@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -24,7 +26,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${plusJakartaSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Providers>
+          <TooltipProvider>{children}</TooltipProvider>
+        </Providers>
+      </body>
     </html>
   );
 }
