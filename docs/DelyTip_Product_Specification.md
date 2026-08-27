@@ -12,7 +12,7 @@ The platform gives businesses a simple way to collect digital tips while also tu
 
 DelyTip should feel extremely simple for customers. There should be no complicated registration process or app installation required.
 
-For businesses, DelyTip provides a central dashboard where they can manage locations, employees, QR codes, tips, reviews, customer feedback, and performance.
+For businesses, DelyTip provides a central dashboard where they can manage Stores, employees, QR codes, tips, reviews, customer feedback, and performance.
 
 ---
 
@@ -41,9 +41,9 @@ The customer scans the QR code using their phone camera.
 
 No application download should be required.
 
-### Step 2 — Business page
+### Step 2 — Store page
 
-The customer is shown a branded page for the business.
+The customer is shown a branded page for the Store.
 
 For example:
 
@@ -53,15 +53,15 @@ For example:
 
 The page can show:
 
-- Business logo
-- Business name
-- Location
+- Store logo
+- Store name
+- Address
 - Short message
 - Employee/team members
 - Tip options
 - Review options
 
-The business should be able to customize this page.
+The Store should be able to customize this page.
 
 ---
 
@@ -80,7 +80,7 @@ For example:
 
 The customer selects the employee.
 
-Alternatively, the business can configure the QR code so it is already associated with a specific employee.
+Alternatively, the Store can configure the QR code so it is already associated with a specific employee.
 
 For example, a QR code placed on an employee's table card could automatically show:
 
@@ -131,7 +131,7 @@ The customer can choose to tip the entire team.
 
 Example:
 
-> €20 → distributed among the employees according to the business's rules.
+> €20 → distributed among the employees according to the Store's rules.
 
 ### General business tip
 
@@ -235,7 +235,7 @@ This allows DelyTip to work across multiple industries.
 
 # 9. QR Code Management
 
-Every business can create multiple QR codes.
+Every Store can create multiple QR codes.
 
 For example:
 
@@ -251,7 +251,7 @@ For example:
 
 Each QR code can have its own identity.
 
-This allows the business to understand where interactions are coming from.
+This allows the Store to understand where interactions are coming from.
 
 For example:
 
@@ -265,42 +265,123 @@ The QR codes can also be downloaded and printed.
 
 ---
 
-# 10. Location Management
+# 10. Organizations and Stores
 
-DelyTip should support businesses with multiple locations.
+DelyTip's account model is built around two concepts: **Organizations** and **Stores**.
 
-For example:
+An **Organization** is the top-level account. It is what a user signs up for, what gets billed, and what people are granted access to. An Organization does not run tips or reviews itself — it is an umbrella.
 
-**ABC Hospitality**
+A **Store** is where the actual DelyTip experience happens. Each Store is fully self-contained, with its own:
 
-- Athens
-- Thessaloniki
-- Heraklion
-- Rhodes
-
-Each location has its own:
-
+- Branding (logo, name, cover image, colors, messages)
 - Employees
 - QR codes
-- Tips
-- Reviews
-- Feedback
-- Analytics
+- Tipping configuration
+- Review and feedback configuration
+- Tips, reviews, and analytics
 
-The business can view everything together or filter by location.
+> Note: elsewhere in this document, "business" is used informally to describe whoever is running DelyTip day-to-day. Formally, that maps to a **Store**. Most Organizations will have exactly one Store, and for them the distinction is invisible — they just have "their DelyTip account."
+
+This two-level model is intentionally generic so it can represent several different real-world structures without DelyTip needing to know which one it is:
+
+### A single business, one location
+
+> **Bella Restaurant** (Organization)
+> - Bella Restaurant (Store)
+
+One Organization, one Store. This is the common case and should feel exactly as simple as a single-business setup always has.
+
+### One brand, multiple branches
+
+> **ABC Hospitality** (Organization)
+> - Athens (Store)
+> - Thessaloniki (Store)
+> - Heraklion (Store)
+> - Rhodes (Store)
+
+Each branch is its own Store — own employees, QR codes, tips, reviews, feedback, and analytics — but they share one Organization for billing and access.
+
+### Independently branded stores under one owner
+
+> **Petros's Ventures** (Organization)
+> - Bella Restaurant (Store)
+> - Luxe Hair Salon (Store)
+
+The two Stores can have completely different branding, industries, and configuration. Nothing about a Store assumes its siblings look or behave like it.
+
+### Franchise-style structure
+
+> **Delitip Franchise Group** (Organization)
+> - Downtown Location (Store, own manager)
+> - Airport Location (Store, own manager)
+
+Same shape as the branch case, but the emphasis is on each Store operating semi-independently under shared branding, with store-level managers rather than a single manager overseeing everything.
+
+### Cross-store view
+
+The Organization dashboard can show:
+
+- A combined view aggregating all Stores (tips, reviews, ratings, employees recognized)
+- A per-Store view, with the ability to switch between Stores
+
+This mirrors the existing filter-by-location idea, generalized to any Store regardless of what kind of business it represents.
+
+### Users and Organizations
+
+A user account is not locked to one Organization. Someone can belong to multiple Organizations — for example, an owner running both a café Organization and a salon Organization, or a regional manager who has been granted access across several Organizations. Each membership carries its own role (see §25), and the user can switch between Organizations the way one switches between workspaces.
+
+### Billing
+
+Billing happens at the Organization level. One subscription covers every Store under that Organization, with the plan tier scaling by number of Stores, employees, or features (see §31) rather than requiring a separate subscription per Store.
 
 ---
 
-# 11. Employee Management
+# 11. User Identity and Accounts
 
-Businesses can create employee profiles.
+A single email identifies one person across DelyTip, regardless of how many different roles they play.
+
+The same person can simultaneously be:
+
+- A member of one or more Organizations (Organization Owner, Store Manager, Accountant — see §25)
+- Staff at one or more Stores (an Employee who receives tips and recognition)
+- A Customer, tipping and reviewing at any Store, including ones they have no relationship to at all
+
+For example:
+
+> Maria owns a small café (Organization Owner of her own Organization). She also works evening shifts as a waitress at a friend's restaurant (Employee at that Store). And when she's out with friends, she uses DelyTip to tip other businesses she visits (Customer). All three are the same DelyTip identity, tied to her email.
+
+### One login, multiple views
+
+Signing in is a single account, the same way §10 already lets a user switch between Organizations. That switcher extends to cover every context tied to the identity:
+
+- **Organization/Store view(s)** — any Organization the person belongs to, and within it any Store
+- **Employee view(s)** — any Store where the person is staff, showing their personal tips, reviews, and recognition (§13)
+- **Customer view** — their own tipping and review history across every Store they've interacted with
+
+A person with only one of these — for example, a customer who has never worked anywhere or run a business — simply never sees the switcher. It stays invisible until there's more than one context to switch between, the same principle as §10 and §24.
+
+### Employee accounts
+
+Being added as staff at a Store creates or links an account for that email, formalizing what §12/§13 previously left implicit. This is what makes it possible for someone to be an Organization Owner and an Employee at the same time — an owner-operator working their own counter is both, under one login.
+
+### Customers link automatically by email
+
+Customers still never need to create an account or sign in to leave a tip or review (§28 is unchanged). But if the email they enter matches an existing DelyTip identity — because they're staff somewhere, own an Organization, or have tipped before with that email — the activity is attributed to that identity automatically, without requiring signup. This is what allows a personal tipping/review history to build up over time, feeding into future features like Loyalty and Customer Profiles (§33), while keeping the tipping flow itself account-free.
+
+Customers should be able to see and control this: understand that entering their email links this activity to their identity, and have visibility into their own tipping/review history if they want it.
+
+---
+
+# 12. Employee Management
+
+Stores can create employee profiles.
 
 Each employee can have:
 
 - Name
 - Photo
 - Position
-- Location
+- Store
 - Status
 - Personal QR code
 - Tips received
@@ -308,11 +389,11 @@ Each employee can have:
 - Average rating
 - Customer feedback
 
-Employees should be able to see their own performance if the business allows it.
+Employees should be able to see their own performance if the Store allows it.
 
 ---
 
-# 12. Employee Dashboard
+# 13. Employee Dashboard
 
 An employee could see:
 
@@ -338,13 +419,13 @@ An employee could see:
 
 This creates a positive feedback loop for employees.
 
-It can also help businesses identify high-performing employees.
+It can also help Stores identify high-performing employees.
 
 ---
 
-# 13. Business Dashboard
+# 14. Dashboard Overview
 
-The main business dashboard should provide an overview of what is happening.
+The main dashboard should provide an overview of what is happening, at either the Store level or the aggregated Organization level (see §10).
 
 For example:
 
@@ -364,13 +445,13 @@ For example:
 - Reviews over time
 - Average rating
 - Best-performing employees
-- Best-performing locations
+- Best-performing Stores
 - Customer satisfaction
 - Most common feedback
 
 ---
 
-# 14. Tip Analytics
+# 15. Tip Analytics
 
 Businesses should be able to understand their tipping activity.
 
@@ -380,7 +461,7 @@ They can see:
 - Number of tips
 - Average tip
 - Tips per employee
-- Tips per location
+- Tips per Store
 - Tips per day
 - Tips per week
 - Tips per month
@@ -388,13 +469,13 @@ They can see:
 They should be able to filter the data by:
 
 - Date
-- Location
+- Store
 - Employee
 - QR code
 
 ---
 
-# 15. Employee Performance Analytics
+# 16. Employee Performance Analytics
 
 DelyTip can provide a broader view of employee performance.
 
@@ -414,9 +495,9 @@ Instead, it should help managers understand:
 
 ---
 
-# 16. Location Analytics
+# 17. Store Analytics
 
-For businesses with multiple locations, managers can compare performance.
+For Organizations with multiple Stores, managers can compare performance.
 
 Example:
 
@@ -435,11 +516,11 @@ Example:
 > Tips: €5,120  
 > Rating: 4.9
 
-This can help management identify differences between locations.
+This can help management identify differences between Stores.
 
 ---
 
-# 17. Customer Experience Score
+# 18. Customer Experience Score
 
 DelyTip can combine different signals into an overall customer experience score.
 
@@ -451,7 +532,7 @@ For example:
 - Employee recognition
 - Tip activity
 
-The business could see:
+The Store could see:
 
 > **Customer Experience Score: 94/100**
 
@@ -459,7 +540,7 @@ The score should be accompanied by an explanation of what is driving it rather t
 
 ---
 
-# 18. Review Management
+# 19. Review Management
 
 Businesses should have a dedicated section for reviews.
 
@@ -469,7 +550,7 @@ They can:
 - Filter reviews
 - Search reviews
 - Filter by employee
-- Filter by location
+- Filter by Store
 - Filter by rating
 - Read customer comments
 
@@ -495,7 +576,7 @@ This makes large volumes of feedback easier to understand.
 
 ---
 
-# 19. AI Feedback Analysis
+# 20. AI Feedback Analysis
 
 An optional advanced feature could automatically analyze customer feedback.
 
@@ -517,7 +598,7 @@ This turns DelyTip from a simple tipping platform into a **customer experience i
 
 ---
 
-# 20. Alerts
+# 21. Alerts
 
 The business could receive alerts for important events.
 
@@ -529,7 +610,7 @@ For example:
 
 ### Negative
 
-> Customer satisfaction at the Athens location has dropped below your normal average.
+> Customer satisfaction at the Athens Store has dropped below your normal average.
 
 ### Review
 
@@ -537,13 +618,13 @@ For example:
 
 ### Performance
 
-> Tips at your Thessaloniki location increased 24% this week.
+> Tips at your Thessaloniki Store increased 24% this week.
 
 The business should be able to choose which alerts it wants to receive.
 
 ---
 
-# 21. Customer Thank-You Experience
+# 22. Customer Thank-You Experience
 
 After a successful tip, the customer should receive a simple confirmation.
 
@@ -561,14 +642,14 @@ This small interaction is important because the product should feel like an act 
 
 ---
 
-# 22. Business Branding
+# 23. Store Branding
 
-Businesses should be able to customize their DelyTip experience.
+Stores should be able to customize their DelyTip experience.
 
 They can add:
 
 - Logo
-- Business name
+- Store name
 - Cover image
 - Brand colors
 - Welcome message
@@ -576,43 +657,43 @@ They can add:
 - Employee photos
 - Review questions
 
-The goal is for the customer to feel that they are interacting with the business, not a generic third-party platform.
+The goal is for the customer to feel that they are interacting with the Store, not a generic third-party platform.
 
 ---
 
-# 23. Multiple Businesses and Teams
+# 24. Scaling Across Organization Sizes
 
-DelyTip should support different organizational structures.
+Building on the Organization/Store model in §10, DelyTip needs to work equally well at very different scales.
 
-A small café might have:
+A small café Organization might have:
 
-> 1 location  
+> 1 Store  
 > 6 employees  
 > 20 QR codes
 
-A hotel group might have:
+A hotel group Organization might have:
 
-> 8 locations  
+> 8 Stores  
 > 300 employees  
 > Hundreds of QR codes
 
-The system should accommodate both without making the small business experience unnecessarily complicated.
+The system should accommodate both without making the small business experience unnecessarily complicated. A single-Store Organization should never feel like it's using a "multi-store product with one store filled in" — the extra structure should stay invisible until it's needed.
 
 ---
 
-# 24. Employee Permissions
+# 25. Employee Permissions
 
 Businesses should be able to control what different users can access.
 
-For example:
+Roles apply at either the Organization level or the Store level (see §10). An Organization-level role sees across every Store; a Store-level role is scoped to just that Store — this is what makes the franchise-style structure in §10 work, where each Store can have its own manager who cannot see other Stores.
 
-### Owner
+### Organization Owner
 
-Full access.
+Full access across every Store in the Organization, including billing.
 
-### Manager
+### Store Manager
 
-Can see employees, reviews and analytics.
+Can see employees, reviews and analytics for their Store only.
 
 ### Employee
 
@@ -620,35 +701,37 @@ Can see their own tips and feedback.
 
 ### Accountant
 
-Can access financial and payment information.
+Can access financial and payment information, at the Organization or Store level depending on how they were granted access.
 
 This keeps sensitive information restricted to the appropriate people.
 
+The same person can hold different roles in different places at once — for example, Organization Owner of their own business while also being an Employee elsewhere (see §11).
+
 ---
 
-# 25. Payments and Payouts
+# 26. Payments and Payouts
 
 The platform should provide a clear record of every transaction.
 
-Businesses should be able to see:
+Stores should be able to see:
 
 - Tip amount
 - Date
 - Time
 - Employee
-- Location
+- Store
 - Transaction status
 - Payout status
 
-Employees should be able to see the tips attributed to them and the amount available according to the business's payout setup.
+Employees should be able to see the tips attributed to them and the amount available according to the Store's payout setup.
 
-The platform should make the flow transparent so employees and businesses can understand exactly where money went.
+The platform should make the flow transparent so employees and Stores can understand exactly where money went.
 
 ---
 
-# 26. Refunds and Disputes
+# 27. Refunds and Disputes
 
-The business should have access to transaction information when a customer requests assistance.
+The Store should have access to transaction information when a customer requests assistance.
 
 Managers should be able to:
 
@@ -660,7 +743,7 @@ Managers should be able to:
 
 ---
 
-# 27. Customer Privacy
+# 28. Customer Privacy
 
 Customers should not need to create an account simply to leave a tip or review.
 
@@ -672,10 +755,11 @@ Customers should also understand clearly:
 - Who receives the tip
 - What information is being collected
 - Whether their review is public or private
+- Whether their activity is being linked to an existing DelyTip identity (see §11)
 
 ---
 
-# 28. Mobile-First Experience
+# 29. Mobile-First Experience
 
 The customer-facing experience should be designed primarily for mobile phones.
 
@@ -689,17 +773,17 @@ The entire experience should feel fast enough to complete while the customer is 
 
 ---
 
-# 29. Business Setup
+# 30. Business Setup
 
 A new business should be able to get started through a simple onboarding process.
 
 ### Step 1
 
-Create business profile.
+Create Organization and first Store. For a single-location business, this happens as one step and the Organization stays invisible — it's presented as "create your business profile," not as a separate org-creation step.
 
 ### Step 2
 
-Add location.
+Add additional Stores, if any (e.g. other branches or brands under the same Organization).
 
 ### Step 3
 
@@ -725,9 +809,11 @@ After that, the business is ready to receive tips and feedback.
 
 ---
 
-# 30. Subscription Plans
+# 31. Subscription Plans
 
 DelyTip can operate as a subscription SaaS.
+
+Subscriptions are billed at the Organization level (see §10) — one subscription covers every Store under that Organization, with the plan tier scaling by number of Stores, employees, or features rather than requiring a separate subscription per Store.
 
 Possible plans:
 
@@ -749,7 +835,7 @@ For growing businesses.
 
 Includes:
 
-- Multiple locations
+- Multiple Stores
 - Advanced analytics
 - Employee performance
 - Custom feedback
@@ -762,7 +848,7 @@ For larger groups.
 
 Includes:
 
-- Unlimited locations
+- Unlimited Stores
 - Advanced reporting
 - Custom branding
 - Multiple management levels
@@ -773,7 +859,7 @@ The exact pricing can be determined later.
 
 ---
 
-# 31. The Core Product Loop
+# 32. The Core Product Loop
 
 The entire product can be understood through one simple loop:
 
@@ -819,7 +905,7 @@ This is the core value proposition of DelyTip.
 
 ---
 
-# 32. Future Features
+# 33. Future Features
 
 Once the core product is established, DelyTip could expand into additional areas.
 
@@ -859,7 +945,7 @@ Over time, DelyTip could become a broader customer experience platform rather th
 
 ---
 
-# 33. Product Positioning
+# 34. Product Positioning
 
 The important distinction is that **DelyTip should not be positioned simply as a QR-code tipping tool.**
 
