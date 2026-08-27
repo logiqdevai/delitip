@@ -24,7 +24,7 @@ The entire experience should take only a few seconds.
 
 ### Step 1 — Scan the QR code
 
-The business places a DelyTip QR code on locations such as:
+The Store places a DelyTip QR code on locations such as:
 
 - Restaurant tables
 - Receipts
@@ -69,7 +69,11 @@ The Store should be able to customize this page.
 
 A key feature of DelyTip is allowing customers to recognize a specific employee.
 
-For example:
+Which employees appear, and whether the customer gets to choose, follows directly from how the QR code was set up (§9).
+
+### Choosing among several
+
+When a QR code is assigned multiple employees in **Choose one** mode — the default — the customer picks:
 
 > **Who would you like to thank?**
 >
@@ -78,15 +82,25 @@ For example:
 > Elena — Bartender  
 > George — Host
 
-The customer selects the employee.
+The tip goes to whichever employee they select, per the rule (§5).
 
-Alternatively, the Store can configure the QR code so it is already associated with a specific employee.
+### One employee, no choice needed
 
-For example, a QR code placed on an employee's table card could automatically show:
+A QR code assigned exactly one employee — for example, one placed on that employee's table card — shows that employee automatically:
 
 > **Thank Maria**
 
 This removes the need for the customer to select anyone.
+
+### A fixed team, no choice needed
+
+A QR code assigned multiple employees in **Team** mode shows all of them with no selection step, since the tip is always split between them per the rule (§5):
+
+> **Thank Maria & Nikos**
+
+### No employee at all
+
+A QR code assigned zero employees skips this step entirely — the tip goes straight to the Store (§5, §9).
 
 ---
 
@@ -94,7 +108,7 @@ This removes the need for the customer to select anyone.
 
 After selecting an employee, the customer can leave a tip.
 
-Businesses can configure suggested amounts such as:
+Stores can configure suggested amounts such as:
 
 - €2
 - €5
@@ -115,29 +129,49 @@ The tipping experience should be fast and require as little information as possi
 
 # 5. Tip Distribution
 
-DelyTip should support different ways of distributing tips.
+DelyTip supports every way a Store might want to split a tip through one unified model: a **Distribution Rule**.
 
-### Individual tipping
+### Distribution Rules
 
-The entire tip goes to the selected employee.
+A Distribution Rule is a list of recipients and their share of the tip, always adding up to 100%. A recipient is either the **Store itself** or a **specific Employee**. This one structure covers every scenario a Store needs:
 
-Example:
+| Scenario | Distribution Rule |
+|---|---|
+| All tips go to the Store | Store: 100% |
+| All tips go to the employee | Employee: 100% |
+| Split between two employees (e.g. head server + assistant) | Employee A: 70%, Employee B: 30% |
+| Store keeps a service fee, employee gets the rest | Store: 10%, Employee: 90% |
+| Store keeps a fee, employees split the rest by their own share | Store: 10%, Employee A: 63%, Employee B: 27% |
 
-> Customer leaves €10 → Maria receives €10
+Nothing about the customer's experience changes based on which rule is in effect — they just tap an amount and pay. The Distribution Rule only determines what happens to the money afterward.
 
-### Team tipping
+### Reusable rules
 
-The customer can choose to tip the entire team.
+A Store builds a small library of named Distribution Rules — for example "Standard," "Head Server + Assistant," "House Fee 10%" — and applies any of them:
 
-Example:
+- As the **Store's default rule**, used whenever a tip doesn't specify otherwise
+- To a **specific QR code** (§9), overriding the Store default for that QR code only
 
-> €20 → distributed among the employees according to the Store's rules.
+A hotel with 40 tables using the same "Head Server + Assistant 70/30" split configures it once and applies it wherever it's needed, rather than re-entering the split on every QR code.
 
-### General business tip
+A QR code's rule is picked when the QR code is created, but it isn't locked in — the Store can change which rule a QR code uses at any time. The new rule applies to every tip from that point on; tips the QR code already generated are unaffected.
 
-The customer can also leave a tip without selecting a specific employee.
+### How this plays out for customers
 
-This can be useful when the customer wants to thank the entire team.
+This follows directly from how the QR code was set up (§9) — how many employees are assigned, and in which mode:
+
+- **General Store tip (zero employees)** — no employee selection is shown; the tip goes to the Store, per the rule's Store share (typically Store: 100%).
+- **Individual tipping (one employee)** — a QR code associated with one employee (§3) uses that employee's applicable rule, typically Employee: 100%, or Store: X% / Employee: (100−X)% if the Store takes a fee. Example: Customer leaves €10 → Maria receives €10 (or €9 if the Store keeps a 10% fee).
+- **Choose one (multiple employees, default)** — the customer picks a single employee from those assigned (§3); the rule's Employee share goes entirely to whoever they pick.
+- **Team (multiple employees, no choice)** — the QR shows all assigned employees with no selection step, and the tip is automatically split across them per the rule. Example: €20 on a 70/30 rule → Maria receives €14, Nikos receives €6.
+
+### Who can configure this
+
+Only an Organization Owner or Store Manager (§26) can create or edit Distribution Rules and assign them to QR codes. Employees can see their own tips and which rule produced them (§13), but cannot change how a tip is split — keeping the split itself outside individual negotiation or dispute.
+
+### Rounding
+
+When a split produces a fractional amount smaller than the currency's smallest unit, the remainder is added to the first-listed recipient's share, so the total paid out always equals the tip amount exactly.
 
 ---
 
@@ -171,7 +205,7 @@ For example:
 - Professionalism
 - Overall experience
 
-The business can decide which questions are shown.
+The Store can decide which questions are shown.
 
 ---
 
@@ -179,7 +213,7 @@ The business can decide which questions are shown.
 
 DelyTip should distinguish between **private feedback** and **public reviews**.
 
-This is important for businesses.
+This is important for Stores.
 
 A customer could be asked:
 
@@ -191,19 +225,19 @@ For example:
 
 > "We're glad you enjoyed your experience. Would you like to share your experience with others?"
 
-The customer could then be directed toward the business's preferred review platform.
+The customer could then be directed toward the Store's preferred review platform.
 
 If the customer gives a low rating, the system can instead encourage private feedback:
 
 > "We're sorry your experience wasn't perfect. Please tell us what happened so we can improve."
 
-This gives the business an opportunity to identify problems before they become public negative reviews.
+This gives the Store an opportunity to identify problems before they become public negative reviews.
 
 ---
 
 # 8. Customer Feedback
 
-Businesses should be able to create customized feedback questions.
+Stores should be able to create customized feedback questions.
 
 For example:
 
@@ -249,7 +283,17 @@ For example:
 - Receipt
 - Takeaway counter
 
-Each QR code can have its own identity.
+Each QR code can have its own identity, including which employee(s) it's associated with and which Distribution Rule (§5) applies to tips through it.
+
+### Creating a QR code
+
+When creating a QR code, the Store assigns any number of employees to it — zero, one, or many — and picks the Distribution Rule (§5) that applies to tips through it:
+
+- **Zero employees** — a Store-only QR, e.g. a reception desk or general checkout tip jar. No employee selection is shown; the whole tip goes to the Store, per the rule's Store share.
+- **One employee** — the QR auto-shows that employee (§3); no selection needed.
+- **Multiple employees** — the Store also picks a mode: **Choose one** (default) shows all assigned employees and lets the customer pick who to thank (§3); **Team** shows all of them with no selection step and splits the tip across them automatically per the rule (§5).
+
+Both the assigned employees and the rule applied can be changed at any time after the QR code is created (§5).
 
 This allows the Store to understand where interactions are coming from.
 
@@ -328,47 +372,61 @@ This mirrors the existing filter-by-location idea, generalized to any Store rega
 
 ### Users and Organizations
 
-A user account is not locked to one Organization. Someone can belong to multiple Organizations — for example, an owner running both a café Organization and a salon Organization, or a regional manager who has been granted access across several Organizations. Each membership carries its own role (see §25), and the user can switch between Organizations the way one switches between workspaces.
+A user account is not locked to one Organization. Someone can belong to multiple Organizations — for example, an owner running both a café Organization and a salon Organization, or a regional manager who has been granted access across several Organizations. Each membership carries its own role (see §26), and the user can switch between Organizations the way one switches between workspaces.
 
 ### Billing
 
-Billing happens at the Organization level. One subscription covers every Store under that Organization, with the plan tier scaling by number of Stores, employees, or features (see §31) rather than requiring a separate subscription per Store.
+Billing happens at the Organization level. One subscription covers every Store under that Organization, with the plan tier scaling by number of Stores, employees, or features (see §32) rather than requiring a separate subscription per Store.
 
 ---
 
 # 11. User Identity and Accounts
 
-A single email identifies one person across DelyTip, regardless of how many different roles they play.
+DelyTip separates two ideas: a **User** is a real person, identified by their email. An **Account** is a specific role attached to that email — a Customer Account, an Employee Account (at a specific Store), or an Organization Account (membership in a specific Organization, with a role per §26).
 
-The same person can simultaneously be:
+One User can hold several Accounts — of the same type or different types — all tied together by their email.
 
-- A member of one or more Organizations (Organization Owner, Store Manager, Accountant — see §25)
-- Staff at one or more Stores (an Employee who receives tips and recognition)
-- A Customer, tipping and reviewing at any Store, including ones they have no relationship to at all
+The same person can hold, at once:
+
+- One or more Organization Accounts (Organization Owner, Store Manager, Accountant — see §26)
+- One or more Employee Accounts (staff at a specific Store, receiving tips and recognition)
+- A Customer Account, built from tipping and reviewing at any Store, including ones they have no other relationship to
 
 For example:
 
-> Maria owns a small café (Organization Owner of her own Organization). She also works evening shifts as a waitress at a friend's restaurant (Employee at that Store). And when she's out with friends, she uses DelyTip to tip other businesses she visits (Customer). All three are the same DelyTip identity, tied to her email.
+> Maria owns a small café (Organization Account, Owner role, her own Organization). She also works evening shifts as a waitress at a friend's restaurant (Employee Account at that Store). And when she's out with friends, she uses DelyTip to tip other businesses she visits (Customer Account). All three are separate Accounts, but they belong to the same DelyTip User because they share her email.
+
+### Accounts can exist before anyone logs in
+
+An Account doesn't require the person to sign up first — it can be created passively, the first time their email shows up in a relevant context:
+
+- A customer tips using an email → a Customer Account is created (or reused, if one already exists) for that email, with no password. It just holds their tipping and review history.
+- A Store adds someone as staff by email → an Employee Account is created (or reused) for that email at that Store, with no password.
+- An Organization invites someone as a member by email → an Organization Account is created (or reused) for that email, with no password.
+
+In every case, the Account exists and starts accumulating activity from that point on, but nobody can log into it yet — it's a placeholder tied to an email, not a login.
+
+### Registering claims every linked Account
+
+At any point, the person behind that email can register — set a password for the first time. That single action activates their User identity for login, and every Account already tied to that email (Customer, Employee, Organization) becomes accessible immediately from that one login.
+
+This is what lets, for example, a customer who has been tipping anonymously for months eventually register and see their entire tipping and review history already there — nothing needs to be re-entered or migrated, because it was attached to their email the whole time.
 
 ### One login, multiple views
 
-Signing in is a single account, the same way §10 already lets a user switch between Organizations. That switcher extends to cover every context tied to the identity:
+Once registered, signing in is a single login for the User. §10 already describes switching between Organizations — that same switcher extends to cover every Account tied to the identity:
 
-- **Organization/Store view(s)** — any Organization the person belongs to, and within it any Store
-- **Employee view(s)** — any Store where the person is staff, showing their personal tips, reviews, and recognition (§13)
-- **Customer view** — their own tipping and review history across every Store they've interacted with
+- **Organization/Store view(s)** — any Organization Account the person holds, and within it any Store
+- **Employee view(s)** — any Store where the person has an Employee Account, showing their personal tips, reviews, and recognition (§13)
+- **Customer view** — their Customer Account's tipping and review history across every Store they've interacted with
 
-A person with only one of these — for example, a customer who has never worked anywhere or run a business — simply never sees the switcher. It stays invisible until there's more than one context to switch between, the same principle as §10 and §24.
+A person with only one Account — for example, a customer who has never worked anywhere or run a business — simply never sees the switcher. It stays invisible until there's more than one to switch between, the same principle as §10 and §25.
 
-### Employee accounts
+### Privacy
 
-Being added as staff at a Store creates or links an account for that email, formalizing what §12/§13 previously left implicit. This is what makes it possible for someone to be an Organization Owner and an Employee at the same time — an owner-operator working their own counter is both, under one login.
+Customers still never need to register or sign in to leave a tip or review (§29 is unchanged) — an unclaimed Customer Account created this way grants nobody access to anything; it only becomes reachable once its owner registers with that email. Customers should be able to see and control this: understand that entering their email links this activity to an Account under that email, and have visibility into their own tipping/review history if they choose to register.
 
-### Customers link automatically by email
-
-Customers still never need to create an account or sign in to leave a tip or review (§28 is unchanged). But if the email they enter matches an existing DelyTip identity — because they're staff somewhere, own an Organization, or have tipped before with that email — the activity is attributed to that identity automatically, without requiring signup. This is what allows a personal tipping/review history to build up over time, feeding into future features like Loyalty and Customer Profiles (§33), while keeping the tipping flow itself account-free.
-
-Customers should be able to see and control this: understand that entering their email links this activity to their identity, and have visibility into their own tipping/review history if they want it.
+This also lays the groundwork for future features like Loyalty and Customer Profiles (§34), since a Customer Account can accumulate history well before anyone formally signs up.
 
 ---
 
@@ -400,6 +458,8 @@ An employee could see:
 ### My Tips
 
 > €842 this month
+
+Broken down by which Distribution Rule (§5) produced each tip, so it's clear why a shared QR code paid out what it did.
 
 ### Average Rating
 
@@ -453,7 +513,7 @@ For example:
 
 # 15. Tip Analytics
 
-Businesses should be able to understand their tipping activity.
+Stores should be able to understand their tipping activity.
 
 They can see:
 
@@ -542,7 +602,7 @@ The score should be accompanied by an explanation of what is driving it rather t
 
 # 19. Review Management
 
-Businesses should have a dedicated section for reviews.
+Stores should have a dedicated section for reviews.
 
 They can:
 
@@ -600,7 +660,7 @@ This turns DelyTip from a simple tipping platform into a **customer experience i
 
 # 21. Alerts
 
-The business could receive alerts for important events.
+The Store could receive alerts for important events.
 
 For example:
 
@@ -620,7 +680,7 @@ For example:
 
 > Tips at your Thessaloniki Store increased 24% this week.
 
-The business should be able to choose which alerts it wants to receive.
+The Store should be able to choose which alerts it wants to receive.
 
 ---
 
@@ -636,7 +696,7 @@ For example:
 >
 > Your appreciation means a lot.
 
-The business can customize this message.
+The Store can customize this message.
 
 This small interaction is important because the product should feel like an act of appreciation rather than simply another payment.
 
@@ -659,9 +719,40 @@ They can add:
 
 The goal is for the customer to feel that they are interacting with the Store, not a generic third-party platform.
 
+Welcome message, thank-you message, and review questions can each be translated into multiple languages (§24).
+
 ---
 
-# 24. Scaling Across Organization Sizes
+# 24. Localization and Multi-Language Support
+
+Every piece of customer-facing text a Store writes — welcome message, tipping message, thank-you message, feedback and review questions (§8) — should be able to appear in more than one language.
+
+### Language selection
+
+DelyTip detects the customer's language automatically from their phone or browser, and shows a small language switcher on the page in case they'd rather see it in a different one.
+
+### How translations are produced
+
+A Store writes each message once, in its primary language. DelyTip automatically translates it into every other language the Store supports, and the Store can review and hand-edit any of those translations if the machine translation doesn't read right.
+
+### Scope
+
+The same mechanism covers any Store-authored customer-facing text, not just branding messages:
+
+- Welcome message
+- Thank-you message
+- Feedback and review questions (§8)
+- Any other custom text the Store adds to its page
+
+It does not cover the platform's own interface — buttons, navigation, system messages — which is DelyTip's own localization, independent of what a Store writes.
+
+### Fallback
+
+If a language doesn't have a translation yet — the Store hasn't reviewed it, or auto-translation hasn't run — the customer sees the Store's primary-language version rather than a blank field or a broken translation.
+
+---
+
+# 25. Scaling Across Organization Sizes
 
 Building on the Organization/Store model in §10, DelyTip needs to work equally well at very different scales.
 
@@ -677,13 +768,13 @@ A hotel group Organization might have:
 > 300 employees  
 > Hundreds of QR codes
 
-The system should accommodate both without making the small business experience unnecessarily complicated. A single-Store Organization should never feel like it's using a "multi-store product with one store filled in" — the extra structure should stay invisible until it's needed.
+The system should accommodate both without making the small-Organization experience unnecessarily complicated. A single-Store Organization should never feel like it's using a "multi-store product with one store filled in" — the extra structure should stay invisible until it's needed.
 
 ---
 
-# 25. Employee Permissions
+# 26. Employee Permissions
 
-Businesses should be able to control what different users can access.
+Organizations should be able to control what different users can access.
 
 Roles apply at either the Organization level or the Store level (see §10). An Organization-level role sees across every Store; a Store-level role is scoped to just that Store — this is what makes the franchise-style structure in §10 work, where each Store can have its own manager who cannot see other Stores.
 
@@ -693,7 +784,7 @@ Full access across every Store in the Organization, including billing.
 
 ### Store Manager
 
-Can see employees, reviews and analytics for their Store only.
+Can see employees, reviews and analytics for their Store only, and can create or edit that Store's Distribution Rules (§5).
 
 ### Employee
 
@@ -705,11 +796,11 @@ Can access financial and payment information, at the Organization or Store level
 
 This keeps sensitive information restricted to the appropriate people.
 
-The same person can hold different roles in different places at once — for example, Organization Owner of their own business while also being an Employee elsewhere (see §11).
+The same person can hold different Accounts in different places at once — for example, an Organization Account as Owner of their own business while also holding an Employee Account elsewhere (see §11).
 
 ---
 
-# 26. Payments and Payouts
+# 27. Payments and Payouts
 
 The platform should provide a clear record of every transaction.
 
@@ -729,7 +820,7 @@ The platform should make the flow transparent so employees and Stores can unders
 
 ---
 
-# 27. Refunds and Disputes
+# 28. Refunds and Disputes
 
 The Store should have access to transaction information when a customer requests assistance.
 
@@ -743,7 +834,7 @@ Managers should be able to:
 
 ---
 
-# 28. Customer Privacy
+# 29. Customer Privacy
 
 Customers should not need to create an account simply to leave a tip or review.
 
@@ -756,10 +847,11 @@ Customers should also understand clearly:
 - What information is being collected
 - Whether their review is public or private
 - Whether their activity is being linked to an existing DelyTip identity (see §11)
+- What language they're being shown, and that a Store's messages may be machine-translated (see §24)
 
 ---
 
-# 29. Mobile-First Experience
+# 30. Mobile-First Experience
 
 The customer-facing experience should be designed primarily for mobile phones.
 
@@ -773,13 +865,13 @@ The entire experience should feel fast enough to complete while the customer is 
 
 ---
 
-# 30. Business Setup
+# 31. Business Setup
 
 A new business should be able to get started through a simple onboarding process.
 
 ### Step 1
 
-Create Organization and first Store. For a single-location business, this happens as one step and the Organization stays invisible — it's presented as "create your business profile," not as a separate org-creation step.
+Create Organization and first Store. For a single-Store Organization, this happens as one step and the Organization stays invisible — it's presented as "create your business profile," not as a separate org-creation step.
 
 ### Step 2
 
@@ -805,11 +897,11 @@ Create QR codes.
 
 Print and place QR codes.
 
-After that, the business is ready to receive tips and feedback.
+After that, the Store is ready to receive tips and feedback.
 
 ---
 
-# 31. Subscription Plans
+# 32. Subscription Plans
 
 DelyTip can operate as a subscription SaaS.
 
@@ -859,7 +951,7 @@ The exact pricing can be determined later.
 
 ---
 
-# 32. The Core Product Loop
+# 33. The Core Product Loop
 
 The entire product can be understood through one simple loop:
 
@@ -905,7 +997,7 @@ This is the core value proposition of DelyTip.
 
 ---
 
-# 33. Future Features
+# 34. Future Features
 
 Once the core product is established, DelyTip could expand into additional areas.
 
@@ -945,7 +1037,7 @@ Over time, DelyTip could become a broader customer experience platform rather th
 
 ---
 
-# 34. Product Positioning
+# 35. Product Positioning
 
 The important distinction is that **DelyTip should not be positioned simply as a QR-code tipping tool.**
 
