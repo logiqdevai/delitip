@@ -37,17 +37,17 @@ typography:
     letterSpacing: "-0.01em"
   title:
     fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif"
-    fontSize: "0.875rem"
+    fontSize: "1rem"
     fontWeight: 700
     lineHeight: 1.3
   body:
     fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif"
-    fontSize: "0.75rem"
+    fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.6
   label:
     fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif"
-    fontSize: "0.6875rem"
+    fontSize: "1rem"
     fontWeight: 700
     lineHeight: 1.4
     letterSpacing: "0.08em"
