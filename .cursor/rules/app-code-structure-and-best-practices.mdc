@@ -1,14 +1,14 @@
 ---
-description: Architectural rules, naming conventions, and coding patterns for the React + TypeScript app. Follow when reading, writing, or refactoring app code. Static enum labels/options/descriptions MUST live in config/constants/dropdowns/ — never in features/utils or inline in components.
+description: Architectural rules, naming conventions, and coding patterns for the Next.js (App Router) + TypeScript app. Follow when reading, writing, or refactoring app code. Static enum labels/options/descriptions MUST live in config/constants/dropdowns/ — never in features/utils or inline in components.
 globs: app/**
 alwaysApply: false
 ---
 
-# AI Agent Rules — React + TypeScript + HeroUI Project
+# AI Agent Rules — Next.js (App Router) + TypeScript + HeroUI Project
 
 ## 1. Purpose
 
-This file defines architectural rules, naming conventions, and coding patterns for AI coding agents working in a React + TypeScript project. Follow these rules precisely when reading, writing, or refactoring code.
+This file defines architectural rules, naming conventions, and coding patterns for AI coding agents working in a Next.js (App Router) + TypeScript project. Follow these rules precisely when reading, writing, or refactoring code.
 
 ---
 
@@ -16,22 +16,32 @@ This file defines architectural rules, naming conventions, and coding patterns f
 
 ```
 src/
-├── App.tsx                        # Root: Router > QueryProvider > AppRoutes
-├── main.tsx                       # Entry point
-├── index.css                      # Tailwind v4 CSS-first config + CSS variables
+├── app/                            # Next.js App Router — routing, layouts, pages (file-system based)
+│   ├── layout.tsx                  # Root layout: <html>/<body>, Providers, TooltipProvider
+│   ├── page.tsx                    # Root route ("/")
+│   ├── providers.tsx               # Client-side providers (QueryClientProvider, etc.) — "use client"
+│   ├── globals.css                 # Tailwind v4 CSS-first config + CSS variables
+│   ├── favicon.ico
+│   └── <section>/                  # Route segment — see Route Segment Pattern
+│       ├── page.tsx                # Route entry (server component by default)
+│       ├── layout.tsx              # Optional nested layout for this segment
+│       ├── loading.tsx             # Optional loading UI (Suspense boundary)
+│       ├── error.tsx               # Optional error boundary ("use client")
+│       ├── components/             # Route-local components (not reused elsewhere)
+│       ├── hooks/                  # Route-local hooks (UI state only, no API calls)
+│       └── validation-schemas/     # Route-local Zod schemas (if not in features/)
 ├── DESIGN.md                      # Design system (Material Design 3) — read before UI work
 ├── routes/
-│   └── routes.ts                  # Centralized Routes object (all frontend paths)
+│   └── routes.ts                  # Centralized Routes object (all frontend paths, used as Link href)
 ├── config/
 │   ├── api/
 │   │   ├── axios.ts               # Axios instance with auth interceptor
 │   │   └── routes.ts              # Centralized ApiRoutes object (all API endpoints)
 │   ├── environments/
-│   │   └── index.ts               # Typed and exported env vars
+│   │   └── index.ts               # Typed and exported env vars (wraps process.env)
 │   └── constants/                 # Static maps and dropdown options
 │       └── dropdowns/             # Select/ListBox option arrays by domain folder
 ├── features/                      # Domain modules (see Feature Module Pattern)
-├── pages/                         # Route-level page components
 ├── components/
 │   ├── layout/                    # Layout shells (sidebar, header, etc.)
 │   ├── ui/                        # shadcn/ui base components + custom primitives
@@ -42,6 +52,12 @@ src/
 ├── interfaces/                    # Shared cross-domain interfaces
 └── types/                         # Global TypeScript declarations
 ```
+
+Next.js App Router notes:
+
+- Routing is file-system based under `src/app/` — a folder is a URL segment, and it only becomes a public route once it contains a `page.tsx` (or `route.ts` for an API handler). There is no `App.tsx` / `main.tsx` entry point and no client-side router library; the root layout (`app/layout.tsx`) replaces that role.
+- Components under `app/` are **Server Components by default**. Add `"use client"` at the top of any file that uses hooks, state, event handlers, or browser-only APIs (providers, interactive forms, modals, etc.).
+- `app/providers.tsx` holds app-wide client providers (e.g. `QueryClientProvider`) and is composed into `app/layout.tsx`.
 
 ### Feature Module Pattern
 
@@ -61,25 +77,29 @@ features/<feature-name>/
 
 Optional `utils/` under a feature is only for **non-UI business helpers** (e.g. payload mappers, link resolution from API shapes). It must **not** contain enum labels, select options, descriptions, or other static display vocabulary — those belong in `config/constants/dropdowns/`.
 
-**Never create `components/` under `features/`.** Features are data-only modules (hooks, services, interfaces, schemas). All React UI lives in `pages/<section>/components/` or `components/ui/`.
+**Never create `components/` under `features/`.** Features are data-only modules (hooks, services, interfaces, schemas). All React UI lives in `app/<section>/components/` or `components/ui/`.
 
-### Page Structure
+### Route Segment Pattern
 
-Pages live in `src/pages/<section>/` and may contain nested sub-pages:
+Routes live in `src/app/<section>/` (a folder = a URL segment) and may contain nested sub-routes as nested folders:
 
 ```
-pages/<section>/
-├── index.tsx                      # Top-level page component (route entry)
-├── components/                    # Page-local components (not reused elsewhere)
-├── hooks/                         # Page-local hooks (UI state only, no API calls)
-├── pages/                         # Sub-pages (e.g., new-item, edit-item)
-├── utils/                         # Page-local utility functions
-└── validation-schemas/            # Page-local Zod schemas (if not in features/)
+app/<section>/
+├── page.tsx                       # Route entry component
+├── layout.tsx                     # Optional layout scoped to this segment + its children
+├── loading.tsx                    # Optional loading UI for this segment
+├── error.tsx                      # Optional error boundary ("use client")
+├── components/                    # Route-local components (not reused elsewhere)
+├── hooks/                         # Route-local hooks (UI state only, no API calls)
+├── <sub-route>/                   # Nested route (e.g., new-item, edit-item) — its own page.tsx
+├── utils/                         # Route-local utility functions
+└── validation-schemas/            # Route-local Zod schemas (if not in features/)
 ```
 
-**Do:** Put all data-fetching logic in `features/`. Pages import hooks, services, interfaces, and schemas from features.  
-**Don't:** Put API calls, Zod schemas, or React components inside `features/`.  
-**Don't:** Create `features/<feature-name>/components/` — page-local UI belongs in `pages/<section>/components/`.
+**Do:** Put all data-fetching logic in `features/`. Route components import hooks, services, interfaces, and schemas from features.
+**Don't:** Put API calls, Zod schemas, or React components inside `features/`.
+**Don't:** Create `features/<feature-name>/components/` — route-local UI belongs in `app/<section>/components/`.
+**Don't:** Add a `page.tsx` (or `route.ts`) to a folder that should stay non-routable — use it only to colocate `components/`, `hooks/`, `utils/`, `validation-schemas/`.
 
 ### Static UI vocabulary (dropdowns, labels, descriptions)
 
@@ -98,8 +118,8 @@ Domain folders: `agencies`, `scrapers`, `properties`, `integrations`, `notificat
 **Never put this data in:**
 
 - `features/**/utils/**` (including `*-label.utils.ts`, `*-description.utils.ts`, `*-options.ts`)
-- `pages/**/components/**` or `pages/**/index.tsx` (no inline `const xLabel: Record<...>` / `const xOptions = [...]`)
-- `pages/**/utils/**`
+- `app/**/components/**` or `app/**/page.tsx` (no inline `const xLabel: Record<...>` / `const xOptions = [...]`)
+- `app/**/utils/**`
 - `features/**/components/**`
 - `lib/**` (except the single shared reader below)
 
@@ -139,7 +159,7 @@ When the same enum labels appear in filter + form + chips + tables:
 - Export `get<Domain><Context>Label()` / `get<Domain><Context>Description()` from the **same** `*.options.ts` file that owns the data.
 - For reading labels from a filter/form options array in chips or tables, use the shared helper  
   `getDropdownOptionLabel()` from `@/lib/dropdown-option-label.utils.ts` — do **not** copy a local `find()` helper per component.
-- Do **not** create per-domain label utils under `features/` or `pages/`.
+- Do **not** create per-domain label utils under `features/` or `app/`.
 
 #### Chips, badges, and tables
 
@@ -171,7 +191,7 @@ Chip color maps (`Record<Enum, ChipColor>`) may stay in the chip component — o
 - `features/<feature>/utils/*-label.utils.ts`
 - `features/<feature>/utils/*-description.utils.ts`
 - `features/<feature>/utils/*-options.ts`
-- `const <name>Options = [...]` or `const <name>Label: Record<...>` in pages/components (except the exceptions below)
+- `const <name>Options = [...]` or `const <name>Label: Record<...>` in app routes/components (except the exceptions below)
 - `features/<feature>/components/**` for any UI, including chips and forms
 - Dropdown files that re-export data from `features/**/utils/**`
 - Duplicating the same `{ id, label }` list in a second file when an existing `*.options.ts` already defines it
@@ -263,9 +283,9 @@ Current shared primitives (extend this list as new ones land):
 
 **Placement rule:**
 
-- **Used by one page route** → `pages/<section>/components/` (import via `./components/<file>`)
-- **Used by multiple pages in the same section** (e.g. admin list + detail) → `pages/<section>/components/` (shared within that section folder)
-- **Used by multiple pages across sections** → copy into each page's `components/` folder **or** promote to `app/src/components/ui/` when the component is presentational and identical everywhere
+- **Used by one route** → `app/<section>/components/` (import via `./components/<file>`)
+- **Used by multiple routes in the same section** (e.g. admin list + detail) → `app/<section>/components/` (shared within that section folder)
+- **Used by multiple routes across sections** → copy into each route's `components/` folder **or** promote to `app/src/components/ui/` when the component is presentational and identical everywhere
 - **Reused app-wide primitives** (buttons, skeletons, dialogs) → `app/src/components/ui/`
 
 **Never** place UI in `features/<feature>/components/`. If a form or chip is tied to a domain, colocate it with the page that renders it and import domain types/hooks from `@/features/<feature>/`.
@@ -430,7 +450,7 @@ A sibling `<Label>` **outside** `<Select>` does **not** satisfy accessibility re
 ## 5. Hooks Guidelines
 
 - Feature query hooks live in `features/<feature-name>/hooks/`
-- Page-local hooks live in `pages/<section>/hooks/` and manage UI state only (no API calls)
+- Route-local hooks live in `app/<section>/hooks/` and manage UI state only (no API calls)
 - Every mutation hook **must** call `toast()` in both `onSuccess` and `onError`
 - `onSuccess` **must** call `queryClient.invalidateQueries` with the base query key
 - Use `enabled: !!param` for conditional queries that depend on a runtime value
@@ -454,7 +474,7 @@ Use Zustand for global client state.
 - Always use `zodResolver` — never manual validation
 - Always use shadcn `Form`, `FormField`, `FormItem`, `FormControl`, `FormLabel`, `FormMessage` components
 - Schema files export both the Zod schema and its inferred type
-- Zod schemas live in `features/<feature-name>/validation-schemas/` or `pages/<section>/validation-schemas/`
+- Zod schemas live in `features/<feature-name>/validation-schemas/` or `app/<section>/validation-schemas/`
 
 ---
 
@@ -463,14 +483,16 @@ Use Zustand for global client state.
 **Never hardcode URL strings anywhere in the codebase.** Every frontend path must come from the `Routes` object exported by `@/routes/routes.ts`.
 
 This applies to **all** navigation contexts:
-- `<Link to={Routes.auth.sign_in} />`
-- `<NavLink to={Routes.dashboard.root} />`
-- `<Navigate to={Routes.dashboard.root} replace />`
-- `navigate(Routes.dashboard.leads)`
+- `<Link href={Routes.auth.sign_in} />` (from `next/link`)
+- `<Link href={Routes.dashboard.root} className={isActive ? "active" : undefined} />` (active-link nav; no separate `NavLink`)
+- `redirect(Routes.dashboard.root)` (from `next/navigation`, server components/actions)
+- `router.push(Routes.dashboard.leads)` / `router.replace(...)` (from `useRouter()` in `next/navigation`, client components)
 - `window.location.href = Routes.auth.sign_in`
-- `fallbackPath` defaults in `ProtectedRoute`
+- `fallbackPath` defaults in route guards / middleware redirects
 
 When adding a new route, **always add it to `routes.ts` first**, then reference it via `Routes.*`. Never write string literals like `"/dashboard"`, `"/auth/sign-in"` etc. in component or hook files.
+
+`Routes.*` values are plain path strings — the same object is used for `<Link href>`, `router.push()`, and `redirect()`; there is no separate typed-route generator to maintain.
 
 ---
 
@@ -482,7 +504,8 @@ When adding a new route, **always add it to `routes.ts` first**, then reference 
 - Service functions are plain `async` functions — no React hooks inside them
 - Always wrap service calls with `try/catch`; throw a human-readable `new Error("...")` message
 - Return `response.data` directly, not the full Axios response object
-- All env vars are accessed through a typed `environments` object — never use `import.meta.env.*` directly in components or features
+- All env vars are accessed through a typed `environments` object — never use `process.env.*` directly in components or features
+- Client-exposed env vars must be prefixed `NEXT_PUBLIC_` (Next.js inlines only these into the browser bundle); server-only secrets use unprefixed names and must never be imported into a `"use client"` file
 
 ---
 
@@ -512,11 +535,12 @@ When adding a new route, **always add it to `routes.ts` first**, then reference 
 | ------------------------------------------------------------ | ---------------------------------------------------- |
 | Use `@/` alias for all imports                               | Use relative `../../` paths across folders           |
 | Import `Routes` from `@/routes/routes.ts` for every link/navigate | Hardcode URL strings like `"/dashboard"` anywhere |
-| Add new paths to `routes.ts` before using them               | Write path literals in `<Link>`, `navigate()`, etc.  |
+| Add new paths to `routes.ts` before using them               | Write path literals in `<Link href>`, `router.push()`, etc. |
 | Define all API paths in a central `ApiRoutes` object         | Hardcode API path strings in service files           |
 | Put API calls in `features/<name>/services/`                 | Call `axiosInstance` from components or hooks        |
-| Put page UI in `pages/<section>/components/`                 | Create `features/<name>/components/`                 |
-| Import page components via `./components/<file>`             | Import UI from `@/features/*/components/`            |
+| Put route UI in `app/<section>/components/`                  | Create `features/<name>/components/`                 |
+| Import route components via `./components/<file>`            | Import UI from `@/features/*/components/`            |
+| Add `"use client"` to files using hooks/state/events          | Assume every file under `app/` is a Client Component |
 | Use TanStack Query for all server state                      | Use `useState` + `useEffect` for data fetching       |
 | Call `toast()` in every mutation's `onSuccess` and `onError` | Leave mutations silent                               |
 | Use `zodResolver` with React Hook Form                       | Write manual form validation logic                   |
@@ -525,7 +549,7 @@ When adding a new route, **always add it to `routes.ts` first**, then reference 
 | Export inferred Zod types next to schemas                    | Re-define types that duplicate schema shape          |
 | Use const-object enum pattern with extracted union type      | Use the TypeScript `enum` keyword                    |
 | `invalidateQueries` with the base key after mutations        | Target parameterized query keys in mutations         |
-| Access env vars through a typed `environments` object        | Access `import.meta.env.VITE_*` directly             |
+| Access env vars through a typed `environments` object        | Access `process.env.NEXT_PUBLIC_*` directly           |
 | Extend shadcn/ui components via wrappers                     | Modify files inside `components/ui/` directly        |
 | List `components/ui/` before creating a new primitive      | Duplicate button/form/skeleton markup per page       |
 | Put cross-page shared UI in `components/ui/`                 | Leave reusable atoms inside a single page folder     |
@@ -743,13 +767,31 @@ export const Routes = {
 ```
 
 ```tsx
+import Link from "next/link";
 import { Routes } from "@/routes/routes";
 
-<Link to={Routes.auth.sign_up}>Sign up</Link>
-<NavLink to={Routes.dashboard.leads}>Leads</NavLink>
-<Navigate to={Routes.dashboard.root} replace />
-navigate(Routes.dashboard.root);
+<Link href={Routes.auth.sign_up}>Sign up</Link>
+<Link href={Routes.dashboard.leads}>Leads</Link>
 window.location.href = Routes.auth.sign_in;
+```
+
+```tsx
+"use client";
+
+import { useRouter } from "next/navigation";
+import { Routes } from "@/routes/routes";
+
+const router = useRouter();
+router.push(Routes.dashboard.root);
+router.replace(Routes.dashboard.root);
+```
+
+```tsx
+import { redirect } from "next/navigation";
+import { Routes } from "@/routes/routes";
+
+// Server Component / Server Action
+redirect(Routes.dashboard.root);
 ```
 
 ### Conditional Classnames
