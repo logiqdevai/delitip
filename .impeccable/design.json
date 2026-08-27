@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-27T12:00:00Z",
+  "title": "Design System: Delitip",
+  "extensions": {
+    "colorMeta": {
+      "electric-lime": { "role": "primary", "displayName": "Electric Lime", "canonical": "#C8F169", "tonalRamp": ["#3F4F18", "#6B8429", "#9FBF3E", "#C8F169", "#CDF47A", "#D2EC88", "#DCF0A3", "#EAF7CC", "#F4FBE6"] },
+      "ink-charcoal": { "role": "secondary", "displayName": "Ink Charcoal", "canonical": "#181A1B", "tonalRamp": ["#0C0D0D", "#181A1B", "#2A2D2E", "#3F4243", "#575B5C", "#727677", "#8F9394", "#AEB1B2", "#D3D5D6"] },
+      "rating-amber": { "role": "tertiary", "displayName": "Rating Amber", "canonical": "#F59E0B", "tonalRamp": ["#78350F", "#92400E", "#B45309", "#D97706", "#F59E0B", "#FBBF24", "#FCD34D", "#FDE68A", "#FEF3C7"] },
+      "paper-offwhite": { "role": "neutral", "displayName": "Paper Offwhite", "canonical": "#F7F7F2", "tonalRamp": ["#3A3A35", "#57574F", "#7A7A70", "#9E9E92", "#C2C2B6", "#DEDED4", "#EDEDE6", "#F7F7F2", "#FBFBF8"] },
+      "signal-red": { "role": "semantic", "displayName": "Signal Red", "canonical": "#DC2626", "tonalRamp": ["#7F1D1D", "#991B1B", "#B91C1C", "#DC2626", "#EF4444", "#F87171", "#FCA5A5", "#FECACA", "#FEE2E2"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Marketing hero headlines only." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles, dashboard page titles, auth headings." },
+      "title": { "displayName": "Title", "purpose": "Card headers, names, component titles." },
+      "body": { "displayName": "Body", "purpose": "The dominant, dense operating-console text size across the system." },
+      "label": { "displayName": "Label", "purpose": "Uppercase eyebrows, table headers, micro-metadata." }
+    },
+    "shadows": [
+      { "name": "resting", "value": "0 1px 2px rgba(0,0,0,0.03)", "purpose": "Default barely-there elevation for cards, inputs, list rows on light surfaces." },
+      { "name": "ambient-glow-lime", "value": "radial blurred shape, blur(64px), lime at 15-20% opacity", "purpose": "The only depth cue on dark charcoal panels; never a drop shadow." },
+      { "name": "lifted-lime", "value": "0 10px 25px -3px rgba(200,241,105,0.3)", "purpose": "Primary CTA buttons and elevated/floating cards." },
+      { "name": "lifted-neutral", "value": "0 20px 40px -8px rgba(0,0,0,0.25)", "purpose": "Modals, the hero device-frame mockup, popovers." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Fade/slide-in transitions between auth and flow steps (150-250ms)." },
+      { "name": "duration-fast", "value": "150ms", "purpose": "Hover and focus state transitions." },
+      { "name": "duration-standard", "value": "200-250ms", "purpose": "View/step transitions (fade-enter pattern)." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Lime-filled primary action button with signature glow shadow.",
+      "html": "<button class=\"ds-btn-primary\">Get Started Free</button>",
+      "css": ".ds-btn-primary { background: #C8F169; color: #181A1B; font-weight: 700; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 13px; padding: 14px 24px; border-radius: 12px; border: none; box-shadow: 0 10px 25px -3px rgba(200,241,105,0.3); transition: background 0.15s ease; cursor: pointer; } .ds-btn-primary:hover { background: #9FBF3E; } .ds-btn-primary:focus-visible { outline: 2px solid #C8F169; outline-offset: 2px; }"
+    },
+    {
+      "name": "Inverse Button",
+      "kind": "button",
+      "refersTo": "button-inverse",
+      "description": "Charcoal-filled secondary action button, paired beside a primary lime button.",
+      "html": "<button class=\"ds-btn-inverse\">Pay with Card</button>",
+      "css": ".ds-btn-inverse { background: #181A1B; color: #F7F7F2; font-weight: 600; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 13px; padding: 12px 24px; border-radius: 16px; border: none; transition: background 0.15s ease; cursor: pointer; } .ds-btn-inverse:hover { background: #27272A; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Low-emphasis tertiary action on a recessed neutral fill.",
+      "html": "<button class=\"ds-btn-ghost\">See All Reviews</button>",
+      "css": ".ds-btn-ghost { background: #F4F4F5; color: #3F3F46; font-weight: 600; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 12px; padding: 10px 16px; border-radius: 12px; border: none; transition: background 0.15s ease; cursor: pointer; } .ds-btn-ghost:hover { background: #E4E4E7; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Recessed-surface input with lime focus ring, no border color shift.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Enter custom amount\" />",
+      "css": ".ds-input { width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid #E4E4E7; background: rgba(250,250,250,0.6); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 12px; color: #181A1B; } .ds-input::placeholder { color: #A1A1AA; } .ds-input:focus { outline: none; box-shadow: 0 0 0 2px #C8F169; }"
+    },
+    {
+      "name": "Positive Badge",
+      "kind": "chip",
+      "refersTo": "badge-positive",
+      "description": "Pill tag for recognition, positive deltas, and settled/on-shift status.",
+      "html": "<span class=\"ds-badge-positive\">Settled</span>",
+      "css": ".ds-badge-positive { display: inline-block; background: #F4FBE6; color: #6B8429; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 9999px; border: 1px solid #DCF0A3; }"
+    },
+    {
+      "name": "Neutral Badge",
+      "kind": "chip",
+      "refersTo": "badge-neutral",
+      "description": "Pill tag for informational/off-state metadata.",
+      "html": "<span class=\"ds-badge-neutral\">Off Shift</span>",
+      "css": ".ds-badge-neutral { display: inline-block; background: #F4F4F5; color: #71717A; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 10px; font-weight: 600; padding: 2px 10px; border-radius: 9999px; }"
+    },
+    {
+      "name": "Stat Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "KPI tile: label + delta pill on top row, large value, muted caption.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-row\"><span class=\"ds-card-label\">Total Tips (7d)</span><span class=\"ds-badge-positive\">+18.4%</span></div><div class=\"ds-card-value\">$3,420.50</div><div class=\"ds-card-caption\">428 customer tips processed</div></div>",
+      "css": ".ds-card { background: #FFFFFF; border: 1px solid rgba(228,228,231,0.8); border-radius: 16px; padding: 16px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; } .ds-card-row { display: flex; justify-content: space-between; align-items: flex-start; } .ds-card-label { font-size: 12px; font-weight: 600; color: #71717A; } .ds-card-value { font-size: 24px; font-weight: 800; color: #181A1B; margin-top: 8px; } .ds-card-caption { font-size: 11px; color: #A1A1AA; margin-top: 4px; }"
+    },
+    {
+      "name": "Sidebar Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Active/inactive sidebar navigation link with lime-tinted active state.",
+      "html": "<a href=\"#\" class=\"ds-nav-item ds-nav-item-active\">Overview</a>",
+      "css": ".ds-nav-item { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 12px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 12px; font-weight: 600; color: #52525B; text-decoration: none; transition: background 0.15s ease; } .ds-nav-item:hover { background: #F4F4F5; color: #181A1B; } .ds-nav-item-active { background: #F4FBE6; color: #6B8429; }"
+    },
+    {
+      "name": "Device Frame",
+      "kind": "custom",
+      "refersTo": "device-frame",
+      "description": "Rounded phone-frame container used to present the customer tipping flow.",
+      "html": "<div class=\"ds-device-frame\"><div class=\"ds-device-screen\">Customer flow content</div></div>",
+      "css": ".ds-device-frame { width: 100%; max-width: 390px; background: #FFFFFF; border-radius: 40px; border: 1px solid rgba(228,228,231,0.8); box-shadow: 0 20px 40px -8px rgba(0,0,0,0.15); overflow: hidden; min-height: 640px; } .ds-device-screen { padding: 24px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 12px; color: #181A1B; }"
+    },
+    {
+      "name": "Icon Badge",
+      "kind": "custom",
+      "refersTo": "icon",
+      "description": "lucide-react icon (stroke-width 2) paired with a short label, replacing the mockups' emoji tags.",
+      "html": "<span class=\"ds-icon-badge\"><svg class=\"ds-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M13 2 3 14h9l-1 8 10-12h-9l1-8Z\"/></svg>Fast Service</span>",
+      "css": ".ds-icon-badge { display: inline-flex; align-items: center; gap: 6px; background: #F4FBE6; color: #6B8429; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 9999px; border: 1px solid #DCF0A3; } .ds-icon { width: 14px; height: 14px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Transparent Ledger",
+    "overview": "Delitip's visual world reads like an honest financial record, not a generic tipping widget. Every surface — the customer's phone screen, the employee's payout card, the owner's dashboard — is built to make one thing visible at a glance: exactly where the money went, and to whom. Receipts carry reference numbers. Dashboards pair every stat with a time window and a sample size. Settlement states (\"Settled\", \"On Shift\", \"100% Direct\") are stated, not implied.\n\nThe palette does the heavy lifting: a near-black ink surface for anything serious (the business's own brand, security, payouts) against a single electric-lime accent that appears only where something good is happening — an active state, a rising number, a completed action. Rounded, generous geometry (16-40px radii, phone-frame device mockups) keeps the fintech confidence from feeling cold or corporate; nothing in the system uses a hard, square corner.\n\nConfirmed anti-reference: this is not playful or gamified fintech. Recognition moments (compliment tags, badges) stay warm, but they use icon-based tags rather than emoji, and nothing about money, security, or settlement status softens into cuteness.\n\nImplementation: built on shadcn/ui (Base UI primitives) over Tailwind v4, with lucide-react as the icon set. globals.css carries this palette as two layers: every color above is a static Tailwind primitive (--color-electric-lime, --color-brand-700, --color-ink-charcoal, --color-signal-red, etc.), directly usable as utilities. shadcn's semantic roles (--background, --primary, --destructive) reference those primitives via var() rather than repeating literal hex, so light/dark mode and any future re-theming only touch one source of truth. --radius is set to 1rem so shadcn's derived radius scale lines up with this document's Shapes scale.",
+    "keyCharacteristics": [
+      "One accent, used sparingly: lime marks \"this is active / this is good,\" never a background fill for large surfaces.",
+      "Money and status are always stated exactly — amount, timestamp, reference ID — never rounded or implied.",
+      "Flat, bordered surfaces in light mode; ambient lime glow (not shadow) for depth on dark surfaces.",
+      "Aggressively rounded geometry throughout — no sharp corners anywhere in the system.",
+      "A recurring \"phone-frame\" device mockup is the system's signature way of showing the customer experience inside a business or marketing surface."
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Lime never fills a large surface. It marks a button, a selected state, a positive delta, or a single glow — never a section background.", "section": "colors" },
+      { "name": "The Exact-Money Rule", "body": "Any figure tied to a transaction (tip amount, payout, fee) is rendered in full precision with its currency symbol — never rounded, abbreviated, or replaced with a vague adjective.", "section": "colors" },
+      { "name": "The One Typeface Rule", "body": "Plus Jakarta Sans carries every role. Introducing a second family breaks the system — the one exception is Geist Mono, scoped exclusively to reference codes.", "section": "typography" },
+      { "name": "The Glow-Not-Shadow Rule", "body": "Depth on a dark (charcoal) surface is conveyed with a blurred color glow, never a drop shadow. Drop shadows are reserved for light-surface elevation only.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do treat lime as a rare signal for \"active, positive, or primary\" — never a section background.",
+      "Do state every financial figure exactly, with a time window or sample size attached.",
+      "Do use the blurred lime glow for depth on charcoal surfaces instead of a drop shadow.",
+      "Do keep every corner rounded — buttons, cards, inputs, device frames, badges alike.",
+      "Do represent recognition/compliment tags with a small icon and a short label, not emoji.",
+      "Do pull every icon from lucide-react at stroke-width: 2, sized 16-20px, colored via currentColor."
+    ],
+    "donts": [
+      "Don't introduce blue, or any generic corporate-SaaS palette, into primary chrome.",
+      "Don't use emoji as the primary vehicle for compliment tags, badges, or status — replace with a lucide-react icon + label.",
+      "Don't mix icon sets. Recreate any missing icon as a custom SVG in the same stroke style rather than pulling from a second library.",
+      "Don't let playful or gamified treatments into money-, security-, or settlement-related surfaces.",
+      "Don't use a sharp (0px) corner anywhere in the system.",
+      "Don't drop dashboard body text below the established 11-12px floor."
+    ]
+  }
+}

@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>delitip.com — Reward great service</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            charcoal: '#181A1B',
+            lime: '#C8F169',
+            offwhite: '#F7F7F2',
+            brand: {
+              50: '#F4FBE6',
+              100: '#EAF7CC',
+              200: '#DCF0A3',
+              300: '#D2EC88',
+              400: '#CDF47A',
+              500: '#C8F169',
+              600: '#C8F169',
+              700: '#9FBF3E',
+              800: '#6B8429',
+              900: '#3F4F18',
+              950: '#181A1B',
+              dark: '#181A1B',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-offwhite text-charcoal min-h-screen antialiased flex flex-col selection:bg-lime selection:text-charcoal">
+
+  <!-- ========================================================================= -->
+  <!-- TOP APP SWITCHER BAR                                                      -->
+  <!-- ========================================================================= -->
+  <header class="bg-charcoal text-offwhite px-4 lg:px-6 py-2.5 border-b border-zinc-800 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <!-- Minimal Abstract Brand Icon -->
+      <div class="w-8 h-8 rounded-xl bg-lime flex items-center justify-center font-bold text-charcoal text-sm shadow-inner shadow-lime/40">
+        d•
+      </div>
+      <div class="flex items-baseline gap-1.5">
+        <span class="font-bold text-base tracking-tight text-offwhite">delitip<span class="text-lime font-medium">.com</span></span>
+        <span class="hidden sm:inline-block text-[11px] text-zinc-400 font-normal">| Reward great service.</span>
+      </div>
+    </div>
+
+    <!-- Toggle between Customer and Business Experience -->
+    <div class="flex items-center bg-charcoal/80 p-1 rounded-xl border border-zinc-800">
+      <button id="navBtnCustomer" onclick="setActiveMode('customer')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 text-zinc-400 hover:text-white">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        <span>Customer Flow</span>
+      </button>
+      <button id="navBtnBusiness" onclick="setActiveMode('business')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 bg-lime text-charcoal shadow-sm">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 4h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span>Business Dashboard</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 1. CUSTOMER MOBILE FLOW VIEW                                              -->
+  <!-- ========================================================================= -->
+  <div id="modeCustomer" class="hidden flex-1 flex flex-col items-center justify-center p-4 sm:p-8 bg-offwhite">
+    <div class="w-full max-w-[400px] bg-white rounded-[36px] shadow-2xl shadow-zinc-300 border border-zinc-200 overflow-hidden flex flex-col min-h-[720px] relative">
+      
+      <!-- Customer Header -->
+      <div class="px-6 pt-5 pb-3 flex items-center justify-between border-b border-zinc-100">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-lg bg-lime flex items-center justify-center font-bold text-charcoal text-xs">
+            d•
+          </div>
+          <span class="font-bold text-sm tracking-tight text-charcoal">delitip<span class="text-lime">.com</span></span>
+        </div>
+        <div class="text-[11px] font-semibold text-zinc-600 bg-zinc-100 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-lime"></span> Table 08
+        </div>
+      </div>
+
+      <!-- Customer Flow Steps Container -->
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        
+        <!-- STEP 1: SELECT TIP -->
+        <div id="custStep1" class="space-y-6">
+          <div class="text-center pt-2">
+            <div class="relative inline-block">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&auto=format&fit=crop&q=80" alt="Maria" class="w-20 h-20 rounded-full object-cover ring-4 ring-brand-50 mx-auto shadow-sm" />
+              <div class="absolute bottom-0 right-0 bg-lime text-charcoal rounded-full p-1 shadow">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              </div>
+            </div>
+            <h1 class="text-lg font-bold text-charcoal mt-3">Thank Maria</h1>
+            <p class="text-xs text-zinc-500 font-medium">Artisan Café & Bar • Server</p>
+          </div>
+
+          <!-- Quick Tip Grid -->
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3 text-center">
+              Choose your tip
+            </label>
+            <div class="grid grid-cols-3 gap-2.5">
+              <button onclick="setCustTip(3, this)" class="cust-tip-btn p-3 rounded-2xl border border-zinc-200 bg-white hover:border-lime text-center transition">
+                <div class="text-sm font-bold text-charcoal">$3.00</div>
+                <div class="text-[10px] text-zinc-400 mt-0.5">Quick</div>
+              </button>
+              <button onclick="setCustTip(5, this)" class="cust-tip-btn p-3 rounded-2xl border-2 border-lime bg-brand-50/60 text-center transition">
+                <div class="text-sm font-bold text-brand-700">$5.00</div>
+                <div class="text-[10px] text-lime font-semibold mt-0.5">Popular</div>
+              </button>
+              <button onclick="setCustTip(8, this)" class="cust-tip-btn p-3 rounded-2xl border border-zinc-200 bg-white hover:border-lime text-center transition">
+                <div class="text-sm font-bold text-charcoal">$8.00</div>
+                <div class="text-[10px] text-zinc-400 mt-0.5">Generous</div>
+              </button>
+            </div>
+            <div class="mt-3 relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-zinc-400">$</span>
+              <input id="customTipInput" oninput="setCustomTip(this.value)" type="number" placeholder="Enter custom amount" class="w-full pl-8 pr-4 py-2.5 text-xs rounded-xl border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-lime bg-zinc-50/50" />
+            </div>
+          </div>
+
+          <!-- Transparency Info -->
+          <div class="bg-zinc-50 rounded-xl p-3 border border-zinc-100 flex items-center gap-2.5 text-[11px] text-zinc-600">
+            <svg class="w-4 h-4 text-lime shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <span>100% of tips are transparently allocated to Maria & staff.</span>
+          </div>
+
+          <!-- Next Button -->
+          <button onclick="showCustStep(2)" class="w-full bg-lime hover:bg-brand-700 text-charcoal font-semibold py-3.5 rounded-2xl transition shadow-lg shadow-lime/30 flex items-center justify-center gap-2 text-sm">
+            <span id="custPayBtnLabel">Continue to Pay $5.00</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
+        <!-- STEP 2: FEEDBACK & PAYMENT -->
+        <div id="custStep2" class="space-y-5 hidden">
+          <div class="text-center pt-2">
+            <h2 class="text-lg font-bold text-charcoal">How was your experience?</h2>
+            <p class="text-xs text-zinc-500 mt-1">Leave a compliment for Maria</p>
+          </div>
+
+          <!-- Rating Stars -->
+          <div class="flex justify-center gap-2">
+            <button class="text-amber-400 hover:scale-110 transition"><svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></button>
+            <button class="text-amber-400 hover:scale-110 transition"><svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></button>
+            <button class="text-amber-400 hover:scale-110 transition"><svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></button>
+            <button class="text-amber-400 hover:scale-110 transition"><svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></button>
+            <button class="text-amber-400 hover:scale-110 transition"><svg class="w-7 h-7 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></button>
+          </div>
+
+          <!-- Feedback Badges -->
+          <div class="flex flex-wrap gap-1.5 justify-center">
+            <button onclick="toggleBadge(this)" class="px-2.5 py-1 text-xs rounded-full bg-brand-50 border border-brand-300 text-brand-800 font-medium">⚡ Super fast</button>
+            <button onclick="toggleBadge(this)" class="px-2.5 py-1 text-xs rounded-full bg-brand-50 border border-brand-300 text-brand-800 font-medium">✨ Friendly vibe</button>
+            <button onclick="toggleBadge(this)" class="px-2.5 py-1 text-xs rounded-full bg-zinc-100 border border-zinc-200 text-zinc-700">☕ Great recommendations</button>
+            <button onclick="toggleBadge(this)" class="px-2.5 py-1 text-xs rounded-full bg-zinc-100 border border-zinc-200 text-zinc-700">💫 Attentive</button>
+          </div>
+
+          <textarea rows="2" placeholder="Add a short note for Maria (optional)..." class="w-full p-2.5 text-xs rounded-xl border border-zinc-200 focus:ring-2 focus:ring-lime focus:outline-none resize-none"></textarea>
+
+          <!-- Express Payments -->
+          <div class="space-y-2 pt-1">
+            <button onclick="showCustStep(3)" class="w-full bg-charcoal hover:bg-zinc-800 text-offwhite font-medium py-3 rounded-2xl flex items-center justify-center gap-2 text-xs transition shadow-sm">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 170 170"><path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.04-7.69-7.85-12-14.43-5.63-8.58-10.03-18.01-13.2-28.29-3.17-10.28-4.76-20.08-4.76-29.41 0-12.98 3.37-23.77 10.11-32.37 6.74-8.6 15.18-13.02 25.32-13.26 4.89 0 10.11 1.25 15.65 3.76 5.54 2.5 9.28 3.82 11.22 3.94 1.52-.12 5.48-1.5 11.87-4.13 6.39-2.63 11.81-3.72 16.27-3.26 12 .98 21.36 5.54 28.09 13.68-10.66 6.42-15.88 15.34-15.66 26.76.22 8.92 3.69 16.32 10.42 22.2 6.73 5.88 14.65 9.24 23.77 10.09-2.07 6.31-4.79 12.63-8.17 18.96zM119.22 31.81c0-7.39 2.67-14.24 8.01-20.55 5.34-6.31 11.96-10.37 19.86-12.18.22 1.3.33 2.4.33 3.29 0 7.39-2.82 14.46-8.47 21.2-5.65 6.74-12.4 10.66-20.25 11.75-.44-1.2-.66-2.37-.66-3.51z"/></svg>
+              <span>Pay with Apple Pay</span>
+            </button>
+            <button onclick="showCustStep(3)" class="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-semibold py-2.5 rounded-2xl text-xs transition">
+              Pay with Card / Google Pay
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: SUCCESS -->
+        <div id="custStep3" class="py-6 text-center space-y-4 hidden">
+          <div class="w-16 h-16 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center mx-auto shadow-inner">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-charcoal">Thank you!</h2>
+            <p class="text-xs text-zinc-500 mt-1">Your tip was sent directly to Maria.</p>
+          </div>
+          <div class="bg-zinc-50 p-4 rounded-2xl border border-zinc-100 text-left space-y-2 text-xs">
+            <div class="flex justify-between text-zinc-500">
+              <span>Receipt Ref</span>
+              <span class="font-mono text-charcoal font-bold">#DLT-8942</span>
+            </div>
+            <div class="flex justify-between text-zinc-500">
+              <span>Business</span>
+              <span class="font-semibold text-charcoal">Artisan Café & Bar</span>
+            </div>
+            <div class="flex justify-between text-zinc-500">
+              <span>Employee</span>
+              <span class="font-semibold text-charcoal">Maria S.</span>
+            </div>
+            <div class="flex justify-between text-zinc-500 pt-1 border-t border-zinc-200">
+              <span class="font-semibold text-zinc-800">Tip Amount</span>
+              <span id="custSuccessAmount" class="font-bold text-brand-700">$5.00</span>
+            </div>
+          </div>
+          <button onclick="showCustStep(1)" class="text-xs font-semibold text-brand-700 hover:underline pt-2 block mx-auto">
+            Give another tip
+          </button>
+        </div>
+
+        <!-- Bottom Micro-footer -->
+        <div class="pt-4 border-t border-zinc-100 text-center">
+          <p class="text-[11px] text-zinc-400 font-medium">
+            Powered by <strong class="text-zinc-700 font-semibold">delitip.com</strong> • Transparent & Secure
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. BUSINESS DASHBOARD (FULL OPERATING SYSTEM)                             -->
+  <!-- ========================================================================= -->
+  <div id="modeBusiness" class="flex-1 flex flex-col md:flex-row overflow-hidden bg-zinc-50">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="w-full md:w-64 bg-white border-r border-zinc-200 flex flex-col justify-between p-4 shrink-0">
+      <div class="space-y-5">
+        
+        <!-- Brand Header inside OS -->
+        <div class="flex items-center justify-between px-2">
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-lime flex items-center justify-center font-bold text-charcoal text-xs">
+              d•
+            </div>
+            <div>
+              <div class="font-bold text-sm text-charcoal tracking-tight leading-none">delitip<span class="text-lime">.com</span></div>
+              <span class="text-[10px] text-zinc-400 uppercase tracking-wider font-medium">Business Portal</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Business Switcher -->
+        <div class="bg-zinc-50 border border-zinc-200/80 rounded-xl p-2.5 flex items-center justify-between">
+          <div class="flex items-center gap-2.5 truncate">
+            <div class="w-7 h-7 rounded-lg bg-charcoal text-offwhite font-bold text-xs flex items-center justify-center shrink-0">A</div>
+            <div class="truncate">
+              <div class="text-xs font-bold text-charcoal truncate">Artisan Café & Bar</div>
+              <div class="text-[10px] text-zinc-400 font-medium">Downtown • 8 Staff</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="space-y-1">
+          <button onclick="setDashTab('overview')" id="nav-overview" class="dash-nav-link w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl bg-brand-50 text-brand-800 transition">
+            <svg class="w-4 h-4 text-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            Overview
+          </button>
+          
+          <button onclick="setDashTab('employees')" id="nav-employees" class="dash-nav-link w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl text-zinc-600 hover:bg-zinc-100 hover:text-charcoal transition">
+            <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            Employees <span class="ml-auto text-[10px] bg-zinc-100 px-1.5 py-0.5 rounded-full text-zinc-600 font-semibold">8</span>
+          </button>
+          
+          <button onclick="setDashTab('tips')" id="nav-tips" class="dash-nav-link w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl text-zinc-600 hover:bg-zinc-100 hover:text-charcoal transition">
+            <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Tips Ledger
+          </button>
+          
+          <button onclick="setDashTab('reviews')" id="nav-reviews" class="dash-nav-link w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl text-zinc-600 hover:bg-zinc-100 hover:text-charcoal transition">
+            <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+            Reviews & Feedback
+          </button>
+          
+          <button onclick="setDashTab('distribution')" id="nav-distribution" class="dash-nav-link w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl text-zinc-600 hover:bg-zinc-100 hover:text-charcoal transition">
+            <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            Tip Distribution
+          </button>
+          
+          <button onclick="setDashTab('analytics')" id="nav-analytics" class="dash-nav-link w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl text-zinc-600 hover:bg-zinc-100 hover:text-charcoal transition">
+            <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Analytics
+          </button>
+
+          <button onclick="setDashTab('access')" id="nav-access" class="dash-nav-link w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl text-zinc-600 hover:bg-zinc-100 hover:text-charcoal transition">
+            <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+            Customer Access (QR)
+          </button>
+        </nav>
+      </div>
+
+      <!-- Settings & Bottom Links -->
+      <div class="border-t border-zinc-100 pt-3">
+        <button onclick="setDashTab('settings')" id="nav-settings" class="dash-nav-link w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl text-zinc-600 hover:bg-zinc-100 hover:text-charcoal transition">
+          <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Settings
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Dashboard Content Switchboard -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      
+      <!-- SUB-PAGE: OVERVIEW -->
+      <section id="dash-view-overview" class="space-y-6">
+        <!-- Title & Action Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-xl font-bold text-charcoal">Overview</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">Understand and manage great service across your business.</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <button onclick="setDashTab('employees')" class="bg-white border border-zinc-200 text-xs font-semibold px-3.5 py-2 rounded-xl text-zinc-700 hover:bg-zinc-50 transition shadow-xs flex items-center gap-2">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              Add Employee
+            </button>
+            <button onclick="setDashTab('distribution')" class="bg-lime hover:bg-brand-700 text-xs font-semibold px-3.5 py-2 rounded-xl text-charcoal transition shadow-sm flex items-center gap-2">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+              Run Tip Distribution
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Primary KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-xs">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-semibold text-zinc-500">Total Tips (7d)</span>
+              <span class="text-[10px] font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full">+18.4%</span>
+            </div>
+            <div class="text-2xl font-extrabold text-charcoal mt-2">$3,420.50</div>
+            <div class="text-[11px] text-zinc-400 mt-1">428 Customer tips processed</div>
+          </div>
+
+          <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-xs">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-semibold text-zinc-500">Average Tip</span>
+              <span class="text-[10px] font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full">19.2%</span>
+            </div>
+            <div class="text-2xl font-extrabold text-charcoal mt-2">$4.95</div>
+            <div class="text-[11px] text-zinc-400 mt-1">Avg customer reward amount</div>
+          </div>
+
+          <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-xs">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-semibold text-zinc-500">Customer Reviews</span>
+              <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">★ 4.93 / 5</span>
+            </div>
+            <div class="text-2xl font-extrabold text-charcoal mt-2">98.6%</div>
+            <div class="text-[11px] text-zinc-400 mt-1">312 positive ratings this week</div>
+          </div>
+
+          <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-xs">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-semibold text-zinc-500">Tip Distribution Model</span>
+              <span class="text-[10px] font-bold text-brand-800 bg-brand-50 px-2 py-0.5 rounded-full">Fair & Direct</span>
+            </div>
+            <div class="text-2xl font-extrabold text-brand-700 mt-2">100%</div>
+            <div class="text-[11px] text-zinc-400 mt-1">Employee Share: 100% • House: 0%</div>
+          </div>
+        </div>
+
+        <!-- Middle Section: Visual Trend Chart & Live Feedback Feed -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Tip Volume Bar Visualizer (2 Cols) -->
+          <div class="lg:col-span-2 bg-white rounded-2xl border border-zinc-200/80 p-5 shadow-xs space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-sm font-bold text-charcoal">Tips & Customer Flow (Past 7 Days)</h2>
+                <p class="text-xs text-zinc-400">Daily tip amounts generated via table QR codes</p>
+              </div>
+              <span class="text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg">Avg $488/day</span>
+            </div>
+
+            <!-- Simulated Bar Chart -->
+            <div class="pt-4 grid grid-cols-7 gap-3 h-44 items-end border-b border-zinc-100 pb-2">
+              <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+                <span class="text-[10px] font-semibold text-zinc-400">$340</span>
+                <div class="w-full bg-zinc-100 hover:bg-lime transition rounded-t-lg" style="height: 45%;"></div>
+                <span class="text-[10px] font-medium text-zinc-500">Mon</span>
+              </div>
+              <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+                <span class="text-[10px] font-semibold text-zinc-400">$410</span>
+                <div class="w-full bg-zinc-100 hover:bg-lime transition rounded-t-lg" style="height: 55%;"></div>
+                <span class="text-[10px] font-medium text-zinc-500">Tue</span>
+              </div>
+              <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+                <span class="text-[10px] font-semibold text-zinc-400">$390</span>
+                <div class="w-full bg-zinc-100 hover:bg-lime transition rounded-t-lg" style="height: 50%;"></div>
+                <span class="text-[10px] font-medium text-zinc-500">Wed</span>
+              </div>
+              <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+                <span class="text-[10px] font-semibold text-zinc-400">$510</span>
+                <div class="w-full bg-zinc-100 hover:bg-lime transition rounded-t-lg" style="height: 70%;"></div>
+                <span class="text-[10px] font-medium text-zinc-500">Thu</span>
+              </div>
+              <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+                <span class="text-[10px] font-semibold text-zinc-400">$720</span>
+                <div class="w-full bg-brand-200 hover:bg-lime transition rounded-t-lg" style="height: 88%;"></div>
+                <span class="text-[10px] font-bold text-charcoal">Fri</span>
+              </div>
+              <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+                <span class="text-[10px] font-semibold text-brand-700 font-bold">$840</span>
+                <div class="w-full bg-lime rounded-t-lg shadow-sm" style="height: 100%;"></div>
+                <span class="text-[10px] font-bold text-brand-800">Sat</span>
+              </div>
+              <div class="flex flex-col items-center gap-1.5 h-full justify-end">
+                <span class="text-[10px] font-semibold text-zinc-400">$610</span>
+                <div class="w-full bg-brand-200 hover:bg-lime transition rounded-t-lg" style="height: 75%;"></div>
+                <span class="text-[10px] font-bold text-charcoal">Sun</span>
+              </div>
+            </div>
+            
+            <div class="flex justify-between items-center text-xs text-zinc-500 pt-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-lime"></span> Peak: Saturday Dinner Service</span>
+              <button onclick="setDashTab('analytics')" class="font-semibold text-brand-700 hover:underline">View In-depth Analytics →</button>
+            </div>
+          </div>
+
+          <!-- Live Reviews & Compliments Feed (1 Col) -->
+          <div class="bg-white rounded-2xl border border-zinc-200/80 p-5 shadow-xs space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-bold text-charcoal">Live Customer Feedback</h2>
+              <span class="w-2 h-2 rounded-full bg-lime animate-pulse"></span>
+            </div>
+
+            <div class="space-y-3">
+              <div class="p-3 rounded-xl bg-zinc-50 border border-zinc-100 space-y-1.5">
+                <div class="flex justify-between items-center text-[11px]">
+                  <span class="font-bold text-charcoal">Customer for Maria S.</span>
+                  <span class="text-amber-500 font-bold">★★★★★</span>
+                </div>
+                <p class="text-xs text-zinc-600">"Maria made our evening unforgettable. Great wine suggestion!"</p>
+                <div class="text-[10px] text-zinc-400 flex justify-between pt-1">
+                  <span class="font-medium text-brand-700">+$8.00 Tip</span>
+                  <span>4 mins ago</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-zinc-50 border border-zinc-100 space-y-1.5">
+                <div class="flex justify-between items-center text-[11px]">
+                  <span class="font-bold text-charcoal">Customer for Alex K.</span>
+                  <span class="text-amber-500 font-bold">★★★★★</span>
+                </div>
+                <p class="text-xs text-zinc-600">"Super quick bar service even with a packed room."</p>
+                <div class="text-[10px] text-zinc-400 flex justify-between pt-1">
+                  <span class="font-medium text-brand-700">+$5.00 Tip</span>
+                  <span>18 mins ago</span>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="setDashTab('reviews')" class="w-full py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold rounded-xl text-xs transition">
+              See All Reviews
+            </button>
+          </div>
+        </div>
+
+        <!-- Top Employee Leaderboard -->
+        <div class="bg-white rounded-2xl border border-zinc-200/80 p-5 shadow-xs space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-sm font-bold text-charcoal">Top Performing Employees</h2>
+              <p class="text-xs text-zinc-400">Directly rewarded based on customer appreciation</p>
+            </div>
+            <button onclick="setDashTab('employees')" class="text-xs font-semibold text-brand-700 hover:underline">View All 8 Staff</button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-zinc-50 text-zinc-400 uppercase tracking-wider font-semibold border-y border-zinc-100">
+                <tr>
+                  <th class="py-2.5 px-3">Employee</th>
+                  <th class="py-2.5 px-3">Role</th>
+                  <th class="py-2.5 px-3">Tips (7d)</th>
+                  <th class="py-2.5 px-3">Rating</th>
+                  <th class="py-2.5 px-3">Top Badge</th>
+                  <th class="py-2.5 px-3 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-zinc-100 font-medium text-zinc-700">
+                <tr>
+                  <td class="py-3 px-3 flex items-center gap-2.5">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover" />
+                    <span class="font-bold text-charcoal">Maria S.</span>
+                  </td>
+                  <td class="py-3 px-3 text-zinc-500">Head Server</td>
+                  <td class="py-3 px-3 font-bold text-charcoal">$642.00</td>
+                  <td class="py-3 px-3 text-amber-500 font-semibold">★ 4.96 <span class="text-zinc-400 text-[10px] font-normal">(84)</span></td>
+                  <td class="py-3 px-3"><span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full text-[10px] font-semibold">⚡ Super Fast</span></td>
+                  <td class="py-3 px-3 text-right"><span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full text-[10px] font-bold">On Shift</span></td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-3 flex items-center gap-2.5">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover" />
+                    <span class="font-bold text-charcoal">Alex K.</span>
+                  </td>
+                  <td class="py-3 px-3 text-zinc-500">Bartender</td>
+                  <td class="py-3 px-3 font-bold text-charcoal">$512.50</td>
+                  <td class="py-3 px-3 text-amber-500 font-semibold">★ 4.92 <span class="text-zinc-400 text-[10px] font-normal">(62)</span></td>
+                  <td class="py-3 px-3"><span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full text-[10px] font-semibold">🍸 Great Drinks</span></td>
+                  <td class="py-3 px-3 text-right"><span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full text-[10px] font-bold">On Shift</span></td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-3 flex items-center gap-2.5">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=60&auto=format&fit=crop&q=80" class="w-7 h-7 rounded-full object-cover" />
+                    <span class="font-bold text-charcoal">Elena R.</span>
+                  </td>
+                  <td class="py-3 px-3 text-zinc-500">Barista</td>
+                  <td class="py-3 px-3 font-bold text-charcoal">$420.00</td>
+                  <td class="py-3 font-semibold text-amber-500 px-3">★ 4.88 <span class="text-zinc-400 text-[10px] font-normal">(45)</span></td>
+                  <td class="py-3 px-3"><span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full text-[10px] font-semibold">✨ Friendly Vibe</span></td>
+                  <td class="py-3 px-3 text-right"><span class="bg-zinc-100 text-zinc-500 px-2 py-0.5 rounded-full text-[10px]">Off Shift</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUB-PAGE: EMPLOYEES -->
+      <section id="dash-view-employees" class="space-y-6 hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-bold text-charcoal">Employees</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">Manage team members, assigned QR codes, and performance metrics.</p>
+          </div>
+          <button class="bg-lime hover:bg-brand-700 text-xs font-semibold px-3.5 py-2 rounded-xl text-charcoal transition flex items-center gap-2 shadow-sm">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add New Employee
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Maria Card -->
+          <div class="bg-white p-5 rounded-2xl border border-zinc-200/80 shadow-xs space-y-4">
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" class="w-12 h-12 rounded-full object-cover" />
+              <div>
+                <h3 class="text-sm font-bold text-charcoal">Maria S.</h3>
+                <p class="text-xs text-zinc-400">Head Server • Full-time</p>
+                <span class="inline-block mt-1 bg-brand-50 text-brand-700 font-bold text-[10px] px-2 py-0.5 rounded-full">On Shift</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-zinc-100 text-xs">
+              <div>
+                <span class="text-zinc-400 block text-[10px]">Total Tips</span>
+                <span class="font-bold text-charcoal">$642.00</span>
+              </div>
+              <div>
+                <span class="text-zinc-400 block text-[10px]">Review Rating</span>
+                <span class="font-bold text-amber-500">★ 4.96</span>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="setDashTab('access')" class="flex-1 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-xl text-xs font-semibold transition">View QR Code</button>
+            </div>
+          </div>
+
+          <!-- Alex Card -->
+          <div class="bg-white p-5 rounded-2xl border border-zinc-200/80 shadow-xs space-y-4">
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80" class="w-12 h-12 rounded-full object-cover" />
+              <div>
+                <h3 class="text-sm font-bold text-charcoal">Alex K.</h3>
+                <p class="text-xs text-zinc-400">Lead Bartender • Full-time</p>
+                <span class="inline-block mt-1 bg-brand-50 text-brand-700 font-bold text-[10px] px-2 py-0.5 rounded-full">On Shift</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-zinc-100 text-xs">
+              <div>
+                <span class="text-zinc-400 block text-[10px]">Total Tips</span>
+                <span class="font-bold text-charcoal">$512.50</span>
+              </div>
+              <div>
+                <span class="text-zinc-400 block text-[10px]">Review Rating</span>
+                <span class="font-bold text-amber-500">★ 4.92</span>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="setDashTab('access')" class="flex-1 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-xl text-xs font-semibold transition">View QR Code</button>
+            </div>
+          </div>
+
+          <!-- Elena Card -->
+          <div class="bg-white p-5 rounded-2xl border border-zinc-200/80 shadow-xs space-y-4">
+            <div class="flex items-center gap-3">
+              <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&auto=format&fit=crop&q=80" class="w-12 h-12 rounded-full object-cover" />
+              <div>
+                <h3 class="text-sm font-bold text-charcoal">Elena R.</h3>
+                <p class="text-xs text-zinc-400">Head Barista • Part-time</p>
+                <span class="inline-block mt-1 bg-zinc-100 text-zinc-500 font-medium text-[10px] px-2 py-0.5 rounded-full">Off Shift</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-zinc-100 text-xs">
+              <div>
+                <span class="text-zinc-400 block text-[10px]">Total Tips</span>
+                <span class="font-bold text-charcoal">$420.00</span>
+              </div>
+              <div>
+                <span class="text-zinc-400 block text-[10px]">Review Rating</span>
+                <span class="font-bold text-amber-500">★ 4.88</span>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="setDashTab('access')" class="flex-1 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-xl text-xs font-semibold transition">View QR Code</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUB-PAGE: TIPS LEDGER -->
+      <section id="dash-view-tips" class="space-y-6 hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-bold text-charcoal">Tips Ledger</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">Real-time transactional ledger of all tips paid by customers.</p>
+          </div>
+          <button class="bg-charcoal hover:bg-zinc-800 text-xs font-semibold px-3.5 py-2 rounded-xl text-white transition flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            Export CSV
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-zinc-200/80 shadow-xs overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-zinc-50 text-zinc-400 uppercase tracking-wider font-semibold border-b border-zinc-100">
+              <tr>
+                <th class="py-3 px-4">Transaction ID</th>
+                <th class="py-3 px-4">Timestamp</th>
+                <th class="py-3 px-4">Employee</th>
+                <th class="py-3 px-4">Location / Table</th>
+                <th class="py-3 px-4">Method</th>
+                <th class="py-3 px-4">Tip Amount</th>
+                <th class="py-3 px-4 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-100 font-medium text-zinc-700">
+              <tr>
+                <td class="py-3.5 px-4 font-mono font-bold text-charcoal">#DLT-8942</td>
+                <td class="py-3.5 px-4 text-zinc-400">Just now</td>
+                <td class="py-3.5 px-4 font-semibold text-charcoal">Maria S.</td>
+                <td class="py-3.5 px-4">Table 08</td>
+                <td class="py-3.5 px-4"><span class="bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-full text-[10px]">Apple Pay</span></td>
+                <td class="py-3.5 px-4 font-bold text-brand-700">$5.00</td>
+                <td class="py-3.5 px-4 text-right"><span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full text-[10px] font-bold">Settled</span></td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-mono font-bold text-charcoal">#DLT-8941</td>
+                <td class="py-3.5 px-4 text-zinc-400">12 mins ago</td>
+                <td class="py-3.5 px-4 font-semibold text-charcoal">Alex K.</td>
+                <td class="py-3.5 px-4">Bar Seat 04</td>
+                <td class="py-3.5 px-4"><span class="bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-full text-[10px]">Credit Card</span></td>
+                <td class="py-3.5 px-4 font-bold text-brand-700">$8.00</td>
+                <td class="py-3.5 px-4 text-right"><span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full text-[10px] font-bold">Settled</span></td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-mono font-bold text-charcoal">#DLT-8940</td>
+                <td class="py-3.5 px-4 text-zinc-400">34 mins ago</td>
+                <td class="py-3.5 px-4 font-semibold text-charcoal">Maria S.</td>
+                <td class="py-3.5 px-4">Table 12</td>
+                <td class="py-3.5 px-4"><span class="bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-full text-[10px]">Google Pay</span></td>
+                <td class="py-3.5 px-4 font-bold text-brand-700">$6.50</td>
+                <td class="py-3.5 px-4 text-right"><span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full text-[10px] font-bold">Settled</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SUB-PAGE: REVIEWS & FEEDBACK -->
+      <section id="dash-view-reviews" class="space-y-6 hidden">
+        <div>
+          <h1 class="text-xl font-bold text-charcoal">Reviews & Feedback</h1>
+          <p class="text-xs text-zinc-500 mt-0.5">Direct customer sentiment, compliments, and ratings tied to employees.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-xs">
+            <span class="text-xs text-zinc-400 font-semibold">Average Rating</span>
+            <div class="text-2xl font-extrabold text-amber-500 mt-1">★ 4.93</div>
+            <p class="text-[11px] text-zinc-500 mt-1">Based on 328 ratings</p>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-xs">
+            <span class="text-xs text-zinc-400 font-semibold">Top Customer Tag</span>
+            <div class="text-2xl font-extrabold text-brand-700 mt-1">⚡ Super Fast</div>
+            <p class="text-[11px] text-zinc-500 mt-1">Awarded 184 times</p>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-xs">
+            <span class="text-xs text-zinc-400 font-semibold">Customer Sentiment</span>
+            <div class="text-2xl font-extrabold text-charcoal mt-1">98.6% Positive</div>
+            <p class="text-[11px] text-zinc-500 mt-1">Only 2 neutral reviews</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-zinc-200/80 p-5 shadow-xs space-y-4">
+          <h2 class="text-sm font-bold text-charcoal">Recent Customer Notes</h2>
+          <div class="space-y-3">
+            <div class="p-4 rounded-xl bg-zinc-50 border border-zinc-100 flex items-start justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-xs text-charcoal">Maria S.</span>
+                  <span class="text-amber-500 text-xs">★★★★★</span>
+                  <span class="text-[10px] bg-brand-50 text-brand-700 font-semibold px-2 py-0.5 rounded-full">Friendly vibe</span>
+                </div>
+                <p class="text-xs text-zinc-600 mt-1">"Maria was wonderful! Anticipated everything we needed before we even asked."</p>
+              </div>
+              <span class="text-[10px] text-zinc-400">1 hour ago</span>
+            </div>
+            <div class="p-4 rounded-xl bg-zinc-50 border border-zinc-100 flex items-start justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-xs text-charcoal">Alex K.</span>
+                  <span class="text-amber-500 text-xs">★★★★★</span>
+                  <span class="text-[10px] bg-brand-50 text-brand-700 font-semibold px-2 py-0.5 rounded-full">Great recommendations</span>
+                </div>
+                <p class="text-xs text-zinc-600 mt-1">"Made the best Espresso Martini in the city. Will definitely come back!"</p>
+              </div>
+              <span class="text-[10px] text-zinc-400">3 hours ago</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUB-PAGE: TIP DISTRIBUTION -->
+      <section id="dash-view-distribution" class="space-y-6 hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-bold text-charcoal">Tip Distribution</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">Transparent payout configuration and automated share allocation.</p>
+          </div>
+          <button class="bg-lime hover:bg-brand-700 text-xs font-semibold px-4 py-2 rounded-xl text-charcoal transition shadow-sm">
+            Execute Weekly Payout
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Allocation Configuration -->
+          <div class="bg-white p-5 rounded-2xl border border-zinc-200/80 shadow-xs space-y-4">
+            <h2 class="text-sm font-bold text-charcoal">Distribution Policy</h2>
+            <p class="text-xs text-zinc-400">Configure how incoming tips are split between the direct server and support pool.</p>
+            
+            <div class="space-y-3 pt-2">
+              <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-100">
+                <div class="flex justify-between text-xs font-bold text-charcoal mb-1">
+                  <span>Employee Share (Direct)</span>
+                  <span class="text-brand-700 font-bold">100%</span>
+                </div>
+                <p class="text-[11px] text-zinc-500">The tipped employee receives 100% of the customer's contribution.</p>
+              </div>
+
+              <div class="bg-zinc-50 p-3.5 rounded-xl border border-zinc-100">
+                <div class="flex justify-between text-xs font-bold text-charcoal mb-1">
+                  <span>Business Share (House)</span>
+                  <span class="text-zinc-500 font-bold">0%</span>
+                </div>
+                <p class="text-[11px] text-zinc-500">0% house retention. 100% transparent to your employees and customers.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pending Payout Breakdown -->
+          <div class="bg-white p-5 rounded-2xl border border-zinc-200/80 shadow-xs space-y-4">
+            <div class="flex justify-between items-center">
+              <h2 class="text-sm font-bold text-charcoal">Pending Shift Payouts</h2>
+              <span class="text-xs font-bold text-brand-700">$3,420.50 Ready</span>
+            </div>
+            
+            <div class="space-y-2 text-xs divide-y divide-zinc-100">
+              <div class="flex justify-between items-center pt-2">
+                <div>
+                  <span class="font-bold text-charcoal">Maria S.</span>
+                  <span class="text-zinc-400 text-[10px] block">Direct deposit: •••• 4092</span>
+                </div>
+                <span class="font-bold text-brand-700">$642.00</span>
+              </div>
+              <div class="flex justify-between items-center pt-2">
+                <div>
+                  <span class="font-bold text-charcoal">Alex K.</span>
+                  <span class="text-zinc-400 text-[10px] block">Direct deposit: •••• 1184</span>
+                </div>
+                <span class="font-bold text-brand-700">$512.50</span>
+              </div>
+              <div class="flex justify-between items-center pt-2">
+                <div>
+                  <span class="font-bold text-charcoal">Elena R.</span>
+                  <span class="text-zinc-400 text-[10px] block">Direct deposit: •••• 7731</span>
+                </div>
+                <span class="font-bold text-brand-700">$420.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUB-PAGE: ANALYTICS -->
+      <section id="dash-view-analytics" class="space-y-6 hidden">
+        <div>
+          <h1 class="text-xl font-bold text-charcoal">Analytics & Insights</h1>
+          <p class="text-xs text-zinc-500 mt-0.5">Detailed intelligence on tipping patterns and high-performance shifts.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-zinc-200/80 shadow-xs">
+            <span class="text-xs text-zinc-400 font-semibold">Peak Tipping Hour</span>
+            <div class="text-xl font-extrabold text-charcoal mt-1">8:30 PM - 10:00 PM</div>
+            <p class="text-[11px] text-zinc-500 mt-1">Average tip: $6.20 during dinner</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-zinc-200/80 shadow-xs">
+            <span class="text-xs text-zinc-400 font-semibold">Top Payment Method</span>
+            <div class="text-xl font-extrabold text-charcoal mt-1">Apple Pay (74%)</div>
+            <p class="text-[11px] text-zinc-500 mt-1">Fastest checkout velocity</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-zinc-200/80 shadow-xs">
+            <span class="text-xs text-zinc-400 font-semibold">QR Scan-to-Tip Conversion</span>
+            <div class="text-xl font-extrabold text-brand-700 mt-1">82.4%</div>
+            <p class="text-[11px] text-zinc-500 mt-1">High customer engagement</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUB-PAGE: CUSTOMER ACCESS (QR) -->
+      <section id="dash-view-access" class="space-y-6 hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-bold text-charcoal">Customer Access & QR Kits</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">Generate and download branded print collateral for tables and counters.</p>
+          </div>
+          <button class="bg-lime hover:bg-brand-700 text-xs font-semibold px-3.5 py-2 rounded-xl text-charcoal transition shadow-sm">
+            Print All Table QR Codes
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <!-- Table QR Stand Preview -->
+          <div class="bg-white p-6 rounded-3xl border border-zinc-200 shadow-sm text-center space-y-4">
+            <div class="w-10 h-10 rounded-xl bg-lime flex items-center justify-center font-bold text-charcoal text-sm mx-auto">d•</div>
+            <div>
+              <h3 class="font-bold text-sm text-charcoal">Table 08 Stand</h3>
+              <p class="text-xs text-zinc-400">delitip.com/artisan/t08</p>
+            </div>
+
+            <!-- QR Code Simulation -->
+            <div class="w-36 h-36 bg-charcoal p-2.5 rounded-2xl mx-auto flex items-center justify-center shadow-inner">
+              <div class="w-full h-full bg-white rounded-xl flex flex-col items-center justify-center p-2">
+                <div class="grid grid-cols-5 gap-1 w-full h-full opacity-80">
+                  <div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-white"></div><div class="bg-black rounded-xs"></div>
+                  <div class="bg-black rounded-xs"></div><div class="bg-white"></div><div class="bg-black rounded-xs"></div><div class="bg-white"></div><div class="bg-black rounded-xs"></div>
+                  <div class="bg-white"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-white"></div>
+                  <div class="bg-black rounded-xs"></div><div class="bg-white"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div>
+                  <div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-white"></div><div class="bg-black rounded-xs"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-[11px] font-semibold text-brand-700 bg-brand-50 py-1 px-3 rounded-full inline-block">
+              Reward great service.
+            </div>
+            <button class="w-full py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold rounded-xl text-xs transition">
+              Download PDF Display Card
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUB-PAGE: SETTINGS -->
+      <section id="dash-view-settings" class="space-y-6 hidden">
+        <div>
+          <h1 class="text-xl font-bold text-charcoal">Settings</h1>
+          <p class="text-xs text-zinc-500 mt-0.5">Manage business profile, bank account connections, and preferences.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-zinc-200/80 p-6 shadow-xs max-w-2xl space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-700 mb-1">Business Name</label>
+            <input type="text" value="Artisan Café & Bar" class="w-full p-2.5 text-xs rounded-xl border border-zinc-200 font-medium" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-700 mb-1">Brand Tagline</label>
+            <input type="text" value="Reward great service." class="w-full p-2.5 text-xs rounded-xl border border-zinc-200 font-medium" />
+          </div>
+          <div class="pt-2">
+            <button class="bg-lime text-charcoal px-4 py-2 rounded-xl text-xs font-semibold hover:bg-brand-700 transition">Save Changes</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT CONTROLLER                                                     -->
+  <!-- ========================================================================= -->
+  <script>
+    // 1. Top Mode Switcher (Customer View vs Business OS Dashboard)
+    function setActiveMode(mode) {
+      const modeCustomer = document.getElementById('modeCustomer');
+      const modeBusiness = document.getElementById('modeBusiness');
+      const navBtnCustomer = document.getElementById('navBtnCustomer');
+      const navBtnBusiness = document.getElementById('navBtnBusiness');
+
+      if (mode === 'customer') {
+        modeCustomer.classList.remove('hidden');
+        modeBusiness.classList.add('hidden');
+        navBtnCustomer.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 bg-lime text-charcoal shadow-sm';
+        navBtnBusiness.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 text-zinc-400 hover:text-white';
+      } else {
+        modeCustomer.classList.add('hidden');
+        modeBusiness.classList.remove('hidden');
+        navBtnBusiness.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 bg-lime text-charcoal shadow-sm';
+        navBtnCustomer.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 text-zinc-400 hover:text-white';
+      }
+    }
+
+    // 2. Business Dashboard Tab Switcher
+    const tabs = ['overview', 'employees', 'tips', 'reviews', 'distribution', 'analytics', 'access', 'settings'];
+
+    function setDashTab(selectedTab) {
+      tabs.forEach(tab => {
+        const viewEl = document.getElementById(`dash-view-${tab}`);
+        const navEl = document.getElementById(`nav-${tab}`);
+        
+        if (viewEl) {
+          if (tab === selectedTab) {
+            viewEl.classList.remove('hidden');
+          } else {
+            viewEl.classList.add('hidden');
+          }
+        }
+
+        if (navEl) {
+          if (tab === selectedTab) {
+            navEl.className = 'dash-nav-link w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl bg-brand-50 text-brand-800 transition';
+            const icon = navEl.querySelector('svg');
+            if (icon) icon.className = 'w-4 h-4 text-lime';
+          } else {
+            navEl.className = 'dash-nav-link w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-xl text-zinc-600 hover:bg-zinc-100 hover:text-charcoal transition';
+            const icon = navEl.querySelector('svg');
+            if (icon) icon.className = 'w-4 h-4 text-zinc-400';
+          }
+        }
+      });
+    }
+
+    // 3. Customer Experience State Handlers
+    let currentTipAmount = 5;
+
+    function setCustTip(amount, btn) {
+      currentTipAmount = amount;
+      document.querySelectorAll('.cust-tip-btn').forEach(b => {
+        b.className = 'cust-tip-btn p-3 rounded-2xl border border-zinc-200 bg-white hover:border-lime text-center transition';
+        const title = b.querySelector('div:first-child');
+        if (title) title.className = 'text-sm font-bold text-charcoal';
+      });
+      btn.className = 'cust-tip-btn p-3 rounded-2xl border-2 border-lime bg-brand-50/60 text-center transition';
+      const title = btn.querySelector('div:first-child');
+      if (title) title.className = 'text-sm font-bold text-brand-700';
+
+      document.getElementById('custPayBtnLabel').innerText = `Continue to Pay $${amount.toFixed(2)}`;
+      document.getElementById('custSuccessAmount').innerText = `$${amount.toFixed(2)}`;
+    }
+
+    function setCustomTip(val) {
+      const num = parseFloat(val);
+      if (!isNaN(num) && num > 0) {
+        currentTipAmount = num;
+        document.querySelectorAll('.cust-tip-btn').forEach(b => {
+          b.className = 'cust-tip-btn p-3 rounded-2xl border border-zinc-200 bg-white hover:border-lime text-center transition';
+        });
+        document.getElementById('custPayBtnLabel').innerText = `Continue to Pay $${num.toFixed(2)}`;
+        document.getElementById('custSuccessAmount').innerText = `$${num.toFixed(2)}`;
+      }
+    }
+
+    function showCustStep(step) {
+      document.getElementById('custStep1').classList.add('hidden');
+      document.getElementById('custStep2').classList.add('hidden');
+      document.getElementById('custStep3').classList.add('hidden');
+
+      if (step === 1) document.getElementById('custStep1').classList.remove('hidden');
+      if (step === 2) document.getElementById('custStep2').classList.remove('hidden');
+      if (step === 3) document.getElementById('custStep3').classList.remove('hidden');
+    }
+
+    function toggleBadge(btn) {
+      btn.classList.toggle('bg-brand-50');
+      btn.classList.toggle('border-brand-300');
+      btn.classList.toggle('text-brand-800');
+      btn.classList.toggle('font-medium');
+      btn.classList.toggle('bg-zinc-100');
+      btn.classList.toggle('text-zinc-700');
+    }
+  </script>
+</body>
+</html>

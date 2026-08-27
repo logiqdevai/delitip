@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>delitip.com — Employee Portal</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            charcoal: '#181A1B',
+            lime: '#C8F169',
+            offwhite: '#F7F7F2',
+            brand: {
+              50: '#F4FBE6',
+              100: '#EAF7CC',
+              200: '#DCF0A3',
+              300: '#D2EC88',
+              400: '#CDF47A',
+              500: '#C8F169',
+              600: '#C8F169',
+              700: '#9FBF3E',
+              800: '#6B8429',
+              900: '#3F4F18',
+              950: '#181A1B',
+              dark: '#181A1B',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .fade-enter { animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-offwhite text-charcoal min-h-screen antialiased flex flex-col selection:bg-lime selection:text-charcoal">
+
+  <!-- ========================================================================= -->
+  <!-- TOP EMPLOYEE HEADER BAR                                                   -->
+  <!-- ========================================================================= -->
+  <header class="bg-white border-b border-zinc-200/80 sticky top-0 z-40 px-4 sm:px-8 py-3">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand Logo & Portal Badge -->
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-lime flex items-center justify-center font-bold text-charcoal text-sm shadow-inner shadow-lime/40">
+          d•
+        </div>
+        <div>
+          <div class="font-bold text-sm text-charcoal tracking-tight leading-none">delitip<span class="text-lime">.com</span></div>
+          <span class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Employee Portal</span>
+        </div>
+      </div>
+
+      <!-- Live Shift Toggle & Profile Pill -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- On-Shift Switch -->
+        <button id="shiftStatusBtn" onclick="toggleShiftStatus()" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-800 text-xs font-bold transition hover:bg-brand-100">
+          <span id="shiftPulse" class="w-2 h-2 rounded-full bg-lime animate-pulse"></span>
+          <span id="shiftLabel">On Shift</span>
+        </button>
+
+        <!-- Employee Avatar / Venue Context -->
+        <div class="flex items-center gap-2.5 pl-2 border-l border-zinc-200">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" class="w-8 h-8 rounded-full object-cover ring-2 ring-lime/20" alt="Maria" />
+          <div class="hidden sm:block text-left">
+            <div class="text-xs font-bold text-charcoal">Maria S.</div>
+            <div class="text-[10px] text-zinc-400">Artisan Café & Bar</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN EMPLOYEE CONTENT CONTAINER                                           -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- SUB-NAVIGATION BAR -->
+    <div class="flex items-center justify-between border-b border-zinc-200 pb-3">
+      <!-- Tabs -->
+      <div class="flex items-center gap-2 overflow-x-auto">
+        <button onclick="setEmpTab('earnings')" id="empTab-earnings" class="px-4 py-2 rounded-xl text-xs font-bold bg-charcoal text-white transition flex items-center gap-1.5 shadow-xs">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Earnings & Tips
+        </button>
+        <button onclick="setEmpTab('reviews')" id="empTab-reviews" class="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 hover:bg-white hover:text-charcoal transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          Reviews & Badges
+        </button>
+        <button onclick="setEmpTab('qr')" id="empTab-qr" class="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 hover:bg-white hover:text-charcoal transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+          My QR & Link
+        </button>
+      </div>
+
+      <!-- Quick Action: Instant Payout -->
+      <button onclick="triggerInstantPayout()" class="hidden sm:flex bg-lime hover:bg-brand-700 text-charcoal px-3.5 py-2 rounded-xl text-xs font-bold items-center gap-1.5 transition shadow-sm">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Instant Cash Out
+      </button>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 1: EARNINGS & TIPS                                               -->
+    <!-- ===================================================================== -->
+    <div id="viewEmpEarnings" class="fade-enter space-y-6">
+      
+      <!-- Top Balance Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <!-- Ready to Cash Out -->
+        <div class="bg-gradient-to-br from-charcoal to-charcoal text-white p-6 rounded-3xl border border-zinc-800 shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <div class="absolute -right-12 -bottom-12 w-36 h-36 bg-brand-500/20 rounded-full blur-2xl"></div>
+          <div>
+            <div class="flex justify-between items-center text-xs text-zinc-400 font-medium">
+              <span>Available for Cash Out</span>
+              <span class="bg-brand-950/90 text-lime border border-brand-800/60 px-2 py-0.5 rounded-full text-[10px] font-bold">100% Direct</span>
+            </div>
+            <div class="text-3xl sm:text-4xl font-extrabold text-white mt-3" id="availableTipBalance">$142.50</div>
+            <p class="text-[11px] text-zinc-400 mt-1">From today's active shift (14 customer tips)</p>
+          </div>
+          <div class="pt-5">
+            <button onclick="triggerInstantPayout()" class="w-full bg-lime hover:bg-brand-400 text-charcoal font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-sm">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <span>Transfer to Debit Card (•••• 4092)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Weekly Performance -->
+        <div class="bg-white p-6 rounded-3xl border border-zinc-200/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center text-xs text-zinc-500 font-semibold">
+              <span>This Week's Tips (7d)</span>
+              <span class="text-brand-700 bg-brand-50 font-bold px-2 py-0.5 rounded-full text-[10px]">+22.4%</span>
+            </div>
+            <div class="text-3xl font-extrabold text-charcoal mt-3">$642.00</div>
+            <p class="text-[11px] text-zinc-400 mt-1">84 total customer rewards received</p>
+          </div>
+          <div class="pt-4 border-t border-zinc-100 flex justify-between items-center text-xs">
+            <span class="text-zinc-500">Average tip per table</span>
+            <span class="font-bold text-charcoal">$7.64</span>
+          </div>
+        </div>
+
+        <!-- Rating & Compliment Summary -->
+        <div class="bg-white p-6 rounded-3xl border border-zinc-200/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center text-xs text-zinc-500 font-semibold">
+              <span>Customer Satisfaction</span>
+              <span class="text-amber-700 bg-amber-50 font-bold px-2 py-0.5 rounded-full text-[10px]">Top 5% Server</span>
+            </div>
+            <div class="text-3xl font-extrabold text-amber-500 mt-3 flex items-center gap-1.5">
+              ★ 4.96 <span class="text-xs text-zinc-400 font-normal">/ 5.0</span>
+            </div>
+            <p class="text-[11px] text-zinc-400 mt-1">84 verified ratings this week</p>
+          </div>
+          <div class="pt-4 border-t border-zinc-100 flex justify-between items-center text-xs">
+            <span class="text-zinc-500">Top customer praise</span>
+            <span class="font-bold text-brand-700">⚡ Super fast (48x)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Shift Tip Feed & Daily History -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Live Shift Tips (2 Cols) -->
+        <div class="lg:col-span-2 bg-white rounded-3xl border border-zinc-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-sm font-bold text-charcoal">Today's Shift Tips</h2>
+              <p class="text-xs text-zinc-400">Tips directly rewarded to your QR / Table code</p>
+            </div>
+            <span class="text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg">14 tips today</span>
+          </div>
+
+          <div class="divide-y divide-zinc-100">
+            <!-- Tip Item 1 -->
+            <div class="py-3.5 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center font-bold text-xs shrink-0">
+                  +$8
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-charcoal">Table 08 • Customer</div>
+                  <div class="text-[10px] text-zinc-400">4 mins ago • Apple Pay</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs font-extrabold text-charcoal">$8.00</div>
+                <div class="text-[10px] text-amber-500 font-bold">★★★★★ "Great wine suggestion!"</div>
+              </div>
+            </div>
+
+            <!-- Tip Item 2 -->
+            <div class="py-3.5 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center font-bold text-xs shrink-0">
+                  +$5
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-charcoal">Table 12 • Customer</div>
+                  <div class="text-[10px] text-zinc-400">28 mins ago • Credit Card</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs font-extrabold text-charcoal">$5.00</div>
+                <div class="text-[10px] text-amber-500 font-bold">★★★★★ "Super friendly vibe"</div>
+              </div>
+            </div>
+
+            <!-- Tip Item 3 -->
+            <div class="py-3.5 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center font-bold text-xs shrink-0">
+                  +$10
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-charcoal">Table 04 • Customer</div>
+                  <div class="text-[10px] text-zinc-400">1 hour ago • Google Pay</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs font-extrabold text-charcoal">$10.00</div>
+                <div class="text-[10px] text-amber-500 font-bold">★★★★★ "Amazing anniversary service"</div>
+              </div>
+            </div>
+
+            <!-- Tip Item 4 -->
+            <div class="py-3.5 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center font-bold text-xs shrink-0">
+                  +$6
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-charcoal">Table 08 • Customer</div>
+                  <div class="text-[10px] text-zinc-400">2 hours ago • Apple Pay</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs font-extrabold text-charcoal">$6.00</div>
+                <div class="text-[10px] text-amber-500 font-bold">★★★★★ "Fast and attentive"</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weekly Tips Bar Breakdown (1 Col) -->
+        <div class="bg-white rounded-3xl border border-zinc-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+          <div>
+            <h2 class="text-sm font-bold text-charcoal">My Daily Earnings (7d)</h2>
+            <p class="text-xs text-zinc-400">Daily breakdown for your shifts</p>
+          </div>
+
+          <div class="grid grid-cols-7 gap-2 h-36 items-end border-b border-zinc-100 pb-2">
+            <div class="flex flex-col items-center gap-1 h-full justify-end">
+              <span class="text-[9px] text-zinc-400 font-semibold">$85</span>
+              <div class="w-full bg-zinc-100 rounded-t-md" style="height: 50%;"></div>
+              <span class="text-[9px] text-zinc-400 font-bold">M</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 h-full justify-end">
+              <span class="text-[9px] text-zinc-400 font-semibold">$110</span>
+              <div class="w-full bg-zinc-100 rounded-t-md" style="height: 65%;"></div>
+              <span class="text-[9px] text-zinc-400 font-bold">T</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 h-full justify-end">
+              <span class="text-[9px] text-zinc-400 font-semibold">$95</span>
+              <div class="w-full bg-zinc-100 rounded-t-md" style="height: 55%;"></div>
+              <span class="text-[9px] text-zinc-400 font-bold">W</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 h-full justify-end">
+              <span class="text-[9px] text-zinc-400 font-semibold">$0</span>
+              <div class="w-full bg-zinc-50 rounded-t-md" style="height: 5%;"></div>
+              <span class="text-[9px] text-zinc-300 font-bold">T</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 h-full justify-end">
+              <span class="text-[9px] text-zinc-400 font-semibold">$140</span>
+              <div class="w-full bg-brand-200 rounded-t-md" style="height: 80%;"></div>
+              <span class="text-[9px] text-charcoal font-bold">F</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 h-full justify-end">
+              <span class="text-[9px] text-brand-700 font-bold">$180</span>
+              <div class="w-full bg-lime rounded-t-md" style="height: 100%;"></div>
+              <span class="text-[9px] text-brand-800 font-bold">S</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 h-full justify-end">
+              <span class="text-[9px] text-zinc-400 font-semibold">$142</span>
+              <div class="w-full bg-brand-400 rounded-t-md" style="height: 85%;"></div>
+              <span class="text-[9px] text-charcoal font-bold">S</span>
+            </div>
+          </div>
+
+          <div class="bg-brand-50/70 p-3 rounded-2xl border border-brand-200/60 text-[11px] text-brand-900 space-y-1">
+            <div class="font-bold flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>Direct Bank Deposit Linked</span>
+            </div>
+            <p class="text-brand-800/80">Weekly automated payouts every Monday at 6:00 AM.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 2: REVIEWS & BADGES                                              -->
+    <!-- ===================================================================== -->
+    <div id="viewEmpReviews" class="fade-enter space-y-6 hidden">
+      <div>
+        <h1 class="text-xl font-bold text-charcoal">Customer Compliments & Reviews</h1>
+        <p class="text-xs text-zinc-500 mt-0.5">Real feedback left by guests after tipping you on delitip.com.</p>
+      </div>
+
+      <!-- Badge Showcase Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 text-center shadow-xs space-y-1">
+          <span class="text-2xl">⚡</span>
+          <div class="text-base font-extrabold text-charcoal">48</div>
+          <div class="text-[11px] text-zinc-500 font-semibold">Super Fast</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 text-center shadow-xs space-y-1">
+          <span class="text-2xl">✨</span>
+          <div class="text-base font-extrabold text-charcoal">36</div>
+          <div class="text-[11px] text-zinc-500 font-semibold">Friendly Vibe</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 text-center shadow-xs space-y-1">
+          <span class="text-2xl">🍷</span>
+          <div class="text-base font-extrabold text-charcoal">22</div>
+          <div class="text-[11px] text-zinc-500 font-semibold">Great Recommendation</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 text-center shadow-xs space-y-1">
+          <span class="text-2xl">💫</span>
+          <div class="text-base font-extrabold text-charcoal">19</div>
+          <div class="text-[11px] text-zinc-500 font-semibold">Super Attentive</div>
+        </div>
+      </div>
+
+      <!-- Customer Reviews List -->
+      <div class="bg-white rounded-3xl border border-zinc-200/80 p-6 shadow-xs space-y-4">
+        <h2 class="text-sm font-bold text-charcoal">Customer Love Notes</h2>
+        <div class="space-y-3">
+          <div class="p-4 rounded-2xl bg-zinc-50 border border-zinc-100 space-y-1.5">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-charcoal">Table 08 • Tipped $8.00</span>
+              <span class="text-amber-500 font-bold">★★★★★</span>
+            </div>
+            <p class="text-xs text-zinc-700">"Maria made our anniversary lunch unforgettable. Her wine recommendation paired perfectly with our meal!"</p>
+            <div class="text-[10px] text-zinc-400">Today at 1:45 PM</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-zinc-50 border border-zinc-100 space-y-1.5">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-charcoal">Table 12 • Tipped $5.00</span>
+              <span class="text-amber-500 font-bold">★★★★★</span>
+            </div>
+            <p class="text-xs text-zinc-700">"Super welcoming energy even during rush hour. Fastest check turnaround I've seen."</p>
+            <div class="text-[10px] text-zinc-400">Today at 12:20 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 3: MY QR & DIGITAL TIP CARD                                      -->
+    <!-- ===================================================================== -->
+    <div id="viewEmpQR" class="fade-enter space-y-6 hidden">
+      <div class="max-w-md mx-auto text-center space-y-6">
+        <div>
+          <h1 class="text-xl font-bold text-charcoal">Your Personal Tip QR</h1>
+          <p class="text-xs text-zinc-500 mt-1">Show this QR code to guests or save it to your Apple / Google Wallet.</p>
+        </div>
+
+        <!-- Standalone Digital Tip Card -->
+        <div class="bg-white p-8 rounded-3xl border border-zinc-200 shadow-xl space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-zinc-100">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-lg bg-lime flex items-center justify-center font-bold text-charcoal text-xs">d•</div>
+              <span class="font-bold text-xs text-charcoal">delitip<span class="text-lime">.com</span></span>
+            </div>
+            <span class="text-[10px] font-semibold text-zinc-400">Artisan Café & Bar</span>
+          </div>
+
+          <!-- Employee Avatar & Name -->
+          <div>
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=140&auto=format&fit=crop&q=80" class="w-16 h-16 rounded-full object-cover ring-4 ring-brand-50 mx-auto shadow-sm" alt="Maria" />
+            <h3 class="text-base font-bold text-charcoal mt-2">Maria S.</h3>
+            <p class="text-xs text-zinc-400">Head Server</p>
+          </div>
+
+          <!-- Simulated QR Code -->
+          <div class="w-44 h-44 bg-charcoal p-3 rounded-2xl mx-auto flex items-center justify-center shadow-inner">
+            <div class="w-full h-full bg-white rounded-xl flex flex-col items-center justify-center p-2">
+              <div class="grid grid-cols-5 gap-1 w-full h-full opacity-85">
+                <div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-white"></div><div class="bg-black rounded-xs"></div>
+                <div class="bg-black rounded-xs"></div><div class="bg-white"></div><div class="bg-black rounded-xs"></div><div class="bg-white"></div><div class="bg-black rounded-xs"></div>
+                <div class="bg-white"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-white"></div>
+                <div class="bg-black rounded-xs"></div><div class="bg-white"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div>
+                <div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-black rounded-xs"></div><div class="bg-white"></div><div class="bg-black rounded-xs"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-xs font-semibold text-brand-700 bg-brand-50 py-1.5 px-3 rounded-full inline-block">
+            delitip.com/maria-s
+          </div>
+
+          <div class="pt-2 space-y-2">
+            <button class="w-full py-2.5 bg-charcoal hover:bg-zinc-800 text-offwhite font-semibold rounded-xl text-xs transition flex items-center justify-center gap-2">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.85c.65-.79 1.09-1.89.97-2.99-1 .04-2.15.65-2.82 1.44-.58.68-1.1 1.77-.96 2.86 1.11.09 2.19-.55 2.81-1.31z"/></svg>
+              <span>Add to Apple Wallet</span>
+            </button>
+            <button onclick="copyTipLink()" id="copyLinkBtn" class="w-full py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-semibold rounded-xl text-xs transition">
+              Copy Personal Tip Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- FOOTER                                                                    -->
+  <!-- ========================================================================= -->
+  <footer class="w-full py-4 text-center text-xs text-zinc-400 border-t border-zinc-200/60 bg-white">
+    <p>© 2026 <strong class="text-zinc-700 font-semibold">delitip.com</strong> • Transparent Direct Tipping for Service Staff</p>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT CONTROLLER                                                     -->
+  <!-- ========================================================================= -->
+  <script>
+    // 1. Employee Tab Switcher
+    function setEmpTab(tab) {
+      const tabs = ['earnings', 'reviews', 'qr'];
+      tabs.forEach(t => {
+        const view = document.getElementById(`viewEmp${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        const tabBtn = document.getElementById(`empTab-${t}`);
+        
+        if (t === tab) {
+          view.classList.remove('hidden');
+          tabBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-charcoal text-white transition flex items-center gap-1.5 shadow-xs';
+        } else {
+          view.classList.add('hidden');
+          tabBtn.className = 'px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 hover:bg-white hover:text-charcoal transition flex items-center gap-1.5';
+        }
+      });
+    }
+
+    // 2. On-Shift Status Toggle
+    let isOnShift = true;
+    function toggleShiftStatus() {
+      isOnShift = !isOnShift;
+      const btn = document.getElementById('shiftStatusBtn');
+      const pulse = document.getElementById('shiftPulse');
+      const label = document.getElementById('shiftLabel');
+
+      if (isOnShift) {
+        btn.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-800 text-xs font-bold transition hover:bg-brand-100';
+        pulse.className = 'w-2 h-2 rounded-full bg-lime animate-pulse';
+        label.innerText = 'On Shift';
+      } else {
+        btn.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-500 text-xs font-medium transition hover:bg-zinc-200';
+        pulse.className = 'w-2 h-2 rounded-full bg-zinc-400';
+        label.innerText = 'Off Shift';
+      }
+    }
+
+    // 3. Instant Cash Out Simulation
+    function triggerInstantPayout() {
+      const balanceEl = document.getElementById('availableTipBalance');
+      const current = balanceEl.innerText;
+      
+      if (current === '$0.00') {
+        alert('You have no pending balance ready for transfer right now.');
+        return;
+      }
+
+      if (confirm(`Transfer ${current} instantly to your linked Debit Card (•••• 4092)?`)) {
+        balanceEl.innerText = '$0.00';
+        alert(`Success! ${current} has been sent to your bank account via instant transfer.`);
+      }
+    }
+
+    // 4. Copy Personal Link
+    function copyTipLink() {
+      navigator.clipboard.writeText('https://delitip.com/maria-s');
+      const btn = document.getElementById('copyLinkBtn');
+      btn.innerText = 'Copied to Clipboard! ✓';
+      setTimeout(() => {
+        btn.innerText = 'Copy Personal Tip Link';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>delitip.com — Reward great service. Digital Tipping & Employee Feedback</title>
+  <meta name="description" content="delitip.com is the modern digital tipping and employee feedback platform for restaurants, cafés, bars, hotels, and salons." />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            charcoal: '#181A1B',
+            lime: '#C8F169',
+            offwhite: '#F7F7F2',
+            brand: {
+              50: '#F4FBE6',
+              100: '#EAF7CC',
+              200: '#DCF0A3',
+              300: '#D2EC88',
+              400: '#CDF47A',
+              500: '#C8F169',
+              600: '#C8F169',
+              700: '#9FBF3E',
+              800: '#6B8429',
+              900: '#3F4F18',
+              950: '#181A1B',
+              dark: '#181A1B',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .hero-glow {
+      background: radial-gradient(circle at 50% 30%, rgba(200, 241, 105, 0.18) 0%, rgba(247, 247, 242, 0) 70%);
+    }
+  </style>
+</head>
+<body class="bg-offwhite text-charcoal antialiased selection:bg-lime selection:text-charcoal">
+
+  <!-- ========================================================================= -->
+  <!-- TOP ANNOUNCEMENT BANNER                                                   -->
+  <!-- ========================================================================= -->
+  <div class="bg-charcoal text-offwhite text-[11px] font-medium py-2 px-4 text-center border-b border-zinc-800 flex items-center justify-center gap-2">
+    <span class="bg-lime text-charcoal text-[9px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full">New</span>
+    <span>Introducing Instant Debit Payouts & Automated Shift Distribution for Hospitality Teams.</span>
+    <a href="#how-it-works" class="underline text-lime font-semibold hover:text-offwhite transition ml-1">Learn how it works →</a>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- NAVIGATION HEADER                                                         -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-zinc-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-lime flex items-center justify-center font-bold text-charcoal text-sm shadow-inner shadow-lime/40">
+          d•
+        </div>
+        <span class="font-extrabold text-lg tracking-tight text-charcoal">delitip<span class="text-lime font-semibold">.com</span></span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center gap-8 text-xs font-semibold text-zinc-600">
+        <a href="#features" class="hover:text-zinc-950 transition">Features</a>
+        <a href="#how-it-works" class="hover:text-zinc-950 transition">How It Works</a>
+        <a href="#ecosystem" class="hover:text-zinc-950 transition">For Businesses & Staff</a>
+        <a href="#calculator" class="hover:text-zinc-950 transition">Tip Calculator</a>
+        <a href="#pricing" class="hover:text-zinc-950 transition">Pricing</a>
+      </nav>
+
+      <!-- CTA Buttons -->
+      <div class="flex items-center gap-3">
+        <a href="#get-started" class="hidden sm:inline-block text-xs font-bold text-zinc-700 hover:text-zinc-950 px-3 py-2 transition">
+          Sign In
+        </a>
+        <a href="#get-started" class="bg-lime hover:bg-brand-700 text-charcoal text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-lg shadow-lime/30 flex items-center gap-1.5">
+          <span>Start Free</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- HERO SECTION                                                              -->
+  <!-- ========================================================================= -->
+  <section class="relative pt-16 pb-20 md:pt-24 md:pb-28 hero-glow overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <!-- Tagline Pill -->
+      <div class="inline-flex items-center gap-2 bg-brand-50 border border-brand-200 text-brand-800 px-3.5 py-1.5 rounded-full text-xs font-bold mb-6">
+        <span class="w-2 h-2 rounded-full bg-lime animate-pulse"></span>
+        Reward great service.
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-charcoal tracking-tight max-w-4xl mx-auto leading-[1.12]">
+        The digital tipping platform built for <span class="text-lime">fairness</span>, <span class="text-charcoal">trust</span>, and <span class="text-lime">great service</span>.
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="mt-6 text-sm sm:text-base text-zinc-600 max-w-2xl mx-auto leading-relaxed font-normal">
+        Customers reward great service in 5 seconds with zero apps. Businesses gain full tip distribution transparency, employee recognition, and real-time performance insights.
+      </p>
+
+      <!-- Primary Action CTAs -->
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#get-started" class="w-full sm:w-auto bg-charcoal hover:bg-zinc-800 text-offwhite font-bold px-6 py-3.5 rounded-2xl text-xs sm:text-sm transition shadow-xl flex items-center justify-center gap-2">
+          <span>Set Up Your Venue Free</span>
+          <svg class="w-4 h-4 text-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+        <a href="#demo" class="w-full sm:w-auto bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-bold px-6 py-3.5 rounded-2xl text-xs sm:text-sm transition flex items-center justify-center gap-2">
+          <svg class="w-4 h-4 text-zinc-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>
+          <span>See Live Demo</span>
+        </a>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="mt-8 flex items-center justify-center gap-6 text-[11px] font-semibold text-zinc-400">
+        <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> No Hardware Required</span>
+        <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Apple Pay & Google Pay</span>
+        <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> 100% Direct Payouts</span>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- DUAL PRODUCT SHOWCASE PREVIEW (HERO VISUAL)                           -->
+      <!-- ===================================================================== -->
+      <div id="demo" class="mt-14 max-w-5xl mx-auto bg-charcoal p-3 sm:p-4 rounded-3xl sm:rounded-[36px] shadow-2xl border border-zinc-800">
+        <div class="bg-charcoal rounded-2xl sm:rounded-[28px] p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center text-left">
+          
+          <!-- LEFT: Customer Mobile Experience Mockup (4 Cols) -->
+          <div class="lg:col-span-5 bg-white rounded-3xl p-5 shadow-xl border border-zinc-200 space-y-4">
+            <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-lg bg-lime flex items-center justify-center font-bold text-charcoal text-xs">d•</div>
+                <span class="font-bold text-xs text-charcoal">delitip<span class="text-lime">.com</span></span>
+              </div>
+              <span class="text-[10px] font-bold text-zinc-400 bg-zinc-100 px-2 py-0.5 rounded-full">Table 14</span>
+            </div>
+
+            <!-- Server Recognition -->
+            <div class="text-center pt-1">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" class="w-14 h-14 rounded-full object-cover ring-2 ring-brand-100 mx-auto" />
+              <h3 class="text-sm font-bold text-charcoal mt-2">Thank Maria</h3>
+              <p class="text-[10px] text-zinc-400 font-medium">Artisan Café & Bar • Server</p>
+            </div>
+
+            <!-- Tip Pill Selector -->
+            <div class="grid grid-cols-3 gap-2">
+              <div class="p-2 text-center rounded-xl border border-zinc-200">
+                <div class="text-xs font-bold text-charcoal">$3.00</div>
+              </div>
+              <div class="p-2 text-center rounded-xl border-2 border-lime bg-brand-50/70">
+                <div class="text-xs font-bold text-brand-700">$5.00</div>
+                <div class="text-[9px] text-lime font-bold">Popular</div>
+              </div>
+              <div class="p-2 text-center rounded-xl border border-zinc-200">
+                <div class="text-xs font-bold text-charcoal">$8.00</div>
+              </div>
+            </div>
+
+            <!-- Compliment Badge & Apple Pay -->
+            <div class="space-y-2">
+              <div class="flex gap-1.5 justify-center">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-50 text-brand-800">⚡ Super Fast</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-50 text-brand-800">✨ Friendly Vibe</span>
+              </div>
+              <div class="bg-charcoal text-offwhite font-bold py-2.5 rounded-xl text-center text-xs flex items-center justify-center gap-1.5 shadow">
+                <span>Pay with Apple Pay</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Business Dashboard Intelligence Preview (7 Cols) -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-lime">Business Operating System</span>
+                <h3 class="text-lg sm:text-xl font-bold text-offwhite">Live Tip Distribution & Insights</h3>
+              </div>
+              <span class="text-xs bg-charcoal/80 text-lime border border-brand-800/60 font-bold px-2.5 py-1 rounded-lg">Real-time Stream</span>
+            </div>
+
+            <!-- Mini KPI Matrix -->
+            <div class="grid grid-cols-3 gap-3">
+              <div class="bg-charcoal/80 p-3 rounded-2xl border border-zinc-800">
+                <span class="text-[10px] text-zinc-400 block font-medium">Tips Collected (7d)</span>
+                <span class="text-base sm:text-lg font-extrabold text-offwhite mt-1 block">$3,420.50</span>
+              </div>
+              <div class="bg-charcoal/80 p-3 rounded-2xl border border-zinc-800">
+                <span class="text-[10px] text-zinc-400 block font-medium">Staff Satisfaction</span>
+                <span class="text-base sm:text-lg font-extrabold text-amber-400 mt-1 block">★ 4.93 / 5</span>
+              </div>
+              <div class="bg-charcoal/80 p-3 rounded-2xl border border-zinc-800">
+                <span class="text-[10px] text-zinc-400 block font-medium">Employee Share</span>
+                <span class="text-base sm:text-lg font-extrabold text-lime mt-1 block">100% Direct</span>
+              </div>
+            </div>
+
+            <!-- Live Performance Ledger Card -->
+            <div class="bg-charcoal/90 rounded-2xl border border-zinc-800 p-3.5 space-y-2 text-xs">
+              <div class="flex justify-between items-center text-zinc-400 text-[10px] uppercase font-bold tracking-wider">
+                <span>Recent rewarded staff</span>
+                <span>Amount & Feedback</span>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-t border-zinc-800/80 text-offwhite">
+                <span class="font-bold flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-lime"></span> Maria S. (Head Server)
+                </span>
+                <span class="font-bold text-lime">+$8.00 • ★ 5.0</span>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-t border-zinc-800/80 text-offwhite">
+                <span class="font-bold flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-lime"></span> Alex K. (Bartender)
+                </span>
+                <span class="font-bold text-lime">+$5.00 • ★ 5.0</span>
+              </div>
+            </div>
+
+            <p class="text-[11px] text-zinc-400 font-medium">
+              Eliminate end-of-shift disputes. Automate payroll exports in 1 click.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- TRUSTED VENUES / CLIENT TYPES                                             -->
+  <!-- ========================================================================= -->
+  <section class="py-10 bg-offwhite border-y border-zinc-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <p class="text-xs font-bold uppercase tracking-widest text-zinc-400">
+        Empowering service teams across the hospitality industry
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-8 sm:gap-14 text-xs sm:text-sm font-extrabold text-zinc-400">
+        <span>🍽️ Restaurants & Bistros</span>
+        <span>☕ Specialty Cafés</span>
+        <span>🍸 Cocktail Bars & Lounges</span>
+        <span>🏨 Boutique Hotels</span>
+        <span>✂️ Salons & Spas</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- HOW IT WORKS (3 SIMPLE STEPS)                                             -->
+  <!-- ========================================================================= -->
+  <section id="how-it-works" class="py-20 lg:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-700">Simple & Trustworthy</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-charcoal tracking-tight">
+          How delitip.com works
+        </h2>
+        <p class="text-xs sm:text-sm text-zinc-500">
+          A seamless flow designed to make tipping and feedback positive, instant, and frictionless.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Step 1 -->
+        <div class="bg-offwhite rounded-3xl p-8 border border-zinc-200/80 space-y-4 relative">
+          <div class="w-10 h-10 rounded-2xl bg-charcoal text-offwhite font-extrabold text-sm flex items-center justify-center">
+            01
+          </div>
+          <h3 class="text-lg font-bold text-charcoal">Scan & Recognize</h3>
+          <p class="text-xs text-zinc-600 leading-relaxed">
+            The customer scans a discreet table QR code or taps an NFC stand. They instantly see the photo and name of the employee who served them.
+          </p>
+          <div class="text-[11px] font-semibold text-brand-700">Zero apps or account creation needed.</div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="bg-offwhite rounded-3xl p-8 border border-zinc-200/80 space-y-4 relative">
+          <div class="w-10 h-10 rounded-2xl bg-lime text-charcoal font-extrabold text-sm flex items-center justify-center shadow-md shadow-lime/30">
+            02
+          </div>
+          <h3 class="text-lg font-bold text-charcoal">Tip & Appreciate</h3>
+          <p class="text-xs text-zinc-600 leading-relaxed">
+            Guests choose a tip amount ($3, $5, $8, or custom), pay instantly via Apple Pay or Google Pay, and leave compliment tags (*Super Fast, Friendly Vibe*).
+          </p>
+          <div class="text-[11px] font-semibold text-brand-700">Bank-level 256-bit encryption.</div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="bg-offwhite rounded-3xl p-8 border border-zinc-200/80 space-y-4 relative">
+          <div class="w-10 h-10 rounded-2xl bg-charcoal text-offwhite font-extrabold text-sm flex items-center justify-center">
+            03
+          </div>
+          <h3 class="text-lg font-bold text-charcoal">Direct Payouts & Insights</h3>
+          <p class="text-xs text-zinc-600 leading-relaxed">
+            Employees receive their tips immediately to their debit cards. Businesses manage shift pools with transparent tip distribution and live reviews.
+          </p>
+          <div class="text-[11px] font-semibold text-brand-700">Automated payroll & accounting sync.</div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- THE CONNECTED ECOSYSTEM (BUSINESS VS EMPLOYEE VS CUSTOMER)                -->
+  <!-- ========================================================================= -->
+  <section id="ecosystem" class="py-20 bg-offwhite border-t border-zinc-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-700">Two Connected Sides</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-charcoal tracking-tight">
+          Built for everyone in the service loop
+        </h2>
+        <p class="text-xs sm:text-sm text-zinc-500">
+          Customers generate appreciation. Businesses transform it into employee performance and fair distribution.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- For Businesses -->
+        <div class="bg-white p-8 sm:p-10 rounded-3xl border border-zinc-200/80 shadow-xs space-y-6 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="w-10 h-10 rounded-2xl bg-brand-50 text-brand-700 flex items-center justify-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            </div>
+            <h3 class="text-2xl font-bold text-charcoal">For Business Owners & Managers</h3>
+            <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+              Understand and manage great service across your entire venue with complete transparency and zero POS hardware headaches.
+            </p>
+            
+            <ul class="space-y-2.5 text-xs text-zinc-700 font-medium pt-2">
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-lime shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>Tip Distribution Engine:</strong> Direct employee share or pooled splits with house transparency.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-lime shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>Private Feedback Filter:</strong> Catch guest complaints privately before they hit Yelp or Google.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-lime shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>Staff Retention:</strong> Keep your top talent happy with higher take-home pay.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pt-4 border-t border-zinc-100">
+            <a href="#get-started" class="text-xs font-bold text-brand-700 hover:underline flex items-center gap-1">
+              Explore the Business OS →
+            </a>
+          </div>
+        </div>
+
+        <!-- For Service Employees -->
+        <div class="bg-white p-8 sm:p-10 rounded-3xl border border-zinc-200/80 shadow-xs space-y-6 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="w-10 h-10 rounded-2xl bg-brand-50 text-brand-700 flex items-center justify-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            </div>
+            <h3 class="text-2xl font-bold text-charcoal">For Servers, Bartenders & Staff</h3>
+            <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+              Never miss a tip because a guest didn’t have cash. Track every dollar in real time with personal recognition.
+            </p>
+            
+            <ul class="space-y-2.5 text-xs text-zinc-700 font-medium pt-2">
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-lime shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>Instant Cash Out:</strong> Transfer your tip earnings straight to your debit card.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-lime shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>+28% Higher Earnings:</strong> Digital 1-click Apple Pay tipping significantly boosts tip sizes.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-lime shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>Compliment Wall:</strong> Build a verified portfolio of 5-star customer ratings.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pt-4 border-t border-zinc-100">
+            <a href="#get-started" class="text-xs font-bold text-brand-700 hover:underline flex items-center gap-1">
+              Explore the Employee Portal →
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- INTERACTIVE ROI & TIP CALCULATOR                                          -->
+  <!-- ========================================================================= -->
+  <section id="calculator" class="py-20 lg:py-28 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      <div class="text-center space-y-3">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-700">Financial Impact</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-charcoal tracking-tight">
+          Calculate your team’s tip boost
+        </h2>
+        <p class="text-xs sm:text-sm text-zinc-500 max-w-xl mx-auto">
+          See how switching to cashless 1-click delitip.com QR tipping increases your staff take-home pay and reduces turnover.
+        </p>
+      </div>
+
+      <div class="bg-charcoal text-offwhite rounded-3xl p-6 sm:p-10 border border-zinc-800 shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+        
+        <!-- Controls (7 cols) -->
+        <div class="md:col-span-7 space-y-6">
+          <!-- Slider 1: Staff count -->
+          <div>
+            <div class="flex justify-between text-xs font-bold mb-2">
+              <span class="text-zinc-300">Staff Members on Shift</span>
+              <span id="staffVal" class="text-lime font-extrabold text-sm">8 staff</span>
+            </div>
+            <input id="staffSlider" oninput="calculateROI()" type="range" min="1" max="40" value="8" class="w-full accent-lime h-2 bg-zinc-800 rounded-lg cursor-pointer" />
+          </div>
+
+          <!-- Slider 2: Daily tables -->
+          <div>
+            <div class="flex justify-between text-xs font-bold mb-2">
+              <span class="text-zinc-300">Average Daily Tables / Guests</span>
+              <span id="tablesVal" class="text-lime font-extrabold text-sm">120 tables</span>
+            </div>
+            <input id="tablesSlider" oninput="calculateROI()" type="range" min="20" max="500" step="10" value="120" class="w-full accent-lime h-2 bg-zinc-800 rounded-lg cursor-pointer" />
+          </div>
+
+          <div class="text-[11px] text-zinc-400 flex items-center gap-2">
+            <svg class="w-4 h-4 text-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Based on verified 28% higher tip frequency vs traditional card machine prompts.</span>
+          </div>
+        </div>
+
+        <!-- Result Box (5 cols) -->
+        <div class="md:col-span-5 bg-charcoal/90 border border-zinc-800 p-6 rounded-2xl text-center space-y-4">
+          <span class="text-[10px] uppercase tracking-widest text-zinc-400 font-bold block">Estimated Annual Tip Boost</span>
+          <div id="annualBoostVal" class="text-3xl sm:text-4xl font-extrabold text-lime">+$24,528</div>
+          <div class="text-xs text-zinc-300">
+            Avg extra <strong id="perStaffVal" class="text-offwhite">+$255/mo</strong> in direct tips per employee
+          </div>
+          <a href="#get-started" class="w-full inline-block bg-lime hover:bg-brand-400 text-charcoal font-bold py-2.5 rounded-xl text-xs transition shadow">
+            Claim Your Boost Free
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- PRICING SECTION                                                           -->
+  <!-- ========================================================================= -->
+  <section id="pricing" class="py-20 bg-offwhite border-t border-zinc-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-700">Simple & Transparent</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-charcoal tracking-tight">
+          Fair pricing for every venue
+        </h2>
+        <p class="text-xs sm:text-sm text-zinc-500">
+          No setup fees. No hardware lock-ins. Cancel anytime.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        
+        <!-- Plan 1: Starter -->
+        <div class="bg-white p-8 rounded-3xl border border-zinc-200 shadow-xs space-y-6 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div>
+              <h3 class="text-base font-bold text-charcoal">Starter</h3>
+              <p class="text-xs text-zinc-400 mt-1">For single cafés, bars, & small venues</p>
+            </div>
+            <div class="text-3xl font-extrabold text-charcoal">$0 <span class="text-xs text-zinc-400 font-normal">/ month</span></div>
+            <p class="text-xs text-zinc-600">100% free for venues. Small standard processing fee covered by guests.</p>
+
+            <ul class="space-y-2 text-xs text-zinc-700 pt-3">
+              <li class="flex items-center gap-2">✓ Up to 10 Employees</li>
+              <li class="flex items-center gap-2">✓ Unlimited QR Code Generates</li>
+              <li class="flex items-center gap-2">✓ Apple Pay & Google Pay</li>
+              <li class="flex items-center gap-2">✓ Direct Employee Payouts</li>
+            </ul>
+          </div>
+
+          <a href="#get-started" class="w-full text-center bg-zinc-100 hover:bg-zinc-200 text-charcoal font-bold py-3 rounded-xl text-xs transition">
+            Start Free
+          </a>
+        </div>
+
+        <!-- Plan 2: Pro (Featured) -->
+        <div class="bg-charcoal text-offwhite p-8 rounded-3xl border-2 border-lime shadow-2xl space-y-6 flex flex-col justify-between relative">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-lime text-charcoal text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full">
+            Most Popular
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <h3 class="text-base font-bold text-offwhite">Business Pro</h3>
+              <p class="text-xs text-zinc-400 mt-1">For high-volume restaurants & hotels</p>
+            </div>
+            <div class="text-3xl font-extrabold text-offwhite">$29 <span class="text-xs text-zinc-400 font-normal">/ month</span></div>
+            <p class="text-xs text-zinc-400">Everything in Starter plus deep distribution controls & analytics.</p>
+
+            <ul class="space-y-2 text-xs text-zinc-300 pt-3">
+              <li class="flex items-center gap-2">✓ Unlimited Employees & Shifts</li>
+              <li class="flex items-center gap-2">✓ Custom Tip Distribution Pool</li>
+              <li class="flex items-center gap-2">✓ Real-time Private Feedback Feed</li>
+              <li class="flex items-center gap-2">✓ Shift Reports & Payroll Export</li>
+              <li class="flex items-center gap-2">✓ Custom Acrylic QR Stand Kits</li>
+            </ul>
+          </div>
+
+          <a href="#get-started" class="w-full text-center bg-lime hover:bg-brand-400 text-charcoal font-bold py-3 rounded-xl text-xs transition shadow-lg shadow-lime/30">
+            Start 14-Day Free Trial
+          </a>
+        </div>
+
+        <!-- Plan 3: Enterprise -->
+        <div class="bg-white p-8 rounded-3xl border border-zinc-200 shadow-xs space-y-6 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div>
+              <h3 class="text-base font-bold text-charcoal">Hospitality Group</h3>
+              <p class="text-xs text-zinc-400 mt-1">For multi-location restaurant groups</p>
+            </div>
+            <div class="text-3xl font-extrabold text-charcoal">Custom</div>
+            <p class="text-xs text-zinc-600">Enterprise SLA, multi-venue reporting, and dedicated POS integration.</p>
+
+            <ul class="space-y-2 text-xs text-zinc-700 pt-3">
+              <li class="flex items-center gap-2">✓ Multi-Location Switcher</li>
+              <li class="flex items-center gap-2">✓ Custom POS Direct Webhook Sync</li>
+              <li class="flex items-center gap-2">✓ Dedicated Account Manager</li>
+              <li class="flex items-center gap-2">✓ Custom Financial Audit Reports</li>
+            </ul>
+          </div>
+
+          <a href="#get-started" class="w-full text-center bg-zinc-100 hover:bg-zinc-200 text-charcoal font-bold py-3 rounded-xl text-xs transition">
+            Contact Sales
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- FINAL HIGH-IMPACT CALL TO ACTION                                          -->
+  <!-- ========================================================================= -->
+  <section id="get-started" class="py-20 lg:py-24 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-gradient-to-br from-charcoal to-charcoal text-white rounded-[36px] p-8 sm:p-14 text-center space-y-6 border border-zinc-800 shadow-2xl relative overflow-hidden">
+        
+        <div class="w-12 h-12 rounded-2xl bg-lime flex items-center justify-center font-bold text-charcoal text-lg mx-auto shadow-lg shadow-lime/30">
+          d•
+        </div>
+
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight max-w-2xl mx-auto">
+          Ready to reward great service at your venue?
+        </h2>
+
+        <p class="text-xs sm:text-sm text-zinc-400 max-w-lg mx-auto">
+          Join hundreds of hospitality businesses running on <strong class="text-offwhite">delitip.com</strong>. Setup takes under 2 minutes.
+        </p>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <input type="email" placeholder="Enter your business email..." class="px-4 py-3 rounded-xl bg-charcoal border border-zinc-700 text-white text-xs w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-lime" />
+          <button class="w-full sm:w-auto bg-lime hover:bg-brand-400 text-charcoal font-bold px-6 py-3 rounded-xl text-xs transition shadow-lg shadow-lime/30">
+            Get Started Free
+          </button>
+        </div>
+
+        <p class="text-[11px] text-zinc-500">No credit card required • Instant QR code generation</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- FOOTER                                                                    -->
+  <!-- ========================================================================= -->
+  <footer class="bg-charcoal text-zinc-400 text-xs py-14 border-t border-zinc-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-5 gap-8">
+      
+      <!-- Col 1: Brand Info (2 cols) -->
+      <div class="col-span-2 space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-xl bg-lime flex items-center justify-center font-bold text-charcoal text-xs">d•</div>
+          <span class="font-extrabold text-base tracking-tight text-offwhite">delitip<span class="text-lime font-semibold">.com</span></span>
+        </div>
+        <p class="text-xs text-zinc-500 leading-relaxed max-w-sm">
+          The digital tipping and employee feedback platform for restaurants, cafés, bars, hotels, and service businesses.
+        </p>
+        <p class="text-[11px] text-zinc-600">
+          Tagline: <em>Reward great service. Tip. Appreciate. Connect.</em>
+        </p>
+      </div>
+
+      <!-- Col 2: Product -->
+      <div class="space-y-2">
+        <span class="text-offwhite font-bold text-xs uppercase tracking-wider block">Product</span>
+        <ul class="space-y-1.5 text-zinc-400">
+          <li><a href="#how-it-works" class="hover:text-offwhite transition">Customer Flow</a></li>
+          <li><a href="#ecosystem" class="hover:text-offwhite transition">Business OS</a></li>
+          <li><a href="#ecosystem" class="hover:text-offwhite transition">Employee Portal</a></li>
+          <li><a href="#calculator" class="hover:text-offwhite transition">Tip Distribution</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Industries -->
+      <div class="space-y-2">
+        <span class="text-offwhite font-bold text-xs uppercase tracking-wider block">Industries</span>
+        <ul class="space-y-1.5 text-zinc-400">
+          <li><a href="#" class="hover:text-offwhite transition">Restaurants & Bistros</a></li>
+          <li><a href="#" class="hover:text-offwhite transition">Cafés & Bakeries</a></li>
+          <li><a href="#" class="hover:text-offwhite transition">Bars & Nightclubs</a></li>
+          <li><a href="#" class="hover:text-offwhite transition">Hotels & Hospitality</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Legal & Trust -->
+      <div class="space-y-2">
+        <span class="text-offwhite font-bold text-xs uppercase tracking-wider block">Trust & Security</span>
+        <ul class="space-y-1.5 text-zinc-400">
+          <li><a href="#" class="hover:text-offwhite transition">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-offwhite transition">Terms of Service</a></li>
+          <li><a href="#" class="hover:text-offwhite transition">256-bit Security</a></li>
+          <li><a href="#" class="hover:text-offwhite transition">Contact Support</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 mt-8 border-t border-zinc-900 text-center text-zinc-600 text-[11px]">
+      © 2026 delitip.com. All rights reserved. Built for fairness, transparency, and great service.
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT CONTROLLER FOR INTERACTIVE CALCULATOR                          -->
+  <!-- ========================================================================= -->
+  <script>
+    function calculateROI() {
+      const staffCount = parseInt(document.getElementById('staffSlider').value);
+      const dailyTables = parseInt(document.getElementById('tablesSlider').value);
+
+      document.getElementById('staffVal').innerText = `${staffCount} staff`;
+      document.getElementById('tablesVal').innerText = `${dailyTables} tables`;
+
+      // Calculation formula:
+      // Average tip lift = $0.56 additional per table tipped with digital 1-click + 28% more customers leaving tips
+      const extraDailyTips = dailyTables * 0.56;
+      const annualBoost = Math.round(extraDailyTips * 365);
+      const monthlyPerStaff = Math.round((annualBoost / 12) / staffCount);
+
+      document.getElementById('annualBoostVal').innerText = `+$${annualBoost.toLocaleString()}`;
+      document.getElementById('perStaffVal').innerText = `+$${monthlyPerStaff}/mo`;
+    }
+  </script>
+</body>
+</html>
