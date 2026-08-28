@@ -2,7 +2,7 @@
 
 ## 1. Product Overview
 
-**DelyTip** is a digital tipping and customer feedback platform designed primarily for restaurants, cafés, bars, hotels, salons, and other service-based businesses.
+**DelyTip** is a digital tipping and customer feedback platform designed primarily for restaurants, cafés, bars, hotels, salons, spas, and other service-based businesses.
 
 The core idea is simple:
 
@@ -239,6 +239,8 @@ This gives the Store an opportunity to identify problems before they become publ
 
 Stores should be able to create customized feedback questions.
 
+Every Store selects a **Store Type** when it's created (§31) — Restaurant, Café, Bar, Hotel, Salon, Spa, Retail, or Other. This determines a sensible set of default feedback questions, shown below. The Store can still add, remove, or edit questions freely; the Store Type only supplies a useful starting point.
+
 For example:
 
 ### Restaurant
@@ -262,6 +264,12 @@ For example:
 > How satisfied are you with the service?
 
 > How was your stylist?
+
+### Spa
+
+> How relaxing was your visit?
+
+> How was your therapist?
 
 This allows DelyTip to work across multiple industries.
 
@@ -306,6 +314,8 @@ For example:
 > Reception generated 42 reviews.
 
 The QR codes can also be downloaded and printed.
+
+> **Implementation note:** a Store's physical locations (Table 1, Bar, Reception, ...) are their own records, optionally linked to QR codes many-to-many — a QR can cover several locations (e.g. one code printed for a whole patio zone) and a location can carry several QR codes (e.g. one on the table, one on the receipt). A QR with no location at all (an employee card, a promotional flyer) is a portable QR rather than a location one.
 
 ---
 
@@ -750,6 +760,8 @@ It does not cover the platform's own interface — buttons, navigation, system m
 
 If a language doesn't have a translation yet — the Store hasn't reviewed it, or auto-translation hasn't run — the customer sees the Store's primary-language version rather than a blank field or a broken translation.
 
+> **Implementation note:** each translatable field is stored inline as a `{language_code: text}` map (e.g. `{"en": "Welcome!", "el": "Καλώς ήρθατε!"}`) directly on its own row, rather than in a separate translations table joined at read time. This avoids join overhead as feedback questions, review categories, and Store messages scale into the thousands.
+
 ---
 
 # 25. Scaling Across Organization Sizes
@@ -871,7 +883,7 @@ A new business should be able to get started through a simple onboarding process
 
 ### Step 1
 
-Create Organization and first Store. For a single-Store Organization, this happens as one step and the Organization stays invisible — it's presented as "create your business profile," not as a separate org-creation step.
+Create Organization and first Store, including selecting the Store's **Store Type** — Restaurant, Café, Bar, Hotel, Salon, Spa, Retail, or Other (§8). For a single-Store Organization, this happens as one step and the Organization stays invisible — it's presented as "create your business profile," not as a separate org-creation step.
 
 ### Step 2
 
