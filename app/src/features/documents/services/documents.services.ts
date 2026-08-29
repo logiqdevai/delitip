@@ -23,3 +23,11 @@ export const uploadDocument = async (
     throw new Error("Failed to upload image. Please try again.");
   }
 };
+
+export const deleteDocument = async (id: string): Promise<void> => {
+  try {
+    await axiosInstance.delete(ApiRoutes.documents.byId(id));
+  } catch {
+    throw new Error("Failed to remove image. Please try again.");
+  }
+};

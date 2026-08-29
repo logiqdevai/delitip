@@ -26,6 +26,18 @@ export const Languages = {
 } as const;
 export type Language = (typeof Languages)[keyof typeof Languages];
 
+export const StoreTranslatableFields = {
+  WELCOME_MESSAGE: "welcome_message",
+  THANK_YOU_MESSAGE: "thank_you_message",
+} as const;
+export type StoreTranslatableField =
+  (typeof StoreTranslatableFields)[keyof typeof StoreTranslatableFields];
+
+export interface UpdateStoreTranslationPayload {
+  language: Language;
+  text: string;
+}
+
 export const Currencies = {
   EUR: "EUR",
   USD: "USD",
@@ -91,8 +103,8 @@ export interface UpdateStorePayload {
   name?: string;
   industry?: StoreIndustry;
   is_active?: boolean;
-  logo_document_id?: string;
-  cover_document_id?: string;
+  logo_document_id?: string | null;
+  cover_document_id?: string | null;
   primary_color?: string;
   secondary_color?: string;
   suggested_tip_amounts?: number[];

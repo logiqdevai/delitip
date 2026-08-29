@@ -7,7 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { useUploadDocument } from "@/features/documents/hooks/use-documents";
+import {
+  useDeleteDocument,
+  useUploadDocument,
+} from "@/features/documents/hooks/use-documents";
 import { DocumentTypes } from "@/features/documents/interfaces/documents.interfaces";
 import { useStore, useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
@@ -16,9 +19,12 @@ import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 const ImageUploadField: FC<{
   label: string;
   currentUrl?: string | null;
+  currentDocumentId?: string | null;
   onUploaded: (documentId: string) => void;
-}> = ({ label, currentUrl, onUploaded }) => {
+  onRemoved: () => void;
+}> = ({ label, currentUrl, currentDocumentId, onUploaded, onRemoved }) => {
   const uploadDocument = useUploadDocument();
+  const deleteDocument = useDeleteDocument();
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -61,6 +67,22 @@ const ImageUploadField: FC<{
         >
           {uploadDocument.isPending ? "Uploading…" : "Upload"}
         </Button>
+        {currentUrl && currentDocumentId ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="text-red-600 hover:bg-red-50 hover:text-red-700"
+            disabled={deleteDocument.isPending}
+            onClick={() =>
+              deleteDocument.mutate(currentDocumentId, {
+                onSuccess: () => onRemoved(),
+              })
+            }
+          >
+            {deleteDocument.isPending ? "Removing…" : "Remove"}
+          </Button>
+        ) : null}
       </div>
     </div>
   );
@@ -83,8 +105,12 @@ export const BrandingSettingsForm: FC = () => {
     setLoadedStoreId(store.id);
     setPrimaryColor(store.primary_color?.trim() || "#84cc16");
     setSecondaryColor(store.secondary_color?.trim() || "#18181b");
-    setWelcomeMessage(store.welcome_message?.[store.primary_language] ?? "");
-    setThankYouMessage(store.thank_you_message?.[store.primary_language] ?? "");
+    // Translation map keys are always lowercase (e.g. "en"), while
+    // primary_language is the uppercase enum value (e.g. "EN") — mismatched
+    // casing here would silently show these fields as empty even when saved.
+    const primaryKey = store.primary_language.toLowerCase();
+    setWelcomeMessage(store.welcome_message?.[primaryKey] ?? "");
+    setThankYouMessage(store.thank_you_message?.[primaryKey] ?? "");
     setHasChanges(false);
   }
 
@@ -141,15 +167,23 @@ export const BrandingSettingsForm: FC = () => {
         <ImageUploadField
           label="Logo"
           currentUrl={store.logo_document?.url}
+          currentDocumentId={store.logo_document_id}
           onUploaded={(documentId) =>
             updateStore.mutate({ id: store.id, payload: { logo_document_id: documentId } })
+          }
+          onRemoved={() =>
+            updateStore.mutate({ id: store.id, payload: { logo_document_id: null } })
           }
         />
         <ImageUploadField
           label="Cover image"
           currentUrl={store.cover_document?.url}
+          currentDocumentId={store.cover_document_id}
           onUploaded={(documentId) =>
             updateStore.mutate({ id: store.id, payload: { cover_document_id: documentId } })
+          }
+          onRemoved={() =>
+            updateStore.mutate({ id: store.id, payload: { cover_document_id: null } })
           }
         />
       </div>

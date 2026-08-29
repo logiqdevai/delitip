@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  createPublicRefundRequest,
   createRefund,
   getRefund,
   listRefunds,
   updateRefund,
 } from "@/features/refunds/services/refunds.services";
 import type {
+  CreatePublicRefundRequestPayload,
   CreateRefundPayload,
   RefundsQuery,
   UpdateRefundPayload,
@@ -55,6 +57,21 @@ export const useCreateRefund = () => {
         type: "error",
       });
     },
+  });
+};
+
+// No toast here, matching useCreatePublicTip/useCreatePublicReview — this is
+// a full-screen guest flow, so the component shows its own inline
+// success/error UI instead of a corner toast.
+export const useCreatePublicRefundRequest = () => {
+  return useMutation({
+    mutationFn: ({
+      tipId,
+      payload,
+    }: {
+      tipId: string;
+      payload: CreatePublicRefundRequestPayload;
+    }) => createPublicRefundRequest(tipId, payload),
   });
 };
 

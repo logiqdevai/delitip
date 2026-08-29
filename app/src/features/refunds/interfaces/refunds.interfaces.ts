@@ -40,3 +40,9 @@ export interface CreateRefundPayload {
 export interface UpdateRefundPayload {
   status: RefundStatus;
 }
+
+export interface CreatePublicRefundRequestPayload {
+  amount?: number;
+  reason?: string;
+  customer_email?: string;
+}

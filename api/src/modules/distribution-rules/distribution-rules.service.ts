@@ -152,6 +152,41 @@ export class DistributionRulesService {
 
         await this.accessControl.assertStoreAccess(user, rule.store_id, MANAGE_ROLES);
 
+        // Tip.distribution_rule is SetNull on delete, so deleting a rule that was
+        // ever actually used wouldn't corrupt the historical TipDistribution payout
+        // rows themselves, but it would silently erase which rule produced a past
+        // tip's split from the Tip record — block that rather than lose the trail.
+        const usedByPastTip = await this.prisma.tip.findFirst({
+            where: { distribution_rule_id: id },
+            select: { id: true },
+        });
+        if (usedByPastTip) {
+            throw new BadRequestException(
+                'This rule has already been used for past tips and cannot be deleted — historical records depend on it',
+            );
+        }
+
+        const [isStoreDefault, usedByQrCode] = await Promise.all([
+            this.prisma.store.findFirst({
+                where: { id: rule.store_id, default_distribution_rule_id: id },
+                select: { id: true },
+            }),
+            this.prisma.qrCode.findFirst({
+                where: { distribution_rule_id: id },
+                select: { id: true },
+            }),
+        ]);
+        if (isStoreDefault) {
+            throw new BadRequestException(
+                'This rule is set as the Store default — choose a different default before deleting it',
+            );
+        }
+        if (usedByQrCode) {
+            throw new BadRequestException(
+                'This rule is assigned to one or more QR codes — unassign it first',
+            );
+        }
+
         await this.prisma.distributionRule.delete({ where: { id } });
         return { success: true };
     }

@@ -327,8 +327,14 @@ export const TipFlow: FC<TipFlowProps> = ({ store, qr }) => {
         />
       ) : null}
 
-      {step === "done" ? (
-        <DoneStep review={reviewResult} onRestart={resetFlow} />
+      {step === "done" && tipResult ? (
+        <DoneStep
+          review={reviewResult}
+          tipId={tipResult.tip.id}
+          amount={tipResult.tip.amount}
+          currency={tipResult.tip.currency}
+          onRestart={resetFlow}
+        />
       ) : null}
 
       <footer className="border-t border-zinc-100 px-5 py-4 text-center text-[11px] text-zinc-400">

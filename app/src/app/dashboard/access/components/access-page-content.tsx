@@ -130,6 +130,7 @@ export const AccessPageContent: FC = () => {
               key={qr.id}
               qr={qr}
               storeSlug={store.slug}
+              currency={store.currency}
               onEdit={openEdit}
             />
           ))}

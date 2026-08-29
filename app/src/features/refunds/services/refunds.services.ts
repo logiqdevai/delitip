@@ -3,6 +3,7 @@ import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
 import type {
+  CreatePublicRefundRequestPayload,
   CreateRefundPayload,
   Refund,
   RefundsQuery,
@@ -54,6 +55,23 @@ export const createRefund = async (
   } catch (error) {
     throw new Error(
       getApiErrorMessage(error, "Failed to request refund. Please try again."),
+    );
+  }
+};
+
+export const createPublicRefundRequest = async (
+  tipId: string,
+  payload: CreatePublicRefundRequestPayload,
+): Promise<Refund> => {
+  try {
+    const response = await axiosInstance.post<Refund>(
+      ApiRoutes.public.tipRefundRequest(tipId),
+      payload,
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to request a refund. Please try again."),
     );
   }
 };

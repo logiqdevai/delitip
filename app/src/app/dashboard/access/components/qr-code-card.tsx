@@ -5,6 +5,7 @@ import { Download, Pencil, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { getQrCodeSelectionModeLabel } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
+import { useQrCodeStats } from "@/features/qr-codes/hooks/use-qr-codes";
 import type { QrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { getQrCodeEmployeeCount } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import {
@@ -14,16 +15,25 @@ import {
   getTipPath,
   printQrCode,
 } from "@/features/qr-codes/utils/qr-tip-url.utils";
+import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
+import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 
 interface QrCodeCardProps {
   qr: QrCode;
   storeSlug: string;
+  currency: Currency;
   onEdit: (qr: QrCode) => void;
 }
 
-export const QrCodeCard: FC<QrCodeCardProps> = ({ qr, storeSlug, onEdit }) => {
+export const QrCodeCard: FC<QrCodeCardProps> = ({
+  qr,
+  storeSlug,
+  currency,
+  onEdit,
+}) => {
   const [busy, setBusy] = useState<"download" | "print" | null>(null);
+  const statsQuery = useQrCodeStats(qr.id);
   const tipPath = getTipPath(storeSlug, qr.code);
   const tipUrl = getAbsoluteTipUrl(storeSlug, qr.code);
   const employeeCount = getQrCodeEmployeeCount(qr);
@@ -107,6 +117,32 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({ qr, storeSlug, onEdit }) => {
       ) : (
         <p className="text-[11px] text-zinc-400">Uses store default rule</p>
       )}
+
+      {statsQuery.data ? (
+        <div className="flex items-center justify-center gap-3 border-t border-zinc-100 pt-3 text-[11px] text-zinc-500">
+          <span>
+            <span className="font-bold text-ink-charcoal">
+              {statsQuery.data.tips_count}
+            </span>{" "}
+            {statsQuery.data.tips_count === 1 ? "tip" : "tips"}
+          </span>
+          <span aria-hidden className="text-zinc-300">
+            ·
+          </span>
+          <span className="font-bold text-ink-charcoal">
+            {formatMoney(statsQuery.data.tips_total_amount, currency)}
+          </span>
+          <span aria-hidden className="text-zinc-300">
+            ·
+          </span>
+          <span>
+            <span className="font-bold text-ink-charcoal">
+              {statsQuery.data.reviews_count}
+            </span>{" "}
+            {statsQuery.data.reviews_count === 1 ? "review" : "reviews"}
+          </span>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-3 gap-2">
         <Button

@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -6,6 +7,15 @@ import type {
   SetDefaultDistributionRulePayload,
   UpdateDistributionRulePayload,
 } from "@/features/distribution/interfaces/distribution.interfaces";
+
+const getApiErrorMessage = (error: unknown, fallback: string): string => {
+  if (isAxiosError(error)) {
+    const message = error.response?.data?.message;
+    if (typeof message === "string" && message.length > 0) return message;
+    if (Array.isArray(message) && typeof message[0] === "string") return message[0];
+  }
+  return fallback;
+};
 
 export const listDistributionRules = async (
   storeId: string,
@@ -43,8 +53,10 @@ export const createDistributionRule = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to create distribution rule. Please try again.");
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to create distribution rule. Please try again."),
+    );
   }
 };
 
@@ -58,16 +70,20 @@ export const updateDistributionRule = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to update distribution rule. Please try again.");
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to update distribution rule. Please try again."),
+    );
   }
 };
 
 export const deleteDistributionRule = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.distributionRules.byId(id));
-  } catch {
-    throw new Error("Failed to delete distribution rule. Please try again.");
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to delete distribution rule. Please try again."),
+    );
   }
 };
 
@@ -80,9 +96,9 @@ export const setDefaultDistributionRule = async (
       ApiRoutes.stores.defaultDistributionRule(storeId),
       payload,
     );
-  } catch {
+  } catch (error) {
     throw new Error(
-      "Failed to set default distribution rule. Please try again.",
+      getApiErrorMessage(error, "Failed to set default distribution rule. Please try again."),
     );
   }
 };

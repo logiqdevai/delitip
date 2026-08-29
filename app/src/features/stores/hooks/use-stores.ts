@@ -6,10 +6,13 @@ import {
   getStore,
   listStores,
   updateStore,
+  updateStoreTranslation,
 } from "@/features/stores/services/stores.services";
 import type {
   CreateStorePayload,
+  StoreTranslatableField,
   UpdateStorePayload,
+  UpdateStoreTranslationPayload,
 } from "@/features/stores/interfaces/stores.interfaces";
 import { toast } from "@/components/ui/toast";
 
@@ -18,7 +21,10 @@ const organizationsRootKey = ["organizations"] as const;
 export const storesQueryKeys = {
   root: ["stores"] as const,
   list: (organizationId: string) => ["stores", organizationId] as const,
-  detail: (id: string) => ["store", id] as const,
+  // Nested under the same "stores" root (not a separate "store" key) so that
+  // invalidating storesQueryKeys.root also refetches any open detail query —
+  // several settings forms (e.g. Branding) read logo/cover refs from here.
+  detail: (id: string) => ["stores", "detail", id] as const,
   public: (slug: string) => ["public-store", slug] as const,
 };
 
@@ -93,6 +99,36 @@ export const useUpdateStore = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update store",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useUpdateStoreTranslation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      field,
+      payload,
+    }: {
+      id: string;
+      field: StoreTranslatableField;
+      payload: UpdateStoreTranslationPayload;
+    }) => updateStoreTranslation(id, field, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: storesQueryKeys.root });
+      toast.add({
+        title: "Translation saved",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not save translation",
         description: error.message,
         type: "error",
       });

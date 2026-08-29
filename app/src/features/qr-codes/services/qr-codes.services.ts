@@ -6,6 +6,7 @@ import type {
   PublicQrCode,
   QrCode,
   QrCodesQuery,
+  QrCodeStats,
   UpdateQrCodePayload,
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 
@@ -73,9 +74,11 @@ export const deleteQrCode = async (id: string): Promise<void> => {
   }
 };
 
-export const getQrCodeStats = async (id: string): Promise<unknown> => {
+export const getQrCodeStats = async (id: string): Promise<QrCodeStats> => {
   try {
-    const response = await axiosInstance.get(ApiRoutes.qrCodes.stats(id));
+    const response = await axiosInstance.get<QrCodeStats>(
+      ApiRoutes.qrCodes.stats(id),
+    );
     return response.data;
   } catch {
     throw new Error("Failed to load QR code stats. Please try again.");

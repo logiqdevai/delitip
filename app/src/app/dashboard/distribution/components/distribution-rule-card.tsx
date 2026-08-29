@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC } from "react";
-import { Pencil, Star } from "lucide-react";
+import { Pencil, Star, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { DistributionRule } from "@/features/distribution/interfaces/distribution.interfaces";
 import { formatRecipientSummary } from "@/features/distribution/utils/distribution-summary.utils";
@@ -12,6 +12,7 @@ interface DistributionRuleCardProps {
   isDefault: boolean;
   onEdit: (rule: DistributionRule) => void;
   onSetDefault: (rule: DistributionRule) => void;
+  onDelete: (rule: DistributionRule) => void;
   isSettingDefault?: boolean;
 }
 
@@ -20,6 +21,7 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
   isDefault,
   onEdit,
   onSetDefault,
+  onDelete,
   isSettingDefault = false,
 }) => {
   return (
@@ -67,6 +69,16 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
             Set as default
           </Button>
         ) : null}
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="ml-auto text-red-600 hover:bg-red-50 hover:text-red-700"
+          onClick={() => onDelete(rule)}
+        >
+          <Trash2 data-icon="inline-start" className="size-3.5" />
+          Delete
+        </Button>
       </div>
     </div>
   );

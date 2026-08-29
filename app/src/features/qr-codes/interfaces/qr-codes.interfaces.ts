@@ -70,6 +70,12 @@ export interface QrCodesQuery {
   is_active?: boolean;
 }
 
+export interface QrCodeStats {
+  tips_count: number;
+  tips_total_amount: number;
+  reviews_count: number;
+}
+
 export interface PublicQrCodeStore {
   id: string;
   name: string;

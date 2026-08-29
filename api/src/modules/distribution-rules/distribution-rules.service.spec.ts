@@ -35,7 +35,9 @@ describe('DistributionRulesService', () => {
                 delete: jest.fn(),
             },
             distributionRuleRecipient: { createMany: jest.fn(), deleteMany: jest.fn() },
-            store: { update: jest.fn() },
+            store: { update: jest.fn(), findFirst: jest.fn().mockResolvedValue(null) },
+            tip: { findFirst: jest.fn().mockResolvedValue(null) },
+            qrCode: { findFirst: jest.fn().mockResolvedValue(null) },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
         accessControl = { assertStoreAccess: jest.fn() };
@@ -249,8 +251,36 @@ describe('DistributionRulesService', () => {
             const result = await service.remove(user, 'rule1');
 
             expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1', MANAGE_ROLES);
+            expect(prisma.tip.findFirst).toHaveBeenCalledWith({
+                where: { distribution_rule_id: 'rule1' },
+                select: { id: true },
+            });
             expect(prisma.distributionRule.delete).toHaveBeenCalledWith({ where: { id: 'rule1' } });
             expect(result).toEqual({ success: true });
+        });
+
+        it('throws BadRequestException and does not delete when the rule was ever used for a real tip', async () => {
+            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1', store_id: 'store1' });
+            prisma.tip.findFirst.mockResolvedValue({ id: 'tip1' });
+
+            await expect(service.remove(user, 'rule1')).rejects.toThrow(BadRequestException);
+            expect(prisma.distributionRule.delete).not.toHaveBeenCalled();
+        });
+
+        it('throws BadRequestException and does not delete when the rule is the Store default', async () => {
+            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1', store_id: 'store1' });
+            prisma.store.findFirst.mockResolvedValue({ id: 'store1' });
+
+            await expect(service.remove(user, 'rule1')).rejects.toThrow(BadRequestException);
+            expect(prisma.distributionRule.delete).not.toHaveBeenCalled();
+        });
+
+        it('throws BadRequestException and does not delete when the rule is assigned to a QR code', async () => {
+            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1', store_id: 'store1' });
+            prisma.qrCode.findFirst.mockResolvedValue({ id: 'qr1' });
+
+            await expect(service.remove(user, 'rule1')).rejects.toThrow(BadRequestException);
+            expect(prisma.distributionRule.delete).not.toHaveBeenCalled();
         });
     });
 

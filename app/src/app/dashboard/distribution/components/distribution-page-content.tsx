@@ -5,6 +5,10 @@ import { Plus, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import {
+  ConfirmationDialog,
+  useConfirmationDialog,
+} from "@/components/ui/confirmation-dialog";
+import {
   Empty,
   EmptyContent,
   EmptyDescription,
@@ -17,6 +21,7 @@ import { DistributionRuleCard } from "@/app/dashboard/distribution/components/di
 import { DistributionRuleFormDialog } from "@/app/dashboard/distribution/components/distribution-rule-form-dialog";
 import { DistributionRulesSkeleton } from "@/app/dashboard/distribution/components/distribution-rules-skeleton";
 import {
+  useDeleteDistributionRule,
   useDistributionRules,
   useSetDefaultDistributionRule,
 } from "@/features/distribution/hooks/use-distribution";
@@ -29,9 +34,14 @@ export const DistributionPageContent: FC = () => {
     useWorkspace();
   const rulesQuery = useDistributionRules(storeId ?? "");
   const setDefault = useSetDefaultDistributionRule(storeId ?? "");
+  const deleteRule = useDeleteDistributionRule();
+  const deleteConfirm = useConfirmationDialog();
 
   const [formOpen, setFormOpen] = useState(false);
   const [editingRule, setEditingRule] = useState<DistributionRule | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<DistributionRule | null>(
+    null,
+  );
 
   const openCreate = () => {
     setEditingRule(null);
@@ -45,6 +55,11 @@ export const DistributionPageContent: FC = () => {
 
   const handleSetDefault = (rule: DistributionRule) => {
     void setDefault.mutateAsync({ distribution_rule_id: rule.id });
+  };
+
+  const handleDelete = (rule: DistributionRule) => {
+    setPendingDelete(rule);
+    deleteConfirm.openDialog();
   };
 
   if (workspacePending) {
@@ -185,6 +200,7 @@ export const DistributionPageContent: FC = () => {
                   isDefault={rule.id === defaultRuleId}
                   onEdit={openEdit}
                   onSetDefault={handleSetDefault}
+                  onDelete={handleDelete}
                   isSettingDefault={setDefault.isPending}
                 />
               ))}
@@ -198,6 +214,29 @@ export const DistributionPageContent: FC = () => {
         onOpenChange={setFormOpen}
         storeId={storeId}
         rule={editingRule}
+      />
+
+      <ConfirmationDialog
+        state={{
+          ...deleteConfirm,
+          onOpenChange: (open) => {
+            deleteConfirm.onOpenChange(open);
+            if (!open) setPendingDelete(null);
+          },
+        }}
+        title="Delete distribution rule?"
+        description={
+          pendingDelete
+            ? `"${pendingDelete.name}" will be permanently removed. Rules already used for past tips, set as the store default, or assigned to a QR code can't be deleted.`
+            : "This rule will be permanently removed."
+        }
+        confirmLabel="Delete"
+        isPending={deleteRule.isPending}
+        onConfirm={async () => {
+          if (!pendingDelete) return;
+          await deleteRule.mutateAsync(pendingDelete.id);
+          setPendingDelete(null);
+        }}
       />
     </>
   );
