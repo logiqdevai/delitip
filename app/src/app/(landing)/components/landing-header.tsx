@@ -43,10 +43,10 @@ export const LandingHeader: FC = () => {
           </Link>
           <Link
             href={Routes.auth.sign_up}
-            className="flex items-center gap-1.5 rounded-xl bg-electric-lime px-4 py-2.5 text-xs font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700"
+            className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-electric-lime px-4 py-2.5 text-chip font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700"
           >
             <span>Create account</span>
-            <ArrowRight className="size-3.5" strokeWidth={2} />
+            <ArrowRight className="size-3.5 shrink-0" strokeWidth={2} />
           </Link>
         </div>
       </div>

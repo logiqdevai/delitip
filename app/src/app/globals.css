@@ -34,6 +34,10 @@
   --text-sm--line-height: 1.5;
   --text-base: 1rem;
   --text-base--line-height: 1.5;
+  --text-chip: 0.8125rem;
+  --text-chip--line-height: 1.25;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.25;
 }
 
 @theme inline {
@@ -161,6 +165,19 @@
   }
   html {
     @apply scroll-smooth font-sans;
+  }
+  a,
+  button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    @apply cursor-pointer;
+  }
+  button:disabled,
+  [role="button"][aria-disabled="true"],
+  input:disabled {
+    @apply cursor-not-allowed;
   }
 }
 
