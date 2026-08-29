@@ -80,6 +80,7 @@ enum Currency {
 
 enum QrCodeSelectionMode {
   CHOOSE_ONE
+  CHOOSE_MANY
   TEAM
 }
 
@@ -109,6 +110,17 @@ enum PayoutAccountStatus {
   ACTIVE
   RESTRICTED
   DISABLED
+}
+
+enum PayoutAccountOwnerType {
+  STORE
+  USER
+}
+
+enum PaymentProvider {
+  VIVA
+  STRIPE
+  PAYPAL
 }
 
 enum ReviewVisibility {
@@ -184,6 +196,7 @@ model User {
   customer_reviews         Review[]             @relation("ReviewCustomer")
   refunds_requested        Refund[]             @relation("RefundRequestedBy")
   refunds_processed        Refund[]             @relation("RefundProcessedBy")
+  payout_account           PayoutAccount?
 
   @@index([email])
   @@index([phone])
@@ -349,7 +362,7 @@ model Store {
 
   organization_members OrganizationMember[]
   employees            Employee[]
-  tables               Table[]
+  spots                Spot[]
   qr_codes             QrCode[]
   distribution_rules   DistributionRule[]   @relation("StoreDistributionRules")
   tips                 Tip[]
@@ -360,26 +373,11 @@ model Store {
   alert_preferences    AlertPreference[]
   alerts               Alert[]
   insight_summaries    InsightSummary[]
-  payout_account       StorePayoutAccount?
+  payout_account       PayoutAccount?
 
   @@index([organization_id])
   @@index([slug])
   @@map("stores")
-}
-
-// Payout destination for a Store's collected tips.
-model StorePayoutAccount {
-  id                  String              @id @default(uuid())
-  store_id            String              @unique
-  provider            String // payment processor name, e.g. "stripe"
-  provider_account_id String // the store's connected account id with that processor
-  status              PayoutAccountStatus @default(PENDING)
-  created_at          DateTime            @default(now())
-  updated_at          DateTime            @updatedAt
-
-  store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
-
-  @@map("store_payout_accounts")
 }
 
 // ==================================================================
@@ -408,7 +406,6 @@ model Employee {
   tip_distributions            TipDistribution[]
   reviews                      Review[]
   alerts                       Alert[]
-  payout_account               EmployeePayoutAccount?
 
   @@index([store_id])
   @@index([user_id])
@@ -416,47 +413,30 @@ model Employee {
   @@map("employees")
 }
 
-// Payout destination for an employee's share of tips, when the Store's
-// payout setup pays employees directly (e.g. via a connected account with
-// the payment processor) rather than the Store distributing funds itself.
-// Optional — a Store not using direct employee payout has none of these.
-model EmployeePayoutAccount {
-  id                  String              @id @default(uuid())
-  employee_id         String              @unique
-  provider            String // payment processor name, e.g. "stripe"
-  provider_account_id String // the employee's connected account id with that processor
-  status              PayoutAccountStatus @default(PENDING)
-  created_at          DateTime            @default(now())
-  updated_at          DateTime            @updatedAt
-
-  employee Employee @relation(fields: [employee_id], references: [id], onDelete: Cascade)
-
-  @@map("employee_payout_accounts")
-}
-
 // ==================================================================
-// Tables — a Store's physical locations (a restaurant table, the bar,
-// reception, a checkout counter, ...). Optional and many-to-many with
-// QrCode: a QR can cover several tables (e.g. one code printed for a
-// whole patio zone) and a table can have several QR codes (e.g. one on
-// the table, one on the receipt) or none at all (a QR meant for an
-// employee card or promotional material has no table).
+// Spots — a Store's physical placements (a restaurant table, a spa bed,
+// a salon chair, a hotel room, the bar, reception, a checkout counter,
+// ...). Optional and many-to-many with QrCode: a QR can cover several
+// spots (e.g. one code printed for a whole patio zone) and a spot can
+// have several QR codes (e.g. one on the table, one on the receipt) or
+// none at all (a QR meant for an employee card or promotional material
+// has no spot).
 // ==================================================================
 
-model Table {
+model Spot {
   id         String   @id @default(uuid())
   store_id   String
-  name       String // e.g. "Table 12", "Bar", "Reception"
+  name       String // e.g. "Table 12", "Bed 3", "Room 204", "Bar", "Reception"
   is_active  Boolean  @default(true)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
 
-  qr_codes QrCodeTable[]
+  qr_codes QrCodeSpot[]
 
   @@index([store_id])
-  @@map("tables")
+  @@map("spots")
 }
 
 // ==================================================================
@@ -466,10 +446,13 @@ model Table {
 model QrCode {
   id                   String              @id @default(uuid())
   store_id             String
-  code                 String              @unique // short code embedded in the scan URL, e.g. delitip.com/q/{code}
+  code                 String              @unique // short code embedded in the scan URL, e.g. delitip.com/{store_slug}/q/{code}
   label                String
   // Only meaningful when 2+ employees are assigned below; ignored for 0 or 1.
-  // CHOOSE_ONE: customer picks who to thank. TEAM: tip is split across all of them automatically.
+  // CHOOSE_ONE: customer picks exactly one to thank. CHOOSE_MANY: customer
+  // picks any subset; the tip splits only among those picked, the rule's
+  // percentages renormalized across just the selected employees. TEAM: no
+  // selection step, tip is split across all of them automatically.
   selection_mode       QrCodeSelectionMode @default(CHOOSE_ONE)
   is_active            Boolean             @default(true)
   distribution_rule_id String? // override for this QR code only; null falls back to the store's default rule
@@ -480,10 +463,10 @@ model QrCode {
   distribution_rule DistributionRule? @relation(fields: [distribution_rule_id], references: [id], onDelete: SetNull)
 
   // Both optional and independent of each other: a QR can carry any number
-  // of tables and any number of employees. A QR with employees but no
-  // tables is effectively a portable/personal QR (e.g. an employee's own
-  // business card); a QR with tables is a location QR.
-  tables    QrCodeTable[]
+  // of spots and any number of employees. A QR with employees but no
+  // spots is effectively a portable/personal QR (e.g. an employee's own
+  // business card); a QR with spots is a location QR.
+  spots     QrCodeSpot[]
   employees QrCodeEmployee[]
   tips      Tip[]
 
@@ -493,20 +476,20 @@ model QrCode {
   @@map("qr_codes")
 }
 
-// Join table: which table(s) a QR code is placed at, if any.
-model QrCodeTable {
+// Join table: which spot(s) a QR code is placed at, if any.
+model QrCodeSpot {
   id         String   @id @default(uuid())
   qr_code_id String
-  table_id   String
+  spot_id    String
   created_at DateTime @default(now())
 
   qr_code QrCode @relation(fields: [qr_code_id], references: [id], onDelete: Cascade)
-  table   Table  @relation(fields: [table_id], references: [id], onDelete: Cascade)
+  spot    Spot   @relation(fields: [spot_id], references: [id], onDelete: Cascade)
 
-  @@unique([qr_code_id, table_id])
+  @@unique([qr_code_id, spot_id])
   @@index([qr_code_id])
-  @@index([table_id])
-  @@map("qr_code_tables")
+  @@index([spot_id])
+  @@map("qr_code_spots")
 }
 
 // Join table: which employee(s) a QR code can attribute a tip to.
@@ -571,8 +554,32 @@ model DistributionRuleRecipient {
 // Tips & Payouts
 // ==================================================================
 
+// Payout destination at a payment processor. Owned by either a Store
+// (where it collects tips itself) or a User (a person's own connected
+// account, shared across every Employee Account they hold — see §11 —
+// since the processor ties one connected account to one person's
+// identity/KYC, not to a specific employment at one Store). Exactly one
+// of store_id/user_id is set, matching owner_type; the unique constraint
+// on each caps it at one payout account per owner.
+model PayoutAccount {
+  id                  String                 @id @default(uuid())
+  owner_type          PayoutAccountOwnerType
+  store_id            String?                @unique // set when owner_type is STORE
+  user_id             String?                @unique // set when owner_type is USER
+  provider            PaymentProvider        @default(VIVA)
+  provider_account_id String // the connected account id with that processor
+  status              PayoutAccountStatus    @default(PENDING)
+  created_at          DateTime               @default(now())
+  updated_at          DateTime               @updatedAt
+
+  store Store? @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  user  User?  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("payout_accounts")
+}
+
 model Tip {
-  id                   String    @id @default(uuid())
+  id                   String           @id @default(uuid())
   store_id             String
   qr_code_id           String
   employee_id          String? // the single employee this tip was attributed to (one-employee QR or a Choose-one pick); null for store-only tips and Team-mode tips, which are split across `distributions` instead
@@ -581,13 +588,13 @@ model Tip {
   customer_email       String?
   customer_name        String?
   amount               Int // in the smallest currency unit (e.g. cents)
-  currency             Currency  @default(EUR)
-  status               TipStatus @default(PENDING) // payment lifecycle of the tip itself, separate from payout_status on each TipDistribution
-  payment_provider     String?
+  currency             Currency         @default(EUR)
+  status               TipStatus        @default(PENDING) // payment lifecycle of the tip itself, separate from payout_status on each TipDistribution
+  payment_provider     PaymentProvider? @default(VIVA)
   payment_reference    String?
   paid_at              DateTime?
-  created_at           DateTime  @default(now())
-  updated_at           DateTime  @updatedAt
+  created_at           DateTime         @default(now())
+  updated_at           DateTime         @updatedAt
 
   store             Store             @relation(fields: [store_id], references: [id])
   qr_code           QrCode            @relation(fields: [qr_code_id], references: [id])
@@ -792,16 +799,6 @@ model FeedbackResponse {
   @@index([review_id])
   @@map("feedback_responses")
 }
-
-// ==================================================================
-// Localization (§24) — translatable customer-facing text is stored
-// directly on its owning row as a Json map of lowercase Language code ->
-// text, e.g. {"en": "Welcome!", "el": "Καλώς ήρθατε!"}, instead of a
-// generic joined Translation table (not worth the join cost at scale).
-// Missing keys fall back to the Store's primary_language in application
-// code. See: Store.welcome_message, Store.thank_you_message,
-// FeedbackQuestion.question, ReviewCategory.name.
-// ==================================================================
 
 // ==================================================================
 // Alerts
