@@ -1,0 +1,275 @@
+import { AlertType, OrganizationRole, ReviewSentiment } from 'generated/prisma';
+import { InsightsService } from './insights.service';
+
+const user = { id: 'u1', role: 'USER' as any };
+
+describe('InsightsService', () => {
+    let service: InsightsService;
+    let prisma: any;
+    let accessControl: any;
+
+    beforeEach(() => {
+        prisma = {
+            insightSummary: { findMany: jest.fn(), count: jest.fn(), create: jest.fn() },
+            review: { aggregate: jest.fn(), findMany: jest.fn(), groupBy: jest.fn() },
+            reviewTagAssignment: { findMany: jest.fn() },
+            employee: { findUnique: jest.fn() },
+            alertPreference: { findFirst: jest.fn() },
+            store: { findUnique: jest.fn() },
+            alert: { create: jest.fn() },
+        };
+        accessControl = { assertStoreAccess: jest.fn() };
+        service = new InsightsService(prisma, accessControl);
+    });
+
+    describe('findAll', () => {
+        it('checks store access and returns a paginated list of insight summaries', async () => {
+            const items = [{ id: 'i1' }, { id: 'i2' }];
+            prisma.insightSummary.findMany.mockResolvedValue(items);
+            prisma.insightSummary.count.mockResolvedValue(2);
+
+            const result = await service.findAll(user, 'store1', { page: 1, limit: 20 });
+
+            expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1');
+            expect(prisma.insightSummary.findMany).toHaveBeenCalledWith({
+                where: { store_id: 'store1' },
+                orderBy: { period_end: 'desc' },
+                skip: 0,
+                take: 20,
+            });
+            expect(result).toEqual({
+                data: items,
+                pagination: { total: 2, page: 1, limit: 20, total_pages: 1, has_next: false, has_prev: false },
+            });
+        });
+
+        it('applies skip/take for later pages', async () => {
+            prisma.insightSummary.findMany.mockResolvedValue([]);
+            prisma.insightSummary.count.mockResolvedValue(0);
+
+            await service.findAll(user, 'store1', { page: 3, limit: 10 });
+
+            expect(prisma.insightSummary.findMany).toHaveBeenCalledWith(
+                expect.objectContaining({ skip: 20, take: 10 }),
+            );
+        });
+    });
+
+    describe('generate', () => {
+        beforeEach(() => {
+            jest.useFakeTimers().setSystemTime(new Date('2024-03-15T12:00:00Z'));
+            prisma.review.aggregate.mockResolvedValue({ _avg: { rating: null } });
+            prisma.review.findMany.mockResolvedValue([]);
+            prisma.reviewTagAssignment.findMany.mockResolvedValue([]);
+            prisma.review.groupBy.mockResolvedValue([]);
+            prisma.insightSummary.create.mockImplementation(({ data }: any) => Promise.resolve({ id: 'insight1', ...data }));
+        });
+
+        afterEach(() => {
+            jest.useRealTimers();
+        });
+
+        it('checks store access with OWNER/STORE_MANAGER roles', async () => {
+            await service.generate(user, 'store1', {} as any);
+
+            expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1', [
+                OrganizationRole.OWNER,
+                OrganizationRole.STORE_MANAGER,
+            ]);
+        });
+
+        it('defaults the period to the last 7 days ending now when the DTO gives no dates', async () => {
+            await service.generate(user, 'store1', {} as any);
+
+            const [currentCall, previousCall] = prisma.review.aggregate.mock.calls;
+            const now = new Date('2024-03-15T12:00:00Z');
+            const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+            expect(currentCall[0].where.created_at).toEqual({ gte: sevenDaysAgo, lte: now });
+            // previous period is the same length, immediately before the current one
+            expect(previousCall[0].where.created_at).toEqual({
+                gte: new Date(sevenDaysAgo.getTime() - 7 * 24 * 60 * 60 * 1000),
+                lte: sevenDaysAgo,
+            });
+        });
+
+        it('uses the DTO-provided period when given', async () => {
+            await service.generate(user, 'store1', {
+                period_start: '2024-01-01T00:00:00Z',
+                period_end: '2024-01-11T00:00:00Z',
+            } as any);
+
+            const [currentCall] = prisma.review.aggregate.mock.calls;
+            expect(currentCall[0].where.created_at).toEqual({
+                gte: new Date('2024-01-01T00:00:00Z'),
+                lte: new Date('2024-01-11T00:00:00Z'),
+            });
+        });
+
+        it('computes satisfactionChangePercent as null when there is no previous-period average', async () => {
+            prisma.review.aggregate
+                .mockResolvedValueOnce({ _avg: { rating: 4.5 } })
+                .mockResolvedValueOnce({ _avg: { rating: null } });
+
+            const insight = await service.generate(user, 'store1', {} as any);
+
+            expect(insight.satisfaction_change_percent).toBeNull();
+        });
+
+        it('computes satisfactionChangePercent as null when there is no current-period average', async () => {
+            prisma.review.aggregate
+                .mockResolvedValueOnce({ _avg: { rating: null } })
+                .mockResolvedValueOnce({ _avg: { rating: 4.0 } });
+
+            const insight = await service.generate(user, 'store1', {} as any);
+
+            expect(insight.satisfaction_change_percent).toBeNull();
+        });
+
+        it('computes a positive satisfactionChangePercent rounded to 2 decimals', async () => {
+            prisma.review.aggregate
+                .mockResolvedValueOnce({ _avg: { rating: 4.5 } })
+                .mockResolvedValueOnce({ _avg: { rating: 4.0 } });
+
+            const insight = await service.generate(user, 'store1', {} as any);
+
+            expect(insight.satisfaction_change_percent).toBe(12.5);
+            expect(insight.summary).toContain('increased by 12.5%');
+        });
+
+        it('computes a negative satisfactionChangePercent and reflects it in the summary', async () => {
+            prisma.review.aggregate
+                .mockResolvedValueOnce({ _avg: { rating: 3.5 } })
+                .mockResolvedValueOnce({ _avg: { rating: 4.0 } });
+
+            const insight = await service.generate(user, 'store1', {} as any);
+
+            expect(insight.satisfaction_change_percent).toBe(-12.5);
+            expect(insight.summary).toContain('decreased by 12.5%');
+        });
+
+        it('finds the top praise and complaint tags by assignment count', async () => {
+            prisma.review.findMany.mockResolvedValue([{ id: 'r1' }, { id: 'r2' }, { id: 'r3' }]);
+            prisma.reviewTagAssignment.findMany.mockResolvedValue([
+                { review_tag: { name: 'Friendly staff', sentiment: ReviewSentiment.POSITIVE } },
+                { review_tag: { name: 'Friendly staff', sentiment: ReviewSentiment.POSITIVE } },
+                { review_tag: { name: 'Clean space', sentiment: ReviewSentiment.POSITIVE } },
+                { review_tag: { name: 'Slow service', sentiment: ReviewSentiment.NEGATIVE } },
+            ]);
+
+            const insight = await service.generate(user, 'store1', {} as any);
+
+            expect(prisma.reviewTagAssignment.findMany).toHaveBeenCalledWith({
+                where: { review_id: { in: ['r1', 'r2', 'r3'] } },
+                include: { review_tag: true },
+            });
+            expect(insight.top_praise).toBe('Friendly staff');
+            expect(insight.top_complaint).toBe('Slow service');
+            expect(insight.summary).toContain('Customers particularly praised Friendly staff.');
+            expect(insight.summary).toContain('The most common complaint was Slow service.');
+        });
+
+        it('skips the tag-assignment query entirely when there are no reviews in the period', async () => {
+            prisma.review.findMany.mockResolvedValue([]);
+
+            const insight = await service.generate(user, 'store1', {} as any);
+
+            expect(prisma.reviewTagAssignment.findMany).not.toHaveBeenCalled();
+            expect(insight.top_praise).toBeNull();
+            expect(insight.top_complaint).toBeNull();
+        });
+
+        it('finds the top-performing employee by count of 4+ star reviews and includes them in the summary', async () => {
+            prisma.review.groupBy.mockResolvedValue([
+                { employee_id: 'e1', _count: { _all: 2 } },
+                { employee_id: 'e2', _count: { _all: 5 } },
+            ]);
+            prisma.employee.findUnique.mockResolvedValue({ full_name: 'Nikos' });
+
+            const insight = await service.generate(user, 'store1', {} as any);
+
+            expect(prisma.employee.findUnique).toHaveBeenCalledWith({ where: { id: 'e2' }, select: { full_name: true } });
+            expect(insight.summary).toContain('Nikos received the highest number of positive mentions.');
+        });
+
+        it('omits the employee sentence when no employee groups are returned', async () => {
+            prisma.review.groupBy.mockResolvedValue([]);
+
+            const insight = await service.generate(user, 'store1', {} as any);
+
+            expect(prisma.employee.findUnique).not.toHaveBeenCalled();
+            expect(insight.summary).not.toContain('received the highest number');
+        });
+
+        it('says there is not enough data when satisfactionChangePercent is null and nothing else is found', async () => {
+            const insight = await service.generate(user, 'store1', {} as any);
+
+            expect(insight.summary).toBe('Not enough data yet to compare against the previous period.');
+        });
+
+        it('persists the insight with the computed fields', async () => {
+            prisma.review.aggregate
+                .mockResolvedValueOnce({ _avg: { rating: 4.5 } })
+                .mockResolvedValueOnce({ _avg: { rating: 4.0 } });
+
+            await service.generate(user, 'store1', {} as any);
+
+            expect(prisma.insightSummary.create).toHaveBeenCalledWith({
+                data: expect.objectContaining({
+                    store_id: 'store1',
+                    satisfaction_change_percent: 12.5,
+                }),
+            });
+        });
+
+        describe('drop alert side effect', () => {
+            it('creates a NEGATIVE_SATISFACTION_DROP alert when the drop exceeds the threshold and no preference disables it', async () => {
+                prisma.review.aggregate
+                    .mockResolvedValueOnce({ _avg: { rating: 3.5 } })
+                    .mockResolvedValueOnce({ _avg: { rating: 4.0 } }); // -12.5%, past the -10% threshold
+                prisma.alertPreference.findFirst.mockResolvedValue(null);
+                prisma.store.findUnique.mockResolvedValue({ name: 'Corner Cafe' });
+
+                await service.generate(user, 'store1', {} as any);
+
+                expect(prisma.alert.create).toHaveBeenCalledWith({
+                    data: expect.objectContaining({
+                        store_id: 'store1',
+                        type: AlertType.NEGATIVE_SATISFACTION_DROP,
+                        message: expect.stringContaining('Corner Cafe'),
+                    }),
+                });
+            });
+
+            it('does not create an alert when the drop is at or above the threshold', async () => {
+                prisma.review.aggregate
+                    .mockResolvedValueOnce({ _avg: { rating: 3.6 } })
+                    .mockResolvedValueOnce({ _avg: { rating: 4.0 } }); // exactly -10%, not < -10%
+
+                await service.generate(user, 'store1', {} as any);
+
+                expect(prisma.alert.create).not.toHaveBeenCalled();
+            });
+
+            it('skips alert creation when the store has disabled that alert preference', async () => {
+                prisma.review.aggregate
+                    .mockResolvedValueOnce({ _avg: { rating: 3.5 } })
+                    .mockResolvedValueOnce({ _avg: { rating: 4.0 } });
+                prisma.alertPreference.findFirst.mockResolvedValue({ is_enabled: false });
+
+                await service.generate(user, 'store1', {} as any);
+
+                expect(prisma.alert.create).not.toHaveBeenCalled();
+            });
+
+            it('does not let a failure while creating the alert fail insight generation', async () => {
+                prisma.review.aggregate
+                    .mockResolvedValueOnce({ _avg: { rating: 3.5 } })
+                    .mockResolvedValueOnce({ _avg: { rating: 4.0 } });
+                prisma.alertPreference.findFirst.mockRejectedValue(new Error('db down'));
+
+                await expect(service.generate(user, 'store1', {} as any)).resolves.toBeDefined();
+            });
+        });
+    });
+});
