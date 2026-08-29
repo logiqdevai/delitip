@@ -13,6 +13,7 @@ import type {
   ReviewsQuery,
   UpdateReviewPayload,
 } from "@/features/reviews/interfaces/reviews.interfaces";
+import { toast } from "@/components/ui/toast";
 
 export const reviewsQueryKeys = {
   root: ["reviews"] as const,
@@ -72,6 +73,14 @@ export const useUpdateReview = () => {
     }) => updateReview(id, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.root });
+      toast.add({ title: "Review updated", type: "success" });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not update review",
+        description: error.message,
+        type: "error",
+      });
     },
   });
 };
@@ -83,6 +92,14 @@ export const useDeleteReview = () => {
     mutationFn: (id: string) => deleteReview(id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.root });
+      toast.add({ title: "Review deleted", type: "success" });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not delete review",
+        description: error.message,
+        type: "error",
+      });
     },
   });
 };

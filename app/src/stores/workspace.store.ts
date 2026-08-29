@@ -10,6 +10,7 @@ interface WorkspaceStore {
     organizationId: string;
     storeId: string;
   }) => void;
+  switchOrganization: (organizationId: string) => void;
   clearWorkspace: () => void;
 }
 
@@ -21,6 +22,8 @@ export const useWorkspaceStore = create<WorkspaceStore>()(
         storeId: null,
         setWorkspace: ({ organizationId, storeId }) =>
           set({ organizationId, storeId }),
+        switchOrganization: (organizationId) =>
+          set({ organizationId, storeId: null }),
         clearWorkspace: () => set({ organizationId: null, storeId: null }),
       }),
       {

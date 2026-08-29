@@ -4,6 +4,7 @@ import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
 import type {
   CreateEmployeePayload,
   Employee,
+  EmployeeDashboard,
   EmployeesQuery,
   UpdateEmployeePayload,
 } from "@/features/employees/interfaces/employees.interfaces";
@@ -72,9 +73,11 @@ export const deleteEmployee = async (id: string): Promise<void> => {
   }
 };
 
-export const getEmployeeDashboard = async (id: string): Promise<unknown> => {
+export const getEmployeeDashboard = async (
+  id: string,
+): Promise<EmployeeDashboard> => {
   try {
-    const response = await axiosInstance.get(
+    const response = await axiosInstance.get<EmployeeDashboard>(
       ApiRoutes.employees.dashboard(id),
     );
     return response.data;

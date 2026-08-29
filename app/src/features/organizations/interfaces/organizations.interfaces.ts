@@ -47,3 +47,28 @@ export interface OrganizationMembership {
     stores?: Store[];
   };
 }
+
+export interface OrganizationMemberUserRef {
+  id: string;
+  first_name?: string | null;
+  last_name?: string | null;
+  email?: string | null;
+}
+
+export interface OrganizationMemberWithRefs extends OrganizationMember {
+  user?: OrganizationMemberUserRef | null;
+  store?: Store | null;
+}
+
+export interface AddMemberPayload {
+  email: string;
+  role: OrganizationRole;
+  store_id?: string;
+  first_name?: string;
+  last_name?: string;
+}
+
+export interface UpdateMemberPayload {
+  role?: OrganizationRole;
+  store_id?: string | null;
+}

@@ -31,7 +31,7 @@ const navItems = [
 
 export const EmployeeNav: FC = () => {
   const pathname = usePathname();
-  const { requestCashOut } = useEmployeeCashOut();
+  const { openCashOut } = useEmployeeCashOut();
 
   return (
     <div className="flex items-center justify-between border-b border-zinc-200 pb-3">
@@ -73,7 +73,7 @@ export const EmployeeNav: FC = () => {
 
       <button
         type="button"
-        onClick={requestCashOut}
+        onClick={openCashOut}
         className="hidden items-center gap-1.5 rounded-xl bg-electric-lime px-3.5 py-2 text-chip font-bold text-ink-charcoal shadow-sm transition hover:bg-brand-700 sm:flex"
       >
         <Zap className="size-3.5" strokeWidth={2} />

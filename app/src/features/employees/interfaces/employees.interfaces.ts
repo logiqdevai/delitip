@@ -32,3 +32,25 @@ export interface EmployeesQuery {
   search?: string;
   is_active?: boolean;
 }
+
+export interface EmployeeDashboardDistributionRuleBreakdown {
+  rule_name: string;
+  total_amount: number;
+}
+
+export interface EmployeeDashboardFeedbackItem {
+  comment: string | null;
+  rating: number;
+  created_at: string;
+}
+
+export interface EmployeeDashboard {
+  tips_this_month: {
+    total_amount: number;
+    by_distribution_rule: EmployeeDashboardDistributionRuleBreakdown[];
+  };
+  average_rating: number | null;
+  reviews_count: number;
+  customer_recognition_count: number;
+  recent_feedback: EmployeeDashboardFeedbackItem[];
+}

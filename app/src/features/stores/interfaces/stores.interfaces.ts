@@ -37,6 +37,11 @@ export const Currencies = {
 } as const;
 export type Currency = (typeof Currencies)[keyof typeof Currencies];
 
+export interface StoreDocumentRef {
+  id: string;
+  url: string;
+}
+
 export interface Store {
   id: string;
   organization_id: string;
@@ -46,6 +51,8 @@ export interface Store {
   is_active: boolean;
   logo_document_id?: string | null;
   cover_document_id?: string | null;
+  logo_document?: StoreDocumentRef | null;
+  cover_document?: StoreDocumentRef | null;
   primary_color?: string | null;
   secondary_color?: string | null;
   welcome_message?: Record<string, string> | null;

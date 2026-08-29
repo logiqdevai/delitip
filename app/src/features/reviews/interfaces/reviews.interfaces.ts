@@ -13,6 +13,34 @@ export const ReviewSentiments = {
 export type ReviewSentiment =
   (typeof ReviewSentiments)[keyof typeof ReviewSentiments];
 
+export interface ReviewEmployeeRef {
+  id: string;
+  full_name: string;
+}
+
+export interface ReviewTagRef {
+  id: string;
+  name: string;
+  sentiment?: ReviewSentiment | null;
+}
+
+export interface ReviewTagAssignment {
+  review_tag: ReviewTagRef;
+}
+
+export interface ReviewCategoryRating {
+  review_category_id: string;
+  rating: number;
+  review_category?: { id: string; name: string } | null;
+}
+
+export interface ReviewFeedbackResponse {
+  feedback_question_id: string;
+  rating_value?: number | null;
+  text_value?: string | null;
+  feedback_question?: { id: string; question: string } | null;
+}
+
 export interface Review {
   id: string;
   store_id: string;
@@ -28,45 +56,55 @@ export interface Review {
   redirected_to_public_platform: boolean;
   created_at: string;
   updated_at: string;
+  employee?: ReviewEmployeeRef | null;
+  tags?: ReviewTagAssignment[];
+  category_ratings?: ReviewCategoryRating[];
+  feedback_responses?: ReviewFeedbackResponse[];
 }
 
 export interface ReviewsQuery {
   page?: number;
   limit?: number;
   employee_id?: string;
-  rating?: number;
+  min_rating?: number;
   visibility?: ReviewVisibility;
-  sentiment?: ReviewSentiment;
-  date_from?: string;
-  date_to?: string;
+  search?: string;
 }
 
 export interface UpdateReviewPayload {
   visibility?: ReviewVisibility;
-  comment?: string;
+  tag_ids?: string[];
 }
 
 export interface CreatePublicReviewPayload {
-  store_slug: string;
+  store_id: string;
   tip_id?: string;
   employee_id?: string;
   rating: number;
   comment?: string;
   customer_email?: string;
   customer_name?: string;
-  category_ratings?: { category_id: string; rating: number }[];
-  feedback_responses?: { question_id: string; answer: string }[];
-  tag_ids?: string[];
+  category_ratings?: { review_category_id: string; rating: number }[];
+  feedback_responses?: {
+    feedback_question_id: string;
+    rating_value?: number;
+    text_value?: string;
+  }[];
+}
+
+export interface CreatePublicReviewResponse {
+  review: Review;
+  redirect: { should_redirect: boolean; url: string | null };
+  message: string;
 }
 
 export interface PublicReviewConfig {
-  rating_threshold: number;
-  redirect_url?: string | null;
-  categories: { id: string; name: string }[];
-  tags: { id: string; name: string }[];
+  review_categories: { id: string; name: string; sort_order: number }[];
   feedback_questions: {
     id: string;
     question: string;
     type: string;
+    sort_order: number;
   }[];
+  public_review_rating_threshold: number | null;
 }

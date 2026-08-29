@@ -4,17 +4,28 @@ import {
   createContext,
   type FC,
   type ReactNode,
-  useCallback,
   useContext,
   useMemo,
-  useState,
 } from "react";
-import { demoEmployee } from "../data/employee-demo";
+import {
+  ConfirmationDialog,
+  useConfirmationDialog,
+} from "@/components/ui/confirmation-dialog";
+import { useCurrentEmployee } from "@/features/employees/hooks/use-employees";
+import { useEmployeeTips } from "@/features/tips/hooks/use-tips";
+import {
+  useCreateMyPayoutAccount,
+  useMyPayoutAccount,
+} from "@/features/payout-accounts/hooks/use-payout-accounts";
+import { formatMoney } from "@/lib/money";
+
+const BALANCE_QUERY = { limit: 200 };
 
 interface EmployeeCashOutContextValue {
-  balance: number;
+  balanceMinor: number;
   formattedBalance: string;
-  requestCashOut: () => void;
+  isBalancePending: boolean;
+  openCashOut: () => void;
 }
 
 const EmployeeCashOutContext =
@@ -24,7 +35,7 @@ export const useEmployeeCashOut = () => {
   const context = useContext(EmployeeCashOutContext);
   if (!context) {
     throw new Error(
-      "useEmployeeCashOut must be used within EmployeeCashOutProvider"
+      "useEmployeeCashOut must be used within EmployeeCashOutProvider",
     );
   }
   return context;
@@ -37,51 +48,52 @@ interface EmployeeCashOutProviderProps {
 export const EmployeeCashOutProvider: FC<EmployeeCashOutProviderProps> = ({
   children,
 }) => {
-  const [balance, setBalance] = useState<number>(
-    demoEmployee.availableBalance
-  );
+  const { employeeId, store } = useCurrentEmployee();
+  const tipsQuery = useEmployeeTips(employeeId ?? "", BALANCE_QUERY);
+  const payoutAccountQuery = useMyPayoutAccount(!!employeeId);
+  const createPayoutAccount = useCreateMyPayoutAccount();
+  const dialog = useConfirmationDialog();
 
-  const formattedBalance = useMemo(
-    () =>
-      balance.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD",
-      }),
-    [balance]
-  );
+  const currency = store?.currency ?? "EUR";
+  const balanceMinor = (tipsQuery.data?.data ?? [])
+    .filter((distribution) => distribution.payout_status === "PENDING")
+    .reduce((sum, distribution) => sum + distribution.amount, 0);
+  const formattedBalance = formatMoney(balanceMinor, currency);
 
-  const requestCashOut = useCallback(() => {
-    if (balance <= 0) {
-      window.alert("You have no pending balance ready for transfer right now.");
-      return;
-    }
-
-    const confirmed = window.confirm(
-      `Transfer ${formattedBalance} instantly to your linked Debit Card (•••• ${demoEmployee.depositLast4})?`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    setBalance(0);
-    window.alert(
-      `Success! ${formattedBalance} has been sent to your bank account via instant transfer.`
-    );
-  }, [balance, formattedBalance]);
+  const isPayoutActive = payoutAccountQuery.data?.status === "ACTIVE";
 
   const value = useMemo(
     () => ({
-      balance,
+      balanceMinor,
       formattedBalance,
-      requestCashOut,
+      isBalancePending: tipsQuery.isPending,
+      openCashOut: dialog.openDialog,
     }),
-    [balance, formattedBalance, requestCashOut]
+    [balanceMinor, formattedBalance, tipsQuery.isPending, dialog.openDialog],
   );
 
   return (
     <EmployeeCashOutContext.Provider value={value}>
       {children}
+      <ConfirmationDialog
+        state={dialog}
+        variant="default"
+        title={
+          isPayoutActive ? "Cash-out balance" : "Connect a payout account"
+        }
+        description={
+          isPayoutActive
+            ? `You have ${formattedBalance} pending from unpaid tip distributions. Instant transfer isn't live yet — payouts follow your Store's schedule.`
+            : `Connect a payout account to track and eventually cash out your pending balance (${formattedBalance} right now). This is a sandbox connection — no real bank linking happens yet.`
+        }
+        confirmLabel={isPayoutActive ? "Got it" : "Connect payout account"}
+        cancelLabel={isPayoutActive ? "Close" : "Not now"}
+        isPending={createPayoutAccount.isPending}
+        onConfirm={async () => {
+          if (isPayoutActive) return;
+          await createPayoutAccount.mutateAsync({});
+        }}
+      />
     </EmployeeCashOutContext.Provider>
   );
 };

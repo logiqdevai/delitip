@@ -10,6 +10,7 @@ export const qrCodeFormSchema = z.object({
   label: z.string().trim().min(1, "Label is required"),
   selection_mode: z.enum(selectionModeValues),
   employee_ids: z.array(z.string()),
+  spot_ids: z.array(z.string()),
   distribution_rule_id: z.string().optional(),
   is_active: z.boolean(),
 });

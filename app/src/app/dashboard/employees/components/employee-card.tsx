@@ -34,12 +34,15 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
         !employee.is_active && "opacity-80",
       )}
     >
-      <div className="flex items-start gap-3">
+      <Link
+        href={Routes.dashboard.employeeDetail(employee.id)}
+        className="flex items-start gap-3"
+      >
         <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-ink-charcoal text-sm font-bold text-paper-offwhite">
           {initials(employee.full_name)}
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-sm font-bold text-ink-charcoal">
+          <h3 className="truncate text-sm font-bold text-ink-charcoal hover:underline">
             {employee.full_name}
           </h3>
           <p className="truncate text-xs text-zinc-400">
@@ -56,7 +59,7 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
             {getEmployeeStatusLabel(employee.is_active)}
           </span>
         </div>
-      </div>
+      </Link>
 
       <div className="space-y-1 border-t border-zinc-100 pt-3 text-xs">
         <div className="truncate text-zinc-500">{employee.email}</div>

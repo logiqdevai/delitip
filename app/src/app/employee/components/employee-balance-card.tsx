@@ -2,11 +2,11 @@
 
 import { type FC } from "react";
 import { CheckCircle2, Zap } from "lucide-react";
-import { demoEmployee } from "../data/employee-demo";
 import { useEmployeeCashOut } from "./employee-cash-out-provider";
 
 export const EmployeeBalanceCard: FC = () => {
-  const { formattedBalance, requestCashOut } = useEmployeeCashOut();
+  const { formattedBalance, isBalancePending, openCashOut } =
+    useEmployeeCashOut();
 
   return (
     <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-800 bg-gradient-to-br from-ink-charcoal to-ink-charcoal p-6 text-white shadow-lg">
@@ -16,28 +16,23 @@ export const EmployeeBalanceCard: FC = () => {
       />
       <div className="relative z-10">
         <div className="flex items-center justify-between text-xs font-medium text-zinc-400">
-          <span>Available for Cash Out</span>
-          <span className="rounded-full border border-brand-800/60 bg-brand-950/90 px-2 py-0.5 text-caption font-bold text-electric-lime">
-            100% Direct
-          </span>
+          <span>Pending Balance</span>
         </div>
         <div className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">
-          {formattedBalance}
+          {isBalancePending ? "—" : formattedBalance}
         </div>
         <p className="mt-1 text-[11px] text-zinc-400">
-          From today&apos;s active shift ({demoEmployee.tipsToday} customer tips)
+          From unpaid tip distributions
         </p>
       </div>
       <div className="relative z-10 pt-5">
         <button
           type="button"
-          onClick={requestCashOut}
+          onClick={openCashOut}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-electric-lime py-2.5 text-chip font-bold text-ink-charcoal shadow-sm transition hover:bg-brand-400"
         >
           <Zap className="size-3.5" strokeWidth={2} />
-          <span>
-            Transfer to Debit Card (•••• {demoEmployee.depositLast4})
-          </span>
+          <span>Cash Out</span>
         </button>
       </div>
     </div>
@@ -49,10 +44,10 @@ export const EmployeeDepositNotice: FC = () => {
     <div className="space-y-1 rounded-2xl border border-brand-200/60 bg-brand-50/70 p-3 text-[11px] text-brand-900">
       <div className="flex items-center gap-1 font-bold">
         <CheckCircle2 className="size-3.5 text-brand-700" strokeWidth={2} />
-        <span>Direct Bank Deposit Linked</span>
+        <span>Payouts follow your Store&apos;s schedule</span>
       </div>
       <p className="text-brand-800/80">
-        Weekly automated payouts every Monday at 6:00 AM.
+        Instant cash-out is a preview — no live bank transfer yet.
       </p>
     </div>
   );

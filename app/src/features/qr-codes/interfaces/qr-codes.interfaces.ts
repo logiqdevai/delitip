@@ -108,3 +108,8 @@ export function getQrCodeEmployeeIds(qr: QrCode): string[] {
 export function getQrCodeEmployeeCount(qr: QrCode): number {
   return getQrCodeEmployeeIds(qr).length;
 }
+
+export function getQrCodeSpotIds(qr: QrCode): string[] {
+  if (qr.spot_ids?.length) return qr.spot_ids;
+  return (qr.spots ?? []).map((join) => join.spot.id);
+}

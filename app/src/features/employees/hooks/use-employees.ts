@@ -13,6 +13,10 @@ import type {
   UpdateEmployeePayload,
 } from "@/features/employees/interfaces/employees.interfaces";
 import { toast } from "@/components/ui/toast";
+import { useMyAccounts } from "@/features/users/hooks/use-users";
+import { useAuthHydrated } from "@/hooks/use-auth-hydrated";
+import { useAuthStore } from "@/stores/auth.store";
+import { useEmployeeWorkspaceStore } from "@/stores/employee-workspace.store";
 
 export const employeesQueryKeys = {
   root: ["employees"] as const,
@@ -44,6 +48,38 @@ export const useEmployeeDashboard = (id: string) => {
     queryFn: () => getEmployeeDashboard(id),
     enabled: !!id,
   });
+};
+
+/**
+ * The logged-in user's own Employee identity for the employee portal.
+ * A User can hold multiple Employee accounts (multi-Store employment);
+ * an account switcher lets the user pick among multiple, persisted in
+ * `useEmployeeWorkspaceStore`; falls back to the first one.
+ */
+export const useCurrentEmployee = () => {
+  const hydrated = useAuthHydrated();
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const accountsQuery = useMyAccounts(hydrated && !!accessToken);
+  const employeeAccountId = useEmployeeWorkspaceStore(
+    (state) => state.employeeAccountId,
+  );
+
+  const employeeAccounts = accountsQuery.data?.employee_accounts ?? [];
+  const employee =
+    employeeAccounts.find((account) => account.id === employeeAccountId) ??
+    employeeAccounts[0] ??
+    null;
+
+  return {
+    employee,
+    store: employee?.store ?? null,
+    employeeId: employee?.id ?? null,
+    storeId: employee?.store_id ?? null,
+    isPending: !hydrated || (!!accessToken && accountsQuery.isPending),
+    isError: accountsQuery.isError,
+    error: accountsQuery.error,
+    isReady: !!employee,
+  };
 };
 
 export const useCreateEmployee = (storeId: string) => {

@@ -3,7 +3,10 @@
 import { useEffect } from "react";
 import { useStores } from "@/features/stores/hooks/use-stores";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
-import type { Organization } from "@/features/organizations/interfaces/organizations.interfaces";
+import type {
+  Organization,
+  OrganizationRole,
+} from "@/features/organizations/interfaces/organizations.interfaces";
 import { useMyAccounts } from "@/features/users/hooks/use-users";
 import { useAuthHydrated } from "@/hooks/use-auth-hydrated";
 import { useAuthStore } from "@/stores/auth.store";
@@ -14,10 +17,13 @@ export type WorkspaceState = {
   store: Store | null;
   organizationId: string | null;
   storeId: string | null;
+  storeList: Store[];
+  role: OrganizationRole | null;
   isPending: boolean;
   isError: boolean;
   error: Error | null;
   isReady: boolean;
+  switchStore: (storeId: string) => void;
 };
 
 export const useWorkspace = (): WorkspaceState => {
@@ -88,15 +94,24 @@ export const useWorkspace = (): WorkspaceState => {
 
   const isReady = !!organization && !!store;
 
+  const switchStore = (nextStoreId: string) => {
+    if (!organizationId) return;
+    if (!storeList.some((item) => item.id === nextStoreId)) return;
+    setWorkspace({ organizationId, storeId: nextStoreId });
+  };
+
   return {
     organization,
     store,
     organizationId,
     storeId: store?.id ?? null,
+    storeList,
+    role: selectedMembership?.role ?? null,
     isPending,
     isError,
     error,
     isReady,
+    switchStore,
   };
 };
 

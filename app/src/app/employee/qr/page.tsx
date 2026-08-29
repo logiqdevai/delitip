@@ -29,6 +29,14 @@ const QrPage: FC = () => {
         </p>
       </div>
 
+      <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50 px-4 py-2.5 text-left text-[11px] text-amber-800">
+        Preview only — there is no API yet for an employee to look up their own
+        QR code (employee sessions can&apos;t list a Store&apos;s QR codes).
+        Ask your manager to create a QR with just you assigned in{" "}
+        <span className="font-semibold">Customer Access &amp; QR Kits</span>{" "}
+        for a real, working link.
+      </div>
+
       <div className="space-y-5 rounded-3xl border border-zinc-200 bg-white p-8 shadow-xl">
         <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
           <div className="flex items-center gap-2">

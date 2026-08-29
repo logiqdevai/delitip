@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import {
   ArrowLeftRight,
   BarChart3,
+  Bell,
+  CreditCard,
   LayoutGrid,
   QrCode,
   Settings,
@@ -13,9 +15,11 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
+import { AccountSwitcher } from "@/components/auth/account-switcher";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getStoreIndustryLabel } from "@/config/constants/dropdowns/stores/store-industry-form.options";
+import { useUnreadAlertsCount } from "@/features/alerts/hooks/use-alerts";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { Routes } from "@/routes/routes";
@@ -33,6 +37,7 @@ const navItems = [
     label: "Employees",
     icon: Users,
     showStaffBadge: true,
+    hideForAccountant: true,
     match: (path: string) => path.startsWith(Routes.dashboard.employees),
   },
   {
@@ -40,6 +45,12 @@ const navItems = [
     label: "Tips Ledger",
     icon: Wallet,
     match: (path: string) => path.startsWith(Routes.dashboard.tips),
+  },
+  {
+    href: Routes.dashboard.payments,
+    label: "Payments",
+    icon: CreditCard,
+    match: (path: string) => path.startsWith(Routes.dashboard.payments),
   },
   {
     href: Routes.dashboard.reviews,
@@ -51,6 +62,7 @@ const navItems = [
     href: Routes.dashboard.distribution,
     label: "Tip Distribution",
     icon: ArrowLeftRight,
+    hideForAccountant: true,
     match: (path: string) => path.startsWith(Routes.dashboard.distribution),
   },
   {
@@ -63,7 +75,15 @@ const navItems = [
     href: Routes.dashboard.access,
     label: "Customer Access (QR)",
     icon: QrCode,
+    hideForAccountant: true,
     match: (path: string) => path.startsWith(Routes.dashboard.access),
+  },
+  {
+    href: Routes.dashboard.alerts,
+    label: "Alerts",
+    icon: Bell,
+    showUnreadBadge: true,
+    match: (path: string) => path.startsWith(Routes.dashboard.alerts),
   },
 ] as const;
 
@@ -74,8 +94,14 @@ const storeInitial = (name: string) => {
 
 export const DashboardSidebar: FC = () => {
   const pathname = usePathname();
-  const { store, storeId, isPending, isError } = useWorkspace();
+  const { store, storeId, storeList, role, isPending, isError, switchStore } =
+    useWorkspace();
   const employeesQuery = useEmployees(storeId ?? "");
+  const unreadAlertsQuery = useUnreadAlertsCount(storeId ?? "");
+  const isAccountant = role === "ACCOUNTANT";
+  const visibleNavItems = navItems.filter(
+    (item) => !("hideForAccountant" in item && item.hideForAccountant && isAccountant),
+  );
 
   const staffCount = employeesQuery.data?.pagination.total;
   const metaParts = [
@@ -99,6 +125,8 @@ export const DashboardSidebar: FC = () => {
           </div>
         </div>
 
+        <AccountSwitcher />
+
         <div className="flex items-center justify-between rounded-xl border border-zinc-200/80 bg-zinc-50 p-2.5">
           {isPending ? (
             <div className="flex min-w-0 flex-1 items-center gap-2.5">
@@ -118,14 +146,29 @@ export const DashboardSidebar: FC = () => {
               </div>
             </div>
           ) : (
-            <div className="flex min-w-0 items-center gap-2.5">
+            <div className="flex min-w-0 flex-1 items-center gap-2.5">
               <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-ink-charcoal text-xs font-bold text-paper-offwhite">
                 {storeInitial(store.name)}
               </div>
-              <div className="min-w-0 truncate">
-                <div className="truncate text-xs font-bold text-ink-charcoal">
-                  {store.name}
-                </div>
+              <div className="min-w-0 flex-1 truncate">
+                {storeList.length > 1 ? (
+                  <select
+                    value={storeId ?? ""}
+                    onChange={(event) => switchStore(event.target.value)}
+                    className="w-full truncate bg-transparent text-xs font-bold text-ink-charcoal outline-none"
+                    aria-label="Switch store"
+                  >
+                    {storeList.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="truncate text-xs font-bold text-ink-charcoal">
+                    {store.name}
+                  </div>
+                )}
                 <div className="truncate text-[10px] font-medium text-zinc-400">
                   {metaParts.length > 0 ? metaParts.join(" • ") : store.currency}
                   {typeof staffCount === "number"
@@ -138,7 +181,7 @@ export const DashboardSidebar: FC = () => {
         </div>
 
         <nav className="flex gap-1 overflow-x-auto md:flex-col md:space-y-1 md:overflow-visible">
-          {navItems.map((item) => {
+          {visibleNavItems.map((item) => {
             const Icon = item.icon;
             const active = item.match(pathname);
             const badge =
@@ -146,7 +189,11 @@ export const DashboardSidebar: FC = () => {
               item.showStaffBadge &&
               typeof staffCount === "number"
                 ? String(staffCount)
-                : undefined;
+                : "showUnreadBadge" in item &&
+                    item.showUnreadBadge &&
+                    unreadAlertsQuery.data
+                  ? String(unreadAlertsQuery.data)
+                  : undefined;
 
             return (
               <Link

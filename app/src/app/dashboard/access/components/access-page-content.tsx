@@ -16,6 +16,7 @@ import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared
 import { QrCodeCard } from "@/app/dashboard/access/components/qr-code-card";
 import { QrCodeCardsSkeleton } from "@/app/dashboard/access/components/qr-code-cards-skeleton";
 import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
+import { SpotsPanel } from "@/app/dashboard/access/components/spots-panel";
 import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
 import type { QrCode as QrCodeModel } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
@@ -134,6 +135,8 @@ export const AccessPageContent: FC = () => {
           ))}
         </div>
       )}
+
+      <SpotsPanel storeId={storeId} />
 
       <QrCodeFormDialog
         open={formOpen}

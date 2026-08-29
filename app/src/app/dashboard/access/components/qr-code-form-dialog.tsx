@@ -29,9 +29,11 @@ import {
 } from "@/features/qr-codes/hooks/use-qr-codes";
 import {
   getQrCodeEmployeeIds,
+  getQrCodeSpotIds,
   QrCodeSelectionModes,
   type QrCode,
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
+import { useSpots } from "@/features/spots/hooks/use-spots";
 import {
   qrCodeFormSchema,
   type QrCodeFormData,
@@ -61,6 +63,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
   const updateQr = useUpdateQrCode();
   const employeesQuery = useEmployees(storeId, { limit: 100, is_active: true });
   const rulesQuery = useDistributionRules(storeId);
+  const spotsQuery = useSpots(storeId, { limit: 100, is_active: true });
   const isPending = createQr.isPending || updateQr.isPending;
 
   const {
@@ -75,6 +78,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
       label: "",
       selection_mode: QrCodeSelectionModes.CHOOSE_ONE,
       employee_ids: [],
+      spot_ids: [],
       distribution_rule_id: "",
       is_active: true,
     },
@@ -87,6 +91,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
         label: qr.label,
         selection_mode: qr.selection_mode,
         employee_ids: getQrCodeEmployeeIds(qr),
+        spot_ids: getQrCodeSpotIds(qr),
         distribution_rule_id: qr.distribution_rule_id ?? "",
         is_active: qr.is_active,
       });
@@ -96,6 +101,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
       label: "",
       selection_mode: QrCodeSelectionModes.CHOOSE_ONE,
       employee_ids: [],
+      spot_ids: [],
       distribution_rule_id: "",
       is_active: true,
     });
@@ -106,6 +112,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
       label: values.label,
       selection_mode: values.selection_mode,
       employee_ids: values.employee_ids,
+      spot_ids: values.spot_ids,
       distribution_rule_id: values.distribution_rule_id || undefined,
       ...(isEdit ? { is_active: values.is_active } : {}),
     };
@@ -128,6 +135,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
 
   const employees = employeesQuery.data?.data ?? [];
   const rules = rulesQuery.data ?? [];
+  const spots = spotsQuery.data?.data ?? [];
   const tipPreview = qr
     ? getTipPath(storeSlug, qr.code)
     : `/${storeSlug}/q/…`;
@@ -224,6 +232,50 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                                 </span>
                               ) : null}
                             </span>
+                          </label>
+                        );
+                      })}
+                    </>
+                  )}
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>
+              Spots <span className="font-normal text-zinc-400">(optional)</span>
+            </Label>
+            <div className="max-h-32 space-y-2 overflow-y-auto rounded-xl border border-zinc-200 p-3">
+              {spots.length === 0 ? (
+                <p className="text-xs text-zinc-500">
+                  No spots yet. Create one from the Spots list on this page.
+                </p>
+              ) : (
+                <Controller
+                  control={control}
+                  name="spot_ids"
+                  render={({ field }) => (
+                    <>
+                      {spots.map((spot) => {
+                        const checked = field.value.includes(spot.id);
+                        return (
+                          <label
+                            key={spot.id}
+                            className="flex cursor-pointer items-center gap-2 text-sm"
+                          >
+                            <Checkbox
+                              checked={checked}
+                              onCheckedChange={(next) => {
+                                const isOn = next === true;
+                                field.onChange(
+                                  isOn
+                                    ? [...field.value, spot.id]
+                                    : field.value.filter((id) => id !== spot.id),
+                                );
+                              }}
+                            />
+                            <span className="min-w-0 truncate">{spot.name}</span>
                           </label>
                         );
                       })}

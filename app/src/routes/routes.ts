@@ -22,11 +22,16 @@ export const Routes = {
   dashboard: {
     root: "/dashboard",
     employees: "/dashboard/employees",
+    employeeDetail: (employeeId: string) =>
+      `/dashboard/employees/${employeeId}` as const,
     tips: "/dashboard/tips",
+    tipDetail: (tipId: string) => `/dashboard/tips/${tipId}` as const,
     reviews: "/dashboard/reviews",
     distribution: "/dashboard/distribution",
     analytics: "/dashboard/analytics",
     access: "/dashboard/access",
+    alerts: "/dashboard/alerts",
+    payments: "/dashboard/payments",
     settings: "/dashboard/settings",
   },
   employee: {

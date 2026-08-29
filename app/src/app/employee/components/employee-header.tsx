@@ -1,13 +1,21 @@
 "use client";
 
 import { type FC, useState } from "react";
-import Image from "next/image";
+import { AccountSwitcher } from "@/components/auth/account-switcher";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { cn } from "@/lib/utils";
-import { demoEmployee } from "../data/employee-demo";
+import { useCurrentEmployee } from "@/features/employees/hooks/use-employees";
+
+const employeeInitials = (name: string) => {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+  return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
+};
 
 export const EmployeeHeader: FC = () => {
   const [onShift, setOnShift] = useState(true);
+  const { employee, store } = useCurrentEmployee();
 
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white px-4 py-3 sm:px-8">
@@ -26,6 +34,7 @@ export const EmployeeHeader: FC = () => {
         </div>
 
         <div className="flex items-center gap-3 sm:gap-4">
+          <AccountSwitcher />
           <button
             type="button"
             onClick={() => setOnShift((current) => !current)}
@@ -46,19 +55,15 @@ export const EmployeeHeader: FC = () => {
           </button>
 
           <div className="flex items-center gap-2.5 border-l border-zinc-200 pl-2">
-            <Image
-              src={demoEmployee.photo}
-              alt={demoEmployee.name}
-              width={32}
-              height={32}
-              className="size-8 rounded-full object-cover ring-2 ring-electric-lime/20"
-            />
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-ink-charcoal text-xs font-bold text-paper-offwhite ring-2 ring-electric-lime/20">
+              {employee ? employeeInitials(employee.full_name) : "?"}
+            </div>
             <div className="hidden text-left sm:block">
               <div className="text-xs font-bold text-ink-charcoal">
-                {demoEmployee.name}
+                {employee?.full_name ?? "—"}
               </div>
               <div className="text-[10px] text-zinc-400">
-                {demoEmployee.business}
+                {store?.name ?? "—"}
               </div>
             </div>
           </div>
