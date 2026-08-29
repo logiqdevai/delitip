@@ -22,7 +22,10 @@ export class PasswordService {
             where: { email: dto.email },
         });
 
-        if (user && user.password) {
+        // A user row always accepts a reset/claim link here, even one with no
+        // password yet (e.g. an Employee created by a Store owner) — that's the
+        // only way such a "shell" account can ever be claimed and logged into.
+        if (user) {
             const token = randomBytes(32).toString('hex');
             const tokenHash = this.hashToken(token);
             const expiresAt = new Date(Date.now() + RESET_TOKEN_EXPIRY_MS);

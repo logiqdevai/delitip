@@ -26,19 +26,27 @@ export class EmailAuthService {
                 },
             });
 
-            if (existingUser) {
+            // A row with no password yet (e.g. an Employee created by a Store owner,
+            // or a waitlist signup) is a passive shell, not a claimed account — let
+            // this request claim it instead of rejecting it as a duplicate.
+            if (existingUser && existingUser.password) {
                 throw new ConflictException('User with this email already exists');
             }
 
             const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-            const user = await this.prisma.user.create({
-                data: {
-                    email: dto.email,
-                    password: hashedPassword,
-                    role: AuthRoles.USER,
-                },
-            });
+            const user = existingUser
+                ? await this.prisma.user.update({
+                    where: { id: existingUser.id },
+                    data: { password: hashedPassword, registered_at: new Date() },
+                })
+                : await this.prisma.user.create({
+                    data: {
+                        email: dto.email,
+                        password: hashedPassword,
+                        role: AuthRoles.USER,
+                    },
+                });
 
             const token = await this.jwtService.signToken({
                 id: user.id,

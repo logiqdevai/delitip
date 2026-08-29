@@ -6,7 +6,7 @@ import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
 import { CreatePublicRefundRequestDto, CreateRefundDto } from '../dto/create-refund.dto';
 import { UpdateRefundDto } from '../dto/update-refund.dto';
 import { RefundsQueryType } from '../dto/refunds-query.schema';
-import { RefundStatus, TipStatus } from 'generated/prisma';
+import { PayoutStatus, RefundStatus, TipStatus } from 'generated/prisma';
 
 @Injectable()
 export class RefundsService {
@@ -102,6 +102,14 @@ export class RefundsService {
 
             if (dto.status === RefundStatus.COMPLETED) {
                 await tx.tip.update({ where: { id: refund.tip_id }, data: { status: TipStatus.REFUNDED } });
+
+                // The tip was refunded, so any share of it that hasn't already been
+                // paid out never will be — cancel it instead of leaving it PENDING
+                // forever (which double-counts it in payout/earnings totals).
+                await tx.tipDistribution.updateMany({
+                    where: { tip_id: refund.tip_id, payout_status: PayoutStatus.PENDING },
+                    data: { payout_status: PayoutStatus.CANCELLED },
+                });
             }
 
             return updated;

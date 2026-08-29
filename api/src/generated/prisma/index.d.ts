@@ -265,7 +265,8 @@ export type TipStatus = (typeof TipStatus)[keyof typeof TipStatus]
 export const PayoutStatus: {
   PENDING: 'PENDING',
   PAID: 'PAID',
-  FAILED: 'FAILED'
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
 };
 
 export type PayoutStatus = (typeof PayoutStatus)[keyof typeof PayoutStatus]

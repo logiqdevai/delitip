@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { AuthRole, OrganizationRole, RefundStatus, TipStatus } from 'generated/prisma';
+import { AuthRole, OrganizationRole, PayoutStatus, RefundStatus, TipStatus } from 'generated/prisma';
 import { RefundsService } from './refunds.service';
 
 describe('RefundsService', () => {
@@ -14,6 +14,7 @@ describe('RefundsService', () => {
         prisma = {
             tip: { findUnique: jest.fn(), update: jest.fn() },
             refund: { create: jest.fn(), findMany: jest.fn(), count: jest.fn(), findUnique: jest.fn(), update: jest.fn() },
+            tipDistribution: { updateMany: jest.fn() },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
         accessControl = { assertStoreAccess: jest.fn() };
@@ -226,7 +227,24 @@ describe('RefundsService', () => {
             });
         });
 
-        it('does not touch the tip when transitioning to a non-COMPLETED status', async () => {
+        it('cancels the tip\'s still-pending distributions when the refund becomes COMPLETED', async () => {
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: { store_id: 'store1' },
+            });
+            prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
+
+            await service.update(user, 'refund1', { status: RefundStatus.COMPLETED });
+
+            expect(prisma.tipDistribution.updateMany).toHaveBeenCalledWith({
+                where: { tip_id: 'tip1', payout_status: PayoutStatus.PENDING },
+                data: { payout_status: PayoutStatus.CANCELLED },
+            });
+        });
+
+        it('does not touch the tip or its distributions when transitioning to a non-COMPLETED status', async () => {
             prisma.refund.findUnique.mockResolvedValue({
                 id: 'refund1',
                 status: RefundStatus.PENDING,
@@ -238,6 +256,7 @@ describe('RefundsService', () => {
             await service.update(user, 'refund1', { status: RefundStatus.APPROVED });
 
             expect(prisma.tip.update).not.toHaveBeenCalled();
+            expect(prisma.tipDistribution.updateMany).not.toHaveBeenCalled();
         });
 
         it('asserts store access with the manage roles before updating', async () => {

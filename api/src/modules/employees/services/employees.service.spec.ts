@@ -1,5 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
-import { AuthRole, OrganizationRole } from 'generated/prisma';
+import { AuthRole, OrganizationRole, PayoutStatus } from 'generated/prisma';
 import { EmployeesService } from './employees.service';
 
 describe('EmployeesService', () => {
@@ -196,7 +196,9 @@ describe('EmployeesService', () => {
 
             expect(accessControl.assertEmployeeSelfOrStoreAccess).toHaveBeenCalledWith(user, 'emp1');
             expect(prisma.tipDistribution.findMany).toHaveBeenCalledWith(
-                expect.objectContaining({ where: { employee_id: 'emp1' } }),
+                expect.objectContaining({
+                    where: { employee_id: 'emp1', payout_status: { not: PayoutStatus.CANCELLED } },
+                }),
             );
             expect(result.data).toEqual([{ id: 'td1' }]);
         });

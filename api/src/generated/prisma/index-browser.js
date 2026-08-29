@@ -586,7 +586,8 @@ exports.TipStatus = exports.$Enums.TipStatus = {
 exports.PayoutStatus = exports.$Enums.PayoutStatus = {
   PENDING: 'PENDING',
   PAID: 'PAID',
-  FAILED: 'FAILED'
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.RefundStatus = exports.$Enums.RefundStatus = {

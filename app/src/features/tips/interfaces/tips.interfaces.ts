@@ -12,6 +12,7 @@ export const PayoutStatuses = {
   PENDING: "PENDING",
   PAID: "PAID",
   FAILED: "FAILED",
+  CANCELLED: "CANCELLED",
 } as const;
 export type PayoutStatus = (typeof PayoutStatuses)[keyof typeof PayoutStatuses];
 

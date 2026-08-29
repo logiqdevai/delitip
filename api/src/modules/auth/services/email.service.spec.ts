@@ -14,7 +14,7 @@ describe('EmailAuthService', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        prisma = { user: { findUnique: jest.fn(), create: jest.fn() } };
+        prisma = { user: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn() } };
         jwtService = { signToken: jest.fn(), getExpirationTime: jest.fn() };
         mailService = { sendEmail: jest.fn() };
         service = new EmailAuthService(prisma, jwtService, mailService);
@@ -24,14 +24,15 @@ describe('EmailAuthService', () => {
         // The whole method body is wrapped in a single try/catch that rewraps
         // ANY thrown error — including its own ConflictException — as a
         // BadRequestException. Callers never actually see a 409 here.
-        it('rewraps the duplicate-email conflict as a BadRequestException, not a ConflictException', async () => {
-            prisma.user.findUnique.mockResolvedValue({ id: 'existing' });
+        it('rewraps the duplicate-email conflict as a BadRequestException, not a ConflictException, when the existing user already has a password', async () => {
+            prisma.user.findUnique.mockResolvedValue({ id: 'existing', password: 'already-hashed' });
 
             await expect(service.registerWithEmail({ email: 'a@b.com', password: 'secret1' }))
                 .rejects.toThrow(BadRequestException);
             await expect(service.registerWithEmail({ email: 'a@b.com', password: 'secret1' }))
                 .rejects.toThrow('User with this email already exists');
             expect(prisma.user.create).not.toHaveBeenCalled();
+            expect(prisma.user.update).not.toHaveBeenCalled();
         });
 
         it('hashes the password, creates the user with the USER role, and returns a token with the password stripped', async () => {
@@ -54,6 +55,41 @@ describe('EmailAuthService', () => {
                 user: { id: 'u1', email: 'a@b.com', role: AuthRoles.USER },
             });
             expect((result.user as any).password).toBeUndefined();
+        });
+
+        it('claims a passwordless shell user (e.g. an Employee added by a Store owner) instead of rejecting it as a duplicate', async () => {
+            prisma.user.findUnique.mockResolvedValue({ id: 'shell1', email: 'a@b.com', password: null, role: AuthRoles.USER });
+            (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password');
+            prisma.user.update.mockResolvedValue({ id: 'shell1', email: 'a@b.com', password: 'hashed-password', role: AuthRoles.USER });
+            jwtService.signToken.mockResolvedValue('signed-token');
+            jwtService.getExpirationTime.mockReturnValue(3600);
+
+            const result = await service.registerWithEmail({ email: 'a@b.com', password: 'secret1' });
+
+            expect(prisma.user.create).not.toHaveBeenCalled();
+            expect(prisma.user.update).toHaveBeenCalledWith({
+                where: { id: 'shell1' },
+                data: { password: 'hashed-password', registered_at: expect.any(Date) },
+            });
+            expect(jwtService.signToken).toHaveBeenCalledWith({ id: 'shell1', role: AuthRoles.USER });
+            expect(result.access_token).toBe('signed-token');
+            expect((result.user as any).password).toBeUndefined();
+        });
+
+        it('claims a shell user created with an empty-string password (e.g. a waitlist signup) too', async () => {
+            prisma.user.findUnique.mockResolvedValue({ id: 'shell2', email: 'a@b.com', password: '', role: AuthRoles.USER });
+            (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password');
+            prisma.user.update.mockResolvedValue({ id: 'shell2', email: 'a@b.com', password: 'hashed-password', role: AuthRoles.USER });
+            jwtService.signToken.mockResolvedValue('signed-token');
+            jwtService.getExpirationTime.mockReturnValue(3600);
+
+            await service.registerWithEmail({ email: 'a@b.com', password: 'secret1' });
+
+            expect(prisma.user.create).not.toHaveBeenCalled();
+            expect(prisma.user.update).toHaveBeenCalledWith({
+                where: { id: 'shell2' },
+                data: { password: 'hashed-password', registered_at: expect.any(Date) },
+            });
         });
 
         it('rewraps any downstream failure (e.g. a DB error) as a BadRequestException too', async () => {

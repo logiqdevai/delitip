@@ -35,13 +35,16 @@ describe('PasswordService', () => {
             expect(mailService.sendEmail).not.toHaveBeenCalled();
         });
 
-        it('returns the generic message without side effects when the user has no password set (e.g. OAuth-only account)', async () => {
+        it('still sends a claim link when the user has no password set yet (e.g. an Employee shell added by a Store owner)', async () => {
             prisma.user.findUnique.mockResolvedValue({ id: 'u1', email: 'a@b.com', password: null });
 
             await service.forgotPassword({ email: 'a@b.com' } as any);
+            await new Promise((resolve) => setImmediate(resolve));
 
-            expect(prisma.passwordResetToken.create).not.toHaveBeenCalled();
-            expect(mailService.sendEmail).not.toHaveBeenCalled();
+            expect(prisma.passwordResetToken.create).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ user_uuid: 'u1' }) }),
+            );
+            expect(mailService.sendEmail).toHaveBeenCalled();
         });
 
         it('invalidates prior unused tokens, creates a new one, and fire-and-forget sends the reset email', async () => {

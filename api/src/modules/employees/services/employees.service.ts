@@ -6,7 +6,7 @@ import { paginate, PaginationQueryType } from '@/shared/utils/pagination/paginat
 import { CreateEmployeeDto } from '../dto/create-employee.dto';
 import { UpdateEmployeeDto } from '../dto/update-employee.dto';
 import { EmployeesQueryType } from '../dto/employees-query.schema';
-import { OrganizationRole } from 'generated/prisma';
+import { OrganizationRole, PayoutStatus } from 'generated/prisma';
 
 @Injectable()
 export class EmployeesService {
@@ -91,7 +91,11 @@ export class EmployeesService {
 
         const [distributionsThisMonth, ratingAgg, reviewsCount, recentFeedback] = await Promise.all([
             this.prisma.tipDistribution.findMany({
-                where: { employee_id: employee.id, created_at: { gte: startOfMonth } },
+                where: {
+                    employee_id: employee.id,
+                    created_at: { gte: startOfMonth },
+                    payout_status: { not: PayoutStatus.CANCELLED },
+                },
                 include: { tip: { include: { distribution_rule: true } } },
             }),
             this.prisma.review.aggregate({
@@ -134,7 +138,7 @@ export class EmployeesService {
     async tips(user: AuthUser, id: string, query: PaginationQueryType) {
         const { employee } = await this.accessControl.assertEmployeeSelfOrStoreAccess(user, id);
 
-        const where = { employee_id: employee.id };
+        const where = { employee_id: employee.id, payout_status: { not: PayoutStatus.CANCELLED } };
 
         const [items, total] = await Promise.all([
             this.prisma.tipDistribution.findMany({

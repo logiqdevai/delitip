@@ -100,6 +100,7 @@ enum PayoutStatus {
   PENDING
   PAID
   FAILED
+  CANCELLED // the parent Tip was refunded before this share was ever paid out
 }
 
 // Connected-account lifecycle with the payment processor (e.g. Stripe
