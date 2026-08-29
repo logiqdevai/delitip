@@ -2,7 +2,7 @@
 
 ## 1. Product Overview
 
-**DelyTip** is a digital tipping and customer feedback platform designed primarily for restaurants, cafés, bars, hotels, salons, and other service-based businesses.
+**DelyTip** is a digital tipping and customer feedback platform designed primarily for restaurants, cafés, bars, hotels, salons, spas, and other service-based businesses.
 
 The core idea is simple:
 
@@ -84,6 +84,19 @@ When a QR code is assigned multiple employees in **Choose one** mode — the def
 
 The tip goes to whichever employee they select, per the rule (§5).
 
+### Choosing several
+
+When a QR code is assigned multiple employees in **Choose many** mode, the customer picks any subset of them:
+
+> **Who would you like to thank?** *(select all that apply)*
+>
+> ☑ Maria — Waitress
+> ☑ Nikos — Waiter
+> ☐ Elena — Bartender
+> ☐ George — Host
+
+The tip splits only among the employees they selected, per the rule (§5) — Elena and George receive nothing from this tip since they weren't picked.
+
 ### One employee, no choice needed
 
 A QR code assigned exactly one employee — for example, one placed on that employee's table card — shows that employee automatically:
@@ -163,6 +176,7 @@ This follows directly from how the QR code was set up (§9) — how many employe
 - **General Store tip (zero employees)** — no employee selection is shown; the tip goes to the Store, per the rule's Store share (typically Store: 100%).
 - **Individual tipping (one employee)** — a QR code associated with one employee (§3) uses that employee's applicable rule, typically Employee: 100%, or Store: X% / Employee: (100−X)% if the Store takes a fee. Example: Customer leaves €10 → Maria receives €10 (or €9 if the Store keeps a 10% fee).
 - **Choose one (multiple employees, default)** — the customer picks a single employee from those assigned (§3); the rule's Employee share goes entirely to whoever they pick.
+- **Choose many (multiple employees)** — the customer picks any subset of those assigned (§3); the rule's Employee shares are renormalized across just the selected employees, so the split stays proportional even though not everyone was picked. Example: a 70/30 Maria/Nikos rule, but the customer only picks Nikos → Nikos receives 100% of the Employee share.
 - **Team (multiple employees, no choice)** — the QR shows all assigned employees with no selection step, and the tip is automatically split across them per the rule. Example: €20 on a 70/30 rule → Maria receives €14, Nikos receives €6.
 
 ### Who can configure this
@@ -239,6 +253,8 @@ This gives the Store an opportunity to identify problems before they become publ
 
 Stores should be able to create customized feedback questions.
 
+Every Store selects a **Store Type** when it's created (§31) — Restaurant, Café, Bar, Hotel, Salon, Spa, Retail, or Other. This determines a sensible set of default feedback questions, shown below. The Store can still add, remove, or edit questions freely; the Store Type only supplies a useful starting point.
+
 For example:
 
 ### Restaurant
@@ -262,6 +278,12 @@ For example:
 > How satisfied are you with the service?
 
 > How was your stylist?
+
+### Spa
+
+> How relaxing was your visit?
+
+> How was your therapist?
 
 This allows DelyTip to work across multiple industries.
 
@@ -291,7 +313,7 @@ When creating a QR code, the Store assigns any number of employees to it — zer
 
 - **Zero employees** — a Store-only QR, e.g. a reception desk or general checkout tip jar. No employee selection is shown; the whole tip goes to the Store, per the rule's Store share.
 - **One employee** — the QR auto-shows that employee (§3); no selection needed.
-- **Multiple employees** — the Store also picks a mode: **Choose one** (default) shows all assigned employees and lets the customer pick who to thank (§3); **Team** shows all of them with no selection step and splits the tip across them automatically per the rule (§5).
+- **Multiple employees** — the Store also picks a mode: **Choose one** (default) shows all assigned employees and lets the customer pick a single one to thank (§3); **Choose many** lets the customer pick any subset, splitting the tip only among those picked (§3, §5); **Team** shows all of them with no selection step and splits the tip across them automatically per the rule (§5).
 
 Both the assigned employees and the rule applied can be changed at any time after the QR code is created (§5).
 
@@ -306,6 +328,8 @@ For example:
 > Reception generated 42 reviews.
 
 The QR codes can also be downloaded and printed.
+
+> **Implementation note:** a Store's physical placements — a table, a spa bed, a salon chair, a hotel room, the bar, reception, ... — are their own records, called Spots, optionally linked to QR codes many-to-many. A QR can cover several Spots (e.g. one code printed for a whole patio zone) and a Spot can carry several QR codes (e.g. one on the table, one on the receipt). A QR with no Spot at all (an employee card, a promotional flyer) is a portable QR rather than a location one.
 
 ---
 
@@ -750,6 +774,8 @@ It does not cover the platform's own interface — buttons, navigation, system m
 
 If a language doesn't have a translation yet — the Store hasn't reviewed it, or auto-translation hasn't run — the customer sees the Store's primary-language version rather than a blank field or a broken translation.
 
+> **Implementation note:** each translatable field is stored inline as a `{language_code: text}` map (e.g. `{"en": "Welcome!", "el": "Καλώς ήρθατε!"}`) directly on its own row, rather than in a separate translations table joined at read time. This avoids join overhead as feedback questions, review categories, and Store messages scale into the thousands.
+
 ---
 
 # 25. Scaling Across Organization Sizes
@@ -871,7 +897,7 @@ A new business should be able to get started through a simple onboarding process
 
 ### Step 1
 
-Create Organization and first Store. For a single-Store Organization, this happens as one step and the Organization stays invisible — it's presented as "create your business profile," not as a separate org-creation step.
+Create Organization and first Store, including selecting the Store's **Store Type** — Restaurant, Café, Bar, Hotel, Salon, Spa, Retail, or Other (§8). For a single-Store Organization, this happens as one step and the Organization stays invisible — it's presented as "create your business profile," not as a separate org-creation step.
 
 ### Step 2
 
