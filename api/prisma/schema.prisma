@@ -35,20 +35,10 @@ enum DocumentType {
   OTHER
 }
 
-enum OrganizationStatus {
-  ACTIVE
-  SUSPENDED
-}
-
 enum OrganizationRole {
   OWNER
   STORE_MANAGER
   ACCOUNTANT
-}
-
-enum StoreStatus {
-  ACTIVE
-  INACTIVE
 }
 
 enum StoreIndustry {
@@ -62,19 +52,30 @@ enum StoreIndustry {
   OTHER
 }
 
-enum EmployeeStatus {
-  ACTIVE
-  INACTIVE
+enum Language {
+  EN
+  EL
+  ES
+  FR
+  DE
+  IT
+  PT
+  TR
+  RU
+  AR
+  ZH
 }
 
-enum TableStatus {
-  ACTIVE
-  INACTIVE
-}
-
-enum QrCodeStatus {
-  ACTIVE
-  INACTIVE
+// Mirrors the Language markets above: EUR (eurozone), USD/GBP (English),
+// TRY (Turkey), RUB (Russia), AED (Arabic-market default), CNY (China).
+enum Currency {
+  EUR
+  USD
+  GBP
+  TRY
+  RUB
+  AED
+  CNY
 }
 
 enum QrCodeSelectionMode {
@@ -98,6 +99,16 @@ enum PayoutStatus {
   PENDING
   PAID
   FAILED
+}
+
+// Connected-account lifecycle with the payment processor (e.g. Stripe
+// Connect onboarding), not to be confused with PayoutStatus above, which
+// tracks a single payout transaction.
+enum PayoutAccountStatus {
+  PENDING
+  ACTIVE
+  RESTRICTED
+  DISABLED
 }
 
 enum ReviewVisibility {
@@ -151,14 +162,19 @@ enum SubscriptionStatus {
 // ==================================================================
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  phone         String?   @unique
-  password      String? // null until the person sets a password; until then this row is a passive shell, not a login
-  role          AuthRole  @default(USER) // platform-level role (support/admin); unrelated to OrganizationRole, which is per Organization
-  registered_at DateTime? // set the moment the person claims this identity by setting a password for the first time
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
+  id                String    @id @default(uuid())
+  email             String    @unique
+  phone             String?   @unique
+  first_name        String? // unset until the person registers or is otherwise captured (e.g. a Store adding them as staff by name)
+  last_name         String?
+  password          String? // null until the person sets a password; until then this row is a passive shell, not a login
+  role              AuthRole  @default(USER) // platform-level role (support/admin); unrelated to OrganizationRole, which is per Organization
+  registered_at     DateTime? // set the moment the person claims this identity by setting a password for the first time
+  is_email_verified Boolean   @default(false)
+  is_phone_verified Boolean   @default(false)
+  is_archived       Boolean   @default(true)
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
 
   password_reset_tokens    PasswordResetToken[]
   documents                Document[]
@@ -216,13 +232,13 @@ model Document {
 // ==================================================================
 
 model Organization {
-  id               String             @id @default(uuid())
+  id               String   @id @default(uuid())
   name             String
-  slug             String             @unique
-  status           OrganizationStatus @default(ACTIVE)
+  slug             String   @unique
+  is_active        Boolean  @default(true)
   logo_document_id String?
-  created_at       DateTime           @default(now())
-  updated_at       DateTime           @updatedAt
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
 
   logo_document Document? @relation("OrganizationLogoDocument", fields: [logo_document_id], references: [id], onDelete: SetNull)
 
@@ -282,7 +298,7 @@ model Store {
   name            String
   slug            String        @unique
   industry        StoreIndustry @default(OTHER)
-  status          StoreStatus   @default(ACTIVE)
+  is_active       Boolean       @default(true)
 
   // Branding
   logo_document_id  String?
@@ -290,13 +306,15 @@ model Store {
   primary_color     String?
   secondary_color   String?
 
-  // Customer-facing messages (§23, §24). Json map of language code -> text,
-  // e.g. {"en": "Welcome!", "el": "Καλώς ήρθατε!"}; primary_language key
-  // is always present, others are filled in as translations are produced.
+  // Customer-facing messages (§23, §24). Json map of lowercase Language
+  // code -> text, e.g. {"en": "Welcome!", "el": "Καλώς ήρθατε!"}; the
+  // primary_language key is always present, others are filled in as
+  // translations are produced.
   welcome_message   Json?
   thank_you_message Json?
 
   // Address
+  full_address Json?
   address_line String?
   city         String?
   country      String?
@@ -304,13 +322,13 @@ model Store {
   timezone     String  @default("UTC")
 
   // Localization
-  primary_language    String   @default("en")
-  supported_languages String[] @default(["en"])
+  primary_language    Language   @default(EN)
+  supported_languages Language[] @default([EN])
 
   // Tipping configuration
-  currency                String  @default("EUR")
-  suggested_tip_amounts   Int[]   @default([200, 500, 1000, 2000])
-  allow_custom_tip_amount Boolean @default(true)
+  currency                Currency @default(EUR)
+  suggested_tip_amounts   Int[]    @default([2, 10, 20, 50])
+  allow_custom_tip_amount Boolean  @default(true)
 
   // Review flow routing: above the threshold, prompt the customer to post
   // a public review; below it, collect private feedback instead.
@@ -337,6 +355,7 @@ model Store {
   tips                 Tip[]
   reviews              Review[]
   review_categories    ReviewCategory[]
+  review_tags          ReviewTag[]
   feedback_questions   FeedbackQuestion[]
   alert_preferences    AlertPreference[]
   alerts               Alert[]
@@ -350,13 +369,13 @@ model Store {
 
 // Payout destination for a Store's collected tips.
 model StorePayoutAccount {
-  id                  String   @id @default(uuid())
-  store_id            String   @unique
+  id                  String              @id @default(uuid())
+  store_id            String              @unique
   provider            String // payment processor name, e.g. "stripe"
   provider_account_id String // the store's connected account id with that processor
-  status              String
-  created_at          DateTime @default(now())
-  updated_at          DateTime @updatedAt
+  status              PayoutAccountStatus @default(PENDING)
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @updatedAt
 
   store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
 
@@ -368,16 +387,16 @@ model StorePayoutAccount {
 // ==================================================================
 
 model Employee {
-  id                String         @id @default(uuid())
+  id                String   @id @default(uuid())
   store_id          String
   user_id           String?
-  name              String
-  email             String?
+  full_name         String
+  email             String
   photo_document_id String?
   position          String?
-  status            EmployeeStatus @default(ACTIVE)
-  created_at        DateTime       @default(now())
-  updated_at        DateTime       @updatedAt
+  is_active         Boolean  @default(true)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
 
   store          Store     @relation(fields: [store_id], references: [id], onDelete: Cascade)
   user           User?     @relation(fields: [user_id], references: [id], onDelete: SetNull)
@@ -389,11 +408,30 @@ model Employee {
   tip_distributions            TipDistribution[]
   reviews                      Review[]
   alerts                       Alert[]
+  payout_account               EmployeePayoutAccount?
 
   @@index([store_id])
   @@index([user_id])
   @@index([email])
   @@map("employees")
+}
+
+// Payout destination for an employee's share of tips, when the Store's
+// payout setup pays employees directly (e.g. via a connected account with
+// the payment processor) rather than the Store distributing funds itself.
+// Optional — a Store not using direct employee payout has none of these.
+model EmployeePayoutAccount {
+  id                  String              @id @default(uuid())
+  employee_id         String              @unique
+  provider            String // payment processor name, e.g. "stripe"
+  provider_account_id String // the employee's connected account id with that processor
+  status              PayoutAccountStatus @default(PENDING)
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @updatedAt
+
+  employee Employee @relation(fields: [employee_id], references: [id], onDelete: Cascade)
+
+  @@map("employee_payout_accounts")
 }
 
 // ==================================================================
@@ -406,12 +444,12 @@ model Employee {
 // ==================================================================
 
 model Table {
-  id         String      @id @default(uuid())
+  id         String   @id @default(uuid())
   store_id   String
   name       String // e.g. "Table 12", "Bar", "Reception"
-  status     TableStatus @default(ACTIVE)
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
 
@@ -433,7 +471,7 @@ model QrCode {
   // Only meaningful when 2+ employees are assigned below; ignored for 0 or 1.
   // CHOOSE_ONE: customer picks who to thank. TEAM: tip is split across all of them automatically.
   selection_mode       QrCodeSelectionMode @default(CHOOSE_ONE)
-  status               QrCodeStatus        @default(ACTIVE)
+  is_active            Boolean             @default(true)
   distribution_rule_id String? // override for this QR code only; null falls back to the store's default rule
   created_at           DateTime            @default(now())
   updated_at           DateTime            @updatedAt
@@ -518,6 +556,7 @@ model DistributionRuleRecipient {
   recipient_type       DistributionRecipientType
   employee_id          String? // required when recipient_type is EMPLOYEE, null when recipient_type is STORE
   percentage           Decimal                   @db.Decimal(5, 2) // 0-100; all recipients on a rule must sum to 100
+  sort_order           Int                       @default(0) // display order; the lowest sort_order recipient absorbs the rounding remainder on a split (§5)
   created_at           DateTime                  @default(now())
 
   distribution_rule DistributionRule @relation(fields: [distribution_rule_id], references: [id], onDelete: Cascade)
@@ -542,7 +581,7 @@ model Tip {
   customer_email       String?
   customer_name        String?
   amount               Int // in the smallest currency unit (e.g. cents)
-  currency             String    @default("EUR")
+  currency             Currency  @default(EUR)
   status               TipStatus @default(PENDING) // payment lifecycle of the tip itself, separate from payout_status on each TipDistribution
   payment_provider     String?
   payment_reference    String?
@@ -565,6 +604,7 @@ model Tip {
   @@index([employee_id])
   @@index([customer_user_id])
   @@index([status])
+  @@index([created_at])
   @@map("tips")
 }
 
@@ -638,11 +678,13 @@ model Review {
 
   category_ratings   ReviewCategoryRating[]
   feedback_responses FeedbackResponse[]
+  tags               ReviewTagAssignment[]
 
   @@index([store_id])
   @@index([employee_id])
   @@index([customer_user_id])
   @@index([rating])
+  @@index([created_at])
   @@map("reviews")
 }
 
@@ -677,6 +719,43 @@ model ReviewCategoryRating {
   @@index([review_id])
   @@index([review_category_id])
   @@map("review_category_ratings")
+}
+
+// Store-scoped topic tags used to auto-categorize review content (§19/§20),
+// e.g. "Friendly service", "Slow service", "Waiting time". Distinct from
+// ReviewCategory (a star-rating question the customer answers): a tag is
+// applied afterward, by the store or by AI analysis, to summarize what a
+// review was actually about.
+model ReviewTag {
+  id         String           @id @default(uuid())
+  store_id   String
+  name       String
+  sentiment  ReviewSentiment? // which bucket this tag falls under (§19: Positive / Negative); null if unbucketed
+  is_active  Boolean          @default(true)
+  created_at DateTime         @default(now())
+  updated_at DateTime         @updatedAt
+
+  store   Store                 @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  reviews ReviewTagAssignment[]
+
+  @@unique([store_id, name])
+  @@index([store_id])
+  @@map("review_tags")
+}
+
+model ReviewTagAssignment {
+  id            String   @id @default(uuid())
+  review_id     String
+  review_tag_id String
+  created_at    DateTime @default(now())
+
+  review     Review    @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_tag ReviewTag @relation(fields: [review_tag_id], references: [id], onDelete: Cascade)
+
+  @@unique([review_id, review_tag_id])
+  @@index([review_id])
+  @@index([review_tag_id])
+  @@map("review_tag_assignments")
 }
 
 // Store-configurable feedback questions, e.g. "How was the food?".
@@ -716,11 +795,11 @@ model FeedbackResponse {
 
 // ==================================================================
 // Localization (§24) — translatable customer-facing text is stored
-// directly on its owning row as a Json map of language code -> text,
-// e.g. {"en": "Welcome!", "el": "Καλώς ήρθατε!"}, instead of a generic
-// joined Translation table (not worth the join cost at scale). Missing
-// keys fall back to the Store's primary_language in application code.
-// See: Store.welcome_message, Store.thank_you_message,
+// directly on its owning row as a Json map of lowercase Language code ->
+// text, e.g. {"en": "Welcome!", "el": "Καλώς ήρθατε!"}, instead of a
+// generic joined Translation table (not worth the join cost at scale).
+// Missing keys fall back to the Store's primary_language in application
+// code. See: Store.welcome_message, Store.thank_you_message,
 // FeedbackQuestion.question, ReviewCategory.name.
 // ==================================================================
 
