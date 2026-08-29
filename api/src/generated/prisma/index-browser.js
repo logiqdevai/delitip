@@ -124,8 +124,14 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   phone: 'phone',
+  first_name: 'first_name',
+  last_name: 'last_name',
   password: 'password',
   role: 'role',
+  registered_at: 'registered_at',
+  is_email_verified: 'is_email_verified',
+  is_phone_verified: 'is_phone_verified',
+  is_archived: 'is_archived',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -151,9 +157,307 @@ exports.Prisma.DocumentScalarFieldEnum = {
   created_at: 'created_at'
 };
 
+exports.Prisma.OrganizationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  is_active: 'is_active',
+  logo_document_id: 'logo_document_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.OrganizationMemberScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  user_id: 'user_id',
+  role: 'role',
+  store_id: 'store_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.SubscriptionScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  plan: 'plan',
+  status: 'status',
+  billing_provider_customer_id: 'billing_provider_customer_id',
+  billing_provider_subscription_id: 'billing_provider_subscription_id',
+  current_period_start: 'current_period_start',
+  current_period_end: 'current_period_end',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.StoreScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  name: 'name',
+  slug: 'slug',
+  industry: 'industry',
+  is_active: 'is_active',
+  logo_document_id: 'logo_document_id',
+  cover_document_id: 'cover_document_id',
+  primary_color: 'primary_color',
+  secondary_color: 'secondary_color',
+  welcome_message: 'welcome_message',
+  thank_you_message: 'thank_you_message',
+  full_address: 'full_address',
+  address_line: 'address_line',
+  city: 'city',
+  country: 'country',
+  postal_code: 'postal_code',
+  timezone: 'timezone',
+  primary_language: 'primary_language',
+  supported_languages: 'supported_languages',
+  currency: 'currency',
+  suggested_tip_amounts: 'suggested_tip_amounts',
+  allow_custom_tip_amount: 'allow_custom_tip_amount',
+  public_review_redirect_url: 'public_review_redirect_url',
+  public_review_rating_threshold: 'public_review_rating_threshold',
+  default_distribution_rule_id: 'default_distribution_rule_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.EmployeeScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  user_id: 'user_id',
+  full_name: 'full_name',
+  email: 'email',
+  photo_document_id: 'photo_document_id',
+  position: 'position',
+  is_active: 'is_active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.SpotScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  name: 'name',
+  is_active: 'is_active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.QrCodeScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  code: 'code',
+  label: 'label',
+  selection_mode: 'selection_mode',
+  is_active: 'is_active',
+  distribution_rule_id: 'distribution_rule_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.QrCodeSpotScalarFieldEnum = {
+  id: 'id',
+  qr_code_id: 'qr_code_id',
+  spot_id: 'spot_id',
+  created_at: 'created_at'
+};
+
+exports.Prisma.QrCodeEmployeeScalarFieldEnum = {
+  id: 'id',
+  qr_code_id: 'qr_code_id',
+  employee_id: 'employee_id',
+  created_at: 'created_at'
+};
+
+exports.Prisma.DistributionRuleScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  name: 'name',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.DistributionRuleRecipientScalarFieldEnum = {
+  id: 'id',
+  distribution_rule_id: 'distribution_rule_id',
+  recipient_type: 'recipient_type',
+  employee_id: 'employee_id',
+  percentage: 'percentage',
+  sort_order: 'sort_order',
+  created_at: 'created_at'
+};
+
+exports.Prisma.PayoutAccountScalarFieldEnum = {
+  id: 'id',
+  owner_type: 'owner_type',
+  store_id: 'store_id',
+  user_id: 'user_id',
+  provider: 'provider',
+  provider_account_id: 'provider_account_id',
+  status: 'status',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.TipScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  qr_code_id: 'qr_code_id',
+  employee_id: 'employee_id',
+  distribution_rule_id: 'distribution_rule_id',
+  customer_user_id: 'customer_user_id',
+  customer_email: 'customer_email',
+  customer_name: 'customer_name',
+  amount: 'amount',
+  currency: 'currency',
+  status: 'status',
+  payment_provider: 'payment_provider',
+  payment_reference: 'payment_reference',
+  paid_at: 'paid_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.TipDistributionScalarFieldEnum = {
+  id: 'id',
+  tip_id: 'tip_id',
+  recipient_type: 'recipient_type',
+  employee_id: 'employee_id',
+  amount: 'amount',
+  percentage: 'percentage',
+  payout_status: 'payout_status',
+  paid_out_at: 'paid_out_at',
+  created_at: 'created_at'
+};
+
+exports.Prisma.RefundScalarFieldEnum = {
+  id: 'id',
+  tip_id: 'tip_id',
+  amount: 'amount',
+  reason: 'reason',
+  status: 'status',
+  requested_by_user_id: 'requested_by_user_id',
+  processed_by_user_id: 'processed_by_user_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ReviewScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  tip_id: 'tip_id',
+  employee_id: 'employee_id',
+  customer_user_id: 'customer_user_id',
+  customer_email: 'customer_email',
+  customer_name: 'customer_name',
+  rating: 'rating',
+  comment: 'comment',
+  visibility: 'visibility',
+  sentiment: 'sentiment',
+  redirected_to_public_platform: 'redirected_to_public_platform',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ReviewCategoryScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  name: 'name',
+  is_active: 'is_active',
+  sort_order: 'sort_order',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ReviewCategoryRatingScalarFieldEnum = {
+  id: 'id',
+  review_id: 'review_id',
+  review_category_id: 'review_category_id',
+  rating: 'rating',
+  created_at: 'created_at'
+};
+
+exports.Prisma.ReviewTagScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  name: 'name',
+  sentiment: 'sentiment',
+  is_active: 'is_active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.ReviewTagAssignmentScalarFieldEnum = {
+  id: 'id',
+  review_id: 'review_id',
+  review_tag_id: 'review_tag_id',
+  created_at: 'created_at'
+};
+
+exports.Prisma.FeedbackQuestionScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  question: 'question',
+  type: 'type',
+  is_active: 'is_active',
+  sort_order: 'sort_order',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.FeedbackResponseScalarFieldEnum = {
+  id: 'id',
+  feedback_question_id: 'feedback_question_id',
+  review_id: 'review_id',
+  rating_value: 'rating_value',
+  text_value: 'text_value',
+  created_at: 'created_at'
+};
+
+exports.Prisma.AlertPreferenceScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  alert_type: 'alert_type',
+  is_enabled: 'is_enabled',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.AlertScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  employee_id: 'employee_id',
+  is_read: 'is_read',
+  created_at: 'created_at'
+};
+
+exports.Prisma.InsightSummaryScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  period_start: 'period_start',
+  period_end: 'period_end',
+  summary: 'summary',
+  satisfaction_change_percent: 'satisfaction_change_percent',
+  top_praise: 'top_praise',
+  top_complaint: 'top_complaint',
+  created_at: 'created_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -164,6 +468,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.AuthRole = exports.$Enums.AuthRole = {
   USER: 'USER',
@@ -183,10 +493,161 @@ exports.DocumentType = exports.$Enums.DocumentType = {
   OTHER: 'OTHER'
 };
 
+exports.OrganizationRole = exports.$Enums.OrganizationRole = {
+  OWNER: 'OWNER',
+  STORE_MANAGER: 'STORE_MANAGER',
+  ACCOUNTANT: 'ACCOUNTANT'
+};
+
+exports.SubscriptionPlan = exports.$Enums.SubscriptionPlan = {
+  STARTER: 'STARTER',
+  PROFESSIONAL: 'PROFESSIONAL',
+  ENTERPRISE: 'ENTERPRISE'
+};
+
+exports.SubscriptionStatus = exports.$Enums.SubscriptionStatus = {
+  TRIALING: 'TRIALING',
+  ACTIVE: 'ACTIVE',
+  PAST_DUE: 'PAST_DUE',
+  CANCELED: 'CANCELED'
+};
+
+exports.StoreIndustry = exports.$Enums.StoreIndustry = {
+  RESTAURANT: 'RESTAURANT',
+  CAFE: 'CAFE',
+  BAR: 'BAR',
+  HOTEL: 'HOTEL',
+  SALON: 'SALON',
+  SPA: 'SPA',
+  RETAIL: 'RETAIL',
+  OTHER: 'OTHER'
+};
+
+exports.Language = exports.$Enums.Language = {
+  EN: 'EN',
+  EL: 'EL',
+  ES: 'ES',
+  FR: 'FR',
+  DE: 'DE',
+  IT: 'IT',
+  PT: 'PT',
+  TR: 'TR',
+  RU: 'RU',
+  AR: 'AR',
+  ZH: 'ZH'
+};
+
+exports.Currency = exports.$Enums.Currency = {
+  EUR: 'EUR',
+  USD: 'USD',
+  GBP: 'GBP',
+  TRY: 'TRY',
+  RUB: 'RUB',
+  AED: 'AED',
+  CNY: 'CNY'
+};
+
+exports.QrCodeSelectionMode = exports.$Enums.QrCodeSelectionMode = {
+  CHOOSE_ONE: 'CHOOSE_ONE',
+  CHOOSE_MANY: 'CHOOSE_MANY',
+  TEAM: 'TEAM'
+};
+
+exports.DistributionRecipientType = exports.$Enums.DistributionRecipientType = {
+  STORE: 'STORE',
+  EMPLOYEE: 'EMPLOYEE'
+};
+
+exports.PayoutAccountOwnerType = exports.$Enums.PayoutAccountOwnerType = {
+  STORE: 'STORE',
+  USER: 'USER'
+};
+
+exports.PaymentProvider = exports.$Enums.PaymentProvider = {
+  VIVA: 'VIVA',
+  STRIPE: 'STRIPE',
+  PAYPAL: 'PAYPAL'
+};
+
+exports.PayoutAccountStatus = exports.$Enums.PayoutAccountStatus = {
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  RESTRICTED: 'RESTRICTED',
+  DISABLED: 'DISABLED'
+};
+
+exports.TipStatus = exports.$Enums.TipStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
+};
+
+exports.PayoutStatus = exports.$Enums.PayoutStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  FAILED: 'FAILED'
+};
+
+exports.RefundStatus = exports.$Enums.RefundStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  COMPLETED: 'COMPLETED'
+};
+
+exports.ReviewVisibility = exports.$Enums.ReviewVisibility = {
+  PRIVATE: 'PRIVATE',
+  PUBLIC: 'PUBLIC'
+};
+
+exports.ReviewSentiment = exports.$Enums.ReviewSentiment = {
+  POSITIVE: 'POSITIVE',
+  NEUTRAL: 'NEUTRAL',
+  NEGATIVE: 'NEGATIVE'
+};
+
+exports.FeedbackQuestionType = exports.$Enums.FeedbackQuestionType = {
+  RATING: 'RATING',
+  TEXT: 'TEXT'
+};
+
+exports.AlertType = exports.$Enums.AlertType = {
+  POSITIVE_COMPLIMENTS: 'POSITIVE_COMPLIMENTS',
+  NEGATIVE_SATISFACTION_DROP: 'NEGATIVE_SATISFACTION_DROP',
+  LOW_RATING_REVIEW: 'LOW_RATING_REVIEW',
+  PERFORMANCE_CHANGE: 'PERFORMANCE_CHANGE'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
-  Document: 'Document'
+  Document: 'Document',
+  Organization: 'Organization',
+  OrganizationMember: 'OrganizationMember',
+  Subscription: 'Subscription',
+  Store: 'Store',
+  Employee: 'Employee',
+  Spot: 'Spot',
+  QrCode: 'QrCode',
+  QrCodeSpot: 'QrCodeSpot',
+  QrCodeEmployee: 'QrCodeEmployee',
+  DistributionRule: 'DistributionRule',
+  DistributionRuleRecipient: 'DistributionRuleRecipient',
+  PayoutAccount: 'PayoutAccount',
+  Tip: 'Tip',
+  TipDistribution: 'TipDistribution',
+  Refund: 'Refund',
+  Review: 'Review',
+  ReviewCategory: 'ReviewCategory',
+  ReviewCategoryRating: 'ReviewCategoryRating',
+  ReviewTag: 'ReviewTag',
+  ReviewTagAssignment: 'ReviewTagAssignment',
+  FeedbackQuestion: 'FeedbackQuestion',
+  FeedbackResponse: 'FeedbackResponse',
+  AlertPreference: 'AlertPreference',
+  Alert: 'Alert',
+  InsightSummary: 'InsightSummary'
 };
 
 /**
