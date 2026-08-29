@@ -7,7 +7,7 @@ Create and manage Store QR codes (employee assignment, selection mode, distribut
 **Roles:** Owner, Store Manager; Employees view personal QR in employee portal  
 **Prisma:** `QrCode`, `QrCodeEmployee`, `QrCodeSpot`, `Spot`, `DistributionRule`  
 **Dependencies:** Employees, Distribution, Customer tip flow, Branding  
-**Status:** **Partial** — single print-kit card on Access page; Spots/CRUD **Missing**
+**Status:** **Wired** — list/create/edit + PNG download/print on `/dashboard/access`; Spots and batch PDF deferred
 
 ---
 
@@ -15,13 +15,13 @@ Create and manage Store QR codes (employee assignment, selection mode, distribut
 
 ```text
 Customer Access (QR)
-├── Access Hub (/dashboard/access)              [page — partial]
-│   ├── QR list                                 [missing — replace single card]
-│   ├── Print / download actions
-│   └── Spots manager                           [missing]
-├── Create QR                                   [modal or page — missing]
-├── Edit QR                                     [modal or page — missing]
-└── Spot Create / Edit                          [modal — missing]
+├── Access Hub (/dashboard/access)              [page — wired]
+│   ├── QR list
+│   ├── Print / download (per QR)
+│   └── Spots manager                           [deferred]
+├── Create QR                                   [modal — wired]
+├── Edit QR                                     [modal — wired]
+└── Spot Create / Edit                          [deferred]
 ```
 
 Employee personal QR: [employee-portal.md](./employee-portal.md) `/employee/qr`.

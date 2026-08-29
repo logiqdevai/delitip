@@ -1,25 +1,42 @@
 "use client";
 
-import { type FC, type FormEvent, useState } from "react";
+import { type FC, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, LoaderCircle } from "lucide-react";
-import { Routes } from "@/routes/routes";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowRight, Eye, EyeOff, LoaderCircle } from "lucide-react";
 import {
-  AuthPasswordField,
-  authFieldClassName,
-} from "./auth-password-field";
+  businessSignInSchema,
+  type BusinessSignInFormData,
+} from "@/features/auth/validation-schemas/auth.schema";
+import { useLoginBusiness } from "@/features/auth/hooks/use-auth";
+import { Routes } from "@/routes/routes";
+import { authFieldClassName } from "./auth-password-field";
 import { AuthSocialButtons } from "./auth-social-buttons";
+import { cn } from "@/lib/utils";
 
 export const AuthSignInForm: FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isPending, setIsPending] = useState(false);
+  const loginBusiness = useLoginBusiness();
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsPending(true);
-    window.setTimeout(() => setIsPending(false), 1000);
-  };
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<BusinessSignInFormData>({
+    resolver: zodResolver(businessSignInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const isPending = loginBusiness.isPending;
+
+  const onSubmit = handleSubmit((values) => {
+    loginBusiness.mutate(values);
+  });
 
   return (
     <div className="auth-fade-enter space-y-6">
@@ -41,7 +58,7 @@ export const AuthSignInForm: FC = () => {
         </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-4" noValidate>
         <div>
           <label
             htmlFor="sign-in-email"
@@ -52,21 +69,67 @@ export const AuthSignInForm: FC = () => {
           <input
             id="sign-in-email"
             type="email"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            autoComplete="email"
             placeholder="manager@artisancafe.com"
             className={authFieldClassName}
+            aria-invalid={!!errors.email}
+            {...register("email")}
           />
+          {errors.email ? (
+            <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
+          ) : null}
         </div>
 
-        <AuthPasswordField
-          id="sign-in-password"
-          label="Password"
-          value={password}
-          onChange={setPassword}
-          forgotHref={Routes.auth.forgot_password}
-        />
+        <div>
+          <div className="mb-1.5 flex items-center justify-between">
+            <label
+              htmlFor="sign-in-password"
+              className="text-xs font-semibold text-zinc-700"
+            >
+              Password
+            </label>
+            <Link
+              href={Routes.auth.forgot_password}
+              className="text-xs font-semibold text-brand-700 hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <div className="relative">
+                <input
+                  id="sign-in-password"
+                  type={passwordVisible ? "text" : "password"}
+                  autoComplete="current-password"
+                  placeholder="••••••••••••"
+                  className={cn(authFieldClassName, "pr-10")}
+                  aria-invalid={!!errors.password}
+                  {...field}
+                />
+                <button
+                  type="button"
+                  onClick={() => setPasswordVisible((current) => !current)}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                  aria-label={
+                    passwordVisible ? "Hide password" : "Show password"
+                  }
+                >
+                  {passwordVisible ? (
+                    <EyeOff className="size-4" strokeWidth={2} />
+                  ) : (
+                    <Eye className="size-4" strokeWidth={2} />
+                  )}
+                </button>
+              </div>
+            )}
+          />
+          {errors.password ? (
+            <p className="mt-1 text-xs text-red-600">{errors.password.message}</p>
+          ) : null}
+        </div>
 
         <button
           type="submit"
@@ -76,7 +139,7 @@ export const AuthSignInForm: FC = () => {
           {isPending ? (
             <>
               <LoaderCircle className="size-4 animate-spin" strokeWidth={2} />
-              <span>Authenticating...</span>
+              <span>Signing in...</span>
             </>
           ) : (
             <>

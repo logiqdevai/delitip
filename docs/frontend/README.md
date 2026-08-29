@@ -6,7 +6,7 @@ Implementation-oriented map of pages, navigation, dialogs, and flows for the Nex
 2. [`api/prisma/schema.prisma`](../../api/prisma/schema.prisma)
 3. Current frontend under `app/src/`
 
-**Current frontend status:** Prototype UI with demo data. Forms do not call the API. `app/src/features/` is empty (`.gitkeep` only). Auth submit is fake delay with no redirect.
+**Current frontend status:** Auth email flows and portal route guards are wired. Business/employee dashboards still mostly demo data; onboarding missing. MVP `features/` modules scaffolded; `ApiRoutes` populated; axios attaches auth token.
 
 ---
 
@@ -29,9 +29,10 @@ When implementing UI, follow [`.cursor/rules/app-code-structure-and-best-practic
 - Put API logic in `app/src/features/<domain>/` (hooks, services, interfaces, schemas). **No** `features/*/components/`.
 - Put route UI in `app/src/<section>/components/`.
 - Put enum labels/options in `app/src/config/constants/dropdowns/<domain>/`.
-- Loading: layout-shaped HeroUI `Skeleton` — never `"Loading..."` as primary UI.
-- Destructive actions: shared `ConfirmationDialog`.
-- Forms: React Hook Form + Zod (`zodResolver`).
+- Loading: `TableSkeleton` / `DetailSkeleton` / layout-shaped `Skeleton` — never `"Loading..."` as primary UI.
+- Destructive actions: shared `ConfirmationDialog` + `useConfirmationDialog` (Base UI AlertDialog; not HeroUI).
+- Forms: React Hook Form + Zod (`zodResolver`) with `Field` / `FieldGroup` / `FieldError`.
+- Toasts: `toast.add({ title, description?, type })` from `@/components/ui/toast` (`Toaster` in providers).
 
 ---
 
@@ -58,12 +59,13 @@ Application
 ├── Marketing
 │   ├── Landing (/)
 │   ├── Contact (/contact)
-│   ├── Legal Terms (/legal/terms)          [missing page]
-│   └── Legal Privacy (/legal/privacy)      [missing page]
+│   ├── Legal Terms (/legal/terms)
+│   └── Legal Privacy (/legal/privacy)
 ├── Authentication
 │   ├── Sign In (/auth/sign-in)             Business | Employee modes
 │   ├── Sign Up (/auth/sign-up)             Business only
-│   ├── Forgot Password (/auth/forgot-password) [missing page]
+│   ├── Forgot Password (/auth/forgot-password)
+│   ├── Reset Password (/auth/reset-password)
 │   ├── Invite Accept                       [missing — unclear route]
 │   └── Account / Workspace Switcher        [missing]
 ├── Onboarding (post sign-up)               [missing — multi-step]
@@ -130,11 +132,12 @@ Status legend: **Existing** = `page.tsx` present · **Partial** = page exists bu
 | --- | --- | --- | --- | --- |
 | `/` | Landing | [landing-and-marketing.md](./landing-and-marketing.md) | Public | Existing |
 | `/contact` | Contact | [landing-and-marketing.md](./landing-and-marketing.md) | Public | Existing |
-| `/legal/terms` | Terms | [landing-and-marketing.md](./landing-and-marketing.md) | Public | Missing |
-| `/legal/privacy` | Privacy | [landing-and-marketing.md](./landing-and-marketing.md) | Public | Missing |
-| `/auth/sign-in` | Sign In | [authentication.md](./authentication.md) | Public | Partial |
-| `/auth/sign-up` | Sign Up | [authentication.md](./authentication.md) | Public | Partial |
-| `/auth/forgot-password` | Forgot Password | [authentication.md](./authentication.md) | Public | Missing |
+| `/legal/terms` | Terms | [landing-and-marketing.md](./landing-and-marketing.md) | Public | Existing |
+| `/legal/privacy` | Privacy | [landing-and-marketing.md](./landing-and-marketing.md) | Public | Existing |
+| `/auth/sign-in` | Sign In | [authentication.md](./authentication.md) | Public | Existing |
+| `/auth/sign-up` | Sign Up | [authentication.md](./authentication.md) | Public | Existing |
+| `/auth/forgot-password` | Forgot Password | [authentication.md](./authentication.md) | Public | Existing |
+| `/auth/reset-password` | Reset Password | [authentication.md](./authentication.md) | Public | Existing |
 | `/onboarding` | Business Setup | [onboarding.md](./onboarding.md) | Authenticated Owner | Missing |
 | `/dashboard` | Overview | [dashboard-overview.md](./dashboard-overview.md) | Org roles | Partial |
 | `/dashboard/employees` | Employees | [employees.md](./employees.md) | Owner, Store Manager | Partial |

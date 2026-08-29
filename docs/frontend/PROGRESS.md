@@ -59,17 +59,17 @@ Related:
 
 ## Current Status
 
-**Current Phase:** Phase 0 — Foundation
+**Current Phase:** Phase 2 — Core MVP Features
 
-**MVP Progress:** 2 / 48 tasks completed
+**MVP Progress:** 26 / 48 tasks completed
 
-**Overall Progress:** 2 / 112 tasks completed
+**Overall Progress:** 26 / 112 tasks completed
 
-**Product state:** Marketing + prototype shells exist with **demo data only**. `app/src/features/` is empty. `ApiRoutes` is `{}`. Auth does not call the API or redirect. No route guards.
+**Product state:** Public tip entry at `/{storeSlug}/q/{code}` loads Store + QR + employees. Employee selection → amount → pay is next (critical path).
 
-**Next Task:** Wire `ApiRoutes` to match existing API modules and scaffold first feature modules
+**Next Task:** Employee selection step (all modes)
 
-**Next Documentation:** [README.md](./README.md) (architecture) + API controllers under `api/src/modules/`
+**Next Documentation:** [customer-tipping.md](./customer-tipping.md)
 
 ---
 
@@ -77,11 +77,13 @@ Related:
 
 > The next task for the AI coding agent is:
 
-- [ ] **0.2** Populate `ApiRoutes` and establish `features/` module pattern for auth + stores
-  - Documentation: [README.md](./README.md), app rules, `app/src/config/api/routes.ts`
-  - Phase: 0 — Foundation
-  - Depends on: nothing (start here)
-  - Done means: `ApiRoutes` has real endpoint paths for at least auth, organizations, stores, employees, qr-codes, tips, reviews, distribution-rules; one example `features/auth/` (or stores) folder with interfaces + services + hooks skeleton; axios auth header hook point documented/implemented for token attach
+- [ ] **2.6** Employee selection step (all modes)
+  - Documentation: [customer-tipping.md](./customer-tipping.md)
+  - Phase: 2 — Core MVP Features
+  - Depends on: tip entry route
+  - Done means: 0 employees → skip; 1 → auto thank; CHOOSE_ONE / CHOOSE_MANY / TEAM behave per docs; distribution rule never shown
+
+Note: **0.3** Routes registry expansion remains a standing practice — add keys to `routes.ts` before each new page; do not invent unused routes.
 
 ---
 
@@ -136,39 +138,48 @@ Establish architecture so every later feature plugs into the same patterns.
   - Details: [landing-and-marketing.md](./landing-and-marketing.md)
   - Note: frontend-only (no Prisma model) — acceptable for MVP marketing
 
-- [ ] Confirm shared UI primitives available for MVP work
+- [x] Confirm shared UI primitives available for MVP work
   - Details: [README.md](./README.md), `app/src/components/ui/`
   - Depends on: none
   - Completion criteria:
-    - [ ] `ConfirmationDialog` located and usable
-    - [ ] Form helpers / toast patterns identified
-    - [ ] Skeleton approach documented for list/detail pages (reuse or add `table-skeleton` / page skeletons as needed)
-    - [ ] Agent notes any missing primitive required before Phase 2 (do not invent one-off modals)
+    - [x] `ConfirmationDialog` located and usable
+    - [x] Form helpers / toast patterns identified
+    - [x] Skeleton approach documented for list/detail pages (reuse or add `table-skeleton` / page skeletons as needed)
+    - [x] Agent notes any missing primitive required before Phase 2 (do not invent one-off modals)
+  - Audit notes (2026-08-29):
+    - Stack is **shadcn + Base UI** (not HeroUI). Use `AlertDialog`-based `ConfirmationDialog` + `useConfirmationDialog`; do not import `@heroui/react`.
+    - **Toast:** `import { toast } from "@/components/ui/toast"` → `toast.add({ title, description?, type: "success"|"error"|"info"|"warning"|"loading" })`. `Toaster` mounted in `app/providers.tsx`.
+    - **Forms:** `Field` / `FieldGroup` / `FieldLabel` / `FieldError` + `react-hook-form` + `zodResolver` (packages installed). No classic `form.tsx` FormField wrappers — match Base UI Field pattern.
+    - **Loading:** page queries → `TableSkeleton` / `DetailSkeleton` (or layout-shaped `Skeleton`); never `"Loading..."` as primary UI. Mutations → `ActionButtonWithPending` / `Spinner` on the control.
+    - **Empty:** use `Empty` family from `components/ui/empty.tsx`.
+    - **Also added for Phase 1–2:** `password-input.tsx`, `action-button-with-pending.tsx`.
+    - **Still replace later:** employee cash-out still uses `window.confirm` / `alert` — swap to `ConfirmationDialog` when wiring that flow.
+    - **Not missing for Phase 2 start:** shared destructive confirm, list/detail skeletons, toast, Field forms, password input.
 
 ### 0.2 API client & feature modules
 
-- [ ] Populate `ApiRoutes` for existing backend modules
+- [x] Populate `ApiRoutes` for existing backend modules
   - Details: [README.md](./README.md), `api/src/modules/**`
   - Depends on: none
   - Completion criteria:
-    - [ ] `app/src/config/api/routes.ts` exports paths for auth, organizations, members, stores, employees, qr-codes, spots, distribution-rules, tips, reviews, review-categories, review-tags, feedback-questions, refunds, payout-accounts, alerts, analytics, insights, subscriptions, documents
-    - [ ] No hardcoded API path strings in new service code
-    - [ ] Axios instance still central (`axios.ts`)
+    - [x] `app/src/config/api/routes.ts` exports paths for auth, organizations, members, stores, employees, qr-codes, spots, distribution-rules, tips, reviews, review-categories, review-tags, feedback-questions, refunds, payout-accounts, alerts, analytics, insights, subscriptions, documents
+    - [x] No hardcoded API path strings in new service code
+    - [x] Axios instance still central (`axios.ts`)
 
-- [ ] Scaffold `features/` domains used by MVP
+- [x] Scaffold `features/` domains used by MVP
   - Details: [README.md](./README.md)
   - Depends on: ApiRoutes
   - Completion criteria:
-    - [ ] Folders exist with hooks/services/interfaces for at least: `auth`, `stores`, `employees`, `qr-codes`, `distribution`, `tips`, `reviews`
-    - [ ] No React components under `features/`
-    - [ ] Query key conventions documented in interfaces or hook files (kebab-case)
+    - [x] Folders exist with hooks/services/interfaces for at least: `auth`, `stores`, `employees`, `qr-codes`, `distribution`, `tips`, `reviews`
+    - [x] No React components under `features/`
+    - [x] Query key conventions documented in interfaces or hook files (kebab-case)
 
-- [ ] Auth token attachment on axios
+- [x] Auth token attachment on axios
   - Details: [authentication.md](./authentication.md)
   - Depends on: auth store or session approach chosen
   - Completion criteria:
-    - [ ] Request interceptor attaches token when present
-    - [ ] 401 handling path defined (redirect to sign-in via `Routes.auth.sign_in`)
+    - [x] Request interceptor attaches token when present
+    - [x] 401 handling path defined (redirect to sign-in via `Routes.auth.sign_in`)
 
 ### 0.3 Routes registry expansion (as needed)
 
@@ -181,20 +192,21 @@ Establish architecture so every later feature plugs into the same patterns.
 
 ### 0.4 Dropdown vocabulary for MVP enums
 
-- [ ] Create dropdown option files for MVP enums
+- [x] Create dropdown option files for MVP enums
   - Details: app rules; schema enums
   - Depends on: feature interfaces for enum types
   - Completion criteria:
-    - [ ] Options exist for at least: `StoreIndustry`, `TipStatus`, `QrCodeSelectionMode`, `OrganizationRole`, `PayoutStatus`, `ReviewVisibility` / sentiment as needed
-    - [ ] Labels not defined inline in page components
+    - [x] Options exist for at least: `StoreIndustry`, `TipStatus`, `QrCodeSelectionMode`, `OrganizationRole`, `PayoutStatus`, `ReviewVisibility` / sentiment as needed
+    - [x] Labels not defined inline in page components
+  - Location: `app/src/config/constants/dropdowns/{stores,tips,qr-codes,organizations,reviews}/`; sign-up `BusinessTypeFormOptions` now aliases `StoreIndustryFormOptions`
 
 ### Phase 0 — Feature completion
 
-- [ ] ApiRoutes populated for MVP domains
-- [ ] Feature module pattern established
-- [ ] Axios auth hook-up ready
-- [ ] MVP enum dropdowns started
-- [ ] Shared destructive/loading patterns confirmed
+- [x] ApiRoutes populated for MVP domains
+- [x] Feature module pattern established
+- [x] Axios auth hook-up ready
+- [x] MVP enum dropdowns started
+- [x] Shared destructive/loading patterns confirmed
 
 ---
 
@@ -202,80 +214,84 @@ Establish architecture so every later feature plugs into the same patterns.
 
 ### 1.1 Legal pages
 
-- [ ] Implement `/legal/terms`
+- [x] Implement `/legal/terms`
   - Details: [landing-and-marketing.md](./landing-and-marketing.md)
   - Route: `Routes.legal.terms`
   - Depends on: none
   - Completion criteria:
-    - [ ] `page.tsx` exists
-    - [ ] Linked from sign-up and footer
-    - [ ] Content placeholder acceptable if legal copy TBD (note in Blocked if copy missing)
+    - [x] `page.tsx` exists
+    - [x] Linked from sign-up and footer
+    - [x] Content placeholder acceptable if legal copy TBD (note in Blocked if copy missing)
 
-- [ ] Implement `/legal/privacy`
+- [x] Implement `/legal/privacy`
   - Details: [landing-and-marketing.md](./landing-and-marketing.md)
   - Route: `Routes.legal.privacy`
   - Depends on: none
   - Completion criteria:
-    - [ ] `page.tsx` exists
-    - [ ] Linked from sign-up and footer
+    - [x] `page.tsx` exists
+    - [x] Linked from sign-up and footer
 
 ### 1.2 Auth UI → API
 
-- [ ] Wire business sign-up to API
+- [x] Wire business sign-up to API
   - Details: [authentication.md](./authentication.md), [onboarding.md](./onboarding.md)
   - Route: `Routes.auth.sign_up`
   - Depends on: Phase 0 auth feature module, ApiRoutes
   - Completion criteria:
-    - [ ] Zod validation via `zodResolver`
-    - [ ] Creates User + Organization + first Store (or equivalent API contract)
-    - [ ] Business Type mapped to `StoreIndustry`
-    - [ ] Success redirects to onboarding or dashboard
-    - [ ] Error toast on failure
-    - [ ] Terms/Privacy links work
+    - [x] Zod validation via `zodResolver`
+    - [x] Creates User + Organization + first Store (or equivalent API contract)
+    - [x] Business Type mapped to `StoreIndustry`
+    - [x] Success redirects to onboarding or dashboard
+    - [x] Error toast on failure
+    - [x] Terms/Privacy links work
+  - Notes (2026-08-29): `POST /auth/email/register` then `POST /organizations` with nested `store`; full name → `PATCH /users/me`; team size UI-only (no schema field); redirects to `Routes.onboarding` (Phase 2.1)
 
-- [ ] Wire business sign-in to API
+- [x] Wire business sign-in to API
   - Details: [authentication.md](./authentication.md)
   - Route: `Routes.auth.sign_in`
   - Depends on: auth feature module
   - Completion criteria:
-    - [ ] Session/token stored
-    - [ ] Redirect to `Routes.dashboard.root` (or account switcher if multi-account — Post-MVP OK to skip switcher)
-    - [ ] Error states for invalid credentials
-
-- [ ] Wire employee sign-in to API
+    - [x] Session/token stored
+    - [x] Redirect to `Routes.dashboard.root` (or account switcher if multi-account — Post-MVP OK to skip switcher)
+    - [x] Error states for invalid credentials
+  - Notes (2026-08-29): `POST /auth/email/login` via `useLoginBusiness`; Zod + `zodResolver`; account switcher deferred Post-MVP
+- [x] Wire employee sign-in to API
   - Details: [authentication.md](./authentication.md), [roles-and-permissions.md](./roles-and-permissions.md)
   - Depends on: auth API; clarify PIN vs password
   - Completion criteria:
-    - [ ] Employee can reach `Routes.employee.root` after auth
-    - [ ] If PIN unsupported by schema/API: document in Blocked and use supported method (email/password or phone) without inventing PIN persistence
+    - [x] Employee can reach `Routes.employee.root` after auth
+    - [x] If PIN unsupported by schema/API: document in Blocked and use supported method (email/password or phone) without inventing PIN persistence
+  - Notes (2026-08-29): PIN not in schema/API — MVP uses `POST /auth/email/login` via `useLoginEmployee` → `Routes.employee.root`; role gating deferred to 1.3
 
-- [ ] Implement forgot password + reset flow
+- [x] Implement forgot password + reset flow
   - Details: [authentication.md](./authentication.md)
   - Routes: `Routes.auth.forgot_password` (+ reset route added to `Routes`)
   - Depends on: `PasswordResetToken` API
   - Completion criteria:
-    - [ ] Forgot-password page exists
-    - [ ] Reset page exists and consumes token
-    - [ ] Success/error states
-    - [ ] Sign-in “Forgot password?” link works
+    - [x] Forgot-password page exists
+    - [x] Reset page exists and consumes token
+    - [x] Success/error states
+    - [x] Sign-in “Forgot password?” link works
+  - Notes (2026-08-29): `Routes.auth.reset_password` = `/auth/reset-password?token=` (matches API `AppUrls.resetPassword`); generic success copy on forgot (no email enumeration)
 
 ### 1.3 Route guards & session
 
-- [ ] Protect `/dashboard/*` and `/employee/*`
+- [x] Protect `/dashboard/*` and `/employee/*`
   - Details: [roles-and-permissions.md](./roles-and-permissions.md), [navigation.md](./navigation.md)
   - Depends on: working sign-in
   - Completion criteria:
-    - [ ] Unauthenticated users redirected to sign-in
-    - [ ] Employee-only users cannot use business portal (and vice versa) per membership/employee link
-    - [ ] Fallback paths use `Routes.*`
+    - [x] Unauthenticated users redirected to sign-in
+    - [x] Employee-only users cannot use business portal (and vice versa) per membership/employee link
+    - [x] Fallback paths use `Routes.*`
+  - Notes (2026-08-29): `AuthRouteGuard` + `GET /users/me/accounts`; dashboard requires `organization_memberships` (else → onboarding, or employee portal if only employee accounts); employee requires `employee_accounts`; wrong portal redirects to the other when applicable
 
 ### Phase 1 — Feature completion
 
-- [ ] Legal pages live
-- [ ] Sign-up/sign-in call API
-- [ ] Password reset works
-- [ ] Guards enforce auth
-- [ ] No fake 1s-delay-only auth submit on MVP paths
+- [x] Legal pages live
+- [x] Sign-up/sign-in call API
+- [x] Password reset works
+- [x] Guards enforce auth
+- [x] No fake 1s-delay-only auth submit on MVP paths
 
 ---
 
@@ -285,144 +301,151 @@ Dependency order: Store context → Employees → Distribution → QR → Custom
 
 ### 2.1 Onboarding (minimal)
 
-- [ ] Implement post-sign-up onboarding for Org + first Store
+- [x] Implement post-sign-up onboarding for Org + first Store
   - Details: [onboarding.md](./onboarding.md), [organizations-and-stores.md](./organizations-and-stores.md)
-  - Suggested route: add `Routes.onboarding`
+  - Route: `Routes.onboarding` (`/onboarding`)
   - Depends on: Phase 1 sign-up
   - Completion criteria:
-    - [ ] Single-store UX copy (Org jargon hidden)
-    - [ ] Store name, industry, timezone, currency capturable
-    - [ ] Prefills from sign-up when available
-    - [ ] Completion lands on dashboard
-    - [ ] Loading/error states
-    - [ ] Full 7-step wizard may be deferred but Steps 1 + “skip to dashboard” must exist; remaining steps can deep-link later tasks
-
+    - [x] Single-store UX copy (Org jargon hidden)
+    - [x] Store name, industry, timezone, currency capturable
+    - [x] Prefills from sign-up when available
+    - [x] Completion lands on dashboard
+    - [x] Loading/error states
+    - [x] Full 7-step wizard may be deferred but Steps 1 + “skip to dashboard” must exist; remaining steps can deep-link later tasks
+  - Notes (2026-08-29): `app/onboarding` + `useCompleteBusinessSetup`; sign-up → onboarding; dashboard guard without Org → onboarding; skip only when Store exists; redirect rules in [onboarding.md](./onboarding.md)
 ### 2.2 Store context in business shell
 
-- [ ] Replace `demoBusiness` sidebar chip with live Store
+- [x] Replace `demoBusiness` sidebar chip with live Store
   - Details: [organizations-and-stores.md](./organizations-and-stores.md), [navigation.md](./navigation.md)
   - Depends on: auth + stores feature
   - Completion criteria:
-    - [ ] Sidebar shows current Store name / basic meta from API
-    - [ ] Dashboard queries scoped to current Store id
-    - [ ] Multi-store switcher not required for MVP (single store)
+    - [x] Sidebar shows current Store name / basic meta from API
+    - [x] Dashboard queries scoped to current Store id
+    - [x] Multi-store switcher not required for MVP (single store)
+  - Notes (2026-08-29): `useWorkspace` + `useCurrentStoreId` (`features/stores/hooks/use-workspace.ts`); persist `organizationId`/`storeId` in `stores/workspace.store.ts`; sidebar chip + overview header use live Store; employees badge count via `useEmployees(storeId)`
 
 ### 2.3 Employees `(MVP)`
 
-- [ ] Wire `/dashboard/employees` list to API
+- [x] Wire `/dashboard/employees` list to API
   - Details: [employees.md](./employees.md)
   - Route: `Routes.dashboard.employees`
   - Depends on: Store context, employees feature
   - Completion criteria:
-    - [ ] List/cards show API employees
-    - [ ] Loading skeleton
-    - [ ] Empty state + CTA
-    - [ ] Error state
-    - [ ] Active/inactive visible via `is_active`
+    - [x] List/cards show API employees
+    - [x] Loading skeleton
+    - [x] Empty state + CTA
+    - [x] Error state
+    - [x] Active/inactive visible via `is_active`
 
-- [ ] Implement Create Employee modal
+- [x] Implement Create Employee modal
   - Details: [employees.md](./employees.md)
   - Depends on: employee list
   - Completion criteria:
-    - [ ] Fields: full_name, email, position?, photo optional
-    - [ ] Zod validation
-    - [ ] Success toast + list invalidate
-    - [ ] Error toast
-    - [ ] “Add New Employee” button wired
+    - [x] Fields: full_name, email, position?, photo optional
+    - [x] Zod validation
+    - [x] Success toast + list invalidate
+    - [x] Error toast
+    - [x] “Add New Employee” button wired
+  - Notes (2026-08-29): Photo upload deferred (no document upload UI yet); position optional
 
-- [ ] Implement Edit + deactivate employee
+- [x] Implement Edit + deactivate employee
   - Details: [employees.md](./employees.md)
   - Depends on: create employee
   - Completion criteria:
-    - [ ] Edit form works
-    - [ ] Deactivate uses `ConfirmationDialog` (prefer `is_active=false`)
-    - [ ] Permissions: Owner / Store Manager only
+    - [x] Edit form works
+    - [x] Deactivate uses `ConfirmationDialog` (prefer `is_active=false`)
+    - [x] Permissions: Owner / Store Manager only
+  - Notes (2026-08-29): Activate restores `is_active=true` without confirm; API enforces Owner/Store Manager on create/update
 
 ### Employees — Feature completion `(MVP)`
 
-- [ ] List route API-backed
-- [ ] Create modal complete
-- [ ] Edit/deactivate complete
-- [ ] Loading/empty/error complete
+- [x] List route API-backed
+- [x] Create modal complete
+- [x] Edit/deactivate complete
+- [x] Loading/empty/error complete
 - [ ] Detail page optional for MVP (tracked in Phase 4)
 
 ### 2.4 Distribution rules `(MVP)`
 
-- [ ] Replace static policy cards with rules library
+- [x] Replace static policy cards with rules library
   - Details: [distribution.md](./distribution.md)
   - Route: `Routes.dashboard.distribution`
   - Depends on: Store context, employees (for employee recipients)
   - Completion criteria:
-    - [ ] List rules from API
-    - [ ] Show recipients summary
-    - [ ] Empty state
+    - [x] List rules from API
+    - [x] Show recipients summary
+    - [x] Empty state
 
-- [ ] Create / Edit Distribution Rule modal
+- [x] Create / Edit Distribution Rule modal
   - Details: [distribution.md](./distribution.md)
   - Depends on: rules library
   - Completion criteria:
-    - [ ] Name + recipients (STORE / EMPLOYEE + %)
-    - [ ] Validation: percentages sum to 100
-    - [ ] sort_order for rounding remainder
-    - [ ] Save invalidates queries
+    - [x] Name + recipients (STORE / EMPLOYEE + %)
+    - [x] Validation: percentages sum to 100
+    - [x] sort_order for rounding remainder
+    - [x] Save invalidates queries
 
-- [ ] Set Store default distribution rule
+- [x] Set Store default distribution rule
   - Details: [distribution.md](./distribution.md)
   - Depends on: create rule
   - Completion criteria:
-    - [ ] `Store.default_distribution_rule_id` updatable from UI
-    - [ ] Default visible on Distribution hub
+    - [x] `Store.default_distribution_rule_id` updatable from UI
+    - [x] Default visible on Distribution hub
+  - Notes (2026-08-29): Pending payouts demo removed from hub for now (Phase 5 payments); delete rule deferred
 
 ### Distribution — Feature completion `(MVP)`
 
-- [ ] CRUD for rules (delete can be Post-MVP if blocked by “in use”)
-- [ ] Store default settable
+- [x] CRUD for rules (delete can be Post-MVP if blocked by “in use”)
+- [x] Store default settable
 - [ ] Pending payouts UI can remain stub until Phase 5 payments
 
 ### 2.5 QR codes `(MVP)`
 
-- [ ] Replace single demo card with QR list on `/dashboard/access`
+- [x] Replace single demo card with QR list on `/dashboard/access`
   - Details: [qr-and-access.md](./qr-and-access.md)
   - Route: `Routes.dashboard.access`
   - Depends on: employees, distribution
   - Completion criteria:
-    - [ ] Lists QRs for Store
-    - [ ] Shows label, mode, employee count, active flag
-    - [ ] Loading/empty/error
+    - [x] Lists QRs for Store
+    - [x] Shows label, mode, employee count, active flag
+    - [x] Loading/empty/error
 
-- [ ] Create / Edit QR modal
+- [x] Create / Edit QR modal
   - Details: [qr-and-access.md](./qr-and-access.md), [customer-tipping.md](./customer-tipping.md)
   - Depends on: QR list
   - Completion criteria:
-    - [ ] label, selection_mode, employees, optional distribution_rule_id, is_active
-    - [ ] Mode vs employee-count rules respected
-    - [ ] Tip URL displayed using store slug + code
-    - [ ] Routes helper added (no hardcoded tip URLs)
+    - [x] label, selection_mode, employees, optional distribution_rule_id, is_active
+    - [x] Mode vs employee-count rules respected
+    - [x] Tip URL displayed using store slug + code
+    - [x] Routes helper added (no hardcoded tip URLs)
+  - Notes (2026-08-29): `Routes.tip(storeSlug, code)`; Spots deferred; mode note in form (meaningful with 2+ employees)
 
-- [ ] Basic download/print of QR image
+- [x] Basic download/print of QR image
   - Details: [qr-and-access.md](./qr-and-access.md)
   - Depends on: create QR
   - Completion criteria:
-    - [ ] At least one working download or print for a single QR
-    - [ ] Batch PDF may remain Post-MVP if blocked — note in Blocked
+    - [x] At least one working download or print for a single QR
+    - [x] Batch PDF may remain Post-MVP if blocked — note in Blocked
+  - Notes (2026-08-29): Per-card PNG download + print via QR image URL; batch PDF deferred
 
 ### QR — Feature completion `(MVP)`
 
-- [ ] List + create/edit API-backed
-- [ ] Tip URL correct for public route
-- [ ] Spots deferred to Post-MVP unless trivial
+- [x] List + create/edit API-backed
+- [x] Tip URL correct for public route
+- [x] Spots deferred to Post-MVP unless trivial
 
 ### 2.6 Live customer tip flow `(MVP)` — critical path
 
-- [ ] Implement public tip entry route `/{storeSlug}/q/{code}`
+- [x] Implement public tip entry route `/{storeSlug}/q/{code}`
   - Details: [customer-tipping.md](./customer-tipping.md)
   - Depends on: QR create, public tip/store APIs
   - Completion criteria:
-    - [ ] Route registered in `Routes`
-    - [ ] Loads Store + QrCode + employees
-    - [ ] Inactive QR/Store → error state
-    - [ ] No business/employee chrome
-    - [ ] Mobile-first layout
+    - [x] Route registered in `Routes`
+    - [x] Loads Store + QrCode + employees
+    - [x] Inactive QR/Store → error state
+    - [x] No business/employee chrome
+    - [x] Mobile-first layout
+  - Notes (2026-08-29): `app/[storeSlug]/q/[code]` via `Routes.tip`; `usePublicQrCode` + `usePublicStore`; slug mismatch / inactive → empty error; `PublicQrCode` interface aligned to API
 
 - [ ] Employee selection step (all modes)
   - Details: [customer-tipping.md](./customer-tipping.md)
@@ -990,7 +1013,9 @@ Add items here instead of inventing product behavior.
 
 | Item | Related docs | Reason | Blocking |
 | --- | --- | --- | --- |
-| Employee PIN auth | [authentication.md](./authentication.md), [roles-and-permissions.md](./roles-and-permissions.md) | UI has PIN; schema has no PIN field | Employee sign-in method |
+| Legal copy ownership / counsel-approved Terms & Privacy | [landing-and-marketing.md](./landing-and-marketing.md) | Pages ship draft placeholders; final text TBD | Production legal pages (Phase 10) |
+| Sign-up team size persistence | [authentication.md](./authentication.md) | Form collects estimated team size; no Prisma/API field | Optional analytics / onboarding prefills only |
+| Employee PIN auth | [authentication.md](./authentication.md), [roles-and-permissions.md](./roles-and-permissions.md) | No PIN in schema/API; MVP uses email/password → `/employee` | Optional future PIN product decision |
 | On Shift toggle mapping | [employee-portal.md](./employee-portal.md) | UI toggle; schema only `Employee.is_active` | Header shift control |
 | CX Score storage/formula | [analytics.md](./analytics.md) | Spec §18; no Prisma model | CX Score UI |
 | Notification channels | [alerts.md](./alerts.md) | Spec alerts; no Notification model | Email/push delivery |
@@ -1018,14 +1043,14 @@ Recount after each session. Approximate baseline at plan creation:
 
 | Bucket | Approx. top-level tasks | Completed now |
 | --- | --- | --- |
-| Phase 0 | 6 | 2 (landing, contact) |
-| Phase 1 | 8 | 0 |
-| Phase 2 | 18 | 0 |
+| Phase 0 | 8 | 7 (0.3 Routes expansion remains standing/incremental) |
+| Phase 1 | 8 | 7 (legal + auth + password reset + guards; invite accept still deferred) |
+| Phase 2 | 18 | 12 (through tip entry route; selection→review remain) |
 | Phase 3 | 8 | 0 |
 | Phase 4 | 6 | 0 |
-| **MVP total** | **~48** | **2** |
+| **MVP total** | **~48** | **26** |
 | Phases 5–10 | ~64 | 0 |
-| **Overall (0–10)** | **~112** | **2** |
+| **Overall (0–10)** | **~112** | **26** |
 
 Adjust counts if you split/merge tasks — keep **Current Status** honest.
 

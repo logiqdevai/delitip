@@ -7,7 +7,7 @@ Manage Store staff profiles used for tipping attribution, QR assignment, and per
 **Roles:** Owner, Store Manager (manage); Employee (own profile read in employee portal)  
 **Prisma:** `Employee`, `Document` (photo), optional `User`, `QrCodeEmployee`, tips/reviews relations  
 **Dependencies:** QR, Distribution, Reviews, Auth invites  
-**Status:** **Partial** — list cards only; detail/create **Missing**
+**Status:** **Wired** — list/create/edit/deactivate on `/dashboard/employees`; detail page still missing
 
 ---
 
@@ -15,10 +15,10 @@ Manage Store staff profiles used for tipping attribution, QR assignment, and per
 
 ```text
 Employees
-├── Employee List (/dashboard/employees)        [page — partial]
+├── Employee List (/dashboard/employees)        [page — wired]
 ├── Employee Detail (/dashboard/employees/:id)  [missing]
-├── Create / Invite Employee                    [modal — missing]
-└── Edit Employee                               [modal or detail — missing]
+├── Create / Invite Employee                    [modal — wired]
+└── Edit Employee                               [modal — wired]
 ```
 
 ---

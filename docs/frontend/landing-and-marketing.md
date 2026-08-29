@@ -6,7 +6,7 @@ Public marketing site and contact channel. No authenticated Prisma entities. Pri
 
 **Roles:** Public  
 **Dependencies:** Auth sign-up, Contact, Legal pages  
-**Status:** Landing + Contact **Existing**; Legal **Missing**
+**Status:** Landing + Contact + Legal **Existing** (legal copy is draft placeholder)
 
 ---
 
@@ -26,8 +26,8 @@ Marketing
 │   ├── CTA
 │   └── Footer
 ├── Contact (/contact)                  [page]
-├── Legal Terms (/legal/terms)          [missing]
-└── Legal Privacy (/legal/privacy)      [missing]
+├── Legal Terms (/legal/terms)          [page — draft copy]
+└── Legal Privacy (/legal/privacy)      [page — draft copy]
 ```
 
 ---
@@ -61,10 +61,11 @@ Marketing
 ### Legal Terms / Privacy
 
 **Routes:** `Routes.legal.terms`, `Routes.legal.privacy`  
-**Status:** Missing `page.tsx`; linked from sign-up and footer  
+**Files:** `app/src/app/legal/terms/page.tsx`, `app/src/app/legal/privacy/page.tsx`  
+**Status:** Pages exist; linked from sign-up and footer; **draft placeholder** copy pending counsel  
 **Purpose:** Legal copy for registration agreement and trust  
 **Access:** Public  
-**Unclear:** Exact legal content ownership
+**Unclear:** Exact legal content ownership (tracked in PROGRESS Blocked)
 
 ---
 
@@ -86,7 +87,7 @@ Marketing
 Visitor → Landing → Create account → /auth/sign-up
 Visitor → Landing → Demo → /client
 Visitor → Contact → Submit inquiry → Success state
-Visitor → Sign-up → Terms/Privacy links → [missing pages]
+Visitor → Sign-up → Terms/Privacy links → /legal/terms | /legal/privacy
 ```
 
 ---

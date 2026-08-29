@@ -1,40 +1,53 @@
 "use client";
 
-import { type FC, type FormEvent, useState } from "react";
+import { type FC, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, LoaderCircle } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowRight, Eye, EyeOff, LoaderCircle } from "lucide-react";
 import {
   BusinessTypeFormOptions,
   BusinessTypes,
-  type BusinessType,
 } from "@/config/constants/dropdowns/businesses/business-type-form.options";
 import {
   TeamSizeFormOptions,
   TeamSizes,
-  type TeamSize,
 } from "@/config/constants/dropdowns/businesses/team-size-form.options";
-import { Routes } from "@/routes/routes";
 import {
-  AuthPasswordField,
-  authFieldClassName,
-} from "./auth-password-field";
+  businessSignUpSchema,
+  type BusinessSignUpFormData,
+} from "@/features/auth/validation-schemas/auth.schema";
+import { useRegisterBusiness } from "@/features/auth/hooks/use-auth";
+import { Routes } from "@/routes/routes";
+import { authFieldClassName } from "./auth-password-field";
+import { cn } from "@/lib/utils";
 
 export const AuthSignUpForm: FC = () => {
-  const [venueName, setVenueName] = useState("");
-  const [businessType, setBusinessType] = useState<BusinessType>(
-    BusinessTypes.RESTAURANT
-  );
-  const [teamSize, setTeamSize] = useState<TeamSize>(TeamSizes.MEDIUM);
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isPending, setIsPending] = useState(false);
+  const registerBusiness = useRegisterBusiness();
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsPending(true);
-    window.setTimeout(() => setIsPending(false), 1000);
-  };
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<BusinessSignUpFormData>({
+    resolver: zodResolver(businessSignUpSchema),
+    defaultValues: {
+      venueName: "",
+      businessType: BusinessTypes.RESTAURANT,
+      teamSize: TeamSizes.MEDIUM,
+      fullName: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  const isPending = registerBusiness.isPending;
+
+  const onSubmit = handleSubmit((values) => {
+    registerBusiness.mutate(values);
+  });
 
   return (
     <div className="auth-fade-enter space-y-6">
@@ -47,7 +60,7 @@ export const AuthSignUpForm: FC = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-4" noValidate>
         <div>
           <label
             htmlFor="sign-up-venue"
@@ -58,12 +71,15 @@ export const AuthSignUpForm: FC = () => {
           <input
             id="sign-up-venue"
             type="text"
-            required
-            value={venueName}
-            onChange={(event) => setVenueName(event.target.value)}
+            autoComplete="organization"
             placeholder="e.g. Artisan Café & Bar"
             className={authFieldClassName}
+            aria-invalid={!!errors.venueName}
+            {...register("venueName")}
           />
+          {errors.venueName ? (
+            <p className="mt-1 text-xs text-red-600">{errors.venueName.message}</p>
+          ) : null}
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -76,11 +92,9 @@ export const AuthSignUpForm: FC = () => {
             </label>
             <select
               id="sign-up-type"
-              value={businessType}
-              onChange={(event) =>
-                setBusinessType(event.target.value as BusinessType)
-              }
               className={authFieldClassName}
+              aria-invalid={!!errors.businessType}
+              {...register("businessType")}
             >
               {BusinessTypeFormOptions.map((option) => (
                 <option key={option.id} value={option.id}>
@@ -88,6 +102,11 @@ export const AuthSignUpForm: FC = () => {
                 </option>
               ))}
             </select>
+            {errors.businessType ? (
+              <p className="mt-1 text-xs text-red-600">
+                {errors.businessType.message}
+              </p>
+            ) : null}
           </div>
           <div>
             <label
@@ -98,11 +117,9 @@ export const AuthSignUpForm: FC = () => {
             </label>
             <select
               id="sign-up-team"
-              value={teamSize}
-              onChange={(event) =>
-                setTeamSize(event.target.value as TeamSize)
-              }
               className={authFieldClassName}
+              aria-invalid={!!errors.teamSize}
+              {...register("teamSize")}
             >
               {TeamSizeFormOptions.map((option) => (
                 <option key={option.id} value={option.id}>
@@ -110,6 +127,9 @@ export const AuthSignUpForm: FC = () => {
                 </option>
               ))}
             </select>
+            {errors.teamSize ? (
+              <p className="mt-1 text-xs text-red-600">{errors.teamSize.message}</p>
+            ) : null}
           </div>
         </div>
 
@@ -124,12 +144,15 @@ export const AuthSignUpForm: FC = () => {
             <input
               id="sign-up-name"
               type="text"
-              required
-              value={fullName}
-              onChange={(event) => setFullName(event.target.value)}
+              autoComplete="name"
               placeholder="John Miller"
               className={authFieldClassName}
+              aria-invalid={!!errors.fullName}
+              {...register("fullName")}
             />
+            {errors.fullName ? (
+              <p className="mt-1 text-xs text-red-600">{errors.fullName.message}</p>
+            ) : null}
           </div>
           <div>
             <label
@@ -141,22 +164,60 @@ export const AuthSignUpForm: FC = () => {
             <input
               id="sign-up-email"
               type="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              autoComplete="email"
               placeholder="john@artisancafe.com"
               className={authFieldClassName}
+              aria-invalid={!!errors.email}
+              {...register("email")}
             />
+            {errors.email ? (
+              <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
+            ) : null}
           </div>
         </div>
 
-        <AuthPasswordField
-          id="sign-up-password"
-          label="Create Password"
-          placeholder="At least 8 characters"
-          value={password}
-          onChange={setPassword}
-        />
+        <div>
+          <label
+            htmlFor="sign-up-password"
+            className="mb-1.5 block text-xs font-semibold text-zinc-700"
+          >
+            Create Password
+          </label>
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <div className="relative">
+                <input
+                  id="sign-up-password"
+                  type={passwordVisible ? "text" : "password"}
+                  autoComplete="new-password"
+                  placeholder="At least 8 characters"
+                  className={cn(authFieldClassName, "pr-10")}
+                  aria-invalid={!!errors.password}
+                  {...field}
+                />
+                <button
+                  type="button"
+                  onClick={() => setPasswordVisible((current) => !current)}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                  aria-label={
+                    passwordVisible ? "Hide password" : "Show password"
+                  }
+                >
+                  {passwordVisible ? (
+                    <EyeOff className="size-4" strokeWidth={2} />
+                  ) : (
+                    <Eye className="size-4" strokeWidth={2} />
+                  )}
+                </button>
+              </div>
+            )}
+          />
+          {errors.password ? (
+            <p className="mt-1 text-xs text-red-600">{errors.password.message}</p>
+          ) : null}
+        </div>
 
         <p className="text-xs leading-relaxed text-zinc-400">
           By registering, you agree to delitip.com’s{" "}
@@ -184,7 +245,7 @@ export const AuthSignUpForm: FC = () => {
           {isPending ? (
             <>
               <LoaderCircle className="size-4 animate-spin" strokeWidth={2} />
-              <span>Authenticating...</span>
+              <span>Creating account...</span>
             </>
           ) : (
             <>
