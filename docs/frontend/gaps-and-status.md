@@ -22,11 +22,11 @@ Status values:
 | --- | --- | --- | --- | --- |
 | Landing / marketing | §1, §35 | N/A | `/` | Implemented |
 | Contact form | Implied | No model | `/contact` | Frontend-only |
-| Legal terms / privacy | Linked in UI | No | Routes only | Missing |
+| Legal terms / privacy | Linked in UI | No | Pages + draft copy | Existing (placeholder) |
 | Business sign-up | §11, §31 | `User`, `Organization`, `Store` | `/auth/sign-up` mock | Partial |
 | Business / employee sign-in | §11 | `User` | `/auth/sign-in` mock | Partial |
 | Employee PIN login | Frontend | No PIN field | Employee form | Schema gap |
-| Forgot password | Linked | `PasswordResetToken` | No page | Missing |
+| Forgot password | Linked | `PasswordResetToken` | Pages wired | Existing |
 | Invite accept / claim accounts | §11 | Soft via email | No | Missing |
 | Account / workspace switcher | §11 | Memberships | No | Missing |
 | Onboarding wizard (7 steps) | §31 | Supporting models | No | Missing |
@@ -132,8 +132,9 @@ Status values:
 | `app/src/features/*` | Empty — create per domain when wiring API |
 | `app/src/stores/*` | Empty |
 | `app/src/components/layout/*` | Empty (sidebars live under route segments) |
-| `Routes.auth.forgot_password` | Defined; no `page.tsx` |
-| `Routes.legal.*` | Defined; no `page.tsx` |
+| `Routes.auth.forgot_password` | Page live |
+| `Routes.auth.reset_password` | Page live (`?token=`) |
+| `Routes.legal.*` | Pages live; draft legal copy pending counsel |
 
 ---
 

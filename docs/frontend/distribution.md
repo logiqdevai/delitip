@@ -7,7 +7,7 @@ Named reusable Distribution Rules: recipients are Store and/or Employees; percen
 **Roles:** Owner, Store Manager create/edit/assign; Employees **read** which rule applied on a tip  
 **Prisma:** `DistributionRule`, `DistributionRuleRecipient`, `Store.default_distribution_rule_id`, `QrCode.distribution_rule_id`  
 **Dependencies:** Employees, QR, Tips  
-**Status:** **Partial** — static policy cards + pending payouts list; CRUD **Missing**
+**Status:** **Wired** — rules library + create/edit + store default on `/dashboard/distribution`; pending payouts deferred; delete deferred
 
 ---
 
@@ -15,12 +15,12 @@ Named reusable Distribution Rules: recipients are Store and/or Employees; percen
 
 ```text
 Tip Distribution
-├── Distribution Hub (/dashboard/distribution)  [page — partial]
-│   ├── Policy / default summary
-│   ├── Rules library                           [missing section]
-│   └── Pending payouts list                    [existing demo]
-├── Create Rule                                 [modal — missing]
-└── Edit Rule                                   [modal — missing]
+├── Distribution Hub (/dashboard/distribution)  [page — wired]
+│   ├── Store default summary
+│   ├── Rules library
+│   └── Pending payouts                         [deferred — Phase 5]
+├── Create Rule                                 [modal — wired]
+└── Edit Rule                                   [modal — wired]
 ```
 
 Assigning a rule to a QR lives primarily in [qr-and-access.md](./qr-and-access.md).

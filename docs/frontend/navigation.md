@@ -101,8 +101,8 @@ User / Profile Menu                [missing in app]
 ### Sidebar header (existing)
 
 - Brand: delitip.com + “Business Portal”
-- Business chip: name, location, staff count from `demoBusiness`
-- **Desired:** Store switcher when Org has multiple Stores; Org switcher when User has multiple Organizations (spec §10–11). Hide switchers when only one Account (spec).
+- Business chip: live Store from `useWorkspace()` (name, industry/city, staff count via `useEmployees(storeId)`); skeleton while loading
+- **Workspace:** `stores/workspace.store.ts` persists `organizationId` + `storeId`; `useCurrentStoreId()` scopes dashboard feature queries. Multi-store switcher not required for MVP.
 
 ### Role-conditional visibility (confirmed)
 

@@ -7,7 +7,7 @@ Tenant hierarchy: Organization (billing + access umbrella) → Store(s) (branded
 **Roles:** Owner (all Stores + billing); Store Manager (one Store); Accountant (financial scope as granted)  
 **Prisma:** `Organization`, `Store`, `OrganizationMember`, `Subscription`, `Document`  
 **Dependencies:** Auth, Billing, Dashboard scoping, Account switcher  
-**Status:** **Missing** as first-class UI — app shows a single `demoBusiness`
+**Status:** **Partial** — create at sign-up + onboarding Step 1; dashboard shell uses live Store via `useWorkspace` / `workspace` Zustand store. No multi-store switcher / members UI yet.
 
 ---
 

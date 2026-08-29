@@ -1,0 +1,136 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createEmployee,
+  deleteEmployee,
+  getEmployee,
+  getEmployeeDashboard,
+  listEmployees,
+  updateEmployee,
+} from "@/features/employees/services/employees.services";
+import type {
+  CreateEmployeePayload,
+  EmployeesQuery,
+  UpdateEmployeePayload,
+} from "@/features/employees/interfaces/employees.interfaces";
+import { toast } from "@/components/ui/toast";
+
+export const employeesQueryKeys = {
+  root: ["employees"] as const,
+  list: (storeId: string, query?: EmployeesQuery) =>
+    ["employees", storeId, query] as const,
+  detail: (id: string) => ["employee", id] as const,
+  dashboard: (id: string) => ["employee-dashboard", id] as const,
+};
+
+export const useEmployees = (storeId: string, query?: EmployeesQuery) => {
+  return useQuery({
+    queryKey: employeesQueryKeys.list(storeId, query),
+    queryFn: () => listEmployees(storeId, query),
+    enabled: !!storeId,
+  });
+};
+
+export const useEmployee = (id: string) => {
+  return useQuery({
+    queryKey: employeesQueryKeys.detail(id),
+    queryFn: () => getEmployee(id),
+    enabled: !!id,
+  });
+};
+
+export const useEmployeeDashboard = (id: string) => {
+  return useQuery({
+    queryKey: employeesQueryKeys.dashboard(id),
+    queryFn: () => getEmployeeDashboard(id),
+    enabled: !!id,
+  });
+};
+
+export const useCreateEmployee = (storeId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: CreateEmployeePayload) =>
+      createEmployee(storeId, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
+      toast.add({
+        title: "Employee added",
+        description: "They can now be assigned to QR codes and tips.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not add employee",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useUpdateEmployee = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: UpdateEmployeePayload;
+    }) => updateEmployee(id, payload),
+    onSuccess: (_data, variables) => {
+      void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
+      void queryClient.invalidateQueries({
+        queryKey: employeesQueryKeys.detail(variables.id),
+      });
+      const deactivated = variables.payload.is_active === false;
+      const activated = variables.payload.is_active === true;
+      toast.add({
+        title: deactivated
+          ? "Employee deactivated"
+          : activated
+            ? "Employee activated"
+            : "Employee updated",
+        description: deactivated
+          ? "They will no longer appear as active staff."
+          : activated
+            ? "They are active again for tipping and QR assignment."
+            : "Your changes were saved.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not update employee",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useDeleteEmployee = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => deleteEmployee(id),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
+      toast.add({
+        title: "Employee removed",
+        description: "The employee record was deleted.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not remove employee",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};

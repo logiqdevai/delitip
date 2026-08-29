@@ -7,7 +7,7 @@ Mobile-first guest journey: scan QR → branded Store page → employee selectio
 **Roles:** Guest / Customer (no login required)  
 **Prisma:** `Store`, `QrCode`, `QrCodeEmployee`, `Employee`, `DistributionRule`, `Tip`, `TipDistribution`, `Review`, `ReviewCategory`, `FeedbackQuestion`, `FeedbackResponse`  
 **Dependencies:** QR setup, Store branding, Payments provider, Localization, Privacy copy  
-**Status:** **Partial** — prototype at `/client`; production route **Missing**
+**Status:** **Partial** — entry route live; selection → pay → review still Missing; prototype at `/client`
 
 ---
 
@@ -15,7 +15,7 @@ Mobile-first guest journey: scan QR → branded Store page → employee selectio
 
 ```text
 Customer Tip Flow
-├── Entry: /{storeSlug}/q/{code}            [missing — schema URL shape]
+├── Entry: /{storeSlug}/q/{code}            [exists — branded landing + employees]
 ├── Prototype: /client                      [existing demo]
 │   └── Steps (local state, not routes)
 │       ├── Tip amount
@@ -38,11 +38,12 @@ These are **flow steps**, not sidebar pages. Optional deep links per step are **
 ### Live Tip Entry (desired)
 
 **Route:** `/{storeSlug}/q/{code}` (from Prisma comment on `QrCode`)  
-**Add to `Routes`:** e.g. helper `Routes.tip.qr(storeSlug, code)` when implementing — never hardcode  
+**Add to `Routes`:** `Routes.tip(storeSlug, code)` — implemented  
 **Purpose:** Full customer journey for a specific QR  
 **Access:** Public  
 **Parent:** None (standalone mobile surface)  
 **Entry:** Camera scan / printed QR / employee tip link  
+**Implementation status:** Entry landing shipped (`app/[storeSlug]/q/[code]`); selection / amount / pay / thank-you / review still open 
 
 **Main sections:**  
 1. Store chrome (logo, name, address, welcome message)  

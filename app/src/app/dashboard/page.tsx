@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Download, Plus } from "lucide-react";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
+import { DashboardOverviewHeader } from "./components/dashboard-overview-header";
 import {
-  DashboardPageHeader,
   RecognitionBadge,
   StatusPill,
 } from "./components/dashboard-shared";
@@ -18,9 +18,7 @@ import {
 const OverviewPage: FC = () => {
   return (
     <>
-      <DashboardPageHeader
-        title="Overview"
-        description="Understand and manage great service across your business."
+      <DashboardOverviewHeader
         actions={
           <>
             <Link

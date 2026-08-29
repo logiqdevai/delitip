@@ -14,7 +14,11 @@ export const Routes = {
     sign_in: "/auth/sign-in",
     sign_up: "/auth/sign-up",
     forgot_password: "/auth/forgot-password",
+    reset_password: "/auth/reset-password",
   },
+  onboarding: "/onboarding",
+  tip: (storeSlug: string, code: string) =>
+    `/${storeSlug}/q/${code}` as const,
   dashboard: {
     root: "/dashboard",
     employees: "/dashboard/employees",

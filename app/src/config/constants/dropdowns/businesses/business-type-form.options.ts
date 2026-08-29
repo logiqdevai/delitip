@@ -1,29 +1,17 @@
-export const BusinessTypes = {
-  RESTAURANT: "RESTAURANT",
-  CAFE: "CAFE",
-  BAR: "BAR",
-  HOTEL: "HOTEL",
-  SALON: "SALON",
-  OTHER: "OTHER",
-} as const;
+import {
+  StoreIndustries,
+  type StoreIndustry,
+} from "@/features/stores/interfaces/stores.interfaces";
+import {
+  StoreIndustryFormOptions,
+  getStoreIndustryLabel,
+} from "@/config/constants/dropdowns/stores/store-industry-form.options";
 
-export type BusinessType =
-  (typeof BusinessTypes)[keyof typeof BusinessTypes];
+export const BusinessTypes = StoreIndustries;
+export type BusinessType = StoreIndustry;
 
-export const BusinessTypeFormOptions: {
-  id: BusinessType;
-  label: string;
-}[] = [
-  { id: BusinessTypes.RESTAURANT, label: "Restaurant" },
-  { id: BusinessTypes.CAFE, label: "Café / Coffee Bar" },
-  { id: BusinessTypes.BAR, label: "Bar & Lounge" },
-  { id: BusinessTypes.HOTEL, label: "Hotel & Hospitality" },
-  { id: BusinessTypes.SALON, label: "Salon & Spa" },
-  { id: BusinessTypes.OTHER, label: "Other Service Business" },
-];
+export const BusinessTypeFormOptions = StoreIndustryFormOptions;
 
 export function getBusinessTypeLabel(type: BusinessType | string): string {
-  return (
-    BusinessTypeFormOptions.find((option) => option.id === type)?.label ?? type
-  );
+  return getStoreIndustryLabel(type);
 }

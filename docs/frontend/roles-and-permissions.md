@@ -98,10 +98,10 @@ Cells marked **Unclear** require a product decision before implementation.
 Auth UI uses a separate prototype switcher:
 
 - `AuthRoles.BUSINESS` / `AuthRoles.EMPLOYEE` in auth components — **not** Prisma enums.
-- Sign-in: Business email+password vs Employee phone/email + PIN.
+- Sign-in: Business and Employee both use email+password (`POST /auth/email/login`); destinations differ (dashboard vs employee portal).
 - Sign-up: Business only.
 
-**Gap:** No mapping from auth forms to `OrganizationRole` or `Employee` invite acceptance. PIN-based employee login is **frontend-only** — schema has `User.password` / email / phone, no PIN field (**schema gap** if PIN is required).
+**Gap:** No mapping from auth forms to `OrganizationRole` or `Employee` invite acceptance. PIN-based employee login is **not implemented** — schema has `User.password` / email / phone, no PIN field. MVP employee sign-in uses email/password.
 
 ---
 
@@ -115,4 +115,5 @@ Auth UI uses a separate prototype switcher:
 | Customer QR routes | Public |
 | `/onboarding` | Authenticated Owner without completed setup — **unclear** completion criteria |
 
-No middleware/guards exist in the app yet.
+**Status:** Client `AuthRouteGuard` wraps dashboard/employee layouts. Uses persisted session + `GET /users/me/accounts`. Unauthenticated → sign-in; wrong portal → the other portal when the matching account exists.
+
