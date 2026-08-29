@@ -123,6 +123,7 @@ export class StripePaymentsWebhooksService {
                     } catch (error) {
                         console.error('Failed to update default payment method:', error.message);
                     }
+                    break;
                 }
 
                 case 'payment_method.detached': {
@@ -268,6 +269,7 @@ export class StripePaymentsWebhooksService {
                         // });
                         break;
                     }
+                    break;
                 }
 
                 case "charge.updated":

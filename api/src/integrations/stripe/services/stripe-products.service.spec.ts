@@ -243,13 +243,13 @@ describe('StripeProductsService', () => {
     });
 
     describe('getPrice', () => {
-        it('maps the retrieved price WITHOUT converting unit_amount to major units (unlike createPrice/listPrices)', async () => {
+        it('maps the retrieved price, converting unit_amount to major units (consistent with createPrice/listPrices)', async () => {
             stripe.prices.retrieve.mockResolvedValue({ id: 'price_1', product: 'prod_1', unit_amount: 2500, currency: 'eur', active: true, type: 'one_time', created: 111, metadata: {} });
 
             const result = await service.getPrice('price_1', 'acct_1');
 
             expect(stripe.prices.retrieve).toHaveBeenCalledWith('price_1', { stripeAccount: 'acct_1' });
-            expect(result.unit_amount).toBe(2500);
+            expect(result.unit_amount).toBe(25);
         });
 
         it('defaults unit_amount to 0 when falsy', async () => {

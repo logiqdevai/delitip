@@ -211,7 +211,7 @@ export class StripeProductsService {
             return {
                 id: price.id,
                 product_id: price.product as string,
-                unit_amount: price.unit_amount || 0,
+                unit_amount: (price.unit_amount / 100) || 0,
                 currency: price.currency,
                 active: price.active,
                 type: price.type as 'one_time' | 'recurring',

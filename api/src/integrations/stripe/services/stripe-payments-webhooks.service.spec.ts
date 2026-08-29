@@ -3,14 +3,11 @@ import { StripePaymentsWebhooksService } from './stripe-payments-webhooks.servic
 import { StripePaymentContext } from '../interfaces/stripe-payments.interface';
 
 // This service's `handleStripeWebhook` switch statement is largely commented-out scaffold
-// code carried over from a different project (bookings/credits). Two of its cases are missing
-// a trailing `break` — see api/TEST_COVERAGE_PLAN.md Findings — so real fallthrough occurs:
-//   'customer.updated' falls through into 'payment_method.detached' (harmless: both bodies are
-//   fully commented out, so nothing observable happens).
-//   'charge.failed' (when it doesn't hit an early `break`) falls through into 'charge.updated',
-//   which DOES have live code — it calls `stripePaymentsService.getBalanceTransaction(...)`.
-//   This is a real, currently-live bug: a charge.failed webhook can trigger charge.updated's
-//   fee-calculation logic. These tests assert the CURRENT behavior on purpose.
+// code carried over from a different project (bookings/credits). It used to be missing a
+// trailing `break` on two cases (see api/TEST_COVERAGE_PLAN.md Findings), causing real
+// fallthrough — most notably 'charge.failed' falling into 'charge.updated' and unintentionally
+// triggering its live fee-calculation call. Both missing `break`s have since been fixed; these
+// tests assert that each case is now properly isolated.
 describe('StripePaymentsWebhooksService', () => {
     let service: StripePaymentsWebhooksService;
     let stripe: any;
@@ -136,7 +133,7 @@ describe('StripePaymentsWebhooksService', () => {
         });
     });
 
-    describe('charge.failed — fallthrough into charge.updated (current, presumably-unintended behavior)', () => {
+    describe('charge.failed', () => {
         it('does nothing when the charge has no payment_intent', async () => {
             stripe.webhooks.constructEvent.mockReturnValue(buildEvent('charge.failed', { payment_intent: null }));
 
@@ -156,22 +153,22 @@ describe('StripePaymentsWebhooksService', () => {
             expect(stripePaymentsService.getBalanceTransaction).not.toHaveBeenCalled();
         });
 
-        it('falls through into the charge.updated branch when context is not PROVIDER_PAYMENT — calls getBalanceTransaction on the same charge object', async () => {
+        it('does not fall through into charge.updated when context is not PROVIDER_PAYMENT (break now present)', async () => {
             stripe.webhooks.constructEvent.mockReturnValue(
                 buildEvent('charge.failed', {
                     payment_intent: 'pi_1',
                     balance_transaction: 'txn_1',
-                    metadata: {}, // no context, no booking_uuid -> charge.updated branch exits right after the getBalanceTransaction call
+                    metadata: {}, // no context
                 }),
             );
 
-            await service.handleStripeWebhook('body', 'sig');
+            await expect(service.handleStripeWebhook('body', 'sig')).resolves.toBeUndefined();
 
-            expect(stripePaymentsService.getBalanceTransaction).toHaveBeenCalledWith('txn_1');
+            expect(stripePaymentsService.getBalanceTransaction).not.toHaveBeenCalled();
         });
     });
 
-    describe('customer.updated — fallthrough into payment_method.detached (both bodies are commented out, so it is a harmless no-op)', () => {
+    describe('customer.updated (body is commented out, so it is currently a no-op)', () => {
         it('resolves without throwing when a default_payment_method is present', async () => {
             stripe.webhooks.constructEvent.mockReturnValue(
                 buildEvent('customer.updated', { invoice_settings: { default_payment_method: 'pm_1' } }),

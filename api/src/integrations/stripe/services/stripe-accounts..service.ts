@@ -159,33 +159,33 @@ export class StripeAccountsService {
 
     async getConnectedBalance(stripe_account_id: string) {
         try {
-            return this.stripe.balance.retrieve({}, { stripeAccount: stripe_account_id });
+            return await this.stripe.balance.retrieve({}, { stripeAccount: stripe_account_id });
         } catch (error) {
-            throw new error;
+            throw error;
         }
     }
 
     async listBalanceTransactions(stripe_account_id: string, params = { limit: 50 }) {
         try {
-            return this.stripe.balanceTransactions.list(params, { stripeAccount: stripe_account_id });
+            return await this.stripe.balanceTransactions.list(params, { stripeAccount: stripe_account_id });
         } catch (error) {
-            throw new error;
+            throw error;
         }
     }
 
     async listCharges(stripe_account_id: string, params = { limit: 50 }) {
         try {
-            return this.stripe.charges.list(params, { stripeAccount: stripe_account_id });
+            return await this.stripe.charges.list(params, { stripeAccount: stripe_account_id });
         } catch (error) {
-            throw new error;
+            throw error;
         }
     }
 
     async listPayouts(stripe_account_id: string, params = { limit: 50 }) {
         try {
-            return this.stripe.payouts.list(params, { stripeAccount: stripe_account_id });
+            return await this.stripe.payouts.list(params, { stripeAccount: stripe_account_id });
         } catch (error) {
-            throw new error;
+            throw error;
         }
     }
 

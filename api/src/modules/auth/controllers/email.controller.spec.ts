@@ -22,11 +22,11 @@ describe('EmailAuthController', () => {
             expect(authService.registerWithEmail).toHaveBeenCalledWith(dto);
         });
 
-        // The method wraps `return this.authService.registerWithEmail(dto)` in a try/catch with
-        // an empty catch body — but since the call isn't `await`ed, a rejection is returned as a
-        // still-rejected Promise, not caught. The empty catch is dead code: it never actually
-        // runs for an async failure. See Findings.
-        it('still propagates a service rejection to the caller — the empty catch block is dead code (see Findings)', async () => {
+        // Previously wrapped in a try/catch with an empty catch body that was dead code (the call
+        // wasn't `await`ed, so a rejection was returned as a still-rejected Promise regardless —
+        // see api/TEST_COVERAGE_PLAN.md Findings). The try/catch has been removed as it did
+        // nothing; behavior is unchanged.
+        it('propagates a service rejection to the caller', async () => {
             const dto = { email: 'a@b.com', password: 'x' } as any;
             authService.registerWithEmail.mockRejectedValue(new Error('duplicate email'));
 

@@ -169,16 +169,14 @@ describe('StripeAccountsService', () => {
         });
     });
 
-    // NOTE: getConnectedBalance/listBalanceTransactions/listCharges/listPayouts all share
-    // `try { return this.stripe.X.list(...); } catch (error) { throw new error; }` with no
-    // `await` before the SDK call — see api/TEST_COVERAGE_PLAN.md Findings for
-    // stripe-accounts..service.ts. Because the SDK call is never awaited inside the try block,
-    // a rejected promise from it is returned as-is to the caller; the `catch` (and its own bug,
-    // `throw new error` — throwing the caught Error instance via `new`, which would itself
-    // throw a TypeError "error is not a constructor") never actually runs for async rejections.
-    // Net effect: the ORIGINAL Stripe error propagates unchanged, unwrapped. These tests assert
-    // that CURRENT behavior on purpose — not what the method "should" do — so a future fix
-    // (e.g. adding `await`, fixing the typo) is visible as a test change, not a silent regression.
+    // NOTE (fixed): getConnectedBalance/listBalanceTransactions/listCharges/listPayouts used to
+    // share `try { return this.stripe.X.list(...); } catch (error) { throw new error; }` with no
+    // `await` before the SDK call, which made the (also buggy — `new error` throws a TypeError,
+    // "error is not a constructor") catch block unreachable dead code for async rejections.
+    // Fixed to `return await this.stripe.X.list(...)` + `throw error;` (a proper rethrow). Net
+    // externally-visible behavior for the caller is unchanged — the original Stripe error still
+    // propagates unwrapped — but it now does so via an intentional, correct code path instead of
+    // by accident. See api/TEST_COVERAGE_PLAN.md Findings for the original bug writeup.
     describe('getConnectedBalance', () => {
         it('returns the balance for the connected account', async () => {
             stripe.balance.retrieve.mockResolvedValue({ available: [], pending: [] });
@@ -189,7 +187,7 @@ describe('StripeAccountsService', () => {
             expect(result).toEqual({ available: [], pending: [] });
         });
 
-        it('propagates the original (unwrapped) error on rejection — the catch block is unreachable dead code, see note above', async () => {
+        it('propagates the original (unwrapped) error on rejection', async () => {
             stripe.balance.retrieve.mockRejectedValue(new Error('boom'));
 
             await expect(service.getConnectedBalance('acct_1')).rejects.toThrow('boom');
@@ -205,7 +203,7 @@ describe('StripeAccountsService', () => {
             expect(stripe.balanceTransactions.list).toHaveBeenCalledWith({ limit: 50 }, { stripeAccount: 'acct_1' });
         });
 
-        it('propagates the original (unwrapped) error on rejection — the catch block is unreachable dead code, see note above', async () => {
+        it('propagates the original (unwrapped) error on rejection', async () => {
             stripe.balanceTransactions.list.mockRejectedValue(new Error('boom'));
 
             await expect(service.listBalanceTransactions('acct_1')).rejects.toThrow('boom');
@@ -221,7 +219,7 @@ describe('StripeAccountsService', () => {
             expect(stripe.charges.list).toHaveBeenCalledWith({ limit: 50 }, { stripeAccount: 'acct_1' });
         });
 
-        it('propagates the original (unwrapped) error on rejection — the catch block is unreachable dead code, see note above', async () => {
+        it('propagates the original (unwrapped) error on rejection', async () => {
             stripe.charges.list.mockRejectedValue(new Error('boom'));
 
             await expect(service.listCharges('acct_1')).rejects.toThrow('boom');
@@ -237,7 +235,7 @@ describe('StripeAccountsService', () => {
             expect(stripe.payouts.list).toHaveBeenCalledWith({ limit: 50 }, { stripeAccount: 'acct_1' });
         });
 
-        it('propagates the original (unwrapped) error on rejection — the catch block is unreachable dead code, see note above', async () => {
+        it('propagates the original (unwrapped) error on rejection', async () => {
             stripe.payouts.list.mockRejectedValue(new Error('boom'));
 
             await expect(service.listPayouts('acct_1')).rejects.toThrow('boom');

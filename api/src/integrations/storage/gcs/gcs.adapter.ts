@@ -42,7 +42,7 @@ export class GcsAdapter {
             return new Promise((resolve, reject) => {
                 stream.on('error', (error) => {
                     this.logger.error('Upload error:', error);
-                    reject(error);
+                    reject(new Error(`Failed to upload image: ${error.message}`));
                 });
 
                 stream.on('finish', async () => {

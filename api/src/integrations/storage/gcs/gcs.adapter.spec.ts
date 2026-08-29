@@ -86,12 +86,12 @@ describe('GcsAdapter', () => {
             expect(bucket.file).toHaveBeenCalledWith('avatars/1700000000000-p.png');
         });
 
-        it('rejects with the RAW stream error, not the wrapped "Failed to upload image" message (see Findings — the write-stream error path bypasses the outer try/catch since it rejects asynchronously via an event callback after uploadImage has already returned the Promise)', async () => {
+        it('rejects with a wrapped error when the write stream errors', async () => {
             file.createWriteStream.mockReturnValue(createFakeWriteStream('error', new Error('stream boom')));
 
             await expect(
                 adapter.uploadImage({ file: Buffer.from('x'), filename: 'p.png', contentType: 'image/png' }),
-            ).rejects.toThrow('stream boom');
+            ).rejects.toThrow('Failed to upload image: stream boom');
         });
     });
 
