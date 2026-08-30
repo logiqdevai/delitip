@@ -1,9 +1,9 @@
 "use client";
 
-import { type FC, useRef, useState } from "react";
-import { ImagePlus } from "lucide-react";
+import { type FC, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ColorPicker } from "@/components/ui/color-picker";
+import { ImagePicker } from "@/components/ui/image-picker";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,83 +16,16 @@ import { useStore, useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
-const ImageUploadField: FC<{
-  label: string;
-  currentUrl?: string | null;
-  currentDocumentId?: string | null;
-  onUploaded: (documentId: string) => void;
-  onRemoved: () => void;
-}> = ({ label, currentUrl, currentDocumentId, onUploaded, onRemoved }) => {
-  const uploadDocument = useUploadDocument();
-  const deleteDocument = useDeleteDocument();
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  return (
-    <div className="space-y-1.5">
-      <Label>{label}</Label>
-      <div className="flex items-center gap-3">
-        {currentUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={currentUrl}
-            alt=""
-            className="size-14 rounded-xl border border-zinc-200 object-cover"
-          />
-        ) : (
-          <div className="flex size-14 items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-zinc-50 text-zinc-300">
-            <ImagePlus className="size-5" strokeWidth={2} />
-          </div>
-        )}
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            if (!file) return;
-            uploadDocument.mutate(
-              { file, type: DocumentTypes.LOGO },
-              { onSuccess: (document) => onUploaded(document.id) },
-            );
-            event.target.value = "";
-          }}
-        />
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={uploadDocument.isPending}
-          onClick={() => inputRef.current?.click()}
-        >
-          {uploadDocument.isPending ? "Uploading…" : "Upload"}
-        </Button>
-        {currentUrl && currentDocumentId ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="text-red-600 hover:bg-red-50 hover:text-red-700"
-            disabled={deleteDocument.isPending}
-            onClick={() =>
-              deleteDocument.mutate(currentDocumentId, {
-                onSuccess: () => onRemoved(),
-              })
-            }
-          >
-            {deleteDocument.isPending ? "Removing…" : "Remove"}
-          </Button>
-        ) : null}
-      </div>
-    </div>
-  );
-};
-
 export const BrandingSettingsForm: FC = () => {
   const { store: workspaceStore, isPending } = useWorkspace();
   const storeDetailQuery = useStore(workspaceStore?.id ?? "");
   const store = storeDetailQuery.data ?? workspaceStore;
   const updateStore = useUpdateStore();
+  const uploadDocument = useUploadDocument();
+  const deleteDocument = useDeleteDocument();
+  const [uploadingMode, setUploadingMode] = useState<"logo" | "cover" | null>(
+    null,
+  );
 
   const [loadedStoreId, setLoadedStoreId] = useState<string | null>(null);
   const [primaryColor, setPrimaryColor] = useState("#84cc16");
@@ -164,65 +97,87 @@ export const BrandingSettingsForm: FC = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4 @md:grid-cols-2">
-        <ImageUploadField
-          label="Logo"
-          currentUrl={store.logo_document?.url}
-          currentDocumentId={store.logo_document_id}
-          onUploaded={(documentId) =>
-            updateStore.mutate({ id: store.id, payload: { logo_document_id: documentId } })
-          }
-          onRemoved={() =>
-            updateStore.mutate({ id: store.id, payload: { logo_document_id: null } })
+        <ImagePicker
+          mode="logo"
+          value={store.logo_document?.url}
+          isPending={uploadingMode === "logo"}
+          disabled={deleteDocument.isPending || updateStore.isPending}
+          onChange={(file) => {
+            setUploadingMode("logo");
+            uploadDocument.mutate(
+              { file, type: DocumentTypes.LOGO },
+              {
+                onSuccess: (document) =>
+                  updateStore.mutate({
+                    id: store.id,
+                    payload: { logo_document_id: document.id },
+                  }),
+                onSettled: () => setUploadingMode(null),
+              },
+            );
+          }}
+          onClear={
+            store.logo_document_id
+              ? () =>
+                  deleteDocument.mutate(store.logo_document_id!, {
+                    onSuccess: () =>
+                      updateStore.mutate({
+                        id: store.id,
+                        payload: { logo_document_id: null },
+                      }),
+                  })
+              : undefined
           }
         />
-        <ImageUploadField
-          label="Cover image"
-          currentUrl={store.cover_document?.url}
-          currentDocumentId={store.cover_document_id}
-          onUploaded={(documentId) =>
-            updateStore.mutate({ id: store.id, payload: { cover_document_id: documentId } })
-          }
-          onRemoved={() =>
-            updateStore.mutate({ id: store.id, payload: { cover_document_id: null } })
+        <ImagePicker
+          mode="cover"
+          value={store.cover_document?.url}
+          isPending={uploadingMode === "cover"}
+          disabled={deleteDocument.isPending || updateStore.isPending}
+          onChange={(file) => {
+            setUploadingMode("cover");
+            uploadDocument.mutate(
+              { file, type: DocumentTypes.BANNER },
+              {
+                onSuccess: (document) =>
+                  updateStore.mutate({
+                    id: store.id,
+                    payload: { cover_document_id: document.id },
+                  }),
+                onSettled: () => setUploadingMode(null),
+              },
+            );
+          }}
+          onClear={
+            store.cover_document_id
+              ? () =>
+                  deleteDocument.mutate(store.cover_document_id!, {
+                    onSuccess: () =>
+                      updateStore.mutate({
+                        id: store.id,
+                        payload: { cover_document_id: null },
+                      }),
+                  })
+              : undefined
           }
         />
       </div>
 
       <div className="grid grid-cols-1 gap-4 @md:grid-cols-2">
-        <div className="min-w-0 space-y-1.5">
-          <Label htmlFor="primary-color">Primary color</Label>
-          <div className="flex items-center gap-2">
-            <input
-              id="primary-color"
-              type="color"
-              value={primaryColor}
-              onChange={(event) => updatePrimaryColor(event.target.value)}
-              className="size-9 shrink-0 cursor-pointer rounded-lg border border-zinc-200"
-            />
-            <Input
-              placeholder="#84cc16"
-              value={primaryColor}
-              onChange={(event) => updatePrimaryColor(event.target.value)}
-            />
-          </div>
-        </div>
-        <div className="min-w-0 space-y-1.5">
-          <Label htmlFor="secondary-color">Secondary color</Label>
-          <div className="flex items-center gap-2">
-            <input
-              id="secondary-color"
-              type="color"
-              value={secondaryColor}
-              onChange={(event) => updateSecondaryColor(event.target.value)}
-              className="size-9 shrink-0 cursor-pointer rounded-lg border border-zinc-200"
-            />
-            <Input
-              placeholder="#18181b"
-              value={secondaryColor}
-              onChange={(event) => updateSecondaryColor(event.target.value)}
-            />
-          </div>
-        </div>
+        <ColorPicker
+          id="primary-color"
+          label="Primary color"
+          value={primaryColor}
+          placeholder="#84cc16"
+          onChange={updatePrimaryColor}
+        />
+        <ColorPicker
+          id="secondary-color"
+          label="Secondary color"
+          value={secondaryColor}
+          placeholder="#18181b"
+          onChange={updateSecondaryColor}
+        />
       </div>
 
       <div className="space-y-1.5">

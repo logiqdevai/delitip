@@ -5,6 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
+import { AddressAutocomplete } from "@/components/ui/address-autocomplete";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -132,12 +133,19 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
           <Label htmlFor="onboarding-address">
             Address <span className="font-normal text-zinc-400">(optional)</span>
           </Label>
-          <Input
-            id="onboarding-address"
-            autoComplete="street-address"
-            placeholder="Street, city"
-            aria-invalid={!!errors.address_line}
-            {...register("address_line")}
+          <Controller
+            name="address_line"
+            control={control}
+            render={({ field }) => (
+              <AddressAutocomplete
+                id="onboarding-address"
+                autoComplete="street-address"
+                placeholder="Street, city"
+                aria-invalid={!!errors.address_line}
+                value={field.value ?? ""}
+                onValueChange={field.onChange}
+              />
+            )}
           />
           {errors.address_line ? (
             <p className="text-xs text-red-600">{errors.address_line.message}</p>

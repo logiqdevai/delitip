@@ -4,6 +4,10 @@ import { type FC, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
+import {
+  AddressAutocomplete,
+  type ParsedAddress,
+} from "@/components/ui/address-autocomplete";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,6 +37,7 @@ export const BusinessProfileSettingsForm: FC = () => {
     control,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isDirty },
   } = useForm<StoreProfileFormData>({
     resolver: zodResolver(storeProfileFormSchema),
@@ -142,7 +147,29 @@ export const BusinessProfileSettingsForm: FC = () => {
 
       <div className="space-y-1.5">
         <Label htmlFor="store-address">Address</Label>
-        <Input id="store-address" placeholder="Street address" {...register("address_line")} />
+        <Controller
+          name="address_line"
+          control={control}
+          render={({ field }) => (
+            <AddressAutocomplete
+              id="store-address"
+              placeholder="Street address"
+              value={field.value ?? ""}
+              onValueChange={field.onChange}
+              onPlaceSelect={(address: ParsedAddress) => {
+                if (address.city) {
+                  setValue("city", address.city, { shouldDirty: true });
+                }
+                if (address.country) {
+                  setValue("country", address.country, { shouldDirty: true });
+                }
+                if (address.postalCode) {
+                  setValue("postal_code", address.postalCode, { shouldDirty: true });
+                }
+              }}
+            />
+          )}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-4 @sm:grid-cols-2 @lg:grid-cols-3">
