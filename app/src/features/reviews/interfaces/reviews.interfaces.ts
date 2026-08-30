@@ -24,14 +24,17 @@ export interface ReviewTagAssignment {
 export interface ReviewCategoryRating {
   review_category_id: string;
   rating: number;
-  review_category?: { id: string; name: string } | null;
+  review_category?: { id: string; name: Record<string, string> } | null;
 }
 
 export interface ReviewFeedbackResponse {
   feedback_question_id: string;
   rating_value?: number | null;
   text_value?: string | null;
-  feedback_question?: { id: string; question: string } | null;
+  feedback_question?: {
+    id: string;
+    question: Record<string, string>;
+  } | null;
 }
 
 export interface Review {

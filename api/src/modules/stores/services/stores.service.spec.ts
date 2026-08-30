@@ -107,6 +107,7 @@ describe('StoresService', () => {
             expect(accessControl.getAccessibleStoreIds).toHaveBeenCalledWith(user, 'org1');
             expect(prisma.store.findMany).toHaveBeenCalledWith({
                 where: { id: { in: ['s1', 's2'] } },
+                include: { logo_document: true },
                 orderBy: { created_at: 'desc' },
             });
             expect(result).toEqual([{ id: 's1' }, { id: 's2' }]);
