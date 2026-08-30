@@ -46,6 +46,7 @@ import {
   type QrCode,
   type QrCodeSelectionMode,
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
+import type { Employee } from "@/features/employees/interfaces/employees.interfaces";
 import { useSpots } from "@/features/spots/hooks/use-spots";
 import {
   qrCodeFormSchema,
@@ -62,12 +63,17 @@ const selectionModeIcons: Record<QrCodeSelectionMode, typeof User> = {
   [QrCodeSelectionModes.CHOOSE_MANY]: Users,
   [QrCodeSelectionModes.TEAM]: UsersRound,
 };
+
+type QrEmployeeOption = Pick<Employee, "id" | "full_name" | "position">;
+
 interface QrCodeFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   storeId: string;
   storeSlug: string;
   qr?: QrCode | null;
+  defaultEmployeeIds?: string[];
+  presetEmployees?: QrEmployeeOption[];
 }
 
 export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
@@ -76,6 +82,8 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
   storeId,
   storeSlug,
   qr,
+  defaultEmployeeIds = [],
+  presetEmployees = [],
 }) => {
   const isEdit = !!qr;
   const [ruleFormOpen, setRuleFormOpen] = useState(false);
@@ -88,6 +96,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
   const rulesQuery = useDistributionRules(storeId);
   const spotsQuery = useSpots(storeId, { limit: 100, is_active: true });
   const isPending = createQr.isPending || updateQr.isPending;
+  const defaultEmployeeIdsKey = defaultEmployeeIds.join(",");
 
   const {
     register,
@@ -100,7 +109,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
     defaultValues: {
       label: "",
       selection_mode: QrCodeSelectionModes.CHOOSE_ONE,
-      employee_ids: [],
+      employee_ids: defaultEmployeeIds,
       spot_ids: [],
       distribution_rule_id: "",
       is_active: true,
@@ -123,12 +132,12 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
     reset({
       label: "",
       selection_mode: QrCodeSelectionModes.CHOOSE_ONE,
-      employee_ids: [],
+      employee_ids: defaultEmployeeIds,
       spot_ids: [],
       distribution_rule_id: "",
       is_active: true,
     });
-  }, [open, qr, reset]);
+  }, [open, qr, defaultEmployeeIdsKey, reset]);
 
   const onSubmit = handleSubmit(async (values) => {
     const payload = {
@@ -156,7 +165,25 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
     } catch {}
   });
 
-  const employees = employeesQuery.data?.data ?? [];
+  const employees = (() => {
+    const byId = new Map<string, QrEmployeeOption>();
+    for (const employee of employeesQuery.data?.data ?? []) {
+      byId.set(employee.id, employee);
+    }
+    for (const employee of presetEmployees) {
+      if (!byId.has(employee.id)) {
+        byId.set(employee.id, employee);
+      }
+    }
+    const list = Array.from(byId.values());
+    if (defaultEmployeeIds.length === 0) return list;
+    const selected = new Set(defaultEmployeeIds);
+    return list.toSorted((a, b) => {
+      const aSelected = selected.has(a.id) ? 0 : 1;
+      const bSelected = selected.has(b.id) ? 0 : 1;
+      return aSelected - bSelected;
+    });
+  })();
   const rules = rulesQuery.data ?? [];
   const spots = spotsQuery.data?.data ?? [];
   const tipUrl = qr ? getAbsoluteTipUrl(storeSlug, qr.code) : null;

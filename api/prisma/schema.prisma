@@ -189,7 +189,7 @@ model User {
   registered_at     DateTime? // set the moment the person claims this identity by setting a password for the first time
   is_email_verified Boolean   @default(false)
   is_phone_verified Boolean   @default(false)
-  is_archived       Boolean   @default(true)
+  is_archived       Boolean   @default(false)
   created_at        DateTime  @default(now())
   updated_at        DateTime  @updatedAt
 

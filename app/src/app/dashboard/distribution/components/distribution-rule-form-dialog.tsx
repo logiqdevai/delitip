@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { NumberPicker } from "@/components/ui/number-picker";
 import {
   Select,
   SelectContent,
@@ -178,7 +179,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
         onOpenChange(next);
       }}
     >
-      <DialogContent className="gap-0 p-0 sm:max-w-lg" showCloseButton={!isPending}>
+      <DialogContent className="gap-0 p-0 sm:max-w-xl" showCloseButton={!isPending}>
         <DialogHeader className="border-b border-zinc-100 px-5 py-4 sm:px-6">
           <DialogTitle>
             {isEdit ? "Edit distribution rule" : "Create distribution rule"}
@@ -270,12 +271,12 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                 return (
                   <div
                     key={field.id}
-                    className="rounded-2xl border border-zinc-200/80 bg-white p-3.5 shadow-xs"
+                    className="space-y-2.5 rounded-2xl border border-zinc-200/80 bg-white p-3 shadow-xs"
                   >
-                    <div className="flex items-start gap-3">
+                    <div className="flex items-center gap-2.5">
                       <div
                         className={cn(
-                          "mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold tabular-nums",
+                          "flex size-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold tabular-nums",
                           isStore
                             ? "bg-zinc-100 text-zinc-600"
                             : "bg-brand-50 text-brand-800",
@@ -285,92 +286,46 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                         {index + 1}
                       </div>
 
-                      <div className="min-w-0 flex-1 space-y-3">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <div
-                            className="inline-flex rounded-lg bg-zinc-100 p-1"
-                            role="group"
-                            aria-label={`Recipient ${index + 1} type`}
-                          >
-                            {DistributionRecipientTypeFormOptions.map(
-                              (option) => {
-                                const selected = type === option.id;
-                                const Icon =
-                                  option.id ===
-                                  DistributionRecipientTypes.STORE
-                                    ? Building2
-                                    : User;
-                                return (
-                                  <button
-                                    key={option.id}
-                                    type="button"
-                                    disabled={isPending}
-                                    onClick={() =>
-                                      setRecipientType(index, option.id)
-                                    }
-                                    className={cn(
-                                      "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold transition",
-                                      selected
-                                        ? "bg-white text-ink-charcoal"
-                                        : "text-zinc-500 hover:text-ink-charcoal",
-                                    )}
-                                  >
-                                    <Icon
-                                      className="size-3.5"
-                                      strokeWidth={2}
-                                    />
-                                    {option.id ===
-                                    DistributionRecipientTypes.STORE
-                                      ? "Business"
-                                      : "Employee"}
-                                  </button>
-                                );
-                              },
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-1.5">
-                            <div
+                      <div
+                        className="inline-flex w-fit shrink-0 rounded-lg bg-zinc-100 p-1"
+                        role="group"
+                        aria-label={`Recipient ${index + 1} type`}
+                      >
+                        {DistributionRecipientTypeFormOptions.map((option) => {
+                          const selected = type === option.id;
+                          const Icon =
+                            option.id === DistributionRecipientTypes.STORE
+                              ? Building2
+                              : User;
+                          return (
+                            <button
+                              key={option.id}
+                              type="button"
+                              disabled={isPending}
+                              onClick={() =>
+                                setRecipientType(index, option.id)
+                              }
                               className={cn(
-                                "flex h-9 items-center rounded-lg border border-input bg-transparent focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
-                                recipientError?.percentage &&
-                                  "border-destructive ring-3 ring-destructive/20",
+                                "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap transition",
+                                selected
+                                  ? "bg-white text-ink-charcoal"
+                                  : "text-zinc-500 hover:text-ink-charcoal",
                               )}
                             >
-                              <Input
-                                id={`recipient-pct-${index}`}
-                                type="number"
-                                min={0}
-                                max={100}
-                                step={1}
-                                placeholder="0"
-                                aria-label={`${label} percentage`}
-                                className="h-full w-14 border-0 bg-transparent px-2 text-right font-bold tabular-nums shadow-none focus-visible:border-transparent focus-visible:ring-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                                aria-invalid={!!recipientError?.percentage}
-                                {...register(
-                                  `recipients.${index}.percentage`,
-                                )}
-                              />
-                              <span className="pr-2.5 text-xs font-semibold text-zinc-400">
-                                %
-                              </span>
-                            </div>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon-sm"
-                              disabled={fields.length <= 1 || isPending}
-                              onClick={() => remove(index)}
-                              aria-label={`Remove ${label}`}
-                              className="text-zinc-400 hover:bg-signal-red/10 hover:text-signal-red"
-                            >
-                              <Trash2 className="size-3.5" />
-                            </Button>
-                          </div>
-                        </div>
+                              <Icon className="size-3.5" strokeWidth={2} />
+                              {option.id === DistributionRecipientTypes.STORE
+                                ? "Business"
+                                : "Employee"}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
 
+                    <div className="flex flex-col gap-2 pl-[2.375rem] sm:flex-row sm:items-center">
+                      <div className="min-w-0 flex-1">
                         {isStore ? (
-                          <p className="text-[11px] text-zinc-500">
+                          <p className="text-[11px] leading-5 text-zinc-500 sm:py-2">
                             {pct}% stays with the business house account.
                           </p>
                         ) : (
@@ -423,19 +378,51 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                             )}
                           />
                         )}
+                      </div>
 
-                        {recipientError?.employee_id ? (
-                          <p className="text-xs text-red-600">
-                            {recipientError.employee_id.message}
-                          </p>
-                        ) : null}
-                        {recipientError?.percentage ? (
-                          <p className="text-xs text-red-600">
-                            {recipientError.percentage.message}
-                          </p>
-                        ) : null}
+                      <div className="flex shrink-0 items-center gap-1 self-end sm:self-auto">
+                        <Controller
+                          name={`recipients.${index}.percentage`}
+                          control={control}
+                          render={({ field: percentageField }) => (
+                            <NumberPicker
+                              id={`recipient-pct-${index}`}
+                              value={Number(percentageField.value) || 0}
+                              onChange={percentageField.onChange}
+                              min={0}
+                              max={100}
+                              step={1}
+                              suffix="%"
+                              disabled={isPending}
+                              invalid={!!recipientError?.percentage}
+                              aria-label={`${label} percentage`}
+                            />
+                          )}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          disabled={fields.length <= 1 || isPending}
+                          onClick={() => remove(index)}
+                          aria-label={`Remove ${label}`}
+                          className="size-(--control-height-default) shrink-0 text-zinc-400 hover:bg-signal-red/10 hover:text-signal-red"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
                       </div>
                     </div>
+
+                    {recipientError?.employee_id ? (
+                      <p className="pl-[2.375rem] text-xs text-red-600">
+                        {recipientError.employee_id.message}
+                      </p>
+                    ) : null}
+                    {recipientError?.percentage ? (
+                      <p className="pl-[2.375rem] text-xs text-red-600">
+                        {recipientError.percentage.message}
+                      </p>
+                    ) : null}
                   </div>
                 );
               })}

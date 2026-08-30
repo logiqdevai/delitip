@@ -165,8 +165,7 @@ export const LocalizationSettingsForm: FC = () => {
         <h2 className="text-sm font-bold text-ink-charcoal">Localization</h2>
       </div>
       <p className="text-xs text-zinc-500">
-        The primary language is what you type your branding text in; content
-        is auto-translated into every supported language.
+        The primary language is what you type your branding text in.
       </p>
 
       <div className="space-y-1.5">

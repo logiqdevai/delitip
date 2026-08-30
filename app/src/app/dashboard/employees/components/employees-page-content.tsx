@@ -161,7 +161,7 @@ export const EmployeesPageContent: FC = () => {
           </EmptyContent>
         </Empty>
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <ul className="divide-y divide-zinc-100 overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
           {employees.map((employee) => (
             <EmployeeCard
               key={employee.id}
@@ -170,7 +170,7 @@ export const EmployeesPageContent: FC = () => {
               onToggleActive={requestToggleActive}
             />
           ))}
-        </div>
+        </ul>
       )}
 
       <EmployeeFormDialog

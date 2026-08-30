@@ -2,13 +2,28 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Pencil, QrCode, UserCheck, UserRoundX } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import {
+  ArrowLeft,
+  ChevronDown,
+  Pencil,
+  QrCode,
+  Trash2,
+  UserCheck,
+  UserRoundX,
+} from "lucide-react";
 import {
   ConfirmationDialog,
   useConfirmationDialog,
 } from "@/components/ui/confirmation-dialog";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Empty,
   EmptyContent,
@@ -17,8 +32,11 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
+import { buttonVariants } from "@/components/ui/button";
+import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
 import {
+  useDeleteEmployee,
   useEmployee,
   useEmployeeDashboard,
   useUpdateEmployee,
@@ -32,6 +50,7 @@ import {
 import { getAbsoluteTipUrl } from "@/features/qr-codes/utils/qr-tip-url.utils";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { formatMoney } from "@/lib/money";
+import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 
 const initials = (name: string) => {
@@ -44,13 +63,17 @@ const initials = (name: string) => {
 export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   employeeId,
 }) => {
+  const router = useRouter();
   const { store, storeId } = useWorkspace();
   const employeeQuery = useEmployee(employeeId);
   const dashboardQuery = useEmployeeDashboard(employeeId);
   const qrCodesQuery = useQrCodes(storeId ?? "", { limit: 100 });
   const updateEmployee = useUpdateEmployee();
+  const deleteEmployee = useDeleteEmployee();
   const deactivateConfirm = useConfirmationDialog();
+  const deleteConfirm = useConfirmationDialog();
   const [formOpen, setFormOpen] = useState(false);
+  const [qrFormOpen, setQrFormOpen] = useState(false);
 
   if (employeeQuery.isPending) {
     return <DetailSkeleton fieldCount={6} />;
@@ -130,39 +153,47 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setFormOpen(true)}
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            className={cn(
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "gap-1.5",
+            )}
+            aria-label="Employee actions"
           >
-            <Pencil data-icon="inline-start" className="size-3.5" />
-            Edit
-          </Button>
-          <Button
-            type="button"
-            variant={employee.is_active ? "destructive" : "secondary"}
-            size="sm"
-            onClick={() => {
-              if (employee.is_active) {
-                deactivateConfirm.openDialog();
-              } else {
+            Actions
+            <ChevronDown className="size-3.5 opacity-60" strokeWidth={2} />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-44">
+            <DropdownMenuItem onClick={() => setFormOpen(true)}>
+              <Pencil />
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                if (employee.is_active) {
+                  deactivateConfirm.openDialog();
+                  return;
+                }
                 void updateEmployee.mutateAsync({
                   id: employee.id,
                   payload: { is_active: true },
                 });
-              }
-            }}
-          >
-            {employee.is_active ? (
-              <UserRoundX data-icon="inline-start" className="size-3.5" />
-            ) : (
-              <UserCheck data-icon="inline-start" className="size-3.5" />
-            )}
-            {employee.is_active ? "Deactivate" : "Activate"}
-          </Button>
-        </div>
+              }}
+            >
+              {employee.is_active ? <UserRoundX /> : <UserCheck />}
+              {employee.is_active ? "Deactivate" : "Activate"}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => deleteConfirm.openDialog()}
+            >
+              <Trash2 />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -239,12 +270,13 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         ) : (
           <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 p-4 text-xs text-zinc-500">
             No QR code is scoped to just this employee yet.{" "}
-            <Link
-              href={Routes.dashboard.access}
+            <button
+              type="button"
               className="font-semibold text-brand-700 hover:underline"
+              onClick={() => setQrFormOpen(true)}
             >
               Create one
-            </Link>
+            </button>
             .
           </p>
         )}
@@ -256,6 +288,23 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
           onOpenChange={setFormOpen}
           storeId={storeId}
           employee={employee}
+        />
+      ) : null}
+
+      {storeId && store ? (
+        <QrCodeFormDialog
+          open={qrFormOpen}
+          onOpenChange={setQrFormOpen}
+          storeId={storeId}
+          storeSlug={store.slug}
+          defaultEmployeeIds={[employee.id]}
+          presetEmployees={[
+            {
+              id: employee.id,
+              full_name: employee.full_name,
+              position: employee.position,
+            },
+          ]}
         />
       ) : null}
 
@@ -271,6 +320,18 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
           });
         }}
         isPending={updateEmployee.isPending}
+      />
+
+      <ConfirmationDialog
+        state={deleteConfirm}
+        title="Delete employee?"
+        description={`${employee.full_name} will be permanently removed. This cannot be undone.`}
+        confirmLabel="Delete"
+        onConfirm={async () => {
+          await deleteEmployee.mutateAsync(employee.id);
+          router.push(Routes.dashboard.employees);
+        }}
+        isPending={deleteEmployee.isPending}
       />
     </div>
   );

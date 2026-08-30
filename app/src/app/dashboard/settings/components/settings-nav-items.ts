@@ -43,7 +43,7 @@ export const settingsNavItems: SettingsNavItem[] = [
     href: Routes.dashboard.settings.localization,
     label: "Localization",
     description:
-      "The primary language is what you type your branding text in; content is auto-translated into every supported language.",
+      "The primary language is what you type your branding text in.",
     icon: Globe,
   },
   {

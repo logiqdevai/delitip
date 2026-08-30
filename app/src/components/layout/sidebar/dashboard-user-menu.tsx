@@ -9,10 +9,6 @@ import {
   LogOut,
 } from "lucide-react";
 import {
-  Avatar,
-  AvatarFallback,
-} from "@/components/ui/avatar";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -60,11 +56,9 @@ const initialsFromProfile = (profile: {
 };
 
 const UserAvatar: FC<{ initials: string }> = ({ initials }) => (
-  <Avatar size="sm" className="size-7 rounded-full after:border-zinc-200">
-    <AvatarFallback className="rounded-full bg-ink-charcoal text-[10px] font-bold text-paper-offwhite">
-      {initials}
-    </AvatarFallback>
-  </Avatar>
+  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-ink-charcoal text-[10px] font-bold tracking-wide text-paper-offwhite">
+    {initials}
+  </div>
 );
 
 interface DashboardUserMenuProps {
@@ -95,8 +89,8 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
 
   if (meQuery.isPending && !authUser?.email) {
     return (
-      <div className="flex items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50 px-3 py-2.5">
-        <Skeleton className="size-7 shrink-0 rounded-full" />
+      <div className="flex items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50 p-3">
+        <Skeleton className="size-8 shrink-0 rounded-full" />
         <div className="min-w-0 flex-1 space-y-1.5 group-data-[collapsible=icon]:hidden">
           <Skeleton className="h-3 w-24" />
           <Skeleton className="h-2.5 w-32" />
@@ -111,7 +105,7 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
         <DropdownMenu>
           <DropdownMenuTrigger
             className={cn(
-              "flex w-full items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50 px-3 py-2.5 text-left outline-none transition hover:bg-neutral-fill focus-visible:ring-2 focus-visible:ring-ring/50 aria-expanded:bg-neutral-fill",
+              "flex w-full items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50 p-3 text-left outline-none transition hover:bg-neutral-fill focus-visible:ring-2 focus-visible:ring-ring/50 aria-expanded:bg-neutral-fill",
               "group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:hover:bg-neutral-fill",
             )}
             aria-label="Account menu"
@@ -154,7 +148,7 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
                 className="gap-2 rounded-lg px-2 py-1.5 text-chip font-medium text-zinc-700 focus:bg-neutral-fill focus:text-ink-charcoal"
                 render={
                   <Link
-                    href={Routes.dashboard.settings.profile}
+                    href={Routes.dashboard.account}
                     onClick={onNavigate}
                   />
                 }
