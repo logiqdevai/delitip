@@ -7,11 +7,13 @@ import {
   ArrowLeft,
   ChevronDown,
   Pencil,
-  QrCode,
+  Plus,
+  QrCode as QrCodeIcon,
   Trash2,
   UserCheck,
   UserRoundX,
 } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   ConfirmationDialog,
   useConfirmationDialog,
@@ -29,13 +31,13 @@ import {
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
+  EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
-import { buttonVariants } from "@/components/ui/button";
 import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
-import { EmployeeQrCodesDialog } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
+import { QrRow } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
 import { PlatformAuthRoles } from "@/features/auth/interfaces/auth.interfaces";
 import {
   useDeleteEmployee,
@@ -45,11 +47,7 @@ import {
 } from "@/features/employees/hooks/use-employees";
 import { getEmployeeStatusLabel } from "@/config/constants/dropdowns/employees/employee-status-form.options";
 import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
-import {
-  getQrCodeEmployeeCount,
-  getQrCodeEmployeeIds,
-} from "@/features/qr-codes/interfaces/qr-codes.interfaces";
-import { getAbsoluteTipUrl } from "@/features/qr-codes/utils/qr-tip-url.utils";
+import type { QrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useMe } from "@/features/users/hooks/use-users";
 import { formatMoney } from "@/lib/money";
@@ -83,7 +81,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   const deleteConfirm = useConfirmationDialog();
   const [formOpen, setFormOpen] = useState(false);
   const [qrFormOpen, setQrFormOpen] = useState(false);
-  const [qrListOpen, setQrListOpen] = useState(false);
+  const [editingQr, setEditingQr] = useState<QrCode | null>(null);
 
   const platformRole = meQuery.data?.role ?? authUser?.role;
   const canDeleteEmployee =
@@ -119,11 +117,17 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   const dashboard = dashboardQuery.data;
   const currency = store?.currency ?? "EUR";
 
-  const personalQr = (qrCodesQuery.data?.data ?? []).find(
-    (qr) =>
-      getQrCodeEmployeeCount(qr) === 1 &&
-      getQrCodeEmployeeIds(qr).includes(employee.id),
-  );
+  const employeeQrCodes = qrCodesQuery.data?.data ?? [];
+
+  const openCreateQr = () => {
+    setEditingQr(null);
+    setQrFormOpen(true);
+  };
+
+  const openEditQr = (qr: QrCode) => {
+    setEditingQr(qr);
+    setQrFormOpen(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -258,47 +262,66 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-charcoal">
-          <QrCode className="size-4" strokeWidth={2} />
-          Personal QR
+          <QrCodeIcon className="size-4" strokeWidth={2} />
+          QR codes
         </h2>
         {qrCodesQuery.isPending ? (
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="space-y-1.5">
-              <Skeleton className="h-4 w-40" />
-              <Skeleton className="h-3 w-56 max-w-full" />
-            </div>
-            <Skeleton className="h-3 w-32" />
+          <div className="space-y-3">
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
           </div>
-        ) : personalQr && store ? (
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <div className="text-sm font-semibold text-ink-charcoal">
-                {personalQr.label}
-              </div>
-              <div className="text-xs break-all text-zinc-500">
-                {getAbsoluteTipUrl(store.slug, personalQr.code)}
-              </div>
-            </div>
-            <button
-              type="button"
-              className="text-xs font-semibold text-brand-700 hover:underline"
-              onClick={() => setQrListOpen(true)}
-            >
-              View all QR codes →
-            </button>
-          </div>
+        ) : qrCodesQuery.isError ? (
+          <Empty className="border border-dashed border-zinc-200 bg-zinc-50 py-8">
+            <EmptyHeader>
+              <EmptyTitle>Could not load QR codes</EmptyTitle>
+              <EmptyDescription>{qrCodesQuery.error.message}</EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        ) : employeeQrCodes.length === 0 ? (
+          <Empty className="border border-dashed border-zinc-200 bg-zinc-50 py-8">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <QrCodeIcon />
+              </EmptyMedia>
+              <EmptyTitle>No QR codes yet</EmptyTitle>
+              <EmptyDescription>
+                This employee isn&apos;t assigned to any QR code.
+              </EmptyDescription>
+            </EmptyHeader>
+            {storeId && store ? (
+              <EmptyContent>
+                <Button type="button" variant="outline" size="sm" onClick={openCreateQr}>
+                  <Plus data-icon="inline-start" className="size-3.5" />
+                  Create QR code
+                </Button>
+              </EmptyContent>
+            ) : null}
+          </Empty>
         ) : (
-          <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 p-4 text-xs text-zinc-500">
-            No QR code is scoped to just this employee yet.{" "}
-            <button
-              type="button"
-              className="font-semibold text-brand-700 hover:underline"
-              onClick={() => setQrFormOpen(true)}
-            >
-              Create one
-            </button>
-            .
-          </p>
+          <div className="space-y-4">
+            <ul className="space-y-3">
+              {employeeQrCodes.map((qr) => (
+                <QrRow
+                  key={qr.id}
+                  qr={qr}
+                  storeSlug={store?.slug ?? ""}
+                  onEdit={openEditQr}
+                />
+              ))}
+            </ul>
+            {storeId && store ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={openCreateQr}
+              >
+                <Plus data-icon="inline-start" className="size-3.5" />
+                Create another QR code
+              </Button>
+            ) : null}
+          </div>
         )}
       </div>
 
@@ -317,7 +340,8 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
           onOpenChange={setQrFormOpen}
           storeId={storeId}
           storeSlug={store.slug}
-          defaultEmployeeIds={[employee.id]}
+          qr={editingQr}
+          defaultEmployeeIds={editingQr ? undefined : [employee.id]}
           presetEmployees={[
             {
               id: employee.id,
@@ -327,12 +351,6 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
           ]}
         />
       ) : null}
-
-      <EmployeeQrCodesDialog
-        open={qrListOpen}
-        onOpenChange={setQrListOpen}
-        employee={employee}
-      />
 
       <ConfirmationDialog
         state={deactivateConfirm}

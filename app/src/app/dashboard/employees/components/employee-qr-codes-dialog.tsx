@@ -59,7 +59,7 @@ interface EmployeeQrCodesDialogProps {
   };
 }
 
-const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => void }> = ({
+export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => void }> = ({
   qr,
   storeSlug,
   onEdit,
