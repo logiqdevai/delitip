@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { SlidersHorizontal } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -53,21 +54,25 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5">
+        <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
+          <SlidersHorizontal className="size-3.5" />
+          Filters
+        </div>
         <DatePicker
           value={dateFrom}
           onChange={setDateFrom}
           placeholder="From date"
-          size="sm"
           aria-label="From date"
+          className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
         <span className="text-xs text-zinc-400">to</span>
         <DatePicker
           value={dateTo}
           onChange={setDateTo}
           placeholder="To date"
-          size="sm"
           aria-label="To date"
+          className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
         <Select
           items={[
@@ -82,10 +87,10 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
             if (value) setEmployeeId(value);
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger className="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-auto min-w-44">
             <SelectGroup>
               <SelectItem value="all">All employees</SelectItem>
               {employees.map((employee) => (
@@ -106,10 +111,10 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
             if (value) setQrCodeId(value);
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger className="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-auto min-w-44">
             <SelectGroup>
               <SelectItem value="all">All QR codes</SelectItem>
               {qrCodes.map((qr) => (
@@ -130,10 +135,10 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
             if (value) setGroupBy(value as StoreTipsGroupBy);
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger className="min-w-32 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-auto min-w-36">
             <SelectGroup>
               {GROUP_BY_OPTIONS.map((option) => (
                 <SelectItem key={option.id} value={option.id}>

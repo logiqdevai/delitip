@@ -65,10 +65,10 @@ export const RefundsQueuePanel: FC<{
             if (value) setStatus(value as RefundStatus | "all");
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger className="min-w-32 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-auto min-w-36">
             <SelectGroup>
               <SelectItem value="PENDING">Pending</SelectItem>
               <SelectItem value="APPROVED">Approved</SelectItem>

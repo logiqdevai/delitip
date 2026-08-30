@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { MessageSquareText, Star } from "lucide-react";
+import { MessageSquareText, SlidersHorizontal, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
@@ -109,7 +109,11 @@ export const ReviewsPageContent: FC = () => {
         description="Direct customer sentiment, compliments, and ratings tied to employees."
       />
 
-      <div className="flex flex-wrap items-center gap-2.5">
+      <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5">
+        <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
+          <SlidersHorizontal className="size-3.5" />
+          Filters
+        </div>
         <Select
           items={[
             { label: "Any rating", value: "all" },
@@ -125,10 +129,10 @@ export const ReviewsPageContent: FC = () => {
             }
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger className="min-w-32 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-auto min-w-36">
             <SelectGroup>
               <SelectItem value="all">Any rating</SelectItem>
               {RATING_OPTIONS.map((rating) => (
@@ -153,10 +157,10 @@ export const ReviewsPageContent: FC = () => {
             if (value) setEmployeeId(value);
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger className="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-auto min-w-44">
             <SelectGroup>
               <SelectItem value="all">All employees</SelectItem>
               {employees.map((employee) => (
@@ -178,10 +182,10 @@ export const ReviewsPageContent: FC = () => {
             if (value) setVisibility(value as ReviewVisibility | "all");
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger className="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-auto min-w-40">
             <SelectGroup>
               {ReviewVisibilityFilterOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>

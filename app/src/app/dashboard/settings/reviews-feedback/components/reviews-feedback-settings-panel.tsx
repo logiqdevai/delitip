@@ -64,10 +64,10 @@ const CategoriesSection: FC<{ storeId: string }> = ({ storeId }) => {
           value={name}
           onChange={(event) => setName(event.target.value)}
           placeholder="e.g. Friendliness"
-          className="h-8 flex-1 text-xs"
+          className="flex-1"
         />
-        <Button type="submit" size="sm" disabled={create.isPending || !name.trim()}>
-          <Plus data-icon="inline-start" className="size-3.5" />
+        <Button type="submit" disabled={create.isPending || !name.trim()}>
+          <Plus data-icon="inline-start" />
           Add
         </Button>
       </form>
@@ -141,7 +141,7 @@ const QuestionsSection: FC<{ storeId: string }> = ({ storeId }) => {
           value={question}
           onChange={(event) => setQuestion(event.target.value)}
           placeholder="e.g. How was the food?"
-          className="h-8 flex-1 text-xs"
+          className="flex-1"
         />
         <Select
           items={[
@@ -153,7 +153,7 @@ const QuestionsSection: FC<{ storeId: string }> = ({ storeId }) => {
             if (value) setType(value);
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -163,8 +163,8 @@ const QuestionsSection: FC<{ storeId: string }> = ({ storeId }) => {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <Button type="submit" size="sm" disabled={create.isPending || !question.trim()}>
-          <Plus data-icon="inline-start" className="size-3.5" />
+        <Button type="submit" disabled={create.isPending || !question.trim()}>
+          <Plus data-icon="inline-start" />
           Add
         </Button>
       </form>
@@ -234,7 +234,7 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
           value={name}
           onChange={(event) => setName(event.target.value)}
           placeholder="e.g. Friendly service"
-          className="h-8 flex-1 text-xs"
+          className="flex-1"
         />
         <Select
           items={[
@@ -247,7 +247,7 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
             if (value) setSentiment(value);
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -258,8 +258,8 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <Button type="submit" size="sm" disabled={create.isPending || !name.trim()}>
-          <Plus data-icon="inline-start" className="size-3.5" />
+        <Button type="submit" disabled={create.isPending || !name.trim()}>
+          <Plus data-icon="inline-start" />
           Add
         </Button>
       </form>

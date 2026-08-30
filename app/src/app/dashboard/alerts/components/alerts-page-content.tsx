@@ -2,7 +2,7 @@
 
 import { type FC, useState } from "react";
 import { format } from "date-fns";
-import { Bell, CheckCheck } from "lucide-react";
+import { Bell, CheckCheck, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
@@ -89,7 +89,11 @@ export const AlertsPageContent: FC = () => {
         }
       />
 
-      <div className="flex flex-wrap items-center gap-2.5">
+      <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5">
+        <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
+          <SlidersHorizontal className="size-3.5" />
+          Filters
+        </div>
         <Select
           items={[
             { label: "All", value: "all" },
@@ -101,7 +105,7 @@ export const AlertsPageContent: FC = () => {
             if (value) setReadFilter(value as "all" | "unread" | "read");
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger className="min-w-32 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -125,10 +129,10 @@ export const AlertsPageContent: FC = () => {
             if (value) setType(value as AlertType | "all");
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger className="min-w-40 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-auto min-w-56">
             <SelectGroup>
               <SelectItem value="all">All types</SelectItem>
               {AlertTypeFormOptions.map((option) => (

@@ -88,14 +88,10 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
           onChange={(event) => setName(event.target.value)}
           placeholder="e.g. Table 12"
           aria-label="New spot name"
-          className="h-8 flex-1 text-xs"
+          className="flex-1"
         />
-        <Button
-          type="submit"
-          size="sm"
-          disabled={createSpot.isPending || !name.trim()}
-        >
-          <Plus data-icon="inline-start" className="size-3.5" />
+        <Button type="submit" disabled={createSpot.isPending || !name.trim()}>
+          <Plus data-icon="inline-start" />
           Add spot
         </Button>
       </form>
@@ -138,7 +134,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
                       onChange={(event) => setEditName(event.target.value)}
                       aria-label={`Rename ${spot.name}`}
                       autoFocus
-                      className="h-8 flex-1 text-xs"
+                      className="flex-1"
                     />
                     <Button
                       type="submit"

@@ -3,7 +3,7 @@
 import { type FC, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Receipt } from "lucide-react";
+import { Receipt, SlidersHorizontal } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
@@ -115,7 +115,11 @@ export const TipsPageContent: FC = () => {
         }
       />
 
-      <div className="flex flex-wrap items-center gap-2.5">
+      <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5">
+        <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
+          <SlidersHorizontal className="size-3.5" />
+          Filters
+        </div>
         <Select
           items={TipStatusFilterOptions.map((option) => ({
             label: option.label,
@@ -126,10 +130,10 @@ export const TipsPageContent: FC = () => {
             if (value) setStatus(value as TipStatus | "all");
           }}
         >
-          <SelectTrigger size="sm">
+          <SelectTrigger className="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-auto min-w-40">
             <SelectGroup>
               {TipStatusFilterOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
@@ -143,16 +147,16 @@ export const TipsPageContent: FC = () => {
           value={dateFrom}
           onChange={setDateFrom}
           placeholder="From date"
-          size="sm"
           aria-label="From date"
+          className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
         <span className="text-xs text-zinc-400">to</span>
         <DatePicker
           value={dateTo}
           onChange={setDateTo}
           placeholder="To date"
-          size="sm"
           aria-label="To date"
+          className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
       </div>
 
