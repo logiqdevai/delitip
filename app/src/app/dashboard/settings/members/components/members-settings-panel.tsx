@@ -8,7 +8,7 @@ import {
   ConfirmationDialog,
   useConfirmationDialog,
 } from "@/components/ui/confirmation-dialog";
-import { InviteMemberDialog } from "@/app/dashboard/settings/components/invite-member-dialog";
+import { InviteMemberDialog } from "./invite-member-dialog";
 import {
   useOrganizationMembers,
   useRemoveOrganizationMember,

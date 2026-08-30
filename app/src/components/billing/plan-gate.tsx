@@ -4,6 +4,7 @@ import { type FC, type ReactNode } from "react";
 import Link from "next/link";
 import { Lock } from "lucide-react";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useSubscription } from "@/features/subscriptions/hooks/use-subscriptions";
 import type { SubscriptionPlan } from "@/features/subscriptions/interfaces/subscriptions.interfaces";
 import { getSubscriptionPlanLabel } from "@/config/constants/dropdowns/subscriptions/subscription-plan-form.options";
@@ -26,7 +27,16 @@ export const PlanGate: FC<PlanGateProps> = ({
   const subscriptionQuery = useSubscription(organizationId);
 
   if (subscriptionQuery.isPending) {
-    return null;
+    return (
+      <div className="space-y-4">
+        <div className="flex gap-2">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} className="h-8 w-24 rounded-lg" />
+          ))}
+        </div>
+        <Skeleton className="h-64 w-full rounded-2xl" />
+      </div>
+    );
   }
 
   if (hasPlanAccess(subscriptionQuery.data?.plan, requiredPlan)) {
@@ -46,7 +56,7 @@ export const PlanGate: FC<PlanGateProps> = ({
       </EmptyHeader>
       <EmptyContent>
         <Link
-          href={Routes.dashboard.settings}
+          href={Routes.dashboard.settings.root}
           className="text-xs font-semibold text-brand-700 hover:underline"
         >
           Go to Billing →

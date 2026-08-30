@@ -137,9 +137,13 @@ export const TippingConfigSettingsForm: FC = () => {
       <div className="flex items-center justify-between border-t border-zinc-100 pt-4 text-xs">
         <span className="text-zinc-500">Default distribution rule</span>
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-ink-charcoal">
-            {defaultRule?.name ?? "Store default not set"}
-          </span>
+          {rulesQuery.isPending ? (
+            <Skeleton className="h-4 w-28" />
+          ) : (
+            <span className="font-semibold text-ink-charcoal">
+              {defaultRule?.name ?? "Store default not set"}
+            </span>
+          )}
           <Link
             href={Routes.dashboard.distribution}
             className="font-semibold text-brand-700 hover:underline"

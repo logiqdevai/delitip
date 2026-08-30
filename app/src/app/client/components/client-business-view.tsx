@@ -112,7 +112,7 @@ export const ClientBusinessView: FC = () => {
 
         <div className="space-y-1 border-t border-zinc-100 pt-3">
           <Link
-            href={Routes.dashboard.settings}
+            href={Routes.dashboard.settings.root}
             className="flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-medium text-zinc-600 transition hover:bg-neutral-fill hover:text-ink-charcoal"
           >
             <Settings className="size-4 text-zinc-400" strokeWidth={2} />
