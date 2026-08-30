@@ -3,6 +3,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { ensureUniqueSlug } from '@/shared/utils/slug/slug.utils';
 import { autoTranslateStub, resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
+import { seedIndustryReviewConfig } from '@/shared/utils/industry-review-config/seed-industry-review-config.util';
 import { CreateStoreDto } from '../dto/create-store.dto';
 import { UpdateStoreDto } from '../dto/update-store.dto';
 import { UpdateStoreTranslationDto } from '../dto/update-store-translation.dto';
@@ -26,22 +27,28 @@ export class StoresService {
             return !!existing;
         });
 
-        return this.prisma.store.create({
-            data: {
-                organization_id: organizationId,
-                name: dto.name,
-                slug,
-                industry: dto.industry,
-                primary_language: dto.primary_language,
-                supported_languages: dto.supported_languages,
-                currency: dto.currency,
-                timezone: dto.timezone,
-                address_line: dto.address_line,
-                city: dto.city,
-                country: dto.country,
-                postal_code: dto.postal_code,
-                full_address: dto.full_address ? { ...dto.full_address } : undefined,
-            },
+        return this.prisma.$transaction(async (tx) => {
+            const store = await tx.store.create({
+                data: {
+                    organization_id: organizationId,
+                    name: dto.name,
+                    slug,
+                    industry: dto.industry,
+                    primary_language: dto.primary_language,
+                    supported_languages: dto.supported_languages,
+                    currency: dto.currency,
+                    timezone: dto.timezone,
+                    address_line: dto.address_line,
+                    city: dto.city,
+                    country: dto.country,
+                    postal_code: dto.postal_code,
+                    full_address: dto.full_address ? { ...dto.full_address } : undefined,
+                },
+            });
+
+            await seedIndustryReviewConfig(tx, store.id, store.industry, store.primary_language);
+
+            return store;
         });
     }
 

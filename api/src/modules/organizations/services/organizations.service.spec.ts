@@ -1,5 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
-import { AuthRole, OrganizationRole, StoreIndustry, SubscriptionPlan, SubscriptionStatus } from 'generated/prisma';
+import { AuthRole, Language, OrganizationRole, StoreIndustry, SubscriptionPlan, SubscriptionStatus } from 'generated/prisma';
 import { OrganizationsService } from './organizations.service';
 
 describe('OrganizationsService', () => {
@@ -15,6 +15,9 @@ describe('OrganizationsService', () => {
             organizationMember: { create: jest.fn(), findMany: jest.fn() },
             subscription: { create: jest.fn() },
             store: { findUnique: jest.fn(), create: jest.fn() },
+            reviewCategory: { createMany: jest.fn() },
+            feedbackQuestion: { createMany: jest.fn() },
+            reviewTag: { createMany: jest.fn() },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
         accessControl = { assertOrgAccess: jest.fn() };
@@ -61,7 +64,13 @@ describe('OrganizationsService', () => {
             prisma.organization.findUnique.mockResolvedValue(null);
             prisma.organization.create.mockResolvedValue({ id: 'org1', name: 'Acme', slug: 'acme' });
             prisma.store.findUnique.mockResolvedValue(null);
-            prisma.store.create.mockResolvedValue({ id: 'store1', name: 'Acme Downtown', slug: 'acme-downtown' });
+            prisma.store.create.mockResolvedValue({
+                id: 'store1',
+                name: 'Acme Downtown',
+                slug: 'acme-downtown',
+                industry: StoreIndustry.RESTAURANT,
+                primary_language: Language.EN,
+            });
 
             const result = await service.create(user, {
                 name: 'Acme',
@@ -76,11 +85,26 @@ describe('OrganizationsService', () => {
                     industry: StoreIndustry.RESTAURANT,
                 },
             });
+            expect(prisma.reviewCategory.createMany).toHaveBeenCalledWith({
+                data: expect.arrayContaining([expect.objectContaining({ store_id: 'store1' })]),
+            });
+            expect(prisma.feedbackQuestion.createMany).toHaveBeenCalledWith({
+                data: expect.arrayContaining([expect.objectContaining({ store_id: 'store1' })]),
+            });
+            expect(prisma.reviewTag.createMany).toHaveBeenCalledWith({
+                data: expect.arrayContaining([expect.objectContaining({ store_id: 'store1' })]),
+            });
             expect(result).toEqual({
                 id: 'org1',
                 name: 'Acme',
                 slug: 'acme',
-                store: { id: 'store1', name: 'Acme Downtown', slug: 'acme-downtown' },
+                store: {
+                    id: 'store1',
+                    name: 'Acme Downtown',
+                    slug: 'acme-downtown',
+                    industry: StoreIndustry.RESTAURANT,
+                    primary_language: Language.EN,
+                },
             });
         });
     });

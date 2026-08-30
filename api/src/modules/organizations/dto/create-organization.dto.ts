@@ -9,7 +9,7 @@ export class CreateInitialStoreDto {
     @MinLength(1)
     name: string;
 
-    @ApiProperty({ enum: StoreIndustry, default: StoreIndustry.OTHER })
+    @ApiProperty({ enum: StoreIndustry })
     @IsEnum(StoreIndustry)
     industry: StoreIndustry;
 }

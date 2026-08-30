@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { ensureUniqueSlug } from '@/shared/utils/slug/slug.utils';
+import { seedIndustryReviewConfig } from '@/shared/utils/industry-review-config/seed-industry-review-config.util';
 import { CreateOrganizationDto } from '../dto/create-organization.dto';
 import { UpdateOrganizationDto } from '../dto/update-organization.dto';
 import { OrganizationRole, SubscriptionPlan, SubscriptionStatus } from 'generated/prisma';
@@ -63,6 +64,8 @@ export class OrganizationsService {
                         industry: dto.store.industry,
                     },
                 });
+
+                await seedIndustryReviewConfig(tx, store.id, store.industry, store.primary_language);
             }
 
             return { ...organization, store };

@@ -3,6 +3,10 @@
 import { type FC, type FormEvent, useState } from "react";
 import { MessageSquareText, Plus, Star, Tag, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  ConfirmationDialog,
+  useConfirmationDialog,
+} from "@/components/ui/confirmation-dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -26,6 +30,9 @@ import {
   useUpdateFeedbackQuestion,
 } from "@/features/feedback-questions/hooks/use-feedback-questions";
 import { FeedbackQuestionTypes } from "@/features/feedback-questions/interfaces/feedback-questions.interfaces";
+import type { FeedbackQuestion } from "@/features/feedback-questions/interfaces/feedback-questions.interfaces";
+import type { ReviewCategory } from "@/features/review-categories/interfaces/review-categories.interfaces";
+import type { ReviewTag } from "@/features/review-tags/interfaces/review-tags.interfaces";
 import {
   useCreateReviewTag,
   useDeleteReviewTag,
@@ -37,12 +44,14 @@ import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { resolvePrimaryText } from "@/lib/translated-text";
 import { cn } from "@/lib/utils";
 
-const CategoriesSection: FC<{ storeId: string }> = ({ storeId }) => {
+const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ storeId, primaryLanguage }) => {
   const query = useReviewCategories(storeId);
   const create = useCreateReviewCategory(storeId);
   const update = useUpdateReviewCategory(storeId);
   const remove = useDeleteReviewCategory(storeId);
   const [name, setName] = useState("");
+  const [pendingDelete, setPendingDelete] = useState<ReviewCategory | null>(null);
+  const deleteConfirm = useConfirmationDialog();
 
   const items = query.data ?? [];
 
@@ -92,13 +101,16 @@ const CategoriesSection: FC<{ storeId: string }> = ({ storeId }) => {
                 onClick={() => update.mutate({ id: item.id, payload: { is_active: !item.is_active } })}
                 title={item.is_active ? "Deactivate" : "Activate"}
               >
-                {resolvePrimaryText(item.name)}
+                {resolvePrimaryText(item.name, primaryLanguage)}
               </button>
               <button
                 type="button"
                 className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
-                onClick={() => remove.mutate(item.id)}
-                aria-label={`Delete ${resolvePrimaryText(item.name)}`}
+                onClick={() => {
+                  setPendingDelete(item);
+                  deleteConfirm.openDialog();
+                }}
+                aria-label={`Delete ${resolvePrimaryText(item.name, primaryLanguage)}`}
               >
                 <Trash2 className="size-3" />
               </button>
@@ -106,17 +118,35 @@ const CategoriesSection: FC<{ storeId: string }> = ({ storeId }) => {
           ))}
         </ul>
       )}
+      <ConfirmationDialog
+        state={deleteConfirm}
+        title="Delete this rating category?"
+        description={
+          pendingDelete
+            ? `"${resolvePrimaryText(pendingDelete.name, primaryLanguage)}" will no longer appear on the review step.`
+            : undefined
+        }
+        confirmLabel="Delete"
+        isPending={remove.isPending}
+        onConfirm={async () => {
+          if (!pendingDelete) return;
+          await remove.mutateAsync(pendingDelete.id);
+          setPendingDelete(null);
+        }}
+      />
     </div>
   );
 };
 
-const QuestionsSection: FC<{ storeId: string }> = ({ storeId }) => {
+const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ storeId, primaryLanguage }) => {
   const query = useFeedbackQuestions(storeId);
   const create = useCreateFeedbackQuestion(storeId);
   const update = useUpdateFeedbackQuestion(storeId);
   const remove = useDeleteFeedbackQuestion(storeId);
   const [question, setQuestion] = useState("");
   const [type, setType] = useState<string>(FeedbackQuestionTypes.RATING);
+  const [pendingDelete, setPendingDelete] = useState<FeedbackQuestion | null>(null);
+  const deleteConfirm = useConfirmationDialog();
 
   const items = query.data ?? [];
 
@@ -184,13 +214,16 @@ const QuestionsSection: FC<{ storeId: string }> = ({ storeId }) => {
                   item.is_active ? "text-ink-charcoal" : "text-zinc-400",
                 )}
               >
-                {resolvePrimaryText(item.question)}{" "}
+                {resolvePrimaryText(item.question, primaryLanguage)}{" "}
                 <span className="text-zinc-400">({item.type})</span>
               </button>
               <button
                 type="button"
                 className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
-                onClick={() => remove.mutate(item.id)}
+                onClick={() => {
+                  setPendingDelete(item);
+                  deleteConfirm.openDialog();
+                }}
                 aria-label="Delete question"
               >
                 <Trash2 className="size-3" />
@@ -199,6 +232,22 @@ const QuestionsSection: FC<{ storeId: string }> = ({ storeId }) => {
           ))}
         </div>
       )}
+      <ConfirmationDialog
+        state={deleteConfirm}
+        title="Delete this feedback question?"
+        description={
+          pendingDelete
+            ? `"${resolvePrimaryText(pendingDelete.question, primaryLanguage)}" will no longer appear on the review step.`
+            : undefined
+        }
+        confirmLabel="Delete"
+        isPending={remove.isPending}
+        onConfirm={async () => {
+          if (!pendingDelete) return;
+          await remove.mutateAsync(pendingDelete.id);
+          setPendingDelete(null);
+        }}
+      />
     </div>
   );
 };
@@ -210,6 +259,8 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
   const remove = useDeleteReviewTag(storeId);
   const [name, setName] = useState("");
   const [sentiment, setSentiment] = useState<string>(ReviewTagSentiments.POSITIVE);
+  const [pendingDelete, setPendingDelete] = useState<ReviewTag | null>(null);
+  const deleteConfirm = useConfirmationDialog();
 
   const items = query.data ?? [];
 
@@ -288,7 +339,10 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
               <button
                 type="button"
                 className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
-                onClick={() => remove.mutate(item.id)}
+                onClick={() => {
+                  setPendingDelete(item);
+                  deleteConfirm.openDialog();
+                }}
                 aria-label={`Delete ${item.name}`}
               >
                 <Trash2 className="size-3" />
@@ -297,13 +351,31 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
           ))}
         </ul>
       )}
+      <ConfirmationDialog
+        state={deleteConfirm}
+        title="Delete this tag?"
+        description={
+          pendingDelete
+            ? `"${pendingDelete.name}" will no longer be available to tag reviews.`
+            : undefined
+        }
+        confirmLabel="Delete"
+        isPending={remove.isPending}
+        onConfirm={async () => {
+          if (!pendingDelete) return;
+          await remove.mutateAsync(pendingDelete.id);
+          setPendingDelete(null);
+        }}
+      />
     </div>
   );
 };
 
 export const ReviewsFeedbackSettingsPanel: FC = () => {
-  const { storeId } = useWorkspace();
+  const { store, storeId } = useWorkspace();
   if (!storeId) return null;
+
+  const primaryLanguage = store?.primary_language?.toLowerCase();
 
   return (
     <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
@@ -316,8 +388,8 @@ export const ReviewsFeedbackSettingsPanel: FC = () => {
         </p>
       </div>
 
-      <CategoriesSection storeId={storeId} />
-      <QuestionsSection storeId={storeId} />
+      <CategoriesSection storeId={storeId} primaryLanguage={primaryLanguage} />
+      <QuestionsSection storeId={storeId} primaryLanguage={primaryLanguage} />
       <TagsSection storeId={storeId} />
     </div>
   );

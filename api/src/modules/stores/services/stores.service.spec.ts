@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { AuthRole, Language, OrganizationRole } from 'generated/prisma';
+import { AuthRole, Language, OrganizationRole, StoreIndustry } from 'generated/prisma';
 import { StoresService } from './stores.service';
 
 describe('StoresService', () => {
@@ -13,6 +13,10 @@ describe('StoresService', () => {
         prisma = {
             store: { findUnique: jest.fn(), findMany: jest.fn(), create: jest.fn(), update: jest.fn(), delete: jest.fn() },
             distributionRule: { findFirst: jest.fn() },
+            reviewCategory: { createMany: jest.fn() },
+            feedbackQuestion: { createMany: jest.fn() },
+            reviewTag: { createMany: jest.fn() },
+            $transaction: jest.fn((fn) => fn(prisma)),
         };
         accessControl = {
             assertOrgAccess: jest.fn(),
@@ -25,27 +29,44 @@ describe('StoresService', () => {
     describe('create', () => {
         it('asserts OWNER-only org access, generates a unique slug, and creates the store', async () => {
             prisma.store.findUnique.mockResolvedValue(null); // slug is available on first try
-            prisma.store.create.mockResolvedValue({ id: 's1', slug: 'my-diner' });
+            prisma.store.create.mockResolvedValue({ id: 's1', slug: 'my-diner', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN });
 
-            const result = await service.create(user, 'org1', { name: 'My Diner' } as any);
+            const result = await service.create(user, 'org1', { name: 'My Diner', industry: StoreIndustry.RESTAURANT } as any);
 
             expect(accessControl.assertOrgAccess).toHaveBeenCalledWith(user, 'org1', [OrganizationRole.OWNER]);
             expect(prisma.store.create).toHaveBeenCalledWith({
                 data: expect.objectContaining({ organization_id: 'org1', name: 'My Diner', slug: 'my-diner' }),
             });
-            expect(result).toEqual({ id: 's1', slug: 'my-diner' });
+            expect(result).toEqual({ id: 's1', slug: 'my-diner', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN });
         });
 
         it('appends a numeric suffix when the base slug is already taken', async () => {
             prisma.store.findUnique
                 .mockResolvedValueOnce({ id: 'existing' }) // 'my-diner' taken
                 .mockResolvedValueOnce(null); // 'my-diner-1' free
-            prisma.store.create.mockResolvedValue({ id: 's1', slug: 'my-diner-1' });
+            prisma.store.create.mockResolvedValue({ id: 's1', slug: 'my-diner-1', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN });
 
-            await service.create(user, 'org1', { name: 'My Diner' } as any);
+            await service.create(user, 'org1', { name: 'My Diner', industry: StoreIndustry.RESTAURANT } as any);
 
             expect(prisma.store.create).toHaveBeenCalledWith({
                 data: expect.objectContaining({ slug: 'my-diner-1' }),
+            });
+        });
+
+        it('seeds the default review categories, feedback questions, and tags for the store industry', async () => {
+            prisma.store.findUnique.mockResolvedValue(null);
+            prisma.store.create.mockResolvedValue({ id: 's1', slug: 'my-diner', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN });
+
+            await service.create(user, 'org1', { name: 'My Diner', industry: StoreIndustry.RESTAURANT } as any);
+
+            expect(prisma.reviewCategory.createMany).toHaveBeenCalledWith({
+                data: expect.arrayContaining([expect.objectContaining({ store_id: 's1' })]),
+            });
+            expect(prisma.feedbackQuestion.createMany).toHaveBeenCalledWith({
+                data: expect.arrayContaining([expect.objectContaining({ store_id: 's1' })]),
+            });
+            expect(prisma.reviewTag.createMany).toHaveBeenCalledWith({
+                data: expect.arrayContaining([expect.objectContaining({ store_id: 's1', name: expect.any(String) })]),
             });
         });
     });
