@@ -15,9 +15,19 @@ export const listQrCodes = async (
   query?: QrCodesQuery,
 ): Promise<PaginatedResponse<QrCode>> => {
   try {
+    const { employee_ids, spot_ids, distribution_rule_ids, ...rest } =
+      query ?? {};
+    const params = {
+      ...rest,
+      ...(employee_ids?.length ? { employee_ids: employee_ids.join(",") } : {}),
+      ...(spot_ids?.length ? { spot_ids: spot_ids.join(",") } : {}),
+      ...(distribution_rule_ids?.length
+        ? { distribution_rule_ids: distribution_rule_ids.join(",") }
+        : {}),
+    };
     const response = await axiosInstance.get<PaginatedResponse<QrCode>>(
       ApiRoutes.stores.qrCodes(storeId),
-      { params: query },
+      { params },
     );
     return response.data;
   } catch {

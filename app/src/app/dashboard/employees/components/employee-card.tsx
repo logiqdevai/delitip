@@ -1,9 +1,10 @@
 "use client";
 
-import { type FC } from "react";
+import { type FC, useState } from "react";
 import Link from "next/link";
 import { Pencil, QrCode, UserRoundX, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmployeeQrCodesDialog } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
 import { getEmployeeStatusLabel } from "@/config/constants/dropdowns/employees/employee-status-form.options";
 import type { Employee } from "@/features/employees/interfaces/employees.interfaces";
 import { Routes } from "@/routes/routes";
@@ -28,6 +29,7 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
   onToggleActive,
 }) => {
   const position = employee.position?.trim() || "Team member";
+  const [qrDialogOpen, setQrDialogOpen] = useState(false);
 
   return (
     <li
@@ -78,11 +80,11 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
 
       <div className="flex shrink-0 items-center gap-1 self-end sm:self-auto">
         <Button
+          type="button"
           variant="ghost"
           size="sm"
           className="size-8 px-0 text-zinc-500 hover:text-ink-charcoal"
-          nativeButton={false}
-          render={<Link href={Routes.dashboard.access} />}
+          onClick={() => setQrDialogOpen(true)}
           aria-label={`View QR codes for ${employee.full_name}`}
         >
           <QrCode className="size-3.5" strokeWidth={2} />
@@ -121,6 +123,12 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
           )}
         </Button>
       </div>
+
+      <EmployeeQrCodesDialog
+        open={qrDialogOpen}
+        onOpenChange={setQrDialogOpen}
+        employee={employee}
+      />
     </li>
   );
 };

@@ -68,6 +68,9 @@ export interface QrCodesQuery {
   page?: number;
   limit?: number;
   is_active?: boolean;
+  employee_ids?: string[];
+  spot_ids?: string[];
+  distribution_rule_ids?: string[];
 }
 
 export interface QrCodeStats {
