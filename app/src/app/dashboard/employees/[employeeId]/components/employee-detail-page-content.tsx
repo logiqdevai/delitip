@@ -9,6 +9,7 @@ import {
   Pencil,
   Plus,
   QrCode as QrCodeIcon,
+  Receipt,
   Trash2,
   UserCheck,
   UserRoundX,
@@ -36,6 +37,15 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { TableSkeleton } from "@/components/ui/table-skeleton";
 import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
 import { QrRow } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
@@ -47,14 +57,32 @@ import {
   useUpdateEmployee,
 } from "@/features/employees/hooks/use-employees";
 import { getEmployeeStatusLabel } from "@/config/constants/dropdowns/employees/employee-status-form.options";
+import { getPayoutStatusLabel } from "@/config/constants/dropdowns/tips/payout-status-form.options";
 import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
 import type { QrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { useEmployeeTips } from "@/features/tips/hooks/use-tips";
+import type { PayoutStatus } from "@/features/tips/interfaces/tips.interfaces";
 import { useMe } from "@/features/users/hooks/use-users";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 import { useAuthStore } from "@/stores/auth.store";
+
+const payoutStatusChipClass: Record<PayoutStatus, string> = {
+  PENDING: "bg-amber-50 text-amber-700",
+  PAID: "bg-brand-50 text-brand-700",
+  FAILED: "bg-red-50 text-red-700",
+  CANCELLED: "bg-zinc-100 text-zinc-600",
+};
+
+const formatDateTime = (value?: string | null) => {
+  if (!value) return "—";
+  return new Date(value).toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+};
 
 export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   employeeId,
@@ -69,6 +97,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
     employee_ids: [employeeId],
     limit: 100,
   });
+  const tipsQuery = useEmployeeTips(employeeId, { limit: 100 });
   const updateEmployee = useUpdateEmployee();
   const deleteEmployee = useDeleteEmployee();
   const deactivateConfirm = useConfirmationDialog();
@@ -112,6 +141,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   const currency = store?.currency ?? "EUR";
 
   const employeeQrCodes = qrCodesQuery.data?.data ?? [];
+  const employeeTips = tipsQuery.data?.data ?? [];
 
   const openCreateQr = () => {
     setEditingQr(null);
@@ -308,6 +338,75 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                 Create another QR code
               </Button>
             ) : null}
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+        <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-charcoal">
+          <Receipt className="size-4" strokeWidth={2} />
+          Tips
+        </h2>
+        {tipsQuery.isPending ? (
+          <TableSkeleton columns={3} rows={4} />
+        ) : tipsQuery.isError ? (
+          <Empty className="border border-dashed border-zinc-200 bg-zinc-50 py-8">
+            <EmptyHeader>
+              <EmptyTitle>Could not load tips</EmptyTitle>
+              <EmptyDescription>{tipsQuery.error.message}</EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        ) : employeeTips.length === 0 ? (
+          <Empty className="border border-dashed border-zinc-200 bg-zinc-50 py-8">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <Receipt />
+              </EmptyMedia>
+              <EmptyTitle>No tips yet</EmptyTitle>
+              <EmptyDescription>
+                Tips this employee receives will show up here.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        ) : (
+          <div className="overflow-hidden rounded-xl border border-zinc-200/80">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="px-4">When</TableHead>
+                  <TableHead className="px-4">Amount</TableHead>
+                  <TableHead className="px-4 text-right">Payout status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {employeeTips.map((distribution) => (
+                  <TableRow
+                    key={distribution.id}
+                    className="cursor-pointer"
+                    onClick={() =>
+                      router.push(Routes.dashboard.tipDetail(distribution.tip_id))
+                    }
+                  >
+                    <TableCell className="px-4 py-3.5 text-zinc-500">
+                      {formatDateTime(distribution.tip.created_at)}
+                    </TableCell>
+                    <TableCell className="px-4 py-3.5 font-bold text-brand-700">
+                      {formatMoney(distribution.amount, distribution.tip.currency)}
+                    </TableCell>
+                    <TableCell className="px-4 py-3.5 text-right">
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-caption font-bold",
+                          payoutStatusChipClass[distribution.payout_status],
+                        )}
+                      >
+                        {getPayoutStatusLabel(distribution.payout_status)}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         )}
       </div>
