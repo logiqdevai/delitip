@@ -1,22 +1,22 @@
 "use client";
 
-import { type FC, useState } from "react";
+import { type FC } from "react";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Eye, EyeOff, LoaderCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import {
   businessSignInSchema,
   type BusinessSignInFormData,
 } from "@/features/auth/validation-schemas/auth.schema";
 import { useLoginBusiness } from "@/features/auth/hooks/use-auth";
 import { Routes } from "@/routes/routes";
-import { authFieldClassName } from "./auth-password-field";
-import { cn } from "@/lib/utils";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export const AuthSignInForm: FC = () => {
   const loginBusiness = useLoginBusiness();
-  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const {
     register,
@@ -56,12 +56,11 @@ export const AuthSignInForm: FC = () => {
           >
             Business Email
           </label>
-          <input
+          <Input
             id="sign-in-email"
             type="email"
             autoComplete="email"
             placeholder="manager@artisancafe.com"
-            className={authFieldClassName}
             aria-invalid={!!errors.email}
             {...register("email")}
           />
@@ -89,31 +88,13 @@ export const AuthSignInForm: FC = () => {
             name="password"
             control={control}
             render={({ field }) => (
-              <div className="relative">
-                <input
-                  id="sign-in-password"
-                  type={passwordVisible ? "text" : "password"}
-                  autoComplete="current-password"
-                  placeholder="••••••••••••"
-                  className={cn(authFieldClassName, "pr-10")}
-                  aria-invalid={!!errors.password}
-                  {...field}
-                />
-                <button
-                  type="button"
-                  onClick={() => setPasswordVisible((current) => !current)}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
-                  aria-label={
-                    passwordVisible ? "Hide password" : "Show password"
-                  }
-                >
-                  {passwordVisible ? (
-                    <EyeOff className="size-4" strokeWidth={2} />
-                  ) : (
-                    <Eye className="size-4" strokeWidth={2} />
-                  )}
-                </button>
-              </div>
+              <PasswordInput
+                id="sign-in-password"
+                autoComplete="current-password"
+                placeholder="••••••••••••"
+                aria-invalid={!!errors.password}
+                {...field}
+              />
             )}
           />
           {errors.password ? (
@@ -121,23 +102,14 @@ export const AuthSignInForm: FC = () => {
           ) : null}
         </div>
 
-        <button
+        <ActionButtonWithPending
           type="submit"
-          disabled={isPending}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-electric-lime py-3 text-xs font-semibold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700 disabled:opacity-70"
+          isPending={isPending}
+          className="w-full rounded-xl bg-electric-lime text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-700"
         >
-          {isPending ? (
-            <>
-              <LoaderCircle className="size-4 animate-spin" strokeWidth={2} />
-              <span>Signing in...</span>
-            </>
-          ) : (
-            <>
-              <span>Sign in to delitip.com</span>
-              <ArrowRight className="size-3.5" strokeWidth={2} />
-            </>
-          )}
-        </button>
+          Sign in to delitip.com
+          <ArrowRight data-icon="inline-end" className="size-3.5" />
+        </ActionButtonWithPending>
       </form>
 
       <div className="pt-2 text-center">

@@ -148,7 +148,7 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
           <ActionButtonWithPending
             type="submit"
             isPending={completeSetup.isPending}
-            className="h-10 flex-1 rounded-xl bg-electric-lime text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-700"
+            className="flex-1 rounded-xl bg-electric-lime text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-700"
           >
             Save and continue
             <ArrowRight data-icon="inline-end" className="size-3.5" />

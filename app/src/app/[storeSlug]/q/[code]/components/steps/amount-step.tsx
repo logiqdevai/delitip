@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
@@ -77,7 +78,7 @@ export const AmountStep: FC<AmountStepProps> = ({
           <label className="mb-1.5 block text-xs font-semibold tracking-wide text-zinc-500 uppercase">
             Custom amount
           </label>
-          <input
+          <Input
             type="number"
             min="0"
             step="0.01"
@@ -85,7 +86,6 @@ export const AmountStep: FC<AmountStepProps> = ({
             value={customAmount}
             onChange={(event) => setCustomAmount(event.target.value)}
             placeholder="Enter an amount"
-            className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-4 py-2.5 text-sm focus:border-brand-500 focus:ring-2 focus:ring-electric-lime focus:outline-none"
           />
         </div>
       ) : null}

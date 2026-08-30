@@ -38,6 +38,14 @@
   --text-chip--line-height: 1.25;
   --text-caption: 0.75rem;
   --text-caption--line-height: 1.25;
+
+  /* Shared control heights — Input, Select, NativeSelect, Button, InputGroup,
+     Combobox and DatePicker all read these so every form field and button
+     stays the same height across the app. Change once here to resize all. */
+  --control-height-xs: 1.5rem;
+  --control-height-sm: 1.75rem;
+  --control-height-default: 2.5rem;
+  --control-height-lg: 2.75rem;
 }
 
 @theme inline {

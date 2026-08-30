@@ -1,22 +1,22 @@
 "use client";
 
-import { type FC, useState } from "react";
+import { type FC } from "react";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Eye, EyeOff, Info, LoaderCircle } from "lucide-react";
+import { ArrowRight, Info } from "lucide-react";
 import {
   employeeSignInSchema,
   type EmployeeSignInFormData,
 } from "@/features/auth/validation-schemas/auth.schema";
 import { useLoginEmployee } from "@/features/auth/hooks/use-auth";
 import { Routes } from "@/routes/routes";
-import { authFieldClassName } from "./auth-password-field";
-import { cn } from "@/lib/utils";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export const AuthEmployeeForm: FC = () => {
   const loginEmployee = useLoginEmployee();
-  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const {
     register,
@@ -56,12 +56,11 @@ export const AuthEmployeeForm: FC = () => {
           >
             Work Email
           </label>
-          <input
+          <Input
             id="employee-email"
             type="email"
             autoComplete="email"
             placeholder="maria@artisancafe.com"
-            className={authFieldClassName}
             aria-invalid={!!errors.email}
             {...register("email")}
           />
@@ -89,31 +88,13 @@ export const AuthEmployeeForm: FC = () => {
             name="password"
             control={control}
             render={({ field }) => (
-              <div className="relative">
-                <input
-                  id="employee-password"
-                  type={passwordVisible ? "text" : "password"}
-                  autoComplete="current-password"
-                  placeholder="••••••••••••"
-                  className={cn(authFieldClassName, "pr-10")}
-                  aria-invalid={!!errors.password}
-                  {...field}
-                />
-                <button
-                  type="button"
-                  onClick={() => setPasswordVisible((current) => !current)}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
-                  aria-label={
-                    passwordVisible ? "Hide password" : "Show password"
-                  }
-                >
-                  {passwordVisible ? (
-                    <EyeOff className="size-4" strokeWidth={2} />
-                  ) : (
-                    <Eye className="size-4" strokeWidth={2} />
-                  )}
-                </button>
-              </div>
+              <PasswordInput
+                id="employee-password"
+                autoComplete="current-password"
+                placeholder="••••••••••••"
+                aria-invalid={!!errors.password}
+                {...field}
+              />
             )}
           />
           {errors.password ? (
@@ -131,23 +112,14 @@ export const AuthEmployeeForm: FC = () => {
           </span>
         </div>
 
-        <button
+        <ActionButtonWithPending
           type="submit"
-          disabled={isPending}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-ink-charcoal py-3 text-xs font-semibold text-paper-offwhite shadow transition hover:bg-zinc-800 disabled:opacity-70"
+          isPending={isPending}
+          className="w-full rounded-xl bg-ink-charcoal text-paper-offwhite shadow hover:bg-zinc-800"
         >
-          {isPending ? (
-            <>
-              <LoaderCircle className="size-4 animate-spin" strokeWidth={2} />
-              <span>Signing in...</span>
-            </>
-          ) : (
-            <>
-              <span>Access My Tip Profile</span>
-              <ArrowRight className="size-3.5" strokeWidth={2} />
-            </>
-          )}
-        </button>
+          Access My Tip Profile
+          <ArrowRight data-icon="inline-end" className="size-3.5" />
+        </ActionButtonWithPending>
       </form>
 
       <div className="pt-2 text-center">

@@ -1,7 +1,10 @@
 "use client";
 
 import { type FC, type FormEvent, useState } from "react";
-import { ArrowRight, Check, LoaderCircle } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 const topics = [
@@ -14,9 +17,6 @@ const topics = [
 type TopicId = (typeof topics)[number]["id"];
 
 type FormStatus = "idle" | "pending" | "success";
-
-const fieldClassName =
-  "w-full rounded-xl border border-zinc-200 bg-zinc-50/40 px-3.5 py-2.5 text-xs text-ink-charcoal placeholder:text-zinc-400 focus:ring-2 focus:ring-electric-lime focus:outline-none";
 
 export const ContactForm: FC = () => {
   const [topic, setTopic] = useState<TopicId>("sales");
@@ -98,7 +98,7 @@ export const ContactForm: FC = () => {
           >
             Full name
           </label>
-          <input
+          <Input
             id="contact-name"
             type="text"
             required
@@ -106,7 +106,6 @@ export const ContactForm: FC = () => {
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="Alex Rivera"
-            className={fieldClassName}
           />
         </div>
         <div>
@@ -116,7 +115,7 @@ export const ContactForm: FC = () => {
           >
             Work email
           </label>
-          <input
+          <Input
             id="contact-email"
             type="email"
             required
@@ -124,7 +123,6 @@ export const ContactForm: FC = () => {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder="alex@northline.com"
-            className={fieldClassName}
           />
         </div>
       </div>
@@ -137,14 +135,13 @@ export const ContactForm: FC = () => {
           Business{" "}
           <span className="font-medium text-zinc-400">(optional)</span>
         </label>
-        <input
+        <Input
           id="contact-company"
           type="text"
           autoComplete="organization"
           value={company}
           onChange={(event) => setCompany(event.target.value)}
           placeholder="Northline Support"
-          className={fieldClassName}
         />
       </div>
 
@@ -155,34 +152,25 @@ export const ContactForm: FC = () => {
         >
           How can we help?
         </label>
-        <textarea
+        <Textarea
           id="contact-message"
           required
           rows={5}
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           placeholder="Tell us about your team or what you need help with."
-          className={cn(fieldClassName, "min-h-28 resize-y")}
+          className="min-h-28 resize-y"
         />
       </div>
 
-      <button
+      <ActionButtonWithPending
         type="submit"
-        disabled={status === "pending"}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-electric-lime py-3 text-xs font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700 disabled:opacity-70"
+        isPending={status === "pending"}
+        className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-700"
       >
-        {status === "pending" ? (
-          <>
-            <LoaderCircle className="size-4 animate-spin" strokeWidth={2} />
-            <span>Sending…</span>
-          </>
-        ) : (
-          <>
-            <span>Send message</span>
-            <ArrowRight className="size-3.5" strokeWidth={2} />
-          </>
-        )}
-      </button>
+        Send message
+        <ArrowRight data-icon="inline-end" className="size-3.5" />
+      </ActionButtonWithPending>
     </form>
   );
 };

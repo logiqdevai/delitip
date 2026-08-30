@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { AlertTriangle, Loader2, ShieldCheck } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { useCreatePublicTip } from "@/features/tips/hooks/use-tips";
 import type { CreatePublicTipResponse } from "@/features/tips/interfaces/tips.interfaces";
@@ -81,12 +82,11 @@ export const PaymentStep: FC<PaymentStepProps> = ({
         <label className="mb-1.5 block text-xs font-semibold tracking-wide text-zinc-500 uppercase">
           Email receipt (optional)
         </label>
-        <input
+        <Input
           type="email"
           value={customerEmail}
           onChange={(event) => setCustomerEmail(event.target.value)}
           placeholder="you@example.com"
-          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-4 py-2.5 text-sm focus:border-brand-500 focus:ring-2 focus:ring-electric-lime focus:outline-none"
         />
       </div>
 

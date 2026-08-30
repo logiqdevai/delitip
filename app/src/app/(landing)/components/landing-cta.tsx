@@ -2,6 +2,8 @@
 
 import { type FC, type FormEvent, useState } from "react";
 import { BrandMark } from "@/components/brand/brand-mark";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export const LandingCta: FC = () => {
   const [email, setEmail] = useState("");
@@ -32,20 +34,20 @@ export const LandingCta: FC = () => {
             onSubmit={handleSubmit}
             className="flex flex-col items-center justify-center gap-3 pt-4 sm:flex-row"
           >
-            <input
+            <Input
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="Business email"
               aria-label="Business email"
-              className="w-full rounded-xl border border-zinc-700 bg-ink-charcoal px-4 py-3 text-xs text-white focus:ring-2 focus:ring-electric-lime focus:outline-none sm:w-72"
+              className="w-full rounded-xl border-zinc-700 bg-ink-charcoal text-white placeholder:text-zinc-500 sm:w-72"
             />
-            <button
+            <Button
               type="submit"
-              className="w-full rounded-xl bg-electric-lime px-6 py-3 text-xs font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-400 sm:w-auto"
+              className="w-full rounded-xl bg-electric-lime px-6 font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-400 sm:w-auto"
             >
               Create your business account
-            </button>
+            </Button>
           </form>
 
           <p className="text-xs text-zinc-500">

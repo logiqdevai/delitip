@@ -12,6 +12,12 @@ import {
   Zap,
 } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
 import {
   clientComplimentOptions,
@@ -169,20 +175,21 @@ export const ClientCustomerFlow: FC = () => {
                   })}
                 </div>
 
-                <div className="relative mt-3">
-                  <span className="absolute top-1/2 left-3.5 -translate-y-1/2 text-sm font-semibold text-zinc-400">
-                    $
-                  </span>
-                  <input
+                <InputGroup className="mt-3">
+                  <InputGroupAddon>
+                    <InputGroupText className="font-semibold text-zinc-400">
+                      $
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <InputGroupInput
                     type="number"
                     min="0"
                     step="0.01"
                     value={customTip}
                     onChange={(event) => setCustomTip(event.target.value)}
                     placeholder="Enter custom tip"
-                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pr-4 pl-8 text-sm focus:border-brand-500 focus:ring-2 focus:ring-electric-lime focus:outline-none"
                   />
-                </div>
+                </InputGroup>
               </div>
 
               <div className="flex items-center gap-2.5 rounded-xl border border-zinc-100 bg-zinc-50 p-3 text-[11px] text-zinc-600">

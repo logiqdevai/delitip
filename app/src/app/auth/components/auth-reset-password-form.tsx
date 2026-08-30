@@ -1,26 +1,24 @@
 "use client";
 
-import { type FC, useState } from "react";
+import { type FC } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Eye, EyeOff, LoaderCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import {
   resetPasswordSchema,
   type ResetPasswordFormData,
 } from "@/features/auth/validation-schemas/auth.schema";
 import { useResetPassword } from "@/features/auth/hooks/use-auth";
 import { Routes } from "@/routes/routes";
-import { authFieldClassName } from "./auth-password-field";
-import { cn } from "@/lib/utils";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export const AuthResetPasswordForm: FC = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token")?.trim() ?? "";
   const resetPassword = useResetPassword();
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmVisible, setConfirmVisible] = useState(false);
 
   const {
     control,
@@ -89,31 +87,13 @@ export const AuthResetPasswordForm: FC = () => {
             name="password"
             control={control}
             render={({ field }) => (
-              <div className="relative">
-                <input
-                  id="reset-password"
-                  type={passwordVisible ? "text" : "password"}
-                  autoComplete="new-password"
-                  placeholder="At least 8 characters"
-                  className={cn(authFieldClassName, "pr-10")}
-                  aria-invalid={!!errors.password}
-                  {...field}
-                />
-                <button
-                  type="button"
-                  onClick={() => setPasswordVisible((current) => !current)}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
-                  aria-label={
-                    passwordVisible ? "Hide password" : "Show password"
-                  }
-                >
-                  {passwordVisible ? (
-                    <EyeOff className="size-4" strokeWidth={2} />
-                  ) : (
-                    <Eye className="size-4" strokeWidth={2} />
-                  )}
-                </button>
-              </div>
+              <PasswordInput
+                id="reset-password"
+                autoComplete="new-password"
+                placeholder="At least 8 characters"
+                aria-invalid={!!errors.password}
+                {...field}
+              />
             )}
           />
           {errors.password ? (
@@ -132,31 +112,13 @@ export const AuthResetPasswordForm: FC = () => {
             name="confirmPassword"
             control={control}
             render={({ field }) => (
-              <div className="relative">
-                <input
-                  id="reset-confirm-password"
-                  type={confirmVisible ? "text" : "password"}
-                  autoComplete="new-password"
-                  placeholder="Repeat password"
-                  className={cn(authFieldClassName, "pr-10")}
-                  aria-invalid={!!errors.confirmPassword}
-                  {...field}
-                />
-                <button
-                  type="button"
-                  onClick={() => setConfirmVisible((current) => !current)}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
-                  aria-label={
-                    confirmVisible ? "Hide password" : "Show password"
-                  }
-                >
-                  {confirmVisible ? (
-                    <EyeOff className="size-4" strokeWidth={2} />
-                  ) : (
-                    <Eye className="size-4" strokeWidth={2} />
-                  )}
-                </button>
-              </div>
+              <PasswordInput
+                id="reset-confirm-password"
+                autoComplete="new-password"
+                placeholder="Repeat password"
+                aria-invalid={!!errors.confirmPassword}
+                {...field}
+              />
             )}
           />
           {errors.confirmPassword ? (
@@ -166,23 +128,14 @@ export const AuthResetPasswordForm: FC = () => {
           ) : null}
         </div>
 
-        <button
+        <ActionButtonWithPending
           type="submit"
-          disabled={isPending}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-electric-lime py-3 text-xs font-semibold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700 disabled:opacity-70"
+          isPending={isPending}
+          className="w-full rounded-xl bg-electric-lime text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-700"
         >
-          {isPending ? (
-            <>
-              <LoaderCircle className="size-4 animate-spin" strokeWidth={2} />
-              <span>Updating...</span>
-            </>
-          ) : (
-            <>
-              <span>Update password</span>
-              <ArrowRight className="size-3.5" strokeWidth={2} />
-            </>
-          )}
-        </button>
+          Update password
+          <ArrowRight data-icon="inline-end" className="size-3.5" />
+        </ActionButtonWithPending>
       </form>
 
       <div className="pt-2 text-center">

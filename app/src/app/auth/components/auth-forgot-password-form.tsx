@@ -4,14 +4,15 @@ import { type FC, useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, CheckCircle2, LoaderCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import {
   forgotPasswordSchema,
   type ForgotPasswordFormData,
 } from "@/features/auth/validation-schemas/auth.schema";
 import { useForgotPassword } from "@/features/auth/hooks/use-auth";
 import { Routes } from "@/routes/routes";
-import { authFieldClassName } from "./auth-password-field";
+import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
+import { Input } from "@/components/ui/input";
 
 export const AuthForgotPasswordForm: FC = () => {
   const forgotPassword = useForgotPassword();
@@ -84,12 +85,11 @@ export const AuthForgotPasswordForm: FC = () => {
           >
             Email
           </label>
-          <input
+          <Input
             id="forgot-email"
             type="email"
             autoComplete="email"
             placeholder="manager@artisancafe.com"
-            className={authFieldClassName}
             aria-invalid={!!errors.email}
             {...register("email")}
           />
@@ -98,23 +98,14 @@ export const AuthForgotPasswordForm: FC = () => {
           ) : null}
         </div>
 
-        <button
+        <ActionButtonWithPending
           type="submit"
-          disabled={isPending}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-electric-lime py-3 text-xs font-semibold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700 disabled:opacity-70"
+          isPending={isPending}
+          className="w-full rounded-xl bg-electric-lime text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-700"
         >
-          {isPending ? (
-            <>
-              <LoaderCircle className="size-4 animate-spin" strokeWidth={2} />
-              <span>Sending...</span>
-            </>
-          ) : (
-            <>
-              <span>Send reset link</span>
-              <ArrowRight className="size-3.5" strokeWidth={2} />
-            </>
-          )}
-        </button>
+          Send reset link
+          <ArrowRight data-icon="inline-end" className="size-3.5" />
+        </ActionButtonWithPending>
       </form>
 
       <div className="pt-2 text-center">
