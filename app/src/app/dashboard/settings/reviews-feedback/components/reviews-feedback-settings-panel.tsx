@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, type FormEvent, useState } from "react";
-import { MessageSquareText, Plus, Star, Tag, Trash2 } from "lucide-react";
+import { MessageSquareText, Minus, Plus, Star, Tag, ThumbsDown, ThumbsUp, Trash2, Type } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   ConfirmationDialog,
@@ -19,8 +19,13 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import {
+  SortableConfigList,
+  SortableConfigRow,
+} from "./sortable-config-list";
+import {
   useCreateReviewCategory,
   useDeleteReviewCategory,
+  useReorderReviewCategories,
   useReviewCategories,
   useUpdateReviewCategory,
 } from "@/features/review-categories/hooks/use-review-categories";
@@ -28,6 +33,7 @@ import {
   useCreateFeedbackQuestion,
   useDeleteFeedbackQuestion,
   useFeedbackQuestions,
+  useReorderFeedbackQuestions,
   useUpdateFeedbackQuestion,
 } from "@/features/feedback-questions/hooks/use-feedback-questions";
 import { FeedbackQuestionTypes } from "@/features/feedback-questions/interfaces/feedback-questions.interfaces";
@@ -41,7 +47,11 @@ import {
   useUpdateReviewTag,
 } from "@/features/review-tags/hooks/use-review-tags";
 import { ReviewTagSentiments } from "@/features/review-tags/interfaces/review-tags.interfaces";
+import { PlatformAuthRoles } from "@/features/auth/interfaces/auth.interfaces";
+import { getReviewSentimentLabel } from "@/config/constants/dropdowns/reviews/review-sentiment-form.options";
+import { useMe } from "@/features/users/hooks/use-users";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { useAuthStore } from "@/stores/auth.store";
 import { resolvePrimaryText } from "@/lib/translated-text";
 import { cn } from "@/lib/utils";
 
@@ -58,10 +68,37 @@ const VisibilityBadge: FC<{ isActive: boolean }> = ({ isActive }) => (
   </span>
 );
 
+const TagSentimentIcon: FC<{
+  sentiment: string;
+  isActive: boolean;
+}> = ({ sentiment, isActive }) => {
+  const label = getReviewSentimentLabel(sentiment);
+  const Icon =
+    sentiment === ReviewTagSentiments.POSITIVE
+      ? ThumbsUp
+      : sentiment === ReviewTagSentiments.NEGATIVE
+        ? ThumbsDown
+        : Minus;
+
+  return (
+    <span
+      className={cn(
+        "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md",
+        isActive ? "bg-zinc-100 text-zinc-500" : "bg-zinc-50 text-zinc-300",
+      )}
+      title={label}
+      aria-label={`${label} tag`}
+    >
+      <Icon className="size-3" />
+    </span>
+  );
+};
+
 const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ storeId, primaryLanguage }) => {
   const query = useReviewCategories(storeId);
   const create = useCreateReviewCategory(storeId);
   const update = useUpdateReviewCategory(storeId);
+  const reorder = useReorderReviewCategories(storeId);
   const remove = useDeleteReviewCategory(storeId);
   const [name, setName] = useState("");
   const [pendingDelete, setPendingDelete] = useState<ReviewCategory | null>(null);
@@ -73,7 +110,9 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
     event.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return;
-    create.mutate({ name: trimmed }, { onSuccess: () => setName("") });
+    const sort_order =
+      items.reduce((max, item) => Math.max(max, item.sort_order), -1) + 1;
+    create.mutate({ name: trimmed, sort_order }, { onSuccess: () => setName("") });
   };
 
   return (
@@ -83,7 +122,7 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
         Rating categories
       </div>
       <p className="text-[11px] text-zinc-400">
-        Switch off to hide a category from the review step without deleting it.
+        Drag to reorder. Switch off to hide from the review step without deleting.
       </p>
       <form onSubmit={handleAdd} className="flex gap-2">
         <Input
@@ -102,17 +141,21 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
       ) : items.length === 0 ? (
         <p className="text-[11px] text-zinc-400">No categories yet.</p>
       ) : (
-        <ul className="divide-y divide-zinc-100 rounded-xl border border-zinc-200/80">
+        <SortableConfigList
+          itemIds={items.map((item) => item.id)}
+          onReorder={(orderedIds) => reorder.mutate(orderedIds)}
+        >
           {items.map((item) => {
             const label = resolvePrimaryText(item.name, primaryLanguage);
             const isUpdating =
               update.isPending && update.variables?.id === item.id;
 
             return (
-              <li
+              <SortableConfigRow
                 key={item.id}
+                id={item.id}
                 className={cn(
-                  "flex items-center justify-between gap-3 px-3 py-2.5",
+                  "justify-between gap-3",
                   !item.is_active && "bg-zinc-50/80",
                 )}
               >
@@ -154,10 +197,10 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
                     <Trash2 className="size-3" />
                   </button>
                 </div>
-              </li>
+              </SortableConfigRow>
             );
           })}
-        </ul>
+        </SortableConfigList>
       )}
       <ConfirmationDialog
         state={deleteConfirm}
@@ -183,6 +226,7 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
   const query = useFeedbackQuestions(storeId);
   const create = useCreateFeedbackQuestion(storeId);
   const update = useUpdateFeedbackQuestion(storeId);
+  const reorder = useReorderFeedbackQuestions(storeId);
   const remove = useDeleteFeedbackQuestion(storeId);
   const [question, setQuestion] = useState("");
   const [type, setType] = useState<string>(FeedbackQuestionTypes.RATING);
@@ -195,8 +239,14 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
     event.preventDefault();
     const trimmed = question.trim();
     if (!trimmed) return;
+    const sort_order =
+      items.reduce((max, item) => Math.max(max, item.sort_order), -1) + 1;
     create.mutate(
-      { question: trimmed, type: type as (typeof FeedbackQuestionTypes)[keyof typeof FeedbackQuestionTypes] },
+      {
+        question: trimmed,
+        type: type as (typeof FeedbackQuestionTypes)[keyof typeof FeedbackQuestionTypes],
+        sort_order,
+      },
       { onSuccess: () => setQuestion("") },
     );
   };
@@ -208,7 +258,7 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
         Feedback questions
       </div>
       <p className="text-[11px] text-zinc-400">
-        Switch off to hide a question from the review step without deleting it.
+        Drag to reorder. Switch off to hide from the review step without deleting.
       </p>
       <form onSubmit={handleAdd} className="flex gap-2">
         <Input
@@ -247,31 +297,60 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
       ) : items.length === 0 ? (
         <p className="text-[11px] text-zinc-400">No feedback questions yet.</p>
       ) : (
-        <ul className="divide-y divide-zinc-100 rounded-xl border border-zinc-200/80">
+        <SortableConfigList
+          itemIds={items.map((item) => item.id)}
+          onReorder={(orderedIds) => reorder.mutate(orderedIds)}
+        >
           {items.map((item) => {
             const label = resolvePrimaryText(item.question, primaryLanguage);
             const isUpdating =
               update.isPending && update.variables?.id === item.id;
 
             return (
-              <li
+              <SortableConfigRow
                 key={item.id}
+                id={item.id}
                 className={cn(
-                  "flex items-center justify-between gap-3 px-3 py-2.5",
+                  "justify-between gap-3",
                   !item.is_active && "bg-zinc-50/80",
                 )}
               >
-                <div className="min-w-0 flex-1">
-                  <p
+                <div className="flex min-w-0 flex-1 items-start gap-2">
+                  <span
                     className={cn(
-                      "truncate text-xs font-medium",
-                      item.is_active ? "text-ink-charcoal" : "text-zinc-400",
+                      "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md",
+                      item.is_active
+                        ? "bg-zinc-100 text-zinc-500"
+                        : "bg-zinc-50 text-zinc-300",
                     )}
+                    title={
+                      item.type === FeedbackQuestionTypes.RATING
+                        ? "Rating"
+                        : "Text"
+                    }
+                    aria-label={
+                      item.type === FeedbackQuestionTypes.RATING
+                        ? "Rating question"
+                        : "Text question"
+                    }
                   >
-                    {label}{" "}
-                    <span className="font-normal text-zinc-400">({item.type})</span>
-                  </p>
-                  <VisibilityBadge isActive={item.is_active} />
+                    {item.type === FeedbackQuestionTypes.RATING ? (
+                      <Star className="size-3" />
+                    ) : (
+                      <Type className="size-3" />
+                    )}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p
+                      className={cn(
+                        "truncate text-xs font-medium",
+                        item.is_active ? "text-ink-charcoal" : "text-zinc-400",
+                      )}
+                    >
+                      {label}
+                    </p>
+                    <VisibilityBadge isActive={item.is_active} />
+                  </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   <Switch
@@ -300,10 +379,10 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
                     <Trash2 className="size-3" />
                   </button>
                 </div>
-              </li>
+              </SortableConfigRow>
             );
           })}
-        </ul>
+        </SortableConfigList>
       )}
       <ConfirmationDialog
         state={deleteConfirm}
@@ -408,22 +487,24 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
                   !item.is_active && "bg-zinc-50/80",
                 )}
               >
-                <div className="min-w-0 flex-1">
-                  <p
-                    className={cn(
-                      "truncate text-xs font-medium",
-                      item.is_active ? "text-ink-charcoal" : "text-zinc-400",
-                    )}
-                  >
-                    {item.name}
-                    {item.sentiment ? (
-                      <span className="font-normal text-zinc-400">
-                        {" "}
-                        ({item.sentiment})
-                      </span>
-                    ) : null}
-                  </p>
-                  <VisibilityBadge isActive={item.is_active} />
+                <div className="flex min-w-0 flex-1 items-start gap-2">
+                  {item.sentiment ? (
+                    <TagSentimentIcon
+                      sentiment={item.sentiment}
+                      isActive={item.is_active}
+                    />
+                  ) : null}
+                  <div className="min-w-0 flex-1">
+                    <p
+                      className={cn(
+                        "truncate text-xs font-medium",
+                        item.is_active ? "text-ink-charcoal" : "text-zinc-400",
+                      )}
+                    >
+                      {item.name}
+                    </p>
+                    <VisibilityBadge isActive={item.is_active} />
+                  </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   <Switch
@@ -481,9 +562,15 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
 
 export const ReviewsFeedbackSettingsPanel: FC = () => {
   const { store, storeId } = useWorkspace();
+  const authUser = useAuthStore((state) => state.user);
+  const meQuery = useMe();
   if (!storeId) return null;
 
   const primaryLanguage = store?.primary_language?.toLowerCase();
+  const platformRole = meQuery.data?.role ?? authUser?.role;
+  const canManageTags =
+    platformRole === PlatformAuthRoles.ADMIN ||
+    platformRole === PlatformAuthRoles.SUPER_ADMIN;
 
   return (
     <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
@@ -498,7 +585,7 @@ export const ReviewsFeedbackSettingsPanel: FC = () => {
 
       <CategoriesSection storeId={storeId} primaryLanguage={primaryLanguage} />
       <QuestionsSection storeId={storeId} primaryLanguage={primaryLanguage} />
-      <TagsSection storeId={storeId} />
+      {canManageTags ? <TagsSection storeId={storeId} /> : null}
     </div>
   );
 };
