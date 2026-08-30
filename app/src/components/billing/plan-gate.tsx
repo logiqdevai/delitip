@@ -1,7 +1,6 @@
 "use client";
 
 import { type FC, type ReactNode } from "react";
-import Link from "next/link";
 import { Lock } from "lucide-react";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,6 +9,8 @@ import type { SubscriptionPlan } from "@/features/subscriptions/interfaces/subsc
 import { getSubscriptionPlanLabel } from "@/config/constants/dropdowns/subscriptions/subscription-plan-form.options";
 import { hasPlanAccess } from "@/lib/plan-gate";
 import { Routes } from "@/routes/routes";
+
+const BILLING_HREF = Routes.dashboard.settings.billing;
 
 interface PlanGateProps {
   organizationId: string;
@@ -55,12 +56,16 @@ export const PlanGate: FC<PlanGateProps> = ({
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Link
-          href={Routes.dashboard.settings.billing}
+        <a
+          href={BILLING_HREF}
+          onClick={(event) => {
+            event.preventDefault();
+            window.location.assign(BILLING_HREF);
+          }}
           className="text-xs font-semibold text-brand-700 hover:underline"
         >
           Go to Billing →
-        </Link>
+        </a>
       </EmptyContent>
     </Empty>
   );

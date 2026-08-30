@@ -164,7 +164,7 @@ export const OverviewPageContent: FC = () => {
               </p>
             </div>
             <Link
-              href={Routes.dashboard.analytics}
+              href={Routes.dashboard.analytics.overview}
               className="text-xs font-semibold text-brand-700 hover:underline"
             >
               View Analytics →

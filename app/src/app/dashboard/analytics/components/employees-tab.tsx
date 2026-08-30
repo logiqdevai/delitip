@@ -2,7 +2,6 @@
 
 import { type FC } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AnalyticsPeriodSelect } from "@/app/dashboard/analytics/components/analytics-period-select";
 import { useEmployeesPerformance } from "@/features/analytics/hooks/use-analytics";
 import type { DashboardPeriod } from "@/features/analytics/interfaces/analytics.interfaces";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
@@ -13,8 +12,7 @@ export const EmployeesTab: FC<{
   storeId: string;
   currency: Currency;
   period: DashboardPeriod;
-  onPeriodChange: (period: DashboardPeriod) => void;
-}> = ({ organizationId, storeId, currency, period, onPeriodChange }) => {
+}> = ({ organizationId, storeId, currency, period }) => {
   const performanceQuery = useEmployeesPerformance(organizationId, {
     store_id: storeId,
     period,
@@ -23,13 +21,10 @@ export const EmployeesTab: FC<{
   const rows = performanceQuery.data ?? [];
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-zinc-500">
-          Informational stats for your team — not a ranking.
-        </p>
-        <AnalyticsPeriodSelect value={period} onChange={onPeriodChange} />
-      </div>
+    <div className="flex flex-col gap-4">
+      <p className="text-xs text-zinc-500">
+        Informational stats for your team — not a ranking.
+      </p>
 
       {performanceQuery.isPending ? (
         <Skeleton className="h-64 w-full rounded-2xl" />

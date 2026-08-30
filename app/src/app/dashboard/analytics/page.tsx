@@ -1,8 +1,8 @@
-import { type FC } from "react";
-import { AnalyticsPageContent } from "@/app/dashboard/analytics/components/analytics-page-content";
+import { redirect } from "next/navigation";
+import { Routes } from "@/routes/routes";
 
-const AnalyticsPage: FC = () => {
-  return <AnalyticsPageContent />;
+const AnalyticsPage = () => {
+  redirect(Routes.dashboard.analytics.overview);
 };
 
 export default AnalyticsPage;

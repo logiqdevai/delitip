@@ -92,10 +92,10 @@ const navItems = [
     match: (path: string) => path.startsWith(Routes.dashboard.distribution),
   },
   {
-    href: Routes.dashboard.analytics,
+    href: Routes.dashboard.analytics.overview,
     label: "Analytics",
     icon: BarChart3,
-    match: (path: string) => path.startsWith(Routes.dashboard.analytics),
+    match: (path: string) => path.startsWith(Routes.dashboard.analytics.root),
   },
   {
     href: Routes.dashboard.access,
@@ -353,7 +353,7 @@ export const DashboardSidebar: FC = () => {
                 isActive={settingsActive}
                 tooltip="Settings"
                 render={
-                  <Link href={Routes.dashboard.settings.root} onClick={closeMobileNav} />
+                  <Link href={Routes.dashboard.settings.profile} onClick={closeMobileNav} />
                 }
                 className={cn(
                   "h-auto gap-3 rounded-xl px-3 py-2 text-chip group-data-[collapsible=icon]:mx-auto",

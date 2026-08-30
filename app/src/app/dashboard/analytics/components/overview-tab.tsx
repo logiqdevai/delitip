@@ -2,7 +2,6 @@
 
 import { type FC } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AnalyticsPeriodSelect } from "@/app/dashboard/analytics/components/analytics-period-select";
 import {
   useDashboardOverview,
   useExperienceScore,
@@ -16,8 +15,7 @@ export const OverviewTab: FC<{
   storeId: string;
   currency: Currency;
   period: DashboardPeriod;
-  onPeriodChange: (period: DashboardPeriod) => void;
-}> = ({ organizationId, storeId, currency, period, onPeriodChange }) => {
+}> = ({ organizationId, storeId, currency, period }) => {
   const overviewQuery = useDashboardOverview(organizationId, {
     store_id: storeId,
     period,
@@ -31,11 +29,7 @@ export const OverviewTab: FC<{
   const score = scoreQuery.data;
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <AnalyticsPeriodSelect value={period} onChange={onPeriodChange} />
-      </div>
-
+    <div className="flex flex-col gap-4">
       {overviewQuery.isPending ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (

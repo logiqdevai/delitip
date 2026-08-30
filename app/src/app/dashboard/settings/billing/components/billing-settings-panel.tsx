@@ -32,8 +32,21 @@ export const BillingSettingsPanel: FC = () => {
   const cancelSubscription = useCancelSubscription(organizationId ?? "");
   const cancelConfirm = useConfirmationDialog();
 
-  if (role !== "OWNER") return null;
   if (!organizationId) return null;
+
+  if (role !== "OWNER") {
+    return (
+      <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
+        <div className="flex items-center gap-2">
+          <CreditCard className="size-4 text-zinc-400" strokeWidth={2} />
+          <h2 className="text-sm font-bold text-ink-charcoal">Billing</h2>
+        </div>
+        <p className="text-xs text-zinc-500">
+          Only the business owner can manage the subscription plan.
+        </p>
+      </div>
+    );
+  }
 
   const subscription = subscriptionQuery.data;
 

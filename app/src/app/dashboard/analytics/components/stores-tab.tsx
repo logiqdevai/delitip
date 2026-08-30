@@ -2,7 +2,6 @@
 
 import { type FC } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AnalyticsPeriodSelect } from "@/app/dashboard/analytics/components/analytics-period-select";
 import { useStoresPerformance } from "@/features/analytics/hooks/use-analytics";
 import type { DashboardPeriod } from "@/features/analytics/interfaces/analytics.interfaces";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
@@ -12,8 +11,7 @@ export const StoresTab: FC<{
   organizationId: string;
   stores: Store[];
   period: DashboardPeriod;
-  onPeriodChange: (period: DashboardPeriod) => void;
-}> = ({ organizationId, stores, period, onPeriodChange }) => {
+}> = ({ organizationId, stores, period }) => {
   const performanceQuery = useStoresPerformance(organizationId, { period });
   const currencyByStoreId = new Map(
     stores.map((store) => [store.id, store.currency]),
@@ -22,11 +20,7 @@ export const StoresTab: FC<{
   const rows = performanceQuery.data ?? [];
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <AnalyticsPeriodSelect value={period} onChange={onPeriodChange} />
-      </div>
-
+    <div className="flex flex-col gap-4">
       {performanceQuery.isPending ? (
         <Skeleton className="h-64 w-full rounded-2xl" />
       ) : performanceQuery.isError ? (
