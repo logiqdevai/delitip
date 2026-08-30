@@ -7,7 +7,6 @@ export const Routes = {
     ecosystem: "/#ecosystem",
     calculator: "/#calculator",
     pricing: "/#pricing",
-    demo: "/client",
     getStarted: "/auth/sign-up",
   },
   auth: {
@@ -57,9 +56,6 @@ export const Routes = {
     root: "/employee",
     reviews: "/employee/reviews",
     qr: "/employee/qr",
-  },
-  client: {
-    root: "/client",
   },
   legal: {
     terms: "/legal/terms",

@@ -1,6 +1,14 @@
 import { NotFoundException } from '@nestjs/common';
-import { AuthRole, Language, OrganizationRole, StoreIndustry, SubscriptionPlan, SubscriptionStatus } from 'generated/prisma';
+import { AuthRole, Language, OrganizationRole, Prisma, StoreIndustry, SubscriptionPlan, SubscriptionStatus } from 'generated/prisma';
 import { OrganizationsService } from './organizations.service';
+
+function slugConflictError() {
+    return new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: '7.0.0',
+        meta: { target: ['slug'] },
+    });
+}
 
 describe('OrganizationsService', () => {
     let service: OrganizationsService;
@@ -58,6 +66,20 @@ describe('OrganizationsService', () => {
             await service.create(user, { name: 'Acme' } as any);
 
             expect(prisma.organization.create).toHaveBeenCalledWith({ data: { name: 'Acme', slug: 'acme-1' } });
+        });
+
+        it('retries the whole transaction with a fresh slug when two requests race to insert the same slug', async () => {
+            // Both requests see the slug as free (concurrent findUnique before either insert lands).
+            prisma.organization.findUnique.mockResolvedValueOnce(null).mockResolvedValueOnce({ id: 'other' });
+            prisma.organization.create
+                .mockRejectedValueOnce(slugConflictError())
+                .mockResolvedValueOnce({ id: 'org1', name: 'Acme', slug: 'acme-1' });
+
+            const result = await service.create(user, { name: 'Acme' } as any);
+
+            expect(prisma.organization.create).toHaveBeenNthCalledWith(1, { data: { name: 'Acme', slug: 'acme' } });
+            expect(prisma.organization.create).toHaveBeenNthCalledWith(2, { data: { name: 'Acme', slug: 'acme-1' } });
+            expect(result).toEqual({ id: 'org1', name: 'Acme', slug: 'acme-1', store: null });
         });
 
         it('also creates the initial Store when dto.store is provided', async () => {

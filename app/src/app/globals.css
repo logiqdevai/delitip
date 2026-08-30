@@ -119,7 +119,7 @@
   --chart-3: var(--color-brand-400);
   --chart-4: var(--color-electric-lime);
   --chart-5: var(--color-brand-700);
-  --radius: 1rem;
+  --radius: 0.75rem;
   --sidebar: #FFFFFF;
   --sidebar-foreground: var(--color-ink-charcoal);
   --sidebar-primary: var(--color-electric-lime);

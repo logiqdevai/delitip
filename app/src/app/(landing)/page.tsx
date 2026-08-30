@@ -1,5 +1,4 @@
 import { type FC } from "react";
-import { LandingAnnouncementBanner } from "./components/landing-announcement-banner";
 import { LandingHeader } from "./components/landing-header";
 import { LandingHero } from "./components/landing-hero";
 import { LandingIndustries } from "./components/landing-industries";
@@ -13,7 +12,6 @@ import { LandingFooter } from "./components/landing-footer";
 const LandingPage: FC = () => {
   return (
     <div className="bg-paper-offwhite text-ink-charcoal antialiased">
-      <LandingAnnouncementBanner />
       <LandingHeader />
       <main>
         <LandingHero />

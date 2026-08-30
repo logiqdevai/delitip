@@ -1,4 +1,13 @@
-import { slugify, ensureUniqueSlug } from './slug.utils';
+import { Prisma } from 'generated/prisma';
+import { slugify, ensureUniqueSlug, isUniqueSlugConflict, withUniqueSlugRetry } from './slug.utils';
+
+function slugConflictError() {
+    return new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: '7.0.0',
+        meta: { target: ['slug'] },
+    });
+}
 
 describe('slugify', () => {
     it('lowercases and hyphenates spaces', () => {
@@ -66,5 +75,58 @@ describe('ensureUniqueSlug', () => {
         const result = await ensureUniqueSlug('Wëird!! Name??', exists);
 
         expect(result).toBe('weird-name');
+    });
+});
+
+describe('isUniqueSlugConflict', () => {
+    it('recognizes a P2002 error targeting the slug column', () => {
+        expect(isUniqueSlugConflict(slugConflictError())).toBe(true);
+    });
+
+    it('rejects a P2002 error targeting a different column', () => {
+        const err = new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+            code: 'P2002',
+            clientVersion: '7.0.0',
+            meta: { target: ['email'] },
+        });
+        expect(isUniqueSlugConflict(err)).toBe(false);
+    });
+
+    it('rejects non-Prisma errors', () => {
+        expect(isUniqueSlugConflict(new Error('boom'))).toBe(false);
+    });
+});
+
+describe('withUniqueSlugRetry', () => {
+    it('returns the result on first success without retrying', async () => {
+        const operation = jest.fn().mockResolvedValue('ok');
+
+        const result = await withUniqueSlugRetry(operation);
+
+        expect(result).toBe('ok');
+        expect(operation).toHaveBeenCalledTimes(1);
+    });
+
+    it('retries the whole operation on a slug conflict and returns the eventual success', async () => {
+        const operation = jest.fn().mockRejectedValueOnce(slugConflictError()).mockResolvedValueOnce('ok');
+
+        const result = await withUniqueSlugRetry(operation);
+
+        expect(result).toBe('ok');
+        expect(operation).toHaveBeenCalledTimes(2);
+    });
+
+    it('gives up after maxAttempts and rethrows the last slug conflict', async () => {
+        const operation = jest.fn().mockRejectedValue(slugConflictError());
+
+        await expect(withUniqueSlugRetry(operation, 3)).rejects.toThrow('Unique constraint failed');
+        expect(operation).toHaveBeenCalledTimes(3);
+    });
+
+    it('rethrows immediately on a non-slug-conflict error without retrying', async () => {
+        const operation = jest.fn().mockRejectedValue(new Error('unrelated failure'));
+
+        await expect(withUniqueSlugRetry(operation)).rejects.toThrow('unrelated failure');
+        expect(operation).toHaveBeenCalledTimes(1);
     });
 });

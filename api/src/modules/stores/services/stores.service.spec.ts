@@ -1,6 +1,14 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { AuthRole, Language, OrganizationRole, StoreIndustry } from 'generated/prisma';
+import { AuthRole, Language, OrganizationRole, Prisma, StoreIndustry } from 'generated/prisma';
 import { StoresService } from './stores.service';
+
+function slugConflictError() {
+    return new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: '7.0.0',
+        meta: { target: ['slug'] },
+    });
+}
 
 describe('StoresService', () => {
     let service: StoresService;
@@ -51,6 +59,23 @@ describe('StoresService', () => {
             expect(prisma.store.create).toHaveBeenCalledWith({
                 data: expect.objectContaining({ slug: 'my-diner-1' }),
             });
+        });
+
+        it('retries the whole transaction with a fresh slug when two requests race to insert the same slug', async () => {
+            prisma.store.findUnique.mockResolvedValueOnce(null).mockResolvedValueOnce({ id: 'existing' });
+            prisma.store.create
+                .mockRejectedValueOnce(slugConflictError())
+                .mockResolvedValueOnce({ id: 's1', slug: 'my-diner-1', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN });
+
+            const result = await service.create(user, 'org1', { name: 'My Diner', industry: StoreIndustry.RESTAURANT } as any);
+
+            expect(prisma.store.create).toHaveBeenNthCalledWith(1, {
+                data: expect.objectContaining({ slug: 'my-diner' }),
+            });
+            expect(prisma.store.create).toHaveBeenNthCalledWith(2, {
+                data: expect.objectContaining({ slug: 'my-diner-1' }),
+            });
+            expect(result).toEqual({ id: 's1', slug: 'my-diner-1', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN });
         });
 
         it('seeds the default review categories, feedback questions, and tags for the store industry', async () => {

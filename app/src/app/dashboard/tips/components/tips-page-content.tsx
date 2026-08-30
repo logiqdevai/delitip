@@ -207,12 +207,12 @@ export const TipsPageContent: FC = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>When</TableHead>
-                <TableHead>Employee</TableHead>
-                <TableHead>QR</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Provider</TableHead>
-                <TableHead className="text-right">Status</TableHead>
+                <TableHead className="px-4">When</TableHead>
+                <TableHead className="px-4">Employee</TableHead>
+                <TableHead className="px-4">QR</TableHead>
+                <TableHead className="px-4">Amount</TableHead>
+                <TableHead className="px-4">Provider</TableHead>
+                <TableHead className="px-4 text-right">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -222,22 +222,22 @@ export const TipsPageContent: FC = () => {
                   className="cursor-pointer"
                   onClick={() => router.push(Routes.dashboard.tipDetail(tip.id))}
                 >
-                  <TableCell className="text-zinc-500">
+                  <TableCell className="px-4 py-3.5 text-zinc-500">
                     {formatDateTime(tip.paid_at ?? tip.created_at)}
                   </TableCell>
-                  <TableCell className="font-semibold text-ink-charcoal">
+                  <TableCell className="px-4 py-3.5 font-semibold text-ink-charcoal">
                     {tip.employee?.full_name ?? "Store"}
                   </TableCell>
-                  <TableCell className="text-zinc-500">
+                  <TableCell className="px-4 py-3.5 text-zinc-500">
                     {tip.qr_code?.label ?? "—"}
                   </TableCell>
-                  <TableCell className="font-bold text-brand-700">
+                  <TableCell className="px-4 py-3.5 font-bold text-brand-700">
                     {formatMoney(tip.amount, tip.currency)}
                   </TableCell>
-                  <TableCell className="text-zinc-500">
+                  <TableCell className="px-4 py-3.5 text-zinc-500">
                     {tip.payment_provider ?? "—"}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="px-4 py-3.5 text-right">
                     <span
                       className={cn(
                         "rounded-full px-2 py-0.5 text-caption font-bold",

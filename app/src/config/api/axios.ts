@@ -16,7 +16,6 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 const isPublicGuestPath = (path: string) =>
-  path === Routes.client.root ||
   path === Routes.home ||
   path === Routes.contact ||
   path.startsWith("/legal/") ||

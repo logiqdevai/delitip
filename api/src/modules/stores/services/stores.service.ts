@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
-import { ensureUniqueSlug } from '@/shared/utils/slug/slug.utils';
+import { ensureUniqueSlug, withUniqueSlugRetry } from '@/shared/utils/slug/slug.utils';
 import { resolveTranslatedText, sanitizeTranslations, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { seedIndustryReviewConfig } from '@/shared/utils/industry-review-config/seed-industry-review-config.util';
 import { CreateStoreDto } from '../dto/create-store.dto';
@@ -18,6 +18,10 @@ export class StoresService {
     async create(user: AuthUser, organizationId: string, dto: CreateStoreDto) {
         await this.accessControl.assertOrgAccess(user, organizationId, [OrganizationRole.OWNER]);
 
+        return withUniqueSlugRetry(() => this.createStore(organizationId, dto));
+    }
+
+    private async createStore(organizationId: string, dto: CreateStoreDto) {
         const slug = await ensureUniqueSlug(dto.name, async (candidate) => {
             const existing = await this.prisma.store.findUnique({ where: { slug: candidate } });
             return !!existing;

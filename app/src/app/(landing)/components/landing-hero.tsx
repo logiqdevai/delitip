@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check, MessageSquare, Play, Zap } from "lucide-react";
+import { ArrowRight, Check, MessageSquare, Zap } from "lucide-react";
 import { Routes } from "@/routes/routes";
 import { BrandMark } from "@/components/brand/brand-mark";
 
@@ -36,13 +36,6 @@ export const LandingHero: FC = () => {
               className="size-4 text-electric-lime"
               strokeWidth={2}
             />
-          </Link>
-          <Link
-            href={Routes.landing.demo}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-neutral-fill px-6 py-3.5 text-xs font-bold text-zinc-800 transition hover:bg-zinc-200 sm:w-auto sm:text-sm"
-          >
-            <Play className="size-4 fill-zinc-600 text-zinc-600" />
-            <span>See how it works</span>
           </Link>
         </div>
 

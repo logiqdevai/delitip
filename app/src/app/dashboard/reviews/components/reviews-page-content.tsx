@@ -24,13 +24,9 @@ import {
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { ReviewDetailSheet } from "@/app/dashboard/reviews/components/review-detail-sheet";
 import { useStoreReviews } from "@/features/reviews/hooks/use-reviews";
-import type {
-  ReviewVisibility,
-  ReviewsQuery,
-} from "@/features/reviews/interfaces/reviews.interfaces";
+import type { ReviewsQuery } from "@/features/reviews/interfaces/reviews.interfaces";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
-import { ReviewVisibilityFilterOptions } from "@/config/constants/dropdowns/reviews/review-visibility-filter.options";
 import { getReviewVisibilityLabel } from "@/config/constants/dropdowns/reviews/review-visibility-form.options";
 import { cn } from "@/lib/utils";
 
@@ -62,9 +58,6 @@ export const ReviewsPageContent: FC = () => {
   const { storeId, isPending: workspacePending, isReady } = useWorkspace();
   const [minRating, setMinRating] = useState<number | "all">("all");
   const [employeeId, setEmployeeId] = useState<string>("all");
-  const [visibility, setVisibility] = useState<ReviewVisibility | "all">(
-    "all",
-  );
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(
     null,
   );
@@ -75,7 +68,6 @@ export const ReviewsPageContent: FC = () => {
     limit: 50,
     ...(minRating !== "all" ? { min_rating: minRating } : {}),
     ...(employeeId !== "all" ? { employee_id: employeeId } : {}),
-    ...(visibility !== "all" ? { visibility } : {}),
   };
 
   const reviewsQuery = useStoreReviews(storeId ?? "", query);
@@ -154,30 +146,6 @@ export const ReviewsPageContent: FC = () => {
           contentClassName="min-w-44"
           aria-label="Filter by employee"
         />
-
-        <Select
-          items={ReviewVisibilityFilterOptions.map((option) => ({
-            label: option.label,
-            value: option.id,
-          }))}
-          value={visibility}
-          onValueChange={(value) => {
-            if (value) setVisibility(value as ReviewVisibility | "all");
-          }}
-        >
-          <SelectTrigger className="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="w-auto min-w-40">
-            <SelectGroup>
-              {ReviewVisibilityFilterOptions.map((option) => (
-                <SelectItem key={option.id} value={option.id}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
       </div>
 
       {reviewsQuery.isPending ? (
