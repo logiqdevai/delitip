@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import {
   useCreateReviewCategory,
   useDeleteReviewCategory,
@@ -44,6 +45,19 @@ import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { resolvePrimaryText } from "@/lib/translated-text";
 import { cn } from "@/lib/utils";
 
+const VisibilityBadge: FC<{ isActive: boolean }> = ({ isActive }) => (
+  <span
+    className={cn(
+      "inline-block rounded-full px-2 py-0.5 text-[10px] font-bold",
+      isActive
+        ? "bg-brand-50 text-brand-700"
+        : "bg-neutral-fill font-medium text-zinc-500",
+    )}
+  >
+    {isActive ? "Shown" : "Hidden"}
+  </span>
+);
+
 const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ storeId, primaryLanguage }) => {
   const query = useReviewCategories(storeId);
   const create = useCreateReviewCategory(storeId);
@@ -68,6 +82,9 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
         <Star className="size-3.5 text-zinc-400" />
         Rating categories
       </div>
+      <p className="text-[11px] text-zinc-400">
+        Switch off to hide a category from the review step without deleting it.
+      </p>
       <form onSubmit={handleAdd} className="flex gap-2">
         <Input
           value={name}
@@ -85,37 +102,61 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
       ) : items.length === 0 ? (
         <p className="text-[11px] text-zinc-400">No categories yet.</p>
       ) : (
-        <ul className="flex flex-wrap gap-2">
-          {items.map((item) => (
-            <li
-              key={item.id}
-              className={cn(
-                "flex items-center gap-1.5 rounded-full border py-1 pr-1.5 pl-3 text-xs",
-                item.is_active
-                  ? "border-zinc-200 bg-white text-ink-charcoal"
-                  : "border-zinc-100 bg-zinc-50 text-zinc-400",
-              )}
-            >
-              <button
-                type="button"
-                onClick={() => update.mutate({ id: item.id, payload: { is_active: !item.is_active } })}
-                title={item.is_active ? "Deactivate" : "Activate"}
+        <ul className="divide-y divide-zinc-100 rounded-xl border border-zinc-200/80">
+          {items.map((item) => {
+            const label = resolvePrimaryText(item.name, primaryLanguage);
+            const isUpdating =
+              update.isPending && update.variables?.id === item.id;
+
+            return (
+              <li
+                key={item.id}
+                className={cn(
+                  "flex items-center justify-between gap-3 px-3 py-2.5",
+                  !item.is_active && "bg-zinc-50/80",
+                )}
               >
-                {resolvePrimaryText(item.name, primaryLanguage)}
-              </button>
-              <button
-                type="button"
-                className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
-                onClick={() => {
-                  setPendingDelete(item);
-                  deleteConfirm.openDialog();
-                }}
-                aria-label={`Delete ${resolvePrimaryText(item.name, primaryLanguage)}`}
-              >
-                <Trash2 className="size-3" />
-              </button>
-            </li>
-          ))}
+                <div className="min-w-0 flex-1">
+                  <p
+                    className={cn(
+                      "truncate text-xs font-medium",
+                      item.is_active ? "text-ink-charcoal" : "text-zinc-400",
+                    )}
+                  >
+                    {label}
+                  </p>
+                  <VisibilityBadge isActive={item.is_active} />
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
+                  <Switch
+                    size="sm"
+                    checked={item.is_active}
+                    disabled={isUpdating}
+                    onCheckedChange={() =>
+                      update.mutate({
+                        id: item.id,
+                        payload: { is_active: !item.is_active },
+                      })
+                    }
+                    aria-label={
+                      item.is_active ? `Hide ${label}` : `Show ${label}`
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
+                    onClick={() => {
+                      setPendingDelete(item);
+                      deleteConfirm.openDialog();
+                    }}
+                    aria-label={`Delete ${label}`}
+                  >
+                    <Trash2 className="size-3" />
+                  </button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
       <ConfirmationDialog
@@ -166,6 +207,9 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
         <MessageSquareText className="size-3.5 text-zinc-400" />
         Feedback questions
       </div>
+      <p className="text-[11px] text-zinc-400">
+        Switch off to hide a question from the review step without deleting it.
+      </p>
       <form onSubmit={handleAdd} className="flex gap-2">
         <Input
           value={question}
@@ -203,34 +247,63 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
       ) : items.length === 0 ? (
         <p className="text-[11px] text-zinc-400">No feedback questions yet.</p>
       ) : (
-        <div className="divide-y divide-zinc-100">
-          {items.map((item) => (
-            <div key={item.id} className="flex items-center justify-between gap-2 py-2 text-xs">
-              <button
-                type="button"
-                onClick={() => update.mutate({ id: item.id, payload: { is_active: !item.is_active } })}
+        <ul className="divide-y divide-zinc-100 rounded-xl border border-zinc-200/80">
+          {items.map((item) => {
+            const label = resolvePrimaryText(item.question, primaryLanguage);
+            const isUpdating =
+              update.isPending && update.variables?.id === item.id;
+
+            return (
+              <li
+                key={item.id}
                 className={cn(
-                  "text-left",
-                  item.is_active ? "text-ink-charcoal" : "text-zinc-400",
+                  "flex items-center justify-between gap-3 px-3 py-2.5",
+                  !item.is_active && "bg-zinc-50/80",
                 )}
               >
-                {resolvePrimaryText(item.question, primaryLanguage)}{" "}
-                <span className="text-zinc-400">({item.type})</span>
-              </button>
-              <button
-                type="button"
-                className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
-                onClick={() => {
-                  setPendingDelete(item);
-                  deleteConfirm.openDialog();
-                }}
-                aria-label="Delete question"
-              >
-                <Trash2 className="size-3" />
-              </button>
-            </div>
-          ))}
-        </div>
+                <div className="min-w-0 flex-1">
+                  <p
+                    className={cn(
+                      "truncate text-xs font-medium",
+                      item.is_active ? "text-ink-charcoal" : "text-zinc-400",
+                    )}
+                  >
+                    {label}{" "}
+                    <span className="font-normal text-zinc-400">({item.type})</span>
+                  </p>
+                  <VisibilityBadge isActive={item.is_active} />
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
+                  <Switch
+                    size="sm"
+                    checked={item.is_active}
+                    disabled={isUpdating}
+                    onCheckedChange={() =>
+                      update.mutate({
+                        id: item.id,
+                        payload: { is_active: !item.is_active },
+                      })
+                    }
+                    aria-label={
+                      item.is_active ? `Hide ${label}` : `Show ${label}`
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
+                    onClick={() => {
+                      setPendingDelete(item);
+                      deleteConfirm.openDialog();
+                    }}
+                    aria-label={`Delete ${label}`}
+                  >
+                    <Trash2 className="size-3" />
+                  </button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
       )}
       <ConfirmationDialog
         state={deleteConfirm}
@@ -280,6 +353,9 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
         <Tag className="size-3.5 text-zinc-400" />
         Compliment / feedback tags
       </div>
+      <p className="text-[11px] text-zinc-400">
+        Switch off to hide a tag from the review step without deleting it.
+      </p>
       <form onSubmit={handleAdd} className="flex gap-2">
         <Input
           value={name}
@@ -319,36 +395,68 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
       ) : items.length === 0 ? (
         <p className="text-[11px] text-zinc-400">No tags yet.</p>
       ) : (
-        <ul className="flex flex-wrap gap-2">
-          {items.map((item) => (
-            <li
-              key={item.id}
-              className={cn(
-                "flex items-center gap-1.5 rounded-full border py-1 pr-1.5 pl-3 text-xs",
-                item.is_active
-                  ? "border-zinc-200 bg-white text-ink-charcoal"
-                  : "border-zinc-100 bg-zinc-50 text-zinc-400",
-              )}
-            >
-              <button
-                type="button"
-                onClick={() => update.mutate({ id: item.id, payload: { is_active: !item.is_active } })}
+        <ul className="divide-y divide-zinc-100 rounded-xl border border-zinc-200/80">
+          {items.map((item) => {
+            const isUpdating =
+              update.isPending && update.variables?.id === item.id;
+
+            return (
+              <li
+                key={item.id}
+                className={cn(
+                  "flex items-center justify-between gap-3 px-3 py-2.5",
+                  !item.is_active && "bg-zinc-50/80",
+                )}
               >
-                {item.name}
-              </button>
-              <button
-                type="button"
-                className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
-                onClick={() => {
-                  setPendingDelete(item);
-                  deleteConfirm.openDialog();
-                }}
-                aria-label={`Delete ${item.name}`}
-              >
-                <Trash2 className="size-3" />
-              </button>
-            </li>
-          ))}
+                <div className="min-w-0 flex-1">
+                  <p
+                    className={cn(
+                      "truncate text-xs font-medium",
+                      item.is_active ? "text-ink-charcoal" : "text-zinc-400",
+                    )}
+                  >
+                    {item.name}
+                    {item.sentiment ? (
+                      <span className="font-normal text-zinc-400">
+                        {" "}
+                        ({item.sentiment})
+                      </span>
+                    ) : null}
+                  </p>
+                  <VisibilityBadge isActive={item.is_active} />
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
+                  <Switch
+                    size="sm"
+                    checked={item.is_active}
+                    disabled={isUpdating}
+                    onCheckedChange={() =>
+                      update.mutate({
+                        id: item.id,
+                        payload: { is_active: !item.is_active },
+                      })
+                    }
+                    aria-label={
+                      item.is_active
+                        ? `Hide ${item.name}`
+                        : `Show ${item.name}`
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
+                    onClick={() => {
+                      setPendingDelete(item);
+                      deleteConfirm.openDialog();
+                    }}
+                    aria-label={`Delete ${item.name}`}
+                  >
+                    <Trash2 className="size-3" />
+                  </button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
       <ConfirmationDialog

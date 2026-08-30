@@ -35,6 +35,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { buttonVariants } from "@/components/ui/button";
 import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
+import { EmployeeQrCodesDialog } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
+import { PlatformAuthRoles } from "@/features/auth/interfaces/auth.interfaces";
 import {
   useDeleteEmployee,
   useEmployee,
@@ -49,9 +51,11 @@ import {
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { getAbsoluteTipUrl } from "@/features/qr-codes/utils/qr-tip-url.utils";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { useMe } from "@/features/users/hooks/use-users";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+import { useAuthStore } from "@/stores/auth.store";
 
 const initials = (name: string) => {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -65,15 +69,26 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
 }) => {
   const router = useRouter();
   const { store, storeId } = useWorkspace();
+  const authUser = useAuthStore((state) => state.user);
+  const meQuery = useMe();
   const employeeQuery = useEmployee(employeeId);
   const dashboardQuery = useEmployeeDashboard(employeeId);
-  const qrCodesQuery = useQrCodes(storeId ?? "", { limit: 100 });
+  const qrCodesQuery = useQrCodes(storeId ?? "", {
+    employee_ids: [employeeId],
+    limit: 100,
+  });
   const updateEmployee = useUpdateEmployee();
   const deleteEmployee = useDeleteEmployee();
   const deactivateConfirm = useConfirmationDialog();
   const deleteConfirm = useConfirmationDialog();
   const [formOpen, setFormOpen] = useState(false);
   const [qrFormOpen, setQrFormOpen] = useState(false);
+  const [qrListOpen, setQrListOpen] = useState(false);
+
+  const platformRole = meQuery.data?.role ?? authUser?.role;
+  const canDeleteEmployee =
+    platformRole === PlatformAuthRoles.ADMIN ||
+    platformRole === PlatformAuthRoles.SUPER_ADMIN;
 
   if (employeeQuery.isPending) {
     return <DetailSkeleton fieldCount={6} />;
@@ -184,14 +199,18 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
               {employee.is_active ? <UserRoundX /> : <UserCheck />}
               {employee.is_active ? "Deactivate" : "Activate"}
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={() => deleteConfirm.openDialog()}
-            >
-              <Trash2 />
-              Delete
-            </DropdownMenuItem>
+            {canDeleteEmployee ? (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => deleteConfirm.openDialog()}
+                >
+                  <Trash2 />
+                  Delete
+                </DropdownMenuItem>
+              </>
+            ) : null}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -260,12 +279,13 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                 {getAbsoluteTipUrl(store.slug, personalQr.code)}
               </div>
             </div>
-            <Link
-              href={Routes.dashboard.access}
+            <button
+              type="button"
               className="text-xs font-semibold text-brand-700 hover:underline"
+              onClick={() => setQrListOpen(true)}
             >
-              Manage in QR & Access →
-            </Link>
+              View all QR codes →
+            </button>
           </div>
         ) : (
           <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 p-4 text-xs text-zinc-500">
@@ -308,6 +328,12 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         />
       ) : null}
 
+      <EmployeeQrCodesDialog
+        open={qrListOpen}
+        onOpenChange={setQrListOpen}
+        employee={employee}
+      />
+
       <ConfirmationDialog
         state={deactivateConfirm}
         title="Deactivate employee?"
@@ -322,17 +348,19 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         isPending={updateEmployee.isPending}
       />
 
-      <ConfirmationDialog
-        state={deleteConfirm}
-        title="Delete employee?"
-        description={`${employee.full_name} will be permanently removed. This cannot be undone.`}
-        confirmLabel="Delete"
-        onConfirm={async () => {
-          await deleteEmployee.mutateAsync(employee.id);
-          router.push(Routes.dashboard.employees);
-        }}
-        isPending={deleteEmployee.isPending}
-      />
+      {canDeleteEmployee ? (
+        <ConfirmationDialog
+          state={deleteConfirm}
+          title="Delete employee?"
+          description={`${employee.full_name} will be permanently removed. This cannot be undone.`}
+          confirmLabel="Delete"
+          onConfirm={async () => {
+            await deleteEmployee.mutateAsync(employee.id);
+            router.push(Routes.dashboard.employees);
+          }}
+          isPending={deleteEmployee.isPending}
+        />
+      ) : null}
     </div>
   );
 };

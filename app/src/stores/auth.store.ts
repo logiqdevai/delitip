@@ -1,17 +1,10 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
+import type { AuthUser } from "@/features/auth/interfaces/auth.interfaces";
 import { getEmployeeWorkspaceStoreState } from "@/stores/employee-workspace.store";
 import { getWorkspaceStoreState } from "@/stores/workspace.store";
 
 const STORE_KEY = "auth";
-
-export interface AuthUser {
-  id: string;
-  email?: string;
-  phone?: string;
-  created_at: string;
-  updated_at: string;
-}
 
 interface AuthStore {
   accessToken: string | null;

@@ -55,7 +55,7 @@ export const settingsNavItems: SettingsNavItem[] = [
   },
   {
     href: Routes.dashboard.settings.reviewsFeedback,
-    label: "Reviews & Feedback",
+    label: "Reviews",
     description: "What customers see on the review step after tipping.",
     icon: MessageSquare,
   },
