@@ -28,6 +28,9 @@ const buildDefaults = (store?: Store | null): BusinessSetupFormData => {
         : DEFAULT_TIMEZONE,
     currency: store?.currency ?? Currencies.EUR,
     address_line: store?.address_line ?? "",
+    city: store?.city ?? "",
+    country: store?.country ?? "",
+    postal_code: store?.postal_code ?? "",
   };
 };
 

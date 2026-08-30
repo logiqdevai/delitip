@@ -5,7 +5,10 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
-import { AddressAutocomplete } from "@/components/ui/address-autocomplete";
+import {
+  AddressAutocomplete,
+  type ParsedAddress,
+} from "@/components/ui/address-autocomplete";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -42,6 +45,7 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<BusinessSetupFormData>({
     resolver: zodResolver(businessSetupSchema),
@@ -144,12 +148,47 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
                 aria-invalid={!!errors.address_line}
                 value={field.value ?? ""}
                 onValueChange={field.onChange}
+                onPlaceSelect={(address: ParsedAddress) => {
+                  if (address.city) {
+                    setValue("city", address.city, { shouldDirty: true });
+                  }
+                  if (address.country) {
+                    setValue("country", address.country, { shouldDirty: true });
+                  }
+                  if (address.postalCode) {
+                    setValue("postal_code", address.postalCode, { shouldDirty: true });
+                  }
+                  setValue("full_address", address, { shouldDirty: true });
+                }}
               />
             )}
           />
           {errors.address_line ? (
             <p className="text-xs text-red-600">{errors.address_line.message}</p>
           ) : null}
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="onboarding-city">City</Label>
+            <Input id="onboarding-city" placeholder="City" {...register("city")} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="onboarding-country">Country</Label>
+            <Input
+              id="onboarding-country"
+              placeholder="Country"
+              {...register("country")}
+            />
+          </div>
+          <div className="space-y-1.5 sm:col-span-1">
+            <Label htmlFor="onboarding-postal">Postal code</Label>
+            <Input
+              id="onboarding-postal"
+              placeholder="Postal code"
+              {...register("postal_code")}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">

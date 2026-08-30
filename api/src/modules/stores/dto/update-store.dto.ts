@@ -28,7 +28,7 @@ export class UpdateStoreDto extends PartialType(CreateStoreDto) {
     @IsString()
     secondary_color?: string;
 
-    @ApiProperty({ required: false, type: [Number], default: [2, 10, 20, 50] })
+    @ApiProperty({ required: false, type: [Number], default: [200, 1000, 2000, 5000], description: 'Suggested tip amounts in minor currency units (e.g. cents)' })
     @IsOptional()
     @IsArray()
     @IsInt({ each: true })

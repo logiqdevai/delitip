@@ -13,12 +13,16 @@ import {
 import { environments } from "@/config/environments";
 
 export interface ParsedAddress {
+  placeId: string;
   formattedAddress: string;
   streetAddress?: string;
+  subpremise?: string;
   city?: string;
-  country?: string;
+  state?: string;
+  stateCode?: string;
   postalCode?: string;
-  placeId: string;
+  country?: string;
+  countryCode?: string;
   lat?: number;
   lng?: number;
 }
@@ -71,17 +75,21 @@ async function fetchSuggestions(
     }));
 }
 
+type AddressComponent = { types?: string[]; longText?: string; shortText?: string };
+
 function getAddressComponent(
-  components: Array<{ types?: string[]; longText?: string }>,
-  type: string
+  components: AddressComponent[],
+  type: string,
+  useShortText = false
 ) {
-  return components.find((component) => component.types?.includes(type))?.longText;
+  const component = components.find((item) => item.types?.includes(type));
+  return useShortText ? component?.shortText : component?.longText;
 }
 
 function parsePlace(place: {
   id?: string;
   formattedAddress?: string;
-  addressComponents?: Array<{ types?: string[]; longText?: string }>;
+  addressComponents?: AddressComponent[];
   location?: { latitude?: number; longitude?: number };
 }): ParsedAddress {
   const components = place.addressComponents ?? [];
@@ -93,14 +101,18 @@ function parsePlace(place: {
     .join(" ");
 
   return {
+    placeId: place.id ?? "",
     formattedAddress: place.formattedAddress ?? "",
     streetAddress: streetAddress || undefined,
+    subpremise: getAddressComponent(components, "subpremise"),
     city:
       getAddressComponent(components, "locality") ??
       getAddressComponent(components, "postal_town"),
-    country: getAddressComponent(components, "country"),
+    state: getAddressComponent(components, "administrative_area_level_1"),
+    stateCode: getAddressComponent(components, "administrative_area_level_1", true),
     postalCode: getAddressComponent(components, "postal_code"),
-    placeId: place.id ?? "",
+    country: getAddressComponent(components, "country"),
+    countryCode: getAddressComponent(components, "country", true),
     lat: place.location?.latitude,
     lng: place.location?.longitude,
   };

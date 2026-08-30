@@ -1,3 +1,5 @@
+import type { ParsedAddress } from "@/components/ui/address-autocomplete";
+
 export const StoreIndustries = {
   RESTAURANT: "RESTAURANT",
   CAFE: "CAFE",
@@ -77,6 +79,7 @@ export interface Store {
   city?: string | null;
   country?: string | null;
   postal_code?: string | null;
+  full_address?: ParsedAddress | null;
   timezone: string;
   primary_language: Language;
   supported_languages: Language[];
@@ -101,6 +104,7 @@ export interface CreateStorePayload {
   city?: string;
   country?: string;
   postal_code?: string;
+  full_address?: ParsedAddress;
 }
 
 export interface UpdateStorePayload {
@@ -126,6 +130,7 @@ export interface UpdateStorePayload {
   city?: string;
   country?: string;
   postal_code?: string;
+  full_address?: ParsedAddress;
 }
 
 export interface PublicStore {

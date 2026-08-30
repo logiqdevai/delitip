@@ -40,6 +40,7 @@ export class StoresService {
                 city: dto.city,
                 country: dto.country,
                 postal_code: dto.postal_code,
+                full_address: dto.full_address ? { ...dto.full_address } : undefined,
             },
         });
     }

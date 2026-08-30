@@ -73,6 +73,10 @@ export const useCompleteBusinessSetup = () => {
         timezone: values.timezone,
         currency: values.currency,
         address_line: values.address_line || undefined,
+        city: values.city || undefined,
+        country: values.country || undefined,
+        postal_code: values.postal_code || undefined,
+        full_address: values.full_address,
       };
 
       if (context.storeId) {
@@ -96,6 +100,10 @@ export const useCompleteBusinessSetup = () => {
           timezone: values.timezone,
           currency: values.currency,
           address_line: values.address_line || undefined,
+          city: values.city || undefined,
+          country: values.country || undefined,
+          postal_code: values.postal_code || undefined,
+          full_address: values.full_address,
         });
       }
 

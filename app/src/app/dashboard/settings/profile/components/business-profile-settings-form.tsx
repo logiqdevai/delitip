@@ -48,6 +48,7 @@ export const BusinessProfileSettingsForm: FC = () => {
       city: "",
       country: "",
       postal_code: "",
+      full_address: undefined,
     },
   });
 
@@ -60,6 +61,7 @@ export const BusinessProfileSettingsForm: FC = () => {
       city: store.city ?? "",
       country: store.country ?? "",
       postal_code: store.postal_code ?? "",
+      full_address: store.full_address ?? undefined,
     });
   }, [store, reset]);
 
@@ -76,6 +78,7 @@ export const BusinessProfileSettingsForm: FC = () => {
         city: values.city || undefined,
         country: values.country || undefined,
         postal_code: values.postal_code || undefined,
+        full_address: values.full_address,
       },
     });
   });
@@ -166,6 +169,7 @@ export const BusinessProfileSettingsForm: FC = () => {
                 if (address.postalCode) {
                   setValue("postal_code", address.postalCode, { shouldDirty: true });
                 }
+                setValue("full_address", address, { shouldDirty: true });
               }}
             />
           )}

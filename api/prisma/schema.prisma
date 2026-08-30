@@ -345,7 +345,7 @@ model Store {
 
   // Tipping configuration
   currency                Currency @default(EUR)
-  suggested_tip_amounts   Int[]    @default([2, 10, 20, 50])
+  suggested_tip_amounts   Int[]    @default([200, 1000, 2000, 5000])
   allow_custom_tip_amount Boolean  @default(true)
 
   // Review flow routing: above the threshold, prompt the customer to post
