@@ -22,6 +22,7 @@ const industryLinks = [
 ] as const;
 
 const trustLinks = [
+  { href: Routes.help.root, label: "Help Center" },
   { href: Routes.legal.privacy, label: "Privacy Policy" },
   { href: Routes.legal.terms, label: "Terms of Service" },
   { href: Routes.home, label: "Security" },

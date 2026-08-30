@@ -65,4 +65,10 @@ export const Routes = {
     terms: "/legal/terms",
     privacy: "/legal/privacy",
   },
+  help: {
+    root: "/help",
+    category: (categorySlug: string) => `/help/${categorySlug}` as const,
+    article: (categorySlug: string, articleSlug: string) =>
+      `/help/${categorySlug}/${articleSlug}` as const,
+  },
 } as const;
