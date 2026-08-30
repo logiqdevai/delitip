@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { paginate, PaginationQueryType } from '@/shared/utils/pagination/pagination-query.schema';
+import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { AlertType, OrganizationRole, ReviewSentiment } from 'generated/prisma';
 import { GenerateInsightDto } from './dto/generate-insight.dto';
 
@@ -166,10 +167,11 @@ export class InsightsService {
 
         const employee = await this.prisma.employee.findUnique({
             where: { id: topEmployeeId },
-            select: { full_name: true },
+            select: { full_name: true, store: { select: { primary_language: true } } },
         });
+        if (!employee) return null;
 
-        return employee?.full_name ?? null;
+        return resolveTranslatedText(employee.full_name as TranslatedText, undefined, employee.store.primary_language);
     }
 
     private buildSummary(

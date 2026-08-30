@@ -2,11 +2,12 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
+import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { ensureUniqueQrCode } from './utils/qr-code.utils';
 import { CreateQrCodeDto } from './dto/create-qr-code.dto';
 import { UpdateQrCodeDto } from './dto/update-qr-code.dto';
 import { QrCodesQueryType } from './dto/qr-codes-query.schema';
-import { OrganizationRole, QrCodeSelectionMode, TipStatus } from 'generated/prisma';
+import { Language, OrganizationRole, QrCodeSelectionMode, TipStatus } from 'generated/prisma';
 
 const MANAGE_ROLES: OrganizationRole[] = [OrganizationRole.OWNER, OrganizationRole.STORE_MANAGER];
 
@@ -30,12 +31,32 @@ interface RefDto {
     spot_ids?: string[];
 }
 
+type QrCodeWithEmployees = {
+    employees: { employee: { full_name: unknown } }[];
+} | null;
+
 @Injectable()
 export class QrCodesService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
     ) { }
+
+    private async resolveEmployeeNames<T extends QrCodeWithEmployees>(qrCode: T, storeId: string): Promise<T> {
+        if (!qrCode) return qrCode;
+        const store = await this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } });
+        const primaryLanguage: Language = store?.primary_language ?? Language.EN;
+        return {
+            ...qrCode,
+            employees: qrCode.employees.map((qrCodeEmployee) => ({
+                ...qrCodeEmployee,
+                employee: {
+                    ...qrCodeEmployee.employee,
+                    full_name: resolveTranslatedText(qrCodeEmployee.employee.full_name as TranslatedText, undefined, primaryLanguage),
+                },
+            })),
+        };
+    }
 
     private async validateRefs(storeId: string, dto: RefDto) {
         if (dto.distribution_rule_id) {
@@ -78,7 +99,7 @@ export class QrCodesService {
             return !!existing;
         });
 
-        return this.prisma.$transaction(async (tx) => {
+        const created = await this.prisma.$transaction(async (tx) => {
             const qrCode = await tx.qrCode.create({
                 data: {
                     store_id: storeId,
@@ -103,6 +124,8 @@ export class QrCodesService {
 
             return tx.qrCode.findUnique({ where: { id: qrCode.id }, include: QR_CODE_INCLUDE });
         });
+
+        return this.resolveEmployeeNames(created, storeId);
     }
 
     async findAllForStore(user: AuthUser, storeId: string, query: QrCodesQueryType) {
@@ -124,7 +147,20 @@ export class QrCodesService {
             this.prisma.qrCode.count({ where }),
         ]);
 
-        return paginate(items, total, query);
+        const store = await this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } });
+        const primaryLanguage: Language = store?.primary_language ?? Language.EN;
+        const resolvedItems = items.map((qrCode) => ({
+            ...qrCode,
+            employees: qrCode.employees.map((qrCodeEmployee) => ({
+                ...qrCodeEmployee,
+                employee: {
+                    ...qrCodeEmployee.employee,
+                    full_name: resolveTranslatedText(qrCodeEmployee.employee.full_name as TranslatedText, undefined, primaryLanguage),
+                },
+            })),
+        }));
+
+        return paginate(resolvedItems, total, query);
     }
 
     async findOne(user: AuthUser, id: string) {
@@ -133,7 +169,8 @@ export class QrCodesService {
 
         await this.accessControl.assertStoreAccess(user, qrCode.store_id);
 
-        return this.prisma.qrCode.findUnique({ where: { id }, include: QR_CODE_INCLUDE });
+        const full = await this.prisma.qrCode.findUnique({ where: { id }, include: QR_CODE_INCLUDE });
+        return this.resolveEmployeeNames(full, qrCode.store_id);
     }
 
     async update(user: AuthUser, id: string, dto: UpdateQrCodeDto) {
@@ -144,7 +181,7 @@ export class QrCodesService {
 
         await this.validateRefs(qrCode.store_id, dto);
 
-        return this.prisma.$transaction(async (tx) => {
+        const updated = await this.prisma.$transaction(async (tx) => {
             await tx.qrCode.update({
                 where: { id },
                 data: {
@@ -177,6 +214,8 @@ export class QrCodesService {
 
             return tx.qrCode.findUnique({ where: { id }, include: QR_CODE_INCLUDE });
         });
+
+        return this.resolveEmployeeNames(updated, qrCode.store_id);
     }
 
     async remove(user: AuthUser, id: string) {
@@ -211,7 +250,7 @@ export class QrCodesService {
         };
     }
 
-    async findPublicByCode(code: string) {
+    async findPublicByCode(code: string, lang?: string) {
         const qrCode = await this.prisma.qrCode.findUnique({
             where: { code },
             include: {
@@ -249,7 +288,7 @@ export class QrCodesService {
             spots: qrCode.spots.map((qrCodeSpot) => ({ id: qrCodeSpot.spot.id, name: qrCodeSpot.spot.name })),
             employees: activeEmployees.map((employee) => ({
                 id: employee.id,
-                full_name: employee.full_name,
+                full_name: resolveTranslatedText(employee.full_name as TranslatedText, lang, qrCode.store.primary_language),
                 position: employee.position,
                 photo_url: employee.photo_document?.url ?? null,
             })),

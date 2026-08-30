@@ -82,14 +82,23 @@ describe('UsersService', () => {
     describe('getMyAccounts', () => {
         it('reports has_customer_account: true when the user has a tip', async () => {
             prisma.organizationMember.findMany.mockResolvedValue([{ id: 'om1' }]);
-            prisma.employee.findMany.mockResolvedValue([{ id: 'e1' }]);
+            prisma.employee.findMany.mockResolvedValue([
+                { id: 'e1', full_name: { en: 'Alice' }, store: { primary_language: 'EN' } },
+            ]);
             prisma.tip.findFirst.mockResolvedValue({ id: 't1' });
 
             const result = await service.getMyAccounts('u1');
 
             expect(result).toEqual({
                 organization_memberships: [{ id: 'om1' }],
-                employee_accounts: [{ id: 'e1' }],
+                employee_accounts: [
+                    {
+                        id: 'e1',
+                        full_name: 'Alice',
+                        full_name_translations: { en: 'Alice' },
+                        store: { primary_language: 'EN' },
+                    },
+                ],
                 has_customer_account: true,
             });
             expect(prisma.review.findFirst).not.toHaveBeenCalled();

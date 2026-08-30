@@ -3,6 +3,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UsersQueryType } from '../dto/users-query.schema';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
+import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
 
 @Injectable()
 export class UsersService {
@@ -57,7 +58,14 @@ export class UsersService {
 
         return {
             organization_memberships,
-            employee_accounts,
+            employee_accounts: employee_accounts.map((employee) => {
+                const translations = (employee.full_name as TranslatedText) || {};
+                return {
+                    ...employee,
+                    full_name: resolveTranslatedText(translations, undefined, employee.store.primary_language) ?? '',
+                    full_name_translations: translations,
+                };
+            }),
             has_customer_account: !!customerActivity || hasReview,
         };
     }

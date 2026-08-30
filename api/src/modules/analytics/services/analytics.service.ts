@@ -1,7 +1,8 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
-import { TipStatus } from 'generated/prisma';
+import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
+import { Language, TipStatus } from 'generated/prisma';
 import { bucketKey, resolvePeriod, sortedBucketEntries } from '../utils/period.utils';
 import { DashboardQueryType, PeriodQueryType } from '../dto/dashboard-query.schema';
 import { TrendsQueryType } from '../dto/trends-query.schema';
@@ -101,6 +102,12 @@ export class AnalyticsService {
             where: { store_id: { in: storeIds }, is_active: true },
         });
 
+        const stores = await this.prisma.store.findMany({
+            where: { id: { in: storeIds } },
+            select: { id: true, primary_language: true },
+        });
+        const languageByStore = new Map<string, Language>(stores.map((s) => [s.id, s.primary_language]));
+
         return Promise.all(
             employees.map(async (employee) => {
                 const [tipAgg, reviewAgg] = await Promise.all([
@@ -117,7 +124,11 @@ export class AnalyticsService {
 
                 return {
                     employee_id: employee.id,
-                    employee_name: employee.full_name,
+                    employee_name: resolveTranslatedText(
+                        employee.full_name as TranslatedText,
+                        undefined,
+                        languageByStore.get(employee.store_id) ?? Language.EN,
+                    ),
                     store_id: employee.store_id,
                     tips_total: tipAgg._sum.amount ?? 0,
                     average_rating: reviewAgg._avg.rating ?? 0,

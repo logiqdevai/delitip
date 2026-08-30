@@ -6,11 +6,13 @@ import {
   getEmployeeDashboard,
   listEmployees,
   updateEmployee,
+  updateEmployeeTranslation,
 } from "@/features/employees/services/employees.services";
 import type {
   CreateEmployeePayload,
   EmployeesQuery,
   UpdateEmployeePayload,
+  UpdateEmployeeTranslationPayload,
 } from "@/features/employees/interfaces/employees.interfaces";
 import { toast } from "@/components/ui/toast";
 import { useMyAccounts, usersQueryKeys } from "@/features/users/hooks/use-users";
@@ -144,6 +146,37 @@ export const useUpdateEmployee = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update employee",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useUpdateEmployeeTranslation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: UpdateEmployeeTranslationPayload;
+    }) => updateEmployeeTranslation(id, payload),
+    onSuccess: (_data, variables) => {
+      void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
+      void queryClient.invalidateQueries({
+        queryKey: employeesQueryKeys.detail(variables.id),
+      });
+      toast.add({
+        title: "Translation saved",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not save translation",
         description: error.message,
         type: "error",
       });

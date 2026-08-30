@@ -1,3 +1,5 @@
+import type { Language } from "@/features/stores/interfaces/stores.interfaces";
+
 export interface EmployeeDocumentRef {
   id: string;
   url: string;
@@ -7,7 +9,10 @@ export interface Employee {
   id: string;
   store_id: string;
   user_id?: string | null;
+  // Resolved display name (store's primary language). The raw multilingual
+  // map lives in full_name_translations, used only by the edit form.
   full_name: string;
+  full_name_translations: Record<string, string>;
   email: string;
   photo_document_id?: string | null;
   photo_document?: EmployeeDocumentRef | null;
@@ -30,6 +35,11 @@ export interface UpdateEmployeePayload {
   position?: string;
   photo_document_id?: string | null;
   is_active?: boolean;
+}
+
+export interface UpdateEmployeeTranslationPayload {
+  language: Language;
+  text: string;
 }
 
 export interface EmployeesQuery {

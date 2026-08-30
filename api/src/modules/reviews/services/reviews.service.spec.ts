@@ -241,6 +241,7 @@ describe('ReviewsService', () => {
             is_active: true,
             public_review_rating_threshold: 4,
             public_review_redirect_url: 'https://google.com/review',
+            primary_language: 'EN',
         };
 
         beforeEach(() => {
@@ -412,7 +413,7 @@ describe('ReviewsService', () => {
 
         it('creates a POSITIVE_COMPLIMENTS alert on the 10th, 20th, ... 4+-star review of the day for an employee', async () => {
             prisma.review.create = jest.fn().mockResolvedValue({ id: 'r1' });
-            prisma.employee.findFirst.mockResolvedValue({ id: 'emp1', full_name: 'Alex' });
+            prisma.employee.findFirst.mockResolvedValue({ id: 'emp1', full_name: { en: 'Alex' } });
             prisma.review.count.mockResolvedValue(10);
 
             await service.createPublic({ ...baseDto, rating: 5, employee_id: 'emp1' });
@@ -427,7 +428,7 @@ describe('ReviewsService', () => {
 
         it('does not create a POSITIVE_COMPLIMENTS alert when the compliment count is not a multiple of 10', async () => {
             prisma.review.create = jest.fn().mockResolvedValue({ id: 'r1' });
-            prisma.employee.findFirst.mockResolvedValue({ id: 'emp1', full_name: 'Alex' });
+            prisma.employee.findFirst.mockResolvedValue({ id: 'emp1', full_name: { en: 'Alex' } });
             prisma.review.count.mockResolvedValue(7);
 
             await service.createPublic({ ...baseDto, rating: 5, employee_id: 'emp1' });

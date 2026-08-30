@@ -68,7 +68,8 @@ describe('StoreAnalyticsService', () => {
                 { id: 't1', amount: 100, created_at: new Date(), employee_id: 'e1' },
                 { id: 't2', amount: 201, created_at: new Date(), employee_id: 'e1' },
             ]);
-            prisma.employee.findMany.mockResolvedValue([{ id: 'e1', full_name: 'Alice' }]);
+            prisma.employee.findMany.mockResolvedValue([{ id: 'e1', full_name: { en: 'Alice' } }]);
+            prisma.store.findUnique.mockResolvedValue({ primary_language: 'EN' });
 
             const result = await service.tips(user, 'store1', { group_by: 'employee' } as any);
 
@@ -91,7 +92,8 @@ describe('StoreAnalyticsService', () => {
                     { id: 't1', amount: 100, created_at: new Date(), employee_id: 'e1' },
                     { id: 't2', amount: 50, created_at: new Date(), employee_id: null },
                 ]);
-                prisma.employee.findMany.mockResolvedValue([{ id: 'e1', full_name: 'Alice' }]);
+                prisma.employee.findMany.mockResolvedValue([{ id: 'e1', full_name: { en: 'Alice' } }]);
+                prisma.store.findUnique.mockResolvedValue({ primary_language: 'EN' });
 
                 const result = await service.tips(user, 'store1', { group_by: 'employee' } as any);
 

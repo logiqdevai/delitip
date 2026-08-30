@@ -86,6 +86,7 @@ export const ApiRoutes = {
   },
   employees: {
     byId: (id: string) => `/employees/${id}` as const,
+    translation: (id: string) => `/employees/${id}/translations` as const,
     dashboard: (id: string) => `/employees/${id}/dashboard` as const,
     tips: (id: string) => `/employees/${id}/tips` as const,
     reviews: (id: string) => `/employees/${id}/reviews` as const,

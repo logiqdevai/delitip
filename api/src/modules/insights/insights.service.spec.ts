@@ -176,11 +176,17 @@ describe('InsightsService', () => {
                 { employee_id: 'e1', _count: { _all: 2 } },
                 { employee_id: 'e2', _count: { _all: 5 } },
             ]);
-            prisma.employee.findUnique.mockResolvedValue({ full_name: 'Nikos' });
+            prisma.employee.findUnique.mockResolvedValue({
+                full_name: { en: 'Nikos' },
+                store: { primary_language: 'EN' },
+            });
 
             const result = await service.generate(user, 'store1', {});
 
-            expect(prisma.employee.findUnique).toHaveBeenCalledWith({ where: { id: 'e2' }, select: { full_name: true } });
+            expect(prisma.employee.findUnique).toHaveBeenCalledWith({
+                where: { id: 'e2' },
+                select: { full_name: true, store: { select: { primary_language: true } } },
+            });
             expect(result.summary).toContain('Nikos received the highest number of positive mentions.');
         });
 

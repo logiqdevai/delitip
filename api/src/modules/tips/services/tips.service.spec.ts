@@ -28,7 +28,7 @@ describe('TipsService', () => {
 
     const employee = (id: string, overrides: Partial<any> = {}) => ({
         id,
-        full_name: `Employee ${id}`,
+        full_name: { en: `Employee ${id}` },
         is_active: true,
         ...overrides,
     });
@@ -367,7 +367,7 @@ describe('TipsService', () => {
                 prisma.qrCode.findUnique.mockResolvedValue(
                     qrCode({
                         store: store({ thank_you_message: null }),
-                        employees: [{ employee: employee('e1', { full_name: 'Nikos' }) }],
+                        employees: [{ employee: employee('e1', { full_name: { en: 'Nikos' } }) }],
                     }),
                 );
 
@@ -528,7 +528,7 @@ describe('TipsService', () => {
             const result = await service.findOne(user, 'tip1');
 
             expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1');
-            expect(result).toBe(tip);
+            expect(result).toEqual(tip);
         });
     });
 });

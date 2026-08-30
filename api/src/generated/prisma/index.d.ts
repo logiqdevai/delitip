@@ -13337,7 +13337,6 @@ export namespace Prisma {
     id: string | null
     store_id: string | null
     user_id: string | null
-    full_name: string | null
     email: string | null
     photo_document_id: string | null
     position: string | null
@@ -13350,7 +13349,6 @@ export namespace Prisma {
     id: string | null
     store_id: string | null
     user_id: string | null
-    full_name: string | null
     email: string | null
     photo_document_id: string | null
     position: string | null
@@ -13378,7 +13376,6 @@ export namespace Prisma {
     id?: true
     store_id?: true
     user_id?: true
-    full_name?: true
     email?: true
     photo_document_id?: true
     position?: true
@@ -13391,7 +13388,6 @@ export namespace Prisma {
     id?: true
     store_id?: true
     user_id?: true
-    full_name?: true
     email?: true
     photo_document_id?: true
     position?: true
@@ -13490,7 +13486,7 @@ export namespace Prisma {
     id: string
     store_id: string
     user_id: string | null
-    full_name: string
+    full_name: JsonValue
     email: string
     photo_document_id: string | null
     position: string | null
@@ -13625,7 +13621,7 @@ export namespace Prisma {
       id: string
       store_id: string
       user_id: string | null
-      full_name: string
+      full_name: Prisma.JsonValue
       email: string
       photo_document_id: string | null
       position: string | null
@@ -14067,7 +14063,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Employee", 'String'>
     readonly store_id: FieldRef<"Employee", 'String'>
     readonly user_id: FieldRef<"Employee", 'String'>
-    readonly full_name: FieldRef<"Employee", 'String'>
+    readonly full_name: FieldRef<"Employee", 'Json'>
     readonly email: FieldRef<"Employee", 'String'>
     readonly photo_document_id: FieldRef<"Employee", 'String'>
     readonly position: FieldRef<"Employee", 'String'>
@@ -39321,7 +39317,7 @@ export namespace Prisma {
     id?: StringFilter<"Employee"> | string
     store_id?: StringFilter<"Employee"> | string
     user_id?: StringNullableFilter<"Employee"> | string | null
-    full_name?: StringFilter<"Employee"> | string
+    full_name?: JsonFilter<"Employee">
     email?: StringFilter<"Employee"> | string
     photo_document_id?: StringNullableFilter<"Employee"> | string | null
     position?: StringNullableFilter<"Employee"> | string | null
@@ -39368,7 +39364,7 @@ export namespace Prisma {
     NOT?: EmployeeWhereInput | EmployeeWhereInput[]
     store_id?: StringFilter<"Employee"> | string
     user_id?: StringNullableFilter<"Employee"> | string | null
-    full_name?: StringFilter<"Employee"> | string
+    full_name?: JsonFilter<"Employee">
     email?: StringFilter<"Employee"> | string
     photo_document_id?: StringNullableFilter<"Employee"> | string | null
     position?: StringNullableFilter<"Employee"> | string | null
@@ -39409,7 +39405,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Employee"> | string
     store_id?: StringWithAggregatesFilter<"Employee"> | string
     user_id?: StringNullableWithAggregatesFilter<"Employee"> | string | null
-    full_name?: StringWithAggregatesFilter<"Employee"> | string
+    full_name?: JsonWithAggregatesFilter<"Employee">
     email?: StringWithAggregatesFilter<"Employee"> | string
     photo_document_id?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     position?: StringNullableWithAggregatesFilter<"Employee"> | string | null
@@ -41731,7 +41727,7 @@ export namespace Prisma {
 
   export type EmployeeCreateInput = {
     id?: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -41752,7 +41748,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -41769,7 +41765,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -41790,7 +41786,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41809,7 +41805,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -41820,7 +41816,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -41832,7 +41828,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44275,6 +44271,29 @@ export namespace Prisma {
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type StoreScalarRelationFilter = {
     is?: StoreWhereInput
@@ -44333,7 +44352,6 @@ export namespace Prisma {
     id?: SortOrder
     store_id?: SortOrder
     user_id?: SortOrder
-    full_name?: SortOrder
     email?: SortOrder
     photo_document_id?: SortOrder
     position?: SortOrder
@@ -44346,13 +44364,38 @@ export namespace Prisma {
     id?: SortOrder
     store_id?: SortOrder
     user_id?: SortOrder
-    full_name?: SortOrder
     email?: SortOrder
     photo_document_id?: SortOrder
     position?: SortOrder
     is_active?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type QrCodeSpotListRelationFilter = {
@@ -45082,29 +45125,6 @@ export namespace Prisma {
     _min?: NestedEnumReviewSentimentNullableFilter<$PrismaModel>
     _max?: NestedEnumReviewSentimentNullableFilter<$PrismaModel>
   }
-  export type JsonFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type ReviewCategoryCountOrderByAggregateInput = {
     id?: SortOrder
@@ -45140,32 +45160,6 @@ export namespace Prisma {
 
   export type ReviewCategorySumOrderByAggregateInput = {
     sort_order?: SortOrder
-  }
-  export type JsonWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedJsonFilter<$PrismaModel>
-    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type ReviewScalarRelationFilter = {
@@ -49003,6 +48997,29 @@ export namespace Prisma {
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedEnumQrCodeSelectionModeFilter<$PrismaModel = never> = {
     equals?: $Enums.QrCodeSelectionMode | EnumQrCodeSelectionModeFieldRefInput<$PrismaModel>
@@ -49217,29 +49234,6 @@ export namespace Prisma {
     _min?: NestedEnumReviewSentimentNullableFilter<$PrismaModel>
     _max?: NestedEnumReviewSentimentNullableFilter<$PrismaModel>
   }
-  export type NestedJsonFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type NestedEnumFeedbackQuestionTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.FeedbackQuestionType | EnumFeedbackQuestionTypeFieldRefInput<$PrismaModel>
@@ -49398,7 +49392,7 @@ export namespace Prisma {
 
   export type EmployeeCreateWithoutUserInput = {
     id?: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -49417,7 +49411,7 @@ export namespace Prisma {
   export type EmployeeUncheckedCreateWithoutUserInput = {
     id?: string
     store_id: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -49744,7 +49738,7 @@ export namespace Prisma {
     id?: StringFilter<"Employee"> | string
     store_id?: StringFilter<"Employee"> | string
     user_id?: StringNullableFilter<"Employee"> | string | null
-    full_name?: StringFilter<"Employee"> | string
+    full_name?: JsonFilter<"Employee">
     email?: StringFilter<"Employee"> | string
     photo_document_id?: StringNullableFilter<"Employee"> | string | null
     position?: StringNullableFilter<"Employee"> | string | null
@@ -50304,7 +50298,7 @@ export namespace Prisma {
 
   export type EmployeeCreateWithoutPhoto_documentInput = {
     id?: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -50324,7 +50318,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -51404,7 +51398,7 @@ export namespace Prisma {
 
   export type EmployeeCreateWithoutStoreInput = {
     id?: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -51423,7 +51417,7 @@ export namespace Prisma {
   export type EmployeeUncheckedCreateWithoutStoreInput = {
     id?: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -53884,7 +53878,7 @@ export namespace Prisma {
 
   export type EmployeeCreateWithoutQr_codesInput = {
     id?: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -53904,7 +53898,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -53975,7 +53969,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateWithoutQr_codesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -53995,7 +53989,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54588,7 +54582,7 @@ export namespace Prisma {
 
   export type EmployeeCreateWithoutDistribution_rule_recipientsInput = {
     id?: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -54608,7 +54602,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -54673,7 +54667,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateWithoutDistribution_rule_recipientsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -54693,7 +54687,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55139,7 +55133,7 @@ export namespace Prisma {
 
   export type EmployeeCreateWithoutTipsInput = {
     id?: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -55159,7 +55153,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -55516,7 +55510,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateWithoutTipsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -55536,7 +55530,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55772,7 +55766,7 @@ export namespace Prisma {
 
   export type EmployeeCreateWithoutTip_distributionsInput = {
     id?: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -55792,7 +55786,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -55877,7 +55871,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateWithoutTip_distributionsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -55897,7 +55891,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56377,7 +56371,7 @@ export namespace Prisma {
 
   export type EmployeeCreateWithoutReviewsInput = {
     id?: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -56397,7 +56391,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -56706,7 +56700,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateWithoutReviewsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -56726,7 +56720,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58311,7 +58305,7 @@ export namespace Prisma {
 
   export type EmployeeCreateWithoutAlertsInput = {
     id?: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -58331,7 +58325,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -58462,7 +58456,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateWithoutAlertsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -58482,7 +58476,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58719,7 +58713,7 @@ export namespace Prisma {
   export type EmployeeCreateManyUserInput = {
     id?: string
     store_id: string
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -58878,7 +58872,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -58897,7 +58891,7 @@ export namespace Prisma {
   export type EmployeeUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58915,7 +58909,7 @@ export namespace Prisma {
   export type EmployeeUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59177,7 +59171,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     position?: string | null
     is_active?: boolean
@@ -59456,7 +59450,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateWithoutPhoto_documentInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -59476,7 +59470,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -59494,7 +59488,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -59698,7 +59692,7 @@ export namespace Prisma {
   export type EmployeeCreateManyStoreInput = {
     id?: string
     user_id?: string | null
-    full_name: string
+    full_name: JsonNullValueInput | InputJsonValue
     email: string
     photo_document_id?: string | null
     position?: string | null
@@ -59853,7 +59847,7 @@ export namespace Prisma {
 
   export type EmployeeUpdateWithoutStoreInput = {
     id?: StringFieldUpdateOperationsInput | string
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -59872,7 +59866,7 @@ export namespace Prisma {
   export type EmployeeUncheckedUpdateWithoutStoreInput = {
     id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59890,7 +59884,7 @@ export namespace Prisma {
   export type EmployeeUncheckedUpdateManyWithoutStoreInput = {
     id?: StringFieldUpdateOperationsInput | string
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    full_name?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null

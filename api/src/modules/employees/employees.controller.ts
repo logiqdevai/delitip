@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { RolesGuard } from '@/shared/guards/roles.guard';
+import { Roles } from '@/shared/decorators/roles.decorator';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { AuthUser } from '@/shared/services/access-control/access-control.service';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
@@ -8,6 +10,7 @@ import { PaginationQuerySchema, PaginationQueryType } from '@/shared/utils/pagin
 import { EmployeesService } from './services/employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { UpdateEmployeeTranslationDto } from './dto/update-employee-translation.dto';
 import { EmployeesQuerySchema, EmployeesQueryType } from './dto/employees-query.schema';
 
 @ApiTags('Employees')
@@ -54,8 +57,20 @@ export class EmployeesController {
         return this.employeesService.update(user, id, dto);
     }
 
+    @Patch('employees/:id/translations')
+    @ApiOperation({ summary: "Hand-edit a single language's translation of full_name (Owner/Store Manager)" })
+    updateTranslation(
+        @CurrentUser() user: AuthUser,
+        @Param('id') id: string,
+        @Body() dto: UpdateEmployeeTranslationDto,
+    ) {
+        return this.employeesService.updateTranslation(user, id, dto);
+    }
+
     @Delete('employees/:id')
-    @ApiOperation({ summary: 'Remove an Employee (Owner/Store Manager)' })
+    @UseGuards(RolesGuard)
+    @Roles('ADMIN', 'SUPER_ADMIN')
+    @ApiOperation({ summary: 'Remove an Employee (platform Admin / Super Admin only)' })
     remove(@CurrentUser() user: AuthUser, @Param('id') id: string) {
         return this.employeesService.remove(user, id);
     }

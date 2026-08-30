@@ -393,7 +393,11 @@ model Employee {
   id                String   @id @default(uuid())
   store_id          String
   user_id           String?
-  full_name         String
+  // Multilingual: Json map of lowercase Language code -> text, e.g.
+  // {"en": "Maria Papadopoulou", "el": "Μαρία Παπαδοπούλου"}. Auto-translated
+  // (stub) into every Store-supported language on write; hand-edited per
+  // language via PATCH employees/:id/translations.
+  full_name         Json
   email             String
   photo_document_id String?
   position          String?

@@ -1,5 +1,5 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { QrCodesService } from './qr-codes.service';
 
 @ApiTags('Public QR')
@@ -9,7 +9,8 @@ export class PublicQrController {
 
     @Get(':code')
     @ApiOperation({ summary: 'Public: resolve a scanned QR code to its Store/employee/spot config (§3, no auth)' })
-    findByCode(@Param('code') code: string) {
-        return this.qrCodesService.findPublicByCode(code);
+    @ApiQuery({ name: 'lang', required: false })
+    findByCode(@Param('code') code: string, @Query('lang') lang?: string) {
+        return this.qrCodesService.findPublicByCode(code, lang);
     }
 }

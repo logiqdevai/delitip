@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
-import { TipStatus } from 'generated/prisma';
+import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
+import { Language, TipStatus } from 'generated/prisma';
 import { bucketKey, sortedBucketEntries } from '../utils/period.utils';
 import { StoreTipsAnalyticsQueryType } from '../dto/store-tips-analytics-query.schema';
 
@@ -54,11 +55,17 @@ export class StoreAnalyticsService {
             }
 
             const employeeIds = [...amounts.keys()].filter((id) => id !== 'unattributed');
-            const employees = await this.prisma.employee.findMany({
-                where: { id: { in: employeeIds } },
-                select: { id: true, full_name: true },
-            });
-            const nameById = new Map(employees.map((e) => [e.id, e.full_name]));
+            const [employees, store] = await Promise.all([
+                this.prisma.employee.findMany({
+                    where: { id: { in: employeeIds } },
+                    select: { id: true, full_name: true },
+                }),
+                this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } }),
+            ]);
+            const primaryLanguage: Language = store?.primary_language ?? Language.EN;
+            const nameById = new Map(
+                employees.map((e) => [e.id, resolveTranslatedText(e.full_name as TranslatedText, undefined, primaryLanguage)]),
+            );
 
             return [...amounts.entries()].map(([key, amount]) => ({
                 key,

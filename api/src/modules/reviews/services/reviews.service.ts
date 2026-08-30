@@ -7,7 +7,7 @@ import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translatio
 import { CreatePublicReviewDto } from '../dto/create-public-review.dto';
 import { UpdateReviewDto } from '../dto/update-review.dto';
 import { ReviewsQueryType } from '../dto/reviews-query.schema';
-import { AlertType, Employee, OrganizationRole, Prisma, Review, ReviewSentiment, ReviewVisibility } from 'generated/prisma';
+import { AlertType, Employee, Language, OrganizationRole, Prisma, Review, ReviewSentiment, ReviewVisibility } from 'generated/prisma';
 
 const MANAGE_ROLES: OrganizationRole[] = [OrganizationRole.OWNER, OrganizationRole.STORE_MANAGER];
 
@@ -36,7 +36,7 @@ export class ReviewsService {
             ...(query.search && { comment: { contains: query.search, mode: 'insensitive' as const } }),
         };
 
-        const [items, total] = await Promise.all([
+        const [items, total, store] = await Promise.all([
             this.prisma.review.findMany({
                 where,
                 skip: (query.page - 1) * query.limit,
@@ -48,9 +48,21 @@ export class ReviewsService {
                 },
             }),
             this.prisma.review.count({ where }),
+            this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } }),
         ]);
+        const primaryLanguage = store?.primary_language ?? 'EN';
 
-        return paginate(items, total, query);
+        const resolvedItems = items.map((review) => ({
+            ...review,
+            employee: review.employee
+                ? {
+                    ...review.employee,
+                    full_name: resolveTranslatedText(review.employee.full_name as TranslatedText, undefined, primaryLanguage),
+                }
+                : review.employee,
+        }));
+
+        return paginate(resolvedItems, total, query);
     }
 
     async findOne(user: AuthUser, id: string) {
@@ -59,7 +71,10 @@ export class ReviewsService {
 
         await this.accessControl.assertStoreAccess(user, review.store_id);
 
-        return this.prisma.review.findUnique({
+        const store = await this.prisma.store.findUnique({ where: { id: review.store_id }, select: { primary_language: true } });
+        const primaryLanguage = store?.primary_language ?? 'EN';
+
+        const full = await this.prisma.review.findUnique({
             where: { id },
             include: {
                 category_ratings: { include: { review_category: true } },
@@ -68,6 +83,17 @@ export class ReviewsService {
                 employee: true,
             },
         });
+        if (!full) return full;
+
+        return {
+            ...full,
+            employee: full.employee
+                ? {
+                    ...full.employee,
+                    full_name: resolveTranslatedText(full.employee.full_name as TranslatedText, undefined, primaryLanguage),
+                }
+                : full.employee,
+        };
     }
 
     async update(user: AuthUser, id: string, dto: UpdateReviewDto) {
@@ -235,7 +261,7 @@ export class ReviewsService {
         // Side effect only — never fail the review submission because an
         // alert couldn't be written.
         try {
-            await this.triggerAlerts(dto, review, employee);
+            await this.triggerAlerts(dto, review, employee, store.primary_language);
         } catch (error) {
             this.logger.error('Failed to process review alert triggers', error as Error);
         }
@@ -278,7 +304,7 @@ export class ReviewsService {
         }
     }
 
-    private async triggerAlerts(dto: CreatePublicReviewDto, review: Review, employee: Employee | null) {
+    private async triggerAlerts(dto: CreatePublicReviewDto, review: Review, employee: Employee | null, primaryLanguage: Language) {
         if (dto.rating <= 2) {
             const preference = await this.prisma.alertPreference.findUnique({
                 where: { store_id_alert_type: { store_id: dto.store_id, alert_type: AlertType.LOW_RATING_REVIEW } },
@@ -325,7 +351,7 @@ export class ReviewsService {
                             store_id: dto.store_id,
                             type: AlertType.POSITIVE_COMPLIMENTS,
                             title: 'Customer compliments',
-                            message: `${employee.full_name} has received ${count} customer compliments today.`,
+                            message: `${resolveTranslatedText(employee.full_name as TranslatedText, undefined, primaryLanguage)} has received ${count} customer compliments today.`,
                             employee_id: dto.employee_id,
                         },
                     });

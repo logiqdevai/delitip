@@ -15,7 +15,7 @@ describe('AnalyticsService', () => {
             tip: { aggregate: jest.fn(), findMany: jest.fn(), count: jest.fn() },
             review: { aggregate: jest.fn(), findMany: jest.fn(), count: jest.fn() },
             employee: { findMany: jest.fn() },
-            store: { findMany: jest.fn() },
+            store: { findMany: jest.fn().mockResolvedValue([]) },
         };
         accessControl = {
             assertOrgAccess: jest.fn(),
@@ -174,9 +174,10 @@ describe('AnalyticsService', () => {
     describe('employeesPerformance', () => {
         it('returns per-employee stats sorted by tips_total descending', async () => {
             prisma.employee.findMany.mockResolvedValue([
-                { id: 'e1', full_name: 'Alice', store_id: 'store1' },
-                { id: 'e2', full_name: 'Bob', store_id: 'store1' },
+                { id: 'e1', full_name: { en: 'Alice' }, store_id: 'store1' },
+                { id: 'e2', full_name: { en: 'Bob' }, store_id: 'store1' },
             ]);
+            prisma.store.findMany.mockResolvedValue([{ id: 'store1', primary_language: 'EN' }]);
             prisma.tip.aggregate
                 .mockResolvedValueOnce({ _sum: { amount: 100 } }) // e1
                 .mockResolvedValueOnce({ _sum: { amount: 900 } }); // e2

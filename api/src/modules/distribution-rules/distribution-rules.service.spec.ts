@@ -35,7 +35,11 @@ describe('DistributionRulesService', () => {
                 delete: jest.fn(),
             },
             distributionRuleRecipient: { createMany: jest.fn(), deleteMany: jest.fn() },
-            store: { update: jest.fn(), findFirst: jest.fn().mockResolvedValue(null) },
+            store: {
+                update: jest.fn(),
+                findFirst: jest.fn().mockResolvedValue(null),
+                findUnique: jest.fn().mockResolvedValue({ primary_language: 'EN' }),
+            },
             tip: { findFirst: jest.fn().mockResolvedValue(null) },
             qrCode: { findFirst: jest.fn().mockResolvedValue(null) },
             $transaction: jest.fn((fn) => fn(prisma)),
@@ -85,7 +89,7 @@ describe('DistributionRulesService', () => {
 
         it('tolerates floating point rounding within 0.01 of 100', async () => {
             prisma.distributionRule.create.mockResolvedValue({ id: 'rule1' });
-            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1' });
+            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1', recipients: [] });
             const dto = { name: 'Split', recipients: [storeRecipient(33.34), storeRecipient(33.33), storeRecipient(33.33)] } as any;
 
             await expect(service.create(user, 'store1', dto)).resolves.toBeDefined();
@@ -94,7 +98,7 @@ describe('DistributionRulesService', () => {
         it('asserts store access with the manage roles before validating', async () => {
             const dto = { name: 'Split', recipients: [storeRecipient(100)] } as any;
             prisma.distributionRule.create.mockResolvedValue({ id: 'rule1' });
-            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1' });
+            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1', recipients: [] });
 
             await service.create(user, 'store1', dto);
 
@@ -103,7 +107,7 @@ describe('DistributionRulesService', () => {
 
         it('creates the rule and its recipients inside a transaction, defaulting sort_order to array index and nulling employee_id for STORE recipients', async () => {
             prisma.distributionRule.create.mockResolvedValue({ id: 'rule1' });
-            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1' });
+            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1', recipients: [] });
             const dto = {
                 name: 'Split',
                 recipients: [employeeRecipient('e1', 60), storeRecipient(40)],
@@ -124,7 +128,7 @@ describe('DistributionRulesService', () => {
 
         it('respects an explicit sort_order over the array index', async () => {
             prisma.distributionRule.create.mockResolvedValue({ id: 'rule1' });
-            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1' });
+            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1', recipients: [] });
             const dto = { name: 'Split', recipients: [storeRecipient(100, 7)] } as any;
 
             await service.create(user, 'store1', dto);
@@ -137,7 +141,7 @@ describe('DistributionRulesService', () => {
 
     describe('findAllForStore', () => {
         it('asserts store access (no role restriction) and lists rules for the store', async () => {
-            prisma.distributionRule.findMany.mockResolvedValue([{ id: 'rule1' }]);
+            prisma.distributionRule.findMany.mockResolvedValue([{ id: 'rule1', recipients: [] }]);
 
             const result = await service.findAllForStore(user, 'store1');
 
@@ -145,7 +149,7 @@ describe('DistributionRulesService', () => {
             expect(prisma.distributionRule.findMany).toHaveBeenCalledWith(
                 expect.objectContaining({ where: { store_id: 'store1' } }),
             );
-            expect(result).toEqual([{ id: 'rule1' }]);
+            expect(result).toEqual([{ id: 'rule1', recipients: [] }]);
         });
     });
 
@@ -176,7 +180,7 @@ describe('DistributionRulesService', () => {
         });
 
         it('asserts store access with the manage roles', async () => {
-            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1', store_id: 'store1' });
+            prisma.distributionRule.findUnique.mockResolvedValue({ id: 'rule1', store_id: 'store1', recipients: [] });
 
             await service.update(user, 'rule1', {} as any);
 
@@ -186,7 +190,7 @@ describe('DistributionRulesService', () => {
         it('updates only the name when recipients are not provided', async () => {
             prisma.distributionRule.findUnique
                 .mockResolvedValueOnce({ id: 'rule1', store_id: 'store1' })
-                .mockResolvedValueOnce({ id: 'rule1', name: 'New name' });
+                .mockResolvedValueOnce({ id: 'rule1', name: 'New name', recipients: [] });
 
             await service.update(user, 'rule1', { name: 'New name' } as any);
 
@@ -198,7 +202,7 @@ describe('DistributionRulesService', () => {
         it('does nothing when neither name nor recipients are provided', async () => {
             prisma.distributionRule.findUnique
                 .mockResolvedValueOnce({ id: 'rule1', store_id: 'store1' })
-                .mockResolvedValueOnce({ id: 'rule1' });
+                .mockResolvedValueOnce({ id: 'rule1', recipients: [] });
 
             await service.update(user, 'rule1', {} as any);
 
@@ -208,7 +212,7 @@ describe('DistributionRulesService', () => {
         it('replaces all recipients inside a transaction when recipients are provided, re-validating them first', async () => {
             prisma.distributionRule.findUnique.mockResolvedValueOnce({ id: 'rule1', store_id: 'store1' });
             prisma.employee.findMany.mockResolvedValue([{ id: 'e1' }]);
-            prisma.distributionRule.findUnique.mockResolvedValueOnce({ id: 'rule1' });
+            prisma.distributionRule.findUnique.mockResolvedValueOnce({ id: 'rule1', recipients: [] });
 
             await service.update(user, 'rule1', { recipients: [employeeRecipient('e1', 100)] } as any);
 
@@ -230,7 +234,7 @@ describe('DistributionRulesService', () => {
 
         it('also updates the name inside the same transaction when both name and recipients are provided', async () => {
             prisma.distributionRule.findUnique.mockResolvedValueOnce({ id: 'rule1', store_id: 'store1' });
-            prisma.distributionRule.findUnique.mockResolvedValueOnce({ id: 'rule1' });
+            prisma.distributionRule.findUnique.mockResolvedValueOnce({ id: 'rule1', recipients: [] });
 
             await service.update(user, 'rule1', { name: 'Renamed', recipients: [storeRecipient(100)] } as any);
 

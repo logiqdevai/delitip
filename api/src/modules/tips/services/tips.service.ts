@@ -4,11 +4,11 @@ import { AccessControlService, AuthUser } from '@/shared/services/access-control
 import { UsersService } from '@/modules/users/services/users.service';
 import { calculateTipDistribution } from '@/shared/utils/distribution/distribution-calculator.util';
 import { generateMockPaymentReference } from '@/shared/utils/mock-payment/mock-payment.utils';
-import { resolveTranslatedText } from '@/shared/utils/translation/translation.utils';
+import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
 import { CreatePublicTipDto } from '../dto/create-public-tip.dto';
 import { TipsQueryType } from '../dto/tips-query.schema';
-import { TipStatus } from 'generated/prisma';
+import { Language, TipStatus } from 'generated/prisma';
 
 const PERFORMANCE_CHANGE_THRESHOLD_PERCENT = 20;
 
@@ -19,6 +19,26 @@ export class TipsService {
         private readonly accessControl: AccessControlService,
         private readonly usersService: UsersService,
     ) { }
+
+    private resolveEmployeeRef(employee: any, primaryLanguage: Language): any {
+        if (!employee) return employee;
+        return { ...employee, full_name: resolveTranslatedText(employee.full_name as TranslatedText, undefined, primaryLanguage) };
+    }
+
+    private resolveTipEmployeeNames(tip: any, primaryLanguage: Language): any {
+        return {
+            ...tip,
+            ...(tip.employee !== undefined ? { employee: this.resolveEmployeeRef(tip.employee, primaryLanguage) } : {}),
+            ...(tip.distributions !== undefined
+                ? {
+                    distributions: tip.distributions.map((d: any) => ({
+                        ...d,
+                        ...(d.employee !== undefined ? { employee: this.resolveEmployeeRef(d.employee, primaryLanguage) } : {}),
+                    })),
+                }
+                : {}),
+        };
+    }
 
     async createPublicTip(dto: CreatePublicTipDto) {
         const qrCode = await this.prisma.qrCode.findUnique({
@@ -106,7 +126,8 @@ export class TipsService {
 
         const thankedNames = assignedEmployees
             .filter((e) => selectedEmployeeIds.includes(e.id))
-            .map((e) => e.full_name);
+            .map((e) => resolveTranslatedText(e.full_name as TranslatedText, undefined, store.primary_language))
+            .filter((name): name is string => !!name);
 
         const defaultThankYou = `Thank you. Your ${(dto.amount / 100).toFixed(2)} ${currency} tip was sent to ${thankedNames.length ? thankedNames.join(' & ') : store.name}. Your appreciation means a lot.`;
 
@@ -217,7 +238,7 @@ export class TipsService {
             if (query.date_to) where.created_at.lte = new Date(query.date_to);
         }
 
-        const [items, total] = await Promise.all([
+        const [items, total, store] = await Promise.all([
             this.prisma.tip.findMany({
                 where,
                 include: { employee: true, qr_code: true, distributions: true },
@@ -226,9 +247,15 @@ export class TipsService {
                 orderBy: { created_at: 'desc' },
             }),
             this.prisma.tip.count({ where }),
+            this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } }),
         ]);
+        const primaryLanguage = store?.primary_language ?? Language.EN;
 
-        return paginate(items, total, query);
+        return paginate(
+            items.map((item) => this.resolveTipEmployeeNames(item, primaryLanguage)),
+            total,
+            query,
+        );
     }
 
     async findOne(user: AuthUser, id: string) {
@@ -246,6 +273,8 @@ export class TipsService {
         if (!tip) throw new NotFoundException('Tip not found');
 
         await this.accessControl.assertStoreAccess(user, tip.store_id);
-        return tip;
+
+        const store = await this.prisma.store.findUnique({ where: { id: tip.store_id }, select: { primary_language: true } });
+        return this.resolveTipEmployeeNames(tip, store?.primary_language ?? Language.EN);
     }
 }

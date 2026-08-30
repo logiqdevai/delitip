@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
+import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { CreateDistributionRuleDto } from './dto/create-distribution-rule.dto';
 import { UpdateDistributionRuleDto } from './dto/update-distribution-rule.dto';
 import { RecipientInputDto } from './dto/recipient-input.dto';
 import { SetDefaultDistributionRuleDto } from './dto/set-default-distribution-rule.dto';
-import { DistributionRecipientType, OrganizationRole } from 'generated/prisma';
+import { DistributionRecipientType, Language, OrganizationRole } from 'generated/prisma';
 
 const MANAGE_ROLES: OrganizationRole[] = [OrganizationRole.OWNER, OrganizationRole.STORE_MANAGER];
 
@@ -18,12 +19,36 @@ const RECIPIENTS_INCLUDE = {
     },
 };
 
+type RuleWithRecipients = {
+    recipients: { employee: { full_name: unknown } | null }[];
+} | null;
+
 @Injectable()
 export class DistributionRulesService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
     ) { }
+
+    private async resolveRecipientNames<T extends RuleWithRecipients>(rule: T, storeId: string): Promise<T> {
+        if (!rule) return rule;
+        const store = await this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } });
+        const primaryLanguage: Language = store?.primary_language ?? Language.EN;
+        return {
+            ...rule,
+            recipients: rule.recipients.map((recipient) =>
+                recipient.employee
+                    ? {
+                        ...recipient,
+                        employee: {
+                            ...recipient.employee,
+                            full_name: resolveTranslatedText(recipient.employee.full_name as TranslatedText, undefined, primaryLanguage),
+                        },
+                    }
+                    : recipient,
+            ),
+        };
+    }
 
     private async validateRecipients(storeId: string, recipients: RecipientInputDto[]) {
         if (!recipients || recipients.length === 0) {
@@ -65,14 +90,14 @@ export class DistributionRulesService {
 
         await this.validateRecipients(storeId, dto.recipients);
 
-        return this.prisma.$transaction(async (tx) => {
-            const rule = await tx.distributionRule.create({
+        const rule = await this.prisma.$transaction(async (tx) => {
+            const created = await tx.distributionRule.create({
                 data: { store_id: storeId, name: dto.name },
             });
 
             await tx.distributionRuleRecipient.createMany({
                 data: dto.recipients.map((recipient, index) => ({
-                    distribution_rule_id: rule.id,
+                    distribution_rule_id: created.id,
                     recipient_type: recipient.recipient_type,
                     employee_id:
                         recipient.recipient_type === DistributionRecipientType.EMPLOYEE
@@ -83,18 +108,38 @@ export class DistributionRulesService {
                 })),
             });
 
-            return tx.distributionRule.findUnique({ where: { id: rule.id }, include: RECIPIENTS_INCLUDE });
+            return tx.distributionRule.findUnique({ where: { id: created.id }, include: RECIPIENTS_INCLUDE });
         });
+
+        return this.resolveRecipientNames(rule, storeId);
     }
 
     async findAllForStore(user: AuthUser, storeId: string) {
         await this.accessControl.assertStoreAccess(user, storeId);
 
-        return this.prisma.distributionRule.findMany({
+        const rules = await this.prisma.distributionRule.findMany({
             where: { store_id: storeId },
             include: RECIPIENTS_INCLUDE,
             orderBy: { created_at: 'desc' },
         });
+
+        const store = await this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } });
+        const primaryLanguage: Language = store?.primary_language ?? Language.EN;
+
+        return rules.map((rule) => ({
+            ...rule,
+            recipients: rule.recipients.map((recipient) =>
+                recipient.employee
+                    ? {
+                        ...recipient,
+                        employee: {
+                            ...recipient.employee,
+                            full_name: resolveTranslatedText(recipient.employee.full_name as TranslatedText, undefined, primaryLanguage),
+                        },
+                    }
+                    : recipient,
+            ),
+        }));
     }
 
     async findOne(user: AuthUser, id: string) {
@@ -103,7 +148,8 @@ export class DistributionRulesService {
 
         await this.accessControl.assertStoreAccess(user, rule.store_id);
 
-        return this.prisma.distributionRule.findUnique({ where: { id }, include: RECIPIENTS_INCLUDE });
+        const full = await this.prisma.distributionRule.findUnique({ where: { id }, include: RECIPIENTS_INCLUDE });
+        return this.resolveRecipientNames(full, rule.store_id);
     }
 
     async update(user: AuthUser, id: string, dto: UpdateDistributionRuleDto) {
@@ -115,7 +161,7 @@ export class DistributionRulesService {
         if (dto.recipients) {
             await this.validateRecipients(rule.store_id, dto.recipients);
 
-            return this.prisma.$transaction(async (tx) => {
+            const updated = await this.prisma.$transaction(async (tx) => {
                 if (dto.name !== undefined) {
                     await tx.distributionRule.update({ where: { id }, data: { name: dto.name } });
                 }
@@ -137,13 +183,16 @@ export class DistributionRulesService {
 
                 return tx.distributionRule.findUnique({ where: { id }, include: RECIPIENTS_INCLUDE });
             });
+
+            return this.resolveRecipientNames(updated, rule.store_id);
         }
 
         if (dto.name !== undefined) {
             await this.prisma.distributionRule.update({ where: { id }, data: { name: dto.name } });
         }
 
-        return this.prisma.distributionRule.findUnique({ where: { id }, include: RECIPIENTS_INCLUDE });
+        const full = await this.prisma.distributionRule.findUnique({ where: { id }, include: RECIPIENTS_INCLUDE });
+        return this.resolveRecipientNames(full, rule.store_id);
     }
 
     async remove(user: AuthUser, id: string) {

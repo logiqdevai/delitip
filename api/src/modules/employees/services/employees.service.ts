@@ -1,12 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { UsersService } from '@/modules/users/services/users.service';
 import { paginate, PaginationQueryType } from '@/shared/utils/pagination/pagination-query.schema';
+import { autoTranslateStub, resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { CreateEmployeeDto } from '../dto/create-employee.dto';
 import { UpdateEmployeeDto } from '../dto/update-employee.dto';
+import { UpdateEmployeeTranslationDto } from '../dto/update-employee-translation.dto';
 import { EmployeesQueryType } from '../dto/employees-query.schema';
-import { OrganizationRole, PayoutStatus } from 'generated/prisma';
+import { Language, OrganizationRole, PayoutStatus } from 'generated/prisma';
 
 @Injectable()
 export class EmployeesService {
@@ -16,26 +18,45 @@ export class EmployeesService {
         private readonly usersService: UsersService,
     ) { }
 
+    // Resolves the raw Json full_name map into a plain display string (primary
+    // language) alongside the raw map, which only the edit form needs.
+    private toResponse<T extends { full_name: unknown }>(employee: T, primaryLanguage: Language) {
+        const translations = (employee.full_name as TranslatedText) || {};
+        return {
+            ...employee,
+            full_name: resolveTranslatedText(translations, undefined, primaryLanguage) ?? '',
+            full_name_translations: translations,
+        };
+    }
+
     async create(user: AuthUser, storeId: string, dto: CreateEmployeeDto) {
         await this.accessControl.assertStoreAccess(user, storeId, [OrganizationRole.OWNER, OrganizationRole.STORE_MANAGER]);
+
+        const store = await this.prisma.store.findUnique({ where: { id: storeId } });
+        if (!store) throw new NotFoundException('Store not found');
 
         const firstName = dto.full_name.trim().split(/\s+/)[0];
         const linkedUser = await this.usersService.findOrCreateByEmail(dto.email, { first_name: firstName });
 
-        return this.prisma.employee.create({
+        const employee = await this.prisma.employee.create({
             data: {
                 store_id: storeId,
                 user_id: linkedUser.id,
-                full_name: dto.full_name,
+                full_name: autoTranslateStub(store.primary_language, dto.full_name, store.supported_languages),
                 email: dto.email,
                 position: dto.position,
                 photo_document_id: dto.photo_document_id,
             },
         });
+
+        return this.toResponse(employee, store.primary_language);
     }
 
     async findAllForStore(user: AuthUser, storeId: string, query: EmployeesQueryType) {
         await this.accessControl.assertStoreAccess(user, storeId);
+
+        const store = await this.prisma.store.findUnique({ where: { id: storeId } });
+        if (!store) throw new NotFoundException('Store not found');
 
         const where = {
             store_id: storeId,
@@ -53,16 +74,25 @@ export class EmployeesService {
             this.prisma.employee.count({ where }),
         ]);
 
-        return paginate(items, total, query);
+        return paginate(
+            items.map((employee) => this.toResponse(employee, store.primary_language)),
+            total,
+            query,
+        );
     }
 
     async findOne(user: AuthUser, id: string) {
         const { employee } = await this.accessControl.assertEmployeeSelfOrStoreAccess(user, id);
 
-        return this.prisma.employee.findUnique({
+        const store = await this.prisma.store.findUnique({ where: { id: employee.store_id } });
+        if (!store) throw new NotFoundException('Store not found');
+
+        const full = await this.prisma.employee.findUnique({
             where: { id: employee.id },
             include: { photo_document: true },
         });
+
+        return this.toResponse(full!, store.primary_language);
     }
 
     async update(user: AuthUser, id: string, dto: UpdateEmployeeDto) {
@@ -71,17 +101,52 @@ export class EmployeesService {
             OrganizationRole.STORE_MANAGER,
         ]);
 
-        // Employees updating their own record may only change their photo — other fields require a store role.
-        const data = isSelf ? { photo_document_id: dto.photo_document_id } : dto;
+        const store = await this.prisma.store.findUnique({ where: { id: employee.store_id } });
+        if (!store) throw new NotFoundException('Store not found');
 
-        return this.prisma.employee.update({ where: { id: employee.id }, data });
+        // Employees updating their own record may only change their photo — other fields require a store role.
+        const { full_name, ...rest } = dto;
+        const data: Record<string, unknown> = isSelf ? { photo_document_id: dto.photo_document_id } : { ...rest };
+
+        if (!isSelf && full_name !== undefined) {
+            data.full_name = autoTranslateStub(
+                store.primary_language,
+                full_name,
+                store.supported_languages,
+                employee.full_name as TranslatedText,
+            );
+        }
+
+        const updated = await this.prisma.employee.update({ where: { id: employee.id }, data });
+        return this.toResponse(updated, store.primary_language);
     }
 
-    async remove(user: AuthUser, id: string) {
+    async updateTranslation(user: AuthUser, id: string, dto: UpdateEmployeeTranslationDto) {
         const employee = await this.prisma.employee.findUnique({ where: { id } });
         if (!employee) throw new NotFoundException('Employee not found');
 
-        await this.accessControl.assertStoreAccess(user, employee.store_id, [OrganizationRole.OWNER, OrganizationRole.STORE_MANAGER]);
+        await this.accessControl.assertStoreAccess(user, employee.store_id, [
+            OrganizationRole.OWNER,
+            OrganizationRole.STORE_MANAGER,
+        ]);
+
+        const store = await this.prisma.store.findUnique({ where: { id: employee.store_id } });
+        if (!store) throw new NotFoundException('Store not found');
+
+        const existing = (employee.full_name as TranslatedText) || {};
+        const merged: TranslatedText = { ...existing, [dto.language.toLowerCase()]: dto.text };
+
+        const updated = await this.prisma.employee.update({ where: { id: employee.id }, data: { full_name: merged } });
+        return this.toResponse(updated, store.primary_language);
+    }
+
+    async remove(user: AuthUser, id: string) {
+        if (!this.accessControl.isPlatformAdmin(user)) {
+            throw new ForbiddenException('Only platform admins can delete employees');
+        }
+
+        const employee = await this.prisma.employee.findUnique({ where: { id } });
+        if (!employee) throw new NotFoundException('Employee not found');
 
         await this.prisma.employee.delete({ where: { id } });
         return { success: true };

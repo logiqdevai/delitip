@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
+import { CountryFlag } from "@/components/ui/country-flag";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import {
 import { ImagePicker } from "@/components/ui/image-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { StoreLanguageFormOptions } from "@/config/constants/dropdowns/stores/store-language-form.options";
 import {
   useDeleteDocument,
   useUploadDocument,
@@ -24,12 +26,15 @@ import { DocumentTypes } from "@/features/documents/interfaces/documents.interfa
 import {
   useCreateEmployee,
   useUpdateEmployee,
+  useUpdateEmployeeTranslation,
 } from "@/features/employees/hooks/use-employees";
 import type { Employee } from "@/features/employees/interfaces/employees.interfaces";
 import {
   employeeFormSchema,
   type EmployeeFormData,
 } from "@/features/employees/validation-schemas/employees.schema";
+import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import type { Language } from "@/features/stores/interfaces/stores.interfaces";
 
 interface EmployeeFormDialogProps {
   open: boolean;
@@ -38,6 +43,53 @@ interface EmployeeFormDialogProps {
   employee?: Employee | null;
 }
 
+const getLanguageLabel = (language: Language): string =>
+  StoreLanguageFormOptions.find((option) => option.id === language)?.label ??
+  language;
+
+const EmployeeTranslationRow: FC<{
+  employeeId: string;
+  language: Language;
+  initialText: string;
+}> = ({ employeeId, language, initialText }) => {
+  const updateTranslation = useUpdateEmployeeTranslation();
+  const [text, setText] = useState(initialText);
+  const dirty = text !== initialText;
+  const option = StoreLanguageFormOptions.find((item) => item.id === language);
+
+  const handleSave = () => {
+    updateTranslation.mutate({
+      id: employeeId,
+      payload: { language, text },
+    });
+  };
+
+  return (
+    <div className="flex items-end gap-2">
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <Label className="flex items-center gap-1.5 text-[11px] text-zinc-500">
+          {option ? <CountryFlag countryCode={option.flagCountryCode} /> : null}
+          {getLanguageLabel(language)}
+        </Label>
+        <Input
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          placeholder="Name in this language"
+        />
+      </div>
+      <Button
+        type="button"
+        size="sm"
+        variant="outline"
+        disabled={!dirty || updateTranslation.isPending}
+        onClick={handleSave}
+      >
+        {updateTranslation.isPending ? "Saving…" : "Save"}
+      </Button>
+    </div>
+  );
+};
+
 export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
   open,
   onOpenChange,
@@ -45,6 +97,7 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
   employee,
 }) => {
   const isEdit = !!employee;
+  const { store } = useWorkspace();
   const createEmployee = useCreateEmployee(storeId);
   const updateEmployee = useUpdateEmployee();
   const uploadDocument = useUploadDocument();
@@ -79,15 +132,22 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
     },
   });
 
+  const primaryLanguage: Language = store?.primary_language ?? "EN";
+
   useEffect(() => {
     if (!open) {
       return;
     }
+    const primaryKey = primaryLanguage.toLowerCase();
+    const seededName = employee
+      ? (employee.full_name_translations?.[primaryKey] ?? employee.full_name)
+      : "";
     reset({
-      full_name: employee?.full_name ?? "",
+      full_name: seededName,
       email: employee?.email ?? "",
       position: employee?.position ?? "",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [employee, open, reset]);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -112,6 +172,10 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
       onOpenChange(false);
     } catch {}
   });
+
+  const otherLanguages = (store?.supported_languages ?? []).filter(
+    (language) => language !== primaryLanguage,
+  );
 
   return (
     <Dialog
@@ -166,7 +230,12 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
           />
 
           <div className="space-y-1.5">
-            <Label htmlFor="employee-full-name">Full name</Label>
+            <Label htmlFor="employee-full-name">
+              Full name{" "}
+              <span className="font-normal text-zinc-400">
+                ({getLanguageLabel(primaryLanguage)})
+              </span>
+            </Label>
             <Input
               id="employee-full-name"
               autoComplete="name"
@@ -209,6 +278,32 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
               <p className="text-xs text-red-600">{errors.position.message}</p>
             ) : null}
           </div>
+
+          {isEdit && employee && otherLanguages.length > 0 ? (
+            <div className="space-y-3 border-t border-zinc-100 pt-4">
+              <div>
+                <p className="text-xs font-bold text-ink-charcoal">
+                  Name in other languages
+                </p>
+                <p className="text-[11px] text-zinc-500">
+                  Shown to customers who view the tip page in a different
+                  language.
+                </p>
+              </div>
+              <div className="space-y-3">
+                {otherLanguages.map((language) => (
+                  <EmployeeTranslationRow
+                    key={language}
+                    employeeId={employee.id}
+                    language={language}
+                    initialText={
+                      employee.full_name_translations?.[language.toLowerCase()] ?? ""
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           <DialogFooter className="gap-2 sm:gap-2">
             <Button

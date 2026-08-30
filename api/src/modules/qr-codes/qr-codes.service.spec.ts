@@ -18,6 +18,7 @@ describe('QrCodesService', () => {
             distributionRule: { findFirst: jest.fn() },
             employee: { findMany: jest.fn() },
             spot: { findMany: jest.fn() },
+            store: { findUnique: jest.fn().mockResolvedValue({ primary_language: 'EN' }) },
             tip: { count: jest.fn(), aggregate: jest.fn() },
             review: { count: jest.fn() },
             $transaction: jest.fn((fn) => fn(prisma)),
@@ -32,7 +33,7 @@ describe('QrCodesService', () => {
         beforeEach(() => {
             // code-availability check inside ensureUniqueQrCode
             prisma.qrCode.findUnique.mockImplementation(({ where }: any) =>
-                where.code ? Promise.resolve(null) : Promise.resolve({ id: 'qr1' }),
+                where.code ? Promise.resolve(null) : Promise.resolve({ id: 'qr1', employees: [] }),
             );
         });
 
@@ -70,7 +71,7 @@ describe('QrCodesService', () => {
         });
 
         it('creates the QR code with a generated code and defaults selection_mode to CHOOSE_ONE', async () => {
-            const full = { id: 'qr1', code: 'ABC12345' };
+            const full = { id: 'qr1', code: 'ABC12345', employees: [] };
             prisma.qrCode.create.mockResolvedValue({ id: 'qr1' });
             prisma.qrCode.findUnique.mockImplementation(({ where }: any) =>
                 where.code ? Promise.resolve(null) : Promise.resolve(full),
@@ -88,7 +89,7 @@ describe('QrCodesService', () => {
             });
             expect(prisma.qrCodeEmployee.createMany).not.toHaveBeenCalled();
             expect(prisma.qrCodeSpot.createMany).not.toHaveBeenCalled();
-            expect(result).toBe(full);
+            expect(result).toEqual(full);
         });
 
         it('respects an explicit selection_mode and creates employee/spot links when provided', async () => {
@@ -120,13 +121,13 @@ describe('QrCodesService', () => {
 
     describe('findAllForStore', () => {
         it('asserts store access (no role restriction) and paginates', async () => {
-            prisma.qrCode.findMany.mockResolvedValue([{ id: 'qr1' }]);
+            prisma.qrCode.findMany.mockResolvedValue([{ id: 'qr1', employees: [] }]);
             prisma.qrCode.count.mockResolvedValue(1);
 
             const result = await service.findAllForStore(user, 'store1', { page: 1, limit: 20 } as any);
 
             expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1');
-            expect(result.data).toEqual([{ id: 'qr1' }]);
+            expect(result.data).toEqual([{ id: 'qr1', employees: [] }]);
         });
 
         it('applies the is_active filter when provided', async () => {
@@ -181,7 +182,7 @@ describe('QrCodesService', () => {
         it('only writes fields present on the DTO', async () => {
             prisma.qrCode.findUnique
                 .mockResolvedValueOnce({ id: 'qr1', store_id: 'store1' })
-                .mockResolvedValueOnce({ id: 'qr1', label: 'New label' });
+                .mockResolvedValueOnce({ id: 'qr1', label: 'New label', employees: [] });
 
             await service.update(user, 'qr1', { label: 'New label' } as any);
 
@@ -191,7 +192,7 @@ describe('QrCodesService', () => {
         it('replaces employee links when employee_ids is a non-empty array', async () => {
             prisma.qrCode.findUnique
                 .mockResolvedValueOnce({ id: 'qr1', store_id: 'store1' })
-                .mockResolvedValueOnce({ id: 'qr1' });
+                .mockResolvedValueOnce({ id: 'qr1', employees: [] });
             prisma.employee.findMany.mockResolvedValue([{ id: 'e1' }]);
 
             await service.update(user, 'qr1', { employee_ids: ['e1'] } as any);
@@ -203,7 +204,7 @@ describe('QrCodesService', () => {
         it('clears employee links (delete only, no create) when employee_ids is an empty array', async () => {
             prisma.qrCode.findUnique
                 .mockResolvedValueOnce({ id: 'qr1', store_id: 'store1' })
-                .mockResolvedValueOnce({ id: 'qr1' });
+                .mockResolvedValueOnce({ id: 'qr1', employees: [] });
 
             await service.update(user, 'qr1', { employee_ids: [] } as any);
 
@@ -214,7 +215,7 @@ describe('QrCodesService', () => {
         it('leaves employee links untouched when employee_ids is not provided', async () => {
             prisma.qrCode.findUnique
                 .mockResolvedValueOnce({ id: 'qr1', store_id: 'store1' })
-                .mockResolvedValueOnce({ id: 'qr1' });
+                .mockResolvedValueOnce({ id: 'qr1', employees: [] });
 
             await service.update(user, 'qr1', { label: 'x' } as any);
 
@@ -292,6 +293,7 @@ describe('QrCodesService', () => {
                 allow_custom_tip_amount: true,
                 primary_color: '#000',
                 secondary_color: '#fff',
+                primary_language: 'EN',
                 is_active: true,
                 logo_document: null,
             },
@@ -324,12 +326,12 @@ describe('QrCodesService', () => {
             prisma.qrCode.findUnique.mockResolvedValue(
                 buildQrCode({
                     employees: [
-                        { employee: { id: 'e1', full_name: 'Active One', position: 'Waiter', is_active: true, photo_document: null } },
-                        { employee: { id: 'e2', full_name: 'Inactive One', position: 'Waiter', is_active: false, photo_document: null } },
+                        { employee: { id: 'e1', full_name: { en: 'Active One' }, position: 'Waiter', is_active: true, photo_document: null } },
+                        { employee: { id: 'e2', full_name: { en: 'Inactive One' }, position: 'Waiter', is_active: false, photo_document: null } },
                         {
                             employee: {
                                 id: 'e3',
-                                full_name: 'Has Photo',
+                                full_name: { en: 'Has Photo' },
                                 position: 'Chef',
                                 is_active: true,
                                 photo_document: { url: 'https://example.com/e3.png' },
