@@ -155,7 +155,7 @@ export const BrandingSettingsForm: FC = () => {
   };
 
   return (
-    <div className="max-w-2xl space-y-5 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
+    <div className="@container max-w-2xl space-y-5 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">Branding</h2>
         <p className="mt-0.5 text-xs text-zinc-500">
@@ -163,7 +163,7 @@ export const BrandingSettingsForm: FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 @md:grid-cols-2">
         <ImageUploadField
           label="Logo"
           currentUrl={store.logo_document?.url}
@@ -188,8 +188,8 @@ export const BrandingSettingsForm: FC = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="space-y-1.5">
+      <div className="grid grid-cols-1 gap-4 @md:grid-cols-2">
+        <div className="min-w-0 space-y-1.5">
           <Label htmlFor="primary-color">Primary color</Label>
           <div className="flex items-center gap-2">
             <input
@@ -206,7 +206,7 @@ export const BrandingSettingsForm: FC = () => {
             />
           </div>
         </div>
-        <div className="space-y-1.5">
+        <div className="min-w-0 space-y-1.5">
           <Label htmlFor="secondary-color">Secondary color</Label>
           <div className="flex items-center gap-2">
             <input

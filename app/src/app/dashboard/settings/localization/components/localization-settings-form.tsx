@@ -159,7 +159,7 @@ export const LocalizationSettingsForm: FC = () => {
   );
 
   return (
-    <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
+    <div className="@container max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
       <div className="flex items-center gap-2">
         <Globe className="size-4 text-zinc-400" strokeWidth={2} />
         <h2 className="text-sm font-bold text-ink-charcoal">Localization</h2>
@@ -198,9 +198,9 @@ export const LocalizationSettingsForm: FC = () => {
 
       <div className="space-y-2">
         <Label>Supported languages</Label>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 @xs:grid-cols-2 @md:grid-cols-3">
           {StoreLanguageFormOptions.map((option) => (
-            <label key={option.id} className="flex items-center gap-2 text-xs">
+            <label key={option.id} className="flex min-w-0 items-center gap-2 text-xs">
               <Checkbox
                 checked={supportedLanguages.includes(option.id)}
                 onCheckedChange={() => toggleSupported(option.id)}
@@ -243,7 +243,7 @@ export const LocalizationSettingsForm: FC = () => {
               flow shows real, correct text once a switcher exists.
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 @md:grid-cols-2">
             {otherLanguages.map((language) => (
               <TranslationRow
                 key={language}

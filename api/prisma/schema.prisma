@@ -49,6 +49,10 @@ enum StoreIndustry {
   SALON
   SPA
   RETAIL
+  BARBERSHOP
+  FITNESS
+  FOOD_TRUCK
+  CLEANING
   OTHER
 }
 

@@ -6,6 +6,10 @@ export const StoreIndustries = {
   SALON: "SALON",
   SPA: "SPA",
   RETAIL: "RETAIL",
+  BARBERSHOP: "BARBERSHOP",
+  FITNESS: "FITNESS",
+  FOOD_TRUCK: "FOOD_TRUCK",
+  CLEANING: "CLEANING",
   OTHER: "OTHER",
 } as const;
 export type StoreIndustry =

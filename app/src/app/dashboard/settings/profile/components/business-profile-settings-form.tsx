@@ -22,8 +22,6 @@ import {
   type StoreProfileFormData,
 } from "@/features/stores/validation-schemas/stores.schema";
 import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
-import { StoreCurrencyFormOptions } from "@/config/constants/dropdowns/stores/store-currency-form.options";
-import { getStoreTimezoneOptions } from "@/config/constants/dropdowns/stores/store-timezone-form.options";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const BusinessProfileSettingsForm: FC = () => {
@@ -41,8 +39,6 @@ export const BusinessProfileSettingsForm: FC = () => {
     defaultValues: {
       name: "",
       industry: "OTHER",
-      timezone: "UTC",
-      currency: "EUR",
       address_line: "",
       city: "",
       country: "",
@@ -55,8 +51,6 @@ export const BusinessProfileSettingsForm: FC = () => {
     reset({
       name: store.name,
       industry: store.industry,
-      timezone: store.timezone,
-      currency: store.currency,
       address_line: store.address_line ?? "",
       city: store.city ?? "",
       country: store.country ?? "",
@@ -73,8 +67,6 @@ export const BusinessProfileSettingsForm: FC = () => {
       payload: {
         name: values.name,
         industry: values.industry,
-        timezone: values.timezone,
-        currency: values.currency,
         address_line: values.address_line || undefined,
         city: values.city || undefined,
         country: values.country || undefined,
@@ -92,7 +84,7 @@ export const BusinessProfileSettingsForm: FC = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs"
+      className="@container max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs"
       noValidate
     >
       <div>
@@ -117,100 +109,34 @@ export const BusinessProfileSettingsForm: FC = () => {
         ) : null}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="space-y-1.5">
-          <Label htmlFor="store-industry">Industry</Label>
-          <Controller
-            name="industry"
-            control={control}
-            render={({ field }) => (
-              <Select
-                items={StoreIndustryFormOptions.map((option) => ({
-                  label: option.label,
-                  value: option.id,
-                }))}
-                value={field.value}
-                onValueChange={field.onChange}
-              >
-                <SelectTrigger id="store-industry" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {StoreIndustryFormOptions.map((option) => (
-                      <SelectItem key={option.id} value={option.id}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )}
-          />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="store-currency">Currency</Label>
-          <Controller
-            name="currency"
-            control={control}
-            render={({ field }) => (
-              <Select
-                items={StoreCurrencyFormOptions.map((option) => ({
-                  label: option.label,
-                  value: option.id,
-                }))}
-                value={field.value}
-                onValueChange={field.onChange}
-              >
-                <SelectTrigger id="store-currency" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {StoreCurrencyFormOptions.map((option) => (
-                      <SelectItem key={option.id} value={option.id}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )}
-          />
-        </div>
-      </div>
-
       <div className="space-y-1.5">
-        <Label htmlFor="store-timezone">Timezone</Label>
+        <Label htmlFor="store-industry">Industry</Label>
         <Controller
-          name="timezone"
+          name="industry"
           control={control}
-          render={({ field }) => {
-            const timezoneOptions = getStoreTimezoneOptions(store.timezone);
-            return (
-              <Select
-                items={timezoneOptions.map((option) => ({
-                  label: option.label,
-                  value: option.id,
-                }))}
-                value={field.value}
-                onValueChange={field.onChange}
-              >
-                <SelectTrigger id="store-timezone" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {timezoneOptions.map((option) => (
-                      <SelectItem key={option.id} value={option.id}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            );
-          }}
+          render={({ field }) => (
+            <Select
+              items={StoreIndustryFormOptions.map((option) => ({
+                label: option.label,
+                value: option.id,
+              }))}
+              value={field.value}
+              onValueChange={field.onChange}
+            >
+              <SelectTrigger id="store-industry" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {StoreIndustryFormOptions.map((option) => (
+                    <SelectItem key={option.id} value={option.id}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
         />
       </div>
 
@@ -219,12 +145,12 @@ export const BusinessProfileSettingsForm: FC = () => {
         <Input id="store-address" placeholder="Street address" {...register("address_line")} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="space-y-1.5">
+      <div className="grid grid-cols-1 gap-4 @sm:grid-cols-2 @lg:grid-cols-3">
+        <div className="min-w-0 space-y-1.5">
           <Label htmlFor="store-city">City</Label>
           <Input id="store-city" placeholder="City" {...register("city")} />
         </div>
-        <div className="space-y-1.5">
+        <div className="min-w-0 space-y-1.5">
           <Label htmlFor="store-country">Country</Label>
           <Input
             id="store-country"
@@ -232,7 +158,7 @@ export const BusinessProfileSettingsForm: FC = () => {
             {...register("country")}
           />
         </div>
-        <div className="space-y-1.5">
+        <div className="min-w-0 space-y-1.5 @sm:col-span-2 @lg:col-span-1">
           <Label htmlFor="store-postal">Postal code</Label>
           <Input
             id="store-postal"

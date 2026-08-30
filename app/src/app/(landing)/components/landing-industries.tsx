@@ -1,10 +1,14 @@
 import { type FC } from "react";
 import {
+  Dumbbell,
   Headphones,
   Hotel,
   Scissors,
+  Sparkles,
   Store,
+  Truck,
   UtensilsCrossed,
+  Wine,
 } from "lucide-react";
 
 const industries = [
@@ -13,6 +17,10 @@ const industries = [
   { label: "Hotels & hospitality", Icon: Hotel },
   { label: "Salons & clinics", Icon: Scissors },
   { label: "Restaurants & cafés", Icon: UtensilsCrossed },
+  { label: "Bars & lounges", Icon: Wine },
+  { label: "Spas & wellness", Icon: Sparkles },
+  { label: "Fitness & training", Icon: Dumbbell },
+  { label: "Food trucks", Icon: Truck },
 ] as const;
 
 export const LandingIndustries: FC = () => {

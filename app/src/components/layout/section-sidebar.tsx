@@ -20,8 +20,8 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
   const pathname = usePathname();
 
   return (
-    <div className="w-full shrink-0 self-start md:w-56">
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-2 shadow-xs md:hidden">
+    <div className="w-full shrink-0 self-start lg:w-56">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white p-2 shadow-xs lg:hidden">
         <nav className="flex gap-1 overflow-x-auto">
           {items.map((item) => {
             const Icon = item.icon;
@@ -52,7 +52,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
         </nav>
       </div>
 
-      <nav className="sticky top-6 hidden rounded-2xl border border-zinc-200/80 bg-white p-2 shadow-xs md:block">
+      <nav className="sticky top-6 hidden rounded-2xl border border-zinc-200/80 bg-white p-2 shadow-xs lg:block">
         <ul className="flex flex-col gap-0.5">
           {items.map((item) => {
             const Icon = item.icon;

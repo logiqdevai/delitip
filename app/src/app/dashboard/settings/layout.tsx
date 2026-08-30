@@ -10,7 +10,7 @@ const SettingsLayout: FC<SettingsLayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col gap-6">
       <SettingsPageHeader />
-      <div className="flex w-full min-h-0 flex-col gap-4 md:flex-row md:items-start md:gap-6">
+      <div className="flex w-full min-h-0 flex-col gap-4 lg:flex-row lg:items-start lg:gap-6">
         <SettingsSidebar />
         <div className="min-w-0 flex-1">{children}</div>
       </div>

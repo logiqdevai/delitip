@@ -15,6 +15,10 @@ const industryLinks = [
   "Retail & checkout",
   "Hotels & hospitality",
   "Restaurants & cafés",
+  "Bars & lounges",
+  "Spas & wellness",
+  "Fitness & training",
+  "Food trucks",
 ] as const;
 
 const trustLinks = [

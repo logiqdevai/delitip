@@ -199,6 +199,10 @@ export const StoreIndustry: {
   SALON: 'SALON',
   SPA: 'SPA',
   RETAIL: 'RETAIL',
+  BARBERSHOP: 'BARBERSHOP',
+  FITNESS: 'FITNESS',
+  FOOD_TRUCK: 'FOOD_TRUCK',
+  CLEANING: 'CLEANING',
   OTHER: 'OTHER'
 };
 

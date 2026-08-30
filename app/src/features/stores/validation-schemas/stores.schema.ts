@@ -27,8 +27,6 @@ export type BusinessSetupFormData = z.infer<typeof businessSetupSchema>;
 export const storeProfileFormSchema = z.object({
   name: z.string().trim().min(1, "Business name is required"),
   industry: z.enum(storeIndustryValues),
-  timezone: z.string().trim().min(1, "Timezone is required"),
-  currency: z.enum(currencyValues),
   address_line: z.string().trim().optional(),
   city: z.string().trim().optional(),
   country: z.string().trim().optional(),

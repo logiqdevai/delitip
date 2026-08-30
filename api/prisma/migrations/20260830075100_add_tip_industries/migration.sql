@@ -1,0 +1,5 @@
+-- AlterEnum
+ALTER TYPE "StoreIndustry" ADD VALUE 'BARBERSHOP';
+ALTER TYPE "StoreIndustry" ADD VALUE 'FITNESS';
+ALTER TYPE "StoreIndustry" ADD VALUE 'FOOD_TRUCK';
+ALTER TYPE "StoreIndustry" ADD VALUE 'CLEANING';

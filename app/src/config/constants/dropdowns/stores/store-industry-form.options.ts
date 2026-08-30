@@ -12,6 +12,10 @@ export const StoreIndustryFormOptions: { id: StoreIndustry; label: string }[] =
     { id: StoreIndustries.SALON, label: "Salon" },
     { id: StoreIndustries.SPA, label: "Spa" },
     { id: StoreIndustries.RETAIL, label: "Retail" },
+    { id: StoreIndustries.BARBERSHOP, label: "Barbershop" },
+    { id: StoreIndustries.FITNESS, label: "Fitness & Personal Training" },
+    { id: StoreIndustries.FOOD_TRUCK, label: "Food Truck" },
+    { id: StoreIndustries.CLEANING, label: "Cleaning Services" },
     { id: StoreIndustries.OTHER, label: "Other Service Business" },
   ];
 

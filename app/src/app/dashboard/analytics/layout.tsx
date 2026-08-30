@@ -15,7 +15,7 @@ const AnalyticsLayout: FC<AnalyticsLayoutProps> = ({ children }) => {
     <AnalyticsPeriodProvider>
       <div className="flex flex-col gap-6">
         <AnalyticsPageHeader />
-        <div className="flex w-full min-h-0 flex-col gap-4 md:flex-row md:items-start md:gap-6">
+        <div className="flex w-full min-h-0 flex-col gap-4 lg:flex-row lg:items-start lg:gap-6">
           <AnalyticsSidebar />
           <div className="min-w-0 flex-1">
             <AnalyticsWorkspaceGate>{children}</AnalyticsWorkspaceGate>
