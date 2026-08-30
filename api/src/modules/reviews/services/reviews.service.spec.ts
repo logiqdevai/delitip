@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { AlertType, AuthRole, OrganizationRole, ReviewSentiment, ReviewVisibility, Language } from 'generated/prisma';
+import { AlertType, AuthRole, OrganizationRole, ReviewSentiment, Language } from 'generated/prisma';
 import { ReviewsService } from './reviews.service';
 
 describe('ReviewsService', () => {
@@ -61,7 +61,6 @@ describe('ReviewsService', () => {
                 limit: 10,
                 employee_id: 'emp1',
                 min_rating: 4,
-                visibility: ReviewVisibility.PUBLIC,
                 search: 'great',
             } as any);
 
@@ -71,7 +70,6 @@ describe('ReviewsService', () => {
                         store_id: 'store1',
                         employee_id: 'emp1',
                         rating: { gte: 4 },
-                        visibility: ReviewVisibility.PUBLIC,
                         comment: { contains: 'great', mode: 'insensitive' },
                     },
                     skip: 10,
@@ -155,21 +153,9 @@ describe('ReviewsService', () => {
             expect(prisma.reviewTagAssignment.createMany).not.toHaveBeenCalled();
         });
 
-        it('updates visibility when provided', async () => {
+        it('returns the re-fetched review after tag updates', async () => {
             prisma.review.findUnique.mockResolvedValue({ id: 'r1', store_id: 'store1' });
-            jest.spyOn(service, 'findOne').mockResolvedValue({ id: 'r1' } as any);
-
-            await service.update(user, 'r1', { visibility: ReviewVisibility.PUBLIC });
-
-            expect(prisma.review.update).toHaveBeenCalledWith({
-                where: { id: 'r1' },
-                data: { visibility: ReviewVisibility.PUBLIC },
-            });
-        });
-
-        it('does not touch visibility when not provided, and returns the re-fetched review', async () => {
-            prisma.review.findUnique.mockResolvedValue({ id: 'r1', store_id: 'store1' });
-            const refetched = { id: 'r1', visibility: ReviewVisibility.PRIVATE };
+            const refetched = { id: 'r1' };
             jest.spyOn(service, 'findOne').mockResolvedValue(refetched as any);
 
             const result = await service.update(user, 'r1', {});
@@ -305,7 +291,7 @@ describe('ReviewsService', () => {
             ).rejects.toThrow(BadRequestException);
         });
 
-        it('buckets rating >= 4 as POSITIVE sentiment, marks it redirected+PUBLIC when above threshold, and returns the redirect payload', async () => {
+        it('buckets rating >= 4 as POSITIVE sentiment, marks it redirected when above threshold, and returns the redirect payload', async () => {
             const created = { id: 'r1' };
             prisma.review.create = jest.fn().mockResolvedValue(created);
 
@@ -315,7 +301,6 @@ describe('ReviewsService', () => {
                 expect.objectContaining({
                     data: expect.objectContaining({
                         sentiment: ReviewSentiment.POSITIVE,
-                        visibility: ReviewVisibility.PUBLIC,
                         redirected_to_public_platform: true,
                     }),
                 }),
@@ -327,14 +312,14 @@ describe('ReviewsService', () => {
             });
         });
 
-        it('buckets rating === 3 as NEUTRAL sentiment and keeps it PRIVATE/not redirected', async () => {
+        it('buckets rating === 3 as NEUTRAL sentiment and does not redirect', async () => {
             prisma.review.create = jest.fn().mockResolvedValue({ id: 'r1' });
 
             const result = await service.createPublic({ ...baseDto, rating: 3 });
 
             expect(prisma.review.create).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    data: expect.objectContaining({ sentiment: ReviewSentiment.NEUTRAL, visibility: ReviewVisibility.PRIVATE }),
+                    data: expect.objectContaining({ sentiment: ReviewSentiment.NEUTRAL, redirected_to_public_platform: false }),
                 }),
             );
             expect(result.redirect).toEqual({ should_redirect: false, url: 'https://google.com/review' });

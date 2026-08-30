@@ -21,7 +21,6 @@ export class ReviewsController {
     @ApiQuery({ name: 'limit', required: false })
     @ApiQuery({ name: 'employee_id', required: false })
     @ApiQuery({ name: 'min_rating', required: false })
-    @ApiQuery({ name: 'visibility', required: false })
     @ApiQuery({ name: 'search', required: false })
     findAllForStore(
         @CurrentUser() user: AuthUser,
@@ -38,7 +37,7 @@ export class ReviewsController {
     }
 
     @Patch('reviews/:id')
-    @ApiOperation({ summary: 'Update a review\'s visibility and/or replace its tag assignments' })
+    @ApiOperation({ summary: 'Replace a review\'s tag assignments' })
     update(@CurrentUser() user: AuthUser, @Param('id') id: string, @Body() dto: UpdateReviewDto) {
         return this.reviewsService.update(user, id, dto);
     }

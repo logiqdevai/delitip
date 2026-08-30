@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReview } from "@/features/reviews/hooks/use-reviews";
-import { getReviewVisibilityLabel } from "@/config/constants/dropdowns/reviews/review-visibility-form.options";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 
@@ -53,7 +52,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
               const review = reviewQuery.data;
               return (
                 <>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center">
                     <span className="flex items-center gap-0.5">
                       {Array.from({ length: 5 }).map((_, index) => (
                         <Star
@@ -66,16 +65,6 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
                           )}
                         />
                       ))}
-                    </span>
-                    <span
-                      className={cn(
-                        "rounded-full px-2 py-0.5 text-[11px] font-semibold",
-                        review.visibility === "PUBLIC"
-                          ? "bg-brand-50 text-brand-700"
-                          : "bg-zinc-100 text-zinc-600",
-                      )}
-                    >
-                      {getReviewVisibilityLabel(review.visibility)}
                     </span>
                   </div>
 

@@ -27,7 +27,6 @@ import { useStoreReviews } from "@/features/reviews/hooks/use-reviews";
 import type { ReviewsQuery } from "@/features/reviews/interfaces/reviews.interfaces";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
-import { getReviewVisibilityLabel } from "@/config/constants/dropdowns/reviews/review-visibility-form.options";
 import { cn } from "@/lib/utils";
 
 const RATING_OPTIONS = [5, 4, 3, 2, 1] as const;
@@ -204,16 +203,6 @@ export const ReviewsPageContent: FC = () => {
                       {review.employee?.full_name ?? "Store"}
                     </span>
                     <StarRating rating={review.rating} />
-                    <span
-                      className={cn(
-                        "rounded-full px-2 py-0.5 text-[10px] font-semibold",
-                        review.visibility === "PUBLIC"
-                          ? "bg-brand-50 text-brand-700"
-                          : "bg-zinc-100 text-zinc-600",
-                      )}
-                    >
-                      {getReviewVisibilityLabel(review.visibility)}
-                    </span>
                     {review.tags?.map((assignment) => (
                       <span
                         key={assignment.review_tag.id}
