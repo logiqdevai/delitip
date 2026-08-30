@@ -6,90 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 import { CountryFlag } from "@/components/ui/country-flag";
 import { LanguagePicker } from "@/components/ui/language-picker";
-import {
-  useUpdateStore,
-  useUpdateStoreTranslation,
-} from "@/features/stores/hooks/use-stores";
+import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
-import {
-  StoreTranslatableFields,
-  type Language,
-} from "@/features/stores/interfaces/stores.interfaces";
+import type { Language } from "@/features/stores/interfaces/stores.interfaces";
 import { StoreLanguageFormOptions } from "@/config/constants/dropdowns/stores/store-language-form.options";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
-
-const getLanguageLabel = (language: Language): string =>
-  StoreLanguageFormOptions.find((option) => option.id === language)?.label ??
-  language;
-
-const TranslationRow: FC<{
-  storeId: string;
-  language: Language;
-  initialWelcome: string;
-  initialThankYou: string;
-}> = ({ storeId, language, initialWelcome, initialThankYou }) => {
-  const updateTranslation = useUpdateStoreTranslation();
-  const [welcome, setWelcome] = useState(initialWelcome);
-  const [thankYou, setThankYou] = useState(initialThankYou);
-  const dirty = welcome !== initialWelcome || thankYou !== initialThankYou;
-
-  const handleSave = async () => {
-    if (welcome !== initialWelcome) {
-      await updateTranslation.mutateAsync({
-        id: storeId,
-        field: StoreTranslatableFields.WELCOME_MESSAGE,
-        payload: { language, text: welcome },
-      });
-    }
-    if (thankYou !== initialThankYou) {
-      await updateTranslation.mutateAsync({
-        id: storeId,
-        field: StoreTranslatableFields.THANK_YOU_MESSAGE,
-        payload: { language, text: thankYou },
-      });
-    }
-  };
-
-  return (
-    <div className="space-y-2 rounded-xl border border-zinc-200/80 p-3">
-      <p className="text-xs font-bold text-ink-charcoal">
-        {getLanguageLabel(language)}
-      </p>
-      <div className="space-y-1">
-        <Label className="text-[11px] text-zinc-500">Welcome message</Label>
-        <Textarea
-          rows={2}
-          placeholder="Welcome message in this language"
-          value={welcome}
-          onChange={(event) => setWelcome(event.target.value)}
-          className="text-xs"
-        />
-      </div>
-      <div className="space-y-1">
-        <Label className="text-[11px] text-zinc-500">Thank-you message</Label>
-        <Textarea
-          rows={2}
-          placeholder="Thank-you message in this language"
-          value={thankYou}
-          onChange={(event) => setThankYou(event.target.value)}
-          className="text-xs"
-        />
-      </div>
-      <Button
-        type="button"
-        size="sm"
-        variant="outline"
-        disabled={!dirty || updateTranslation.isPending}
-        onClick={() => void handleSave()}
-      >
-        {updateTranslation.isPending ? "Saving…" : "Save"}
-      </Button>
-    </div>
-  );
-};
 
 export const LocalizationSettingsForm: FC = () => {
   const { store, isPending } = useWorkspace();
@@ -148,10 +71,6 @@ export const LocalizationSettingsForm: FC = () => {
     );
   };
 
-  const otherLanguages = store.supported_languages.filter(
-    (language) => language !== store.primary_language,
-  );
-
   return (
     <div className="@container max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
       <div className="flex items-center gap-2">
@@ -199,36 +118,6 @@ export const LocalizationSettingsForm: FC = () => {
           {updateStore.isPending ? "Saving…" : "Save Changes"}
         </Button>
       </div>
-
-      {otherLanguages.length > 0 ? (
-        <div className="space-y-3 border-t border-zinc-100 pt-4">
-          <div>
-            <p className="text-xs font-bold text-ink-charcoal">
-              Per-language messages
-            </p>
-            <p className="text-[11px] text-zinc-500">
-              Welcome/thank-you messages start as a copy of your primary
-              language. Hand-edit each supported language here so the tip
-              flow shows real, correct text once a switcher exists.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-3 @md:grid-cols-2">
-            {otherLanguages.map((language) => (
-              <TranslationRow
-                key={language}
-                storeId={store.id}
-                language={language}
-                initialWelcome={
-                  store.welcome_message?.[language.toLowerCase()] ?? ""
-                }
-                initialThankYou={
-                  store.thank_you_message?.[language.toLowerCase()] ?? ""
-                }
-              />
-            ))}
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 };

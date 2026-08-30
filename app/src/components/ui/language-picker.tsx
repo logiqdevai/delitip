@@ -24,6 +24,8 @@ interface LanguagePickerProps {
   size?: "sm" | "default";
   /** Renders the trigger as just a flag, no label — for mobile / compact layouts. */
   compact?: boolean;
+  /** Restricts the option list to these languages. Defaults to every store language. */
+  languages?: Language[];
   "aria-label"?: string;
 }
 
@@ -36,14 +38,18 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
   className,
   size = "default",
   compact = false,
+  languages,
   "aria-label": ariaLabel,
 }) => {
   const generatedId = useId();
   const id = idProp ?? generatedId;
+  const options = languages
+    ? StoreLanguageFormOptions.filter((option) => languages.includes(option.id))
+    : StoreLanguageFormOptions;
 
   return (
     <Select
-      items={StoreLanguageFormOptions.map((option) => ({
+      items={options.map((option) => ({
         label: option.label,
         value: option.id,
       }))}
@@ -62,9 +68,7 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
       >
         <SelectValue>
           {(selected: Language | null) => {
-            const option = StoreLanguageFormOptions.find(
-              (item) => item.id === selected,
-            );
+            const option = options.find((item) => item.id === selected);
             if (!option) return null;
             return (
               <>
@@ -77,7 +81,7 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {StoreLanguageFormOptions.map((option) => (
+          {options.map((option) => (
             <SelectItem key={option.id} value={option.id}>
               <CountryFlag countryCode={option.flagCountryCode} />
               {option.label}
