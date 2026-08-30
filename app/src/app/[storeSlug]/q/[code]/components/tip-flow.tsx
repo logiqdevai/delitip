@@ -1,21 +1,22 @@
 "use client";
 
 import { type FC, useMemo, useState } from "react";
-import { ArrowRight, Check, MapPin, Users } from "lucide-react";
-import { BrandMark } from "@/components/brand/brand-mark";
-import { EmployeeAvatar } from "@/components/ui/employee-avatar";
-import type {
-  PublicQrCode,
-  PublicQrCodeEmployee,
-} from "@/features/qr-codes/interfaces/qr-codes.interfaces";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type { PublicQrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import type { PublicStore } from "@/features/stores/interfaces/stores.interfaces";
 import type { CreatePublicTipResponse } from "@/features/tips/interfaces/tips.interfaces";
 import type { CreatePublicReviewResponse } from "@/features/reviews/interfaces/reviews.interfaces";
-import { cn } from "@/lib/utils";
+import { usePublicReviewConfig } from "@/features/reviews/hooks/use-reviews";
+import { Routes } from "@/routes/routes";
+import { StoreHero } from "@/app/[storeSlug]/q/[code]/components/store-hero";
 import { AmountStep } from "@/app/[storeSlug]/q/[code]/components/steps/amount-step";
-import { PaymentStep } from "@/app/[storeSlug]/q/[code]/components/steps/payment-step";
-import { ThankYouStep } from "@/app/[storeSlug]/q/[code]/components/steps/thank-you-step";
-import { ReviewStep } from "@/app/[storeSlug]/q/[code]/components/steps/review-step";
+import { RecipientStep } from "@/app/[storeSlug]/q/[code]/components/steps/recipient-step";
+import {
+  ReviewStep,
+  emptyReviewDraft,
+  type ReviewDraft,
+} from "@/app/[storeSlug]/q/[code]/components/steps/review-step";
 import { DoneStep } from "@/app/[storeSlug]/q/[code]/components/steps/done-step";
 
 interface TipFlowProps {
@@ -24,76 +25,17 @@ interface TipFlowProps {
   qr: PublicQrCode;
 }
 
-type FlowStep = "select" | "amount" | "payment" | "thank-you" | "review" | "done";
+type FlowStep = "amount" | "select" | "review" | "done";
 
-const formatStoreAddress = (parts: {
-  address_line?: string | null;
-  city?: string | null;
-  country?: string | null;
-}) => {
-  return [parts.address_line, parts.city, parts.country]
-    .map((part) => part?.trim())
-    .filter(Boolean)
-    .join(", ");
-};
+const TIP_QUERY_PARAM = "tip";
 
-const EmployeeRow: FC<{
-  employee: PublicQrCodeEmployee;
-  selectable: boolean;
-  selected: boolean;
-  onToggle: () => void;
-}> = ({ employee, selectable, selected, onToggle }) => {
-  const content = (
-    <>
-      <EmployeeAvatar
-        name={employee.full_name}
-        photoUrl={employee.photo_url}
-        size="xl"
-      />
-      <div className="min-w-0 flex-1 text-left">
-        <p className="truncate text-sm font-bold text-ink-charcoal">
-          {employee.full_name}
-        </p>
-        <p className="truncate text-xs text-zinc-500">
-          {employee.position?.trim() || "Team member"}
-        </p>
-      </div>
-      {selectable ? (
-        <div
-          className={cn(
-            "flex size-5 shrink-0 items-center justify-center rounded-full border-2",
-            selected
-              ? "border-electric-lime bg-electric-lime text-ink-charcoal"
-              : "border-zinc-300 bg-white",
-          )}
-        >
-          {selected ? <Check className="size-3.5" strokeWidth={3} /> : null}
-        </div>
-      ) : null}
-    </>
-  );
+export const TipFlow: FC<TipFlowProps> = ({ storeSlug, store, qr }) => {
+  const { data: reviewConfig } = usePublicReviewConfig(storeSlug);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const recoveredTipId = searchParams.get(TIP_QUERY_PARAM);
 
-  const rowClass = cn(
-    "flex w-full items-center gap-3 rounded-2xl border px-4 py-3 shadow-xs transition",
-    selectable
-      ? selected
-        ? "border-2 border-electric-lime bg-brand-50/60"
-        : "border-zinc-200/80 bg-white hover:border-electric-lime/60"
-      : "border-zinc-200/80 bg-white",
-  );
-
-  if (!selectable) {
-    return <div className={rowClass}>{content}</div>;
-  }
-
-  return (
-    <button type="button" onClick={onToggle} className={rowClass}>
-      {content}
-    </button>
-  );
-};
-
-export const TipFlow: FC<TipFlowProps> = ({ store, qr }) => {
   const employees = qr.employees;
   const mode = qr.qr_code.selection_mode;
   const interactive =
@@ -107,7 +49,9 @@ export const TipFlow: FC<TipFlowProps> = ({ store, qr }) => {
     return [];
   }, [employees, mode]);
 
-  const [step, setStep] = useState<FlowStep>("select");
+  const [step, setStep] = useState<FlowStep>(
+    recoveredTipId ? "done" : "amount",
+  );
   const [selectedEmployeeIds, setSelectedEmployeeIds] =
     useState<string[]>(initialSelectedIds);
   const [amount, setAmount] = useState(0);
@@ -116,6 +60,7 @@ export const TipFlow: FC<TipFlowProps> = ({ store, qr }) => {
   );
   const [reviewResult, setReviewResult] =
     useState<CreatePublicReviewResponse | null>(null);
+  const [reviewDraft, setReviewDraft] = useState<ReviewDraft>(emptyReviewDraft);
 
   const toggleEmployee = (id: string) => {
     setSelectedEmployeeIds((current) => {
@@ -127,10 +72,6 @@ export const TipFlow: FC<TipFlowProps> = ({ store, qr }) => {
       return [id];
     });
   };
-
-  const canContinueFromSelect = interactive
-    ? selectedEmployeeIds.length > 0
-    : true;
 
   const recipientLabel =
     employees.length === 0
@@ -144,189 +85,103 @@ export const TipFlow: FC<TipFlowProps> = ({ store, qr }) => {
 
   const accent = store.primary_color?.trim() || qr.store.primary_color?.trim();
   const logoUrl = store.logo_url ?? qr.store.logo_url;
-  const address = formatStoreAddress(store);
   const welcome =
     store.welcome_message?.trim() ||
     `Welcome to ${store.name}. Leave a tip for great service.`;
 
   const resetFlow = () => {
-    setStep("select");
+    setStep("amount");
     setSelectedEmployeeIds(initialSelectedIds);
     setAmount(0);
     setTipResult(null);
     setReviewResult(null);
+    setReviewDraft(emptyReviewDraft);
+    router.replace(pathname, { scroll: false });
   };
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-paper-offwhite">
-      <header className="flex items-center justify-between border-b border-zinc-100 bg-white px-5 py-4">
-        <div className="flex min-w-0 items-center gap-2.5">
-          <BrandMark size="sm" className="size-8 shrink-0 rounded-lg text-xs" />
-          <span className="truncate text-sm font-bold tracking-tight text-ink-charcoal">
-            delitip
-            <span className="text-zinc-400">.com</span>
-          </span>
-        </div>
-        {qr.spots[0] ? (
-          <span className="shrink-0 rounded-full bg-neutral-fill px-2.5 py-1 text-[11px] font-medium text-zinc-500">
-            {qr.spots[0].name}
-          </span>
-        ) : null}
-      </header>
-
-      {step === "select" ? (
-        <div className="flex flex-1 flex-col gap-8 px-5 py-8">
-          <section className="flex flex-col items-center text-center">
-            {logoUrl ? (
-              <img
-                src={logoUrl}
-                alt=""
-                className="size-20 rounded-2xl object-cover shadow-sm ring-4 ring-white"
-                style={accent ? { boxShadow: `0 0 0 4px ${accent}33` } : undefined}
-              />
-            ) : (
-              <div
-                className={cn(
-                  "flex size-20 items-center justify-center rounded-2xl text-2xl font-bold text-ink-charcoal shadow-sm",
-                  !accent && "bg-electric-lime",
-                )}
-                style={accent ? { backgroundColor: accent } : undefined}
-              >
-                {store.name.charAt(0).toUpperCase()}
-              </div>
-            )}
-
-            <h1 className="mt-4 text-xl font-bold tracking-tight text-ink-charcoal">
-              {store.name}
-            </h1>
-
-            {address ? (
-              <p className="mt-1.5 flex items-start justify-center gap-1 text-xs text-zinc-500">
-                <MapPin className="mt-0.5 size-3.5 shrink-0" />
-                <span>{address}</span>
-              </p>
-            ) : null}
-
-            <p className="mt-3 max-w-xs text-sm leading-relaxed text-zinc-600">
-              {welcome}
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 text-xs font-semibold tracking-wide text-zinc-400 uppercase">
-              <Users className="size-3.5" />
-              {employees.length === 0
-                ? "Tip the store"
-                : employees.length === 1
-                  ? "Your host"
-                  : mode === "CHOOSE_MANY"
-                    ? "Select who to thank"
-                    : mode === "CHOOSE_ONE"
-                      ? "Choose who to thank"
-                      : "The team"}
-            </div>
-
-            {employees.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-zinc-200 bg-white px-4 py-6 text-center text-sm text-zinc-500">
-                Your tip goes to {store.name}.
-              </div>
-            ) : (
-              <ul className="space-y-2">
-                {employees.map((employee) => (
-                  <li key={employee.id}>
-                    <EmployeeRow
-                      employee={employee}
-                      selectable={interactive}
-                      selected={selectedEmployeeIds.includes(employee.id)}
-                      onToggle={() => toggleEmployee(employee.id)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-
-          <button
-            type="button"
-            disabled={!canContinueFromSelect}
-            onClick={() => setStep("amount")}
-            className="mt-auto flex w-full items-center justify-center gap-2 rounded-2xl bg-electric-lime py-3.5 text-sm font-semibold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <span>Continue</span>
-            <ArrowRight className="size-4" strokeWidth={2} />
-          </button>
+      {step === "amount" ? (
+        <div className="flex flex-1 flex-col">
+          <StoreHero
+            store={store}
+            logoUrl={logoUrl}
+            accent={accent}
+            welcome={welcome}
+          />
+          <AmountStep
+            currency={store.currency}
+            suggestedAmounts={store.suggested_tip_amounts}
+            allowCustomAmount={store.allow_custom_tip_amount}
+            subtitle={interactive ? undefined : `for ${recipientLabel}`}
+            recipientLabel={recipientLabel}
+            onContinue={(value) => {
+              setAmount(value);
+              setStep("select");
+            }}
+          />
         </div>
       ) : null}
 
-      {step === "amount" ? (
-        <AmountStep
-          currency={store.currency}
-          suggestedAmounts={store.suggested_tip_amounts}
-          allowCustomAmount={store.allow_custom_tip_amount}
-          recipientLabel={recipientLabel}
-          onContinue={(value) => {
-            setAmount(value);
-            setStep("payment");
-          }}
+      {step === "select" ? (
+        <RecipientStep
+          storeName={store.name}
+          employees={employees}
+          mode={mode}
+          interactive={interactive}
+          selectedEmployeeIds={selectedEmployeeIds}
+          onToggle={toggleEmployee}
+          onBack={() => setStep("amount")}
+          onContinue={() => setStep("review")}
         />
       ) : null}
 
-      {step === "payment" ? (
-        <PaymentStep
+      {step === "review" ? (
+        <ReviewStep
           qrCodeId={qr.qr_code.id}
+          storeId={store.id}
           amount={amount}
           currency={store.currency}
-          storeName={store.name}
           recipientLabel={recipientLabel}
           selectionMode={mode}
           selectedEmployeeIds={selectedEmployeeIds}
-          onBack={() => setStep("amount")}
-          onSuccess={(result) => {
-            setTipResult(result);
-            setStep("thank-you");
-          }}
-        />
-      ) : null}
-
-      {step === "thank-you" && tipResult ? (
-        <ThankYouStep
-          amount={tipResult.tip.amount}
-          currency={tipResult.tip.currency}
-          recipientLabel={recipientLabel}
-          message={tipResult.thank_you_message}
-          onLeaveReview={() => setStep("review")}
-          onDone={() => setStep("done")}
-        />
-      ) : null}
-
-      {step === "review" && tipResult ? (
-        <ReviewStep
-          storeId={store.id}
-          tipId={tipResult.tip.id}
-          employeeId={
-            selectedEmployeeIds.length === 1 ? selectedEmployeeIds[0] : undefined
-          }
-          recipientLabel={recipientLabel}
-          onSkip={() => setStep("done")}
-          onSubmitted={(result) => {
-            setReviewResult(result);
+          config={reviewConfig}
+          draft={reviewDraft}
+          onChange={setReviewDraft}
+          onBack={() => setStep("select")}
+          onSuccess={(tip, review) => {
+            setTipResult(tip);
+            setReviewResult(review);
             setStep("done");
+            router.replace(`${pathname}?${TIP_QUERY_PARAM}=${tip.tip.id}`, {
+              scroll: false,
+            });
           }}
         />
       ) : null}
 
-      {step === "done" && tipResult ? (
+      {step === "done" && (tipResult || recoveredTipId) ? (
         <DoneStep
           review={reviewResult}
-          tipId={tipResult.tip.id}
-          amount={tipResult.tip.amount}
-          currency={tipResult.tip.currency}
+          tipId={tipResult?.tip.id ?? recoveredTipId!}
+          amount={tipResult?.tip.amount}
+          currency={tipResult?.tip.currency}
+          storeName={tipResult ? store.name : undefined}
+          recipientLabel={tipResult ? recipientLabel : undefined}
+          thankYouMessage={tipResult?.thank_you_message}
           onRestart={resetFlow}
         />
       ) : null}
 
-      <footer className="border-t border-zinc-100 px-5 py-4 text-center text-[11px] text-zinc-400">
-        Powered by delitip
+      <footer className="border-t border-zinc-100 px-5 py-4 text-center text-[11px] font-medium text-zinc-400">
+        Powered by{" "}
+        <Link
+          href={Routes.home}
+          className="font-semibold text-zinc-700 transition hover:text-ink-charcoal"
+        >
+          delitip.com
+        </Link>{" "}
+        • Transparent & Secure
       </footer>
     </main>
   );

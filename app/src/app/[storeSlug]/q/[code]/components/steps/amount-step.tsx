@@ -1,16 +1,17 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { ArrowRight } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { ArrowRight, ShieldCheck } from "lucide-react";
+import { NumberPicker } from "@/components/ui/number-picker";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
-import { formatMoney } from "@/lib/money";
+import { formatMoney, getCurrencySymbol } from "@/lib/money";
 import { cn } from "@/lib/utils";
 
 interface AmountStepProps {
   currency: Currency;
   suggestedAmounts: number[];
   allowCustomAmount: boolean;
+  subtitle?: string;
   recipientLabel: string;
   onContinue: (amountMinorUnits: number) => void;
 }
@@ -19,21 +20,16 @@ export const AmountStep: FC<AmountStepProps> = ({
   currency,
   suggestedAmounts,
   allowCustomAmount,
+  subtitle,
   recipientLabel,
   onContinue,
 }) => {
   const [selectedPreset, setSelectedPreset] = useState<number | null>(
     suggestedAmounts[0] ?? null,
   );
-  const [customAmount, setCustomAmount] = useState("");
+  const [customAmount, setCustomAmount] = useState(0);
 
-  const customMinorUnits = (() => {
-    const parsed = Number.parseFloat(customAmount.replace(",", "."));
-    if (customAmount.trim() && Number.isFinite(parsed) && parsed > 0) {
-      return Math.round(parsed * 100);
-    }
-    return null;
-  })();
+  const customMinorUnits = customAmount > 0 ? Math.round(customAmount * 100) : null;
 
   const amount = customMinorUnits ?? selectedPreset ?? 0;
   const canContinue = amount > 0;
@@ -41,10 +37,14 @@ export const AmountStep: FC<AmountStepProps> = ({
   return (
     <div className="auth-fade-enter flex flex-1 flex-col gap-6 px-5 py-8">
       <div className="text-center">
-        <h1 className="text-lg font-bold text-ink-charcoal">
+        <h1 className="text-lg font-bold text-muted-foreground uppercase">
           Choose your tip
         </h1>
-        <p className="mt-1 text-xs text-zinc-500">for {recipientLabel}</p>
+        {subtitle ? (
+          <p className="mx-auto mt-1 max-w-[280px] truncate text-xs text-zinc-500">
+            {subtitle}
+          </p>
+        ) : null}
       </div>
 
       {suggestedAmounts.length > 0 ? (
@@ -57,7 +57,7 @@ export const AmountStep: FC<AmountStepProps> = ({
                 type="button"
                 onClick={() => {
                   setSelectedPreset(preset);
-                  setCustomAmount("");
+                  setCustomAmount(0);
                 }}
                 className={cn(
                   "rounded-2xl border p-3 text-center text-sm font-bold transition",
@@ -74,21 +74,33 @@ export const AmountStep: FC<AmountStepProps> = ({
       ) : null}
 
       {allowCustomAmount ? (
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+        <div className="space-y-2">
+          <p className="text-center text-xs font-semibold tracking-wide text-zinc-500 uppercase">
             Custom amount
-          </label>
-          <Input
-            type="number"
-            min="0"
-            step="0.01"
-            inputMode="decimal"
+          </p>
+          <NumberPicker
             value={customAmount}
-            onChange={(event) => setCustomAmount(event.target.value)}
-            placeholder="Enter an amount"
+            onChange={setCustomAmount}
+            min={0}
+            max={1000}
+            step={1}
+            suffix={getCurrencySymbol(currency)}
+            aria-label="Custom tip amount"
+            className="w-full"
           />
         </div>
       ) : null}
+
+      <div className="flex items-center gap-2.5 rounded-xl border border-zinc-100 bg-zinc-50 p-3 text-[11px] text-zinc-600">
+        <ShieldCheck
+          className="size-4 shrink-0 text-electric-lime"
+          strokeWidth={2}
+        />
+        <span>
+          100% transparent. Tips are sent securely and directly to{" "}
+          {recipientLabel}.
+        </span>
+      </div>
 
       <button
         type="button"
@@ -98,7 +110,7 @@ export const AmountStep: FC<AmountStepProps> = ({
       >
         <span>
           {canContinue
-            ? `Continue with ${formatMoney(amount, currency)}`
+            ? `Continue to pay ${formatMoney(amount, currency)}`
             : "Choose an amount"}
         </span>
         <ArrowRight className="size-4" strokeWidth={2} />

@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { AlertTriangle, CheckCircle2, ExternalLink, Heart } from "lucide-react";
+import { AlertTriangle, Check, CheckCircle2, ExternalLink } from "lucide-react";
 import { useCreatePublicRefundRequest } from "@/features/refunds/hooks/use-refunds";
 import type { CreatePublicReviewResponse } from "@/features/reviews/interfaces/reviews.interfaces";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
@@ -10,27 +10,32 @@ import { formatMoney } from "@/lib/money";
 interface DoneStepProps {
   review: CreatePublicReviewResponse | null;
   tipId: string;
-  amount: number;
-  currency: Currency;
+  amount?: number;
+  currency?: Currency;
+  storeName?: string;
+  recipientLabel?: string;
+  thankYouMessage?: string;
   onRestart: () => void;
 }
 
-const RefundRequest: FC<{ tipId: string; amount: number; currency: Currency }> = ({
-  tipId,
-  amount,
-  currency,
-}) => {
+const RefundRequest: FC<{
+  tipId: string;
+  amount?: number;
+  currency?: Currency;
+}> = ({ tipId, amount, currency }) => {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const requestRefund = useCreatePublicRefundRequest();
+  const amountLabel =
+    amount !== undefined && currency ? formatMoney(amount, currency) : null;
 
   if (requestRefund.isSuccess) {
     return (
       <div className="flex items-start gap-2.5 rounded-xl border border-brand-100 bg-brand-50/70 p-3 text-left text-xs text-brand-900">
         <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-brand-700" strokeWidth={2} />
         <span>
-          Refund requested for {formatMoney(amount, currency)}. The business
-          will review it.
+          Refund requested{amountLabel ? ` for ${amountLabel}` : ""}. The
+          business will review it.
         </span>
       </div>
     );
@@ -51,7 +56,7 @@ const RefundRequest: FC<{ tipId: string; amount: number; currency: Currency }> =
   return (
     <div className="space-y-2.5 rounded-2xl border border-zinc-100 bg-zinc-50 p-4 text-left">
       <p className="text-xs font-semibold text-ink-charcoal">
-        Request a refund of {formatMoney(amount, currency)}
+        Request a refund{amountLabel ? ` of ${amountLabel}` : ""}
       </p>
       <textarea
         value={reason}
@@ -104,23 +109,55 @@ export const DoneStep: FC<DoneStepProps> = ({
   tipId,
   amount,
   currency,
+  storeName,
+  recipientLabel,
+  thankYouMessage,
   onRestart,
 }) => {
+  const receiptCode = `#${tipId.replace(/-/g, "").slice(0, 8).toUpperCase()}`;
+  const hasTipDetails = amount !== undefined && currency !== undefined;
+  const description =
+    thankYouMessage?.trim() ||
+    (hasTipDetails
+      ? `Your ${formatMoney(amount, currency)} tip${review ? " and compliments" : ""} were sent to ${recipientLabel}.`
+      : "Your tip has already been sent.");
+
   return (
     <div className="auth-fade-enter flex flex-1 flex-col gap-5 px-5 py-8 text-center">
       <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-brand-100 text-brand-700 shadow-inner">
-        <Heart className="size-8" strokeWidth={2.5} />
+        <Check className="size-8" strokeWidth={2.5} />
       </div>
 
       <div>
-        <h1 className="text-xl font-bold text-ink-charcoal">
-          {review ? "Thanks for the feedback!" : "All set!"}
-        </h1>
+        <h1 className="text-xl font-bold text-ink-charcoal">Thank you!</h1>
         <p className="mt-2 text-sm leading-relaxed text-zinc-600">
-          {review
-            ? review.message
-            : "Your tip is on its way. You can close this page."}
+          {description}
         </p>
+      </div>
+
+      <div className="space-y-2 rounded-2xl border border-zinc-100 bg-zinc-50 p-4 text-left">
+        <div className="flex items-center justify-between gap-3 text-xs text-zinc-600">
+          <span className="shrink-0">Receipt ID</span>
+          <span className="min-w-0 truncate font-mono text-ink-charcoal">
+            {receiptCode}
+          </span>
+        </div>
+        {storeName ? (
+          <div className="flex items-center justify-between gap-3 text-xs text-zinc-600">
+            <span className="shrink-0">Business</span>
+            <span className="min-w-0 truncate font-medium text-ink-charcoal">
+              {storeName}
+            </span>
+          </div>
+        ) : null}
+        {recipientLabel ? (
+          <div className="flex items-center justify-between gap-3 text-xs text-zinc-600">
+            <span className="shrink-0">Recipient</span>
+            <span className="min-w-0 truncate font-medium text-ink-charcoal">
+              {recipientLabel}
+            </span>
+          </div>
+        ) : null}
       </div>
 
       {review?.redirect.should_redirect && review.redirect.url ? (
@@ -140,7 +177,7 @@ export const DoneStep: FC<DoneStepProps> = ({
         onClick={onRestart}
         className="mx-auto block pt-2 text-xs font-semibold text-brand-700 hover:underline"
       >
-        Leave another tip
+        Make another tip
       </button>
 
       <div className="mt-auto pt-6">

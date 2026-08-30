@@ -7,3 +7,12 @@ export function formatMoney(amountMinorUnits: number, currency: Currency): strin
     currencyDisplay: "narrowSymbol",
   }).format(amountMinorUnits / 100);
 }
+
+export function getCurrencySymbol(currency: Currency): string {
+  const parts = new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency,
+    currencyDisplay: "narrowSymbol",
+  }).formatToParts(0);
+  return parts.find((part) => part.type === "currency")?.value ?? currency;
+}
