@@ -50,7 +50,7 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
       <button
         type="button"
         onClick={onSelectEmployee}
-        aria-label="Employee Access"
+        aria-label="Staff Access"
         className={cn(
           "flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs whitespace-nowrap transition sm:px-3.5",
           activeRole === AuthRoles.EMPLOYEE
@@ -68,7 +68,7 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
           strokeWidth={2}
         />
         <span className="sm:hidden">Employee</span>
-        <span className="hidden sm:inline">Employee Access</span>
+        <span className="hidden sm:inline">Staff Access</span>
       </button>
     </div>
   );

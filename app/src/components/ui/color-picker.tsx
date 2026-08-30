@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useId } from "react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -10,6 +11,7 @@ export type ColorPickerProps = {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  defaultValue?: string;
   id?: string;
   disabled?: boolean;
   className?: string;
@@ -28,6 +30,7 @@ export const ColorPicker: FC<ColorPickerProps> = ({
   value,
   onChange,
   placeholder = "#000000",
+  defaultValue,
   id,
   disabled = false,
   className,
@@ -38,10 +41,29 @@ export const ColorPicker: FC<ColorPickerProps> = ({
   const swatchId = `${inputId}-swatch`;
   const errorId = `${inputId}-error`;
   const nativeValue = normalizeHex(value) ?? "#000000";
+  const resetValue = defaultValue ?? placeholder;
+  const normalizedReset = normalizeHex(resetValue);
+  const canReset =
+    Boolean(normalizedReset) &&
+    (normalizeHex(value) ?? value.trim().toLowerCase()) !== normalizedReset;
 
   return (
     <div className={cn("flex min-w-0 flex-col gap-1.5", className)}>
-      <Label htmlFor={inputId}>{label}</Label>
+      <div className="flex items-center justify-between gap-2">
+        <Label htmlFor={inputId}>{label}</Label>
+        {canReset ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="xs"
+            disabled={disabled}
+            onClick={() => onChange(normalizedReset!)}
+            className="h-auto px-1.5 py-0.5 text-xs text-zinc-500 hover:text-ink-charcoal"
+          >
+            Reset
+          </Button>
+        ) : null}
+      </div>
       <div className="flex items-center gap-2">
         <label
           htmlFor={swatchId}

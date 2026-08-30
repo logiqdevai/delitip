@@ -17,6 +17,7 @@ export interface SettingsNavItem {
   label: string;
   description: string;
   icon: LucideIcon;
+  requiresPlatformAdmin?: boolean;
 }
 
 export const settingsNavItems: SettingsNavItem[] = [
@@ -71,6 +72,7 @@ export const settingsNavItems: SettingsNavItem[] = [
     label: "Members & Access",
     description: "Invite teammates and manage their role-based access.",
     icon: Users2,
+    requiresPlatformAdmin: true,
   },
   {
     href: Routes.dashboard.settings.billing,

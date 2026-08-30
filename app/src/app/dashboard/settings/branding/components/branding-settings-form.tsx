@@ -171,6 +171,7 @@ export const BrandingSettingsForm: FC = () => {
           id="primary-color"
           label="Primary color"
           value={primaryColor}
+          defaultValue="#84cc16"
           placeholder="#84cc16"
           onChange={updatePrimaryColor}
         />
@@ -178,6 +179,7 @@ export const BrandingSettingsForm: FC = () => {
           id="secondary-color"
           label="Secondary color"
           value={secondaryColor}
+          defaultValue="#18181b"
           placeholder="#18181b"
           onChange={updateSecondaryColor}
         />

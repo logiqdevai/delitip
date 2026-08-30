@@ -148,7 +148,7 @@ User / Profile Menu                [missing in app]
 | Logo | `Routes.home` | Always |
 | Contact Support | `Routes.contact` | Always |
 
-**Role switcher (existing):** `AuthRoleSwitcher` — Business Account (`Building2`) | Employee Access (`User`). Not the same as `OrganizationRole`. Sign-up locks Business; selecting Employee redirects to `Routes.auth.sign_in?role=employee`.
+**Role switcher (existing):** `AuthRoleSwitcher` — Business Account (`Building2`) | Staff Access (`User`). Not the same as `OrganizationRole`. Sign-up locks Business; selecting Employee redirects to `Routes.auth.sign_in?role=employee`.
 
 ---
 
