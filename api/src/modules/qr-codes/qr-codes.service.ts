@@ -134,6 +134,13 @@ export class QrCodesService {
         const where = {
             store_id: storeId,
             ...(query.is_active !== undefined ? { is_active: query.is_active } : {}),
+            ...(query.employee_ids?.length
+                ? { employees: { some: { employee_id: { in: query.employee_ids } } } }
+                : {}),
+            ...(query.spot_ids?.length ? { spots: { some: { spot_id: { in: query.spot_ids } } } } : {}),
+            ...(query.distribution_rule_ids?.length
+                ? { distribution_rule_id: { in: query.distribution_rule_ids } }
+                : {}),
         };
 
         const [items, total] = await Promise.all([

@@ -27,6 +27,9 @@ export class QrCodesController {
     @ApiQuery({ name: 'page', required: false })
     @ApiQuery({ name: 'limit', required: false })
     @ApiQuery({ name: 'is_active', required: false })
+    @ApiQuery({ name: 'employee_ids', required: false, description: 'Comma-separated employee IDs' })
+    @ApiQuery({ name: 'spot_ids', required: false, description: 'Comma-separated spot IDs' })
+    @ApiQuery({ name: 'distribution_rule_ids', required: false, description: 'Comma-separated distribution rule IDs' })
     findAllForStore(
         @CurrentUser() user: AuthUser,
         @Param('storeId') storeId: string,
