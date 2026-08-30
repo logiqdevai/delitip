@@ -51,8 +51,24 @@ export const useUpdateSpot = () => {
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: UpdateSpotPayload }) =>
       updateSpot(id, payload),
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       void queryClient.invalidateQueries({ queryKey: spotsQueryKeys.root });
+      if (
+        variables.payload.is_active !== undefined &&
+        variables.payload.name === undefined
+      ) {
+        toast.add({
+          title: variables.payload.is_active
+            ? "Spot activated"
+            : "Spot deactivated",
+          type: "success",
+        });
+        return;
+      }
+      if (variables.payload.name !== undefined) {
+        toast.add({ title: "Spot renamed", type: "success" });
+        return;
+      }
       toast.add({ title: "Spot updated", type: "success" });
     },
     onError: (error: Error) => {
