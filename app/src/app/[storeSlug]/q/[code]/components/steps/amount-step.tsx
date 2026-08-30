@@ -62,8 +62,8 @@ export const AmountStep: FC<AmountStepProps> = ({
                 className={cn(
                   "rounded-2xl border p-3 text-center text-sm font-bold transition",
                   active
-                    ? "border-2 border-electric-lime bg-brand-50/60 text-brand-700"
-                    : "border-zinc-200 bg-white text-ink-charcoal hover:border-electric-lime hover:bg-brand-50/50",
+                    ? "border-2 border-(--tip-primary) bg-(--tip-primary)/10 text-(--tip-secondary)"
+                    : "border-zinc-200 bg-white text-ink-charcoal hover:border-(--tip-primary) hover:bg-(--tip-primary)/10",
                 )}
               >
                 {formatMoney(preset, currency)}
@@ -93,7 +93,7 @@ export const AmountStep: FC<AmountStepProps> = ({
 
       <div className="flex items-center gap-2.5 rounded-xl border border-zinc-100 bg-zinc-50 p-3 text-[11px] text-zinc-600">
         <ShieldCheck
-          className="size-4 shrink-0 text-electric-lime"
+          className="size-4 shrink-0 text-(--tip-primary)"
           strokeWidth={2}
         />
         <span>
@@ -106,7 +106,7 @@ export const AmountStep: FC<AmountStepProps> = ({
         type="button"
         disabled={!canContinue}
         onClick={() => onContinue(amount)}
-        className="mt-auto flex w-full items-center justify-center gap-2 rounded-2xl bg-electric-lime py-3.5 text-sm font-semibold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-auto flex w-full items-center justify-center gap-2 rounded-2xl bg-(--tip-primary) py-3.5 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
       >
         <span>
           {canContinue

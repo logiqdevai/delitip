@@ -1,24 +1,29 @@
 import { type FC } from "react";
 import type { PublicStore } from "@/features/stores/interfaces/stores.interfaces";
+import { getReadableTextColor } from "@/lib/color";
 import { cn } from "@/lib/utils";
 
 interface StoreHeroProps {
   store: PublicStore;
   logoUrl?: string | null;
-  accent?: string;
+  primary?: string;
+  secondary?: string;
   welcome: string;
 }
 
 export const StoreHero: FC<StoreHeroProps> = ({
   store,
   logoUrl,
-  accent,
+  primary,
+  secondary,
   welcome,
 }) => {
   const bannerStyle = store.cover_url
     ? { backgroundImage: `url(${store.cover_url})` }
-    : accent
-      ? { backgroundImage: `linear-gradient(135deg, ${accent}, ${accent}66)` }
+    : primary
+      ? {
+          backgroundImage: `linear-gradient(135deg, ${primary}, ${secondary ?? primary})`,
+        }
       : undefined;
 
   return (
@@ -41,10 +46,17 @@ export const StoreHero: FC<StoreHeroProps> = ({
         ) : (
           <div
             className={cn(
-              "flex size-20 shrink-0 items-center justify-center rounded-2xl text-2xl font-bold text-ink-charcoal shadow-lg ring-4 ring-brand-50",
-              !accent && "bg-electric-lime",
+              "flex size-20 shrink-0 items-center justify-center rounded-2xl text-2xl font-bold shadow-lg ring-4 ring-brand-50",
+              !primary && "bg-electric-lime text-ink-charcoal",
             )}
-            style={accent ? { backgroundColor: accent } : undefined}
+            style={
+              primary
+                ? {
+                    backgroundColor: primary,
+                    color: getReadableTextColor(primary),
+                  }
+                : undefined
+            }
           >
             {store.name.charAt(0).toUpperCase()}
           </div>

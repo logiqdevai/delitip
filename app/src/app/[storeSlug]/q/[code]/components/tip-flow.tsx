@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, useMemo, useState } from "react";
+import { type CSSProperties, type FC, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { PublicQrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
@@ -8,6 +8,7 @@ import type { PublicStore } from "@/features/stores/interfaces/stores.interfaces
 import type { CreatePublicTipResponse } from "@/features/tips/interfaces/tips.interfaces";
 import type { CreatePublicReviewResponse } from "@/features/reviews/interfaces/reviews.interfaces";
 import { usePublicReviewConfig } from "@/features/reviews/hooks/use-reviews";
+import { getReadableTextColor } from "@/lib/color";
 import { Routes } from "@/routes/routes";
 import { StoreHero } from "@/app/[storeSlug]/q/[code]/components/store-hero";
 import { AmountStep } from "@/app/[storeSlug]/q/[code]/components/steps/amount-step";
@@ -28,6 +29,8 @@ interface TipFlowProps {
 type FlowStep = "amount" | "select" | "review" | "done";
 
 const TIP_QUERY_PARAM = "tip";
+const DEFAULT_PRIMARY_COLOR = "#C8F169";
+const DEFAULT_SECONDARY_COLOR = "#9FBF3E";
 
 export const TipFlow: FC<TipFlowProps> = ({ storeSlug, store, qr }) => {
   const { data: reviewConfig } = usePublicReviewConfig(storeSlug);
@@ -83,7 +86,20 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, store, qr }) => {
             .map((employee) => employee.full_name)
             .join(" & ");
 
-  const accent = store.primary_color?.trim() || qr.store.primary_color?.trim();
+  const primary =
+    store.primary_color?.trim() ||
+    qr.store.primary_color?.trim() ||
+    DEFAULT_PRIMARY_COLOR;
+  const secondary =
+    store.secondary_color?.trim() ||
+    qr.store.secondary_color?.trim() ||
+    DEFAULT_SECONDARY_COLOR;
+  const primaryForeground = getReadableTextColor(primary);
+  const themeStyle = {
+    "--tip-primary": primary,
+    "--tip-secondary": secondary,
+    "--tip-primary-foreground": primaryForeground,
+  } as CSSProperties;
   const logoUrl = store.logo_url ?? qr.store.logo_url;
   const welcome =
     store.welcome_message?.trim() ||
@@ -100,13 +116,17 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, store, qr }) => {
   };
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-paper-offwhite">
+    <main
+      className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-paper-offwhite"
+      style={themeStyle}
+    >
       {step === "amount" ? (
         <div className="flex flex-1 flex-col">
           <StoreHero
             store={store}
             logoUrl={logoUrl}
-            accent={accent}
+            primary={primary}
+            secondary={secondary}
             welcome={welcome}
           />
           <AmountStep

@@ -35,7 +35,7 @@ const EmployeeRow: FC<{
           className={cn(
             "flex size-5 shrink-0 items-center justify-center rounded-full border-2",
             selected
-              ? "border-electric-lime bg-electric-lime text-ink-charcoal"
+              ? "border-(--tip-primary) bg-(--tip-primary) text-(--tip-primary-foreground)"
               : "border-zinc-300 bg-white",
           )}
         >
@@ -49,8 +49,8 @@ const EmployeeRow: FC<{
     "flex w-full items-center gap-3 rounded-2xl border px-4 py-3 shadow-xs transition",
     selectable
       ? selected
-        ? "border-2 border-electric-lime bg-brand-50/60"
-        : "border-zinc-200/80 bg-white hover:border-electric-lime/60"
+        ? "border-2 border-(--tip-primary) bg-(--tip-primary)/10"
+        : "border-zinc-200/80 bg-white hover:border-(--tip-primary)/60"
       : "border-zinc-200/80 bg-white",
   );
 
@@ -129,7 +129,7 @@ export const RecipientStep: FC<RecipientStepProps> = ({
           type="button"
           disabled={!canContinue}
           onClick={onContinue}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-electric-lime py-3.5 text-sm font-semibold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-(--tip-primary) py-3.5 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
         >
           <span>Continue</span>
           <ArrowRight className="size-4" strokeWidth={2} />

@@ -252,7 +252,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
                     })
                   }
                   placeholder={question.question}
-                  className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs focus:ring-2 focus:ring-electric-lime focus:outline-none"
+                  className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs focus:ring-2 focus:ring-(--tip-primary) focus:outline-none"
                 />
               )}
             </div>
@@ -265,7 +265,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
               onChange({ ...draft, comment: event.target.value })
             }
             placeholder={`Write a short message for ${recipientLabel} (optional)...`}
-            className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs focus:ring-2 focus:ring-electric-lime focus:outline-none"
+            className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs focus:ring-2 focus:ring-(--tip-primary) focus:outline-none"
           />
         </div>
       ) : null}
