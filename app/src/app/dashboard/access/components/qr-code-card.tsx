@@ -99,7 +99,14 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
       <div>
         <h3 className="text-sm font-bold text-ink-charcoal">{qr.label}</h3>
         <div className="mt-1 flex items-start justify-center gap-1">
-          <p className="min-w-0 break-all text-xs text-zinc-400">{tipUrl}</p>
+          <a
+            href={tipUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="min-w-0 break-all text-xs text-zinc-400 underline-offset-2 hover:text-brand-700 hover:underline"
+          >
+            {tipUrl}
+          </a>
           <Button
             type="button"
             variant="ghost"
