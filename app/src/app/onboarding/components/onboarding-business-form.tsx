@@ -19,7 +19,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CountryPicker } from "@/components/ui/country-picker";
 import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
+import {
+  getCountryCodeByName,
+  getCountryLabel,
+} from "@/config/constants/dropdowns/shared/country.options";
 import type { BusinessSetupContext } from "@/features/organizations/hooks/use-organizations";
 import { useCompleteBusinessSetup } from "@/features/organizations/hooks/use-organizations";
 import {
@@ -175,10 +180,19 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="onboarding-country">Country</Label>
-            <Input
-              id="onboarding-country"
-              placeholder="Country"
-              {...register("country")}
+            <Controller
+              name="country"
+              control={control}
+              render={({ field }) => (
+                <CountryPicker
+                  id="onboarding-country"
+                  className="w-full"
+                  value={getCountryCodeByName(field.value) ?? null}
+                  onValueChange={(code) =>
+                    field.onChange(code ? getCountryLabel(code) : "")
+                  }
+                />
+              )}
             />
           </div>
           <div className="space-y-1.5 sm:col-span-1">

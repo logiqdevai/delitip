@@ -3,18 +3,22 @@ import {
   type Language,
 } from "@/features/stores/interfaces/stores.interfaces";
 
-export const StoreLanguageFormOptions: { id: Language; label: string }[] = [
-  { id: Languages.EN, label: "English" },
-  { id: Languages.EL, label: "Greek" },
-  { id: Languages.ES, label: "Spanish" },
-  { id: Languages.FR, label: "French" },
-  { id: Languages.DE, label: "German" },
-  { id: Languages.IT, label: "Italian" },
-  { id: Languages.PT, label: "Portuguese" },
-  { id: Languages.TR, label: "Turkish" },
-  { id: Languages.RU, label: "Russian" },
-  { id: Languages.AR, label: "Arabic" },
-  { id: Languages.ZH, label: "Chinese" },
+export const StoreLanguageFormOptions: {
+  id: Language;
+  label: string;
+  flagCountryCode: string;
+}[] = [
+  { id: Languages.EN, label: "English", flagCountryCode: "GB" },
+  { id: Languages.EL, label: "Greek", flagCountryCode: "GR" },
+  { id: Languages.ES, label: "Spanish", flagCountryCode: "ES" },
+  { id: Languages.FR, label: "French", flagCountryCode: "FR" },
+  { id: Languages.DE, label: "German", flagCountryCode: "DE" },
+  { id: Languages.IT, label: "Italian", flagCountryCode: "IT" },
+  { id: Languages.PT, label: "Portuguese", flagCountryCode: "PT" },
+  { id: Languages.TR, label: "Turkish", flagCountryCode: "TR" },
+  { id: Languages.RU, label: "Russian", flagCountryCode: "RU" },
+  { id: Languages.AR, label: "Arabic", flagCountryCode: "SA" },
+  { id: Languages.ZH, label: "Chinese", flagCountryCode: "CN" },
 ];
 
 export function getStoreLanguageLabel(language: Language | string): string {

@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CountryPicker } from "@/components/ui/country-picker";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import {
@@ -26,6 +27,10 @@ import {
   type StoreProfileFormData,
 } from "@/features/stores/validation-schemas/stores.schema";
 import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
+import {
+  getCountryCodeByName,
+  getCountryLabel,
+} from "@/config/constants/dropdowns/shared/country.options";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const BusinessProfileSettingsForm: FC = () => {
@@ -183,10 +188,19 @@ export const BusinessProfileSettingsForm: FC = () => {
         </div>
         <div className="min-w-0 space-y-1.5">
           <Label htmlFor="store-country">Country</Label>
-          <Input
-            id="store-country"
-            placeholder="Country"
-            {...register("country")}
+          <Controller
+            name="country"
+            control={control}
+            render={({ field }) => (
+              <CountryPicker
+                id="store-country"
+                className="w-full"
+                value={getCountryCodeByName(field.value) ?? null}
+                onValueChange={(code) =>
+                  field.onChange(code ? getCountryLabel(code) : "")
+                }
+              />
+            )}
           />
         </div>
         <div className="min-w-0 space-y-1.5 @sm:col-span-2 @lg:col-span-1">

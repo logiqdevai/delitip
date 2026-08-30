@@ -7,14 +7,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { CountryFlag } from "@/components/ui/country-flag";
+import { LanguagePicker } from "@/components/ui/language-picker";
 import {
   useUpdateStore,
   useUpdateStoreTranslation,
@@ -170,29 +164,12 @@ export const LocalizationSettingsForm: FC = () => {
 
       <div className="space-y-1.5">
         <Label htmlFor="primary-language">Primary language</Label>
-        <Select
-          items={StoreLanguageFormOptions.map((option) => ({
-            label: option.label,
-            value: option.id,
-          }))}
+        <LanguagePicker
+          id="primary-language"
+          className="w-full"
           value={primaryLanguage}
-          onValueChange={(value) => {
-            if (value) updatePrimaryLanguage(value as Language);
-          }}
-        >
-          <SelectTrigger id="primary-language" className="w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {StoreLanguageFormOptions.map((option) => (
-                <SelectItem key={option.id} value={option.id}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+          onValueChange={updatePrimaryLanguage}
+        />
       </div>
 
       <div className="space-y-2">
@@ -205,18 +182,11 @@ export const LocalizationSettingsForm: FC = () => {
                 onCheckedChange={() => toggleSupported(option.id)}
                 disabled={option.id === primaryLanguage}
               />
+              <CountryFlag countryCode={option.flagCountryCode} />
               {option.label}
             </label>
           ))}
         </div>
-      </div>
-
-      <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50 px-3 py-2.5 text-[11px] text-amber-800">
-        A customer-facing language switcher on the tip flow itself isn&apos;t
-        built yet — that needs full UI copy translated for every string on{" "}
-        <code>/{"{storeSlug}"}/q/{"{code}"}</code>, which doesn&apos;t exist
-        in this codebase yet. This only configures which languages the Store
-        supports.
       </div>
 
       <div className="pt-1">
