@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE "Review" DROP COLUMN "visibility";
+ALTER TABLE "reviews" DROP COLUMN "visibility";
 
 -- DropEnum
 DROP TYPE "ReviewVisibility";
