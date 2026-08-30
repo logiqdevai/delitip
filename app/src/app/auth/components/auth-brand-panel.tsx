@@ -29,7 +29,7 @@ export const AuthBrandPanel: FC = () => {
                 alt="Maria S., Head Server"
                 width={32}
                 height={32}
-                className="size-8 rounded-full object-cover ring-2 ring-electric-lime/40"
+                className="size-8 shrink-0 rounded-full object-cover ring-2 ring-electric-lime/40"
               />
               <div>
                 <div className="text-xs font-bold text-white">Maria S.</div>

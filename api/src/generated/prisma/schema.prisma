@@ -128,11 +128,6 @@ enum PaymentProvider {
   PAYPAL
 }
 
-enum ReviewVisibility {
-  PRIVATE
-  PUBLIC
-}
-
 enum ReviewSentiment {
   POSITIVE
   NEUTRAL
@@ -681,7 +676,6 @@ model Review {
   customer_name                 String?
   rating                        Int
   comment                       String?
-  visibility                    ReviewVisibility @default(PRIVATE) // PRIVATE stays internal to the store; PUBLIC can be surfaced externally
   sentiment                     ReviewSentiment? // auto-categorized from the rating/comment; null until that analysis has run
   redirected_to_public_platform Boolean          @default(false) // whether the customer was sent on to the store's public review platform after this review
   created_at                    DateTime         @default(now())

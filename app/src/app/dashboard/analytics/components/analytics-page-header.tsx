@@ -9,7 +9,7 @@ import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { Routes } from "@/routes/routes";
 import { analyticsNavItems } from "./analytics-nav-items";
 
-const PERIOD_ROUTES = new Set([
+const PERIOD_ROUTES = new Set<string>([
   Routes.dashboard.analytics.overview,
   Routes.dashboard.analytics.employees,
   Routes.dashboard.analytics.stores,

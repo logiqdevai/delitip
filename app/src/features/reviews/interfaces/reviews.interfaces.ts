@@ -1,10 +1,3 @@
-export const ReviewVisibilities = {
-  PRIVATE: "PRIVATE",
-  PUBLIC: "PUBLIC",
-} as const;
-export type ReviewVisibility =
-  (typeof ReviewVisibilities)[keyof typeof ReviewVisibilities];
-
 export const ReviewSentiments = {
   POSITIVE: "POSITIVE",
   NEUTRAL: "NEUTRAL",
@@ -51,7 +44,6 @@ export interface Review {
   customer_name?: string | null;
   rating: number;
   comment?: string | null;
-  visibility: ReviewVisibility;
   sentiment?: ReviewSentiment | null;
   redirected_to_public_platform: boolean;
   created_at: string;
@@ -67,12 +59,10 @@ export interface ReviewsQuery {
   limit?: number;
   employee_id?: string;
   min_rating?: number;
-  visibility?: ReviewVisibility;
   search?: string;
 }
 
 export interface UpdateReviewPayload {
-  visibility?: ReviewVisibility;
   tag_ids?: string[];
 }
 

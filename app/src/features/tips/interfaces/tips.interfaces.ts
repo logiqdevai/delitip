@@ -87,7 +87,6 @@ export interface TipReviewRef {
   id: string;
   rating: number;
   comment?: string | null;
-  visibility: string;
   created_at: string;
 }
 

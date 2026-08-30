@@ -7,7 +7,7 @@ import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translatio
 import { CreatePublicReviewDto } from '../dto/create-public-review.dto';
 import { UpdateReviewDto } from '../dto/update-review.dto';
 import { ReviewsQueryType } from '../dto/reviews-query.schema';
-import { AlertType, Employee, Language, OrganizationRole, Prisma, Review, ReviewSentiment, ReviewVisibility } from 'generated/prisma';
+import { AlertType, Employee, Language, OrganizationRole, Prisma, Review, ReviewSentiment } from 'generated/prisma';
 
 const MANAGE_ROLES: OrganizationRole[] = [OrganizationRole.OWNER, OrganizationRole.STORE_MANAGER];
 
@@ -32,7 +32,6 @@ export class ReviewsService {
             store_id: storeId,
             ...(query.employee_id && { employee_id: query.employee_id }),
             ...(query.min_rating !== undefined && { rating: { gte: query.min_rating } }),
-            ...(query.visibility && { visibility: query.visibility }),
             ...(query.search && { comment: { contains: query.search, mode: 'insensitive' as const } }),
         };
 
@@ -123,10 +122,6 @@ export class ReviewsService {
             ]);
         }
 
-        if (dto.visibility !== undefined) {
-            await this.prisma.review.update({ where: { id }, data: { visibility: dto.visibility } });
-        }
-
         return this.findOne(user, id);
     }
 
@@ -215,7 +210,6 @@ export class ReviewsService {
 
         const threshold = store.public_review_rating_threshold ?? 4;
         const redirected = dto.rating >= threshold && !!store.public_review_redirect_url;
-        const visibility = redirected ? ReviewVisibility.PUBLIC : ReviewVisibility.PRIVATE;
 
         const review = await this.prisma.$transaction(async (tx) => {
             const created = await tx.review.create({
@@ -228,7 +222,6 @@ export class ReviewsService {
                     customer_name: dto.customer_name,
                     rating: dto.rating,
                     comment: dto.comment,
-                    visibility,
                     sentiment,
                     redirected_to_public_platform: redirected,
                 },

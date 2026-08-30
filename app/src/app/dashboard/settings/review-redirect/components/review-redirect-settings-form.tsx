@@ -80,8 +80,7 @@ export const ReviewRedirectSettingsForm: FC = () => {
         </h2>
         <p className="mt-0.5 text-xs text-zinc-500">
           Customers who rate you at or above this threshold are prompted to
-          share their review publicly. Below it, they&apos;re guided to
-          private feedback instead.
+          share feedback on an external site such as Google.
         </p>
       </div>
 

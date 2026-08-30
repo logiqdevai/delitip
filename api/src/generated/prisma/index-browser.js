@@ -352,7 +352,6 @@ exports.Prisma.ReviewScalarFieldEnum = {
   customer_name: 'customer_name',
   rating: 'rating',
   comment: 'comment',
-  visibility: 'visibility',
   sentiment: 'sentiment',
   redirected_to_public_platform: 'redirected_to_public_platform',
   created_at: 'created_at',
@@ -599,11 +598,6 @@ exports.RefundStatus = exports.$Enums.RefundStatus = {
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
   COMPLETED: 'COMPLETED'
-};
-
-exports.ReviewVisibility = exports.$Enums.ReviewVisibility = {
-  PRIVATE: 'PRIVATE',
-  PUBLIC: 'PUBLIC'
 };
 
 exports.ReviewSentiment = exports.$Enums.ReviewSentiment = {

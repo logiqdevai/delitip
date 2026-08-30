@@ -303,14 +303,6 @@ export const PaymentProvider: {
 export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
 
 
-export const ReviewVisibility: {
-  PRIVATE: 'PRIVATE',
-  PUBLIC: 'PUBLIC'
-};
-
-export type ReviewVisibility = (typeof ReviewVisibility)[keyof typeof ReviewVisibility]
-
-
 export const ReviewSentiment: {
   POSITIVE: 'POSITIVE',
   NEUTRAL: 'NEUTRAL',
@@ -419,10 +411,6 @@ export const PayoutAccountOwnerType: typeof $Enums.PayoutAccountOwnerType
 export type PaymentProvider = $Enums.PaymentProvider
 
 export const PaymentProvider: typeof $Enums.PaymentProvider
-
-export type ReviewVisibility = $Enums.ReviewVisibility
-
-export const ReviewVisibility: typeof $Enums.ReviewVisibility
 
 export type ReviewSentiment = $Enums.ReviewSentiment
 
@@ -26376,7 +26364,6 @@ export namespace Prisma {
     customer_name: string | null
     rating: number | null
     comment: string | null
-    visibility: $Enums.ReviewVisibility | null
     sentiment: $Enums.ReviewSentiment | null
     redirected_to_public_platform: boolean | null
     created_at: Date | null
@@ -26393,7 +26380,6 @@ export namespace Prisma {
     customer_name: string | null
     rating: number | null
     comment: string | null
-    visibility: $Enums.ReviewVisibility | null
     sentiment: $Enums.ReviewSentiment | null
     redirected_to_public_platform: boolean | null
     created_at: Date | null
@@ -26410,7 +26396,6 @@ export namespace Prisma {
     customer_name: number
     rating: number
     comment: number
-    visibility: number
     sentiment: number
     redirected_to_public_platform: number
     created_at: number
@@ -26437,7 +26422,6 @@ export namespace Prisma {
     customer_name?: true
     rating?: true
     comment?: true
-    visibility?: true
     sentiment?: true
     redirected_to_public_platform?: true
     created_at?: true
@@ -26454,7 +26438,6 @@ export namespace Prisma {
     customer_name?: true
     rating?: true
     comment?: true
-    visibility?: true
     sentiment?: true
     redirected_to_public_platform?: true
     created_at?: true
@@ -26471,7 +26454,6 @@ export namespace Prisma {
     customer_name?: true
     rating?: true
     comment?: true
-    visibility?: true
     sentiment?: true
     redirected_to_public_platform?: true
     created_at?: true
@@ -26575,7 +26557,6 @@ export namespace Prisma {
     customer_name: string | null
     rating: number
     comment: string | null
-    visibility: $Enums.ReviewVisibility
     sentiment: $Enums.ReviewSentiment | null
     redirected_to_public_platform: boolean
     created_at: Date
@@ -26611,7 +26592,6 @@ export namespace Prisma {
     customer_name?: boolean
     rating?: boolean
     comment?: boolean
-    visibility?: boolean
     sentiment?: boolean
     redirected_to_public_platform?: boolean
     created_at?: boolean
@@ -26636,7 +26616,6 @@ export namespace Prisma {
     customer_name?: boolean
     rating?: boolean
     comment?: boolean
-    visibility?: boolean
     sentiment?: boolean
     redirected_to_public_platform?: boolean
     created_at?: boolean
@@ -26657,7 +26636,6 @@ export namespace Prisma {
     customer_name?: boolean
     rating?: boolean
     comment?: boolean
-    visibility?: boolean
     sentiment?: boolean
     redirected_to_public_platform?: boolean
     created_at?: boolean
@@ -26678,14 +26656,13 @@ export namespace Prisma {
     customer_name?: boolean
     rating?: boolean
     comment?: boolean
-    visibility?: boolean
     sentiment?: boolean
     redirected_to_public_platform?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "store_id" | "tip_id" | "employee_id" | "customer_user_id" | "customer_email" | "customer_name" | "rating" | "comment" | "visibility" | "sentiment" | "redirected_to_public_platform" | "created_at" | "updated_at", ExtArgs["result"]["review"]>
+  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "store_id" | "tip_id" | "employee_id" | "customer_user_id" | "customer_email" | "customer_name" | "rating" | "comment" | "sentiment" | "redirected_to_public_platform" | "created_at" | "updated_at", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     store?: boolean | StoreDefaultArgs<ExtArgs>
     tip?: boolean | Review$tipArgs<ExtArgs>
@@ -26730,7 +26707,6 @@ export namespace Prisma {
       customer_name: string | null
       rating: number
       comment: string | null
-      visibility: $Enums.ReviewVisibility
       sentiment: $Enums.ReviewSentiment | null
       redirected_to_public_platform: boolean
       created_at: Date
@@ -27174,7 +27150,6 @@ export namespace Prisma {
     readonly customer_name: FieldRef<"Review", 'String'>
     readonly rating: FieldRef<"Review", 'Int'>
     readonly comment: FieldRef<"Review", 'String'>
-    readonly visibility: FieldRef<"Review", 'ReviewVisibility'>
     readonly sentiment: FieldRef<"Review", 'ReviewSentiment'>
     readonly redirected_to_public_platform: FieldRef<"Review", 'Boolean'>
     readonly created_at: FieldRef<"Review", 'DateTime'>
@@ -38042,7 +38017,6 @@ export namespace Prisma {
     customer_name: 'customer_name',
     rating: 'rating',
     comment: 'comment',
-    visibility: 'visibility',
     sentiment: 'sentiment',
     redirected_to_public_platform: 'redirected_to_public_platform',
     created_at: 'created_at',
@@ -38517,20 +38491,6 @@ export namespace Prisma {
    * Reference to a field of type 'RefundStatus[]'
    */
   export type ListEnumRefundStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RefundStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'ReviewVisibility'
-   */
-  export type EnumReviewVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewVisibility'>
-    
-
-
-  /**
-   * Reference to a field of type 'ReviewVisibility[]'
-   */
-  export type ListEnumReviewVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewVisibility[]'>
     
 
 
@@ -40197,7 +40157,6 @@ export namespace Prisma {
     customer_name?: StringNullableFilter<"Review"> | string | null
     rating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
-    visibility?: EnumReviewVisibilityFilter<"Review"> | $Enums.ReviewVisibility
     sentiment?: EnumReviewSentimentNullableFilter<"Review"> | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFilter<"Review"> | boolean
     created_at?: DateTimeFilter<"Review"> | Date | string
@@ -40221,7 +40180,6 @@ export namespace Prisma {
     customer_name?: SortOrderInput | SortOrder
     rating?: SortOrder
     comment?: SortOrderInput | SortOrder
-    visibility?: SortOrder
     sentiment?: SortOrderInput | SortOrder
     redirected_to_public_platform?: SortOrder
     created_at?: SortOrder
@@ -40248,7 +40206,6 @@ export namespace Prisma {
     customer_name?: StringNullableFilter<"Review"> | string | null
     rating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
-    visibility?: EnumReviewVisibilityFilter<"Review"> | $Enums.ReviewVisibility
     sentiment?: EnumReviewSentimentNullableFilter<"Review"> | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFilter<"Review"> | boolean
     created_at?: DateTimeFilter<"Review"> | Date | string
@@ -40272,7 +40229,6 @@ export namespace Prisma {
     customer_name?: SortOrderInput | SortOrder
     rating?: SortOrder
     comment?: SortOrderInput | SortOrder
-    visibility?: SortOrder
     sentiment?: SortOrderInput | SortOrder
     redirected_to_public_platform?: SortOrder
     created_at?: SortOrder
@@ -40297,7 +40253,6 @@ export namespace Prisma {
     customer_name?: StringNullableWithAggregatesFilter<"Review"> | string | null
     rating?: IntWithAggregatesFilter<"Review"> | number
     comment?: StringNullableWithAggregatesFilter<"Review"> | string | null
-    visibility?: EnumReviewVisibilityWithAggregatesFilter<"Review"> | $Enums.ReviewVisibility
     sentiment?: EnumReviewSentimentNullableWithAggregatesFilter<"Review"> | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolWithAggregatesFilter<"Review"> | boolean
     created_at?: DateTimeWithAggregatesFilter<"Review"> | Date | string
@@ -42621,7 +42576,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -42645,7 +42599,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -42661,7 +42614,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42685,7 +42637,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42705,7 +42656,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -42718,7 +42668,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42735,7 +42684,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44998,13 +44946,6 @@ export namespace Prisma {
     _max?: NestedEnumRefundStatusFilter<$PrismaModel>
   }
 
-  export type EnumReviewVisibilityFilter<$PrismaModel = never> = {
-    equals?: $Enums.ReviewVisibility | EnumReviewVisibilityFieldRefInput<$PrismaModel>
-    in?: $Enums.ReviewVisibility[] | ListEnumReviewVisibilityFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ReviewVisibility[] | ListEnumReviewVisibilityFieldRefInput<$PrismaModel>
-    not?: NestedEnumReviewVisibilityFilter<$PrismaModel> | $Enums.ReviewVisibility
-  }
-
   export type EnumReviewSentimentNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.ReviewSentiment | EnumReviewSentimentFieldRefInput<$PrismaModel> | null
     in?: $Enums.ReviewSentiment[] | ListEnumReviewSentimentFieldRefInput<$PrismaModel> | null
@@ -45057,7 +44998,6 @@ export namespace Prisma {
     customer_name?: SortOrder
     rating?: SortOrder
     comment?: SortOrder
-    visibility?: SortOrder
     sentiment?: SortOrder
     redirected_to_public_platform?: SortOrder
     created_at?: SortOrder
@@ -45078,7 +45018,6 @@ export namespace Prisma {
     customer_name?: SortOrder
     rating?: SortOrder
     comment?: SortOrder
-    visibility?: SortOrder
     sentiment?: SortOrder
     redirected_to_public_platform?: SortOrder
     created_at?: SortOrder
@@ -45095,7 +45034,6 @@ export namespace Prisma {
     customer_name?: SortOrder
     rating?: SortOrder
     comment?: SortOrder
-    visibility?: SortOrder
     sentiment?: SortOrder
     redirected_to_public_platform?: SortOrder
     created_at?: SortOrder
@@ -45104,16 +45042,6 @@ export namespace Prisma {
 
   export type ReviewSumOrderByAggregateInput = {
     rating?: SortOrder
-  }
-
-  export type EnumReviewVisibilityWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ReviewVisibility | EnumReviewVisibilityFieldRefInput<$PrismaModel>
-    in?: $Enums.ReviewVisibility[] | ListEnumReviewVisibilityFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ReviewVisibility[] | ListEnumReviewVisibilityFieldRefInput<$PrismaModel>
-    not?: NestedEnumReviewVisibilityWithAggregatesFilter<$PrismaModel> | $Enums.ReviewVisibility
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumReviewVisibilityFilter<$PrismaModel>
-    _max?: NestedEnumReviewVisibilityFilter<$PrismaModel>
   }
 
   export type EnumReviewSentimentNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -48182,10 +48110,6 @@ export namespace Prisma {
     connect?: ReviewTagAssignmentWhereUniqueInput | ReviewTagAssignmentWhereUniqueInput[]
   }
 
-  export type EnumReviewVisibilityFieldUpdateOperationsInput = {
-    set?: $Enums.ReviewVisibility
-  }
-
   export type NullableEnumReviewSentimentFieldUpdateOperationsInput = {
     set?: $Enums.ReviewSentiment | null
   }
@@ -49201,28 +49125,11 @@ export namespace Prisma {
     _max?: NestedEnumRefundStatusFilter<$PrismaModel>
   }
 
-  export type NestedEnumReviewVisibilityFilter<$PrismaModel = never> = {
-    equals?: $Enums.ReviewVisibility | EnumReviewVisibilityFieldRefInput<$PrismaModel>
-    in?: $Enums.ReviewVisibility[] | ListEnumReviewVisibilityFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ReviewVisibility[] | ListEnumReviewVisibilityFieldRefInput<$PrismaModel>
-    not?: NestedEnumReviewVisibilityFilter<$PrismaModel> | $Enums.ReviewVisibility
-  }
-
   export type NestedEnumReviewSentimentNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.ReviewSentiment | EnumReviewSentimentFieldRefInput<$PrismaModel> | null
     in?: $Enums.ReviewSentiment[] | ListEnumReviewSentimentFieldRefInput<$PrismaModel> | null
     notIn?: $Enums.ReviewSentiment[] | ListEnumReviewSentimentFieldRefInput<$PrismaModel> | null
     not?: NestedEnumReviewSentimentNullableFilter<$PrismaModel> | $Enums.ReviewSentiment | null
-  }
-
-  export type NestedEnumReviewVisibilityWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ReviewVisibility | EnumReviewVisibilityFieldRefInput<$PrismaModel>
-    in?: $Enums.ReviewVisibility[] | ListEnumReviewVisibilityFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ReviewVisibility[] | ListEnumReviewVisibilityFieldRefInput<$PrismaModel>
-    not?: NestedEnumReviewVisibilityWithAggregatesFilter<$PrismaModel> | $Enums.ReviewVisibility
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumReviewVisibilityFilter<$PrismaModel>
-    _max?: NestedEnumReviewVisibilityFilter<$PrismaModel>
   }
 
   export type NestedEnumReviewSentimentNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -49494,7 +49401,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -49516,7 +49422,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -49814,7 +49719,6 @@ export namespace Prisma {
     customer_name?: StringNullableFilter<"Review"> | string | null
     rating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
-    visibility?: EnumReviewVisibilityFilter<"Review"> | $Enums.ReviewVisibility
     sentiment?: EnumReviewSentimentNullableFilter<"Review"> | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFilter<"Review"> | boolean
     created_at?: DateTimeFilter<"Review"> | Date | string
@@ -51598,7 +51502,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -51620,7 +51523,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -52678,7 +52580,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -52700,7 +52601,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -55290,7 +55190,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -55312,7 +55211,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -55669,7 +55567,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55691,7 +55588,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -57112,7 +57008,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -57135,7 +57030,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -57191,7 +57085,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -57214,7 +57107,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -57490,7 +57382,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -57513,7 +57404,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -57569,7 +57459,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -57592,7 +57481,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -57899,7 +57787,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -57922,7 +57809,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -57986,7 +57872,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58009,7 +57894,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58749,7 +58633,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -58984,7 +58867,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59006,7 +58888,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59025,7 +58906,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59754,7 +59634,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -60053,7 +59932,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60075,7 +59953,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60094,7 +59971,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60331,7 +60207,6 @@ export namespace Prisma {
     customer_name?: string | null
     rating: number
     comment?: string | null
-    visibility?: $Enums.ReviewVisibility
     sentiment?: $Enums.ReviewSentiment | null
     redirected_to_public_platform?: boolean
     created_at?: Date | string
@@ -60492,7 +60367,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60514,7 +60388,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60533,7 +60406,6 @@ export namespace Prisma {
     customer_name?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
-    visibility?: EnumReviewVisibilityFieldUpdateOperationsInput | $Enums.ReviewVisibility
     sentiment?: NullableEnumReviewSentimentFieldUpdateOperationsInput | $Enums.ReviewSentiment | null
     redirected_to_public_platform?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string

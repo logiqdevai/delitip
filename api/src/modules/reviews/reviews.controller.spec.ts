@@ -33,7 +33,7 @@ describe('ReviewsController', () => {
     });
 
     it('update delegates with the current user, id param, and body', () => {
-        const dto = { visibility: undefined } as any;
+        const dto = { tag_ids: undefined } as any;
         service.update.mockReturnValue('result');
 
         expect(controller.update(user, 'r1', dto)).toBe('result');

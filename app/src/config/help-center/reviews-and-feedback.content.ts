@@ -12,11 +12,11 @@ export const ReviewsAndFeedbackHelpCategory: HelpCategory = {
       slug: "viewing-customer-reviews",
       title: "Viewing customer reviews",
       summary:
-        "Ratings and comments customers leave after tipping, filterable by rating, employee, and visibility.",
+        "Ratings and comments customers leave after tipping, filterable by rating and employee.",
       sections: [
         {
           paragraphs: [
-            "Dashboard → Reviews lists every customer rating and comment, each tied to the employee it was left for. Filter by minimum rating, employee, or visibility (Public or Private).",
+            "Dashboard → Reviews lists every customer rating and comment, each tied to the employee it was left for. Filter by minimum rating or employee.",
             "Open a review's detail sheet to see the full comment along with any tags or categories the customer selected.",
           ],
           links: [{ label: "Dashboard → Reviews", href: Routes.dashboard.reviews }],
@@ -28,12 +28,12 @@ export const ReviewsAndFeedbackHelpCategory: HelpCategory = {
       slug: "setting-the-review-redirect-threshold",
       title: "Setting the review redirect threshold",
       summary:
-        "Choose a star rating above which happy customers are prompted to post a public review, like on Google.",
+        "Choose a star rating above which happy customers are prompted to post on an external site like Google.",
       sections: [
         {
           paragraphs: [
-            "Settings → Review Redirect lets you set a star-rating threshold — for example, 4 stars and up. Customers who rate at or above that threshold are prompted to share their review publicly via an external link (such as your Google Business Profile).",
-            "Customers who rate below the threshold are routed to leave private feedback instead, which stays inside your Dashboard rather than going public.",
+            "Settings → Review Redirect lets you set a star-rating threshold — for example, 4 stars and up. Customers who rate at or above that threshold are prompted to share feedback via an external link (such as your Google Business Profile).",
+            "Ratings below the threshold stay in your Dashboard only — no external redirect is offered.",
           ],
           links: [{ label: "Settings → Review Redirect", href: Routes.dashboard.settings.reviewRedirect }],
         },
