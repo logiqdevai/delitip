@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { Download, Pencil, Printer } from "lucide-react";
+import { Check, Copy, Download, Pencil, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { getQrCodeSelectionModeLabel } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
@@ -12,7 +12,6 @@ import {
   downloadQrCodePng,
   getAbsoluteTipUrl,
   getQrCodeImageUrl,
-  getTipPath,
   printQrCode,
 } from "@/features/qr-codes/utils/qr-tip-url.utils";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
@@ -33,11 +32,30 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
   onEdit,
 }) => {
   const [busy, setBusy] = useState<"download" | "print" | null>(null);
+  const [copied, setCopied] = useState(false);
   const statsQuery = useQrCodeStats(qr.id);
-  const tipPath = getTipPath(storeSlug, qr.code);
   const tipUrl = getAbsoluteTipUrl(storeSlug, qr.code);
   const employeeCount = getQrCodeEmployeeCount(qr);
   const imageUrl = getQrCodeImageUrl(tipUrl, 240);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(tipUrl);
+      setCopied(true);
+      toast.add({
+        title: "Link copied",
+        description: "Tip URL copied to clipboard.",
+        type: "success",
+      });
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.add({
+        title: "Could not copy",
+        description: "Please copy the link manually.",
+        type: "error",
+      });
+    }
+  };
 
   const handleDownload = async () => {
     setBusy("download");
@@ -80,7 +98,23 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
     >
       <div>
         <h3 className="text-sm font-bold text-ink-charcoal">{qr.label}</h3>
-        <p className="mt-1 break-all text-xs text-zinc-400">{tipPath}</p>
+        <div className="mt-1 flex items-start justify-center gap-1">
+          <p className="min-w-0 break-all text-xs text-zinc-400">{tipUrl}</p>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="size-7 shrink-0 px-0 text-zinc-400 hover:text-ink-charcoal"
+            onClick={() => void handleCopy()}
+            aria-label={copied ? "Copied tip URL" : "Copy tip URL"}
+          >
+            {copied ? (
+              <Check className="size-3.5 text-brand-700" strokeWidth={2} />
+            ) : (
+              <Copy className="size-3.5" strokeWidth={2} />
+            )}
+          </Button>
+        </div>
       </div>
 
       <div className="mx-auto flex size-40 items-center justify-center rounded-2xl bg-ink-charcoal p-2.5 shadow-inner">

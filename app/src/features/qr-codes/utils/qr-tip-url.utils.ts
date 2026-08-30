@@ -1,3 +1,4 @@
+import { environments } from "@/config/environments";
 import { Routes } from "@/routes/routes";
 
 export function getTipPath(storeSlug: string, code: string): string {
@@ -6,10 +7,8 @@ export function getTipPath(storeSlug: string, code: string): string {
 
 export function getAbsoluteTipUrl(storeSlug: string, code: string): string {
   const path = getTipPath(storeSlug, code);
-  if (typeof window !== "undefined" && window.location?.origin) {
-    return `${window.location.origin}${path}`;
-  }
-  return path;
+  const base = environments.siteUrl.replace(/\/$/, "");
+  return `${base}${path}`;
 }
 
 export function getQrCodeImageUrl(tipUrl: string, size = 280): string {
