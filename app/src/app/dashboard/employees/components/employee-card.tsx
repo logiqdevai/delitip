@@ -4,6 +4,7 @@ import { type FC, useState } from "react";
 import Link from "next/link";
 import { Pencil, QrCode, UserRoundX, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { EmployeeQrCodesDialog } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
 import { getEmployeeStatusLabel } from "@/config/constants/dropdowns/employees/employee-status-form.options";
 import type { Employee } from "@/features/employees/interfaces/employees.interfaces";
@@ -15,13 +16,6 @@ interface EmployeeCardProps {
   onEdit: (employee: Employee) => void;
   onToggleActive: (employee: Employee) => void;
 }
-
-const initials = (name: string) => {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-  return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
-};
 
 export const EmployeeCard: FC<EmployeeCardProps> = ({
   employee,
@@ -42,18 +36,11 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
         href={Routes.dashboard.employeeDetail(employee.id)}
         className="group flex min-w-0 flex-1 items-center gap-3"
       >
-        <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink-charcoal text-xs font-bold text-paper-offwhite">
-          {employee.photo_document?.url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={employee.photo_document.url}
-              alt=""
-              className="size-full object-cover"
-            />
-          ) : (
-            initials(employee.full_name)
-          )}
-        </div>
+        <EmployeeAvatar
+          name={employee.full_name}
+          photoUrl={employee.photo_document?.url}
+          size="lg"
+        />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <h3 className="truncate text-sm font-bold text-ink-charcoal group-hover:underline">

@@ -53,7 +53,18 @@ export class DocumentsService {
             throw new ForbiddenException('You do not have access to this document');
         }
 
-        await this.prisma.document.delete({ where: { id } });
+        return this.deleteDocumentAndStorage(document);
+    }
+
+    async removeById(id: string) {
+        const document = await this.prisma.document.findUnique({ where: { id } });
+        if (!document) return { success: true };
+
+        return this.deleteDocumentAndStorage(document);
+    }
+
+    private async deleteDocumentAndStorage(document: { id: string; filename: string }) {
+        await this.prisma.document.delete({ where: { id: document.id } });
 
         try {
             await this.gcsService.deleteImage({ filename: document.filename, folder: GcsFolders.documents });

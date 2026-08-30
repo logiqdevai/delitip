@@ -35,17 +35,30 @@ export const EmployeesPageContent: FC = () => {
   const deactivateConfirm = useConfirmationDialog();
 
   const [formOpen, setFormOpen] = useState(false);
-  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [editingEmployeeId, setEditingEmployeeId] = useState<string | null>(
+    null,
+  );
   const [pendingToggle, setPendingToggle] = useState<Employee | null>(null);
 
+  const employees = employeesQuery.data?.data ?? [];
+  const editingEmployee =
+    employees.find((employee) => employee.id === editingEmployeeId) ?? null;
+
   const openCreate = () => {
-    setEditingEmployee(null);
+    setEditingEmployeeId(null);
     setFormOpen(true);
   };
 
   const openEdit = (employee: Employee) => {
-    setEditingEmployee(employee);
+    setEditingEmployeeId(employee.id);
     setFormOpen(true);
+  };
+
+  const handleFormOpenChange = (open: boolean) => {
+    setFormOpen(open);
+    if (!open) {
+      setEditingEmployeeId(null);
+    }
   };
 
   const requestToggleActive = (employee: Employee) => {
@@ -93,8 +106,6 @@ export const EmployeesPageContent: FC = () => {
       </Empty>
     );
   }
-
-  const employees = employeesQuery.data?.data ?? [];
 
   return (
     <>
@@ -175,7 +186,7 @@ export const EmployeesPageContent: FC = () => {
 
       <EmployeeFormDialog
         open={formOpen}
-        onOpenChange={setFormOpen}
+        onOpenChange={handleFormOpenChange}
         storeId={storeId}
         employee={editingEmployee}
       />

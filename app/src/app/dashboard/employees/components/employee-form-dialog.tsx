@@ -6,6 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
 import {
+  ConfirmationDialog,
+  useConfirmationDialog,
+} from "@/components/ui/confirmation-dialog";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -17,11 +21,9 @@ import { ImagePicker } from "@/components/ui/image-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MultilingualInput } from "@/components/ui/multilingual-input";
-import {
-  useDeleteDocument,
-  useUploadDocument,
-} from "@/features/documents/hooks/use-documents";
+import { useUploadDocument } from "@/features/documents/hooks/use-documents";
 import { DocumentTypes } from "@/features/documents/interfaces/documents.interfaces";
+import { deleteDocument as deleteDocumentRequest } from "@/features/documents/services/documents.services";
 import {
   useCreateEmployee,
   useUpdateEmployee,
@@ -52,28 +54,44 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
   const createEmployee = useCreateEmployee(storeId);
   const updateEmployee = useUpdateEmployee();
   const uploadDocument = useUploadDocument();
-  const deleteDocument = useDeleteDocument();
+  const removePhotoConfirm = useConfirmationDialog();
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [photoDocumentId, setPhotoDocumentId] = useState<string | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-  const [photoSeededForOpen, setPhotoSeededForOpen] = useState(false);
+  const [photoDirty, setPhotoDirty] = useState(false);
   const [fullNameTranslations, setFullNameTranslations] = useState<
     Record<string, string>
   >({});
   const [fullNameError, setFullNameError] = useState<string | null>(null);
+  const [seededOpen, setSeededOpen] = useState(false);
 
-  if (open && !photoSeededForOpen) {
-    setPhotoSeededForOpen(true);
+  if (open && !seededOpen) {
+    setSeededOpen(true);
     setPhotoDocumentId(employee?.photo_document_id ?? null);
     setPhotoUrl(employee?.photo_document?.url ?? null);
+    setPhotoDirty(false);
     setFullNameTranslations(employee?.full_name_translations ?? {});
     setFullNameError(null);
-  } else if (!open && photoSeededForOpen) {
-    setPhotoSeededForOpen(false);
+  } else if (!open && seededOpen) {
+    setSeededOpen(false);
+    setPhotoDirty(false);
   }
 
+  useEffect(() => {
+    if (!open || photoDirty) return;
+    setPhotoDocumentId(employee?.photo_document_id ?? null);
+    setPhotoUrl(employee?.photo_document?.url ?? null);
+  }, [
+    open,
+    photoDirty,
+    employee?.photo_document_id,
+    employee?.photo_document?.url,
+  ]);
+
   const isPending =
-    createEmployee.isPending || updateEmployee.isPending || isUploadingPhoto;
+    createEmployee.isPending ||
+    (updateEmployee.isPending && !isUploadingPhoto) ||
+    isUploadingPhoto;
 
   const {
     register,
@@ -101,7 +119,36 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
       email: employee?.email ?? "",
       position: employee?.position ?? "",
     });
-  }, [employee, open, reset]);
+  }, [employee?.id, employee?.email, employee?.position, open, reset]);
+
+  const persistPhoto = async (
+    nextDocumentId: string | null,
+    nextUrl: string | null,
+    previousId: string | null,
+  ) => {
+    if (!isEdit || !employee) {
+      setPhotoDirty(true);
+      setPhotoDocumentId(nextDocumentId);
+      setPhotoUrl(nextUrl);
+      if (previousId && previousId !== nextDocumentId) {
+        void deleteDocumentRequest(previousId).catch(() => undefined);
+      }
+      return;
+    }
+
+    await updateEmployee.mutateAsync({
+      id: employee.id,
+      payload: { photo_document_id: nextDocumentId },
+    });
+
+    setPhotoDocumentId(nextDocumentId);
+    setPhotoUrl(nextUrl);
+    setPhotoDirty(false);
+
+    if (previousId && previousId !== nextDocumentId) {
+      void deleteDocumentRequest(previousId).catch(() => undefined);
+    }
+  };
 
   const onSubmit = handleSubmit(async (values) => {
     const primaryKey = primaryLanguage.toLowerCase();
@@ -122,7 +169,6 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
             full_name_translations: fullNameTranslations,
             email: values.email,
             position,
-            photo_document_id: photoDocumentId,
           },
         });
       } else {
@@ -133,6 +179,7 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
           photo_document_id: photoDocumentId ?? undefined,
         });
       }
+
       onOpenChange(false);
     } catch {}
   });
@@ -162,29 +209,29 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
             hint="Optional"
             value={photoUrl ?? undefined}
             isPending={isUploadingPhoto}
-            disabled={isPending || deleteDocument.isPending}
+            disabled={isPending}
             onChange={(file) => {
               setIsUploadingPhoto(true);
+              const previousId = photoDocumentId;
               uploadDocument.mutate(
                 { file, type: DocumentTypes.IMAGE },
                 {
                   onSuccess: (document) => {
-                    setPhotoDocumentId(document.id);
-                    setPhotoUrl(document.url);
+                    void persistPhoto(document.id, document.url, previousId)
+                      .catch(() => {
+                        void deleteDocumentRequest(document.id).catch(
+                          () => undefined,
+                        );
+                      })
+                      .finally(() => setIsUploadingPhoto(false));
                   },
-                  onSettled: () => setIsUploadingPhoto(false),
+                  onError: () => setIsUploadingPhoto(false),
                 },
               );
             }}
             onClear={
               photoDocumentId
-                ? () =>
-                    deleteDocument.mutate(photoDocumentId, {
-                      onSuccess: () => {
-                        setPhotoDocumentId(null);
-                        setPhotoUrl(null);
-                      },
-                    })
+                ? () => removePhotoConfirm.openDialog()
                 : undefined
             }
           />
@@ -254,6 +301,27 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
           </DialogFooter>
         </form>
       </DialogContent>
+
+      <ConfirmationDialog
+        state={removePhotoConfirm}
+        title="Remove photo?"
+        description={
+          isEdit
+            ? "This photo will be removed from the employee profile right away."
+            : "This photo will be discarded."
+        }
+        confirmLabel="Remove"
+        isPending={isUploadingPhoto}
+        onConfirm={async () => {
+          setIsUploadingPhoto(true);
+          const previousId = photoDocumentId;
+          try {
+            await persistPhoto(null, null, previousId);
+          } finally {
+            setIsUploadingPhoto(false);
+          }
+        }}
+      />
     </Dialog>
   );
 };

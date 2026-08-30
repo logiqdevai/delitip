@@ -26,6 +26,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import {
   Empty,
   EmptyContent,
@@ -54,13 +55,6 @@ import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 import { useAuthStore } from "@/stores/auth.store";
-
-const initials = (name: string) => {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-  return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
-};
 
 export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   employeeId,
@@ -141,18 +135,11 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
 
       <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
         <div className="flex items-center gap-4">
-          <div className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink-charcoal text-lg font-bold text-paper-offwhite">
-            {employee.photo_document?.url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={employee.photo_document.url}
-                alt=""
-                className="size-full object-cover"
-              />
-            ) : (
-              initials(employee.full_name)
-            )}
-          </div>
+          <EmployeeAvatar
+            name={employee.full_name}
+            photoUrl={employee.photo_document?.url}
+            className="size-14 text-lg"
+          />
           <div>
             <h1 className="text-xl font-bold text-ink-charcoal">
               {employee.full_name}

@@ -10,6 +10,7 @@ import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employe
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import {
   Dialog,
   DialogContent,
@@ -333,6 +334,11 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                                       ),
                                 );
                               }}
+                            />
+                            <EmployeeAvatar
+                              name={employee.full_name}
+                              photoUrl={employee.photo_document?.url}
+                              size="xs"
                             />
                             <span className="min-w-0 truncate">
                               {employee.full_name}

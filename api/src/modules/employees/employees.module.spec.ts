@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { DocumentsService } from '@/modules/documents/services/documents.service';
 import { EmployeesModule } from './employees.module';
 import { EmployeesController } from './employees.controller';
 import { EmployeesService } from './services/employees.service';
@@ -13,6 +14,8 @@ describe('EmployeesModule', () => {
         })
             .overrideProvider(PrismaService)
             .useValue({})
+            .overrideProvider(DocumentsService)
+            .useValue({ removeById: jest.fn() })
             .compile();
     });
 

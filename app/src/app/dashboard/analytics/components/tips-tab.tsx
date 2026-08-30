@@ -4,6 +4,7 @@ import { type FC, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmployeeSelect } from "@/components/ui/employee-select";
 import {
   Select,
   SelectContent,
@@ -74,33 +75,15 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
           aria-label="To date"
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
-        <Select
-          items={[
-            { label: "All employees", value: "all" },
-            ...employees.map((employee) => ({
-              label: employee.full_name,
-              value: employee.id,
-            })),
-          ]}
+        <EmployeeSelect
+          employees={employees}
           value={employeeId}
-          onValueChange={(value) => {
-            if (value) setEmployeeId(value);
-          }}
-        >
-          <SelectTrigger className="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="w-auto min-w-44">
-            <SelectGroup>
-              <SelectItem value="all">All employees</SelectItem>
-              {employees.map((employee) => (
-                <SelectItem key={employee.id} value={employee.id}>
-                  {employee.full_name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+          onValueChange={setEmployeeId}
+          includeAll
+          triggerClassName="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs"
+          contentClassName="min-w-44"
+          aria-label="Filter by employee"
+        />
         <Select
           items={[
             { label: "All QR codes", value: "all" },

@@ -13,18 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { useLogout } from "@/features/auth/hooks/use-auth";
 import { useCurrentEmployee } from "@/features/employees/hooks/use-employees";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 import { EmployeePhotoDialog } from "./employee-photo-dialog";
-
-const employeeInitials = (name: string) => {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-  return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
-};
 
 export const EmployeeHeader: FC = () => {
   const [onShift, setOnShift] = useState(true);
@@ -74,20 +68,12 @@ export const EmployeeHeader: FC = () => {
               className="flex items-center gap-2.5 border-l border-zinc-200 pl-2 outline-none"
               aria-label="Account menu"
             >
-              <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink-charcoal text-xs font-bold text-paper-offwhite ring-2 ring-electric-lime/20">
-                {employee?.photo_document?.url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={employee.photo_document.url}
-                    alt=""
-                    className="size-full object-cover"
-                  />
-                ) : employee ? (
-                  employeeInitials(employee.full_name)
-                ) : (
-                  "?"
-                )}
-              </div>
+              <EmployeeAvatar
+                name={employee?.full_name ?? "?"}
+                photoUrl={employee?.photo_document?.url}
+                size="md"
+                className="ring-2 ring-electric-lime/20"
+              />
               <div className="hidden text-left sm:block">
                 <div className="text-xs font-bold text-ink-charcoal">
                   {employee?.full_name ?? "—"}

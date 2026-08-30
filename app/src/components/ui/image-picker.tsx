@@ -1,21 +1,21 @@
 "use client";
 
-import { type DragEvent, type FC, useId, useRef, useState } from "react";
+import { type DragEvent, type FC, useEffect, useId, useRef, useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { ImagePlus, X } from "lucide-react";
+import { Check, ImagePlus, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 const imagePickerPreviewVariants = cva(
-  "relative flex shrink-0 items-center justify-center overflow-hidden border border-dashed transition-colors outline-none focus-visible:ring-2 focus-visible:ring-electric-lime focus-visible:ring-offset-2",
+  "relative flex shrink-0 items-center justify-center overflow-hidden border transition-colors",
   {
     variants: {
       mode: {
-        logo: "size-20 rounded-2xl",
-        cover: "h-20 w-[7.5rem] rounded-2xl",
-        image: "size-20 rounded-2xl",
+        logo: "size-16 rounded-xl",
+        cover: "h-16 w-28 rounded-xl",
+        image: "size-16 rounded-xl",
       },
     },
     defaultVariants: {
@@ -34,6 +34,24 @@ const IMAGE_PICKER_MODE_HINTS = {
   logo: "Square PNG or SVG",
   cover: "Wide image recommended",
   image: "PNG or JPG",
+} as const;
+
+const IMAGE_PICKER_MODE_ACTIONS = {
+  logo: {
+    emptyTitle: "Add your logo",
+    emptyBody: "Drop a file here, or browse",
+    filledTitle: "Logo ready",
+  },
+  cover: {
+    emptyTitle: "Add a cover image",
+    emptyBody: "Drop a file here, or browse",
+    filledTitle: "Cover ready",
+  },
+  image: {
+    emptyTitle: "Add a photo",
+    emptyBody: "Drop a file here, or browse",
+    filledTitle: "Photo ready",
+  },
 } as const;
 
 export type ImagePickerMode = NonNullable<
@@ -81,12 +99,34 @@ export const ImagePicker: FC<ImagePickerProps> = ({
   const hintId = `${inputId}-hint`;
   const errorId = `${inputId}-error`;
   const inputRef = useRef<HTMLInputElement>(null);
+  const wasPendingRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const resolvedLabel = label ?? IMAGE_PICKER_MODE_LABELS[mode];
   const resolvedHint =
     hint === null ? null : (hint ?? IMAGE_PICKER_MODE_HINTS[mode]);
+  const copy = IMAGE_PICKER_MODE_ACTIONS[mode];
   const isDisabled = disabled || isPending;
   const hasValue = Boolean(value);
+
+  useEffect(() => {
+    if (isPending) {
+      wasPendingRef.current = true;
+      setShowSuccess(false);
+      return;
+    }
+
+    if (wasPendingRef.current && hasValue) {
+      setShowSuccess(true);
+      wasPendingRef.current = false;
+    }
+  }, [isPending, hasValue]);
+
+  useEffect(() => {
+    if (!hasValue) {
+      setShowSuccess(false);
+    }
+  }, [hasValue]);
 
   const openFileDialog = () => {
     if (isDisabled) return;
@@ -98,18 +138,19 @@ export const ImagePicker: FC<ImagePickerProps> = ({
     onChange(file);
   };
 
-  const handleDragOver = (event: DragEvent<HTMLButtonElement>) => {
+  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (isDisabled) return;
     setIsDragging(true);
   };
 
-  const handleDragLeave = (event: DragEvent<HTMLButtonElement>) => {
+  const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    if (event.currentTarget.contains(event.relatedTarget as Node)) return;
     setIsDragging(false);
   };
 
-  const handleDrop = (event: DragEvent<HTMLButtonElement>) => {
+  const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setIsDragging(false);
     if (isDisabled) return;
@@ -117,9 +158,9 @@ export const ImagePicker: FC<ImagePickerProps> = ({
   };
 
   return (
-    <div className={cn("flex flex-col gap-2", className)}>
+    <div className={cn("@container flex flex-col gap-2", className)}>
       <div className="flex flex-col gap-0.5">
-        <Label id={labelId} htmlFor={inputId}>
+        <Label id={labelId} htmlFor={inputId} className="w-fit">
           {resolvedLabel}
         </Label>
         {resolvedHint ? (
@@ -129,7 +170,24 @@ export const ImagePicker: FC<ImagePickerProps> = ({
         ) : null}
       </div>
 
-      <div className="flex items-center gap-3">
+      <div
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={cn(
+          "group/dropzone relative flex flex-col gap-3 rounded-2xl border border-dashed p-3.5 transition-all",
+          "@xs:flex-row @xs:items-center @xs:gap-4",
+          hasValue
+            ? showSuccess
+              ? "border-solid border-brand-200 bg-brand-50/40 shadow-xs"
+              : "border-solid border-zinc-200/80 bg-white shadow-xs"
+            : "border-zinc-200 bg-zinc-50/80 hover:border-zinc-300 hover:bg-zinc-50",
+          isDragging &&
+            "border-solid border-brand-700 bg-brand-50 shadow-[0_0_0_4px] shadow-brand-100",
+          error && "border-red-300 bg-red-50/40",
+          isDisabled && "opacity-60",
+        )}
+      >
         <button
           type="button"
           disabled={isDisabled}
@@ -141,18 +199,14 @@ export const ImagePicker: FC<ImagePickerProps> = ({
           }
           aria-invalid={error ? true : undefined}
           onClick={openFileDialog}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
           className={cn(
             imagePickerPreviewVariants({ mode }),
-            "group/preview cursor-pointer disabled:cursor-not-allowed disabled:opacity-60",
+            "outline-none focus-visible:ring-2 focus-visible:ring-electric-lime focus-visible:ring-offset-2",
+            isDisabled ? "cursor-not-allowed" : "cursor-pointer",
             hasValue
-              ? "border-solid border-zinc-200 bg-white"
-              : "border-zinc-200 bg-zinc-50 text-zinc-300 hover:border-zinc-300 hover:bg-zinc-100/80 hover:text-zinc-400",
-            isDragging &&
-              "border-solid border-brand-700 bg-brand-50 text-brand-800",
-            error && "border-red-300",
+              ? "border-zinc-200 bg-white"
+              : "border-transparent bg-white text-zinc-400 shadow-xs ring-1 ring-zinc-200/70 group-hover/dropzone:text-zinc-500",
+            isDragging && "bg-brand-50 text-brand-800 ring-brand-200",
           )}
         >
           {hasValue ? (
@@ -161,28 +215,96 @@ export const ImagePicker: FC<ImagePickerProps> = ({
               src={value!}
               alt={alt}
               className={cn(
-                "size-full transition-opacity group-hover/preview:opacity-80",
+                "size-full",
                 mode === "logo" ? "object-contain p-1.5" : "object-cover",
               )}
             />
           ) : (
-            <ImagePlus className="size-5" strokeWidth={1.75} />
+            <span
+              className={cn(
+                "flex size-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-500 transition-colors",
+                "group-hover/dropzone:bg-brand-50 group-hover/dropzone:text-brand-800",
+                isDragging && "bg-brand-100 text-brand-800",
+              )}
+            >
+              <ImagePlus className="size-4" strokeWidth={2} />
+            </span>
           )}
 
           {isPending ? (
-            <span className="absolute inset-0 flex items-center justify-center bg-white/70 backdrop-blur-[1px]">
+            <span className="absolute inset-0 flex items-center justify-center bg-white/75 backdrop-blur-[1px]">
               <Spinner className="size-5 text-ink-charcoal" />
             </span>
           ) : null}
-
-          {!isPending && hasValue ? (
-            <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink-charcoal/0 opacity-0 transition-all group-hover/preview:bg-ink-charcoal/35 group-hover/preview:opacity-100">
-              <span className="rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-ink-charcoal shadow-xs">
-                Replace
-              </span>
-            </span>
-          ) : null}
         </button>
+
+        <div className="min-w-0 flex-1">
+          {hasValue ? (
+            <>
+              <p className="truncate text-sm font-semibold text-ink-charcoal">
+                {copy.filledTitle}
+              </p>
+              {showSuccess ? (
+                <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-brand-700">
+                  <Check className="size-3.5 shrink-0" strokeWidth={2.5} />
+                  Upload successful
+                </p>
+              ) : (
+                <p className="mt-0.5 text-xs text-zinc-500">
+                  Click the photo to replace, or use an action
+                </p>
+              )}
+              <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  disabled={isDisabled}
+                  className="h-8 rounded-full bg-zinc-100 px-3.5 text-xs font-semibold text-ink-charcoal hover:bg-zinc-200"
+                  onClick={openFileDialog}
+                >
+                  <Upload data-icon="inline-start" />
+                  {isPending ? "Uploading…" : "Replace"}
+                </Button>
+                {onClear ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    disabled={isDisabled}
+                    className="h-8 rounded-full px-3 text-xs font-medium text-zinc-600 hover:bg-zinc-100 hover:text-red-700"
+                    onClick={onClear}
+                  >
+                    <X data-icon="inline-start" />
+                    Remove
+                  </Button>
+                ) : null}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="text-sm font-semibold text-ink-charcoal">
+                {isDragging ? "Drop to upload" : copy.emptyTitle}
+              </p>
+              <p className="mt-0.5 text-xs text-zinc-500">
+                {isDragging ? "Release to add this file" : copy.emptyBody}
+              </p>
+              <div className="mt-2.5">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  disabled={isDisabled}
+                  className="h-8 rounded-full bg-white px-3.5 text-xs font-semibold text-ink-charcoal shadow-xs ring-1 ring-zinc-200/80 hover:bg-zinc-50"
+                  onClick={openFileDialog}
+                >
+                  <Upload data-icon="inline-start" />
+                  {isPending ? "Uploading…" : "Browse"}
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
 
         <input
           ref={inputRef}
@@ -196,32 +318,6 @@ export const ImagePicker: FC<ImagePickerProps> = ({
             event.target.value = "";
           }}
         />
-
-        <div className="flex min-w-0 flex-col gap-2">
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            disabled={isDisabled}
-            className="h-8 w-fit rounded-full bg-zinc-100 px-4 text-xs font-semibold text-ink-charcoal hover:bg-zinc-200"
-            onClick={openFileDialog}
-          >
-            {isPending ? "Uploading…" : hasValue ? "Replace" : "Upload"}
-          </Button>
-          {hasValue && onClear ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              disabled={isDisabled}
-              className="h-8 w-fit rounded-full px-3 text-xs font-medium text-zinc-600 hover:bg-zinc-100 hover:text-red-600"
-              onClick={onClear}
-            >
-              <X data-icon="inline-start" />
-              Remove
-            </Button>
-          ) : null}
-        </div>
       </div>
 
       {error ? (

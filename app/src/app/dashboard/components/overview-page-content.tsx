@@ -8,6 +8,7 @@ import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 import { formatMoney } from "@/lib/money";
 import { DashboardOverviewHeader } from "@/app/dashboard/components/dashboard-overview-header";
+import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useStoreReviews } from "@/features/reviews/hooks/use-reviews";
@@ -310,9 +311,11 @@ export const OverviewPageContent: FC = () => {
                 key={employee.id}
                 className="flex items-center gap-2 rounded-full border border-zinc-100 bg-zinc-50 py-1.5 pr-3 pl-1.5"
               >
-                <span className="flex size-6 items-center justify-center rounded-full bg-ink-charcoal text-[10px] font-bold text-paper-offwhite">
-                  {employee.full_name.charAt(0).toUpperCase()}
-                </span>
+                <EmployeeAvatar
+                  name={employee.full_name}
+                  photoUrl={employee.photo_document?.url}
+                  size="xs"
+                />
                 <span className="text-xs font-semibold text-ink-charcoal">
                   {employee.full_name}
                 </span>

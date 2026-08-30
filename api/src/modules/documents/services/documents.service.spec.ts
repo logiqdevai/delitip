@@ -131,4 +131,24 @@ describe('DocumentsService', () => {
             await expect(service.remove('doc1', 'u1')).resolves.toEqual({ success: true });
         });
     });
+
+    describe('removeById', () => {
+        it('returns success when the document does not exist', async () => {
+            prisma.document.findUnique.mockResolvedValue(null);
+
+            await expect(service.removeById('doc1')).resolves.toEqual({ success: true });
+            expect(prisma.document.delete).not.toHaveBeenCalled();
+        });
+
+        it('deletes the DB row and the GCS object without ownership checks', async () => {
+            prisma.document.findUnique.mockResolvedValue({ id: 'doc1', user_uuid: 'other', filename: 'photo.png' });
+            gcsService.deleteImage.mockResolvedValue({ success: true });
+
+            const result = await service.removeById('doc1');
+
+            expect(prisma.document.delete).toHaveBeenCalledWith({ where: { id: 'doc1' } });
+            expect(gcsService.deleteImage).toHaveBeenCalledWith({ filename: 'photo.png', folder: GcsFolders.documents });
+            expect(result).toEqual({ success: true });
+        });
+    });
 });

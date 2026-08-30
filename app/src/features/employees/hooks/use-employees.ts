@@ -117,7 +117,8 @@ export const useUpdateEmployee = () => {
       id: string;
       payload: UpdateEmployeePayload;
     }) => updateEmployee(id, payload),
-    onSuccess: (_data, variables) => {
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(employeesQueryKeys.detail(variables.id), data);
       void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
       void queryClient.invalidateQueries({
         queryKey: employeesQueryKeys.detail(variables.id),

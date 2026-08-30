@@ -3,6 +3,7 @@
 import { type FC, useMemo, useState } from "react";
 import { ArrowRight, Check, MapPin, Users } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
+import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import type {
   PublicQrCode,
   PublicQrCodeEmployee,
@@ -25,13 +26,6 @@ interface TipFlowProps {
 
 type FlowStep = "select" | "amount" | "payment" | "thank-you" | "review" | "done";
 
-const employeeInitials = (name: string) => {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-  return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
-};
-
 const formatStoreAddress = (parts: {
   address_line?: string | null;
   city?: string | null;
@@ -51,17 +45,11 @@ const EmployeeRow: FC<{
 }> = ({ employee, selectable, selected, onToggle }) => {
   const content = (
     <>
-      {employee.photo_url ? (
-        <img
-          src={employee.photo_url}
-          alt=""
-          className="size-12 shrink-0 rounded-full object-cover"
-        />
-      ) : (
-        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-ink-charcoal text-sm font-bold text-paper-offwhite">
-          {employeeInitials(employee.full_name)}
-        </div>
-      )}
+      <EmployeeAvatar
+        name={employee.full_name}
+        photoUrl={employee.photo_url}
+        size="xl"
+      />
       <div className="min-w-0 flex-1 text-left">
         <p className="truncate text-sm font-bold text-ink-charcoal">
           {employee.full_name}

@@ -17,14 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NumberPicker } from "@/components/ui/number-picker";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { EmployeeSelect } from "@/components/ui/employee-select";
 import { DistributionRecipientTypeFormOptions } from "@/config/constants/dropdowns/distribution/distribution-recipient-type-form.options";
 import {
   useCreateDistributionRule,
@@ -333,48 +326,19 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                             name={`recipients.${index}.employee_id`}
                             control={control}
                             render={({ field: employeeField }) => (
-                              <Select
-                                items={[
-                                  {
-                                    label: "Select employee",
-                                    value: "",
-                                  },
-                                  ...employees.map((employee) => ({
-                                    label: employee.full_name,
-                                    value: employee.id,
-                                  })),
-                                ]}
+                              <EmployeeSelect
+                                id={`recipient-employee-${index}`}
+                                employees={employees}
                                 value={employeeField.value}
-                                onValueChange={(value) =>
-                                  employeeField.onChange(value ?? "")
-                                }
-                              >
-                                <SelectTrigger
-                                  id={`recipient-employee-${index}`}
-                                  className="w-full"
-                                  aria-label={`Employee for recipient ${index + 1}`}
-                                  aria-invalid={
-                                    !!recipientError?.employee_id
-                                  }
-                                >
-                                  <SelectValue placeholder="Select employee" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectGroup>
-                                    <SelectItem value="">
-                                      Select employee
-                                    </SelectItem>
-                                    {employees.map((employee) => (
-                                      <SelectItem
-                                        key={employee.id}
-                                        value={employee.id}
-                                      >
-                                        {employee.full_name}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectGroup>
-                                </SelectContent>
-                              </Select>
+                                onValueChange={employeeField.onChange}
+                                emptyValue=""
+                                emptyLabel="Select employee"
+                                placeholder="Select employee"
+                                showPosition
+                                invalid={!!recipientError?.employee_id}
+                                aria-label={`Employee for recipient ${index + 1}`}
+                                className="w-full"
+                              />
                             )}
                           />
                         )}

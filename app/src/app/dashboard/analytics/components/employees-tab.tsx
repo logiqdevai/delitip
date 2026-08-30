@@ -1,9 +1,11 @@
 "use client";
 
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
+import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEmployeesPerformance } from "@/features/analytics/hooks/use-analytics";
 import type { DashboardPeriod } from "@/features/analytics/interfaces/analytics.interfaces";
+import { useEmployees } from "@/features/employees/hooks/use-employees";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 
@@ -17,6 +19,15 @@ export const EmployeesTab: FC<{
     store_id: storeId,
     period,
   });
+  const employeesQuery = useEmployees(storeId, { limit: 100 });
+
+  const photoByEmployeeId = useMemo(() => {
+    const map = new Map<string, string | undefined>();
+    for (const employee of employeesQuery.data?.data ?? []) {
+      map.set(employee.id, employee.photo_document?.url);
+    }
+    return map;
+  }, [employeesQuery.data?.data]);
 
   const rows = performanceQuery.data ?? [];
 
@@ -54,14 +65,23 @@ export const EmployeesTab: FC<{
               ) : (
                 rows.map((row) => (
                   <tr key={row.employee_id}>
-                    <td className="px-4 py-2.5 font-semibold text-ink-charcoal">
-                      {row.employee_name}
+                    <td className="px-4 py-2.5">
+                      <span className="inline-flex items-center gap-2 font-semibold text-ink-charcoal">
+                        <EmployeeAvatar
+                          name={row.employee_name}
+                          photoUrl={photoByEmployeeId.get(row.employee_id)}
+                          size="sm"
+                        />
+                        {row.employee_name}
+                      </span>
                     </td>
                     <td className="px-4 py-2.5 font-bold text-brand-700">
                       {formatMoney(row.tips_total, currency)}
                     </td>
                     <td className="px-4 py-2.5 text-rating-amber">
-                      {row.average_rating ? `★ ${row.average_rating.toFixed(2)}` : "—"}
+                      {row.average_rating
+                        ? `★ ${row.average_rating.toFixed(2)}`
+                        : "—"}
                     </td>
                     <td className="px-4 py-2.5 text-zinc-500">
                       {row.reviews_count}

@@ -1,5 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { DocumentsService } from '@/modules/documents/services/documents.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { UsersService } from '@/modules/users/services/users.service';
 import { paginate, PaginationQueryType } from '@/shared/utils/pagination/pagination-query.schema';
@@ -15,6 +16,7 @@ export class EmployeesService {
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
         private readonly usersService: UsersService,
+        private readonly documentsService: DocumentsService,
     ) { }
 
     // Resolves the raw Json full_name map into a plain display string (primary
@@ -46,6 +48,7 @@ export class EmployeesService {
                 position: dto.position,
                 photo_document_id: dto.photo_document_id,
             },
+            include: { photo_document: true },
         });
 
         return this.toResponse(employee, store.primary_language);
@@ -118,7 +121,11 @@ export class EmployeesService {
             data.full_name = merged;
         }
 
-        const updated = await this.prisma.employee.update({ where: { id: employee.id }, data });
+        const updated = await this.prisma.employee.update({
+            where: { id: employee.id },
+            data,
+            include: { photo_document: true },
+        });
         return this.toResponse(updated, store.primary_language);
     }
 
@@ -130,7 +137,14 @@ export class EmployeesService {
         const employee = await this.prisma.employee.findUnique({ where: { id } });
         if (!employee) throw new NotFoundException('Employee not found');
 
+        const photoDocumentId = employee.photo_document_id;
+
         await this.prisma.employee.delete({ where: { id } });
+
+        if (photoDocumentId) {
+            await this.documentsService.removeById(photoDocumentId);
+        }
+
         return { success: true };
     }
 

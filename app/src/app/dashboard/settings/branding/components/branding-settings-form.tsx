@@ -12,6 +12,7 @@ import {
   useUploadDocument,
 } from "@/features/documents/hooks/use-documents";
 import { DocumentTypes } from "@/features/documents/interfaces/documents.interfaces";
+import { deleteDocument as deleteDocumentRequest } from "@/features/documents/services/documents.services";
 import { useStore, useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
@@ -99,7 +100,7 @@ export const BrandingSettingsForm: FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 @md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5">
         <ImagePicker
           mode="logo"
           value={store.logo_document?.url}
@@ -107,14 +108,26 @@ export const BrandingSettingsForm: FC = () => {
           disabled={deleteDocument.isPending || updateStore.isPending}
           onChange={(file) => {
             setUploadingMode("logo");
+            const previousId = store.logo_document_id;
             uploadDocument.mutate(
               { file, type: DocumentTypes.LOGO },
               {
                 onSuccess: (document) =>
-                  updateStore.mutate({
-                    id: store.id,
-                    payload: { logo_document_id: document.id },
-                  }),
+                  updateStore.mutate(
+                    {
+                      id: store.id,
+                      payload: { logo_document_id: document.id },
+                    },
+                    {
+                      onSuccess: () => {
+                        if (previousId) {
+                          void deleteDocumentRequest(previousId).catch(
+                            () => undefined,
+                          );
+                        }
+                      },
+                    },
+                  ),
                 onSettled: () => setUploadingMode(null),
               },
             );
@@ -139,14 +152,26 @@ export const BrandingSettingsForm: FC = () => {
           disabled={deleteDocument.isPending || updateStore.isPending}
           onChange={(file) => {
             setUploadingMode("cover");
+            const previousId = store.cover_document_id;
             uploadDocument.mutate(
               { file, type: DocumentTypes.BANNER },
               {
                 onSuccess: (document) =>
-                  updateStore.mutate({
-                    id: store.id,
-                    payload: { cover_document_id: document.id },
-                  }),
+                  updateStore.mutate(
+                    {
+                      id: store.id,
+                      payload: { cover_document_id: document.id },
+                    },
+                    {
+                      onSuccess: () => {
+                        if (previousId) {
+                          void deleteDocumentRequest(previousId).catch(
+                            () => undefined,
+                          );
+                        }
+                      },
+                    },
+                  ),
                 onSettled: () => setUploadingMode(null),
               },
             );

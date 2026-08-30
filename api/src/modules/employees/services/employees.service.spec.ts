@@ -7,6 +7,7 @@ describe('EmployeesService', () => {
     let prisma: any;
     let accessControl: any;
     let usersService: any;
+    let documentsService: any;
 
     const user = { id: 'u1', role: AuthRole.USER };
     const store1 = { id: 'store1', primary_language: 'EN', supported_languages: ['EN'] };
@@ -25,7 +26,8 @@ describe('EmployeesService', () => {
             isPlatformAdmin: jest.fn(),
         };
         usersService = { findOrCreateByEmail: jest.fn() };
-        service = new EmployeesService(prisma, accessControl, usersService);
+        documentsService = { removeById: jest.fn().mockResolvedValue({ success: true }) };
+        service = new EmployeesService(prisma, accessControl, usersService, documentsService);
     });
 
     describe('create', () => {
@@ -51,6 +53,7 @@ describe('EmployeesService', () => {
                     position: 'Waiter',
                     photo_document_id: 'doc1',
                 },
+                include: { photo_document: true },
             });
             expect(result.full_name).toBe('Maria Papadopoulou');
             expect(result.full_name_translations).toEqual({ en: 'Maria Papadopoulou' });
@@ -143,7 +146,11 @@ describe('EmployeesService', () => {
                 OrganizationRole.OWNER,
                 OrganizationRole.STORE_MANAGER,
             ]);
-            expect(prisma.employee.update).toHaveBeenCalledWith({ where: { id: 'emp1' }, data: { position: 'Manager' } });
+            expect(prisma.employee.update).toHaveBeenCalledWith({
+                where: { id: 'emp1' },
+                data: { position: 'Manager' },
+                include: { photo_document: true },
+            });
             expect(result.full_name).toBe('Alice');
         });
 
@@ -159,6 +166,7 @@ describe('EmployeesService', () => {
             expect(prisma.employee.update).toHaveBeenCalledWith({
                 where: { id: 'emp1' },
                 data: { full_name: { en: 'Alicia', el: 'Άλις' } },
+                include: { photo_document: true },
             });
         });
 
@@ -176,6 +184,7 @@ describe('EmployeesService', () => {
             expect(prisma.employee.update).toHaveBeenCalledWith({
                 where: { id: 'emp1' },
                 data: { full_name: { en: 'Alice', fr: 'Alice' } },
+                include: { photo_document: true },
             });
         });
 
@@ -204,7 +213,11 @@ describe('EmployeesService', () => {
                 full_name_translations: { en: 'Ignored' },
             } as any);
 
-            expect(prisma.employee.update).toHaveBeenCalledWith({ where: { id: 'emp1' }, data: { photo_document_id: 'doc1' } });
+            expect(prisma.employee.update).toHaveBeenCalledWith({
+                where: { id: 'emp1' },
+                data: { photo_document_id: 'doc1' },
+                include: { photo_document: true },
+            });
         });
     });
 
@@ -227,7 +240,7 @@ describe('EmployeesService', () => {
 
         it('deletes the employee when the user is a platform admin', async () => {
             accessControl.isPlatformAdmin.mockReturnValue(true);
-            prisma.employee.findUnique.mockResolvedValue({ id: 'emp1', store_id: 'store1' });
+            prisma.employee.findUnique.mockResolvedValue({ id: 'emp1', store_id: 'store1', photo_document_id: null });
 
             const result = await service.remove(
                 { id: 'u1', role: AuthRole.ADMIN },
@@ -235,6 +248,25 @@ describe('EmployeesService', () => {
             );
 
             expect(prisma.employee.delete).toHaveBeenCalledWith({ where: { id: 'emp1' } });
+            expect(documentsService.removeById).not.toHaveBeenCalled();
+            expect(result).toEqual({ success: true });
+        });
+
+        it('deletes the linked photo document from storage when the employee has one', async () => {
+            accessControl.isPlatformAdmin.mockReturnValue(true);
+            prisma.employee.findUnique.mockResolvedValue({
+                id: 'emp1',
+                store_id: 'store1',
+                photo_document_id: 'doc1',
+            });
+
+            const result = await service.remove(
+                { id: 'u1', role: AuthRole.ADMIN },
+                'emp1',
+            );
+
+            expect(prisma.employee.delete).toHaveBeenCalledWith({ where: { id: 'emp1' } });
+            expect(documentsService.removeById).toHaveBeenCalledWith('doc1');
             expect(result).toEqual({ success: true });
         });
     });
