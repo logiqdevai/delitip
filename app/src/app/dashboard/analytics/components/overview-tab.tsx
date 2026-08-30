@@ -33,7 +33,13 @@ export const OverviewTab: FC<{
       {overviewQuery.isPending ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (
-            <Skeleton key={index} className="h-24 rounded-2xl" />
+            <div
+              key={index}
+              className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs"
+            >
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="mt-2 h-7 w-28" />
+            </div>
           ))}
         </div>
       ) : overviewQuery.isError ? (
@@ -80,7 +86,18 @@ export const OverviewTab: FC<{
           Customer Experience Score
         </h2>
         {scoreQuery.isPending ? (
-          <Skeleton className="mt-3 h-20 w-full rounded-xl" />
+          <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <Skeleton className="size-20 shrink-0 rounded-full" />
+            <div className="min-w-0 flex-1 space-y-2">
+              <Skeleton className="h-3 w-full max-w-md" />
+              <Skeleton className="h-3 w-3/4 max-w-sm" />
+              <div className="flex flex-wrap gap-3">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-3 w-28" />
+                <Skeleton className="h-3 w-32" />
+              </div>
+            </div>
+          </div>
         ) : scoreQuery.isError ? (
           <p className="mt-2 text-xs text-red-600">{scoreQuery.error.message}</p>
         ) : score ? (
