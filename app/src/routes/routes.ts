@@ -39,6 +39,7 @@ export const Routes = {
     access: "/dashboard/access",
     alerts: "/dashboard/alerts",
     payments: "/dashboard/payments",
+    account: "/dashboard/account",
     settings: {
       root: "/dashboard/settings",
       profile: "/dashboard/settings/profile",
