@@ -1,23 +1,11 @@
-import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
   CreateStorePayload,
   PublicStore,
   Store,
-  StoreTranslatableField,
   UpdateStorePayload,
-  UpdateStoreTranslationPayload,
 } from "@/features/stores/interfaces/stores.interfaces";
-
-const getApiErrorMessage = (error: unknown, fallback: string): string => {
-  if (isAxiosError(error)) {
-    const message = error.response?.data?.message;
-    if (typeof message === "string" && message.length > 0) return message;
-    if (Array.isArray(message) && typeof message[0] === "string") return message[0];
-  }
-  return fallback;
-};
 
 export const listStores = async (
   organizationId: string,
@@ -68,24 +56,6 @@ export const updateStore = async (
     return response.data;
   } catch {
     throw new Error("Failed to update store. Please try again.");
-  }
-};
-
-export const updateStoreTranslation = async (
-  id: string,
-  field: StoreTranslatableField,
-  payload: UpdateStoreTranslationPayload,
-): Promise<Store> => {
-  try {
-    const response = await axiosInstance.patch<Store>(
-      ApiRoutes.stores.translation(id, field),
-      payload,
-    );
-    return response.data;
-  } catch (error) {
-    throw new Error(
-      getApiErrorMessage(error, "Failed to save translation. Please try again."),
-    );
   }
 };
 

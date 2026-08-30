@@ -1,4 +1,4 @@
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { AuthRole, OrganizationRole, PayoutStatus } from 'generated/prisma';
 import { EmployeesService } from './employees.service';
 
@@ -147,19 +147,48 @@ describe('EmployeesService', () => {
             expect(result.full_name).toBe('Alice');
         });
 
-        it('merges an updated full_name into the existing translation map', async () => {
+        it('merges full_name_translations into the existing translation map', async () => {
             accessControl.assertEmployeeSelfOrStoreAccess.mockResolvedValue({
                 employee: { id: 'emp1', store_id: 'store1', full_name: { en: 'Alice', el: 'Άλις' } },
                 isSelf: false,
             });
             prisma.employee.update.mockResolvedValue({ id: 'emp1', full_name: { en: 'Alicia', el: 'Άλις' } });
 
-            await service.update(user, 'emp1', { full_name: 'Alicia' } as any);
+            await service.update(user, 'emp1', { full_name_translations: { en: 'Alicia' } } as any);
 
             expect(prisma.employee.update).toHaveBeenCalledWith({
                 where: { id: 'emp1' },
                 data: { full_name: { en: 'Alicia', el: 'Άλις' } },
             });
+        });
+
+        it('drops blank entries and lowercases language keys in full_name_translations', async () => {
+            accessControl.assertEmployeeSelfOrStoreAccess.mockResolvedValue({
+                employee: { id: 'emp1', store_id: 'store1', full_name: { en: 'Alice' } },
+                isSelf: false,
+            });
+            prisma.employee.update.mockResolvedValue({ id: 'emp1', full_name: { en: 'Alice', fr: 'Alice' } });
+
+            await service.update(user, 'emp1', {
+                full_name_translations: { en: 'Alice', FR: 'Alice', de: '  ' },
+            } as any);
+
+            expect(prisma.employee.update).toHaveBeenCalledWith({
+                where: { id: 'emp1' },
+                data: { full_name: { en: 'Alice', fr: 'Alice' } },
+            });
+        });
+
+        it('throws BadRequestException when the primary language would end up with no text', async () => {
+            accessControl.assertEmployeeSelfOrStoreAccess.mockResolvedValue({
+                employee: { id: 'emp1', store_id: 'store1', full_name: {} },
+                isSelf: false,
+            });
+
+            await expect(
+                service.update(user, 'emp1', { full_name_translations: { el: 'Άλις' } } as any),
+            ).rejects.toThrow(BadRequestException);
+            expect(prisma.employee.update).not.toHaveBeenCalled();
         });
 
         it('restricts a self-service update to only photo_document_id', async () => {
@@ -169,36 +198,13 @@ describe('EmployeesService', () => {
             });
             prisma.employee.update.mockResolvedValue({ id: 'emp1', full_name: { en: 'Alice' }, photo_document_id: 'doc1' });
 
-            await service.update(user, 'emp1', { photo_document_id: 'doc1', position: 'Manager', full_name: 'Ignored' } as any);
+            await service.update(user, 'emp1', {
+                photo_document_id: 'doc1',
+                position: 'Manager',
+                full_name_translations: { en: 'Ignored' },
+            } as any);
 
             expect(prisma.employee.update).toHaveBeenCalledWith({ where: { id: 'emp1' }, data: { photo_document_id: 'doc1' } });
-        });
-    });
-
-    describe('updateTranslation', () => {
-        it('merges a single language translation into the existing map', async () => {
-            prisma.employee.findUnique.mockResolvedValue({ id: 'emp1', store_id: 'store1', full_name: { en: 'Alice' } });
-            prisma.employee.update.mockResolvedValue({ id: 'emp1', full_name: { en: 'Alice', el: 'Άλις' } });
-
-            const result = await service.updateTranslation(user, 'emp1', { language: 'EL', text: 'Άλις' } as any);
-
-            expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1', [
-                OrganizationRole.OWNER,
-                OrganizationRole.STORE_MANAGER,
-            ]);
-            expect(prisma.employee.update).toHaveBeenCalledWith({
-                where: { id: 'emp1' },
-                data: { full_name: { en: 'Alice', el: 'Άλις' } },
-            });
-            expect(result.full_name_translations).toEqual({ en: 'Alice', el: 'Άλις' });
-        });
-
-        it('throws NotFoundException when the employee does not exist', async () => {
-            prisma.employee.findUnique.mockResolvedValue(null);
-
-            await expect(
-                service.updateTranslation(user, 'emp1', { language: 'EL', text: 'Άλις' } as any),
-            ).rejects.toThrow(NotFoundException);
         });
     });
 

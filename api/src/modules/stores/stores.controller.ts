@@ -6,7 +6,6 @@ import { AuthUser } from '@/shared/services/access-control/access-control.servic
 import { StoresService } from './services/stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
-import { UpdateStoreTranslationDto } from './dto/update-store-translation.dto';
 
 @ApiTags('Stores')
 @ApiBearerAuth()
@@ -41,17 +40,6 @@ export class StoresController {
     @ApiOperation({ summary: 'Update a Store (Owner/Store Manager)' })
     update(@CurrentUser() user: AuthUser, @Param('id') id: string, @Body() dto: UpdateStoreDto) {
         return this.storesService.update(user, id, dto);
-    }
-
-    @Patch('stores/:id/translations/:field')
-    @ApiOperation({ summary: "Hand-edit a single language's translation of welcome_message/thank_you_message (§24)" })
-    updateTranslation(
-        @CurrentUser() user: AuthUser,
-        @Param('id') id: string,
-        @Param('field') field: string,
-        @Body() dto: UpdateStoreTranslationDto,
-    ) {
-        return this.storesService.updateTranslation(user, id, field, dto);
     }
 
     @Delete('stores/:id')

@@ -12,13 +12,8 @@ import {
   useUploadDocument,
 } from "@/features/documents/hooks/use-documents";
 import { DocumentTypes } from "@/features/documents/interfaces/documents.interfaces";
-import {
-  useStore,
-  useUpdateStore,
-  useUpdateStoreTranslation,
-} from "@/features/stores/hooks/use-stores";
+import { useStore, useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
-import { StoreTranslatableFields } from "@/features/stores/interfaces/stores.interfaces";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const BrandingSettingsForm: FC = () => {
@@ -26,7 +21,6 @@ export const BrandingSettingsForm: FC = () => {
   const storeDetailQuery = useStore(workspaceStore?.id ?? "");
   const store = storeDetailQuery.data ?? workspaceStore;
   const updateStore = useUpdateStore();
-  const updateTranslation = useUpdateStoreTranslation();
   const uploadDocument = useUploadDocument();
   const deleteDocument = useDeleteDocument();
   const [uploadingMode, setUploadingMode] = useState<"logo" | "cover" | null>(
@@ -61,13 +55,9 @@ export const BrandingSettingsForm: FC = () => {
 
   if (!store) return null;
 
-  const primaryKey = store.primary_language.toLowerCase();
   const fieldLanguages = store.supported_languages.length
     ? store.supported_languages
     : [store.primary_language];
-  const otherLanguages = fieldLanguages.filter(
-    (language) => language !== store.primary_language,
-  );
 
   const handleSave = async () => {
     await updateStore.mutateAsync({
@@ -75,44 +65,10 @@ export const BrandingSettingsForm: FC = () => {
       payload: {
         primary_color: primaryColor,
         secondary_color: secondaryColor,
-        welcome_message: welcomeMessage[primaryKey] || undefined,
-        thank_you_message: thankYouMessage[primaryKey] || undefined,
+        welcome_message_translations: welcomeMessage,
+        thank_you_message_translations: thankYouMessage,
       },
     });
-
-    await Promise.all(
-      otherLanguages.flatMap((language) => {
-        const key = language.toLowerCase();
-        const calls: Promise<unknown>[] = [];
-        const welcomeText = welcomeMessage[key]?.trim() ?? "";
-        const thankYouText = thankYouMessage[key]?.trim() ?? "";
-        // The translation endpoint rejects empty text, and clearing a
-        // translation back to blank isn't a case we support here — only
-        // send the ones the user actually filled in and changed.
-        if (welcomeText && welcomeText !== (store.welcome_message?.[key] ?? "")) {
-          calls.push(
-            updateTranslation.mutateAsync({
-              id: store.id,
-              field: StoreTranslatableFields.WELCOME_MESSAGE,
-              payload: { language, text: welcomeText },
-            }),
-          );
-        }
-        if (
-          thankYouText &&
-          thankYouText !== (store.thank_you_message?.[key] ?? "")
-        ) {
-          calls.push(
-            updateTranslation.mutateAsync({
-              id: store.id,
-              field: StoreTranslatableFields.THANK_YOU_MESSAGE,
-              payload: { language, text: thankYouText },
-            }),
-          );
-        }
-        return calls;
-      }),
-    );
 
     setHasChanges(false);
   };
@@ -259,12 +215,10 @@ export const BrandingSettingsForm: FC = () => {
         <Button
           type="button"
           onClick={() => void handleSave()}
-          disabled={updateStore.isPending || updateTranslation.isPending}
+          disabled={updateStore.isPending}
           className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal hover:bg-brand-700"
         >
-          {updateStore.isPending || updateTranslation.isPending
-            ? "Saving…"
-            : "Save Changes"}
+          {updateStore.isPending ? "Saving…" : "Save Changes"}
         </Button>
       </div>
     </div>

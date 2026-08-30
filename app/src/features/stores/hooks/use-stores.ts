@@ -6,15 +6,13 @@ import {
   getStore,
   listStores,
   updateStore,
-  updateStoreTranslation,
 } from "@/features/stores/services/stores.services";
 import type {
   CreateStorePayload,
-  StoreTranslatableField,
   UpdateStorePayload,
-  UpdateStoreTranslationPayload,
 } from "@/features/stores/interfaces/stores.interfaces";
 import { toast } from "@/components/ui/toast";
+import { usersQueryKeys } from "@/features/users/hooks/use-users";
 
 const organizationsRootKey = ["organizations"] as const;
 
@@ -63,6 +61,9 @@ export const useCreateStore = (organizationId: string) => {
       void queryClient.invalidateQueries({
         queryKey: organizationsRootKey,
       });
+      void queryClient.invalidateQueries({
+        queryKey: usersQueryKeys.accounts,
+      });
       toast.add({
         title: "Store created",
         description: "Your store was added successfully.",
@@ -90,6 +91,9 @@ export const useUpdateStore = () => {
       void queryClient.invalidateQueries({
         queryKey: organizationsRootKey,
       });
+      void queryClient.invalidateQueries({
+        queryKey: usersQueryKeys.accounts,
+      });
       toast.add({
         title: "Store updated",
         description: "Your changes were saved.",
@@ -106,36 +110,6 @@ export const useUpdateStore = () => {
   });
 };
 
-export const useUpdateStoreTranslation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      id,
-      field,
-      payload,
-    }: {
-      id: string;
-      field: StoreTranslatableField;
-      payload: UpdateStoreTranslationPayload;
-    }) => updateStoreTranslation(id, field, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: storesQueryKeys.root });
-      toast.add({
-        title: "Translation saved",
-        type: "success",
-      });
-    },
-    onError: (error: Error) => {
-      toast.add({
-        title: "Could not save translation",
-        description: error.message,
-        type: "error",
-      });
-    },
-  });
-};
-
 export const useDeleteStore = () => {
   const queryClient = useQueryClient();
 
@@ -145,6 +119,9 @@ export const useDeleteStore = () => {
       void queryClient.invalidateQueries({ queryKey: storesQueryKeys.root });
       void queryClient.invalidateQueries({
         queryKey: organizationsRootKey,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: usersQueryKeys.accounts,
       });
       toast.add({
         title: "Store deleted",

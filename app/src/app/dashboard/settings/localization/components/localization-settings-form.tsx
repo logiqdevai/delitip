@@ -67,7 +67,12 @@ export const LocalizationSettingsForm: FC = () => {
           supported_languages: supported,
         },
       },
-      { onSuccess: () => setHasChanges(false) },
+      {
+        onSuccess: () => {
+          setSupportedLanguages(supported);
+          setHasChanges(false);
+        },
+      },
     );
   };
 

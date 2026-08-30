@@ -13,7 +13,6 @@ describe('EmployeesController', () => {
             findAllForStore: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
-            updateTranslation: jest.fn(),
             remove: jest.fn(),
             dashboard: jest.fn(),
             tips: jest.fn(),
@@ -51,14 +50,6 @@ describe('EmployeesController', () => {
 
         await expect(controller.update(user, 'emp1', dto)).resolves.toBe('updated');
         expect(service.update).toHaveBeenCalledWith(user, 'emp1', dto);
-    });
-
-    it('updateTranslation delegates to the service with the current user, id param, and body', async () => {
-        const dto = { language: 'EL', text: 'Μαρία' } as any;
-        service.updateTranslation.mockResolvedValue('translated');
-
-        await expect(controller.updateTranslation(user, 'emp1', dto)).resolves.toBe('translated');
-        expect(service.updateTranslation).toHaveBeenCalledWith(user, 'emp1', dto);
     });
 
     it('remove delegates to the service with the current user and id param', async () => {

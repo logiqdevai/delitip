@@ -25,6 +25,19 @@ export function autoTranslateStub(
     return result;
 }
 
+// Normalizes a caller-supplied language -> text map: lowercases keys and
+// drops blank values, so a hand-edited map can never persist an empty
+// translation (there's no "clear this language" UI, so blank always means
+// "the user didn't touch this one").
+export function sanitizeTranslations(input: Record<string, string>): TranslatedText {
+    const result: TranslatedText = {};
+    for (const [key, value] of Object.entries(input)) {
+        const text = value?.trim();
+        if (text) result[key.toLowerCase()] = text;
+    }
+    return result;
+}
+
 export function resolveTranslatedText(
     text: TranslatedText | null | undefined,
     requestedLanguage: string | undefined,

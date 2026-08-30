@@ -7,7 +7,6 @@ import type {
   EmployeeDashboard,
   EmployeesQuery,
   UpdateEmployeePayload,
-  UpdateEmployeeTranslationPayload,
 } from "@/features/employees/interfaces/employees.interfaces";
 
 export const listEmployees = async (
@@ -63,21 +62,6 @@ export const updateEmployee = async (
     return response.data;
   } catch {
     throw new Error("Failed to update employee. Please try again.");
-  }
-};
-
-export const updateEmployeeTranslation = async (
-  id: string,
-  payload: UpdateEmployeeTranslationPayload,
-): Promise<Employee> => {
-  try {
-    const response = await axiosInstance.patch<Employee>(
-      ApiRoutes.employees.translation(id),
-      payload,
-    );
-    return response.data;
-  } catch {
-    throw new Error("Failed to save translation. Please try again.");
   }
 };
 

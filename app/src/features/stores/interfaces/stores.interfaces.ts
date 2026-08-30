@@ -32,18 +32,6 @@ export const Languages = {
 } as const;
 export type Language = (typeof Languages)[keyof typeof Languages];
 
-export const StoreTranslatableFields = {
-  WELCOME_MESSAGE: "welcome_message",
-  THANK_YOU_MESSAGE: "thank_you_message",
-} as const;
-export type StoreTranslatableField =
-  (typeof StoreTranslatableFields)[keyof typeof StoreTranslatableFields];
-
-export interface UpdateStoreTranslationPayload {
-  language: Language;
-  text: string;
-}
-
 export const Currencies = {
   EUR: "EUR",
   USD: "USD",
@@ -120,8 +108,10 @@ export interface UpdateStorePayload {
   public_review_redirect_url?: string;
   public_review_rating_threshold?: number;
   default_distribution_rule_id?: string;
-  welcome_message?: string;
-  thank_you_message?: string;
+  /** Map of lowercase language code -> welcome message text. Merged into the existing translations. */
+  welcome_message_translations?: Record<string, string>;
+  /** Map of lowercase language code -> thank-you message text. Merged into the existing translations. */
+  thank_you_message_translations?: Record<string, string>;
   primary_language?: Language;
   supported_languages?: Language[];
   currency?: Currency;

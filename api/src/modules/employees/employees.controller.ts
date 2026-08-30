@@ -10,7 +10,6 @@ import { PaginationQuerySchema, PaginationQueryType } from '@/shared/utils/pagin
 import { EmployeesService } from './services/employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
-import { UpdateEmployeeTranslationDto } from './dto/update-employee-translation.dto';
 import { EmployeesQuerySchema, EmployeesQueryType } from './dto/employees-query.schema';
 
 @ApiTags('Employees')
@@ -55,16 +54,6 @@ export class EmployeesController {
     })
     update(@CurrentUser() user: AuthUser, @Param('id') id: string, @Body() dto: UpdateEmployeeDto) {
         return this.employeesService.update(user, id, dto);
-    }
-
-    @Patch('employees/:id/translations')
-    @ApiOperation({ summary: "Hand-edit a single language's translation of full_name (Owner/Store Manager)" })
-    updateTranslation(
-        @CurrentUser() user: AuthUser,
-        @Param('id') id: string,
-        @Body() dto: UpdateEmployeeTranslationDto,
-    ) {
-        return this.employeesService.updateTranslation(user, id, dto);
     }
 
     @Delete('employees/:id')

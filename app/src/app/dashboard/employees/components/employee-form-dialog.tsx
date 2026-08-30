@@ -25,7 +25,6 @@ import { DocumentTypes } from "@/features/documents/interfaces/documents.interfa
 import {
   useCreateEmployee,
   useUpdateEmployee,
-  useUpdateEmployeeTranslation,
 } from "@/features/employees/hooks/use-employees";
 import type { Employee } from "@/features/employees/interfaces/employees.interfaces";
 import {
@@ -52,7 +51,6 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
   const { store } = useWorkspace();
   const createEmployee = useCreateEmployee(storeId);
   const updateEmployee = useUpdateEmployee();
-  const updateTranslation = useUpdateEmployeeTranslation();
   const uploadDocument = useUploadDocument();
   const deleteDocument = useDeleteDocument();
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
@@ -75,10 +73,7 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
   }
 
   const isPending =
-    createEmployee.isPending ||
-    updateEmployee.isPending ||
-    updateTranslation.isPending ||
-    isUploadingPhoto;
+    createEmployee.isPending || updateEmployee.isPending || isUploadingPhoto;
 
   const {
     register,
@@ -97,9 +92,6 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
   const fieldLanguages = store?.supported_languages?.length
     ? store.supported_languages
     : [primaryLanguage];
-  const otherLanguages = fieldLanguages.filter(
-    (language) => language !== primaryLanguage,
-  );
 
   useEffect(() => {
     if (!open) {
@@ -120,40 +112,24 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
     }
     setFullNameError(null);
 
-    const base = {
-      full_name: fullName,
-      email: values.email,
-      position: values.position?.trim() || undefined,
-    };
+    const position = values.position?.trim() || undefined;
 
     try {
       if (isEdit && employee) {
         await updateEmployee.mutateAsync({
           id: employee.id,
-          payload: { ...base, photo_document_id: photoDocumentId },
+          payload: {
+            full_name_translations: fullNameTranslations,
+            email: values.email,
+            position,
+            photo_document_id: photoDocumentId,
+          },
         });
-        await Promise.all(
-          otherLanguages
-            .flatMap((language) => {
-              const key = language.toLowerCase();
-              const current = fullNameTranslations[key]?.trim() ?? "";
-              const initial = employee.full_name_translations?.[key] ?? "";
-              // The translation endpoint rejects empty text, and clearing a
-              // translation back to blank isn't a case we support here —
-              // only send the ones the user actually filled in and changed.
-              if (!current || current === initial) return [];
-              return [{ language, text: current }];
-            })
-            .map(({ language, text }) =>
-              updateTranslation.mutateAsync({
-                id: employee.id,
-                payload: { language, text },
-              }),
-            ),
-        );
       } else {
         await createEmployee.mutateAsync({
-          ...base,
+          full_name: fullName,
+          email: values.email,
+          position,
           photo_document_id: photoDocumentId ?? undefined,
         });
       }

@@ -13,7 +13,6 @@ describe('StoresController', () => {
             findAllForOrg: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
-            updateTranslation: jest.fn(),
             remove: jest.fn(),
         };
         controller = new StoresController(storesService);
@@ -47,14 +46,6 @@ describe('StoresController', () => {
 
         await expect(controller.update(user, 's1', dto)).resolves.toEqual({ id: 's1' });
         expect(storesService.update).toHaveBeenCalledWith(user, 's1', dto);
-    });
-
-    it('updateTranslation delegates to the service with the user, store id, field, and dto', async () => {
-        const dto = { language: 'EN', text: 'Hi' } as any;
-        storesService.updateTranslation.mockResolvedValue({ id: 's1' });
-
-        await expect(controller.updateTranslation(user, 's1', 'welcome_message', dto)).resolves.toEqual({ id: 's1' });
-        expect(storesService.updateTranslation).toHaveBeenCalledWith(user, 's1', 'welcome_message', dto);
     });
 
     it('remove delegates to the service with the user and store id', async () => {

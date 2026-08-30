@@ -1,12 +1,11 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { UsersService } from '@/modules/users/services/users.service';
 import { paginate, PaginationQueryType } from '@/shared/utils/pagination/pagination-query.schema';
-import { autoTranslateStub, resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
+import { autoTranslateStub, resolveTranslatedText, sanitizeTranslations, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { CreateEmployeeDto } from '../dto/create-employee.dto';
 import { UpdateEmployeeDto } from '../dto/update-employee.dto';
-import { UpdateEmployeeTranslationDto } from '../dto/update-employee-translation.dto';
 import { EmployeesQueryType } from '../dto/employees-query.schema';
 import { Language, OrganizationRole, PayoutStatus } from 'generated/prisma';
 
@@ -105,38 +104,21 @@ export class EmployeesService {
         if (!store) throw new NotFoundException('Store not found');
 
         // Employees updating their own record may only change their photo — other fields require a store role.
-        const { full_name, ...rest } = dto;
+        const { full_name_translations, ...rest } = dto;
         const data: Record<string, unknown> = isSelf ? { photo_document_id: dto.photo_document_id } : { ...rest };
 
-        if (!isSelf && full_name !== undefined) {
-            data.full_name = autoTranslateStub(
-                store.primary_language,
-                full_name,
-                store.supported_languages,
-                employee.full_name as TranslatedText,
-            );
+        if (!isSelf && full_name_translations !== undefined) {
+            const existing = (employee.full_name as TranslatedText) || {};
+            const merged = { ...existing, ...sanitizeTranslations(full_name_translations) };
+            if (!merged[store.primary_language.toLowerCase()]) {
+                throw new BadRequestException(
+                    "full_name_translations must include non-empty text for the store's primary language",
+                );
+            }
+            data.full_name = merged;
         }
 
         const updated = await this.prisma.employee.update({ where: { id: employee.id }, data });
-        return this.toResponse(updated, store.primary_language);
-    }
-
-    async updateTranslation(user: AuthUser, id: string, dto: UpdateEmployeeTranslationDto) {
-        const employee = await this.prisma.employee.findUnique({ where: { id } });
-        if (!employee) throw new NotFoundException('Employee not found');
-
-        await this.accessControl.assertStoreAccess(user, employee.store_id, [
-            OrganizationRole.OWNER,
-            OrganizationRole.STORE_MANAGER,
-        ]);
-
-        const store = await this.prisma.store.findUnique({ where: { id: employee.store_id } });
-        if (!store) throw new NotFoundException('Store not found');
-
-        const existing = (employee.full_name as TranslatedText) || {};
-        const merged: TranslatedText = { ...existing, [dto.language.toLowerCase()]: dto.text };
-
-        const updated = await this.prisma.employee.update({ where: { id: employee.id }, data: { full_name: merged } });
         return this.toResponse(updated, store.primary_language);
     }
 

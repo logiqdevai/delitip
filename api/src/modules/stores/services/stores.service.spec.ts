@@ -138,7 +138,7 @@ describe('StoresService', () => {
             expect(prisma.store.update).toHaveBeenCalledWith({ where: { id: 's1' }, data: { name: 'New name' } });
         });
 
-        it('runs welcome_message/thank_you_message through autoTranslateStub using the store\'s existing translations and languages', async () => {
+        it('merges welcome_message_translations/thank_you_message_translations into the existing maps, lowercasing keys and dropping blanks', async () => {
             prisma.store.findUnique.mockResolvedValue({
                 id: 's1',
                 primary_language: Language.EN,
@@ -148,43 +148,17 @@ describe('StoresService', () => {
             });
             prisma.store.update.mockResolvedValue({});
 
-            await service.update(user, 's1', { welcome_message: 'New welcome', thank_you_message: 'Thanks!' } as any);
+            await service.update(user, 's1', {
+                welcome_message_translations: { en: 'New welcome', EL: 'Νέο μήνυμα', de: '  ' },
+                thank_you_message_translations: { en: 'Thanks!' },
+            } as any);
 
             expect(prisma.store.update).toHaveBeenCalledWith({
                 where: { id: 's1' },
                 data: {
-                    welcome_message: { en: 'New welcome', el: 'New welcome' },
-                    thank_you_message: { en: 'Thanks!', el: 'Thanks!' },
+                    welcome_message: { en: 'New welcome', el: 'Νέο μήνυμα' },
+                    thank_you_message: { en: 'Thanks!' },
                 },
-            });
-        });
-    });
-
-    describe('updateTranslation', () => {
-        it('throws BadRequestException for an unsupported field before checking access', async () => {
-            await expect(
-                service.updateTranslation(user, 's1', 'not_a_field', { language: 'EN', text: 'x' } as any),
-            ).rejects.toThrow(BadRequestException);
-            expect(accessControl.assertStoreAccess).not.toHaveBeenCalled();
-        });
-
-        it('throws NotFoundException when the store does not exist', async () => {
-            prisma.store.findUnique.mockResolvedValue(null);
-
-            await expect(
-                service.updateTranslation(user, 's1', 'welcome_message', { language: 'EN', text: 'x' } as any),
-            ).rejects.toThrow(NotFoundException);
-        });
-
-        it('merges the single language into the existing translation map, lowercasing the language key', async () => {
-            prisma.store.findUnique.mockResolvedValue({ id: 's1', welcome_message: { en: 'Hi' } });
-            prisma.store.update.mockResolvedValue({});
-
-            await service.updateTranslation(user, 's1', 'welcome_message', { language: 'EL', text: 'Γεια' } as any);
-
-            expect(prisma.store.update).toHaveBeenCalledWith({
-                where: { id: 's1' },
-                data: { welcome_message: { en: 'Hi', el: 'Γεια' } },
             });
         });
     });

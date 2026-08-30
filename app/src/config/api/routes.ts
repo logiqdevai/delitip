@@ -46,8 +46,6 @@ export const ApiRoutes = {
   },
   stores: {
     byId: (id: string) => `/stores/${id}` as const,
-    translation: (id: string, field: string) =>
-      `/stores/${id}/translations/${field}` as const,
     employees: (storeId: string) => `/stores/${storeId}/employees` as const,
     qrCodes: (storeId: string) => `/stores/${storeId}/qr-codes` as const,
     spots: (storeId: string) => `/stores/${storeId}/spots` as const,
@@ -86,7 +84,6 @@ export const ApiRoutes = {
   },
   employees: {
     byId: (id: string) => `/employees/${id}` as const,
-    translation: (id: string) => `/employees/${id}/translations` as const,
     dashboard: (id: string) => `/employees/${id}/dashboard` as const,
     tips: (id: string) => `/employees/${id}/tips` as const,
     reviews: (id: string) => `/employees/${id}/reviews` as const,

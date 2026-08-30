@@ -2,15 +2,11 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { ensureUniqueSlug } from '@/shared/utils/slug/slug.utils';
-import { autoTranslateStub, resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
+import { resolveTranslatedText, sanitizeTranslations, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { seedIndustryReviewConfig } from '@/shared/utils/industry-review-config/seed-industry-review-config.util';
 import { CreateStoreDto } from '../dto/create-store.dto';
 import { UpdateStoreDto } from '../dto/update-store.dto';
-import { UpdateStoreTranslationDto } from '../dto/update-store-translation.dto';
 import { OrganizationRole } from 'generated/prisma';
-
-export type StoreTranslatableField = 'welcome_message' | 'thank_you_message';
-const TRANSLATABLE_FIELDS: StoreTranslatableField[] = ['welcome_message', 'thank_you_message'];
 
 @Injectable()
 export class StoresService {
@@ -88,54 +84,24 @@ export class StoresService {
         }
 
         const {
-            welcome_message,
-            thank_you_message,
+            welcome_message_translations,
+            thank_you_message_translations,
             ...rest
         } = dto;
 
-        const resolvedPrimaryLanguage = dto.primary_language ?? store.primary_language;
-        const resolvedSupportedLanguages = dto.supported_languages ?? store.supported_languages;
-
         const data: Record<string, unknown> = { ...rest };
 
-        if (welcome_message !== undefined) {
-            data.welcome_message = autoTranslateStub(
-                resolvedPrimaryLanguage,
-                welcome_message,
-                resolvedSupportedLanguages,
-                store.welcome_message as TranslatedText,
-            );
+        if (welcome_message_translations !== undefined) {
+            const existing = (store.welcome_message as TranslatedText) || {};
+            data.welcome_message = { ...existing, ...sanitizeTranslations(welcome_message_translations) };
         }
 
-        if (thank_you_message !== undefined) {
-            data.thank_you_message = autoTranslateStub(
-                resolvedPrimaryLanguage,
-                thank_you_message,
-                resolvedSupportedLanguages,
-                store.thank_you_message as TranslatedText,
-            );
+        if (thank_you_message_translations !== undefined) {
+            const existing = (store.thank_you_message as TranslatedText) || {};
+            data.thank_you_message = { ...existing, ...sanitizeTranslations(thank_you_message_translations) };
         }
 
         return this.prisma.store.update({ where: { id }, data });
-    }
-
-    async updateTranslation(user: AuthUser, id: string, field: string, dto: UpdateStoreTranslationDto) {
-        if (!TRANSLATABLE_FIELDS.includes(field as StoreTranslatableField)) {
-            throw new BadRequestException(`Unsupported translation field: ${field}`);
-        }
-
-        await this.accessControl.assertStoreAccess(user, id, [OrganizationRole.OWNER, OrganizationRole.STORE_MANAGER]);
-
-        const store = await this.prisma.store.findUnique({ where: { id } });
-        if (!store) throw new NotFoundException('Store not found');
-
-        const existing = (store[field as StoreTranslatableField] as TranslatedText) || {};
-        const merged: TranslatedText = { ...existing, [dto.language.toLowerCase()]: dto.text };
-
-        return this.prisma.store.update({
-            where: { id },
-            data: { [field]: merged },
-        });
     }
 
     async remove(user: AuthUser, id: string) {

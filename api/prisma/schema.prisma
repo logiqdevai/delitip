@@ -395,8 +395,8 @@ model Employee {
   user_id           String?
   // Multilingual: Json map of lowercase Language code -> text, e.g.
   // {"en": "Maria Papadopoulou", "el": "Μαρία Παπαδοπούλου"}. Auto-translated
-  // (stub) into every Store-supported language on write; hand-edited per
-  // language via PATCH employees/:id/translations.
+  // (stub) into every Store-supported language on create; hand-edited per
+  // language via full_name_translations on PATCH employees/:id.
   full_name         Json
   email             String
   photo_document_id String?

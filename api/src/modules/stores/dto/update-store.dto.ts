@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsInt, IsOptional, IsString, IsUrl, Max, Min } from 'class-validator';
+import { IsArray, IsBoolean, IsInt, IsObject, IsOptional, IsString, IsUrl, Max, Min } from 'class-validator';
 import { CreateStoreDto } from './create-store.dto';
 
 export class UpdateStoreDto extends PartialType(CreateStoreDto) {
@@ -56,13 +56,21 @@ export class UpdateStoreDto extends PartialType(CreateStoreDto) {
     @IsString()
     default_distribution_rule_id?: string;
 
-    @ApiProperty({ required: false, description: 'Primary-language text; auto-translated (stub) into every supported language' })
+    @ApiProperty({
+        required: false,
+        example: { en: 'Welcome to our restaurant!', el: 'Καλώς ήρθατε στο εστιατόριό μας!' },
+        description: 'Map of lowercase language code -> welcome message text. Merged into the existing translations.',
+    })
     @IsOptional()
-    @IsString()
-    welcome_message?: string;
+    @IsObject()
+    welcome_message_translations?: Record<string, string>;
 
-    @ApiProperty({ required: false, description: 'Primary-language text; auto-translated (stub) into every supported language' })
+    @ApiProperty({
+        required: false,
+        example: { en: 'Thank you!', el: 'Ευχαριστούμε!' },
+        description: 'Map of lowercase language code -> thank-you message text. Merged into the existing translations.',
+    })
     @IsOptional()
-    @IsString()
-    thank_you_message?: string;
+    @IsObject()
+    thank_you_message_translations?: Record<string, string>;
 }

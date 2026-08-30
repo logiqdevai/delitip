@@ -1,5 +1,3 @@
-import type { Language } from "@/features/stores/interfaces/stores.interfaces";
-
 export interface EmployeeDocumentRef {
   id: string;
   url: string;
@@ -30,16 +28,12 @@ export interface CreateEmployeePayload {
 }
 
 export interface UpdateEmployeePayload {
-  full_name?: string;
+  /** Map of lowercase language code -> full name text. Must include the store's primary language. */
+  full_name_translations?: Record<string, string>;
   email?: string;
   position?: string;
   photo_document_id?: string | null;
   is_active?: boolean;
-}
-
-export interface UpdateEmployeeTranslationPayload {
-  language: Language;
-  text: string;
 }
 
 export interface EmployeesQuery {

@@ -2,7 +2,6 @@
 
 import { type FC, useState } from "react";
 import { Check, ChevronLeft, Plus } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CountryFlag } from "@/components/ui/country-flag";
 import {
@@ -10,6 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/spinner";
 import { StoreLanguageFormOptions } from "@/config/constants/dropdowns/stores/store-language-form.options";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import type { Language } from "@/features/stores/interfaces/stores.interfaces";
@@ -41,6 +41,9 @@ export const MultilingualLanguageControl: FC<
   const updateStore = useUpdateStore();
   const [open, setOpen] = useState(false);
   const [managing, setManaging] = useState(false);
+  const [pendingLanguage, setPendingLanguage] = useState<Language | null>(
+    null,
+  );
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
@@ -56,28 +59,37 @@ export const MultilingualLanguageControl: FC<
     const next = supportedLanguages.includes(language)
       ? supportedLanguages.filter((item) => item !== language)
       : [...supportedLanguages, language];
-    updateStore.mutate({ id: storeId, payload: { supported_languages: next } });
+    setPendingLanguage(language);
+    updateStore.mutate(
+      { id: storeId, payload: { supported_languages: next } },
+      { onSettled: () => setPendingLanguage(null) },
+    );
   };
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger
         className={cn(
-          buttonVariants({ variant: "ghost", size: "icon-xs" }),
-          "gap-1 text-zinc-500 hover:text-zinc-700",
+          "inline-flex size-(--control-height-xs) shrink-0 items-center justify-center rounded-[min(var(--radius-md),10px)] text-zinc-500 outline-none transition-colors hover:bg-muted hover:text-zinc-700 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50",
           className,
         )}
         aria-label="Language"
       >
         {activeOption ? (
-          <CountryFlag countryCode={activeOption.flagCountryCode} />
+          <CountryFlag
+            countryCode={activeOption.flagCountryCode}
+            className="h-4 w-5"
+          />
         ) : null}
       </PopoverTrigger>
       <PopoverContent align="end" className="w-56 p-1">
         {managing ? (
           <>
-            <p className="px-1.5 pt-1 pb-1.5 text-[11px] font-semibold text-zinc-500">
+            <p className="flex items-center gap-1.5 px-1.5 pt-1 pb-1.5 text-[11px] font-semibold text-zinc-500">
               Supported languages
+              {updateStore.isPending ? (
+                <Spinner className="size-3 text-zinc-400" />
+              ) : null}
             </p>
             <div className="max-h-40 space-y-0.5 overflow-y-auto">
               {StoreLanguageFormOptions.map((option) => (
@@ -85,16 +97,20 @@ export const MultilingualLanguageControl: FC<
                   key={option.id}
                   className="flex min-w-0 items-center gap-2 rounded-md px-1.5 py-1 text-xs hover:bg-zinc-50"
                 >
-                  <Checkbox
-                    checked={
-                      option.id === primaryLanguage ||
-                      supportedLanguages.includes(option.id)
-                    }
-                    onCheckedChange={() => toggleLanguage(option.id)}
-                    disabled={
-                      option.id === primaryLanguage || updateStore.isPending
-                    }
-                  />
+                  {pendingLanguage === option.id ? (
+                    <Spinner className="size-4 shrink-0 text-zinc-400" />
+                  ) : (
+                    <Checkbox
+                      checked={
+                        option.id === primaryLanguage ||
+                        supportedLanguages.includes(option.id)
+                      }
+                      onCheckedChange={() => toggleLanguage(option.id)}
+                      disabled={
+                        option.id === primaryLanguage || updateStore.isPending
+                      }
+                    />
+                  )}
                   <CountryFlag countryCode={option.flagCountryCode} />
                   {option.label}
                 </label>
