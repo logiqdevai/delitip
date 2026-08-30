@@ -85,6 +85,7 @@ export const InviteMemberDialog: FC<InviteMemberDialogProps> = ({
               id="invite-email"
               type="email"
               required
+              placeholder="name@business.com"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
             />

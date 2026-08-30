@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
@@ -24,9 +25,6 @@ const GROUP_BY_OPTIONS: { id: StoreTipsGroupBy; label: string }[] = [
   { id: "employee", label: "By employee" },
   { id: "store", label: "By store" },
 ];
-
-const inputClassName =
-  "h-7 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
 export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
   storeId,
@@ -56,19 +54,19 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
-        <input
-          type="date"
+        <DatePicker
           value={dateFrom}
-          onChange={(event) => setDateFrom(event.target.value)}
-          className={inputClassName}
+          onChange={setDateFrom}
+          placeholder="From date"
+          size="sm"
           aria-label="From date"
         />
         <span className="text-xs text-zinc-400">to</span>
-        <input
-          type="date"
+        <DatePicker
           value={dateTo}
-          onChange={(event) => setDateTo(event.target.value)}
-          className={inputClassName}
+          onChange={setDateTo}
+          placeholder="To date"
+          size="sm"
           aria-label="To date"
         />
         <Select

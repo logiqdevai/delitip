@@ -12,7 +12,6 @@ import {
 import { useLoginBusiness } from "@/features/auth/hooks/use-auth";
 import { Routes } from "@/routes/routes";
 import { authFieldClassName } from "./auth-password-field";
-import { AuthSocialButtons } from "./auth-social-buttons";
 import { cn } from "@/lib/utils";
 
 export const AuthSignInForm: FC = () => {
@@ -47,15 +46,6 @@ export const AuthSignInForm: FC = () => {
         <p className="mt-1 text-xs text-zinc-500">
           Sign in to manage your team, tips, and live customer reviews.
         </p>
-      </div>
-
-      <AuthSocialButtons />
-
-      <div className="relative flex items-center justify-center">
-        <div className="w-full border-t border-zinc-200" />
-        <span className="relative bg-white px-3 text-xs font-medium tracking-wider text-zinc-400 uppercase">
-          or with email
-        </span>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4" noValidate>

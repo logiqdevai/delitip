@@ -78,6 +78,7 @@ export const RequestRefundDialog: FC<RequestRefundDialogProps> = ({
               min="0.01"
               step="0.01"
               max={tipAmount / 100}
+              placeholder="0.00"
               value={amount}
               onChange={(event) => setAmount(event.target.value)}
             />
@@ -89,6 +90,7 @@ export const RequestRefundDialog: FC<RequestRefundDialogProps> = ({
             <Textarea
               id="refund-reason"
               rows={3}
+              placeholder="e.g. Order was cancelled after tipping"
               value={reason}
               onChange={(event) => setReason(event.target.value)}
             />

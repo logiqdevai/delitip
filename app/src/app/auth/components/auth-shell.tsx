@@ -1,6 +1,5 @@
 import { type FC, type ReactNode } from "react";
 import Link from "next/link";
-import { Lock } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Routes } from "@/routes/routes";
 import { AuthBrandPanel } from "./auth-brand-panel";
@@ -35,18 +34,8 @@ export const AuthShell: FC<AuthShellProps> = ({ children }) => {
 
       <main className="flex flex-1 items-center justify-center p-4 sm:p-6 lg:p-10">
         <div className="grid min-h-[640px] w-full max-w-5xl grid-cols-1 overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-xl shadow-zinc-200/50 lg:grid-cols-12">
-          <div className="flex flex-col justify-between p-6 sm:p-10 lg:col-span-7 lg:p-12">
+          <div className="flex flex-col p-6 sm:p-10 lg:col-span-7 lg:p-12">
             {children}
-            <div className="flex items-center justify-between border-t border-zinc-100 pt-8 text-xs text-zinc-400">
-              <div className="flex items-center gap-1.5">
-                <Lock
-                  className="size-3.5 text-electric-lime"
-                  strokeWidth={2}
-                />
-                <span>256-bit bank-grade encryption</span>
-              </div>
-              <span className="font-medium text-zinc-500">delitip.com</span>
-            </div>
           </div>
           <AuthBrandPanel />
         </div>

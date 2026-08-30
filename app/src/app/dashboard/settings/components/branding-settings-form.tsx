@@ -199,7 +199,11 @@ export const BrandingSettingsForm: FC = () => {
               onChange={(event) => updatePrimaryColor(event.target.value)}
               className="size-9 shrink-0 cursor-pointer rounded-lg border border-zinc-200"
             />
-            <Input value={primaryColor} onChange={(event) => updatePrimaryColor(event.target.value)} />
+            <Input
+              placeholder="#84cc16"
+              value={primaryColor}
+              onChange={(event) => updatePrimaryColor(event.target.value)}
+            />
           </div>
         </div>
         <div className="space-y-1.5">
@@ -212,7 +216,11 @@ export const BrandingSettingsForm: FC = () => {
               onChange={(event) => updateSecondaryColor(event.target.value)}
               className="size-9 shrink-0 cursor-pointer rounded-lg border border-zinc-200"
             />
-            <Input value={secondaryColor} onChange={(event) => updateSecondaryColor(event.target.value)} />
+            <Input
+              placeholder="#18181b"
+              value={secondaryColor}
+              onChange={(event) => updateSecondaryColor(event.target.value)}
+            />
           </div>
         </div>
       </div>

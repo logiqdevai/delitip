@@ -68,6 +68,7 @@ const TranslationRow: FC<{
         <Label className="text-[11px] text-zinc-500">Welcome message</Label>
         <Textarea
           rows={2}
+          placeholder="Welcome message in this language"
           value={welcome}
           onChange={(event) => setWelcome(event.target.value)}
           className="text-xs"
@@ -77,6 +78,7 @@ const TranslationRow: FC<{
         <Label className="text-[11px] text-zinc-500">Thank-you message</Label>
         <Textarea
           rows={2}
+          placeholder="Thank-you message in this language"
           value={thankYou}
           onChange={(event) => setThankYou(event.target.value)}
           className="text-xs"

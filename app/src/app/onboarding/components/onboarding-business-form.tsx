@@ -5,7 +5,6 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -17,8 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
-import { StoreCurrencyFormOptions } from "@/config/constants/dropdowns/stores/store-currency-form.options";
-import { getStoreTimezoneOptions } from "@/config/constants/dropdowns/stores/store-timezone-form.options";
 import type { BusinessSetupContext } from "@/features/organizations/hooks/use-organizations";
 import { useCompleteBusinessSetup } from "@/features/organizations/hooks/use-organizations";
 import {
@@ -30,20 +27,15 @@ import { Currencies } from "@/features/stores/interfaces/stores.interfaces";
 interface OnboardingBusinessFormProps {
   defaultValues: BusinessSetupFormData;
   context: BusinessSetupContext;
-  canSkip: boolean;
   onCompleted: () => void;
-  onSkip: () => void;
 }
 
 export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
   defaultValues,
   context,
-  canSkip,
   onCompleted,
-  onSkip,
 }) => {
   const completeSetup = useCompleteBusinessSetup();
-  const timezoneOptions = getStoreTimezoneOptions(defaultValues.timezone);
 
   const {
     register,
@@ -133,82 +125,8 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
           ) : null}
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <Label htmlFor="onboarding-timezone">Timezone</Label>
-            <Controller
-              name="timezone"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  items={timezoneOptions.map((option) => ({
-                    label: option.label,
-                    value: option.id,
-                  }))}
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
-                  <SelectTrigger
-                    id="onboarding-timezone"
-                    className="w-full"
-                    aria-invalid={!!errors.timezone}
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {timezoneOptions.map((option) => (
-                        <SelectItem key={option.id} value={option.id}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {errors.timezone ? (
-              <p className="text-xs text-red-600">{errors.timezone.message}</p>
-            ) : null}
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="onboarding-currency">Currency</Label>
-            <Controller
-              name="currency"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  items={StoreCurrencyFormOptions.map((option) => ({
-                    label: option.label,
-                    value: option.id,
-                  }))}
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
-                  <SelectTrigger
-                    id="onboarding-currency"
-                    className="w-full"
-                    aria-invalid={!!errors.currency}
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {StoreCurrencyFormOptions.map((option) => (
-                        <SelectItem key={option.id} value={option.id}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {errors.currency ? (
-              <p className="text-xs text-red-600">{errors.currency.message}</p>
-            ) : null}
-          </div>
-        </div>
+        <input type="hidden" {...register("timezone")} />
+        <input type="hidden" {...register("currency")} />
 
         <div className="space-y-1.5">
           <Label htmlFor="onboarding-address">
@@ -235,17 +153,6 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
             Save and continue
             <ArrowRight data-icon="inline-end" className="size-3.5" />
           </ActionButtonWithPending>
-          {canSkip ? (
-            <Button
-              type="button"
-              variant="ghost"
-              className="h-10 text-zinc-600"
-              disabled={completeSetup.isPending}
-              onClick={onSkip}
-            >
-              Skip to dashboard
-            </Button>
-          ) : null}
         </div>
       </form>
     </div>

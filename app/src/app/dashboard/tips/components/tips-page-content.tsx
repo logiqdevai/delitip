@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Receipt } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
   Table,
@@ -138,19 +139,19 @@ export const TipsPageContent: FC = () => {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <input
-          type="date"
+        <DatePicker
           value={dateFrom}
-          onChange={(event) => setDateFrom(event.target.value)}
-          className="h-7 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          onChange={setDateFrom}
+          placeholder="From date"
+          size="sm"
           aria-label="From date"
         />
         <span className="text-xs text-zinc-400">to</span>
-        <input
-          type="date"
+        <DatePicker
           value={dateTo}
-          onChange={(event) => setDateTo(event.target.value)}
-          className="h-7 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          onChange={setDateTo}
+          placeholder="To date"
+          size="sm"
           aria-label="To date"
         />
       </div>

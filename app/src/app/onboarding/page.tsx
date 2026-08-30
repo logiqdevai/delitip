@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import { OnboardingBusinessForm } from "@/app/onboarding/components/onboarding-business-form";
 import { OnboardingShell } from "@/app/onboarding/components/onboarding-shell";
-import { getBrowserTimezone } from "@/config/constants/dropdowns/stores/store-timezone-form.options";
 import { useMyOrganizations } from "@/features/organizations/hooks/use-organizations";
 import {
   Currencies,
@@ -17,15 +16,16 @@ import { useAuthHydrated } from "@/hooks/use-auth-hydrated";
 import { Routes } from "@/routes/routes";
 import { useAuthStore } from "@/stores/auth.store";
 
+const DEFAULT_TIMEZONE = "Europe/Athens";
+
 const buildDefaults = (store?: Store | null): BusinessSetupFormData => {
-  const browserTimezone = getBrowserTimezone();
   return {
     name: store?.name ?? "",
     industry: store?.industry ?? StoreIndustries.RESTAURANT,
     timezone:
       store?.timezone && store.timezone !== "UTC"
         ? store.timezone
-        : browserTimezone,
+        : DEFAULT_TIMEZONE,
     currency: store?.currency ?? Currencies.EUR,
     address_line: store?.address_line ?? "",
   };
@@ -51,7 +51,6 @@ const OnboardingPage: FC = () => {
     storeId: existingStore?.id,
   };
 
-  const canSkip = !!existingStore;
   const goDashboard = () => {
     router.push(Routes.dashboard.root);
   };
@@ -74,9 +73,7 @@ const OnboardingPage: FC = () => {
           key={`${context.organizationId ?? "new"}-${context.storeId ?? "none"}`}
           defaultValues={defaults}
           context={context}
-          canSkip={canSkip}
           onCompleted={goDashboard}
-          onSkip={goDashboard}
         />
       )}
     </OnboardingShell>

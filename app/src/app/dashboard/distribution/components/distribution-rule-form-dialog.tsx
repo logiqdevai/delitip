@@ -265,6 +265,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                         min={0}
                         max={100}
                         step={1}
+                        placeholder="0"
                         className="w-20"
                         aria-invalid={!!recipientError?.percentage}
                         {...register(`recipients.${index}.percentage`)}

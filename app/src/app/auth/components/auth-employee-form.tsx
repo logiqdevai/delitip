@@ -127,8 +127,7 @@ export const AuthEmployeeForm: FC = () => {
             strokeWidth={2}
           />
           <span>
-            Use the email and password from your staff invite. PIN login is not
-            supported yet — ask your manager if you need access reset.
+            Use the email and password from your staff invite. Ask your manager if you need access reset.
           </span>
         </div>
 

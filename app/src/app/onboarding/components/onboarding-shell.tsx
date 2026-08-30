@@ -57,12 +57,11 @@ export const OnboardingShell: FC<OnboardingShellProps> = ({ children }) => {
       <main className="flex flex-1 items-center justify-center p-4 sm:p-6 lg:p-10">
         <div className="w-full max-w-xl overflow-hidden rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-xl shadow-zinc-200/50 sm:p-10">
           {children}
-          <div className="mt-10 flex items-center justify-between border-t border-zinc-100 pt-6 text-xs text-zinc-400">
+          <div className="mt-10 flex items-center justify-center border-t border-zinc-100 pt-6 text-xs text-zinc-400">
             <div className="flex items-center gap-1.5">
               <Lock className="size-3.5 text-electric-lime" strokeWidth={2} />
               <span>Secure business setup</span>
             </div>
-            <span className="font-medium text-zinc-500">Step 1 of 7</span>
           </div>
         </div>
       </main>

@@ -106,7 +106,12 @@ export const BusinessProfileSettingsForm: FC = () => {
 
       <div className="space-y-1.5">
         <Label htmlFor="store-name">Business name</Label>
-        <Input id="store-name" aria-invalid={!!errors.name} {...register("name")} />
+        <Input
+          id="store-name"
+          placeholder="e.g. Artisan Café & Bar"
+          aria-invalid={!!errors.name}
+          {...register("name")}
+        />
         {errors.name ? (
           <p className="text-xs text-red-600">{errors.name.message}</p>
         ) : null}
@@ -217,15 +222,23 @@ export const BusinessProfileSettingsForm: FC = () => {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
           <Label htmlFor="store-city">City</Label>
-          <Input id="store-city" {...register("city")} />
+          <Input id="store-city" placeholder="City" {...register("city")} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="store-country">Country</Label>
-          <Input id="store-country" {...register("country")} />
+          <Input
+            id="store-country"
+            placeholder="Country"
+            {...register("country")}
+          />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="store-postal">Postal code</Label>
-          <Input id="store-postal" {...register("postal_code")} />
+          <Input
+            id="store-postal"
+            placeholder="Postal code"
+            {...register("postal_code")}
+          />
         </div>
       </div>
 

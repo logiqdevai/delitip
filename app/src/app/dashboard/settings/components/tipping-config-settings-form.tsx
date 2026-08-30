@@ -92,6 +92,7 @@ export const TippingConfigSettingsForm: FC = () => {
                 type="number"
                 min="0.01"
                 step="0.01"
+                placeholder="0.00"
                 value={amount}
                 onChange={(event) => {
                   const next = [...amounts];
