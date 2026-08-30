@@ -113,36 +113,40 @@ export const DistributionPageContent: FC = () => {
         }
       />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="space-y-3 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs lg:col-span-1">
-          <h2 className="text-sm font-bold text-ink-charcoal">Store default</h2>
-          {rulesQuery.isPending ? (
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-3 w-full" />
-            </div>
-          ) : defaultRule ? (
-            <div className="space-y-2">
-              <p className="text-sm font-semibold text-ink-charcoal">
-                {defaultRule.name}
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-4 lg:col-span-1">
+          <div className="flex h-5 items-center">
+            <h2 className="text-sm font-bold text-ink-charcoal">Store default</h2>
+          </div>
+          <div className="space-y-2 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+            {rulesQuery.isPending ? (
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-full" />
+              </div>
+            ) : defaultRule ? (
+              <>
+                <p className="text-sm font-bold text-ink-charcoal">
+                  {defaultRule.name}
+                </p>
+                <p className="text-xs leading-relaxed text-zinc-500">
+                  {formatRecipientSummary(defaultRule.recipients)}
+                </p>
+                <p className="text-[11px] text-zinc-400">
+                  Used when a QR code does not override the rule.
+                </p>
+              </>
+            ) : (
+              <p className="text-xs text-zinc-500">
+                No default rule yet. Create a rule and set it as the store
+                default.
               </p>
-              <p className="text-xs leading-relaxed text-zinc-500">
-                {formatRecipientSummary(defaultRule.recipients)}
-              </p>
-              <p className="text-[11px] text-zinc-400">
-                Used when a QR code does not override the rule.
-              </p>
-            </div>
-          ) : (
-            <p className="text-xs text-zinc-500">
-              No default rule yet. Create a rule and set it as the store
-              default.
-            </p>
-          )}
+            )}
+          </div>
         </div>
 
-        <div className="space-y-4 lg:col-span-2">
-          <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-col gap-4 lg:col-span-2">
+          <div className="flex h-5 items-center justify-between gap-2">
             <h2 className="text-sm font-bold text-ink-charcoal">Rules library</h2>
             <span className="text-xs text-zinc-400">
               {rules.length} {rules.length === 1 ? "rule" : "rules"}
