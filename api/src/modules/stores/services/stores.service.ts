@@ -59,6 +59,7 @@ export class StoresService {
 
         return this.prisma.store.findMany({
             where: { id: { in: storeIds } },
+            include: { logo_document: true },
             orderBy: { created_at: 'desc' },
         });
     }

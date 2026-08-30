@@ -125,6 +125,33 @@ const storeInitial = (name: string) => {
   return trimmed ? trimmed.charAt(0).toUpperCase() : "?";
 };
 
+const StoreLogo: FC<{
+  name: string;
+  logoUrl?: string | null;
+  className?: string;
+}> = ({ name, logoUrl, className }) => {
+  if (logoUrl) {
+    return (
+      <img
+        src={logoUrl}
+        alt=""
+        className={cn("shrink-0 rounded-lg object-cover", className)}
+      />
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        "flex shrink-0 items-center justify-center rounded-lg bg-ink-charcoal text-xs font-bold text-paper-offwhite",
+        className,
+      )}
+    >
+      {storeInitial(name)}
+    </div>
+  );
+};
+
 export const DashboardSidebar: FC = () => {
   const pathname = usePathname();
   const { state, isMobile, toggleSidebar, setOpenMobile } = useSidebar();
@@ -237,9 +264,11 @@ export const DashboardSidebar: FC = () => {
                 </div>
               ) : (
                 <div className="flex min-w-0 flex-1 items-center gap-2.5">
-                  <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-ink-charcoal text-xs font-bold text-paper-offwhite">
-                    {storeInitial(store.name)}
-                  </div>
+                  <StoreLogo
+                    name={store.name}
+                    logoUrl={store.logo_document?.url}
+                    className="size-7"
+                  />
                   <div className="min-w-0 flex-1 truncate">
                     {storeList.length > 1 ? (
                       <Select
@@ -289,10 +318,14 @@ export const DashboardSidebar: FC = () => {
             <Tooltip>
               <TooltipTrigger
                 render={
-                  <div className="hidden size-8 shrink-0 items-center justify-center self-center rounded-lg bg-ink-charcoal text-xs font-bold text-paper-offwhite group-data-[collapsible=icon]:flex" />
+                  <div className="hidden self-center group-data-[collapsible=icon]:block" />
                 }
               >
-                {storeInitial(store.name)}
+                <StoreLogo
+                  name={store.name}
+                  logoUrl={store.logo_document?.url}
+                  className="size-8"
+                />
               </TooltipTrigger>
               <TooltipContent side="right">{store.name}</TooltipContent>
             </Tooltip>

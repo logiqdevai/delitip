@@ -4,8 +4,8 @@ import { type FC, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Receipt } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import { RequestRefundDialog } from "@/app/dashboard/tips/[tipId]/components/request-refund-dialog";
+import { TipDetailSkeleton } from "@/app/dashboard/tips/[tipId]/components/tip-detail-skeleton";
 import { getRefundStatusLabel } from "@/config/constants/dropdowns/refunds/refund-status-form.options";
 import {
   Empty,
@@ -44,7 +44,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
   const [refundDialogOpen, setRefundDialogOpen] = useState(false);
 
   if (tipQuery.isPending) {
-    return <DetailSkeleton fieldCount={6} />;
+    return <TipDetailSkeleton />;
   }
 
   if (tipQuery.isError || !tipQuery.data) {
@@ -136,7 +136,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
         />
         <SummaryRow
           label="Customer"
-          value={tip.customer_name ?? tip.customer_email ?? "Anonymous"}
+          value={tip.customer_name ?? tip.customer_email ?? "—"}
         />
       </div>
 

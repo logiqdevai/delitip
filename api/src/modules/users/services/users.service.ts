@@ -43,7 +43,10 @@ export class UsersService {
         const [organization_memberships, employee_accounts, customerActivity] = await Promise.all([
             this.prisma.organizationMember.findMany({
                 where: { user_id: id },
-                include: { organization: true, store: true },
+                include: {
+                    organization: true,
+                    store: { include: { logo_document: true } },
+                },
             }),
             this.prisma.employee.findMany({
                 where: { user_id: id },
