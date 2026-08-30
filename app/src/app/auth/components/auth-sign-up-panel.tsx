@@ -13,7 +13,7 @@ export const AuthSignUpPanel: FC = () => {
   const router = useRouter();
 
   return (
-    <div>
+    <div className="flex flex-1 flex-col">
       <AuthRoleSwitcher
         activeRole={AuthRoles.BUSINESS}
         onSelectBusiness={() => undefined}

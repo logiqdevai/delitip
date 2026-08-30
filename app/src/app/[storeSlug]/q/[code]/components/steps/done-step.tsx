@@ -63,7 +63,7 @@ const RefundRequest: FC<{
         onChange={(event) => setReason(event.target.value)}
         placeholder="What went wrong? (optional)"
         rows={2}
-        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-brand-500 focus:ring-2 focus:ring-electric-lime focus:outline-none"
+        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs ring-2 ring-transparent transition-[border-color,box-shadow] duration-200 ease-out focus:border-brand-500 focus:ring-electric-lime focus:outline-none"
       />
 
       {requestRefund.isError ? (

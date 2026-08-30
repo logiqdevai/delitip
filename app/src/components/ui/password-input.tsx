@@ -12,13 +12,18 @@ import {
 type PasswordInputProps = Omit<
   ComponentProps<typeof InputGroupInput>,
   "type"
->;
+> & {
+  groupClassName?: string;
+};
 
-export const PasswordInput: FC<PasswordInputProps> = ({ ...props }) => {
+export const PasswordInput: FC<PasswordInputProps> = ({
+  groupClassName,
+  ...props
+}) => {
   const [visible, setVisible] = useState(false);
 
   return (
-    <InputGroup>
+    <InputGroup className={groupClassName}>
       <InputGroupInput type={visible ? "text" : "password"} {...props} />
       <InputGroupAddon align="inline-end">
         <Button
