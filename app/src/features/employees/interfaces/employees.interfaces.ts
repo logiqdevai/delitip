@@ -1,3 +1,8 @@
+export interface EmployeeDocumentRef {
+  id: string;
+  url: string;
+}
+
 export interface Employee {
   id: string;
   store_id: string;
@@ -5,6 +10,7 @@ export interface Employee {
   full_name: string;
   email: string;
   photo_document_id?: string | null;
+  photo_document?: EmployeeDocumentRef | null;
   position?: string | null;
   is_active: boolean;
   created_at: string;
@@ -22,7 +28,7 @@ export interface UpdateEmployeePayload {
   full_name?: string;
   email?: string;
   position?: string;
-  photo_document_id?: string;
+  photo_document_id?: string | null;
   is_active?: boolean;
 }
 

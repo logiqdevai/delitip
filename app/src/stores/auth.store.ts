@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
+import { getEmployeeWorkspaceStoreState } from "@/stores/employee-workspace.store";
 import { getWorkspaceStoreState } from "@/stores/workspace.store";
 
 const STORE_KEY = "auth";
@@ -28,6 +29,7 @@ export const useAuthStore = create<AuthStore>()(
         setSession: ({ accessToken, user }) => set({ accessToken, user }),
         clearSession: () => {
           getWorkspaceStoreState().clearWorkspace();
+          getEmployeeWorkspaceStoreState().clearEmployeeWorkspace();
           set({ accessToken: null, user: null });
         },
       }),

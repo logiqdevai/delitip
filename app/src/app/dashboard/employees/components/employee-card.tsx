@@ -38,8 +38,17 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
         href={Routes.dashboard.employeeDetail(employee.id)}
         className="flex items-start gap-3"
       >
-        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-ink-charcoal text-sm font-bold text-paper-offwhite">
-          {initials(employee.full_name)}
+        <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink-charcoal text-sm font-bold text-paper-offwhite">
+          {employee.photo_document?.url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={employee.photo_document.url}
+              alt=""
+              className="size-full object-cover"
+            />
+          ) : (
+            initials(employee.full_name)
+          )}
         </div>
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-sm font-bold text-ink-charcoal hover:underline">

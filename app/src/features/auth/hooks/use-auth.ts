@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import {
   forgotPassword,
@@ -207,4 +207,21 @@ export const useResetPassword = () => {
       });
     },
   });
+};
+
+export const useLogout = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const clearSession = useAuthStore((state) => state.clearSession);
+
+  return (options?: { redirectTo?: string }) => {
+    clearSession();
+    queryClient.clear();
+    toast.add({
+      title: "Signed out",
+      description: "You have been signed out of delitip.",
+      type: "success",
+    });
+    router.replace(options?.redirectTo ?? Routes.auth.sign_in);
+  };
 };

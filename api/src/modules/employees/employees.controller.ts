@@ -47,7 +47,9 @@ export class EmployeesController {
     }
 
     @Patch('employees/:id')
-    @ApiOperation({ summary: 'Update an Employee (Owner/Store Manager)' })
+    @ApiOperation({
+        summary: 'Update an Employee (Owner/Store Manager) — an Employee may update only their own photo_document_id',
+    })
     update(@CurrentUser() user: AuthUser, @Param('id') id: string, @Body() dto: UpdateEmployeeDto) {
         return this.employeesService.update(user, id, dto);
     }

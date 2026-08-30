@@ -71,6 +71,7 @@ describe('EmployeesService', () => {
                 skip: 0,
                 take: 20,
                 orderBy: { created_at: 'desc' },
+                include: { photo_document: true },
             });
             expect(result.data).toEqual([{ id: 'e1' }]);
         });
@@ -105,25 +106,34 @@ describe('EmployeesService', () => {
     });
 
     describe('update', () => {
-        it('throws NotFoundException when the employee does not exist', async () => {
-            prisma.employee.findUnique.mockResolvedValue(null);
-
-            await expect(service.update(user, 'emp1', {} as any)).rejects.toThrow(NotFoundException);
-        });
-
-        it('asserts OWNER/STORE_MANAGER store access and updates the employee', async () => {
-            prisma.employee.findUnique.mockResolvedValue({ id: 'emp1', store_id: 'store1' });
+        it('delegates access resolution to assertEmployeeSelfOrStoreAccess', async () => {
+            accessControl.assertEmployeeSelfOrStoreAccess.mockResolvedValue({
+                employee: { id: 'emp1', store_id: 'store1' },
+                isSelf: false,
+            });
             const updated = { id: 'emp1', position: 'Manager' };
             prisma.employee.update.mockResolvedValue(updated);
 
             const result = await service.update(user, 'emp1', { position: 'Manager' } as any);
 
-            expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1', [
+            expect(accessControl.assertEmployeeSelfOrStoreAccess).toHaveBeenCalledWith(user, 'emp1', [
                 OrganizationRole.OWNER,
                 OrganizationRole.STORE_MANAGER,
             ]);
             expect(prisma.employee.update).toHaveBeenCalledWith({ where: { id: 'emp1' }, data: { position: 'Manager' } });
             expect(result).toBe(updated);
+        });
+
+        it('restricts a self-service update to only photo_document_id', async () => {
+            accessControl.assertEmployeeSelfOrStoreAccess.mockResolvedValue({
+                employee: { id: 'emp1', store_id: 'store1' },
+                isSelf: true,
+            });
+            prisma.employee.update.mockResolvedValue({ id: 'emp1', photo_document_id: 'doc1' });
+
+            await service.update(user, 'emp1', { photo_document_id: 'doc1', position: 'Manager' } as any);
+
+            expect(prisma.employee.update).toHaveBeenCalledWith({ where: { id: 'emp1' }, data: { photo_document_id: 'doc1' } });
         });
     });
 

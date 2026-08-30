@@ -23,12 +23,13 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
   onSelectEmployee,
 }) => {
   return (
-    <div className="mb-6 inline-flex rounded-xl border border-zinc-200/60 bg-neutral-fill p-1">
+    <div className="mb-6 flex w-full rounded-xl border border-zinc-200/60 bg-neutral-fill p-1">
       <button
         type="button"
         onClick={onSelectBusiness}
+        aria-label="Business Account"
         className={cn(
-          "flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs transition",
+          "flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs whitespace-nowrap transition sm:px-3.5",
           activeRole === AuthRoles.BUSINESS
             ? "bg-white font-bold text-ink-charcoal shadow-xs"
             : "font-semibold text-zinc-500 hover:text-ink-charcoal"
@@ -36,20 +37,22 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
       >
         <Building2
           className={cn(
-            "size-3.5",
+            "size-3.5 shrink-0",
             activeRole === AuthRoles.BUSINESS
               ? "text-electric-lime"
               : "text-zinc-400"
           )}
           strokeWidth={2}
         />
-        Business Account
+        <span className="sm:hidden">Business</span>
+        <span className="hidden sm:inline">Business Account</span>
       </button>
       <button
         type="button"
         onClick={onSelectEmployee}
+        aria-label="Employee Access"
         className={cn(
-          "flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs transition",
+          "flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs whitespace-nowrap transition sm:px-3.5",
           activeRole === AuthRoles.EMPLOYEE
             ? "bg-white font-bold text-ink-charcoal shadow-xs"
             : "font-semibold text-zinc-500 hover:text-ink-charcoal"
@@ -57,14 +60,15 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
       >
         <User
           className={cn(
-            "size-3.5",
+            "size-3.5 shrink-0",
             activeRole === AuthRoles.EMPLOYEE
               ? "text-electric-lime"
               : "text-zinc-400"
           )}
           strokeWidth={2}
         />
-        Employee Access
+        <span className="sm:hidden">Employee</span>
+        <span className="hidden sm:inline">Employee Access</span>
       </button>
     </div>
   );

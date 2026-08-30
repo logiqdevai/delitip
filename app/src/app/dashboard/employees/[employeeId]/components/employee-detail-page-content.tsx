@@ -99,8 +99,17 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
 
       <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
         <div className="flex items-center gap-4">
-          <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-ink-charcoal text-lg font-bold text-paper-offwhite">
-            {initials(employee.full_name)}
+          <div className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink-charcoal text-lg font-bold text-paper-offwhite">
+            {employee.photo_document?.url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={employee.photo_document.url}
+                alt=""
+                className="size-full object-cover"
+              />
+            ) : (
+              initials(employee.full_name)
+            )}
           </div>
           <div>
             <h1 className="text-xl font-bold text-ink-charcoal">

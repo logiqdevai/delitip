@@ -1,10 +1,23 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { ImagePlus, LogOut } from "lucide-react";
 import { AccountSwitcher } from "@/components/auth/account-switcher";
 import { BrandMark } from "@/components/brand/brand-mark";
-import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useLogout } from "@/features/auth/hooks/use-auth";
 import { useCurrentEmployee } from "@/features/employees/hooks/use-employees";
+import { Routes } from "@/routes/routes";
+import { cn } from "@/lib/utils";
+import { EmployeePhotoDialog } from "./employee-photo-dialog";
 
 const employeeInitials = (name: string) => {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -15,7 +28,9 @@ const employeeInitials = (name: string) => {
 
 export const EmployeeHeader: FC = () => {
   const [onShift, setOnShift] = useState(true);
+  const [photoDialogOpen, setPhotoDialogOpen] = useState(false);
   const { employee, store } = useCurrentEmployee();
+  const logout = useLogout();
 
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white px-4 py-3 sm:px-8">
@@ -54,21 +69,77 @@ export const EmployeeHeader: FC = () => {
             <span>{onShift ? "On Shift" : "Off Shift"}</span>
           </button>
 
-          <div className="flex items-center gap-2.5 border-l border-zinc-200 pl-2">
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-ink-charcoal text-xs font-bold text-paper-offwhite ring-2 ring-electric-lime/20">
-              {employee ? employeeInitials(employee.full_name) : "?"}
-            </div>
-            <div className="hidden text-left sm:block">
-              <div className="text-xs font-bold text-ink-charcoal">
-                {employee?.full_name ?? "—"}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className="flex items-center gap-2.5 border-l border-zinc-200 pl-2 outline-none"
+              aria-label="Account menu"
+            >
+              <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink-charcoal text-xs font-bold text-paper-offwhite ring-2 ring-electric-lime/20">
+                {employee?.photo_document?.url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={employee.photo_document.url}
+                    alt=""
+                    className="size-full object-cover"
+                  />
+                ) : employee ? (
+                  employeeInitials(employee.full_name)
+                ) : (
+                  "?"
+                )}
               </div>
-              <div className="text-[10px] text-zinc-400">
-                {store?.name ?? "—"}
+              <div className="hidden text-left sm:block">
+                <div className="text-xs font-bold text-ink-charcoal">
+                  {employee?.full_name ?? "—"}
+                </div>
+                <div className="text-[10px] text-zinc-400">
+                  {store?.name ?? "—"}
+                </div>
               </div>
-            </div>
-          </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-44">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="truncate text-xs font-bold text-ink-charcoal">
+                    {employee?.full_name ?? "Account"}
+                  </div>
+                  <div className="truncate text-[10px] text-zinc-400">
+                    {store?.name ?? "Employee"}
+                  </div>
+                </DropdownMenuLabel>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                disabled={!employee}
+                onClick={() => setPhotoDialogOpen(true)}
+              >
+                <ImagePlus />
+                Edit photo
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={() =>
+                  logout({
+                    redirectTo: `${Routes.auth.sign_in}?role=employee`,
+                  })
+                }
+              >
+                <LogOut />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
+
+      {employee ? (
+        <EmployeePhotoDialog
+          open={photoDialogOpen}
+          onOpenChange={setPhotoDialogOpen}
+          employee={employee}
+        />
+      ) : null}
     </header>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, useEffect } from "react";
+import { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
@@ -13,8 +13,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ImagePicker } from "@/components/ui/image-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  useDeleteDocument,
+  useUploadDocument,
+} from "@/features/documents/hooks/use-documents";
+import { DocumentTypes } from "@/features/documents/interfaces/documents.interfaces";
 import {
   useCreateEmployee,
   useUpdateEmployee,
@@ -41,7 +47,23 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
   const isEdit = !!employee;
   const createEmployee = useCreateEmployee(storeId);
   const updateEmployee = useUpdateEmployee();
-  const isPending = createEmployee.isPending || updateEmployee.isPending;
+  const uploadDocument = useUploadDocument();
+  const deleteDocument = useDeleteDocument();
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [photoDocumentId, setPhotoDocumentId] = useState<string | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [photoSeededForOpen, setPhotoSeededForOpen] = useState(false);
+
+  if (open && !photoSeededForOpen) {
+    setPhotoSeededForOpen(true);
+    setPhotoDocumentId(employee?.photo_document_id ?? null);
+    setPhotoUrl(employee?.photo_document?.url ?? null);
+  } else if (!open && photoSeededForOpen) {
+    setPhotoSeededForOpen(false);
+  }
+
+  const isPending =
+    createEmployee.isPending || updateEmployee.isPending || isUploadingPhoto;
 
   const {
     register,
@@ -69,7 +91,7 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
   }, [employee, open, reset]);
 
   const onSubmit = handleSubmit(async (values) => {
-    const payload = {
+    const base = {
       full_name: values.full_name,
       email: values.email,
       position: values.position?.trim() || undefined,
@@ -77,9 +99,15 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
 
     try {
       if (isEdit && employee) {
-        await updateEmployee.mutateAsync({ id: employee.id, payload });
+        await updateEmployee.mutateAsync({
+          id: employee.id,
+          payload: { ...base, photo_document_id: photoDocumentId },
+        });
       } else {
-        await createEmployee.mutateAsync(payload);
+        await createEmployee.mutateAsync({
+          ...base,
+          photo_document_id: photoDocumentId ?? undefined,
+        });
       }
       onOpenChange(false);
     } catch {}
@@ -104,6 +132,39 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
         </DialogHeader>
 
         <form onSubmit={onSubmit} className="space-y-4" noValidate>
+          <ImagePicker
+            mode="image"
+            label="Photo"
+            hint="Optional"
+            value={photoUrl ?? undefined}
+            isPending={isUploadingPhoto}
+            disabled={isPending || deleteDocument.isPending}
+            onChange={(file) => {
+              setIsUploadingPhoto(true);
+              uploadDocument.mutate(
+                { file, type: DocumentTypes.IMAGE },
+                {
+                  onSuccess: (document) => {
+                    setPhotoDocumentId(document.id);
+                    setPhotoUrl(document.url);
+                  },
+                  onSettled: () => setIsUploadingPhoto(false),
+                },
+              );
+            }}
+            onClear={
+              photoDocumentId
+                ? () =>
+                    deleteDocument.mutate(photoDocumentId, {
+                      onSuccess: () => {
+                        setPhotoDocumentId(null);
+                        setPhotoUrl(null);
+                      },
+                    })
+                : undefined
+            }
+          />
+
           <div className="space-y-1.5">
             <Label htmlFor="employee-full-name">Full name</Label>
             <Input

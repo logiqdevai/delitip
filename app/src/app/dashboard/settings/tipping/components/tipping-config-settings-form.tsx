@@ -2,13 +2,26 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Plus, Trash2, Wallet } from "lucide-react";
+import { Plus, Trash2, Wallet } from "lucide-react";
+import { DistributionRuleFormDialog } from "@/app/dashboard/distribution/components/distribution-rule-form-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { useDistributionRules } from "@/features/distribution/hooks/use-distribution";
+import {
+  useDistributionRules,
+  useSetDefaultDistributionRule,
+} from "@/features/distribution/hooks/use-distribution";
+import { formatRecipientSummary } from "@/features/distribution/utils/distribution-summary.utils";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
@@ -33,11 +46,13 @@ export const TippingConfigSettingsForm: FC = () => {
   const { store, isPending } = useWorkspace();
   const updateStore = useUpdateStore();
   const rulesQuery = useDistributionRules(store?.id ?? "");
+  const setDefault = useSetDefaultDistributionRule(store?.id ?? "");
 
   const [loadedStoreId, setLoadedStoreId] = useState<string | null>(null);
   const [amounts, setAmounts] = useState<string[]>([]);
   const [allowCustom, setAllowCustom] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
+  const [ruleFormOpen, setRuleFormOpen] = useState(false);
 
   if (store && store.id !== loadedStoreId) {
     setLoadedStoreId(store.id);
@@ -54,11 +69,17 @@ export const TippingConfigSettingsForm: FC = () => {
 
   if (!store) return null;
 
-  const defaultRule = rulesQuery.data?.find(
+  const rules = rulesQuery.data ?? [];
+  const defaultRule = rules.find(
     (rule) => rule.id === store.default_distribution_rule_id,
   );
   const symbol = currencySymbol(store.currency);
   const canAddPreset = amounts.length < MAX_PRESETS;
+
+  const handleDefaultRuleChange = (ruleId: string | null) => {
+    if (!ruleId || ruleId === store.default_distribution_rule_id) return;
+    void setDefault.mutateAsync({ distribution_rule_id: ruleId });
+  };
 
   const updateAmounts = (next: string[]) => {
     setAmounts(next);
@@ -194,25 +215,73 @@ export const TippingConfigSettingsForm: FC = () => {
         />
       </div>
 
-      <Link
-        href={Routes.dashboard.distribution}
-        className="flex items-center justify-between gap-3 rounded-2xl border border-zinc-200/80 px-4 py-3.5 transition hover:border-brand-200 hover:bg-brand-50/40"
-      >
-        <div className="min-w-0">
-          <p className="text-xs font-semibold text-ink-charcoal">
-            Default distribution rule
-          </p>
-          <p className="mt-0.5 truncate text-[11px] text-zinc-500">
-            {rulesQuery.isPending
-              ? "Loading…"
-              : (defaultRule?.name ?? "Store default not set")}
-          </p>
+      <div className="space-y-2 rounded-2xl border border-zinc-200/80 px-4 py-3.5">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <Label htmlFor="default-distribution-rule" className="text-xs font-semibold text-ink-charcoal">
+              Default distribution rule
+            </Label>
+            <p className="mt-0.5 text-[11px] text-zinc-500">
+              Used when a QR code does not override the split.
+            </p>
+          </div>
+          <Link
+            href={Routes.dashboard.distribution}
+            className="shrink-0 text-[11px] font-semibold text-brand-700 hover:underline"
+          >
+            Manage all
+          </Link>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-brand-700">
-          Manage
-          <ArrowRight className="size-3.5" strokeWidth={2} />
-        </span>
-      </Link>
+
+        {rulesQuery.isPending ? (
+          <Skeleton className="h-9 w-full rounded-lg" />
+        ) : (
+          <Select
+            items={rules.map((rule) => ({
+              label: rule.name,
+              value: rule.id,
+            }))}
+            value={store.default_distribution_rule_id ?? ""}
+            onValueChange={handleDefaultRuleChange}
+            disabled={setDefault.isPending || rules.length === 0}
+          >
+            <SelectTrigger id="default-distribution-rule" className="w-full">
+              <SelectValue
+                placeholder={
+                  rules.length === 0
+                    ? "No rules yet — create one"
+                    : "Select a default rule"
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {rules.map((rule) => (
+                  <SelectItem key={rule.id} value={rule.id}>
+                    {rule.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        )}
+
+        {defaultRule ? (
+          <p className="truncate text-[11px] text-zinc-500">
+            {formatRecipientSummary(defaultRule.recipients)}
+          </p>
+        ) : null}
+
+        <Button
+          type="button"
+          variant="link"
+          className="h-auto px-0 text-xs font-semibold text-brand-700"
+          onClick={() => setRuleFormOpen(true)}
+        >
+          <Plus data-icon="inline-start" className="size-3.5" />
+          Create distribution rule
+        </Button>
+      </div>
 
       <div className="flex items-center gap-3 border-t border-zinc-100 pt-4">
         <Button
@@ -229,6 +298,15 @@ export const TippingConfigSettingsForm: FC = () => {
           </span>
         ) : null}
       </div>
+
+      <DistributionRuleFormDialog
+        open={ruleFormOpen}
+        onOpenChange={setRuleFormOpen}
+        storeId={store.id}
+        onCreated={(rule) => {
+          void setDefault.mutateAsync({ distribution_rule_id: rule.id });
+        }}
+      />
     </div>
   );
 };

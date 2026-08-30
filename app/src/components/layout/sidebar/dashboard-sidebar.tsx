@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { AccountSwitcher } from "@/components/auth/account-switcher";
 import { BrandMark } from "@/components/brand/brand-mark";
+import { DashboardUserMenu } from "@/components/layout/sidebar/dashboard-user-menu";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -111,6 +112,12 @@ const navItems = [
     showUnreadBadge: true,
     match: (path: string) => path.startsWith(Routes.dashboard.alerts),
   },
+  {
+    href: Routes.dashboard.settings.profile,
+    label: "Settings",
+    icon: Settings,
+    match: (path: string) => path.startsWith(Routes.dashboard.settings.root),
+  },
 ] as const;
 
 const storeInitial = (name: string) => {
@@ -130,7 +137,6 @@ export const DashboardSidebar: FC = () => {
   const visibleNavItems = navItems.filter(
     (item) => !("hideForAccountant" in item && item.hideForAccountant && isAccountant),
   );
-  const settingsActive = pathname.startsWith(Routes.dashboard.settings.root);
 
   const staffCount = employeesQuery.data?.pagination.total;
   const metaParts = [
@@ -347,32 +353,7 @@ export const DashboardSidebar: FC = () => {
         </SidebarContent>
 
         <SidebarFooter className="border-t border-zinc-100 p-2">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                isActive={settingsActive}
-                tooltip="Settings"
-                render={
-                  <Link href={Routes.dashboard.settings.profile} onClick={closeMobileNav} />
-                }
-                className={cn(
-                  "h-auto gap-3 rounded-xl px-3 py-2 text-chip group-data-[collapsible=icon]:mx-auto",
-                  settingsActive
-                    ? "bg-brand-50 font-semibold text-brand-800"
-                    : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
-                )}
-              >
-                <Settings
-                  className={cn(
-                    "size-4",
-                    settingsActive ? "text-electric-lime" : "text-zinc-400",
-                  )}
-                  strokeWidth={2}
-                />
-                <span>Settings</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <DashboardUserMenu onNavigate={closeMobileNav} />
         </SidebarFooter>
       </Sidebar>
     </>

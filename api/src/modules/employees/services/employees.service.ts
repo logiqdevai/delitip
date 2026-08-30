@@ -48,6 +48,7 @@ export class EmployeesService {
                 skip: (query.page - 1) * query.limit,
                 take: query.limit,
                 orderBy: { created_at: 'desc' },
+                include: { photo_document: true },
             }),
             this.prisma.employee.count({ where }),
         ]);
@@ -65,12 +66,15 @@ export class EmployeesService {
     }
 
     async update(user: AuthUser, id: string, dto: UpdateEmployeeDto) {
-        const employee = await this.prisma.employee.findUnique({ where: { id } });
-        if (!employee) throw new NotFoundException('Employee not found');
+        const { employee, isSelf } = await this.accessControl.assertEmployeeSelfOrStoreAccess(user, id, [
+            OrganizationRole.OWNER,
+            OrganizationRole.STORE_MANAGER,
+        ]);
 
-        await this.accessControl.assertStoreAccess(user, employee.store_id, [OrganizationRole.OWNER, OrganizationRole.STORE_MANAGER]);
+        // Employees updating their own record may only change their photo — other fields require a store role.
+        const data = isSelf ? { photo_document_id: dto.photo_document_id } : dto;
 
-        return this.prisma.employee.update({ where: { id }, data: dto });
+        return this.prisma.employee.update({ where: { id: employee.id }, data });
     }
 
     async remove(user: AuthUser, id: string) {

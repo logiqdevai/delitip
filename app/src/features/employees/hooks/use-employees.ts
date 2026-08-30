@@ -13,7 +13,7 @@ import type {
   UpdateEmployeePayload,
 } from "@/features/employees/interfaces/employees.interfaces";
 import { toast } from "@/components/ui/toast";
-import { useMyAccounts } from "@/features/users/hooks/use-users";
+import { useMyAccounts, usersQueryKeys } from "@/features/users/hooks/use-users";
 import { useAuthHydrated } from "@/hooks/use-auth-hydrated";
 import { useAuthStore } from "@/stores/auth.store";
 import { useEmployeeWorkspaceStore } from "@/stores/employee-workspace.store";
@@ -121,6 +121,9 @@ export const useUpdateEmployee = () => {
       void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
       void queryClient.invalidateQueries({
         queryKey: employeesQueryKeys.detail(variables.id),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: usersQueryKeys.accounts,
       });
       const deactivated = variables.payload.is_active === false;
       const activated = variables.payload.is_active === true;

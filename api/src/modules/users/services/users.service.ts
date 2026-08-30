@@ -46,7 +46,7 @@ export class UsersService {
             }),
             this.prisma.employee.findMany({
                 where: { user_id: id },
-                include: { store: true },
+                include: { store: true, photo_document: true },
             }),
             this.prisma.tip.findFirst({ where: { customer_user_id: id }, select: { id: true } }),
         ]);
