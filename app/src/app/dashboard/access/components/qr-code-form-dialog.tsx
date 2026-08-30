@@ -65,7 +65,10 @@ const selectionModeIcons: Record<QrCodeSelectionMode, typeof User> = {
   [QrCodeSelectionModes.TEAM]: UsersRound,
 };
 
-type QrEmployeeOption = Pick<Employee, "id" | "full_name" | "position">;
+type QrEmployeeOption = Pick<
+  Employee,
+  "id" | "full_name" | "position" | "photo_document"
+>;
 
 interface QrCodeFormDialogProps {
   open: boolean;

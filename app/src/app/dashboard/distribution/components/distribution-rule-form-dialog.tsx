@@ -329,7 +329,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                               <EmployeeSelect
                                 id={`recipient-employee-${index}`}
                                 employees={employees}
-                                value={employeeField.value}
+                                value={employeeField.value ?? ""}
                                 onValueChange={employeeField.onChange}
                                 emptyValue=""
                                 emptyLabel="Select employee"
