@@ -14,7 +14,7 @@ Create and manage Store QR codes (employee assignment, selection mode, distribut
 ## Hierarchy
 
 ```text
-Customer Access (QR)
+QR Codes
 ├── Access Hub (/dashboard/access)              [page — wired]
 │   ├── QR list
 │   ├── Print / download (per QR)
@@ -125,4 +125,4 @@ Team bar QR
 - Feature: `features/qr-codes/` and optionally `features/spots/`.  
 - Selection mode labels in `config/constants/dropdowns/`.  
 - Replace decorative `qrCells` with real QR image from `code` URL when API/CDN available.  
-- Sidebar label today: “Customer Access (QR)” — keep unless product renames.
+- Sidebar label today: “QR Codes” — keep unless product renames.

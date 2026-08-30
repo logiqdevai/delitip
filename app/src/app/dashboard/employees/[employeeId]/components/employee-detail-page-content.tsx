@@ -16,6 +16,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
 import {
   useEmployee,
@@ -161,9 +162,11 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
             Tips this month
           </span>
           <div className="mt-1 text-xl font-extrabold text-ink-charcoal">
-            {dashboardQuery.isPending
-              ? "—"
-              : formatMoney(dashboard?.tips_this_month.total_amount ?? 0, currency)}
+            {dashboardQuery.isPending ? (
+              <Skeleton className="h-6 w-20" />
+            ) : (
+              formatMoney(dashboard?.tips_this_month.total_amount ?? 0, currency)
+            )}
           </div>
         </div>
         <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
@@ -171,11 +174,13 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
             Average rating
           </span>
           <div className="mt-1 text-xl font-extrabold text-rating-amber">
-            {dashboardQuery.isPending
-              ? "—"
-              : dashboard?.average_rating
-                ? `★ ${dashboard.average_rating.toFixed(2)}`
-                : "—"}
+            {dashboardQuery.isPending ? (
+              <Skeleton className="h-6 w-16" />
+            ) : dashboard?.average_rating ? (
+              `★ ${dashboard.average_rating.toFixed(2)}`
+            ) : (
+              "—"
+            )}
           </div>
         </div>
         <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
@@ -183,7 +188,11 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
             Reviews
           </span>
           <div className="mt-1 text-xl font-extrabold text-ink-charcoal">
-            {dashboardQuery.isPending ? "—" : (dashboard?.reviews_count ?? 0)}
+            {dashboardQuery.isPending ? (
+              <Skeleton className="h-6 w-10" />
+            ) : (
+              (dashboard?.reviews_count ?? 0)
+            )}
           </div>
         </div>
       </div>
@@ -194,7 +203,13 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
           Personal QR
         </h2>
         {qrCodesQuery.isPending ? (
-          <p className="text-xs text-zinc-400">Loading…</p>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="space-y-1.5">
+              <Skeleton className="h-4 w-40" />
+              <Skeleton className="h-3 w-56 max-w-full" />
+            </div>
+            <Skeleton className="h-3 w-32" />
+          </div>
         ) : personalQr && store ? (
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>

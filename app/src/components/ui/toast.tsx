@@ -132,36 +132,45 @@ function ToastClose({
   )
 }
 
+const toastTypeAccent: Record<string, string> = {
+  success: "border-l-brand-700",
+  error: "border-l-destructive",
+  warning: "border-l-rating-amber",
+  info: "border-l-neutral-muted",
+  loading: "border-l-neutral-muted",
+}
+
+const toastTypeIconClass: Record<string, string> = {
+  success: "text-brand-800",
+  error: "text-destructive",
+  warning: "text-rating-amber",
+  info: "text-neutral-muted",
+  loading: "text-neutral-muted",
+}
+
 function ToastIcon({ type }: { type: string | undefined }) {
   let icon: React.ReactNode = null
+  const iconClass = type ? toastTypeIconClass[type] : undefined
 
   if (type === "success") {
-    icon = (
-      <CircleCheckIcon aria-hidden="true" />
-    )
+    icon = <CircleCheckIcon className={iconClass} aria-hidden="true" />
   }
 
   if (type === "info") {
-    icon = (
-      <InfoIcon aria-hidden="true" />
-    )
+    icon = <InfoIcon className={iconClass} aria-hidden="true" />
   }
 
   if (type === "warning") {
-    icon = (
-      <TriangleAlertIcon aria-hidden="true" />
-    )
+    icon = <TriangleAlertIcon className={iconClass} aria-hidden="true" />
   }
 
   if (type === "error") {
-    icon = (
-      <OctagonXIcon className="text-destructive" aria-hidden="true" />
-    )
+    icon = <OctagonXIcon className={iconClass} aria-hidden="true" />
   }
 
   if (type === "loading") {
     icon = (
-      <Loader2Icon className="animate-spin" aria-hidden="true" />
+      <Loader2Icon className={cn("animate-spin", iconClass)} aria-hidden="true" />
     )
   }
 
@@ -183,7 +192,15 @@ function ToastList() {
   const { toasts } = ToastPrimitive.useToastManager()
 
   return toasts.map((toastItem) => (
-    <Toast key={toastItem.id} toast={toastItem}>
+    <Toast
+      key={toastItem.id}
+      toast={toastItem}
+      className={cn(
+        toastItem.type && toastTypeAccent[toastItem.type]
+          ? cn("border-l-4", toastTypeAccent[toastItem.type])
+          : undefined
+      )}
+    >
       <ToastContent>
         <ToastIcon type={toastItem.type} />
         <div className="flex min-w-0 flex-1 flex-col gap-1">

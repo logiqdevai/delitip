@@ -38,10 +38,10 @@ const navItems: {
   { label: "Overview", icon: LayoutGrid, active: true },
   { label: "Employees", icon: Users, badge: "8" },
   { label: "Tips", icon: Wallet },
-  { label: "Reviews & Feedback", icon: Star },
+  { label: "Reviews", icon: Star },
   { label: "Tip Distribution", icon: ArrowLeftRight },
   { label: "Analytics", icon: BarChart3 },
-  { label: "Customer Access (QR)", icon: QrCode },
+  { label: "QR Codes", icon: QrCode },
 ];
 
 export const ClientBusinessView: FC = () => {

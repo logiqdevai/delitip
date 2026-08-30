@@ -100,7 +100,7 @@ export const TipsPageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="Tips Ledger"
+        title="Tips"
         description="Real-time transactional ledger of all tips paid by customers."
         actions={
           <Button

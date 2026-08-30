@@ -105,7 +105,7 @@ export const ReviewsPageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="Reviews & Feedback"
+        title="Reviews"
         description="Direct customer sentiment, compliments, and ratings tied to employees."
       />
 

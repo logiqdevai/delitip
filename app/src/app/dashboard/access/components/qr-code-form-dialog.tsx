@@ -1,8 +1,12 @@
 "use client";
 
-import { type FC, useEffect } from "react";
+import { type FC, useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, Copy, User, Users, UsersRound } from "lucide-react";
+import { SpotFormDialog } from "@/app/dashboard/access/components/spot-form-dialog";
+import { DistributionRuleFormDialog } from "@/app/dashboard/distribution/components/distribution-rule-form-dialog";
+import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -16,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -24,6 +29,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "@/components/ui/toast";
+import { getQrCodeSelectionModeDescription } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-description.options";
 import { QrCodeSelectionModeFormOptions } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
 import { useDistributionRules } from "@/features/distribution/hooks/use-distribution";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
@@ -36,6 +44,7 @@ import {
   getQrCodeSpotIds,
   QrCodeSelectionModes,
   type QrCode,
+  type QrCodeSelectionMode,
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { useSpots } from "@/features/spots/hooks/use-spots";
 import {
@@ -46,7 +55,13 @@ import {
   getAbsoluteTipUrl,
   getTipPath,
 } from "@/features/qr-codes/utils/qr-tip-url.utils";
+import { cn } from "@/lib/utils";
 
+const selectionModeIcons: Record<QrCodeSelectionMode, typeof User> = {
+  [QrCodeSelectionModes.CHOOSE_ONE]: User,
+  [QrCodeSelectionModes.CHOOSE_MANY]: Users,
+  [QrCodeSelectionModes.TEAM]: UsersRound,
+};
 interface QrCodeFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -63,6 +78,10 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
   qr,
 }) => {
   const isEdit = !!qr;
+  const [ruleFormOpen, setRuleFormOpen] = useState(false);
+  const [employeeFormOpen, setEmployeeFormOpen] = useState(false);
+  const [spotFormOpen, setSpotFormOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const createQr = useCreateQrCode(storeId);
   const updateQr = useUpdateQrCode();
   const employeesQuery = useEmployees(storeId, { limit: 100, is_active: true });
@@ -140,11 +159,33 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
   const employees = employeesQuery.data?.data ?? [];
   const rules = rulesQuery.data ?? [];
   const spots = spotsQuery.data?.data ?? [];
+  const tipUrl = qr ? getAbsoluteTipUrl(storeSlug, qr.code) : null;
   const tipPreview = qr
     ? getTipPath(storeSlug, qr.code)
     : `/${storeSlug}/q/…`;
 
+  const handleCopyTipUrl = async () => {
+    if (!tipUrl) return;
+    try {
+      await navigator.clipboard.writeText(tipUrl);
+      setCopied(true);
+      toast.add({
+        title: "Link copied",
+        description: "Tip URL copied to clipboard.",
+        type: "success",
+      });
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.add({
+        title: "Could not copy",
+        description: "Please copy the link manually.",
+        type: "error",
+      });
+    }
+  };
+
   return (
+    <>
     <Dialog
       open={open}
       onOpenChange={(next) => {
@@ -175,44 +216,67 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
             ) : null}
           </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="qr-mode">Selection mode</Label>
+          <div className="space-y-2">
+            <Label id="qr-mode-label">Selection mode</Label>
             <Controller
               name="selection_mode"
               control={control}
               render={({ field }) => (
-                <Select
-                  items={QrCodeSelectionModeFormOptions.map((option) => ({
-                    label: option.label,
-                    value: option.id,
-                  }))}
+                <RadioGroup
+                  aria-labelledby="qr-mode-label"
                   value={field.value}
                   onValueChange={field.onChange}
+                  className="gap-2"
                 >
-                  <SelectTrigger id="qr-mode" className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {QrCodeSelectionModeFormOptions.map((option) => (
-                        <SelectItem key={option.id} value={option.id}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                  {QrCodeSelectionModeFormOptions.map((option) => {
+                    const selected = field.value === option.id;
+                    const Icon = selectionModeIcons[option.id];
+                    return (
+                      <label
+                        key={option.id}
+                        className={cn(
+                          "flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-3 transition-colors",
+                          selected
+                            ? "border-brand-200 bg-brand-50 ring-1 ring-brand-100"
+                            : "border-zinc-200 hover:bg-zinc-50",
+                        )}
+                      >
+                        <RadioGroupItem
+                          value={option.id}
+                          className="mt-0.5"
+                        />
+                        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-ink-charcoal shadow-xs ring-1 ring-zinc-200/80">
+                          <Icon className="size-4" strokeWidth={2} />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-sm font-semibold text-ink-charcoal">
+                            {option.label}
+                          </span>
+                          <span className="mt-0.5 block text-xs leading-relaxed text-zinc-500">
+                            {getQrCodeSelectionModeDescription(option.id)}
+                          </span>
+                        </span>
+                      </label>
+                    );
+                  })}
+                </RadioGroup>
               )}
             />
             <p className="text-[11px] text-zinc-400">
-              Only applies when 2+ employees are assigned.
+              Only applies when 2+ employees are assigned to this QR.
             </p>
           </div>
 
           <div className="space-y-2">
             <Label>Employees</Label>
             <div className="max-h-40 space-y-2 overflow-y-auto rounded-xl border border-zinc-200 p-3">
-              {employees.length === 0 ? (
+              {employeesQuery.isPending ? (
+                <div className="space-y-2">
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <Skeleton key={index} className="h-4 w-40" />
+                  ))}
+                </div>
+              ) : employees.length === 0 ? (
                 <p className="text-xs text-zinc-500">
                   No active employees yet. Add staff first, or leave empty for
                   store-only tips.
@@ -260,6 +324,18 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                 />
               )}
             </div>
+            <p className="text-[11px] text-zinc-400">
+              Assigned staff appear on this QR for customers. Leave empty for
+              store-only tips.
+            </p>
+            <Button
+              type="button"
+              variant="link"
+              className="h-auto px-0 text-xs font-semibold text-brand-700"
+              onClick={() => setEmployeeFormOpen(true)}
+            >
+              Create employee
+            </Button>
           </div>
 
           <div className="space-y-2">
@@ -267,9 +343,15 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
               Spots <span className="font-normal text-zinc-400">(optional)</span>
             </Label>
             <div className="max-h-32 space-y-2 overflow-y-auto rounded-xl border border-zinc-200 p-3">
-              {spots.length === 0 ? (
+              {spotsQuery.isPending ? (
+                <div className="space-y-2">
+                  {Array.from({ length: 2 }).map((_, index) => (
+                    <Skeleton key={index} className="h-4 w-32" />
+                  ))}
+                </div>
+              ) : spots.length === 0 ? (
                 <p className="text-xs text-zinc-500">
-                  No spots yet. Create one from the Spots list on this page.
+                  No spots yet. Create one below, or leave empty.
                 </p>
               ) : (
                 <Controller
@@ -304,6 +386,17 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                 />
               )}
             </div>
+            <p className="text-[11px] text-zinc-400">
+              Optional location tags like tables or counters for this QR.
+            </p>
+            <Button
+              type="button"
+              variant="link"
+              className="h-auto px-0 text-xs font-semibold text-brand-700"
+              onClick={() => setSpotFormOpen(true)}
+            >
+              Create spot
+            </Button>
           </div>
 
           <div className="space-y-1.5">
@@ -342,6 +435,18 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                 </Select>
               )}
             />
+            <p className="text-[11px] text-zinc-400">
+              Store default follows the rule set on Distribution. If none is
+              set, tips are recorded without a split.
+            </p>
+            <Button
+              type="button"
+              variant="link"
+              className="h-auto px-0 text-xs font-semibold text-brand-700"
+              onClick={() => setRuleFormOpen(true)}
+            >
+              Create distribution rule
+            </Button>
           </div>
 
           {isEdit ? (
@@ -360,10 +465,26 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
             </label>
           ) : null}
 
-          {isEdit && qr ? (
+          {isEdit && qr && tipUrl ? (
             <div className="rounded-xl bg-zinc-50 p-3 text-left text-xs text-zinc-500">
               <div className="font-semibold text-ink-charcoal">Tip URL</div>
-              <p className="mt-1 break-all">{getAbsoluteTipUrl(storeSlug, qr.code)}</p>
+              <div className="mt-1 flex items-start gap-1">
+                <p className="min-w-0 flex-1 break-all">{tipUrl}</p>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="size-7 shrink-0 px-0 text-zinc-400 hover:text-ink-charcoal"
+                  onClick={() => void handleCopyTipUrl()}
+                  aria-label={copied ? "Copied tip URL" : "Copy tip URL"}
+                >
+                  {copied ? (
+                    <Check className="size-3.5 text-brand-700" strokeWidth={2} />
+                  ) : (
+                    <Copy className="size-3.5" strokeWidth={2} />
+                  )}
+                </Button>
+              </div>
               <p className="mt-1 text-[11px] text-zinc-400">Path: {tipPreview}</p>
             </div>
           ) : null}
@@ -384,5 +505,22 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
         </form>
       </DialogContent>
     </Dialog>
+
+    <DistributionRuleFormDialog
+      open={ruleFormOpen}
+      onOpenChange={setRuleFormOpen}
+      storeId={storeId}
+    />
+    <EmployeeFormDialog
+      open={employeeFormOpen}
+      onOpenChange={setEmployeeFormOpen}
+      storeId={storeId}
+    />
+    <SpotFormDialog
+      open={spotFormOpen}
+      onOpenChange={setSpotFormOpen}
+      storeId={storeId}
+    />
+    </>
   );
 };

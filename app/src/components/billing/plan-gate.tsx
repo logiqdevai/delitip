@@ -56,7 +56,7 @@ export const PlanGate: FC<PlanGateProps> = ({
       </EmptyHeader>
       <EmptyContent>
         <Link
-          href={Routes.dashboard.settings.root}
+          href={Routes.dashboard.settings.billing}
           className="text-xs font-semibold text-brand-700 hover:underline"
         >
           Go to Billing →

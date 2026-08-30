@@ -75,7 +75,7 @@ Application
 │   │   ├── List
 │   │   ├── Detail                          [missing]
 │   │   └── Invite / Create                 [modal or page — missing]
-│   ├── Tips Ledger
+│   ├── Tips
 │   │   └── Tip Detail / Refund             [missing]
 │   ├── Reviews & Feedback
 │   │   ├── Review List
@@ -90,7 +90,7 @@ Application
 │   │   ├── Stores (multi-store)
 │   │   ├── CX Score
 │   │   └── Insights (AI)                   [missing]
-│   ├── Customer Access (QR)
+│   ├── QR Codes
 │   │   ├── QR List / Print kit             [partial — one demo card]
 │   │   ├── QR Create / Edit                [missing]
 │   │   └── Spots                           [missing]
@@ -142,7 +142,7 @@ Status legend: **Existing** = `page.tsx` present · **Partial** = page exists bu
 | `/dashboard` | Overview | [dashboard-overview.md](./dashboard-overview.md) | Org roles | Partial |
 | `/dashboard/employees` | Employees | [employees.md](./employees.md) | Owner, Store Manager | Partial |
 | `/dashboard/employees/:id` | Employee Detail | [employees.md](./employees.md) | Owner, Store Manager | Missing |
-| `/dashboard/tips` | Tips Ledger | [tips-ledger.md](./tips-ledger.md) | Owner, Store Manager, Accountant | Partial |
+| `/dashboard/tips` | Tips | [tips-ledger.md](./tips-ledger.md) | Owner, Store Manager, Accountant | Partial |
 | `/dashboard/tips/:id` | Tip Detail | [tips-ledger.md](./tips-ledger.md) | Owner, Store Manager, Accountant | Missing |
 | `/dashboard/reviews` | Reviews | [reviews.md](./reviews.md) | Owner, Store Manager | Partial |
 | `/dashboard/distribution` | Distribution | [distribution.md](./distribution.md) | Owner, Store Manager | Partial |

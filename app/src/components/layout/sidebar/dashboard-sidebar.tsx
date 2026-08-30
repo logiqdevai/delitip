@@ -68,7 +68,7 @@ const navItems = [
   },
   {
     href: Routes.dashboard.tips,
-    label: "Tips Ledger",
+    label: "Tips",
     icon: Wallet,
     match: (path: string) => path.startsWith(Routes.dashboard.tips),
   },
@@ -80,7 +80,7 @@ const navItems = [
   },
   {
     href: Routes.dashboard.reviews,
-    label: "Reviews & Feedback",
+    label: "Reviews",
     icon: Star,
     match: (path: string) => path.startsWith(Routes.dashboard.reviews),
   },
@@ -99,7 +99,7 @@ const navItems = [
   },
   {
     href: Routes.dashboard.access,
-    label: "Customer Access (QR)",
+    label: "QR Codes",
     icon: QrCode,
     hideForAccountant: true,
     match: (path: string) => path.startsWith(Routes.dashboard.access),
@@ -318,7 +318,7 @@ export const DashboardSidebar: FC = () => {
                         tooltip={item.label}
                         render={<Link href={item.href} onClick={closeMobileNav} />}
                         className={cn(
-                          "h-auto gap-3 rounded-xl px-3 py-2 text-chip",
+                          "h-auto gap-3 rounded-xl px-3 py-2 text-chip group-data-[collapsible=icon]:mx-auto",
                           active
                             ? "bg-brand-50 font-semibold text-brand-800"
                             : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
@@ -356,7 +356,7 @@ export const DashboardSidebar: FC = () => {
                   <Link href={Routes.dashboard.settings.root} onClick={closeMobileNav} />
                 }
                 className={cn(
-                  "h-auto gap-3 rounded-xl px-3 py-2 text-chip",
+                  "h-auto gap-3 rounded-xl px-3 py-2 text-chip group-data-[collapsible=icon]:mx-auto",
                   settingsActive
                     ? "bg-brand-50 font-semibold text-brand-800"
                     : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",

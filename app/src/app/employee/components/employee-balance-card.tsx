@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import { CheckCircle2, Zap } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useEmployeeCashOut } from "./employee-cash-out-provider";
 
 export const EmployeeBalanceCard: FC = () => {
@@ -19,7 +20,11 @@ export const EmployeeBalanceCard: FC = () => {
           <span>Pending Balance</span>
         </div>
         <div className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">
-          {isBalancePending ? "—" : formattedBalance}
+          {isBalancePending ? (
+            <Skeleton className="h-9 w-32 bg-white/10" />
+          ) : (
+            formattedBalance
+          )}
         </div>
         <p className="mt-1 text-[11px] text-zinc-400">
           From unpaid tip distributions

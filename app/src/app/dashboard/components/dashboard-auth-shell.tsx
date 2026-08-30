@@ -1,8 +1,9 @@
 "use client";
 
-import { type FC, type ReactNode } from "react";
+import { type CSSProperties, type FC, type ReactNode } from "react";
 import { AuthRouteGuard } from "@/components/auth/auth-route-guard";
-import { DashboardSidebar } from "./dashboard-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { DashboardSidebar } from "@/components/layout/sidebar/dashboard-sidebar";
 
 interface DashboardAuthShellProps {
   children: ReactNode;
@@ -13,12 +14,15 @@ export const DashboardAuthShell: FC<DashboardAuthShellProps> = ({
 }) => {
   return (
     <AuthRouteGuard portal="dashboard">
-      <div className="flex min-h-screen flex-col bg-zinc-50 text-ink-charcoal antialiased md:flex-row md:overflow-hidden">
+      <SidebarProvider
+        className="flex-col bg-zinc-50 text-ink-charcoal antialiased md:h-screen md:flex-row md:overflow-hidden"
+        style={{ "--sidebar-width-icon": "4.5rem" } as CSSProperties}
+      >
         <DashboardSidebar />
         <main className="flex-1 space-y-6 overflow-y-auto p-4 sm:p-6 lg:p-8 md:h-screen">
           {children}
         </main>
-      </div>
+      </SidebarProvider>
     </AuthRouteGuard>
   );
 };

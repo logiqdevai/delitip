@@ -4,6 +4,7 @@ import { type FC, useState } from "react";
 import { Plus, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ConfirmationDialog,
   useConfirmationDialog,
@@ -117,8 +118,8 @@ export const DistributionPageContent: FC = () => {
           <h2 className="text-sm font-bold text-ink-charcoal">Store default</h2>
           {rulesQuery.isPending ? (
             <div className="space-y-2">
-              <div className="h-4 w-32 animate-pulse rounded bg-muted" />
-              <div className="h-3 w-full animate-pulse rounded bg-muted" />
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-3 w-full" />
             </div>
           ) : defaultRule ? (
             <div className="space-y-2">

@@ -18,11 +18,11 @@ Marketing Header
 Business Portal Sidebar
 ├── Overview
 ├── Employees
-├── Tips Ledger
+├── Tips
 ├── Reviews & Feedback
 ├── Tip Distribution
 ├── Analytics
-├── Customer Access (QR)
+├── QR Codes
 ├── Alerts                         [missing]
 ├── Payments                       [missing — Accountant primary]
 └── Settings (footer)
@@ -82,11 +82,11 @@ User / Profile Menu                [missing in app]
 | --- | --- | --- | --- | --- | --- | --- |
 | Overview | `Routes.dashboard.root` | `LayoutGrid` | Sidebar | Owner, Store Manager | Always (demo) | Dashboard home |
 | Employees | `Routes.dashboard.employees` | `Users` | Sidebar | Owner, Store Manager | Always; badge = staff count | Employee list |
-| Tips Ledger | `Routes.dashboard.tips` | `Wallet` | Sidebar | Owner, Store Manager, Accountant | Always | Tips table |
+| Tips | `Routes.dashboard.tips` | `Wallet` | Sidebar | Owner, Store Manager, Accountant | Always | Tips table |
 | Reviews & Feedback | `Routes.dashboard.reviews` | `Star` | Sidebar | Owner, Store Manager | Always | Reviews |
 | Tip Distribution | `Routes.dashboard.distribution` | `ArrowLeftRight` | Sidebar | Owner, Store Manager | Always | Distribution |
 | Analytics | `Routes.dashboard.analytics` | `BarChart3` | Sidebar | Owner, Store Manager | Always; plan-gated advanced sections unclear | Analytics |
-| Customer Access (QR) | `Routes.dashboard.access` | `QrCode` | Sidebar | Owner, Store Manager | Always | QR / print kit |
+| QR Codes | `Routes.dashboard.access` | `QrCode` | Sidebar | Owner, Store Manager | Always | QR / print kit |
 | Settings | `Routes.dashboard.settings` | `Settings` | Sidebar footer | Owner, Store Manager | Always | Settings |
 
 ### Desired additions (not in sidebar today)
@@ -110,7 +110,7 @@ User / Profile Menu                [missing in app]
 | --- | --- | --- | --- | --- |
 | Overview | Yes | Yes (scoped) | Unclear — financial-only role | No → `/employee` |
 | Employees | Yes | Yes | No | No |
-| Tips Ledger | Yes | Yes | Yes | Own tips only in employee portal |
+| Tips | Yes | Yes | Yes | Own tips only in employee portal |
 | Reviews | Yes | Yes | No | Own in employee portal |
 | Distribution | Yes | Yes | No | Read applied rule on tip detail only |
 | Analytics | Yes | Yes | Unclear | No (unless Store allows own performance — toggle unclear) |

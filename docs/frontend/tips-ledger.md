@@ -1,4 +1,4 @@
-# Tips Ledger
+# Tips
 
 ## Feature Overview
 
@@ -15,7 +15,7 @@ Transaction list of tips for a Store (or Org). Spec §27 payments visibility + t
 
 ```text
 Tips
-├── Tips Ledger (/dashboard/tips)           [page — partial]
+├── Tips (/dashboard/tips)           [page — partial]
 └── Tip Detail (/dashboard/tips/:id)        [missing]
     ├── Summary                             [section]
     ├── Distributions                       [section / tab]
@@ -26,7 +26,7 @@ Tips
 
 ## Pages
 
-### Tips Ledger
+### Tips
 
 **Route:** `Routes.dashboard.tips`  
 **Purpose:** Searchable/filterable tip transactions  
@@ -91,7 +91,7 @@ Amounts: Int minor units. Status: `PENDING` | `COMPLETED` | `FAILED` | `REFUNDED
 
 ```text
 View tips
-  Sidebar → Tips Ledger → Filter → Open tip → Distributions
+  Sidebar → Tips → Filter → Open tip → Distributions
 
 Refund
   Tip detail → Request refund → Dialog → Submit

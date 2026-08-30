@@ -61,7 +61,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
             href={Routes.dashboard.tips}
             className="text-xs font-semibold text-brand-700 hover:underline"
           >
-            Back to Tips Ledger
+            Back to Tips
           </Link>
         </EmptyContent>
       </Empty>
@@ -81,7 +81,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
         className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-ink-charcoal"
       >
         <ArrowLeft className="size-3.5" strokeWidth={2} />
-        Back to Tips Ledger
+        Back to Tips
       </Link>
 
       <div className="flex items-center justify-between gap-3">
