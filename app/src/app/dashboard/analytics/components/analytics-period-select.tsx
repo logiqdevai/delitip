@@ -2,9 +2,13 @@
 
 import { type FC } from "react";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { DashboardPeriod } from "@/features/analytics/interfaces/analytics.interfaces";
 
 const PERIOD_OPTIONS: { id: DashboardPeriod; label: string }[] = [
@@ -17,15 +21,27 @@ export const AnalyticsPeriodSelect: FC<{
   value: DashboardPeriod;
   onChange: (value: DashboardPeriod) => void;
 }> = ({ value, onChange }) => (
-  <NativeSelect
+  <Select
+    items={PERIOD_OPTIONS.map((option) => ({
+      label: option.label,
+      value: option.id,
+    }))}
     value={value}
-    onChange={(event) => onChange(event.target.value as DashboardPeriod)}
-    size="sm"
+    onValueChange={(next) => {
+      if (next) onChange(next as DashboardPeriod);
+    }}
   >
-    {PERIOD_OPTIONS.map((option) => (
-      <NativeSelectOption key={option.id} value={option.id}>
-        {option.label}
-      </NativeSelectOption>
-    ))}
-  </NativeSelect>
+    <SelectTrigger size="sm">
+      <SelectValue />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        {PERIOD_OPTIONS.map((option) => (
+          <SelectItem key={option.id} value={option.id}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectGroup>
+    </SelectContent>
+  </Select>
 );

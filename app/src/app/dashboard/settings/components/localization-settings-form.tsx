@@ -8,9 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   useUpdateStore,
   useUpdateStoreTranslation,
@@ -165,18 +169,29 @@ export const LocalizationSettingsForm: FC = () => {
 
       <div className="space-y-1.5">
         <Label htmlFor="primary-language">Primary language</Label>
-        <NativeSelect
-          id="primary-language"
-          className="w-full"
+        <Select
+          items={StoreLanguageFormOptions.map((option) => ({
+            label: option.label,
+            value: option.id,
+          }))}
           value={primaryLanguage}
-          onChange={(event) => updatePrimaryLanguage(event.target.value as Language)}
+          onValueChange={(value) => {
+            if (value) updatePrimaryLanguage(value as Language);
+          }}
         >
-          {StoreLanguageFormOptions.map((option) => (
-            <NativeSelectOption key={option.id} value={option.id}>
-              {option.label}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
+          <SelectTrigger id="primary-language" className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {StoreLanguageFormOptions.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">

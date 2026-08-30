@@ -14,9 +14,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAddOrganizationMember } from "@/features/organizations/hooks/use-organization-members";
 import { OrganizationRoles } from "@/features/organizations/interfaces/organizations.interfaces";
 import { OrganizationRoleFormOptions } from "@/config/constants/dropdowns/organizations/organization-role-form.options";
@@ -87,39 +91,60 @@ export const InviteMemberDialog: FC<InviteMemberDialogProps> = ({
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="invite-role">Role</Label>
-            <NativeSelect
-              id="invite-role"
-              className="w-full"
+            <Select
+              items={OrganizationRoleFormOptions.map((option) => ({
+                label: option.label,
+                value: option.id,
+              }))}
               value={role}
-              onChange={(event) => setRole(event.target.value)}
+              onValueChange={(value) => {
+                if (value) setRole(value);
+              }}
             >
-              {OrganizationRoleFormOptions.map((option) => (
-                <NativeSelectOption key={option.id} value={option.id}>
-                  {option.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
+              <SelectTrigger id="invite-role" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {OrganizationRoleFormOptions.map((option) => (
+                    <SelectItem key={option.id} value={option.id}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="invite-store">
               Store scope{" "}
               <span className="font-normal text-zinc-400">(optional)</span>
             </Label>
-            <NativeSelect
-              id="invite-store"
-              className="w-full"
+            <Select
+              items={[
+                { label: "Organization-wide", value: "" },
+                ...stores.map((store) => ({
+                  label: store.name,
+                  value: store.id,
+                })),
+              ]}
               value={storeId}
-              onChange={(event) => setStoreId(event.target.value)}
+              onValueChange={(value) => setStoreId(value ?? "")}
             >
-              <NativeSelectOption value="">
-                Organization-wide
-              </NativeSelectOption>
-              {stores.map((store) => (
-                <NativeSelectOption key={store.id} value={store.id}>
-                  {store.name}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
+              <SelectTrigger id="invite-store" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="">Organization-wide</SelectItem>
+                  {stores.map((store) => (
+                    <SelectItem key={store.id} value={store.id}>
+                      {store.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <DialogFooter>

@@ -3,9 +3,13 @@
 import { type FC, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useStoreTipsAnalytics } from "@/features/analytics/hooks/use-analytics";
 import type { StoreTipsGroupBy } from "@/features/analytics/interfaces/analytics.interfaces";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
@@ -67,43 +71,80 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
           className={inputClassName}
           aria-label="To date"
         />
-        <NativeSelect
+        <Select
+          items={[
+            { label: "All employees", value: "all" },
+            ...employees.map((employee) => ({
+              label: employee.full_name,
+              value: employee.id,
+            })),
+          ]}
           value={employeeId}
-          onChange={(event) => setEmployeeId(event.target.value)}
-          size="sm"
+          onValueChange={(value) => {
+            if (value) setEmployeeId(value);
+          }}
         >
-          <NativeSelectOption value="all">All employees</NativeSelectOption>
-          {employees.map((employee) => (
-            <NativeSelectOption key={employee.id} value={employee.id}>
-              {employee.full_name}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
-        <NativeSelect
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">All employees</SelectItem>
+              {employees.map((employee) => (
+                <SelectItem key={employee.id} value={employee.id}>
+                  {employee.full_name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Select
+          items={[
+            { label: "All QR codes", value: "all" },
+            ...qrCodes.map((qr) => ({ label: qr.label, value: qr.id })),
+          ]}
           value={qrCodeId}
-          onChange={(event) => setQrCodeId(event.target.value)}
-          size="sm"
+          onValueChange={(value) => {
+            if (value) setQrCodeId(value);
+          }}
         >
-          <NativeSelectOption value="all">All QR codes</NativeSelectOption>
-          {qrCodes.map((qr) => (
-            <NativeSelectOption key={qr.id} value={qr.id}>
-              {qr.label}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
-        <NativeSelect
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">All QR codes</SelectItem>
+              {qrCodes.map((qr) => (
+                <SelectItem key={qr.id} value={qr.id}>
+                  {qr.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Select
+          items={GROUP_BY_OPTIONS.map((option) => ({
+            label: option.label,
+            value: option.id,
+          }))}
           value={groupBy}
-          onChange={(event) =>
-            setGroupBy(event.target.value as StoreTipsGroupBy)
-          }
-          size="sm"
+          onValueChange={(value) => {
+            if (value) setGroupBy(value as StoreTipsGroupBy);
+          }}
         >
-          {GROUP_BY_OPTIONS.map((option) => (
-            <NativeSelectOption key={option.id} value={option.id}>
-              {option.label}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {GROUP_BY_OPTIONS.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       {analyticsQuery.isPending ? (

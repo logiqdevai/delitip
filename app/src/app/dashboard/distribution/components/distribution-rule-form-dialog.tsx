@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, useEffect } from "react";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
@@ -17,9 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { DistributionRecipientTypeFormOptions } from "@/config/constants/dropdowns/distribution/distribution-recipient-type-form.options";
 import {
   useCreateDistributionRule,
@@ -200,29 +204,52 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                       >
                         Type
                       </Label>
-                      <NativeSelect
-                        id={`recipient-type-${index}`}
-                        className="w-full"
-                        {...register(`recipients.${index}.recipient_type`, {
-                          onChange: (event) => {
-                            if (
-                              event.target.value ===
-                              DistributionRecipientTypes.STORE
-                            ) {
-                              setValue(`recipients.${index}.employee_id`, "");
-                            }
-                          },
-                        })}
-                      >
-                        {DistributionRecipientTypeFormOptions.map((option) => (
-                          <NativeSelectOption
-                            key={option.id}
-                            value={option.id}
+                      <Controller
+                        name={`recipients.${index}.recipient_type`}
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            items={DistributionRecipientTypeFormOptions.map(
+                              (option) => ({
+                                label: option.label,
+                                value: option.id,
+                              }),
+                            )}
+                            value={field.value}
+                            onValueChange={(value) => {
+                              if (!value) return;
+                              field.onChange(value);
+                              if (value === DistributionRecipientTypes.STORE) {
+                                setValue(
+                                  `recipients.${index}.employee_id`,
+                                  "",
+                                );
+                              }
+                            }}
                           >
-                            {option.label}
-                          </NativeSelectOption>
-                        ))}
-                      </NativeSelect>
+                            <SelectTrigger
+                              id={`recipient-type-${index}`}
+                              className="w-full"
+                            >
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {DistributionRecipientTypeFormOptions.map(
+                                  (option) => (
+                                    <SelectItem
+                                      key={option.id}
+                                      value={option.id}
+                                    >
+                                      {option.label}
+                                    </SelectItem>
+                                  ),
+                                )}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
                     </div>
 
                     <div className="space-y-1">
@@ -266,24 +293,46 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                       >
                         Employee
                       </Label>
-                      <NativeSelect
-                        id={`recipient-employee-${index}`}
-                        className="w-full"
-                        aria-invalid={!!recipientError?.employee_id}
-                        {...register(`recipients.${index}.employee_id`)}
-                      >
-                        <NativeSelectOption value="">
-                          Select employee
-                        </NativeSelectOption>
-                        {employees.map((employee) => (
-                          <NativeSelectOption
-                            key={employee.id}
-                            value={employee.id}
+                      <Controller
+                        name={`recipients.${index}.employee_id`}
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            items={[
+                              { label: "Select employee", value: "" },
+                              ...employees.map((employee) => ({
+                                label: employee.full_name,
+                                value: employee.id,
+                              })),
+                            ]}
+                            value={field.value}
+                            onValueChange={(value) =>
+                              field.onChange(value ?? "")
+                            }
                           >
-                            {employee.full_name}
-                          </NativeSelectOption>
-                        ))}
-                      </NativeSelect>
+                            <SelectTrigger
+                              id={`recipient-employee-${index}`}
+                              className="w-full"
+                              aria-invalid={!!recipientError?.employee_id}
+                            >
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectItem value="">Select employee</SelectItem>
+                                {employees.map((employee) => (
+                                  <SelectItem
+                                    key={employee.id}
+                                    value={employee.id}
+                                  >
+                                    {employee.full_name}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
                       {recipientError?.employee_id ? (
                         <p className="text-xs text-red-600">
                           {recipientError.employee_id.message}

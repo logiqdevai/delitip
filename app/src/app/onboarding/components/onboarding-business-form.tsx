@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
@@ -9,9 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
 import { StoreCurrencyFormOptions } from "@/config/constants/dropdowns/stores/store-currency-form.options";
 import { getStoreTimezoneOptions } from "@/config/constants/dropdowns/stores/store-timezone-form.options";
@@ -43,6 +47,7 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<BusinessSetupFormData>({
@@ -92,18 +97,37 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
 
         <div className="space-y-1.5">
           <Label htmlFor="onboarding-industry">Business type</Label>
-          <NativeSelect
-            id="onboarding-industry"
-            className="w-full"
-            aria-invalid={!!errors.industry}
-            {...register("industry")}
-          >
-            {StoreIndustryFormOptions.map((option) => (
-              <NativeSelectOption key={option.id} value={option.id}>
-                {option.label}
-              </NativeSelectOption>
-            ))}
-          </NativeSelect>
+          <Controller
+            name="industry"
+            control={control}
+            render={({ field }) => (
+              <Select
+                items={StoreIndustryFormOptions.map((option) => ({
+                  label: option.label,
+                  value: option.id,
+                }))}
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <SelectTrigger
+                  id="onboarding-industry"
+                  className="w-full"
+                  aria-invalid={!!errors.industry}
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {StoreIndustryFormOptions.map((option) => (
+                      <SelectItem key={option.id} value={option.id}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
           {errors.industry ? (
             <p className="text-xs text-red-600">{errors.industry.message}</p>
           ) : null}
@@ -112,36 +136,74 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="onboarding-timezone">Timezone</Label>
-            <NativeSelect
-              id="onboarding-timezone"
-              className="w-full"
-              aria-invalid={!!errors.timezone}
-              {...register("timezone")}
-            >
-              {timezoneOptions.map((option) => (
-                <NativeSelectOption key={option.id} value={option.id}>
-                  {option.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
+            <Controller
+              name="timezone"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  items={timezoneOptions.map((option) => ({
+                    label: option.label,
+                    value: option.id,
+                  }))}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id="onboarding-timezone"
+                    className="w-full"
+                    aria-invalid={!!errors.timezone}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {timezoneOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {errors.timezone ? (
               <p className="text-xs text-red-600">{errors.timezone.message}</p>
             ) : null}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="onboarding-currency">Currency</Label>
-            <NativeSelect
-              id="onboarding-currency"
-              className="w-full"
-              aria-invalid={!!errors.currency}
-              {...register("currency")}
-            >
-              {StoreCurrencyFormOptions.map((option) => (
-                <NativeSelectOption key={option.id} value={option.id}>
-                  {option.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
+            <Controller
+              name="currency"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  items={StoreCurrencyFormOptions.map((option) => ({
+                    label: option.label,
+                    value: option.id,
+                  }))}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id="onboarding-currency"
+                    className="w-full"
+                    aria-invalid={!!errors.currency}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {StoreCurrencyFormOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {errors.currency ? (
               <p className="text-xs text-red-600">{errors.currency.message}</p>
             ) : null}

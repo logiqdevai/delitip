@@ -1,16 +1,20 @@
 "use client";
 
 import { type FC, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import {
@@ -28,6 +32,7 @@ export const BusinessProfileSettingsForm: FC = () => {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isDirty },
@@ -110,35 +115,98 @@ export const BusinessProfileSettingsForm: FC = () => {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="store-industry">Industry</Label>
-          <NativeSelect id="store-industry" className="w-full" {...register("industry")}>
-            {StoreIndustryFormOptions.map((option) => (
-              <NativeSelectOption key={option.id} value={option.id}>
-                {option.label}
-              </NativeSelectOption>
-            ))}
-          </NativeSelect>
+          <Controller
+            name="industry"
+            control={control}
+            render={({ field }) => (
+              <Select
+                items={StoreIndustryFormOptions.map((option) => ({
+                  label: option.label,
+                  value: option.id,
+                }))}
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <SelectTrigger id="store-industry" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {StoreIndustryFormOptions.map((option) => (
+                      <SelectItem key={option.id} value={option.id}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="store-currency">Currency</Label>
-          <NativeSelect id="store-currency" className="w-full" {...register("currency")}>
-            {StoreCurrencyFormOptions.map((option) => (
-              <NativeSelectOption key={option.id} value={option.id}>
-                {option.label}
-              </NativeSelectOption>
-            ))}
-          </NativeSelect>
+          <Controller
+            name="currency"
+            control={control}
+            render={({ field }) => (
+              <Select
+                items={StoreCurrencyFormOptions.map((option) => ({
+                  label: option.label,
+                  value: option.id,
+                }))}
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <SelectTrigger id="store-currency" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {StoreCurrencyFormOptions.map((option) => (
+                      <SelectItem key={option.id} value={option.id}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
         </div>
       </div>
 
       <div className="space-y-1.5">
         <Label htmlFor="store-timezone">Timezone</Label>
-        <NativeSelect id="store-timezone" className="w-full" {...register("timezone")}>
-          {getStoreTimezoneOptions(store.timezone).map((option) => (
-            <NativeSelectOption key={option.id} value={option.id}>
-              {option.label}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
+        <Controller
+          name="timezone"
+          control={control}
+          render={({ field }) => {
+            const timezoneOptions = getStoreTimezoneOptions(store.timezone);
+            return (
+              <Select
+                items={timezoneOptions.map((option) => ({
+                  label: option.label,
+                  value: option.id,
+                }))}
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <SelectTrigger id="store-timezone" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {timezoneOptions.map((option) => (
+                      <SelectItem key={option.id} value={option.id}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            );
+          }}
+        />
       </div>
 
       <div className="space-y-1.5">

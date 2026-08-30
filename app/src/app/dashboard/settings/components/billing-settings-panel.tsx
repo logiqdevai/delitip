@@ -9,9 +9,13 @@ import {
   useConfirmationDialog,
 } from "@/components/ui/confirmation-dialog";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   useCancelSubscription,
   useChangeSubscriptionPlan,
@@ -76,22 +80,34 @@ export const BillingSettingsPanel: FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <NativeSelect
-              size="sm"
+            <Select
+              items={SubscriptionPlanFormOptions.map((option) => ({
+                label: option.label,
+                value: option.id,
+              }))}
               value={subscription.plan}
-              onChange={(event) =>
-                changePlan.mutate({
-                  plan: event.target.value as typeof subscription.plan,
-                })
-              }
+              onValueChange={(value) => {
+                if (value) {
+                  changePlan.mutate({
+                    plan: value as typeof subscription.plan,
+                  });
+                }
+              }}
               disabled={changePlan.isPending}
             >
-              {SubscriptionPlanFormOptions.map((option) => (
-                <NativeSelectOption key={option.id} value={option.id}>
-                  {option.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
+              <SelectTrigger size="sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {SubscriptionPlanFormOptions.map((option) => (
+                    <SelectItem key={option.id} value={option.id}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
             {subscription.status !== "CANCELED" ? (
               <Button
                 type="button"

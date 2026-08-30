@@ -3,9 +3,13 @@
 import { type FC } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useMyAccounts } from "@/features/users/hooks/use-users";
 import { useAuthHydrated } from "@/hooks/use-auth-hydrated";
 import { Routes } from "@/routes/routes";
@@ -60,26 +64,37 @@ export const AccountSwitcher: FC = () => {
     }
   };
 
+  const items = [
+    ...orgOptions.map((membership) => ({
+      label: `${membership.organization.name} (Business)`,
+      value: `org:${membership.organization_id}`,
+    })),
+    ...employeeAccounts.map((account) => ({
+      label: `${account.store.name} (Employee)`,
+      value: `employee:${account.id}`,
+    })),
+  ];
+
   return (
-    <NativeSelect
+    <Select
+      items={items}
       value={currentKey}
-      onChange={(event) => handleChange(event.target.value)}
-      size="sm"
-      aria-label="Switch account"
+      onValueChange={(value) => {
+        if (value) handleChange(value);
+      }}
     >
-      {orgOptions.map((membership) => (
-        <NativeSelectOption
-          key={`org:${membership.organization_id}`}
-          value={`org:${membership.organization_id}`}
-        >
-          {membership.organization.name} (Business)
-        </NativeSelectOption>
-      ))}
-      {employeeAccounts.map((account) => (
-        <NativeSelectOption key={`employee:${account.id}`} value={`employee:${account.id}`}>
-          {account.store.name} (Employee)
-        </NativeSelectOption>
-      ))}
-    </NativeSelect>
+      <SelectTrigger size="sm" aria-label="Switch account">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {items.map((item) => (
+            <SelectItem key={item.value} value={item.value}>
+              {item.label}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 };

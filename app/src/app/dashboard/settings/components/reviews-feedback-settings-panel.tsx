@@ -6,9 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   useCreateReviewCategory,
   useDeleteReviewCategory,
@@ -139,10 +143,26 @@ const QuestionsSection: FC<{ storeId: string }> = ({ storeId }) => {
           placeholder="e.g. How was the food?"
           className="h-8 flex-1 text-xs"
         />
-        <NativeSelect size="sm" value={type} onChange={(event) => setType(event.target.value)}>
-          <NativeSelectOption value={FeedbackQuestionTypes.RATING}>Rating</NativeSelectOption>
-          <NativeSelectOption value={FeedbackQuestionTypes.TEXT}>Text</NativeSelectOption>
-        </NativeSelect>
+        <Select
+          items={[
+            { label: "Rating", value: FeedbackQuestionTypes.RATING },
+            { label: "Text", value: FeedbackQuestionTypes.TEXT },
+          ]}
+          value={type}
+          onValueChange={(value) => {
+            if (value) setType(value);
+          }}
+        >
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value={FeedbackQuestionTypes.RATING}>Rating</SelectItem>
+              <SelectItem value={FeedbackQuestionTypes.TEXT}>Text</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         <Button type="submit" size="sm" disabled={create.isPending || !question.trim()}>
           <Plus data-icon="inline-start" className="size-3.5" />
           Add
@@ -216,11 +236,28 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
           placeholder="e.g. Friendly service"
           className="h-8 flex-1 text-xs"
         />
-        <NativeSelect size="sm" value={sentiment} onChange={(event) => setSentiment(event.target.value)}>
-          <NativeSelectOption value={ReviewTagSentiments.POSITIVE}>Positive</NativeSelectOption>
-          <NativeSelectOption value={ReviewTagSentiments.NEUTRAL}>Neutral</NativeSelectOption>
-          <NativeSelectOption value={ReviewTagSentiments.NEGATIVE}>Negative</NativeSelectOption>
-        </NativeSelect>
+        <Select
+          items={[
+            { label: "Positive", value: ReviewTagSentiments.POSITIVE },
+            { label: "Neutral", value: ReviewTagSentiments.NEUTRAL },
+            { label: "Negative", value: ReviewTagSentiments.NEGATIVE },
+          ]}
+          value={sentiment}
+          onValueChange={(value) => {
+            if (value) setSentiment(value);
+          }}
+        >
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value={ReviewTagSentiments.POSITIVE}>Positive</SelectItem>
+              <SelectItem value={ReviewTagSentiments.NEUTRAL}>Neutral</SelectItem>
+              <SelectItem value={ReviewTagSentiments.NEGATIVE}>Negative</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         <Button type="submit" size="sm" disabled={create.isPending || !name.trim()}>
           <Plus data-icon="inline-start" className="size-3.5" />
           Add

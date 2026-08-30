@@ -17,6 +17,14 @@ import {
 } from "lucide-react";
 import { AccountSwitcher } from "@/components/auth/account-switcher";
 import { BrandMark } from "@/components/brand/brand-mark";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getStoreIndustryLabel } from "@/config/constants/dropdowns/stores/store-industry-form.options";
 import { useUnreadAlertsCount } from "@/features/alerts/hooks/use-alerts";
@@ -152,18 +160,32 @@ export const DashboardSidebar: FC = () => {
               </div>
               <div className="min-w-0 flex-1 truncate">
                 {storeList.length > 1 ? (
-                  <select
-                    value={storeId ?? ""}
-                    onChange={(event) => switchStore(event.target.value)}
-                    className="w-full truncate bg-transparent text-xs font-bold text-ink-charcoal outline-none"
-                    aria-label="Switch store"
+                  <Select
+                    items={storeList.map((item) => ({
+                      label: item.name,
+                      value: item.id,
+                    }))}
+                    value={storeId ?? undefined}
+                    onValueChange={(value) => {
+                      if (value) switchStore(value);
+                    }}
                   >
-                    {storeList.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger
+                      aria-label="Switch store"
+                      className="h-auto w-full min-w-0 justify-start gap-1 border-none bg-transparent p-0 text-xs font-bold text-ink-charcoal shadow-none focus-visible:ring-0"
+                    >
+                      <SelectValue className="truncate" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {storeList.map((item) => (
+                          <SelectItem key={item.id} value={item.id}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 ) : (
                   <div className="truncate text-xs font-bold text-ink-charcoal">
                     {store.name}

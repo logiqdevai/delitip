@@ -19,6 +19,14 @@ import {
 } from "@/features/auth/validation-schemas/auth.schema";
 import { useRegisterBusiness } from "@/features/auth/hooks/use-auth";
 import { Routes } from "@/routes/routes";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { authFieldClassName } from "./auth-password-field";
 import { cn } from "@/lib/utils";
 
@@ -90,18 +98,37 @@ export const AuthSignUpForm: FC = () => {
             >
               Business Type
             </label>
-            <select
-              id="sign-up-type"
-              className={authFieldClassName}
-              aria-invalid={!!errors.businessType}
-              {...register("businessType")}
-            >
-              {BusinessTypeFormOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="businessType"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  items={BusinessTypeFormOptions.map((option) => ({
+                    label: option.label,
+                    value: option.id,
+                  }))}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id="sign-up-type"
+                    className={cn(authFieldClassName, "w-full")}
+                    aria-invalid={!!errors.businessType}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {BusinessTypeFormOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {errors.businessType ? (
               <p className="mt-1 text-xs text-red-600">
                 {errors.businessType.message}
@@ -115,18 +142,37 @@ export const AuthSignUpForm: FC = () => {
             >
               Estimated Team Size
             </label>
-            <select
-              id="sign-up-team"
-              className={authFieldClassName}
-              aria-invalid={!!errors.teamSize}
-              {...register("teamSize")}
-            >
-              {TeamSizeFormOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="teamSize"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  items={TeamSizeFormOptions.map((option) => ({
+                    label: option.label,
+                    value: option.id,
+                  }))}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id="sign-up-team"
+                    className={cn(authFieldClassName, "w-full")}
+                    aria-invalid={!!errors.teamSize}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {TeamSizeFormOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {errors.teamSize ? (
               <p className="mt-1 text-xs text-red-600">{errors.teamSize.message}</p>
             ) : null}

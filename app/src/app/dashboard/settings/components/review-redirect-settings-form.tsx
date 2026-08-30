@@ -2,10 +2,19 @@
 
 import { type FC, type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
+import { cn } from "@/lib/utils";
 
 const RATING_OPTIONS = [1, 2, 3, 4, 5] as const;
 
@@ -86,18 +95,27 @@ export const ReviewRedirectSettingsForm: FC = () => {
         >
           Public prompt threshold
         </label>
-        <select
-          id="rating-threshold"
-          value={threshold}
-          onChange={(event) => updateThreshold(Number(event.target.value))}
-          className={fieldClassName}
+        <Select
+          items={RATING_OPTIONS.map((rating) => ({
+            label: `${rating}+ stars`,
+            value: String(rating),
+          }))}
+          value={String(threshold)}
+          onValueChange={(value) => updateThreshold(Number(value))}
         >
-          {RATING_OPTIONS.map((rating) => (
-            <option key={rating} value={rating}>
-              {rating}+ stars
-            </option>
-          ))}
-        </select>
+          <SelectTrigger id="rating-threshold" className={cn(fieldClassName, "w-full")}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {RATING_OPTIONS.map((rating) => (
+                <SelectItem key={rating} value={String(rating)}>
+                  {rating}+ stars
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       <div>

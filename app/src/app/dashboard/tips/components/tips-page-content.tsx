@@ -15,9 +15,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Empty,
   EmptyContent,
@@ -111,19 +115,29 @@ export const TipsPageContent: FC = () => {
       />
 
       <div className="flex flex-wrap items-center gap-2.5">
-        <NativeSelect
+        <Select
+          items={TipStatusFilterOptions.map((option) => ({
+            label: option.label,
+            value: option.id,
+          }))}
           value={status}
-          onChange={(event) =>
-            setStatus(event.target.value as TipStatus | "all")
-          }
-          size="sm"
+          onValueChange={(value) => {
+            if (value) setStatus(value as TipStatus | "all");
+          }}
         >
-          {TipStatusFilterOptions.map((option) => (
-            <NativeSelectOption key={option.id} value={option.id}>
-              {option.label}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {TipStatusFilterOptions.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         <input
           type="date"
           value={dateFrom}

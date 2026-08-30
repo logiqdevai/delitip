@@ -17,9 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { QrCodeSelectionModeFormOptions } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
 import { useDistributionRules } from "@/features/distribution/hooks/use-distribution";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
@@ -173,17 +177,33 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
 
           <div className="space-y-1.5">
             <Label htmlFor="qr-mode">Selection mode</Label>
-            <NativeSelect
-              id="qr-mode"
-              className="w-full"
-              {...register("selection_mode")}
-            >
-              {QrCodeSelectionModeFormOptions.map((option) => (
-                <NativeSelectOption key={option.id} value={option.id}>
-                  {option.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
+            <Controller
+              name="selection_mode"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  items={QrCodeSelectionModeFormOptions.map((option) => ({
+                    label: option.label,
+                    value: option.id,
+                  }))}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger id="qr-mode" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {QrCodeSelectionModeFormOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
             <p className="text-[11px] text-zinc-400">
               Only applies when 2+ employees are assigned.
             </p>
@@ -291,20 +311,37 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
               Distribution rule{" "}
               <span className="font-normal text-zinc-400">(optional)</span>
             </Label>
-            <NativeSelect
-              id="qr-rule"
-              className="w-full"
-              {...register("distribution_rule_id")}
-            >
-              <NativeSelectOption value="">
-                Store default
-              </NativeSelectOption>
-              {rules.map((rule) => (
-                <NativeSelectOption key={rule.id} value={rule.id}>
-                  {rule.name}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
+            <Controller
+              name="distribution_rule_id"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  items={[
+                    { label: "Store default", value: "" },
+                    ...rules.map((rule) => ({
+                      label: rule.name,
+                      value: rule.id,
+                    })),
+                  ]}
+                  value={field.value}
+                  onValueChange={(value) => field.onChange(value ?? "")}
+                >
+                  <SelectTrigger id="qr-rule" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="">Store default</SelectItem>
+                      {rules.map((rule) => (
+                        <SelectItem key={rule.id} value={rule.id}>
+                          {rule.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
 
           {isEdit ? (

@@ -5,9 +5,13 @@ import { MessageSquareText, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Empty,
   EmptyContent,
@@ -106,51 +110,87 @@ export const ReviewsPageContent: FC = () => {
       />
 
       <div className="flex flex-wrap items-center gap-2.5">
-        <NativeSelect
+        <Select
+          items={[
+            { label: "Any rating", value: "all" },
+            ...RATING_OPTIONS.map((rating) => ({
+              label: `${rating}+ stars`,
+              value: String(rating),
+            })),
+          ]}
           value={String(minRating)}
-          onChange={(event) =>
-            setMinRating(
-              event.target.value === "all"
-                ? "all"
-                : Number(event.target.value),
-            )
-          }
-          size="sm"
+          onValueChange={(value) => {
+            if (value) {
+              setMinRating(value === "all" ? "all" : Number(value));
+            }
+          }}
         >
-          <NativeSelectOption value="all">Any rating</NativeSelectOption>
-          {RATING_OPTIONS.map((rating) => (
-            <NativeSelectOption key={rating} value={rating}>
-              {rating}+ stars
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">Any rating</SelectItem>
+              {RATING_OPTIONS.map((rating) => (
+                <SelectItem key={rating} value={String(rating)}>
+                  {rating}+ stars
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
 
-        <NativeSelect
+        <Select
+          items={[
+            { label: "All employees", value: "all" },
+            ...employees.map((employee) => ({
+              label: employee.full_name,
+              value: employee.id,
+            })),
+          ]}
           value={employeeId}
-          onChange={(event) => setEmployeeId(event.target.value)}
-          size="sm"
+          onValueChange={(value) => {
+            if (value) setEmployeeId(value);
+          }}
         >
-          <NativeSelectOption value="all">All employees</NativeSelectOption>
-          {employees.map((employee) => (
-            <NativeSelectOption key={employee.id} value={employee.id}>
-              {employee.full_name}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">All employees</SelectItem>
+              {employees.map((employee) => (
+                <SelectItem key={employee.id} value={employee.id}>
+                  {employee.full_name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
 
-        <NativeSelect
+        <Select
+          items={ReviewVisibilityFilterOptions.map((option) => ({
+            label: option.label,
+            value: option.id,
+          }))}
           value={visibility}
-          onChange={(event) =>
-            setVisibility(event.target.value as ReviewVisibility | "all")
-          }
-          size="sm"
+          onValueChange={(value) => {
+            if (value) setVisibility(value as ReviewVisibility | "all");
+          }}
         >
-          {ReviewVisibilityFilterOptions.map((option) => (
-            <NativeSelectOption key={option.id} value={option.id}>
-              {option.label}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {ReviewVisibilityFilterOptions.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       {reviewsQuery.isPending ? (

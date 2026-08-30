@@ -5,9 +5,13 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   ConfirmationDialog,
   useConfirmationDialog,
@@ -48,19 +52,32 @@ export const RefundsQueuePanel: FC<{
     <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-sm font-bold text-ink-charcoal">Refunds queue</h2>
-        <NativeSelect
+        <Select
+          items={[
+            { label: "Pending", value: "PENDING" },
+            { label: "Approved", value: "APPROVED" },
+            { label: "Rejected", value: "REJECTED" },
+            { label: "Completed", value: "COMPLETED" },
+            { label: "All", value: "all" },
+          ]}
           value={status}
-          onChange={(event) =>
-            setStatus(event.target.value as RefundStatus | "all")
-          }
-          size="sm"
+          onValueChange={(value) => {
+            if (value) setStatus(value as RefundStatus | "all");
+          }}
         >
-          <NativeSelectOption value="PENDING">Pending</NativeSelectOption>
-          <NativeSelectOption value="APPROVED">Approved</NativeSelectOption>
-          <NativeSelectOption value="REJECTED">Rejected</NativeSelectOption>
-          <NativeSelectOption value="COMPLETED">Completed</NativeSelectOption>
-          <NativeSelectOption value="all">All</NativeSelectOption>
-        </NativeSelect>
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="PENDING">Pending</SelectItem>
+              <SelectItem value="APPROVED">Approved</SelectItem>
+              <SelectItem value="REJECTED">Rejected</SelectItem>
+              <SelectItem value="COMPLETED">Completed</SelectItem>
+              <SelectItem value="all">All</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       {refundsQuery.isPending ? (

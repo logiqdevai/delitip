@@ -6,9 +6,13 @@ import { Bell, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Empty,
   EmptyContent,
@@ -86,29 +90,55 @@ export const AlertsPageContent: FC = () => {
       />
 
       <div className="flex flex-wrap items-center gap-2.5">
-        <NativeSelect
+        <Select
+          items={[
+            { label: "All", value: "all" },
+            { label: "Unread", value: "unread" },
+            { label: "Read", value: "read" },
+          ]}
           value={readFilter}
-          onChange={(event) =>
-            setReadFilter(event.target.value as "all" | "unread" | "read")
-          }
-          size="sm"
+          onValueChange={(value) => {
+            if (value) setReadFilter(value as "all" | "unread" | "read");
+          }}
         >
-          <NativeSelectOption value="all">All</NativeSelectOption>
-          <NativeSelectOption value="unread">Unread</NativeSelectOption>
-          <NativeSelectOption value="read">Read</NativeSelectOption>
-        </NativeSelect>
-        <NativeSelect
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="unread">Unread</SelectItem>
+              <SelectItem value="read">Read</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Select
+          items={[
+            { label: "All types", value: "all" },
+            ...AlertTypeFormOptions.map((option) => ({
+              label: option.label,
+              value: option.id,
+            })),
+          ]}
           value={type}
-          onChange={(event) => setType(event.target.value as AlertType | "all")}
-          size="sm"
+          onValueChange={(value) => {
+            if (value) setType(value as AlertType | "all");
+          }}
         >
-          <NativeSelectOption value="all">All types</NativeSelectOption>
-          {AlertTypeFormOptions.map((option) => (
-            <NativeSelectOption key={option.id} value={option.id}>
-              {option.label}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
+          <SelectTrigger size="sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">All types</SelectItem>
+              {AlertTypeFormOptions.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       {alertsQuery.isPending ? (

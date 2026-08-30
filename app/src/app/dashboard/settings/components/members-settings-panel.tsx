@@ -17,9 +17,13 @@ import {
 import type { OrganizationMemberWithRefs } from "@/features/organizations/interfaces/organizations.interfaces";
 import { OrganizationRoleFormOptions, getOrganizationRoleLabel } from "@/config/constants/dropdowns/organizations/organization-role-form.options";
 import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useStores } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 
@@ -88,22 +92,34 @@ export const MembersSettingsPanel: FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 {isOwner ? (
-                  <NativeSelect
-                    size="sm"
+                  <Select
+                    items={OrganizationRoleFormOptions.map((option) => ({
+                      label: option.label,
+                      value: option.id,
+                    }))}
                     value={member.role}
-                    onChange={(event) =>
-                      updateMember.mutate({
-                        memberId: member.id,
-                        payload: { role: event.target.value as typeof member.role },
-                      })
-                    }
+                    onValueChange={(value) => {
+                      if (value) {
+                        updateMember.mutate({
+                          memberId: member.id,
+                          payload: { role: value as typeof member.role },
+                        });
+                      }
+                    }}
                   >
-                    {OrganizationRoleFormOptions.map((option) => (
-                      <NativeSelectOption key={option.id} value={option.id}>
-                        {option.label}
-                      </NativeSelectOption>
-                    ))}
-                  </NativeSelect>
+                    <SelectTrigger size="sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {OrganizationRoleFormOptions.map((option) => (
+                          <SelectItem key={option.id} value={option.id}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 ) : (
                   <span className="rounded-full bg-neutral-fill px-2 py-0.5 text-[11px] font-semibold text-zinc-600">
                     {getOrganizationRoleLabel(member.role)}
