@@ -4,6 +4,7 @@ import { type FC, useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Copy, User, Users, UsersRound } from "lucide-react";
+import { InFlowSelect } from "@/app/dashboard/access/components/in-flow-select";
 import { SpotFormDialog } from "@/app/dashboard/access/components/spot-form-dialog";
 import { DistributionRuleFormDialog } from "@/app/dashboard/distribution/components/distribution-rule-form-dialog";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
@@ -22,14 +23,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { getQrCodeSelectionModeDescription } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-description.options";
@@ -224,8 +217,11 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
         onOpenChange(next);
       }}
     >
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg" showCloseButton={!isPending}>
-        <DialogHeader>
+      <DialogContent
+        className="flex max-h-[90vh] flex-col gap-4 overflow-hidden sm:max-w-lg"
+        showCloseButton={!isPending}
+      >
+        <DialogHeader className="shrink-0">
           <DialogTitle>{isEdit ? "Edit QR code" : "Create QR code"}</DialogTitle>
           <DialogDescription>
             Assign staff and a selection mode. Customers never see the
@@ -233,7 +229,12 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="space-y-4" noValidate>
+        <form
+          onSubmit={onSubmit}
+          className="flex min-h-0 flex-1 flex-col gap-4"
+          noValidate
+        >
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain pr-0.5">
           <div className="space-y-1.5">
             <Label htmlFor="qr-label">Label</Label>
             <Input
@@ -444,31 +445,19 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
               name="distribution_rule_id"
               control={control}
               render={({ field }) => (
-                <Select
-                  items={[
-                    { label: "Store default", value: "" },
+                <InFlowSelect
+                  key={open ? "qr-rule-open" : "qr-rule-closed"}
+                  id="qr-rule"
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  options={[
+                    { value: "", label: "Store default" },
                     ...rules.map((rule) => ({
-                      label: rule.name,
                       value: rule.id,
+                      label: rule.name,
                     })),
                   ]}
-                  value={field.value}
-                  onValueChange={(value) => field.onChange(value ?? "")}
-                >
-                  <SelectTrigger id="qr-rule" className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="">Store default</SelectItem>
-                      {rules.map((rule) => (
-                        <SelectItem key={rule.id} value={rule.id}>
-                          {rule.name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                />
               )}
             />
             <p className="text-[11px] text-zinc-400">
@@ -524,8 +513,9 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
               <p className="mt-1 text-[11px] text-zinc-400">Path: {tipPreview}</p>
             </div>
           ) : null}
+          </div>
 
-          <DialogFooter>
+          <DialogFooter className="shrink-0">
             <Button
               type="button"
               variant="outline"

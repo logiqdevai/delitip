@@ -89,7 +89,7 @@ export const AlertsPageContent: FC = () => {
         }
       />
 
-      <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5">
+      <div className="flex flex-col gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
           Filters
@@ -105,10 +105,10 @@ export const AlertsPageContent: FC = () => {
             if (value) setReadFilter(value as "all" | "unread" | "read");
           }}
         >
-          <SelectTrigger className="min-w-32 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
+          <SelectTrigger className="w-full rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto sm:min-w-32">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent align="start">
             <SelectGroup>
               <SelectItem value="all">All</SelectItem>
               <SelectItem value="unread">Unread</SelectItem>
@@ -129,10 +129,10 @@ export const AlertsPageContent: FC = () => {
             if (value) setType(value as AlertType | "all");
           }}
         >
-          <SelectTrigger className="min-w-40 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
+          <SelectTrigger className="w-full rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto sm:min-w-40">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="w-auto min-w-56">
+          <SelectContent align="start">
             <SelectGroup>
               <SelectItem value="all">All types</SelectItem>
               {AlertTypeFormOptions.map((option) => (

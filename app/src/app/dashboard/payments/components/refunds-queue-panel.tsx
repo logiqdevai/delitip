@@ -50,7 +50,7 @@ export const RefundsQueuePanel: FC<{
 
   return (
     <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-sm font-bold text-ink-charcoal">Refunds queue</h2>
         <Select
           items={[
@@ -65,10 +65,10 @@ export const RefundsQueuePanel: FC<{
             if (value) setStatus(value as RefundStatus | "all");
           }}
         >
-          <SelectTrigger className="min-w-32 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
+          <SelectTrigger className="w-full rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto sm:min-w-32">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="w-auto min-w-36">
+          <SelectContent align="start">
             <SelectGroup>
               <SelectItem value="PENDING">Pending</SelectItem>
               <SelectItem value="APPROVED">Approved</SelectItem>

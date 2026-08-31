@@ -177,7 +177,7 @@ export const DashboardSidebar: FC = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between border-b border-zinc-200 bg-white px-4 py-3 md:hidden">
+      <div className="sticky top-0 z-40 flex shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-4 py-3 md:hidden">
         <Link href={Routes.dashboard.root} className="flex items-center gap-2.5">
           <BrandMark size="sm" className="size-7 rounded-lg text-xs" />
           <div>

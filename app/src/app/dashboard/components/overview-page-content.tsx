@@ -155,8 +155,8 @@ export const OverviewPageContent: FC = () => {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs lg:col-span-2">
-          <div className="flex items-center justify-between gap-3">
-            <div>
+          <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+            <div className="min-w-0">
               <h2 className="text-sm font-bold text-ink-charcoal">
                 Tips (Past {TREND_DAYS} Days)
               </h2>
@@ -166,9 +166,10 @@ export const OverviewPageContent: FC = () => {
             </div>
             <Link
               href={Routes.dashboard.analytics.overview}
-              className="text-xs font-semibold text-brand-700 hover:underline"
+              className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold whitespace-nowrap text-brand-700 hover:underline"
             >
-              View Analytics →
+              View Analytics
+              <span aria-hidden="true">→</span>
             </Link>
           </div>
 
@@ -283,8 +284,8 @@ export const OverviewPageContent: FC = () => {
       </div>
 
       <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
-        <div className="flex items-center justify-between gap-3">
-          <div>
+        <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+          <div className="min-w-0">
             <h2 className="text-sm font-bold text-ink-charcoal">Team</h2>
             <p className="text-xs text-zinc-400">
               Active staff who can receive tips
@@ -292,9 +293,10 @@ export const OverviewPageContent: FC = () => {
           </div>
           <Link
             href={Routes.dashboard.employees}
-            className="text-xs font-semibold text-brand-700 hover:underline"
+            className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold whitespace-nowrap text-brand-700 hover:underline"
           >
-            View All Staff →
+            View All Staff
+            <span aria-hidden="true">→</span>
           </Link>
         </div>
 

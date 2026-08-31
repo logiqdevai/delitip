@@ -115,7 +115,7 @@ export const TipsPageContent: FC = () => {
         }
       />
 
-      <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5">
+      <div className="flex flex-col gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
           Filters
@@ -130,10 +130,10 @@ export const TipsPageContent: FC = () => {
             if (value) setStatus(value as TipStatus | "all");
           }}
         >
-          <SelectTrigger className="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
+          <SelectTrigger className="w-full rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto sm:min-w-36">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="w-auto min-w-40">
+          <SelectContent align="start">
             <SelectGroup>
               {TipStatusFilterOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
@@ -148,15 +148,15 @@ export const TipsPageContent: FC = () => {
           onChange={setDateFrom}
           placeholder="From date"
           aria-label="From date"
-          className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
+          className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
         />
-        <span className="text-xs text-zinc-400">to</span>
+        <span className="hidden text-xs text-zinc-400 sm:inline">to</span>
         <DatePicker
           value={dateTo}
           onChange={setDateTo}
           placeholder="To date"
           aria-label="To date"
-          className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
+          className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
         />
       </div>
 

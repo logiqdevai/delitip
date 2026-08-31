@@ -13,9 +13,9 @@ const imagePickerPreviewVariants = cva(
   {
     variants: {
       mode: {
-        logo: "size-16 rounded-xl",
-        cover: "h-16 w-28 rounded-xl",
-        image: "size-16 rounded-xl",
+        logo: "size-14 rounded-xl",
+        cover: "h-14 w-24 rounded-xl",
+        image: "size-14 rounded-xl",
       },
     },
     defaultVariants: {
@@ -175,8 +175,8 @@ export const ImagePicker: FC<ImagePickerProps> = ({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          "group/dropzone relative flex flex-col gap-3 rounded-2xl border border-dashed p-3.5 transition-all",
-          "@xs:flex-row @xs:items-center @xs:gap-4",
+          "group/dropzone relative flex flex-col gap-3 rounded-2xl border border-dashed p-3 transition-all",
+          "@sm:flex-row @sm:items-center @sm:gap-3.5 @sm:p-3.5",
           hasValue
             ? showSuccess
               ? "border-solid border-brand-200 bg-brand-50/40 shadow-xs"
@@ -188,122 +188,122 @@ export const ImagePicker: FC<ImagePickerProps> = ({
           isDisabled && "opacity-60",
         )}
       >
-        <button
-          type="button"
-          disabled={isDisabled}
-          aria-labelledby={labelId}
-          aria-describedby={
-            [resolvedHint ? hintId : null, error ? errorId : null]
-              .filter(Boolean)
-              .join(" ") || undefined
-          }
-          aria-invalid={error ? true : undefined}
-          onClick={openFileDialog}
+        <div className="flex items-center gap-3 @sm:contents">
+          <button
+            type="button"
+            disabled={isDisabled}
+            aria-labelledby={labelId}
+            aria-describedby={
+              [resolvedHint ? hintId : null, error ? errorId : null]
+                .filter(Boolean)
+                .join(" ") || undefined
+            }
+            aria-invalid={error ? true : undefined}
+            onClick={openFileDialog}
+            className={cn(
+              imagePickerPreviewVariants({ mode }),
+              "outline-none focus-visible:ring-2 focus-visible:ring-electric-lime focus-visible:ring-offset-2",
+              isDisabled ? "cursor-not-allowed" : "cursor-pointer",
+              hasValue
+                ? "border-zinc-200 bg-white"
+                : "border-transparent bg-white text-zinc-400 shadow-xs ring-1 ring-zinc-200/70 group-hover/dropzone:text-zinc-500",
+              isDragging && "bg-brand-50 text-brand-800 ring-brand-200",
+            )}
+          >
+            {hasValue ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={value!}
+                alt={alt}
+                className={cn(
+                  "size-full",
+                  mode === "logo" ? "object-contain p-1.5" : "object-cover",
+                )}
+              />
+            ) : (
+              <span
+                className={cn(
+                  "flex size-8 items-center justify-center rounded-full bg-zinc-100 text-zinc-500 transition-colors",
+                  "group-hover/dropzone:bg-brand-50 group-hover/dropzone:text-brand-800",
+                  isDragging && "bg-brand-100 text-brand-800",
+                )}
+              >
+                <ImagePlus className="size-3.5" strokeWidth={2} />
+              </span>
+            )}
+
+            {isPending ? (
+              <span className="absolute inset-0 flex items-center justify-center bg-white/75 backdrop-blur-[1px]">
+                <Spinner className="size-5 text-ink-charcoal" />
+              </span>
+            ) : null}
+          </button>
+
+          <div className="min-w-0 flex-1">
+            {hasValue ? (
+              <>
+                <p className="truncate text-sm font-semibold text-ink-charcoal">
+                  {copy.filledTitle}
+                </p>
+                {showSuccess ? (
+                  <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-brand-700">
+                    <Check className="size-3.5 shrink-0" strokeWidth={2.5} />
+                    Upload successful
+                  </p>
+                ) : (
+                  <p className="mt-0.5 text-xs text-zinc-500">
+                    Tap to replace, or use an action below
+                  </p>
+                )}
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-semibold text-ink-charcoal">
+                  {isDragging ? "Drop to upload" : copy.emptyTitle}
+                </p>
+                <p className="mt-0.5 text-xs text-zinc-500">
+                  {isDragging ? "Release to add this file" : copy.emptyBody}
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div
           className={cn(
-            imagePickerPreviewVariants({ mode }),
-            "outline-none focus-visible:ring-2 focus-visible:ring-electric-lime focus-visible:ring-offset-2",
-            isDisabled ? "cursor-not-allowed" : "cursor-pointer",
-            hasValue
-              ? "border-zinc-200 bg-white"
-              : "border-transparent bg-white text-zinc-400 shadow-xs ring-1 ring-zinc-200/70 group-hover/dropzone:text-zinc-500",
-            isDragging && "bg-brand-50 text-brand-800 ring-brand-200",
+            "flex w-full flex-col gap-1.5 @sm:w-auto @sm:flex-row @sm:flex-wrap @sm:items-center",
+            !hasValue && "@sm:mt-0",
           )}
         >
-          {hasValue ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={value!}
-              alt={alt}
-              className={cn(
-                "size-full",
-                mode === "logo" ? "object-contain p-1.5" : "object-cover",
-              )}
-            />
-          ) : (
-            <span
-              className={cn(
-                "flex size-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-500 transition-colors",
-                "group-hover/dropzone:bg-brand-50 group-hover/dropzone:text-brand-800",
-                isDragging && "bg-brand-100 text-brand-800",
-              )}
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            disabled={isDisabled}
+            className={cn(
+              "h-9 w-full rounded-xl bg-white px-3.5 text-xs font-semibold text-ink-charcoal shadow-xs ring-1 ring-zinc-200/80 hover:bg-zinc-50",
+              "@sm:h-8 @sm:w-auto @sm:rounded-full",
+              hasValue &&
+                "bg-zinc-100 ring-0 hover:bg-zinc-200 @sm:bg-zinc-100",
+            )}
+            onClick={openFileDialog}
+          >
+            <Upload data-icon="inline-start" />
+            {isPending ? "Uploading…" : hasValue ? "Replace" : "Browse"}
+          </Button>
+          {hasValue && onClear ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={isDisabled}
+              className="h-9 w-full rounded-xl px-3 text-xs font-medium text-zinc-600 hover:bg-zinc-100 hover:text-red-700 @sm:h-8 @sm:w-auto @sm:rounded-full"
+              onClick={onClear}
             >
-              <ImagePlus className="size-4" strokeWidth={2} />
-            </span>
-          )}
-
-          {isPending ? (
-            <span className="absolute inset-0 flex items-center justify-center bg-white/75 backdrop-blur-[1px]">
-              <Spinner className="size-5 text-ink-charcoal" />
-            </span>
+              <X data-icon="inline-start" />
+              Remove
+            </Button>
           ) : null}
-        </button>
-
-        <div className="min-w-0 flex-1">
-          {hasValue ? (
-            <>
-              <p className="truncate text-sm font-semibold text-ink-charcoal">
-                {copy.filledTitle}
-              </p>
-              {showSuccess ? (
-                <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-brand-700">
-                  <Check className="size-3.5 shrink-0" strokeWidth={2.5} />
-                  Upload successful
-                </p>
-              ) : (
-                <p className="mt-0.5 text-xs text-zinc-500">
-                  Click the photo to replace, or use an action
-                </p>
-              )}
-              <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  disabled={isDisabled}
-                  className="h-8 rounded-full bg-zinc-100 px-3.5 text-xs font-semibold text-ink-charcoal hover:bg-zinc-200"
-                  onClick={openFileDialog}
-                >
-                  <Upload data-icon="inline-start" />
-                  {isPending ? "Uploading…" : "Replace"}
-                </Button>
-                {onClear ? (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    disabled={isDisabled}
-                    className="h-8 rounded-full px-3 text-xs font-medium text-zinc-600 hover:bg-zinc-100 hover:text-red-700"
-                    onClick={onClear}
-                  >
-                    <X data-icon="inline-start" />
-                    Remove
-                  </Button>
-                ) : null}
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="text-sm font-semibold text-ink-charcoal">
-                {isDragging ? "Drop to upload" : copy.emptyTitle}
-              </p>
-              <p className="mt-0.5 text-xs text-zinc-500">
-                {isDragging ? "Release to add this file" : copy.emptyBody}
-              </p>
-              <div className="mt-2.5">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  disabled={isDisabled}
-                  className="h-8 rounded-full bg-white px-3.5 text-xs font-semibold text-ink-charcoal shadow-xs ring-1 ring-zinc-200/80 hover:bg-zinc-50"
-                  onClick={openFileDialog}
-                >
-                  <Upload data-icon="inline-start" />
-                  {isPending ? "Uploading…" : "Browse"}
-                </Button>
-              </div>
-            </>
-          )}
         </div>
 
         <input
