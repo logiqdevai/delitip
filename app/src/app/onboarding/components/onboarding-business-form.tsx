@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { CountryPicker } from "@/components/ui/country-picker";
 import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
+import { TeamSizeFormOptions } from "@/config/constants/dropdowns/businesses/team-size-form.options";
 import {
   getCountryCodeByName,
   getCountryLabel,
@@ -97,42 +98,81 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
           ) : null}
         </div>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="onboarding-industry">Business type</Label>
-          <Controller
-            name="industry"
-            control={control}
-            render={({ field }) => (
-              <Select
-                items={StoreIndustryFormOptions.map((option) => ({
-                  label: option.label,
-                  value: option.id,
-                }))}
-                value={field.value}
-                onValueChange={field.onChange}
-              >
-                <SelectTrigger
-                  id="onboarding-industry"
-                  className="w-full"
-                  aria-invalid={!!errors.industry}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="onboarding-industry">Business type</Label>
+            <Controller
+              name="industry"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  items={StoreIndustryFormOptions.map((option) => ({
+                    label: option.label,
+                    value: option.id,
+                  }))}
+                  value={field.value}
+                  onValueChange={field.onChange}
                 >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {StoreIndustryFormOptions.map((option) => (
-                      <SelectItem key={option.id} value={option.id}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )}
-          />
-          {errors.industry ? (
-            <p className="text-xs text-red-600">{errors.industry.message}</p>
-          ) : null}
+                  <SelectTrigger
+                    id="onboarding-industry"
+                    className="w-full"
+                    aria-invalid={!!errors.industry}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {StoreIndustryFormOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.industry ? (
+              <p className="text-xs text-red-600">{errors.industry.message}</p>
+            ) : null}
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="onboarding-team-size">Estimated team size</Label>
+            <Controller
+              name="teamSize"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  items={TeamSizeFormOptions.map((option) => ({
+                    label: option.label,
+                    value: option.id,
+                  }))}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id="onboarding-team-size"
+                    className="w-full"
+                    aria-invalid={!!errors.teamSize}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {TeamSizeFormOptions.map((option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.teamSize ? (
+              <p className="text-xs text-red-600">{errors.teamSize.message}</p>
+            ) : null}
+          </div>
         </div>
 
         <input type="hidden" {...register("timezone")} />

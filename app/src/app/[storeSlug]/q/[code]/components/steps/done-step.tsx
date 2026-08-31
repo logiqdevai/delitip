@@ -31,8 +31,8 @@ const RefundRequest: FC<{
 
   if (requestRefund.isSuccess) {
     return (
-      <div className="flex items-start gap-2.5 rounded-xl border border-brand-100 bg-brand-50/70 p-3 text-left text-xs text-brand-900">
-        <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-brand-700" strokeWidth={2} />
+      <div className="flex items-start gap-2.5 rounded-xl border border-(--tip-primary)/30 bg-(--tip-primary)/10 p-3 text-left text-xs text-ink-charcoal">
+        <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-(--tip-secondary)" strokeWidth={2} />
         <span>
           Refund requested{amountLabel ? ` for ${amountLabel}` : ""}. The
           business will review it.
@@ -63,7 +63,11 @@ const RefundRequest: FC<{
         onChange={(event) => setReason(event.target.value)}
         placeholder="What went wrong? (optional)"
         rows={2}
+<<<<<<< HEAD
         className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs ring-2 ring-transparent transition-[border-color,box-shadow] duration-200 ease-out focus:border-brand-500 focus:ring-electric-lime focus:outline-none"
+=======
+        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-(--tip-primary) focus:ring-2 focus:ring-(--tip-primary) focus:outline-none"
+>>>>>>> origin/main
       />
 
       {requestRefund.isError ? (
@@ -124,7 +128,7 @@ export const DoneStep: FC<DoneStepProps> = ({
 
   return (
     <div className="auth-fade-enter flex flex-1 flex-col gap-5 px-5 py-8 text-center">
-      <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-brand-100 text-brand-700 shadow-inner">
+      <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-(--tip-primary)/15 text-(--tip-secondary) shadow-inner">
         <Check className="size-8" strokeWidth={2.5} />
       </div>
 
@@ -175,7 +179,7 @@ export const DoneStep: FC<DoneStepProps> = ({
       <button
         type="button"
         onClick={onRestart}
-        className="mx-auto block pt-2 text-xs font-semibold text-brand-700 hover:underline"
+        className="mx-auto block pt-2 text-xs font-semibold text-(--tip-secondary) hover:underline"
       >
         Make another tip
       </button>
