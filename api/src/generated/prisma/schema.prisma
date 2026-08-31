@@ -94,17 +94,37 @@ enum DistributionRecipientType {
 }
 
 enum TipStatus {
-  PENDING
+  PENDING // deprecated in favor of CREATED; kept for backward compatibility with existing rows
+  CREATED
+  PROCESSING
   COMPLETED
   FAILED
+  CANCELLED
   REFUNDED
+}
+
+enum PaymentTransactionStatus {
+  CREATED
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+  EXPIRED
 }
 
 enum PayoutStatus {
   PENDING
+  PROCESSING // claimed by an in-flight Payout run, awaiting the bank-transfer result
   PAID
   FAILED
   CANCELLED // the parent Tip was refunded before this share was ever paid out
+}
+
+enum PayoutExecutionStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
 }
 
 // Connected-account lifecycle with the payment processor (e.g. Stripe
@@ -120,6 +140,11 @@ enum PayoutAccountStatus {
 enum PayoutAccountOwnerType {
   STORE
   USER
+}
+
+enum PayoutMethod {
+  IBAN
+  CONNECTED_ACCOUNT // reserved for a future Marketplace-connected-account upgrade; not built in this phase
 }
 
 enum PaymentProvider {
@@ -374,6 +399,7 @@ model Store {
   alerts               Alert[]
   insight_summaries    InsightSummary[]
   payout_account       PayoutAccount?
+  payouts              Payout[]
 
   @@index([organization_id])
   @@index([slug])
@@ -410,6 +436,7 @@ model Employee {
   tip_distributions            TipDistribution[]
   reviews                      Review[]
   alerts                       Alert[]
+  payouts                      Payout[]
 
   @@index([store_id])
   @@index([user_id])
@@ -573,32 +600,38 @@ model PayoutAccount {
   provider            PaymentProvider        @default(VIVA)
   provider_account_id String // the connected account id with that processor
   status              PayoutAccountStatus    @default(PENDING)
+  payout_method       PayoutMethod           @default(IBAN)
+  bank_account_id     String? // Viva's linked-bank-account id from the Bank Transfer API
+  iban_last4          String? // last 4 digits only — the raw IBAN is never persisted, see §16 of the payment plan
+  beneficiary_name    String?
   created_at          DateTime               @default(now())
   updated_at          DateTime               @updatedAt
 
-  store Store? @relation(fields: [store_id], references: [id], onDelete: Cascade)
-  user  User?  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  store   Store?   @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  user    User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  payouts Payout[]
 
   @@map("payout_accounts")
 }
 
 model Tip {
-  id                   String           @id @default(uuid())
-  store_id             String
-  qr_code_id           String
-  employee_id          String? // the single employee this tip was attributed to (one-employee QR or a Choose-one pick); null for store-only tips and Team-mode tips, which are split across `distributions` instead
-  distribution_rule_id String? // the rule applied at the time of this tip; `distributions` holds the actual frozen amounts, so later edits to the rule can't retroactively change this tip
-  customer_user_id     String? // customers are never required to identify themselves — these three fields stay null for anonymous tips
-  customer_email       String?
-  customer_name        String?
-  amount               Int // in the smallest currency unit (e.g. cents)
-  currency             Currency         @default(EUR)
-  status               TipStatus        @default(PENDING) // payment lifecycle of the tip itself, separate from payout_status on each TipDistribution
-  payment_provider     PaymentProvider? @default(VIVA)
-  payment_reference    String?
-  paid_at              DateTime?
-  created_at           DateTime         @default(now())
-  updated_at           DateTime         @updatedAt
+  id                    String           @id @default(uuid())
+  store_id              String
+  qr_code_id            String
+  employee_id           String? // the single employee this tip was attributed to (one-employee QR or a Choose-one pick); null for store-only tips and Team-mode tips, which are split across `distributions` instead
+  distribution_rule_id  String? // the rule applied at the time of this tip; `distributions` holds the actual frozen amounts, so later edits to the rule can't retroactively change this tip
+  selected_employee_ids Json? // resolved at checkout time (Choose-many/Team); `distributions` aren't created until payment is confirmed, so this is what the webhook handler feeds into calculateTipDistribution()
+  customer_user_id      String? // customers are never required to identify themselves — these three fields stay null for anonymous tips
+  customer_email        String?
+  customer_name         String?
+  amount                Int // in the smallest currency unit (e.g. cents)
+  currency              Currency         @default(EUR)
+  status                TipStatus        @default(CREATED) // payment lifecycle of the tip itself, separate from payout_status on each TipDistribution
+  payment_provider      PaymentProvider? @default(VIVA)
+  payment_reference     String?
+  paid_at               DateTime?
+  created_at            DateTime         @default(now())
+  updated_at            DateTime         @updatedAt
 
   store             Store             @relation(fields: [store_id], references: [id])
   qr_code           QrCode            @relation(fields: [qr_code_id], references: [id])
@@ -606,9 +639,10 @@ model Tip {
   distribution_rule DistributionRule? @relation(fields: [distribution_rule_id], references: [id], onDelete: SetNull)
   customer          User?             @relation("TipCustomer", fields: [customer_user_id], references: [id], onDelete: SetNull)
 
-  distributions TipDistribution[]
-  review        Review?
-  refunds       Refund[]
+  distributions       TipDistribution[]
+  review              Review?
+  refunds             Refund[]
+  payment_transaction PaymentTransaction?
 
   @@index([store_id])
   @@index([qr_code_id])
@@ -616,7 +650,58 @@ model Tip {
   @@index([customer_user_id])
   @@index([status])
   @@index([created_at])
+  @@index([status, created_at])
   @@map("tips")
+}
+
+// The real-money ledger row for a Tip: gross amount, Viva order/transaction
+// references, and the fee/commission breakdown. 1:1 with Tip — created the
+// moment a Viva checkout order is opened, finalized once the payment
+// webhook (or the reconciliation sweep) confirms the transaction.
+model PaymentTransaction {
+  id                             String                   @id @default(uuid())
+  tip_id                         String                   @unique
+  provider                       PaymentProvider          @default(VIVA)
+  client_request_id              String?                  @unique // idempotency key supplied by the frontend on POST /public/tips
+  viva_order_code                String?                  @unique // string, never numeric — the 16-digit orderCode exceeds Number.MAX_SAFE_INTEGER
+  viva_transaction_id            String?                  @unique
+  gross_amount                   Int
+  currency                       Currency
+  commission_percentage_used     Decimal                  @db.Decimal(5, 2) // snapshotted from PlatformFinanceConfig at creation time — never recomputed from live config later
+  commission_amount              Int
+  processor_fee_estimated        Int?
+  processor_fee_confirmed_amount Int?
+  processor_fee_confirmed        Boolean                  @default(false) // gates payout eligibility — a payout can never be computed from an estimate
+  net_distributable_amount       Int?
+  payment_method                 String?
+  status                         PaymentTransactionStatus @default(CREATED)
+  failure_reason                 String?
+  confirmed_at                   DateTime?
+  created_at                     DateTime                 @default(now())
+  updated_at                     DateTime                 @updatedAt
+
+  tip Tip @relation(fields: [tip_id], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([provider])
+  @@map("payment_transactions")
+}
+
+// Idempotency + audit log for every inbound Viva webhook. message_id is
+// Viva's own MessageId — the unique constraint is what makes at-least-once
+// delivery (Viva retries up to 24x hourly) safe to process.
+model WebhookEvent {
+  id               String          @id @default(uuid())
+  provider         PaymentProvider @default(VIVA)
+  message_id       String          @unique
+  event_type_id    Int
+  payload          Json
+  processed_at     DateTime?
+  processing_error String?
+  created_at       DateTime        @default(now())
+
+  @@index([event_type_id])
+  @@map("webhook_events")
 }
 
 // The frozen, per-recipient breakdown of a Tip at the moment it was paid —
@@ -630,28 +715,65 @@ model TipDistribution {
   amount         Int // this recipient's frozen share of the tip, in the smallest currency unit (rounding remainder goes to the first-listed recipient)
   percentage     Decimal                   @db.Decimal(5, 2) // the rule's percentage at the time this tip was made
   payout_status  PayoutStatus              @default(PENDING) // whether this recipient's share has actually been paid out — independent of the Tip's own status
+  payout_id      String? // set only inside the atomic claim of a Payout run; null while PENDING/unclaimed
   paid_out_at    DateTime?
   created_at     DateTime                  @default(now())
 
   tip      Tip       @relation(fields: [tip_id], references: [id], onDelete: Cascade)
   employee Employee? @relation(fields: [employee_id], references: [id], onDelete: SetNull)
+  payout   Payout?   @relation(fields: [payout_id], references: [id], onDelete: SetNull)
 
   @@index([tip_id])
   @@index([employee_id])
   @@index([payout_status])
+  @@index([payout_id])
   @@map("tip_distributions")
 }
 
-model Refund {
-  id                   String       @id @default(uuid())
-  tip_id               String
+// One Bank Transfer API execution to one recipient (Store or Employee),
+// covering one or more TipDistribution rows accumulated since the last
+// payout for that recipient. Created only by a manual "Pay out now" run
+// (§10 of the payment plan) — there is no scheduled batch job in this phase.
+model Payout {
+  id                   String                    @id @default(uuid())
+  recipient_type       DistributionRecipientType
+  store_id             String?
+  employee_id          String?
+  payout_account_id    String
   amount               Int
-  reason               String?
-  status               RefundStatus @default(PENDING)
-  requested_by_user_id String? // who asked for the refund — often the customer, sometimes a store manager acting for them
-  processed_by_user_id String? // who approved/executed it, e.g. a Store Manager or Accountant
-  created_at           DateTime     @default(now())
-  updated_at           DateTime     @updatedAt
+  currency             Currency
+  provider             PaymentProvider           @default(VIVA)
+  provider_transfer_id String? // Viva bank-transfer commandId
+  status               PayoutExecutionStatus     @default(PROCESSING)
+  failure_reason       String?
+  executed_at          DateTime?
+  created_at           DateTime                  @default(now())
+  updated_at           DateTime                  @updatedAt
+
+  store          Store?            @relation(fields: [store_id], references: [id])
+  employee       Employee?         @relation(fields: [employee_id], references: [id])
+  payout_account PayoutAccount     @relation(fields: [payout_account_id], references: [id])
+  distributions  TipDistribution[]
+
+  @@index([status])
+  @@index([store_id])
+  @@index([employee_id])
+  @@map("payouts")
+}
+
+model Refund {
+  id                             String       @id @default(uuid())
+  tip_id                         String
+  amount                         Int
+  reason                         String?
+  status                         RefundStatus @default(PENDING)
+  requested_by_user_id           String? // who asked for the refund — often the customer, sometimes a store manager acting for them
+  processed_by_user_id           String? // who approved/executed it, e.g. a Store Manager or Accountant
+  provider_reference             String? // Viva's transactionId for the refund/fast-refund/rebate call
+  provider_status                String? // Viva's own status for that reference, finalized once the 1797 webhook confirms
+  requires_manual_reconciliation Boolean      @default(false) // set when a refund was approved on a tip whose distributions were already paid out — IBAN transfers have no automatic clawback
+  created_at                     DateTime     @default(now())
+  updated_at                     DateTime     @updatedAt
 
   tip          Tip   @relation(fields: [tip_id], references: [id], onDelete: Cascade)
   requested_by User? @relation("RefundRequestedBy", fields: [requested_by_user_id], references: [id], onDelete: SetNull)

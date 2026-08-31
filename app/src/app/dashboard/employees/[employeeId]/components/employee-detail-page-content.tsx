@@ -71,6 +71,7 @@ import { useAuthStore } from "@/stores/auth.store";
 
 const payoutStatusChipClass: Record<PayoutStatus, string> = {
   PENDING: "bg-amber-50 text-amber-700",
+  PROCESSING: "bg-sky-50 text-sky-700",
   PAID: "bg-brand-50 text-brand-700",
   FAILED: "bg-red-50 text-red-700",
   CANCELLED: "bg-zinc-100 text-zinc-600",

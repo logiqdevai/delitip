@@ -1,9 +1,10 @@
 "use client";
 
-import { type FC } from "react";
+import { type FC, useState } from "react";
 import { CheckCircle2, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { IbanPayoutAccountDialog } from "@/components/payments/iban-payout-account-dialog";
 import {
   useCreateStorePayoutAccount,
   useStorePayoutAccount,
@@ -14,6 +15,7 @@ import { cn } from "@/lib/utils";
 export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
   const accountQuery = useStorePayoutAccount(storeId);
   const createAccount = useCreateStorePayoutAccount(storeId);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const account = accountQuery.data;
 
@@ -31,17 +33,15 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
       ) : !account ? (
         <div className="mt-3 space-y-3">
           <p className="text-xs text-zinc-500">
-            Connect a payout account so your Store can receive its share of
-            tips. This is a sandbox connection — no real bank linking happens
-            yet.
+            Link your Store&apos;s business IBAN so it can receive its share
+            of tips via bank transfer.
           </p>
           <Button
             type="button"
-            onClick={() => createAccount.mutate({})}
-            disabled={createAccount.isPending}
+            onClick={() => setDialogOpen(true)}
             className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
           >
-            {createAccount.isPending ? "Connecting…" : "Connect payout account"}
+            Link payout account
           </Button>
         </div>
       ) : (
@@ -54,7 +54,7 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
               )}
             />
             <span>
-              {account.provider} · {account.provider_account_id}
+              {account.provider} · IBAN ····{account.iban_last4 ?? "----"}
             </span>
           </div>
           <span
@@ -69,6 +69,14 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
           </span>
         </div>
       )}
+
+      <IbanPayoutAccountDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title="Link store payout account"
+        description="Your Store's business IBAN — used to send your share of tips via bank transfer."
+        mutation={createAccount}
+      />
     </div>
   );
 };

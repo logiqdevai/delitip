@@ -1,40 +1,29 @@
 "use client";
 
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { AlertTriangle, Loader2, Star } from "lucide-react";
 import { FeedbackQuestionTypes } from "@/features/feedback-questions/interfaces/feedback-questions.interfaces";
-import { useCreatePublicReview } from "@/features/reviews/hooks/use-reviews";
-import type {
-  CreatePublicReviewResponse,
-  PublicReviewConfig,
-} from "@/features/reviews/interfaces/reviews.interfaces";
+import type { PublicReviewConfig } from "@/features/reviews/interfaces/reviews.interfaces";
 import { useCreatePublicTip } from "@/features/tips/hooks/use-tips";
-import type { CreatePublicTipResponse } from "@/features/tips/interfaces/tips.interfaces";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import type { QrCodeSelectionMode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import {
+  savePendingTip,
+  type ReviewDraft,
+} from "@/app/[storeSlug]/q/[code]/lib/pending-tip";
 
-export interface ReviewDraft {
-  rating: number;
-  comment: string;
-  categoryRatings: Record<string, number>;
-  feedbackResponses: Record<
-    string,
-    { ratingValue?: number; textValue?: string }
-  >;
-}
-
-export const emptyReviewDraft: ReviewDraft = {
-  rating: 0,
-  comment: "",
-  categoryRatings: {},
-  feedbackResponses: {},
-};
+export {
+  emptyReviewDraft,
+  type ReviewDraft,
+} from "@/app/[storeSlug]/q/[code]/lib/pending-tip";
 
 interface ReviewStepProps {
   qrCodeId: string;
   storeId: string;
+  storeSlug: string;
+  code: string;
   amount: number;
   currency: Currency;
   recipientLabel: string;
@@ -44,10 +33,6 @@ interface ReviewStepProps {
   draft: ReviewDraft;
   onChange: (draft: ReviewDraft) => void;
   onBack: () => void;
-  onSuccess: (
-    tip: CreatePublicTipResponse,
-    review: CreatePublicReviewResponse | null,
-  ) => void;
 }
 
 const StarPicker: FC<{
@@ -93,6 +78,8 @@ const StarPicker: FC<{
 export const ReviewStep: FC<ReviewStepProps> = ({
   qrCodeId,
   storeId,
+  storeSlug,
+  code,
   amount,
   currency,
   recipientLabel,
@@ -102,7 +89,6 @@ export const ReviewStep: FC<ReviewStepProps> = ({
   draft,
   onChange,
   onBack,
-  onSuccess,
 }) => {
   const categories = [...(config?.review_categories ?? [])].sort(
     (a, b) => a.sort_order - b.sort_order,
@@ -112,15 +98,18 @@ export const ReviewStep: FC<ReviewStepProps> = ({
   );
   const hasRated = draft.rating > 0;
 
+  // Generated once per checkout attempt (not per render) so a retry after a
+  // network error reuses the same key instead of opening a second Viva order.
+  const clientRequestId = useMemo(() => crypto.randomUUID(), []);
   const createTip = useCreatePublicTip();
-  const createReview = useCreatePublicReview();
-  const submitting = createTip.isPending || createReview.isPending;
+  const submitting = createTip.isPending;
 
   const pay = () => {
     createTip.mutate(
       {
         qr_code_id: qrCodeId,
         amount,
+        client_request_id: clientRequestId,
         ...(selectionMode === "CHOOSE_MANY"
           ? { employee_ids: selectedEmployeeIds }
           : {}),
@@ -129,43 +118,19 @@ export const ReviewStep: FC<ReviewStepProps> = ({
           : {}),
       },
       {
-        onSuccess: (tip) => {
-          if (draft.rating < 1) {
-            onSuccess(tip, null);
-            return;
-          }
-          createReview.mutate(
-            {
-              store_id: storeId,
-              tip_id: tip.tip.id,
-              employee_id:
-                selectedEmployeeIds.length === 1
-                  ? selectedEmployeeIds[0]
-                  : undefined,
-              rating: draft.rating,
-              comment: draft.comment.trim() || undefined,
-              category_ratings: Object.entries(draft.categoryRatings)
-                .filter(([, rating]) => rating > 0)
-                .map(([review_category_id, rating]) => ({
-                  review_category_id,
-                  rating,
-                })),
-              feedback_responses: Object.entries(draft.feedbackResponses)
-                .filter(
-                  ([, response]) =>
-                    !!response.ratingValue || !!response.textValue?.trim(),
-                )
-                .map(([feedback_question_id, response]) => ({
-                  feedback_question_id,
-                  rating_value: response.ratingValue,
-                  text_value: response.textValue?.trim() || undefined,
-                })),
-            },
-            {
-              onSuccess: (review) => onSuccess(tip, review),
-              onError: () => onSuccess(tip, null),
-            },
-          );
+        onSuccess: ({ tip_id, checkout_url }) => {
+          savePendingTip({
+            tipId: tip_id,
+            storeId,
+            storeSlug,
+            code,
+            recipientLabel,
+            selectedEmployeeIds,
+            reviewDraft: draft,
+          });
+          // Full-page redirect, never an iframe — Viva's own docs warn this
+          // breaks Apple Pay/Klarna/BLIK/EPS/P24/PayU/IRIS.
+          window.location.href = checkout_url;
         },
       },
     );

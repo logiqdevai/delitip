@@ -69,6 +69,9 @@ export const ApiRoutes = {
     refunds: (storeId: string) => `/stores/${storeId}/refunds` as const,
     payoutAccount: (storeId: string) =>
       `/stores/${storeId}/payout-account` as const,
+    payouts: (storeId: string) => `/stores/${storeId}/payouts` as const,
+    payoutsRun: (storeId: string) =>
+      `/stores/${storeId}/payouts/run` as const,
     alerts: (storeId: string) => `/stores/${storeId}/alerts` as const,
     alertsReadAll: (storeId: string) =>
       `/stores/${storeId}/alerts/read-all` as const,
@@ -87,6 +90,7 @@ export const ApiRoutes = {
     dashboard: (id: string) => `/employees/${id}/dashboard` as const,
     tips: (id: string) => `/employees/${id}/tips` as const,
     reviews: (id: string) => `/employees/${id}/reviews` as const,
+    payouts: (id: string) => `/employees/${id}/payouts` as const,
   },
   qrCodes: {
     byId: (id: string) => `/qr-codes/${id}` as const,
@@ -119,6 +123,7 @@ export const ApiRoutes = {
   public: {
     qr: (code: string) => `/public/qr/${code}` as const,
     tips: "/public/tips",
+    tipStatus: (id: string) => `/public/tips/${id}/status` as const,
     tipRefundRequest: (tipId: string) =>
       `/public/tips/${tipId}/refund-request` as const,
     store: (slug: string) => `/public/stores/${slug}` as const,

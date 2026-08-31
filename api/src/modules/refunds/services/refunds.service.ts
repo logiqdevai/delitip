@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { UsersService } from '@/modules/users/services/users.service';
+import { VivaTransactionsService } from '@/integrations/viva/services/viva-transactions.service';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
 import { CreatePublicRefundRequestDto, CreateRefundDto } from '../dto/create-refund.dto';
 import { UpdateRefundDto } from '../dto/update-refund.dto';
@@ -14,6 +15,7 @@ export class RefundsService {
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
         private readonly usersService: UsersService,
+        private readonly vivaTransactions: VivaTransactionsService,
     ) { }
 
     private async loadTip(tipId: string) {
@@ -85,7 +87,10 @@ export class RefundsService {
     }
 
     async update(user: AuthUser, id: string, dto: UpdateRefundDto) {
-        const refund = await this.prisma.refund.findUnique({ where: { id }, include: { tip: true } });
+        const refund = await this.prisma.refund.findUnique({
+            where: { id },
+            include: { tip: { include: { payment_transaction: true, distributions: true } } },
+        });
         if (!refund) throw new NotFoundException('Refund not found');
 
         await this.accessControl.assertStoreAccess(user, refund.tip.store_id, ['OWNER', 'STORE_MANAGER', 'ACCOUNTANT']);
@@ -94,10 +99,51 @@ export class RefundsService {
             throw new BadRequestException('This refund has already been finalized');
         }
 
+        let providerReference: string | undefined;
+        let alreadyPaidOut = false;
+
+        if (dto.status === RefundStatus.COMPLETED) {
+            const paymentTransaction = refund.tip.payment_transaction;
+            if (!paymentTransaction?.viva_transaction_id) {
+                throw new BadRequestException('This tip has no confirmed payment to refund');
+            }
+
+            alreadyPaidOut = refund.tip.distributions.some((d) => d.payout_status === PayoutStatus.PAID);
+
+            const confirmedAt = paymentTransaction.confirmed_at ?? refund.tip.created_at;
+            const isSameCalendarDay = this.isSameCalendarDay(confirmedAt, new Date());
+
+            try {
+                const response = isSameCalendarDay
+                    ? await this.vivaTransactions.createFastRefund(paymentTransaction.viva_transaction_id, {
+                        amount: refund.amount,
+                        merchantTrns: refund.id,
+                    })
+                    : await this.vivaTransactions.createRebate(paymentTransaction.viva_transaction_id, {
+                        amount: refund.amount,
+                        merchantTrns: refund.id,
+                    });
+                providerReference = response.transactionId;
+            } catch (error) {
+                const message = error instanceof Error ? error.message : 'Unknown error';
+                throw new BadGatewayException(`Unable to process this refund with the payment processor: ${message}`);
+            }
+        }
+
         return this.prisma.$transaction(async (tx) => {
             const updated = await tx.refund.update({
                 where: { id },
-                data: { status: dto.status, processed_by_user_id: user.id },
+                data: {
+                    status: dto.status,
+                    processed_by_user_id: user.id,
+                    ...(dto.status === RefundStatus.COMPLETED
+                        ? {
+                            provider_reference: providerReference,
+                            provider_status: 'REQUESTED',
+                            requires_manual_reconciliation: alreadyPaidOut,
+                        }
+                        : {}),
+                },
             });
 
             if (dto.status === RefundStatus.COMPLETED) {
@@ -114,5 +160,9 @@ export class RefundsService {
 
             return updated;
         });
+    }
+
+    private isSameCalendarDay(a: Date, b: Date): boolean {
+        return a.getUTCFullYear() === b.getUTCFullYear() && a.getUTCMonth() === b.getUTCMonth() && a.getUTCDate() === b.getUTCDate();
     }
 }

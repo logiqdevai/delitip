@@ -16,7 +16,7 @@ export class UserPayoutAccountController {
     @Post()
     @ApiOperation({
         summary:
-            "Connect the current user's own payout account (mocked — instantly ACTIVE; shared across every Employee Account they hold, §11)",
+            "Link the current user's own personal IBAN payout account (shared across every Employee Account they hold)",
     })
     create(@CurrentUser() user: AuthUser, @Body() dto: CreatePayoutAccountDto) {
         return this.payoutAccountsService.createForUser(user, dto);

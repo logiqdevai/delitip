@@ -15,7 +15,7 @@ export class PayoutAccountsController {
     constructor(private readonly payoutAccountsService: PayoutAccountsService) { }
 
     @Post()
-    @ApiOperation({ summary: "Connect a Store's payout account (mocked — instantly ACTIVE, Owner only)" })
+    @ApiOperation({ summary: "Link a Store's IBAN payout account via Viva Bank Transfer API (Owner only)" })
     create(@CurrentUser() user: AuthUser, @Param('storeId') storeId: string, @Body() dto: CreatePayoutAccountDto) {
         return this.payoutAccountsService.createForStore(user, storeId, dto);
     }
@@ -27,7 +27,7 @@ export class PayoutAccountsController {
     }
 
     @Patch()
-    @ApiOperation({ summary: "Mock-update a Store's payout account status/provider, e.g. to simulate RESTRICTED/DISABLED (Owner only)" })
+    @ApiOperation({ summary: "Update a Store's payout account beneficiary/friendly name (Owner only)" })
     update(
         @CurrentUser() user: AuthUser,
         @Param('storeId') storeId: string,

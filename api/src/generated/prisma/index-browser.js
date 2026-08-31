@@ -295,6 +295,10 @@ exports.Prisma.PayoutAccountScalarFieldEnum = {
   provider: 'provider',
   provider_account_id: 'provider_account_id',
   status: 'status',
+  payout_method: 'payout_method',
+  bank_account_id: 'bank_account_id',
+  iban_last4: 'iban_last4',
+  beneficiary_name: 'beneficiary_name',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -305,6 +309,7 @@ exports.Prisma.TipScalarFieldEnum = {
   qr_code_id: 'qr_code_id',
   employee_id: 'employee_id',
   distribution_rule_id: 'distribution_rule_id',
+  selected_employee_ids: 'selected_employee_ids',
   customer_user_id: 'customer_user_id',
   customer_email: 'customer_email',
   customer_name: 'customer_name',
@@ -318,6 +323,40 @@ exports.Prisma.TipScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.PaymentTransactionScalarFieldEnum = {
+  id: 'id',
+  tip_id: 'tip_id',
+  provider: 'provider',
+  client_request_id: 'client_request_id',
+  viva_order_code: 'viva_order_code',
+  viva_transaction_id: 'viva_transaction_id',
+  gross_amount: 'gross_amount',
+  currency: 'currency',
+  commission_percentage_used: 'commission_percentage_used',
+  commission_amount: 'commission_amount',
+  processor_fee_estimated: 'processor_fee_estimated',
+  processor_fee_confirmed_amount: 'processor_fee_confirmed_amount',
+  processor_fee_confirmed: 'processor_fee_confirmed',
+  net_distributable_amount: 'net_distributable_amount',
+  payment_method: 'payment_method',
+  status: 'status',
+  failure_reason: 'failure_reason',
+  confirmed_at: 'confirmed_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.WebhookEventScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  message_id: 'message_id',
+  event_type_id: 'event_type_id',
+  payload: 'payload',
+  processed_at: 'processed_at',
+  processing_error: 'processing_error',
+  created_at: 'created_at'
+};
+
 exports.Prisma.TipDistributionScalarFieldEnum = {
   id: 'id',
   tip_id: 'tip_id',
@@ -326,8 +365,26 @@ exports.Prisma.TipDistributionScalarFieldEnum = {
   amount: 'amount',
   percentage: 'percentage',
   payout_status: 'payout_status',
+  payout_id: 'payout_id',
   paid_out_at: 'paid_out_at',
   created_at: 'created_at'
+};
+
+exports.Prisma.PayoutScalarFieldEnum = {
+  id: 'id',
+  recipient_type: 'recipient_type',
+  store_id: 'store_id',
+  employee_id: 'employee_id',
+  payout_account_id: 'payout_account_id',
+  amount: 'amount',
+  currency: 'currency',
+  provider: 'provider',
+  provider_transfer_id: 'provider_transfer_id',
+  status: 'status',
+  failure_reason: 'failure_reason',
+  executed_at: 'executed_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 };
 
 exports.Prisma.RefundScalarFieldEnum = {
@@ -338,6 +395,9 @@ exports.Prisma.RefundScalarFieldEnum = {
   status: 'status',
   requested_by_user_id: 'requested_by_user_id',
   processed_by_user_id: 'processed_by_user_id',
+  provider_reference: 'provider_reference',
+  provider_status: 'provider_status',
+  requires_manual_reconciliation: 'requires_manual_reconciliation',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -579,16 +639,41 @@ exports.PayoutAccountStatus = exports.$Enums.PayoutAccountStatus = {
   DISABLED: 'DISABLED'
 };
 
+exports.PayoutMethod = exports.$Enums.PayoutMethod = {
+  IBAN: 'IBAN',
+  CONNECTED_ACCOUNT: 'CONNECTED_ACCOUNT'
+};
+
 exports.TipStatus = exports.$Enums.TipStatus = {
   PENDING: 'PENDING',
+  CREATED: 'CREATED',
+  PROCESSING: 'PROCESSING',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
   REFUNDED: 'REFUNDED'
+};
+
+exports.PaymentTransactionStatus = exports.$Enums.PaymentTransactionStatus = {
+  CREATED: 'CREATED',
+  PROCESSING: 'PROCESSING',
+  SUCCEEDED: 'SUCCEEDED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED'
 };
 
 exports.PayoutStatus = exports.$Enums.PayoutStatus = {
   PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
   PAID: 'PAID',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.PayoutExecutionStatus = exports.$Enums.PayoutExecutionStatus = {
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
   CANCELLED: 'CANCELLED'
 };
@@ -635,7 +720,10 @@ exports.Prisma.ModelName = {
   DistributionRuleRecipient: 'DistributionRuleRecipient',
   PayoutAccount: 'PayoutAccount',
   Tip: 'Tip',
+  PaymentTransaction: 'PaymentTransaction',
+  WebhookEvent: 'WebhookEvent',
   TipDistribution: 'TipDistribution',
+  Payout: 'Payout',
   Refund: 'Refund',
   Review: 'Review',
   ReviewCategory: 'ReviewCategory',

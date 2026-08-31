@@ -18,6 +18,7 @@ export const Routes = {
   onboarding: "/onboarding",
   tip: (storeSlug: string, code: string) =>
     `/${storeSlug}/q/${code}` as const,
+  checkoutReturn: "/checkout/return",
   dashboard: {
     root: "/dashboard",
     employees: "/dashboard/employees",
@@ -38,6 +39,7 @@ export const Routes = {
     access: "/dashboard/access",
     alerts: "/dashboard/alerts",
     payments: "/dashboard/payments",
+    payouts: "/dashboard/payouts",
     account: "/dashboard/account",
     settings: {
       root: "/dashboard/settings",

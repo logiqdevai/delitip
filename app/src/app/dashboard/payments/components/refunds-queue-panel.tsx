@@ -115,6 +115,14 @@ export const RefundsQueuePanel: FC<{
                 >
                   {getRefundStatusLabel(refund.status)}
                 </span>
+                {refund.requires_manual_reconciliation ? (
+                  <span
+                    className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700"
+                    title="Some of this tip's distributions were already paid out — IBAN transfers can't be clawed back automatically."
+                  >
+                    Needs reconciliation
+                  </span>
+                ) : null}
                 {refund.status === "PENDING" ? (
                   <>
                     <Button

@@ -22,6 +22,12 @@ export const PaymentProviders = {
 export type PaymentProvider =
   (typeof PaymentProviders)[keyof typeof PaymentProviders];
 
+export const PayoutMethods = {
+  IBAN: "IBAN",
+  CONNECTED_ACCOUNT: "CONNECTED_ACCOUNT",
+} as const;
+export type PayoutMethod = (typeof PayoutMethods)[keyof typeof PayoutMethods];
+
 export interface PayoutAccount {
   id: string;
   owner_type: PayoutAccountOwnerType;
@@ -30,10 +36,16 @@ export interface PayoutAccount {
   provider: PaymentProvider;
   provider_account_id: string;
   status: PayoutAccountStatus;
+  payout_method: PayoutMethod;
+  bank_account_id?: string | null;
+  iban_last4?: string | null;
+  beneficiary_name?: string | null;
   created_at: string;
   updated_at: string;
 }
 
 export interface CreatePayoutAccountPayload {
-  provider?: PaymentProvider;
+  iban: string;
+  beneficiary_name: string;
+  friendly_name?: string;
 }

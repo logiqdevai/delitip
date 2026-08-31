@@ -1,22 +1,32 @@
-import { ConflictException, NotFoundException } from '@nestjs/common';
-import { AuthRole, OrganizationRole, PaymentProvider, PayoutAccountOwnerType, PayoutAccountStatus } from 'generated/prisma';
+import { BadGatewayException, ConflictException, NotFoundException } from '@nestjs/common';
+import { AuthRole, OrganizationRole, PaymentProvider, PayoutAccountOwnerType, PayoutAccountStatus, PayoutMethod } from 'generated/prisma';
 import { PayoutAccountsService } from './payout-accounts.service';
 
-// No real payment processor is wired up — connecting an account is simulated
-// as instantly successful and ACTIVE. Don't assume real Stripe/Viva calls.
+const VALID_IBAN = 'GR1601101250000000012300695';
+
 describe('PayoutAccountsService', () => {
     let service: PayoutAccountsService;
     let prisma: any;
     let accessControl: any;
+    let vivaBankTransfers: any;
 
     const user = { id: 'u1', role: AuthRole.USER };
+    const createDto = (overrides: Partial<any> = {}) => ({
+        iban: VALID_IBAN,
+        beneficiary_name: 'Ada Lovelace',
+        ...overrides,
+    });
 
     beforeEach(() => {
         prisma = {
             payoutAccount: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn() },
         };
         accessControl = { assertStoreAccess: jest.fn() };
-        service = new PayoutAccountsService(prisma, accessControl);
+        vivaBankTransfers = {
+            linkBankAccount: jest.fn().mockResolvedValue({ bankAccountId: 'bank-1' }),
+            updateBankAccount: jest.fn().mockResolvedValue({}),
+        };
+        service = new PayoutAccountsService(prisma, accessControl, vivaBankTransfers);
     });
 
     describe('createForStore', () => {
@@ -24,7 +34,7 @@ describe('PayoutAccountsService', () => {
             prisma.payoutAccount.findUnique.mockResolvedValue(null);
             prisma.payoutAccount.create.mockResolvedValue({});
 
-            await service.createForStore(user, 'store1', {});
+            await service.createForStore(user, 'store1', createDto());
 
             expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1', [OrganizationRole.OWNER]);
         });
@@ -32,37 +42,46 @@ describe('PayoutAccountsService', () => {
         it('throws ConflictException when the store already has a payout account', async () => {
             prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'existing' });
 
-            await expect(service.createForStore(user, 'store1', {})).rejects.toThrow(ConflictException);
+            await expect(service.createForStore(user, 'store1', createDto())).rejects.toThrow(ConflictException);
             expect(prisma.payoutAccount.create).not.toHaveBeenCalled();
+            expect(vivaBankTransfers.linkBankAccount).not.toHaveBeenCalled();
         });
 
-        it('creates an instantly-ACTIVE mocked payout account defaulting to VIVA', async () => {
+        it('links the IBAN with Viva and creates a PENDING payout account, never persisting the raw IBAN', async () => {
             prisma.payoutAccount.findUnique.mockResolvedValue(null);
             const created = { id: 'pa1' };
             prisma.payoutAccount.create.mockResolvedValue(created);
 
-            const result = await service.createForStore(user, 'store1', {});
+            const result = await service.createForStore(user, 'store1', createDto());
 
+            expect(vivaBankTransfers.linkBankAccount).toHaveBeenCalledWith({
+                iban: VALID_IBAN,
+                beneficiaryName: 'Ada Lovelace',
+                friendlyName: undefined,
+            });
             expect(result).toBe(created);
             expect(prisma.payoutAccount.create).toHaveBeenCalledWith({
                 data: expect.objectContaining({
                     owner_type: PayoutAccountOwnerType.STORE,
                     store_id: 'store1',
                     provider: PaymentProvider.VIVA,
-                    status: PayoutAccountStatus.ACTIVE,
+                    bank_account_id: 'bank-1',
+                    iban_last4: '0695',
+                    beneficiary_name: 'Ada Lovelace',
+                    payout_method: PayoutMethod.IBAN,
+                    status: PayoutAccountStatus.PENDING,
                 }),
             });
+            const dataArg = prisma.payoutAccount.create.mock.calls[0][0].data;
+            expect(JSON.stringify(dataArg)).not.toContain(VALID_IBAN);
         });
 
-        it('respects an explicitly requested provider', async () => {
+        it('wraps a Viva linking failure in BadGatewayException', async () => {
             prisma.payoutAccount.findUnique.mockResolvedValue(null);
-            prisma.payoutAccount.create.mockResolvedValue({});
+            vivaBankTransfers.linkBankAccount.mockRejectedValue(new Error('Viva rejected this IBAN'));
 
-            await service.createForStore(user, 'store1', { provider: PaymentProvider.STRIPE });
-
-            expect(prisma.payoutAccount.create).toHaveBeenCalledWith({
-                data: expect.objectContaining({ provider: PaymentProvider.STRIPE }),
-            });
+            await expect(service.createForStore(user, 'store1', createDto())).rejects.toThrow(BadGatewayException);
+            expect(prisma.payoutAccount.create).not.toHaveBeenCalled();
         });
     });
 
@@ -91,7 +110,7 @@ describe('PayoutAccountsService', () => {
 
     describe('updateForStore', () => {
         it('requires OWNER-level store access', async () => {
-            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1' });
+            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', bank_account_id: 'bank-1' });
             prisma.payoutAccount.update.mockResolvedValue({});
 
             await service.updateForStore(user, 'store1', {});
@@ -106,39 +125,26 @@ describe('PayoutAccountsService', () => {
             expect(prisma.payoutAccount.update).not.toHaveBeenCalled();
         });
 
-        it('only writes fields that are present in the DTO (partial-update semantics)', async () => {
-            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1' });
+        it('updates the beneficiary name locally and at Viva', async () => {
+            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', bank_account_id: 'bank-1' });
             prisma.payoutAccount.update.mockResolvedValue({});
 
-            await service.updateForStore(user, 'store1', { status: PayoutAccountStatus.RESTRICTED });
+            await service.updateForStore(user, 'store1', { beneficiary_name: 'New Name' });
 
+            expect(vivaBankTransfers.updateBankAccount).toHaveBeenCalledWith('bank-1', expect.objectContaining({ beneficiaryName: 'New Name' }));
             expect(prisma.payoutAccount.update).toHaveBeenCalledWith({
                 where: { store_id: 'store1' },
-                data: { status: PayoutAccountStatus.RESTRICTED },
-            });
-        });
-
-        it('writes both fields when both are present', async () => {
-            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1' });
-            prisma.payoutAccount.update.mockResolvedValue({});
-
-            await service.updateForStore(user, 'store1', {
-                status: PayoutAccountStatus.DISABLED,
-                provider: PaymentProvider.PAYPAL,
-            });
-
-            expect(prisma.payoutAccount.update).toHaveBeenCalledWith({
-                where: { store_id: 'store1' },
-                data: { status: PayoutAccountStatus.DISABLED, provider: PaymentProvider.PAYPAL },
+                data: { beneficiary_name: 'New Name' },
             });
         });
 
         it('writes no fields when the DTO is empty', async () => {
-            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1' });
+            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', bank_account_id: 'bank-1' });
             prisma.payoutAccount.update.mockResolvedValue({});
 
             await service.updateForStore(user, 'store1', {});
 
+            expect(vivaBankTransfers.updateBankAccount).not.toHaveBeenCalled();
             expect(prisma.payoutAccount.update).toHaveBeenCalledWith({
                 where: { store_id: 'store1' },
                 data: {},
@@ -150,16 +156,16 @@ describe('PayoutAccountsService', () => {
         it('throws ConflictException when the user already has a payout account', async () => {
             prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'existing' });
 
-            await expect(service.createForUser(user, {})).rejects.toThrow(ConflictException);
+            await expect(service.createForUser(user, createDto())).rejects.toThrow(ConflictException);
             expect(prisma.payoutAccount.create).not.toHaveBeenCalled();
         });
 
-        it('creates an instantly-ACTIVE mocked payout account owned by the user', async () => {
+        it('links the IBAN and creates a PENDING payout account owned by the user', async () => {
             prisma.payoutAccount.findUnique.mockResolvedValue(null);
             const created = { id: 'pa1' };
             prisma.payoutAccount.create.mockResolvedValue(created);
 
-            const result = await service.createForUser(user, {});
+            const result = await service.createForUser(user, createDto());
 
             expect(result).toBe(created);
             expect(prisma.payoutAccount.create).toHaveBeenCalledWith({
@@ -167,7 +173,7 @@ describe('PayoutAccountsService', () => {
                     owner_type: PayoutAccountOwnerType.USER,
                     user_id: 'u1',
                     provider: PaymentProvider.VIVA,
-                    status: PayoutAccountStatus.ACTIVE,
+                    status: PayoutAccountStatus.PENDING,
                 }),
             });
         });

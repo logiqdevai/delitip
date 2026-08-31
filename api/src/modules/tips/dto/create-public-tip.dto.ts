@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsEmail, IsEnum, IsInt, IsOptional, IsPositive, IsString } from 'class-validator';
+import { IsArray, IsEmail, IsEnum, IsInt, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
 import { Currency } from 'generated/prisma';
 
 export class CreatePublicTipDto {
@@ -37,4 +37,9 @@ export class CreatePublicTipDto {
     @IsOptional()
     @IsString()
     customer_name?: string;
+
+    @ApiProperty({ required: false, description: 'Client-generated idempotency key — reused on retry so a network retry never creates two Viva orders for one intended tip' })
+    @IsOptional()
+    @IsUUID()
+    client_request_id?: string;
 }

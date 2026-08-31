@@ -72,6 +72,23 @@ export class VivaConfig {
     return this.configService.get<string>('VIVA_SOURCE_CODE');
   }
 
+  getWalletId(): number | undefined {
+    return this.configService.get<number>('VIVA_WALLET_ID');
+  }
+
+  // Comma-separated CIDR/IP list — Viva has no webhook HMAC, so this
+  // allowlist plus the mandatory re-fetch-before-trusting pattern is the
+  // only authenticity check available. Empty means "not configured yet";
+  // callers should treat that as fail-closed, not as "allow everything".
+  getWebhookIpAllowlist(): string[] {
+    const raw = this.configService.get<string>('VIVA_WEBHOOK_IP_ALLOWLIST');
+    if (!raw) return [];
+    return raw
+      .split(',')
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+  }
+
   getBasicAuthHeader(): string {
     const merchantId = this.getMerchantId();
     const apiKey = this.getApiKey();

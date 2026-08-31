@@ -6,6 +6,19 @@ import type {
   PayoutAccount,
 } from "@/features/payout-accounts/interfaces/payout-accounts.interfaces";
 
+const getApiErrorMessage = (error: unknown, fallback: string): string => {
+  if (isAxiosError(error)) {
+    const message = error.response?.data?.message;
+    if (typeof message === "string" && message.length > 0) {
+      return message;
+    }
+    if (Array.isArray(message) && typeof message[0] === "string") {
+      return message[0];
+    }
+  }
+  return fallback;
+};
+
 export const getMyPayoutAccount = async (): Promise<PayoutAccount | null> => {
   try {
     const response = await axiosInstance.get<PayoutAccount>(
@@ -29,8 +42,10 @@ export const createMyPayoutAccount = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to connect payout account. Please try again.");
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to link payout account. Please try again."),
+    );
   }
 };
 
@@ -60,7 +75,9 @@ export const createStorePayoutAccount = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to connect payout account. Please try again.");
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to link payout account. Please try again."),
+    );
   }
 };

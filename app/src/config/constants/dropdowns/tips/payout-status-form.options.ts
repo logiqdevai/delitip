@@ -5,6 +5,7 @@ import {
 
 export const PayoutStatusFormOptions: { id: PayoutStatus; label: string }[] = [
   { id: PayoutStatuses.PENDING, label: "Pending" },
+  { id: PayoutStatuses.PROCESSING, label: "Processing" },
   { id: PayoutStatuses.PAID, label: "Paid" },
   { id: PayoutStatuses.FAILED, label: "Failed" },
   { id: PayoutStatuses.CANCELLED, label: "Cancelled" },

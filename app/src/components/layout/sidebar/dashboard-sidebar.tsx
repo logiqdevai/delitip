@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   ArrowLeftRight,
   BarChart3,
+  Banknote,
   Bell,
   CreditCard,
   LayoutGrid,
@@ -78,6 +79,12 @@ const navItems = [
     label: "Payments",
     icon: CreditCard,
     match: (path: string) => path.startsWith(Routes.dashboard.payments),
+  },
+  {
+    href: Routes.dashboard.payouts,
+    label: "Payouts",
+    icon: Banknote,
+    match: (path: string) => path.startsWith(Routes.dashboard.payouts),
   },
   {
     href: Routes.dashboard.reviews,

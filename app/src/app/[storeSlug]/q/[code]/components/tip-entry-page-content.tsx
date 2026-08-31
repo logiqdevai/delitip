@@ -60,5 +60,5 @@ export const TipEntryPageContent: FC<TipEntryPageContentProps> = ({
     );
   }
 
-  return <TipFlow storeSlug={storeSlug} store={store} qr={qr} />;
+  return <TipFlow storeSlug={storeSlug} code={code} store={store} qr={qr} />;
 };

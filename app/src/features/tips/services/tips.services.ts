@@ -6,6 +6,7 @@ import type {
   CreatePublicTipPayload,
   CreatePublicTipResponse,
   EmployeeTipDistribution,
+  PublicTipStatus,
   Tip,
   TipsQuery,
 } from "@/features/tips/interfaces/tips.interfaces";
@@ -75,4 +76,13 @@ export const createPublicTip = async (
       getApiErrorMessage(error, "Failed to submit tip. Please try again."),
     );
   }
+};
+
+export const getPublicTipStatus = async (
+  id: string,
+): Promise<PublicTipStatus> => {
+  const response = await axiosInstance.get<PublicTipStatus>(
+    ApiRoutes.public.tipStatus(id),
+  );
+  return response.data;
 };
