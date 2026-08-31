@@ -29,6 +29,7 @@ function Drawer({
   showSwipeHandle = false,
   snapPoints,
   swipeDirection = "down",
+  disablePointerDismissal = true,
   ...props
 }: DrawerPrimitive.Root.Props & {
   showSwipeHandle?: boolean
@@ -46,6 +47,7 @@ function Drawer({
         modal={modal}
         snapPoints={snapPoints}
         swipeDirection={swipeDirection}
+        disablePointerDismissal={disablePointerDismissal}
         {...props}
       />
     </DrawerContext.Provider>

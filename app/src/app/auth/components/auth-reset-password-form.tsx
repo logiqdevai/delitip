@@ -131,7 +131,8 @@ export const AuthResetPasswordForm: FC = () => {
         <ActionButtonWithPending
           type="submit"
           isPending={isPending}
-          className="w-full rounded-xl bg-electric-lime text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-700"
+          size="lg"
+          className="h-12 w-full rounded-full bg-electric-lime text-sm font-bold text-ink-charcoal shadow-[0_10px_28px_rgba(200,241,105,0.45)] hover:bg-brand-300"
         >
           Update password
           <ArrowRight data-icon="inline-end" className="size-3.5" />

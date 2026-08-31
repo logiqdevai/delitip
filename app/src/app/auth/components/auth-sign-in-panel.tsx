@@ -20,7 +20,7 @@ export const AuthSignInPanel: FC = () => {
       : AuthRoles.BUSINESS;
 
   return (
-    <div>
+    <div className="flex flex-1 flex-col">
       <AuthRoleSwitcher
         activeRole={role}
         onSelectBusiness={() => {

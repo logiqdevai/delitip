@@ -103,13 +103,13 @@ export const NumberPicker: FC<NumberPickerProps> = ({
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-full border bg-white shadow-xs transition",
+        "inline-flex items-center rounded-full border bg-white shadow-xs ring-3 ring-transparent transition-[border-color,box-shadow] duration-200 ease-out",
         isSm
           ? "h-(--control-height-sm)"
           : "h-(--control-height-default)",
         invalid
-          ? "border-destructive ring-3 ring-destructive/20"
-          : "border-zinc-200/80 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
+          ? "border-destructive ring-destructive/20"
+          : "border-zinc-200/80 focus-within:border-ring focus-within:ring-ring/50",
         disabled && "pointer-events-none opacity-50",
         className,
       )}
