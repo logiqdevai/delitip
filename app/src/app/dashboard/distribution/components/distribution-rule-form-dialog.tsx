@@ -1,9 +1,10 @@
 "use client";
 
-import { type FC, useEffect } from "react";
+import { type FC, useEffect, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2, Plus, Trash2, User } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,6 +58,8 @@ const SEGMENT_COLORS = [
   "bg-ink-charcoal",
 ] as const;
 
+const RECIPIENT_MOTION_EASE = [0.22, 1, 0.36, 1] as const;
+
 export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = ({
   open,
   onOpenChange,
@@ -90,6 +93,11 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
     name: "recipients",
   });
 
+  const [highlightedRecipientId, setHighlightedRecipientId] = useState<
+    string | null
+  >(null);
+  const shouldHighlightNextRecipientRef = useRef(false);
+
   const recipients = useWatch({ control, name: "recipients" }) ?? [];
   const percentageSum = recipients.reduce(
     (total, recipient) => total + (Number(recipient?.percentage) || 0),
@@ -102,7 +110,11 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
   );
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      setHighlightedRecipientId(null);
+      shouldHighlightNextRecipientRef.current = false;
+      return;
+    }
 
     if (rule) {
       reset({
@@ -123,6 +135,39 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
       recipients: [emptyRecipient()],
     });
   }, [open, reset, rule]);
+
+  useEffect(() => {
+    if (!shouldHighlightNextRecipientRef.current) return;
+
+    const addedRecipient = fields.at(-1);
+    if (!addedRecipient) return;
+
+    shouldHighlightNextRecipientRef.current = false;
+    setHighlightedRecipientId(addedRecipient.id);
+
+    requestAnimationFrame(() => {
+      document
+        .getElementById(`recipient-card-${addedRecipient.id}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    const timer = window.setTimeout(() => {
+      setHighlightedRecipientId((current) =>
+        current === addedRecipient.id ? null : current,
+      );
+    }, 1400);
+
+    return () => window.clearTimeout(timer);
+  }, [fields]);
+
+  const handleAddRecipient = () => {
+    shouldHighlightNextRecipientRef.current = true;
+    append({
+      recipient_type: DistributionRecipientTypes.STORE,
+      employee_id: "",
+      percentage: 0,
+    });
+  };
 
   const onSubmit = handleSubmit(async (values) => {
     const payload = {
@@ -172,8 +217,11 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
         onOpenChange(next);
       }}
     >
-      <DialogContent className="gap-0 p-0 sm:max-w-xl" showCloseButton={!isPending}>
-        <DialogHeader className="border-b border-zinc-100 px-5 py-4 sm:px-6">
+      <DialogContent
+        className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-xl"
+        showCloseButton={!isPending}
+      >
+        <DialogHeader className="shrink-0 border-b border-zinc-100 px-5 py-4 sm:px-6">
           <DialogTitle>
             {isEdit ? "Edit distribution rule" : "Create distribution rule"}
           </DialogTitle>
@@ -183,7 +231,12 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="space-y-5 px-5 py-5 sm:px-6" noValidate>
+        <form
+          onSubmit={onSubmit}
+          className="flex min-h-0 flex-1 flex-col"
+          noValidate
+        >
+          <div className="flex-1 space-y-5 overflow-y-auto px-5 py-5 sm:px-6">
           <div className="space-y-1.5">
             <Label htmlFor="rule-name">Rule name</Label>
             <Input
@@ -250,6 +303,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
             </div>
 
             <div className="space-y-2">
+              <AnimatePresence initial={false} mode="popLayout">
               {fields.map((field, index) => {
                 const type = recipients[index]?.recipient_type;
                 const recipientError = errors.recipients?.[index];
@@ -260,27 +314,59 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                   : (employeeNameById.get(
                       recipients[index]?.employee_id ?? "",
                     ) ?? "Employee");
+                const isHighlighted = highlightedRecipientId === field.id;
 
                 return (
-                  <div
+                  <motion.div
                     key={field.id}
+                    id={`recipient-card-${field.id}`}
+                    layout
+                    initial={{ opacity: 0, y: -14, scale: 0.97 }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                      boxShadow: isHighlighted
+                        ? "0 0 0 2px rgba(200, 241, 105, 0.55), 0 8px 24px -12px rgba(24, 24, 27, 0.18)"
+                        : "0 0 0 0px rgba(200, 241, 105, 0), 0 1px 2px 0 rgba(24, 24, 27, 0.05)",
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: -10,
+                      scale: 0.97,
+                      transition: { duration: 0.18, ease: RECIPIENT_MOTION_EASE },
+                    }}
+                    transition={{
+                      layout: { duration: 0.28, ease: RECIPIENT_MOTION_EASE },
+                      opacity: { duration: 0.26, ease: RECIPIENT_MOTION_EASE },
+                      y: { duration: 0.32, ease: RECIPIENT_MOTION_EASE },
+                      scale: { duration: 0.28, ease: RECIPIENT_MOTION_EASE },
+                      boxShadow: { duration: 0.45, ease: RECIPIENT_MOTION_EASE },
+                    }}
                     className="space-y-2.5 rounded-2xl border border-zinc-200/80 bg-white p-3 shadow-xs"
                   >
                     <div className="flex items-center gap-2.5">
-                      <div
-                        className={cn(
-                          "flex size-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold tabular-nums",
-                          isStore
-                            ? "bg-zinc-100 text-zinc-600"
-                            : "bg-brand-50 text-brand-800",
-                        )}
+                      <motion.div
+                        animate={{
+                          backgroundColor: isStore
+                            ? "rgb(244 244 245)"
+                            : "rgb(240 249 255)",
+                          color: isStore
+                            ? "rgb(82 82 91)"
+                            : "rgb(30 64 175)",
+                        }}
+                        transition={{
+                          duration: 0.24,
+                          ease: RECIPIENT_MOTION_EASE,
+                        }}
+                        className="flex size-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold tabular-nums"
                         aria-hidden
                       >
                         {index + 1}
-                      </div>
+                      </motion.div>
 
                       <div
-                        className="inline-flex w-fit shrink-0 rounded-lg bg-zinc-100 p-1"
+                        className="relative inline-flex w-fit shrink-0 rounded-lg bg-zinc-100 p-1"
                         role="group"
                         aria-label={`Recipient ${index + 1} type`}
                       >
@@ -299,16 +385,42 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                                 setRecipientType(index, option.id)
                               }
                               className={cn(
-                                "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap transition",
+                                "relative inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors",
                                 selected
-                                  ? "bg-white text-ink-charcoal"
+                                  ? "text-ink-charcoal"
                                   : "text-zinc-500 hover:text-ink-charcoal",
                               )}
                             >
-                              <Icon className="size-3.5" strokeWidth={2} />
-                              {option.id === DistributionRecipientTypes.STORE
-                                ? "Business"
-                                : "Employee"}
+                              {selected ? (
+                                <motion.span
+                                  layoutId={`recipient-type-pill-${field.id}`}
+                                  className="absolute inset-0 rounded-md bg-white shadow-sm"
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 460,
+                                    damping: 34,
+                                    mass: 0.75,
+                                  }}
+                                />
+                              ) : null}
+                              <span className="relative z-10 inline-flex items-center gap-1.5">
+                                <motion.span
+                                  animate={{
+                                    scale: selected ? 1.05 : 1,
+                                    opacity: selected ? 1 : 0.72,
+                                  }}
+                                  transition={{
+                                    duration: 0.2,
+                                    ease: RECIPIENT_MOTION_EASE,
+                                  }}
+                                  className="inline-flex"
+                                >
+                                  <Icon className="size-3.5" strokeWidth={2} />
+                                </motion.span>
+                                {option.id === DistributionRecipientTypes.STORE
+                                  ? "Business"
+                                  : "Employee"}
+                              </span>
                             </button>
                           );
                         })}
@@ -316,32 +428,55 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                     </div>
 
                     <div className="flex flex-col gap-2 pl-[2.375rem] sm:flex-row sm:items-center">
-                      <div className="min-w-0 flex-1">
-                        {isStore ? (
-                          <p className="text-[11px] leading-5 text-zinc-500 sm:py-2">
-                            {pct}% stays with the business house account.
-                          </p>
-                        ) : (
-                          <Controller
-                            name={`recipients.${index}.employee_id`}
-                            control={control}
-                            render={({ field: employeeField }) => (
-                              <EmployeeSelect
-                                id={`recipient-employee-${index}`}
-                                employees={employees}
-                                value={employeeField.value ?? ""}
-                                onValueChange={employeeField.onChange}
-                                emptyValue=""
-                                emptyLabel="Select employee"
-                                placeholder="Select employee"
-                                showPosition
-                                invalid={!!recipientError?.employee_id}
-                                aria-label={`Employee for recipient ${index + 1}`}
-                                className="w-full"
+                      <div className="min-w-0 flex-1 overflow-hidden">
+                        <AnimatePresence mode="wait" initial={false}>
+                          {isStore ? (
+                            <motion.p
+                              key={`${field.id}-store`}
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -6 }}
+                              transition={{
+                                duration: 0.22,
+                                ease: RECIPIENT_MOTION_EASE,
+                              }}
+                              className="text-[11px] leading-5 text-zinc-500 sm:py-2"
+                            >
+                              {pct}% stays with the business house account.
+                            </motion.p>
+                          ) : (
+                            <motion.div
+                              key={`${field.id}-employee`}
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -6 }}
+                              transition={{
+                                duration: 0.22,
+                                ease: RECIPIENT_MOTION_EASE,
+                              }}
+                            >
+                              <Controller
+                                name={`recipients.${index}.employee_id`}
+                                control={control}
+                                render={({ field: employeeField }) => (
+                                  <EmployeeSelect
+                                    id={`recipient-employee-${index}`}
+                                    employees={employees}
+                                    value={employeeField.value ?? ""}
+                                    onValueChange={employeeField.onChange}
+                                    emptyValue=""
+                                    emptyLabel="Select employee"
+                                    placeholder="Select employee"
+                                    showPosition
+                                    invalid={!!recipientError?.employee_id}
+                                    aria-label={`Employee for recipient ${index + 1}`}
+                                    className="w-full"
+                                  />
+                                )}
                               />
-                            )}
-                          />
-                        )}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
 
                       <div className="flex shrink-0 items-center gap-1 self-end sm:self-auto">
@@ -387,9 +522,10 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                         {recipientError.percentage.message}
                       </p>
                     ) : null}
-                  </div>
+                  </motion.div>
                 );
               })}
+              </AnimatePresence>
             </div>
 
             {typeof errors.recipients?.message === "string" ? (
@@ -401,24 +537,21 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
               </p>
             ) : null}
 
-            <button
+            <motion.button
               type="button"
               disabled={isPending}
-              onClick={() =>
-                append({
-                  recipient_type: DistributionRecipientTypes.STORE,
-                  employee_id: "",
-                  percentage: 0,
-                })
-              }
-              className="flex w-full items-center justify-center gap-1.5 rounded-2xl border border-dashed border-zinc-300 bg-zinc-50/60 py-3 text-xs font-semibold text-zinc-500 transition hover:border-electric-lime hover:bg-brand-50/50 hover:text-brand-800 disabled:opacity-50"
+              onClick={handleAddRecipient}
+              whileTap={{ scale: 0.985 }}
+              transition={{ duration: 0.14, ease: RECIPIENT_MOTION_EASE }}
+              className="flex w-full items-center justify-center gap-1.5 rounded-2xl border border-dashed border-zinc-300 bg-zinc-50/60 py-3 text-xs font-semibold text-zinc-500 transition-colors hover:border-electric-lime hover:bg-brand-50/50 hover:text-brand-800 disabled:opacity-50"
             >
               <Plus className="size-3.5" strokeWidth={2} />
               Add recipient
-            </button>
+            </motion.button>
+          </div>
           </div>
 
-          <DialogFooter className="gap-2 border-t border-zinc-100 pt-4 sm:justify-between">
+          <DialogFooter className="mx-0 mb-0 shrink-0 gap-2 border-t border-zinc-100 px-5 py-4 sm:justify-between sm:px-6">
             <p className="hidden text-[11px] text-zinc-400 sm:block">
               Applies to future tips only.
             </p>
