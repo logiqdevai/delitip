@@ -237,6 +237,8 @@ Customer scans QR
 
 **Configuration:** `TIP_PLATFORM_COMMISSION_PERCENTAGE` as a platform-wide env var default (matching the brief's example exactly), read once via a small `PlatformFinanceConfig` service — never hardcoded inline anywhere a percentage is used. Architecture leaves room for an optional future per-Store override (a nullable `commission_percentage_override` column on `Store`), but that is not required for V1; document it as a phase-2 hook, not a blocker.
 
+**Shortcut for the fee-timing gap:** rather than building a separate estimation subsystem, `TIP_PROCESSOR_FEE_ESTIMATE_PERCENTAGE` (introduced below) lives right next to `TIP_PLATFORM_COMMISSION_PERCENTAGE` — same `PlatformFinanceConfig` service, same env var block in `api/.env.template`/`.env.local`/`.env.staging`. It is a single extra config constant, not new infrastructure: `PlatformFinanceConfig` exposes both `getCommissionPercentage()` and `getProcessorFeeEstimatePercentage()`, and the latter is only ever read to render a provisional figure before Viva's real 1799-webhook fee lands — it never feeds a stored final `PaymentTransaction` value or a payout calculation (§10.2 already gates payout eligibility on `processor_fee_confirmed = true`, so a payout can never be computed from this constant even by accident).
+
 **Order of calculation** (matches the brief's example, resolved against Viva's actual settlement model from §2.6):
 
 ```
@@ -564,6 +566,8 @@ Per-employee distribution detail is already fully covered by the existing `TipDi
 | `api/src/shared/utils/distribution/distribution-calculator.util.ts` | **No change** — reused as-is |
 | `api/src/modules/distribution-rules/**` | **No change** |
 | `api/prisma/schema.prisma` | Modify — new models/enums per §11 |
+| **New**: `api/src/shared/config/platform-finance.config.ts` (or equivalent `PlatformFinanceConfig` service) | New — single home for `TIP_PLATFORM_COMMISSION_PERCENTAGE` and `TIP_PROCESSOR_FEE_ESTIMATE_PERCENTAGE` (§8); every commission/fee read in the codebase goes through this, never a raw `process.env` read |
+| `api/.env.template`, `.env.local`, `.env.staging` | Modify — add `TIP_PLATFORM_COMMISSION_PERCENTAGE` and `TIP_PROCESSOR_FEE_ESTIMATE_PERCENTAGE` alongside the existing `VIVA_*` block |
 | `api/src/core/queues/**` | Modify — register real queues/processors (currently empty scaffolding) |
 | **New**: `api/src/modules/payouts/**` | New module — `Payout` CRUD, eligibility query, batch job, manual trigger endpoint |
 | **New**: webhook reconciliation job | New — scheduled sweep for abandoned/expired orders |
