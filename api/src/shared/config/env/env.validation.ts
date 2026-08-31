@@ -32,6 +32,12 @@ const EnvSchema = z.object({
     OPENAI_API_KEY: z.string().optional(),
     BULL_BOARD_USER: z.string().optional(),
     BULL_BOARD_PASSWORD: z.string().optional(),
+    VIVA_ENVIRONMENT: z.enum(['demo', 'production']).optional(),
+    VIVA_CLIENT_ID: z.string().optional(),
+    VIVA_CLIENT_SECRET: z.string().optional(),
+    VIVA_MERCHANT_ID: z.string().optional(),
+    VIVA_API_KEY: z.string().optional(),
+    VIVA_SOURCE_CODE: z.string().optional(),
 });
 
 export function validateEnv(config: Record<string, unknown>) {
