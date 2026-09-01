@@ -37,6 +37,13 @@
 - **Wallet ID and Source Code are not visible as plain fields in Viva's merchant portal** — `VIVA_WALLET_ID` had to be retrieved live via `GET /merchants/v1/wallets` (Account Transactions scope); `VIVA_SOURCE_CODE` is the "Code" shown on the Source's setup page (Sales → Online Payments → Websites/Apps), but as of this writing **the sandbox Source (Code `4332`) returns `403 "does not have a source with code assigned or the source is disabled"` on real order creation** — it appears to require Viva's approval (the Source setup page's "one-shot approval" checklist: public domain, privacy policy, T&Cs, customer service contact, Viva logo on payment screens) before it's actually usable, even though the Code is already generated. This is the current blocker on live end-to-end testing, not a code issue.
 - **Success/Failure URL**: `https://delitip.com/checkout/return`, configured once on the Source (both fields point at the same URL — the return page determines success/failure itself by polling `GET /public/tips/:id/status`, not from Viva's redirect param). Viva's `s`/`t` redirect params are intentionally not required by the app past being an optional fallback lookup key (`GET /public/tips/by-order-code/:orderCode`) — the actual confirmation always comes from server-side re-verification against Viva's own transaction API, never from a URL param.
 
+### Reference specs
+
+For exact request/response schemas when implementing or debugging a Viva call — field names, types, enum values, required-vs-optional — use the raw specs directly rather than relying on this document's prose summaries, which are accurate at the level of "what to build" but not a substitute for the schema itself:
+
+- **`docs/viva/viva-payment-api.yaml`** — Viva's own official Payment API spec (Swagger 2.0), downloaded from `https://developer.viva.com/downloads/payment-api.yaml` on 2026-09-01. Covers every endpoint referenced throughout this document (Checkout, Transactions, Bank Transfers, Marketplace, Wallets, Webhooks-support, etc.). Note the download requires an IPv4 connection with a browser-like `User-Agent` — Akamai's bot mitigation in front of `developer.viva.com` stalls plain `curl`/automated requests via a repeated TLS-renegotiation hang otherwise; re-download periodically to pick up upstream spec changes, since this is a point-in-time snapshot, not a live reference.
+- **`api/docs/openapi.yaml`** — Delitip's own generated API spec, for cross-referencing our actual endpoint shapes (`POST /public/tips`, `/webhooks/viva`, `/stores/:storeId/payout-account`, `/stores/:storeId/payouts/run`, etc.) against what this document and the Viva spec describe.
+
 ---
 
 ## Table of Contents
