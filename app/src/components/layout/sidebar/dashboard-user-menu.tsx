@@ -56,7 +56,7 @@ const initialsFromProfile = (profile: {
 };
 
 const UserAvatar: FC<{ initials: string }> = ({ initials }) => (
-  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-ink-charcoal text-[10px] font-bold tracking-wide text-paper-offwhite">
+  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-ink-charcoal text-[10px] font-bold tracking-wide text-paper-offwhite group-data-[collapsible=icon]:size-9">
     {initials}
   </div>
 );
@@ -106,7 +106,7 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
           <DropdownMenuTrigger
             className={cn(
               "flex w-full items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50 p-3 text-left outline-none transition hover:bg-neutral-fill focus-visible:ring-2 focus-visible:ring-ring/50 aria-expanded:bg-neutral-fill",
-              "group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:hover:bg-neutral-fill",
+              "group-data-[collapsible=icon]:size-10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:hover:bg-neutral-fill",
             )}
             aria-label="Account menu"
           >

@@ -248,7 +248,7 @@ export const DashboardSidebar: FC = () => {
               href={Routes.dashboard.root}
               className="flex min-w-0 items-center gap-2.5"
             >
-              <BrandMark size="sm" className="size-7 shrink-0 rounded-lg text-xs" />
+              <BrandMark size="sm" className="size-7 shrink-0 rounded-lg text-xs group-data-[collapsible=icon]:size-8" />
               <div className="min-w-0 group-data-[collapsible=icon]:hidden">
                 <div className="truncate text-sm leading-none font-bold tracking-tight text-ink-charcoal">
                   delitip
@@ -392,7 +392,7 @@ export const DashboardSidebar: FC = () => {
                         : undefined;
 
                   const menuButtonClassName = cn(
-                    "h-auto gap-3 rounded-xl px-3 py-2 text-chip group-data-[collapsible=icon]:mx-auto",
+                    "h-auto gap-3 rounded-xl px-3 py-2 text-chip group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5!",
                     active
                       ? "bg-brand-50 font-semibold text-brand-800"
                       : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
@@ -413,7 +413,7 @@ export const DashboardSidebar: FC = () => {
                           >
                             <Icon
                               className={cn(
-                                "size-4",
+                                "size-4 group-data-[collapsible=icon]:size-5",
                                 active ? "text-electric-lime" : "text-zinc-400",
                               )}
                               strokeWidth={2}
@@ -475,7 +475,7 @@ export const DashboardSidebar: FC = () => {
                       >
                         <Icon
                           className={cn(
-                            "size-4",
+                            "size-4 group-data-[collapsible=icon]:size-5",
                             active ? "text-electric-lime" : "text-zinc-400",
                           )}
                           strokeWidth={2}
