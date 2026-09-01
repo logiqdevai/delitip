@@ -210,3 +210,12 @@ export interface PublicTipStatus {
   distribution_summary?: PublicTipStatusDistributionLine[];
   thank_you_message?: string;
 }
+
+// GET /public/tips/by-order-code/:orderCode — the checkout-return page's
+// fallback when sessionStorage isn't available (different device, cleared
+// storage): resolves Viva's own "s" redirect param back to our tip.
+export interface PublicTipOrderCodeLookup {
+  tip_id: string;
+  store_slug: string;
+  qr_code: string;
+}

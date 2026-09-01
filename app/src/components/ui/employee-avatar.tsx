@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const SIZE_CLASS = {
@@ -11,12 +12,22 @@ const SIZE_CLASS = {
   xl: "size-12 text-sm",
 } as const;
 
+const ICON_SIZE_CLASS = {
+  xs: "size-3.5",
+  sm: "size-3.5",
+  md: "size-4",
+  lg: "size-5",
+  xl: "size-6",
+} as const;
+
 export type EmployeeAvatarSize = keyof typeof SIZE_CLASS;
+export type EmployeeAvatarFallback = "initials" | "icon";
 
 export type EmployeeAvatarProps = {
   name: string;
   photoUrl?: string | null;
   size?: EmployeeAvatarSize;
+  fallback?: EmployeeAvatarFallback;
   className?: string;
 };
 
@@ -31,6 +42,7 @@ export const EmployeeAvatar: FC<EmployeeAvatarProps> = ({
   name,
   photoUrl,
   size = "md",
+  fallback = "initials",
   className,
 }) => {
   return (
@@ -45,6 +57,8 @@ export const EmployeeAvatar: FC<EmployeeAvatarProps> = ({
       {photoUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={photoUrl} alt="" className="size-full object-cover" />
+      ) : fallback === "icon" ? (
+        <UserRound className={ICON_SIZE_CLASS[size]} strokeWidth={2} />
       ) : (
         initials(name)
       )}

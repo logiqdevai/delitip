@@ -1,5 +1,9 @@
 import { VivaBankTransfersService } from './viva-bank-transfers.service';
-import { VivaAuthMode, VivaHost } from '../interfaces/viva-common.interface';
+import {
+  VivaAuthMode,
+  VivaHost,
+  VivaOAuthScope,
+} from '../interfaces/viva-common.interface';
 
 describe('VivaBankTransfersService', () => {
   let service: VivaBankTransfersService;
@@ -20,6 +24,7 @@ describe('VivaBankTransfersService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
         method: 'POST',
         path: '/banktransfers/v1/bankaccounts',
         data: payload,
@@ -40,6 +45,7 @@ describe('VivaBankTransfersService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
         method: 'GET',
         path: '/banktransfers/v1/bankaccounts',
         query: { isArchived: false, maxResults: 10 },
@@ -57,6 +63,7 @@ describe('VivaBankTransfersService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
         method: 'GET',
         path: '/banktransfers/v1/bankaccounts/ba_1',
       });
@@ -76,6 +83,7 @@ describe('VivaBankTransfersService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
         method: 'PATCH',
         path: '/banktransfers/v1/bankaccounts/ba_1',
         data: { archive: true },
@@ -96,6 +104,7 @@ describe('VivaBankTransfersService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
         method: 'GET',
         path: '/banktransfers/v1/bankaccounts/ba_1/instructiontypes',
         query: { amount: 5000 },
@@ -120,6 +129,7 @@ describe('VivaBankTransfersService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
         method: 'POST',
         path: '/banktransfers/v1/bankaccounts/ba_1/fees',
         data: payload,
@@ -140,6 +150,7 @@ describe('VivaBankTransfersService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
         method: 'POST',
         path: '/banktransfers/v1/bankaccounts/ba_1:send',
         data: payload,

@@ -439,6 +439,36 @@ describe('TipsService', () => {
         });
     });
 
+    describe('resolveTipIdByOrderCode', () => {
+        it('throws NotFoundException when no PaymentTransaction has that order code', async () => {
+            prisma.paymentTransaction.findUnique.mockResolvedValue(null);
+
+            await expect(service.resolveTipIdByOrderCode('999')).rejects.toThrow(NotFoundException);
+        });
+
+        it('resolves the tip id, store slug, and QR code for a known order code', async () => {
+            prisma.paymentTransaction.findUnique.mockResolvedValue({
+                provider_order_code: '123',
+                tip: {
+                    id: 'tip1',
+                    store: { slug: 'the-corner-cafe' },
+                    qr_code: { code: 'abcd1234' },
+                },
+            });
+
+            const result = await service.resolveTipIdByOrderCode('123');
+
+            expect(prisma.paymentTransaction.findUnique).toHaveBeenCalledWith(
+                expect.objectContaining({ where: { provider_order_code: '123' } }),
+            );
+            expect(result).toEqual({
+                tip_id: 'tip1',
+                store_slug: 'the-corner-cafe',
+                qr_code: 'abcd1234',
+            });
+        });
+    });
+
     describe('triggerPerformanceChangeAlert (isolated)', () => {
         const call = (storeId = 'store1') => service.triggerPerformanceChangeAlert(storeId);
 

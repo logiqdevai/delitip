@@ -63,11 +63,7 @@ const RefundRequest: FC<{
         onChange={(event) => setReason(event.target.value)}
         placeholder="What went wrong? (optional)"
         rows={2}
-<<<<<<< HEAD
-        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs ring-2 ring-transparent transition-[border-color,box-shadow] duration-200 ease-out focus:border-brand-500 focus:ring-electric-lime focus:outline-none"
-=======
         className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-(--tip-primary) focus:ring-2 focus:ring-(--tip-primary) focus:outline-none"
->>>>>>> origin/main
       />
 
       {requestRefund.isError ? (
@@ -169,7 +165,7 @@ export const DoneStep: FC<DoneStepProps> = ({
           href={review.redirect.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-ink-charcoal py-3.5 text-sm font-semibold text-paper-offwhite shadow transition hover:bg-zinc-800"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-(--tip-primary) py-3.5 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary)"
         >
           <span>Share it publicly</span>
           <ExternalLink className="size-4" strokeWidth={2} />

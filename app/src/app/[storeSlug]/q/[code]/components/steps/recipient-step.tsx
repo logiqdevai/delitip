@@ -21,6 +21,7 @@ const EmployeeRow: FC<{
         name={employee.full_name}
         photoUrl={employee.photo_url}
         size="xl"
+        fallback="icon"
       />
       <div className="min-w-0 flex-1 text-left">
         <p className="truncate text-sm font-bold text-ink-charcoal">

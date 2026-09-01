@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { VivaOAuthScope } from './interfaces/viva-common.interface';
 
 export const VivaEnvironment = {
   DEMO: 'demo',
@@ -22,6 +23,14 @@ export class VivaConfig {
     if (!this.getClientId() || !this.getClientSecret()) {
       this.logger.warn(
         'Viva OAuth2 credentials are not configured (VIVA_CLIENT_ID / VIVA_CLIENT_SECRET)',
+      );
+    }
+
+    if (
+      !this.configService.get<string>('VIVA_ACCOUNT_TRANSACTIONS_CLIENT_ID')
+    ) {
+      this.logger.warn(
+        'VIVA_ACCOUNT_TRANSACTIONS_CLIENT_ID/SECRET not set — Bank Transfer API calls (IBAN linking, payouts) will fall back to the Smart Checkout client, which is likely unauthorized for that permission group.',
       );
     }
   }
@@ -52,11 +61,28 @@ export class VivaConfig {
       : 'https://www.vivapayments.com';
   }
 
-  getClientId(): string | undefined {
+  // Viva issues a separate OAuth2 client id/secret per API permission group
+  // (Smart Checkout vs. Account Transactions/Bank Transfer) rather than one
+  // pair for the whole merchant account. ACCOUNT_TRANSACTIONS falls back to
+  // the checkout pair when unset, so a single-credential setup (checkout
+  // only, no payouts configured yet) keeps working exactly as before.
+  getClientId(scope: VivaOAuthScope = VivaOAuthScope.CHECKOUT): string | undefined {
+    if (scope === VivaOAuthScope.ACCOUNT_TRANSACTIONS) {
+      return (
+        this.configService.get<string>('VIVA_ACCOUNT_TRANSACTIONS_CLIENT_ID') ??
+        this.configService.get<string>('VIVA_CLIENT_ID')
+      );
+    }
     return this.configService.get<string>('VIVA_CLIENT_ID');
   }
 
-  getClientSecret(): string | undefined {
+  getClientSecret(scope: VivaOAuthScope = VivaOAuthScope.CHECKOUT): string | undefined {
+    if (scope === VivaOAuthScope.ACCOUNT_TRANSACTIONS) {
+      return (
+        this.configService.get<string>('VIVA_ACCOUNT_TRANSACTIONS_CLIENT_SECRET') ??
+        this.configService.get<string>('VIVA_CLIENT_SECRET')
+      );
+    }
     return this.configService.get<string>('VIVA_CLIENT_SECRET');
   }
 

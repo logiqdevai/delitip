@@ -124,6 +124,8 @@ export const ApiRoutes = {
     qr: (code: string) => `/public/qr/${code}` as const,
     tips: "/public/tips",
     tipStatus: (id: string) => `/public/tips/${id}/status` as const,
+    tipByOrderCode: (orderCode: string) =>
+      `/public/tips/by-order-code/${orderCode}` as const,
     tipRefundRequest: (tipId: string) =>
       `/public/tips/${tipId}/refund-request` as const,
     store: (slug: string) => `/public/stores/${slug}` as const,

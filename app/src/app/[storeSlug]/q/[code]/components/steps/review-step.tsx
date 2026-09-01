@@ -217,11 +217,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
                     })
                   }
                   placeholder={question.question}
-<<<<<<< HEAD
-                  className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs ring-2 ring-transparent transition-[border-color,box-shadow] duration-200 ease-out focus:ring-electric-lime focus:outline-none"
-=======
                   className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs focus:ring-2 focus:ring-(--tip-primary) focus:outline-none"
->>>>>>> origin/main
                 />
               )}
             </div>
@@ -234,11 +230,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
               onChange({ ...draft, comment: event.target.value })
             }
             placeholder={`Write a short message for ${recipientLabel} (optional)...`}
-<<<<<<< HEAD
-            className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs ring-2 ring-transparent transition-[border-color,box-shadow] duration-200 ease-out focus:ring-electric-lime focus:outline-none"
-=======
             className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs focus:ring-2 focus:ring-(--tip-primary) focus:outline-none"
->>>>>>> origin/main
           />
         </div>
       ) : null}
@@ -259,7 +251,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
           type="button"
           onClick={pay}
           disabled={submitting}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-ink-charcoal py-3.5 text-sm font-semibold text-paper-offwhite shadow transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-(--tip-primary) py-3.5 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
         >
           {submitting ? (
             <Loader2 className="size-4 animate-spin" strokeWidth={2} />

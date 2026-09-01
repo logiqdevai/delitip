@@ -49,6 +49,27 @@ export class TipsService {
         return `${this.vivaConfig.getNativeBaseUrl()}/web/checkout?ref=${orderCode}`;
     }
 
+    // Resolves Viva's own order-code redirect param (the "s" query param
+    // Viva appends to the Source's Success/Failure URL) back to our tip —
+    // used only as a lookup key for the checkout-return page's fallback
+    // path (sessionStorage unavailable, e.g. a different device/browser).
+    // The order code is never trusted for the tip's actual status; the
+    // caller still polls GET /public/tips/:id/status, which re-verifies
+    // server-side, same as the primary path.
+    async resolveTipIdByOrderCode(orderCode: string) {
+        const paymentTransaction = await this.prisma.paymentTransaction.findUnique({
+            where: { provider_order_code: orderCode },
+            include: { tip: { include: { store: true, qr_code: true } } },
+        });
+        if (!paymentTransaction) throw new NotFoundException('No tip found for this order code');
+
+        return {
+            tip_id: paymentTransaction.tip.id,
+            store_slug: paymentTransaction.tip.store.slug,
+            qr_code: paymentTransaction.tip.qr_code.code,
+        };
+    }
+
     async createPublicTip(dto: CreatePublicTipDto) {
         if (dto.client_request_id) {
             const existing = await this.prisma.paymentTransaction.findUnique({

@@ -6,6 +6,7 @@ import type {
   CreatePublicTipPayload,
   CreatePublicTipResponse,
   EmployeeTipDistribution,
+  PublicTipOrderCodeLookup,
   PublicTipStatus,
   Tip,
   TipsQuery,
@@ -85,4 +86,20 @@ export const getPublicTipStatus = async (
     ApiRoutes.public.tipStatus(id),
   );
   return response.data;
+};
+
+export const getPublicTipByOrderCode = async (
+  orderCode: string,
+): Promise<PublicTipOrderCodeLookup | null> => {
+  try {
+    const response = await axiosInstance.get<PublicTipOrderCodeLookup>(
+      ApiRoutes.public.tipByOrderCode(orderCode),
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response?.status === 404) {
+      return null;
+    }
+    throw new Error("Failed to resolve this checkout. Please try again.");
+  }
 };

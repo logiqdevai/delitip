@@ -19,4 +19,13 @@ export class PublicTipsController {
     getStatus(@Param('id') id: string) {
         return this.tipsService.getPublicStatus(id);
     }
+
+    @Get('by-order-code/:orderCode')
+    @ApiOperation({
+        summary:
+            'Resolve Viva\'s order-code redirect param back to a tip id — fallback path for the checkout-return page when sessionStorage is unavailable',
+    })
+    getByOrderCode(@Param('orderCode') orderCode: string) {
+        return this.tipsService.resolveTipIdByOrderCode(orderCode);
+    }
 }
