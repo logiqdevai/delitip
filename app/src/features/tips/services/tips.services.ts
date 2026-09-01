@@ -3,6 +3,7 @@ import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
 import type {
+  AdminTipsQuery,
   CreatePublicTipPayload,
   CreatePublicTipResponse,
   EmployeeTipDistribution,
@@ -37,6 +38,20 @@ export const listStoreTips = async (
     return response.data;
   } catch {
     throw new Error("Failed to load tips. Please try again.");
+  }
+};
+
+export const listAdminTips = async (
+  query?: AdminTipsQuery,
+): Promise<PaginatedResponse<Tip>> => {
+  try {
+    const response = await axiosInstance.get<PaginatedResponse<Tip>>(
+      ApiRoutes.admin.payments.prefix,
+      { params: query },
+    );
+    return response.data;
+  } catch {
+    throw new Error("Failed to load payments. Please try again.");
   }
 };
 

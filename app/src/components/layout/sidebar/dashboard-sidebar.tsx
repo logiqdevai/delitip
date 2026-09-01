@@ -20,6 +20,7 @@ import {
   Star,
   Users,
   Wallet,
+  WalletCards,
   X,
 } from "lucide-react";
 import { AccountSwitcher } from "@/components/auth/account-switcher";
@@ -141,6 +142,15 @@ const navItems = [
     icon: ShieldCheck,
     requiresPlatformAdmin: true,
     match: (path: string) => path.startsWith(Routes.dashboard.admin.users),
+  },
+  {
+    href: Routes.dashboard.admin.payments,
+    label: "Payments & Payouts",
+    icon: WalletCards,
+    requiresPlatformAdmin: true,
+    match: (path: string) =>
+      path.startsWith(Routes.dashboard.admin.payments) ||
+      path.startsWith("/dashboard/admin/payouts"),
   },
 ] as const;
 

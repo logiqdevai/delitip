@@ -10,6 +10,7 @@ import { VivaConfig } from '@/integrations/viva/viva.config';
 import { VivaCheckoutService } from '@/integrations/viva/services/viva-checkout.service';
 import { CreatePublicTipDto } from '../dto/create-public-tip.dto';
 import { TipsQueryType } from '../dto/tips-query.schema';
+import { AdminTipsQueryType } from '../dto/admin-tips-query.schema';
 import { Currency, Language, PaymentTransactionStatus, Tip, TipStatus } from 'generated/prisma';
 
 const PERFORMANCE_CHANGE_THRESHOLD_PERCENT = 20;
@@ -347,10 +348,49 @@ export class TipsService {
         );
     }
 
+    async findAllAdmin(query: AdminTipsQueryType) {
+        const where: any = {};
+        if (query.store_id) where.store_id = query.store_id;
+        if (query.status) where.status = query.status;
+        if (query.date_from || query.date_to) {
+            where.created_at = {};
+            if (query.date_from) where.created_at.gte = new Date(query.date_from);
+            if (query.date_to) where.created_at.lte = new Date(query.date_to);
+        }
+        if (query.search) {
+            where.OR = [
+                { customer_email: { contains: query.search, mode: 'insensitive' } },
+                { customer_name: { contains: query.search, mode: 'insensitive' } },
+                { store: { name: { contains: query.search, mode: 'insensitive' } } },
+            ];
+        }
+
+        const [items, total] = await Promise.all([
+            this.prisma.tip.findMany({
+                where,
+                include: {
+                    store: { select: { id: true, name: true, slug: true, primary_language: true } },
+                    employee: true,
+                },
+                skip: (query.page - 1) * query.limit,
+                take: query.limit,
+                orderBy: { created_at: 'desc' },
+            }),
+            this.prisma.tip.count({ where }),
+        ]);
+
+        return paginate(
+            items.map((item) => this.resolveTipEmployeeNames(item, item.store.primary_language)),
+            total,
+            query,
+        );
+    }
+
     async findOne(user: AuthUser, id: string) {
         const tip = await this.prisma.tip.findUnique({
             where: { id },
             include: {
+                store: { select: { id: true, name: true, slug: true, primary_language: true } },
                 employee: true,
                 qr_code: true,
                 distribution_rule: true,
@@ -369,8 +409,7 @@ export class TipsService {
         // to see the financial breakdown (payment plan §16).
         const canViewFinancials = membership === null || membership.role === 'OWNER' || membership.role === 'ACCOUNTANT';
 
-        const store = await this.prisma.store.findUnique({ where: { id: tip.store_id }, select: { primary_language: true } });
-        const resolved = this.resolveTipEmployeeNames(tip, store?.primary_language ?? Language.EN);
+        const resolved = this.resolveTipEmployeeNames(tip, tip.store?.primary_language ?? Language.EN);
 
         if (!canViewFinancials) {
             const { payment_transaction, ...rest } = resolved;

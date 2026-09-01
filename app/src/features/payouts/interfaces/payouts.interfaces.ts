@@ -1,6 +1,13 @@
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
-import type { DistributionRecipientType } from "@/features/tips/interfaces/tips.interfaces";
-import type { PaymentProvider } from "@/features/payout-accounts/interfaces/payout-accounts.interfaces";
+import type {
+  DistributionRecipientType,
+  PayoutStatus,
+} from "@/features/tips/interfaces/tips.interfaces";
+import type {
+  PayoutAccount,
+  PaymentProvider,
+} from "@/features/payout-accounts/interfaces/payout-accounts.interfaces";
+import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
 
 export const PayoutExecutionStatuses = {
   PROCESSING: "PROCESSING",
@@ -14,6 +21,12 @@ export type PayoutExecutionStatus =
 export interface PayoutEmployeeRef {
   id: string;
   full_name: string;
+}
+
+export interface PayoutStoreRef {
+  id: string;
+  name: string;
+  slug: string;
 }
 
 export interface Payout {
@@ -32,6 +45,9 @@ export interface Payout {
   created_at: string;
   updated_at: string;
   employee?: PayoutEmployeeRef | null;
+  // Only present on admin-wide listings/detail (GET /admin/payouts) — store-
+  // scoped listings already imply the store.
+  store?: PayoutStoreRef | null;
 }
 
 export const PayoutSkipReasons = {
@@ -62,3 +78,60 @@ export interface PayoutsQuery {
   page?: number;
   limit?: number;
 }
+
+export interface DistributionTipRef {
+  id: string;
+  amount: number;
+  paid_at?: string | null;
+  currency: Currency;
+}
+
+export interface Distribution {
+  id: string;
+  tip_id: string;
+  recipient_type: DistributionRecipientType;
+  employee_id?: string | null;
+  employee?: PayoutEmployeeRef | null;
+  amount: number;
+  percentage: number;
+  payout_status: PayoutStatus;
+  payout_id?: string | null;
+  paid_out_at?: string | null;
+  created_at: string;
+  eligible_now: boolean;
+  tip: DistributionTipRef;
+}
+
+export interface DistributionsSummary {
+  pending_total_amount: number;
+  eligible_total_amount: number;
+}
+
+export interface DistributionsQuery {
+  page?: number;
+  limit?: number;
+  payout_status?: PayoutStatus;
+  recipient_type?: DistributionRecipientType;
+  employee_id?: string;
+  date_from?: string;
+  date_to?: string;
+}
+
+export interface AdminPayoutsQuery {
+  page?: number;
+  limit?: number;
+  store_id?: string;
+  recipient_type?: DistributionRecipientType;
+  status?: PayoutExecutionStatus;
+  date_from?: string;
+  date_to?: string;
+}
+
+export interface PayoutDetail extends Payout {
+  payout_account: PayoutAccount;
+  distributions: Distribution[];
+}
+
+export type DistributionsResponse = PaginatedResponse<Distribution> & {
+  summary: DistributionsSummary;
+};

@@ -44,6 +44,10 @@ export const Routes = {
     account: "/dashboard/account",
     admin: {
       users: "/dashboard/admin/users",
+      payments: "/dashboard/admin/payments",
+      paymentDetail: (id: string) =>
+        `/dashboard/admin/payments/${id}` as const,
+      payoutDetail: (id: string) => `/dashboard/admin/payouts/${id}` as const,
     },
     settings: {
       root: "/dashboard/settings",

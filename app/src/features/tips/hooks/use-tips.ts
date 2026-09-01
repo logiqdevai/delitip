@@ -3,11 +3,13 @@ import {
   createPublicTip,
   getPublicTipStatus,
   getTip,
+  listAdminTips,
   listEmployeeTips,
   listStoreTips,
 } from "@/features/tips/services/tips.services";
 import {
   TipStatuses,
+  type AdminTipsQuery,
   type CreatePublicTipPayload,
   type TipsQuery,
 } from "@/features/tips/interfaces/tips.interfaces";
@@ -19,6 +21,7 @@ export const tipsQueryKeys = {
   employeeList: (employeeId: string, query?: TipsQuery) =>
     ["tips", "employee", employeeId, query] as const,
   detail: (id: string) => ["tip", id] as const,
+  adminList: (query?: AdminTipsQuery) => ["tips", "admin", query] as const,
   publicStatus: (id: string) => ["public-tip-status", id] as const,
 };
 
@@ -50,6 +53,13 @@ export const useTip = (id: string) => {
     queryKey: tipsQueryKeys.detail(id),
     queryFn: () => getTip(id),
     enabled: !!id,
+  });
+};
+
+export const useAdminTips = (query?: AdminTipsQuery) => {
+  return useQuery({
+    queryKey: tipsQueryKeys.adminList(query),
+    queryFn: () => listAdminTips(query),
   });
 };
 

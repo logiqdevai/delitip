@@ -1,10 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  getAdminPayout,
+  listAdminPayouts,
   listEmployeePayouts,
+  listStoreDistributions,
   listStorePayouts,
   runStorePayouts,
 } from "@/features/payouts/services/payouts.services";
 import type {
+  AdminPayoutsQuery,
+  DistributionsQuery,
   PayoutsQuery,
   RunPayoutPayload,
 } from "@/features/payouts/interfaces/payouts.interfaces";
@@ -17,6 +22,26 @@ export const payoutsQueryKeys = {
     ["payouts", "store", storeId, query] as const,
   employeeList: (employeeId: string, query?: PayoutsQuery) =>
     ["payouts", "employee", employeeId, query] as const,
+  adminList: (query?: AdminPayoutsQuery) =>
+    ["payouts", "admin", query] as const,
+  adminDetail: (id: string) => ["payout", "admin", id] as const,
+};
+
+export const distributionsQueryKeys = {
+  root: ["distributions"] as const,
+  storeList: (storeId: string, query?: DistributionsQuery) =>
+    ["distributions", "store", storeId, query] as const,
+};
+
+export const useStoreDistributions = (
+  storeId: string,
+  query?: DistributionsQuery,
+) => {
+  return useQuery({
+    queryKey: distributionsQueryKeys.storeList(storeId, query),
+    queryFn: () => listStoreDistributions(storeId, query),
+    enabled: !!storeId,
+  });
 };
 
 export const useStorePayouts = (storeId: string, query?: PayoutsQuery) => {
@@ -38,6 +63,21 @@ export const useEmployeePayouts = (
   });
 };
 
+export const useAdminPayouts = (query?: AdminPayoutsQuery) => {
+  return useQuery({
+    queryKey: payoutsQueryKeys.adminList(query),
+    queryFn: () => listAdminPayouts(query),
+  });
+};
+
+export const useAdminPayout = (id: string) => {
+  return useQuery({
+    queryKey: payoutsQueryKeys.adminDetail(id),
+    queryFn: () => getAdminPayout(id),
+    enabled: !!id,
+  });
+};
+
 export const useRunStorePayouts = (storeId: string) => {
   const queryClient = useQueryClient();
 
@@ -45,9 +85,7 @@ export const useRunStorePayouts = (storeId: string) => {
     mutationFn: (payload: RunPayoutPayload) => runStorePayouts(storeId, payload),
     onSuccess: (result) => {
       void queryClient.invalidateQueries({ queryKey: payoutsQueryKeys.root });
-      // A run moves distributions out of "pending" — the tips list (which
-      // pending-distributions-panel derives its held/eligible view from)
-      // needs to reflect that too.
+      void queryClient.invalidateQueries({ queryKey: distributionsQueryKeys.root });
       void queryClient.invalidateQueries({ queryKey: tipsQueryKeys.root });
 
       const paidCount = result.payouts.filter((p) => p.status !== "FAILED").length;

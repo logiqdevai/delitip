@@ -3,7 +3,11 @@ import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
 import type {
+  AdminPayoutsQuery,
+  DistributionsQuery,
+  DistributionsResponse,
   Payout,
+  PayoutDetail,
   PayoutsQuery,
   RunPayoutPayload,
   RunPayoutResponse,
@@ -49,6 +53,46 @@ export const listEmployeePayouts = async (
     return response.data;
   } catch {
     throw new Error("Failed to load payouts. Please try again.");
+  }
+};
+
+export const listStoreDistributions = async (
+  storeId: string,
+  query?: DistributionsQuery,
+): Promise<DistributionsResponse> => {
+  try {
+    const response = await axiosInstance.get<DistributionsResponse>(
+      ApiRoutes.stores.distributions(storeId),
+      { params: query },
+    );
+    return response.data;
+  } catch {
+    throw new Error("Failed to load distributions. Please try again.");
+  }
+};
+
+export const listAdminPayouts = async (
+  query?: AdminPayoutsQuery,
+): Promise<PaginatedResponse<Payout>> => {
+  try {
+    const response = await axiosInstance.get<PaginatedResponse<Payout>>(
+      ApiRoutes.admin.payouts.prefix,
+      { params: query },
+    );
+    return response.data;
+  } catch {
+    throw new Error("Failed to load payouts. Please try again.");
+  }
+};
+
+export const getAdminPayout = async (id: string): Promise<PayoutDetail> => {
+  try {
+    const response = await axiosInstance.get<PayoutDetail>(
+      ApiRoutes.admin.payouts.byId(id),
+    );
+    return response.data;
+  } catch {
+    throw new Error("Failed to load payout. Please try again.");
   }
 };
 

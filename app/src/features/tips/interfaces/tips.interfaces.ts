@@ -63,6 +63,12 @@ export interface TipQrCodeRef {
   label: string;
 }
 
+export interface TipStoreRef {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export interface TipDistributionRuleRef {
   id: string;
   name: string;
@@ -150,6 +156,9 @@ export interface Tip {
   review?: TipReviewRef | null;
   refunds?: TipRefund[];
   payment_transaction?: PaymentTransaction | null;
+  // Only present on admin-wide listings/detail (GET /admin/payments, GET /tips/:id) —
+  // store-scoped listings already imply the store.
+  store?: TipStoreRef | null;
 }
 
 export interface EmployeeTipDistribution extends TipDistribution {
@@ -167,6 +176,16 @@ export interface TipsQuery {
   employee_id?: string;
   qr_code_id?: string;
   status?: TipStatus;
+  date_from?: string;
+  date_to?: string;
+}
+
+export interface AdminTipsQuery {
+  page?: number;
+  limit?: number;
+  store_id?: string;
+  status?: TipStatus;
+  search?: string;
   date_from?: string;
   date_to?: string;
 }

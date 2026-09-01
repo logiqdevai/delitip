@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { PlatformFinanceConfig } from '@/shared/config/platform-finance/platform-finance.config';
@@ -6,10 +6,14 @@ import { VivaConfig } from '@/integrations/viva/viva.config';
 import { VivaBankTransfersService } from '@/integrations/viva/services/viva-bank-transfers.service';
 import { PayoutAccountsService } from '@/modules/payout-accounts/payout-accounts.service';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
+import { resolveTranslatedText } from '@/shared/utils/translation/translation.utils';
 import { RunPayoutDto } from '../dto/run-payout.dto';
 import { PayoutsQueryType } from '../dto/payouts-query.schema';
+import { DistributionsQueryType } from '../dto/distributions-query.schema';
+import { AdminPayoutsQueryType } from '../dto/admin-payouts-query.schema';
 import {
   DistributionRecipientType,
+  Language,
   OrganizationRole,
   PayoutAccountStatus,
   PayoutExecutionStatus,
@@ -264,5 +268,154 @@ export class PayoutsService {
     ]);
 
     return paginate(items, total, query);
+  }
+
+  private readonly payoutRefsInclude = {
+    store: { select: { id: true, name: true, slug: true } },
+    employee: {
+      include: { store: { select: { id: true, name: true, slug: true, primary_language: true } } },
+    },
+    payout_account: true,
+  } as const;
+
+  // A payout's store comes directly off store_id for STORE recipients, or
+  // via the recipient Employee's own store for EMPLOYEE recipients — this
+  // normalizes both into a single `store` ref and resolves the employee's
+  // translated display name (raw Json otherwise).
+  private resolvePayoutRefs<T extends { store: any; employee: any }>(payout: T) {
+    const store = payout.store ?? payout.employee?.store ?? null;
+    return {
+      ...payout,
+      store: store ? { id: store.id, name: store.name, slug: store.slug } : null,
+      employee: payout.employee
+        ? {
+            id: payout.employee.id,
+            full_name:
+              resolveTranslatedText(payout.employee.full_name, undefined, payout.employee.store?.primary_language ?? Language.EN) ?? '',
+          }
+        : null,
+    };
+  }
+
+  async findAllAdmin(query: AdminPayoutsQueryType) {
+    const where: any = {};
+    if (query.store_id) where.OR = [{ store_id: query.store_id }, { employee: { store_id: query.store_id } }];
+    if (query.recipient_type) where.recipient_type = query.recipient_type;
+    if (query.status) where.status = query.status;
+    if (query.date_from || query.date_to) {
+      where.created_at = {};
+      if (query.date_from) where.created_at.gte = new Date(query.date_from);
+      if (query.date_to) where.created_at.lte = new Date(query.date_to);
+    }
+
+    const [items, total] = await Promise.all([
+      this.prisma.payout.findMany({
+        where,
+        include: this.payoutRefsInclude,
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
+        orderBy: { created_at: 'desc' },
+      }),
+      this.prisma.payout.count({ where }),
+    ]);
+
+    return paginate(items.map((item) => this.resolvePayoutRefs(item)), total, query);
+  }
+
+  async findOneAdmin(id: string) {
+    const payout = await this.prisma.payout.findUnique({
+      where: { id },
+      include: {
+        ...this.payoutRefsInclude,
+        distributions: { include: { tip: true } },
+      },
+    });
+    if (!payout) throw new NotFoundException('Payout not found');
+    return this.resolvePayoutRefs(payout);
+  }
+
+  async findDistributionsForStore(user: AuthUser, storeId: string, query: DistributionsQueryType) {
+    await this.accessControl.assertStoreAccess(user, storeId, [
+      OrganizationRole.OWNER,
+      OrganizationRole.STORE_MANAGER,
+      OrganizationRole.ACCOUNTANT,
+    ]);
+
+    const where: any = {
+      tip: { store_id: storeId },
+      ...(query.payout_status ? { payout_status: query.payout_status } : {}),
+      ...(query.recipient_type ? { recipient_type: query.recipient_type } : {}),
+      ...(query.employee_id ? { employee_id: query.employee_id } : {}),
+    };
+    if (query.date_from || query.date_to) {
+      where.created_at = {};
+      if (query.date_from) where.created_at.gte = new Date(query.date_from);
+      if (query.date_to) where.created_at.lte = new Date(query.date_to);
+    }
+
+    const [items, total] = await Promise.all([
+      this.prisma.tipDistribution.findMany({
+        where,
+        include: { tip: { include: { payment_transaction: true } }, employee: true },
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
+        orderBy: { created_at: 'desc' },
+      }),
+      this.prisma.tipDistribution.count({ where }),
+    ]);
+
+    const holdCutoff = this.holdCutoff();
+    const data = items.map((distribution) => ({
+      ...distribution,
+      eligible_now: this.isEligibleNow(distribution, holdCutoff),
+    }));
+
+    const summary = await this.summarizePendingDistributions(storeId, holdCutoff);
+
+    return { ...paginate(data, total, query), summary };
+  }
+
+  private holdCutoff(): Date {
+    const holdWindowHours = this.platformFinanceConfig.getPayoutHoldWindowHours();
+    return new Date(Date.now() - holdWindowHours * 60 * 60 * 1000);
+  }
+
+  private isEligibleNow(
+    distribution: {
+      payout_status: PayoutStatus;
+      tip: { status: TipStatus; paid_at: Date | null; payment_transaction: { processor_fee_confirmed: boolean } | null };
+    },
+    holdCutoff: Date,
+  ): boolean {
+    return (
+      distribution.payout_status === PayoutStatus.PENDING &&
+      distribution.tip.status === TipStatus.COMPLETED &&
+      !!distribution.tip.paid_at &&
+      distribution.tip.paid_at <= holdCutoff &&
+      !!distribution.tip.payment_transaction?.processor_fee_confirmed
+    );
+  }
+
+  private async summarizePendingDistributions(storeId: string, holdCutoff: Date) {
+    const pendingWhere = { tip: { store_id: storeId }, payout_status: PayoutStatus.PENDING };
+    const eligibleWhere = {
+      payout_status: PayoutStatus.PENDING,
+      tip: {
+        store_id: storeId,
+        status: TipStatus.COMPLETED,
+        paid_at: { lte: holdCutoff },
+        payment_transaction: { processor_fee_confirmed: true },
+      },
+    };
+
+    const [pendingTotal, eligibleTotal] = await Promise.all([
+      this.prisma.tipDistribution.aggregate({ where: pendingWhere, _sum: { amount: true } }),
+      this.prisma.tipDistribution.aggregate({ where: eligibleWhere, _sum: { amount: true } }),
+    ]);
+
+    return {
+      pending_total_amount: pendingTotal._sum.amount ?? 0,
+      eligible_total_amount: eligibleTotal._sum.amount ?? 0,
+    };
   }
 }
