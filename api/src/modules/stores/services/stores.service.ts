@@ -4,6 +4,7 @@ import { AccessControlService, AuthUser } from '@/shared/services/access-control
 import { ensureUniqueSlug, withUniqueSlugRetry } from '@/shared/utils/slug/slug.utils';
 import { resolveTranslatedText, sanitizeTranslations, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { seedIndustryReviewConfig } from '@/shared/utils/industry-review-config/seed-industry-review-config.util';
+import { seedSampleStoreSetup } from '@/shared/utils/sample-store-setup/seed-sample-store-setup.util';
 import { CreateStoreDto } from '../dto/create-store.dto';
 import { UpdateStoreDto } from '../dto/update-store.dto';
 import { OrganizationRole } from 'generated/prisma';
@@ -28,7 +29,7 @@ export class StoresService {
         });
 
         return this.prisma.$transaction(async (tx) => {
-            const store = await tx.store.create({
+            let store = await tx.store.create({
                 data: {
                     organization_id: organizationId,
                     name: dto.name,
@@ -47,6 +48,11 @@ export class StoresService {
             });
 
             await seedIndustryReviewConfig(tx, store.id, store.industry, store.primary_language);
+            const { distributionRuleId } = await seedSampleStoreSetup(tx, store.id);
+            store = await tx.store.update({
+                where: { id: store.id },
+                data: { default_distribution_rule_id: distributionRuleId },
+            });
 
             return store;
         });

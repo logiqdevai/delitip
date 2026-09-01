@@ -22,7 +22,12 @@ describe('OrganizationsService', () => {
             organization: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn(), delete: jest.fn() },
             organizationMember: { create: jest.fn(), findMany: jest.fn() },
             subscription: { create: jest.fn() },
-            store: { findUnique: jest.fn(), create: jest.fn() },
+            store: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn() },
+            distributionRule: { create: jest.fn().mockResolvedValue({ id: 'rule1' }) },
+            distributionRuleRecipient: { createMany: jest.fn() },
+            spot: { create: jest.fn().mockResolvedValue({ id: 'spot1' }) },
+            qrCode: { findUnique: jest.fn().mockResolvedValue(null), create: jest.fn().mockResolvedValue({ id: 'qr1' }) },
+            qrCodeSpot: { create: jest.fn() },
             reviewCategory: { createMany: jest.fn() },
             feedbackQuestion: { createMany: jest.fn() },
             reviewTag: { createMany: jest.fn() },
@@ -93,6 +98,14 @@ describe('OrganizationsService', () => {
                 industry: StoreIndustry.RESTAURANT,
                 primary_language: Language.EN,
             });
+            prisma.store.update.mockResolvedValue({
+                id: 'store1',
+                name: 'Acme Downtown',
+                slug: 'acme-downtown',
+                industry: StoreIndustry.RESTAURANT,
+                primary_language: Language.EN,
+                default_distribution_rule_id: 'rule1',
+            });
 
             const result = await service.create(user, {
                 name: 'Acme',
@@ -116,6 +129,10 @@ describe('OrganizationsService', () => {
             expect(prisma.reviewTag.createMany).toHaveBeenCalledWith({
                 data: expect.arrayContaining([expect.objectContaining({ store_id: 'store1' })]),
             });
+            expect(prisma.store.update).toHaveBeenCalledWith({
+                where: { id: 'store1' },
+                data: { default_distribution_rule_id: 'rule1' },
+            });
             expect(result).toEqual({
                 id: 'org1',
                 name: 'Acme',
@@ -126,6 +143,7 @@ describe('OrganizationsService', () => {
                     slug: 'acme-downtown',
                     industry: StoreIndustry.RESTAURANT,
                     primary_language: Language.EN,
+                    default_distribution_rule_id: 'rule1',
                 },
             });
         });

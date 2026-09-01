@@ -20,7 +20,11 @@ describe('StoresService', () => {
     beforeEach(() => {
         prisma = {
             store: { findUnique: jest.fn(), findMany: jest.fn(), create: jest.fn(), update: jest.fn(), delete: jest.fn() },
-            distributionRule: { findFirst: jest.fn() },
+            distributionRule: { findFirst: jest.fn(), create: jest.fn().mockResolvedValue({ id: 'rule1' }) },
+            distributionRuleRecipient: { createMany: jest.fn() },
+            spot: { create: jest.fn().mockResolvedValue({ id: 'spot1' }) },
+            qrCode: { findUnique: jest.fn().mockResolvedValue(null), create: jest.fn().mockResolvedValue({ id: 'qr1' }) },
+            qrCodeSpot: { create: jest.fn() },
             reviewCategory: { createMany: jest.fn() },
             feedbackQuestion: { createMany: jest.fn() },
             reviewTag: { createMany: jest.fn() },
@@ -38,6 +42,7 @@ describe('StoresService', () => {
         it('asserts OWNER-only org access, generates a unique slug, and creates the store', async () => {
             prisma.store.findUnique.mockResolvedValue(null); // slug is available on first try
             prisma.store.create.mockResolvedValue({ id: 's1', slug: 'my-diner', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN });
+            prisma.store.update.mockResolvedValue({ id: 's1', slug: 'my-diner', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN, default_distribution_rule_id: 'rule1' });
 
             const result = await service.create(user, 'org1', { name: 'My Diner', industry: StoreIndustry.RESTAURANT } as any);
 
@@ -45,7 +50,11 @@ describe('StoresService', () => {
             expect(prisma.store.create).toHaveBeenCalledWith({
                 data: expect.objectContaining({ organization_id: 'org1', name: 'My Diner', slug: 'my-diner' }),
             });
-            expect(result).toEqual({ id: 's1', slug: 'my-diner', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN });
+            expect(prisma.store.update).toHaveBeenCalledWith({
+                where: { id: 's1' },
+                data: { default_distribution_rule_id: 'rule1' },
+            });
+            expect(result).toEqual({ id: 's1', slug: 'my-diner', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN, default_distribution_rule_id: 'rule1' });
         });
 
         it('appends a numeric suffix when the base slug is already taken', async () => {
@@ -66,6 +75,7 @@ describe('StoresService', () => {
             prisma.store.create
                 .mockRejectedValueOnce(slugConflictError())
                 .mockResolvedValueOnce({ id: 's1', slug: 'my-diner-1', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN });
+            prisma.store.update.mockResolvedValue({ id: 's1', slug: 'my-diner-1', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN, default_distribution_rule_id: 'rule1' });
 
             const result = await service.create(user, 'org1', { name: 'My Diner', industry: StoreIndustry.RESTAURANT } as any);
 
@@ -75,7 +85,7 @@ describe('StoresService', () => {
             expect(prisma.store.create).toHaveBeenNthCalledWith(2, {
                 data: expect.objectContaining({ slug: 'my-diner-1' }),
             });
-            expect(result).toEqual({ id: 's1', slug: 'my-diner-1', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN });
+            expect(result).toEqual({ id: 's1', slug: 'my-diner-1', industry: StoreIndustry.RESTAURANT, primary_language: Language.EN, default_distribution_rule_id: 'rule1' });
         });
 
         it('seeds the default review categories, feedback questions, and tags for the store industry', async () => {
