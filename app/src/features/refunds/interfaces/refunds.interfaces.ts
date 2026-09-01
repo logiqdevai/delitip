@@ -32,6 +32,8 @@ export interface RefundsQuery {
   page?: number;
   limit?: number;
   status?: RefundStatus;
+  date_from?: string;
+  date_to?: string;
 }
 
 export interface CreateRefundPayload {

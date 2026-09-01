@@ -60,6 +60,11 @@ export class RefundsService {
 
         const where: any = { tip: { store_id: storeId } };
         if (query.status) where.status = query.status;
+        if (query.date_from || query.date_to) {
+            where.created_at = {};
+            if (query.date_from) where.created_at.gte = new Date(query.date_from);
+            if (query.date_to) where.created_at.lte = new Date(query.date_to);
+        }
 
         const [items, total] = await Promise.all([
             this.prisma.refund.findMany({

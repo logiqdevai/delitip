@@ -7,6 +7,7 @@ import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { PayoutsService } from '../services/payouts.service';
 import { RunPayoutDto } from '../dto/run-payout.dto';
 import { PayoutsQuerySchema, PayoutsQueryType } from '../dto/payouts-query.schema';
+import { DistributionsQuerySchema, DistributionsQueryType } from '../dto/distributions-query.schema';
 
 @ApiTags('Payouts')
 @ApiBearerAuth()
@@ -38,6 +39,23 @@ export class PayoutsController {
     @Query(new ZodValidationPipe(PayoutsQuerySchema)) query: PayoutsQueryType,
   ) {
     return this.payoutsService.findForStore(user, storeId, query);
+  }
+
+  @Get('stores/:storeId/distributions')
+  @ApiOperation({ summary: "List a Store's tip distributions (pending, paid, etc.)" })
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'payout_status', required: false })
+  @ApiQuery({ name: 'recipient_type', required: false })
+  @ApiQuery({ name: 'employee_id', required: false })
+  @ApiQuery({ name: 'date_from', required: false })
+  @ApiQuery({ name: 'date_to', required: false })
+  findDistributionsForStore(
+    @CurrentUser() user: AuthUser,
+    @Param('storeId') storeId: string,
+    @Query(new ZodValidationPipe(DistributionsQuerySchema)) query: DistributionsQueryType,
+  ) {
+    return this.payoutsService.findDistributionsForStore(user, storeId, query);
   }
 
   @Get('employees/:id/payouts')

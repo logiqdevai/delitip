@@ -4,10 +4,11 @@ import { type FC } from "react";
 import { Wallet } from "lucide-react";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { PayoutAccountCard } from "@/app/dashboard/payments/components/payout-account-card";
-import { PendingDistributionsPanel } from "@/app/dashboard/payments/components/pending-distributions-panel";
-import { RefundsQueuePanel } from "@/app/dashboard/payments/components/refunds-queue-panel";
+import { DistributionsTable } from "@/app/dashboard/payments/components/distributions-table";
+import { RefundsTable } from "@/app/dashboard/payments/components/refunds-table";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 
 export const PaymentsPageContent: FC = () => {
@@ -40,12 +41,20 @@ export const PaymentsPageContent: FC = () => {
         description={`Payout account, pending distributions, and refunds for ${store.name}.`}
       />
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <PayoutAccountCard storeId={storeId} />
-        <PendingDistributionsPanel storeId={storeId} currency={store.currency} />
-      </div>
+      <PayoutAccountCard storeId={storeId} />
 
-      <RefundsQueuePanel storeId={storeId} currency={store.currency} />
+      <Tabs defaultValue="distributions">
+        <TabsList variant="line">
+          <TabsTrigger value="distributions">Pending distributions</TabsTrigger>
+          <TabsTrigger value="refunds">Refunds queue</TabsTrigger>
+        </TabsList>
+        <TabsContent value="distributions" className="mt-4">
+          <DistributionsTable storeId={storeId} currency={store.currency} />
+        </TabsContent>
+        <TabsContent value="refunds" className="mt-4">
+          <RefundsTable storeId={storeId} currency={store.currency} />
+        </TabsContent>
+      </Tabs>
     </>
   );
 };
