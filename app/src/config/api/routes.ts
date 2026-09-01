@@ -2,6 +2,7 @@ export const ApiRoutes = {
   health: {
     prefix: "/health",
   },
+  contact: "/contact",
   auth: {
     email: {
       register: "/auth/email/register",
