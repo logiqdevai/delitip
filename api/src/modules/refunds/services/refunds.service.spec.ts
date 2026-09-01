@@ -13,7 +13,7 @@ describe('RefundsService', () => {
 
     const paidTip = (overrides: Partial<any> = {}) => ({
         store_id: 'store1',
-        payment_transaction: { viva_transaction_id: 'vt1', confirmed_at: new Date() },
+        payment_transaction: { provider_transaction_id: 'vt1', confirmed_at: new Date() },
         distributions: [],
         created_at: new Date(),
         ...overrides,
@@ -255,7 +255,7 @@ describe('RefundsService', () => {
                 amount: 500,
                 status: RefundStatus.APPROVED,
                 tip_id: 'tip1',
-                tip: paidTip({ payment_transaction: { viva_transaction_id: 'vt1', confirmed_at: yesterday } }),
+                tip: paidTip({ payment_transaction: { provider_transaction_id: 'vt1', confirmed_at: yesterday } }),
             });
             prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
 

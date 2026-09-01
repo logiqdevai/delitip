@@ -56,10 +56,10 @@ export class TipsService {
                 include: { tip: true },
             });
             if (
-                existing?.viva_order_code &&
+                existing?.provider_order_code &&
                 (existing.tip.status === TipStatus.CREATED || existing.tip.status === TipStatus.PROCESSING)
             ) {
-                return { tip_id: existing.tip.id, checkout_url: this.buildCheckoutUrl(existing.viva_order_code) };
+                return { tip_id: existing.tip.id, checkout_url: this.buildCheckoutUrl(existing.provider_order_code) };
             }
         }
 
@@ -154,7 +154,7 @@ export class TipsService {
 
         await this.prisma.paymentTransaction.update({
             where: { id: paymentTransactionId },
-            data: { viva_order_code: String(orderCode) },
+            data: { provider_order_code: String(orderCode) },
         });
 
         return { tip_id: tip.id, checkout_url: this.buildCheckoutUrl(orderCode) };
@@ -181,7 +181,7 @@ export class TipsService {
             amount: tip.amount,
             currency: tip.currency,
             employee,
-            order_code: tip.payment_transaction?.viva_order_code ?? null,
+            order_code: tip.payment_transaction?.provider_order_code ?? null,
             distribution_summary:
                 tip.status === TipStatus.COMPLETED
                     ? tip.distributions.map((d) => ({

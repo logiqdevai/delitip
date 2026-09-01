@@ -654,17 +654,17 @@ model Tip {
   @@map("tips")
 }
 
-// The real-money ledger row for a Tip: gross amount, Viva order/transaction
+// The real-money ledger row for a Tip: gross amount, provider order/transaction
 // references, and the fee/commission breakdown. 1:1 with Tip — created the
-// moment a Viva checkout order is opened, finalized once the payment
+// moment a checkout order is opened with the processor, finalized once the payment
 // webhook (or the reconciliation sweep) confirms the transaction.
 model PaymentTransaction {
   id                             String                   @id @default(uuid())
   tip_id                         String                   @unique
   provider                       PaymentProvider          @default(VIVA)
   client_request_id              String?                  @unique // idempotency key supplied by the frontend on POST /public/tips
-  viva_order_code                String?                  @unique // string, never numeric — the 16-digit orderCode exceeds Number.MAX_SAFE_INTEGER
-  viva_transaction_id            String?                  @unique
+  provider_order_code            String?                  @unique // string, never numeric — Viva's 16-digit orderCode exceeds Number.MAX_SAFE_INTEGER
+  provider_transaction_id        String?                  @unique
   gross_amount                   Int
   currency                       Currency
   commission_percentage_used     Decimal                  @db.Decimal(5, 2) // snapshotted from PlatformFinanceConfig at creation time — never recomputed from live config later

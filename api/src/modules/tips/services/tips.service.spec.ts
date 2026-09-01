@@ -355,7 +355,7 @@ describe('TipsService', () => {
 
         it('reuses an in-flight order for the same client_request_id instead of creating a new one', async () => {
             prisma.paymentTransaction.findUnique.mockResolvedValue({
-                viva_order_code: '999',
+                provider_order_code: '999',
                 tip: { id: 'existing-tip', status: TipStatus.CREATED },
             });
 
@@ -385,7 +385,7 @@ describe('TipsService', () => {
             currency: Currency.EUR,
             employee: null,
             store: store(),
-            payment_transaction: { viva_order_code: '123' },
+            payment_transaction: { provider_order_code: '123' },
             distributions: [],
             ...overrides,
         });

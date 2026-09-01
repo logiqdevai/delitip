@@ -24565,8 +24565,8 @@ export namespace Prisma {
     tip_id: string | null
     provider: $Enums.PaymentProvider | null
     client_request_id: string | null
-    viva_order_code: string | null
-    viva_transaction_id: string | null
+    provider_order_code: string | null
+    provider_transaction_id: string | null
     gross_amount: number | null
     currency: $Enums.Currency | null
     commission_percentage_used: Decimal | null
@@ -24588,8 +24588,8 @@ export namespace Prisma {
     tip_id: string | null
     provider: $Enums.PaymentProvider | null
     client_request_id: string | null
-    viva_order_code: string | null
-    viva_transaction_id: string | null
+    provider_order_code: string | null
+    provider_transaction_id: string | null
     gross_amount: number | null
     currency: $Enums.Currency | null
     commission_percentage_used: Decimal | null
@@ -24611,8 +24611,8 @@ export namespace Prisma {
     tip_id: number
     provider: number
     client_request_id: number
-    viva_order_code: number
-    viva_transaction_id: number
+    provider_order_code: number
+    provider_transaction_id: number
     gross_amount: number
     currency: number
     commission_percentage_used: number
@@ -24654,8 +24654,8 @@ export namespace Prisma {
     tip_id?: true
     provider?: true
     client_request_id?: true
-    viva_order_code?: true
-    viva_transaction_id?: true
+    provider_order_code?: true
+    provider_transaction_id?: true
     gross_amount?: true
     currency?: true
     commission_percentage_used?: true
@@ -24677,8 +24677,8 @@ export namespace Prisma {
     tip_id?: true
     provider?: true
     client_request_id?: true
-    viva_order_code?: true
-    viva_transaction_id?: true
+    provider_order_code?: true
+    provider_transaction_id?: true
     gross_amount?: true
     currency?: true
     commission_percentage_used?: true
@@ -24700,8 +24700,8 @@ export namespace Prisma {
     tip_id?: true
     provider?: true
     client_request_id?: true
-    viva_order_code?: true
-    viva_transaction_id?: true
+    provider_order_code?: true
+    provider_transaction_id?: true
     gross_amount?: true
     currency?: true
     commission_percentage_used?: true
@@ -24810,8 +24810,8 @@ export namespace Prisma {
     tip_id: string
     provider: $Enums.PaymentProvider
     client_request_id: string | null
-    viva_order_code: string | null
-    viva_transaction_id: string | null
+    provider_order_code: string | null
+    provider_transaction_id: string | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal
@@ -24852,8 +24852,8 @@ export namespace Prisma {
     tip_id?: boolean
     provider?: boolean
     client_request_id?: boolean
-    viva_order_code?: boolean
-    viva_transaction_id?: boolean
+    provider_order_code?: boolean
+    provider_transaction_id?: boolean
     gross_amount?: boolean
     currency?: boolean
     commission_percentage_used?: boolean
@@ -24876,8 +24876,8 @@ export namespace Prisma {
     tip_id?: boolean
     provider?: boolean
     client_request_id?: boolean
-    viva_order_code?: boolean
-    viva_transaction_id?: boolean
+    provider_order_code?: boolean
+    provider_transaction_id?: boolean
     gross_amount?: boolean
     currency?: boolean
     commission_percentage_used?: boolean
@@ -24900,8 +24900,8 @@ export namespace Prisma {
     tip_id?: boolean
     provider?: boolean
     client_request_id?: boolean
-    viva_order_code?: boolean
-    viva_transaction_id?: boolean
+    provider_order_code?: boolean
+    provider_transaction_id?: boolean
     gross_amount?: boolean
     currency?: boolean
     commission_percentage_used?: boolean
@@ -24924,8 +24924,8 @@ export namespace Prisma {
     tip_id?: boolean
     provider?: boolean
     client_request_id?: boolean
-    viva_order_code?: boolean
-    viva_transaction_id?: boolean
+    provider_order_code?: boolean
+    provider_transaction_id?: boolean
     gross_amount?: boolean
     currency?: boolean
     commission_percentage_used?: boolean
@@ -24942,7 +24942,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type PaymentTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "provider" | "client_request_id" | "viva_order_code" | "viva_transaction_id" | "gross_amount" | "currency" | "commission_percentage_used" | "commission_amount" | "processor_fee_estimated" | "processor_fee_confirmed_amount" | "processor_fee_confirmed" | "net_distributable_amount" | "payment_method" | "status" | "failure_reason" | "confirmed_at" | "created_at" | "updated_at", ExtArgs["result"]["paymentTransaction"]>
+  export type PaymentTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "provider" | "client_request_id" | "provider_order_code" | "provider_transaction_id" | "gross_amount" | "currency" | "commission_percentage_used" | "commission_amount" | "processor_fee_estimated" | "processor_fee_confirmed_amount" | "processor_fee_confirmed" | "net_distributable_amount" | "payment_method" | "status" | "failure_reason" | "confirmed_at" | "created_at" | "updated_at", ExtArgs["result"]["paymentTransaction"]>
   export type PaymentTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
   }
@@ -24963,8 +24963,8 @@ export namespace Prisma {
       tip_id: string
       provider: $Enums.PaymentProvider
       client_request_id: string | null
-      viva_order_code: string | null
-      viva_transaction_id: string | null
+      provider_order_code: string | null
+      provider_transaction_id: string | null
       gross_amount: number
       currency: $Enums.Currency
       commission_percentage_used: Prisma.Decimal
@@ -25407,8 +25407,8 @@ export namespace Prisma {
     readonly tip_id: FieldRef<"PaymentTransaction", 'String'>
     readonly provider: FieldRef<"PaymentTransaction", 'PaymentProvider'>
     readonly client_request_id: FieldRef<"PaymentTransaction", 'String'>
-    readonly viva_order_code: FieldRef<"PaymentTransaction", 'String'>
-    readonly viva_transaction_id: FieldRef<"PaymentTransaction", 'String'>
+    readonly provider_order_code: FieldRef<"PaymentTransaction", 'String'>
+    readonly provider_transaction_id: FieldRef<"PaymentTransaction", 'String'>
     readonly gross_amount: FieldRef<"PaymentTransaction", 'Int'>
     readonly currency: FieldRef<"PaymentTransaction", 'Currency'>
     readonly commission_percentage_used: FieldRef<"PaymentTransaction", 'Decimal'>
@@ -42299,8 +42299,8 @@ export namespace Prisma {
     tip_id: 'tip_id',
     provider: 'provider',
     client_request_id: 'client_request_id',
-    viva_order_code: 'viva_order_code',
-    viva_transaction_id: 'viva_transaction_id',
+    provider_order_code: 'provider_order_code',
+    provider_transaction_id: 'provider_transaction_id',
     gross_amount: 'gross_amount',
     currency: 'currency',
     commission_percentage_used: 'commission_percentage_used',
@@ -44449,8 +44449,8 @@ export namespace Prisma {
     tip_id?: StringFilter<"PaymentTransaction"> | string
     provider?: EnumPaymentProviderFilter<"PaymentTransaction"> | $Enums.PaymentProvider
     client_request_id?: StringNullableFilter<"PaymentTransaction"> | string | null
-    viva_order_code?: StringNullableFilter<"PaymentTransaction"> | string | null
-    viva_transaction_id?: StringNullableFilter<"PaymentTransaction"> | string | null
+    provider_order_code?: StringNullableFilter<"PaymentTransaction"> | string | null
+    provider_transaction_id?: StringNullableFilter<"PaymentTransaction"> | string | null
     gross_amount?: IntFilter<"PaymentTransaction"> | number
     currency?: EnumCurrencyFilter<"PaymentTransaction"> | $Enums.Currency
     commission_percentage_used?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
@@ -44473,8 +44473,8 @@ export namespace Prisma {
     tip_id?: SortOrder
     provider?: SortOrder
     client_request_id?: SortOrderInput | SortOrder
-    viva_order_code?: SortOrderInput | SortOrder
-    viva_transaction_id?: SortOrderInput | SortOrder
+    provider_order_code?: SortOrderInput | SortOrder
+    provider_transaction_id?: SortOrderInput | SortOrder
     gross_amount?: SortOrder
     currency?: SortOrder
     commission_percentage_used?: SortOrder
@@ -44496,8 +44496,8 @@ export namespace Prisma {
     id?: string
     tip_id?: string
     client_request_id?: string
-    viva_order_code?: string
-    viva_transaction_id?: string
+    provider_order_code?: string
+    provider_transaction_id?: string
     AND?: PaymentTransactionWhereInput | PaymentTransactionWhereInput[]
     OR?: PaymentTransactionWhereInput[]
     NOT?: PaymentTransactionWhereInput | PaymentTransactionWhereInput[]
@@ -44517,15 +44517,15 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"PaymentTransaction"> | Date | string
     updated_at?: DateTimeFilter<"PaymentTransaction"> | Date | string
     tip?: XOR<TipScalarRelationFilter, TipWhereInput>
-  }, "id" | "tip_id" | "client_request_id" | "viva_order_code" | "viva_transaction_id">
+  }, "id" | "tip_id" | "client_request_id" | "provider_order_code" | "provider_transaction_id">
 
   export type PaymentTransactionOrderByWithAggregationInput = {
     id?: SortOrder
     tip_id?: SortOrder
     provider?: SortOrder
     client_request_id?: SortOrderInput | SortOrder
-    viva_order_code?: SortOrderInput | SortOrder
-    viva_transaction_id?: SortOrderInput | SortOrder
+    provider_order_code?: SortOrderInput | SortOrder
+    provider_transaction_id?: SortOrderInput | SortOrder
     gross_amount?: SortOrder
     currency?: SortOrder
     commission_percentage_used?: SortOrder
@@ -44555,8 +44555,8 @@ export namespace Prisma {
     tip_id?: StringWithAggregatesFilter<"PaymentTransaction"> | string
     provider?: EnumPaymentProviderWithAggregatesFilter<"PaymentTransaction"> | $Enums.PaymentProvider
     client_request_id?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
-    viva_order_code?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
-    viva_transaction_id?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
+    provider_order_code?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
+    provider_transaction_id?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
     gross_amount?: IntWithAggregatesFilter<"PaymentTransaction"> | number
     currency?: EnumCurrencyWithAggregatesFilter<"PaymentTransaction"> | $Enums.Currency
     commission_percentage_used?: DecimalWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
@@ -47257,8 +47257,8 @@ export namespace Prisma {
     id?: string
     provider?: $Enums.PaymentProvider
     client_request_id?: string | null
-    viva_order_code?: string | null
-    viva_transaction_id?: string | null
+    provider_order_code?: string | null
+    provider_transaction_id?: string | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
@@ -47281,8 +47281,8 @@ export namespace Prisma {
     tip_id: string
     provider?: $Enums.PaymentProvider
     client_request_id?: string | null
-    viva_order_code?: string | null
-    viva_transaction_id?: string | null
+    provider_order_code?: string | null
+    provider_transaction_id?: string | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
@@ -47303,8 +47303,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_order_code?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -47327,8 +47327,8 @@ export namespace Prisma {
     tip_id?: StringFieldUpdateOperationsInput | string
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_order_code?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -47350,8 +47350,8 @@ export namespace Prisma {
     tip_id: string
     provider?: $Enums.PaymentProvider
     client_request_id?: string | null
-    viva_order_code?: string | null
-    viva_transaction_id?: string | null
+    provider_order_code?: string | null
+    provider_transaction_id?: string | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
@@ -47372,8 +47372,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_order_code?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -47395,8 +47395,8 @@ export namespace Prisma {
     tip_id?: StringFieldUpdateOperationsInput | string
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_order_code?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -50109,8 +50109,8 @@ export namespace Prisma {
     tip_id?: SortOrder
     provider?: SortOrder
     client_request_id?: SortOrder
-    viva_order_code?: SortOrder
-    viva_transaction_id?: SortOrder
+    provider_order_code?: SortOrder
+    provider_transaction_id?: SortOrder
     gross_amount?: SortOrder
     currency?: SortOrder
     commission_percentage_used?: SortOrder
@@ -50141,8 +50141,8 @@ export namespace Prisma {
     tip_id?: SortOrder
     provider?: SortOrder
     client_request_id?: SortOrder
-    viva_order_code?: SortOrder
-    viva_transaction_id?: SortOrder
+    provider_order_code?: SortOrder
+    provider_transaction_id?: SortOrder
     gross_amount?: SortOrder
     currency?: SortOrder
     commission_percentage_used?: SortOrder
@@ -50164,8 +50164,8 @@ export namespace Prisma {
     tip_id?: SortOrder
     provider?: SortOrder
     client_request_id?: SortOrder
-    viva_order_code?: SortOrder
-    viva_transaction_id?: SortOrder
+    provider_order_code?: SortOrder
+    provider_transaction_id?: SortOrder
     gross_amount?: SortOrder
     currency?: SortOrder
     commission_percentage_used?: SortOrder
@@ -61455,8 +61455,8 @@ export namespace Prisma {
     id?: string
     provider?: $Enums.PaymentProvider
     client_request_id?: string | null
-    viva_order_code?: string | null
-    viva_transaction_id?: string | null
+    provider_order_code?: string | null
+    provider_transaction_id?: string | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
@@ -61477,8 +61477,8 @@ export namespace Prisma {
     id?: string
     provider?: $Enums.PaymentProvider
     client_request_id?: string | null
-    viva_order_code?: string | null
-    viva_transaction_id?: string | null
+    provider_order_code?: string | null
+    provider_transaction_id?: string | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
@@ -61875,8 +61875,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_order_code?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -61897,8 +61897,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_order_code?: NullableStringFieldUpdateOperationsInput | string | null
-    viva_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string

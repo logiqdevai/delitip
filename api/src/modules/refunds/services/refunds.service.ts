@@ -104,7 +104,7 @@ export class RefundsService {
 
         if (dto.status === RefundStatus.COMPLETED) {
             const paymentTransaction = refund.tip.payment_transaction;
-            if (!paymentTransaction?.viva_transaction_id) {
+            if (!paymentTransaction?.provider_transaction_id) {
                 throw new BadRequestException('This tip has no confirmed payment to refund');
             }
 
@@ -115,11 +115,11 @@ export class RefundsService {
 
             try {
                 const response = isSameCalendarDay
-                    ? await this.vivaTransactions.createFastRefund(paymentTransaction.viva_transaction_id, {
+                    ? await this.vivaTransactions.createFastRefund(paymentTransaction.provider_transaction_id, {
                         amount: refund.amount,
                         merchantTrns: refund.id,
                     })
-                    : await this.vivaTransactions.createRebate(paymentTransaction.viva_transaction_id, {
+                    : await this.vivaTransactions.createRebate(paymentTransaction.provider_transaction_id, {
                         amount: refund.amount,
                         merchantTrns: refund.id,
                     });

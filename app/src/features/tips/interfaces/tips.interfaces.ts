@@ -110,8 +110,8 @@ export type PaymentTransactionStatus =
 export interface PaymentTransaction {
   id: string;
   provider: PaymentProvider;
-  viva_order_code?: string | null;
-  viva_transaction_id?: string | null;
+  provider_order_code?: string | null;
+  provider_transaction_id?: string | null;
   gross_amount: number;
   currency: Currency;
   commission_percentage_used: number;

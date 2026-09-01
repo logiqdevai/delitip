@@ -36,7 +36,7 @@ export class PaymentsReconciliationService {
     let corrected = 0;
     for (const tip of stuckTips) {
       try {
-        const wasCorrected = await this.reconcileTip(tip.id, tip.payment_transaction?.viva_order_code ?? null);
+        const wasCorrected = await this.reconcileTip(tip.id, tip.payment_transaction?.provider_order_code ?? null);
         if (wasCorrected) corrected += 1;
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);

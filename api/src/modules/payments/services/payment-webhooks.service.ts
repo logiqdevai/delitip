@@ -183,7 +183,7 @@ export class PaymentWebhooksService {
       await tx.paymentTransaction.update({
         where: { id: tip.payment_transaction!.id },
         data: {
-          viva_transaction_id: this.transactionIdOf(transaction),
+          provider_transaction_id: this.transactionIdOf(transaction),
           status: 'SUCCEEDED',
           confirmed_at: new Date(),
           processor_fee_estimated: processorFeeEstimated,
@@ -254,10 +254,10 @@ export class PaymentWebhooksService {
     const confirmedFee = typeof feeCandidate === 'number' ? Math.round(feeCandidate) : undefined;
 
     const paymentTransaction = await this.prisma.paymentTransaction.findFirst({
-      where: { viva_transaction_id: transactionId },
+      where: { provider_transaction_id: transactionId },
     });
     if (!paymentTransaction) {
-      this.logger.warn(`No PaymentTransaction found for viva_transaction_id=${transactionId}`);
+      this.logger.warn(`No PaymentTransaction found for provider_transaction_id=${transactionId}`);
       return;
     }
 
