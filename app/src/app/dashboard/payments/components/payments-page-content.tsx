@@ -46,7 +46,7 @@ export const PaymentsPageContent: FC = () => {
       <Tabs defaultValue="distributions">
         <TabsList variant="line">
           <TabsTrigger value="distributions">Pending distributions</TabsTrigger>
-          <TabsTrigger value="refunds">Refunds queue</TabsTrigger>
+          <TabsTrigger value="refunds">Refunds</TabsTrigger>
         </TabsList>
         <TabsContent value="distributions" className="mt-4">
           <DistributionsTable storeId={storeId} currency={store.currency} />
