@@ -16,5 +16,6 @@ import { ResendModule } from '@/integrations/notifications/resend/resend.module'
   ],
   providers: [EmailAuthService, PasswordService, JwtStrategy, Logger],
   controllers: [EmailAuthController, PasswordController],
+  exports: [PasswordService],
 })
 export class AuthModule { }

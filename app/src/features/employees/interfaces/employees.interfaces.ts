@@ -16,6 +16,10 @@ export interface Employee {
   photo_document?: EmployeeDocumentRef | null;
   position?: string | null;
   is_active: boolean;
+  // Set the last time an account-setup invite email was sent; null if never invited.
+  invited_at?: string | null;
+  // The linked User's signup status — null/missing registered_at means they haven't set up their account yet.
+  user?: { registered_at: string | null } | null;
   created_at: string;
   updated_at: string;
 }

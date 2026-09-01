@@ -45,6 +45,7 @@ export class EmailAuthService {
                         email: dto.email,
                         password: hashedPassword,
                         role: AuthRoles.USER,
+                        registered_at: new Date(),
                     },
                 });
 

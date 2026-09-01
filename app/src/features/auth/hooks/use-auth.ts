@@ -181,6 +181,29 @@ export const useResetPassword = () => {
   });
 };
 
+export const useAcceptInvite = () => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: (payload: ResetPasswordPayload) => resetPassword(payload),
+    onSuccess: () => {
+      toast.add({
+        title: "Account activated",
+        description: "You can now sign in with your new password.",
+        type: "success",
+      });
+      router.push(Routes.auth.sign_in);
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not activate account",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
 export const useChangePassword = () => {
   return useMutation({
     mutationFn: (payload: ChangePasswordPayload) => changePassword(payload),

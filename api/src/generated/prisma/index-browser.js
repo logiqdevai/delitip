@@ -230,6 +230,7 @@ exports.Prisma.EmployeeScalarFieldEnum = {
   photo_document_id: 'photo_document_id',
   position: 'position',
   is_active: 'is_active',
+  invited_at: 'invited_at',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

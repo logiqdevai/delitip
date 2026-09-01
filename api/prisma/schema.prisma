@@ -423,6 +423,7 @@ model Employee {
   photo_document_id String?
   position          String?
   is_active         Boolean  @default(true)
+  invited_at        DateTime? // last time an account-setup invite email was sent to this Employee's User
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
 

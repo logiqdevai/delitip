@@ -2,11 +2,13 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
-import { Pencil, QrCode, UserRoundX, UserCheck } from "lucide-react";
+import { Mail, Pencil, QrCode, UserRoundX, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { EmployeeQrCodesDialog } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
 import { getEmployeeStatusLabel } from "@/config/constants/dropdowns/employees/employee-status-form.options";
+import { getEmployeeAccountStatusLabel } from "@/config/constants/dropdowns/employees/employee-account-status-form.options";
+import { useResendEmployeeInvite } from "@/features/employees/hooks/use-employees";
 import type { Employee } from "@/features/employees/interfaces/employees.interfaces";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
@@ -24,6 +26,8 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
 }) => {
   const position = employee.position?.trim() || "Team member";
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
+  const isSignedUp = !!employee.user?.registered_at;
+  const resendInvite = useResendEmployeeInvite();
 
   return (
     <li
@@ -56,6 +60,11 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
             >
               {getEmployeeStatusLabel(employee.is_active)}
             </span>
+            {!isSignedUp ? (
+              <span className="inline-flex shrink-0 items-center rounded-full bg-amber-50 px-2 py-0.5 text-caption font-bold text-amber-700">
+                {getEmployeeAccountStatusLabel(employee.user?.registered_at)}
+              </span>
+            ) : null}
           </div>
           <p className="mt-0.5 truncate text-xs text-zinc-500">
             {position}
@@ -66,6 +75,19 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
       </Link>
 
       <div className="flex shrink-0 items-center gap-1 self-end sm:self-auto">
+        {!isSignedUp ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="size-8 px-0 text-zinc-500 hover:text-ink-charcoal"
+            onClick={() => resendInvite.mutate(employee.id)}
+            disabled={resendInvite.isPending}
+            aria-label={`Resend invite to ${employee.full_name}`}
+          >
+            <Mail className="size-3.5" strokeWidth={2} />
+          </Button>
+        ) : null}
         <Button
           type="button"
           variant="ghost"

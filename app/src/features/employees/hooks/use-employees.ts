@@ -5,6 +5,7 @@ import {
   getEmployee,
   getEmployeeDashboard,
   listEmployees,
+  resendEmployeeInvite,
   updateEmployee,
 } from "@/features/employees/services/employees.services";
 import type {
@@ -145,6 +146,30 @@ export const useUpdateEmployee = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update employee",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useResendEmployeeInvite = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => resendEmployeeInvite(id),
+    onSuccess: (data) => {
+      queryClient.setQueryData(employeesQueryKeys.detail(data.id), data);
+      void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
+      toast.add({
+        title: "Invite sent",
+        description: "They'll get an email with a link to set up their account.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not resend invite",
         description: error.message,
         type: "error",
       });

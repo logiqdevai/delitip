@@ -46,7 +46,12 @@ describe('EmailAuthService', () => {
 
             expect(bcrypt.hash).toHaveBeenCalledWith('secret1', 10);
             expect(prisma.user.create).toHaveBeenCalledWith({
-                data: { email: 'a@b.com', password: 'hashed-password', role: AuthRoles.USER },
+                data: {
+                    email: 'a@b.com',
+                    password: 'hashed-password',
+                    role: AuthRoles.USER,
+                    registered_at: expect.any(Date),
+                },
             });
             expect(jwtService.signToken).toHaveBeenCalledWith({ id: 'u1', role: AuthRoles.USER });
             expect(result).toEqual({

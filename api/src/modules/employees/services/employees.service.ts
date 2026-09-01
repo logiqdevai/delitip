@@ -3,11 +3,16 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { DocumentsService } from '@/modules/documents/services/documents.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { UsersService } from '@/modules/users/services/users.service';
+import { PasswordService } from '@/modules/auth/services/password.service';
+import { ResendMailService } from '@/integrations/notifications/resend/services/mail.service';
+import { EmailConfig } from '@/shared/constants/email';
+import { AppUrls } from '@/shared/config/app-urls';
 import { paginate, PaginationQueryType } from '@/shared/utils/pagination/pagination-query.schema';
 import { autoTranslateStub, resolveTranslatedText, sanitizeTranslations, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { CreateEmployeeDto } from '../dto/create-employee.dto';
 import { UpdateEmployeeDto } from '../dto/update-employee.dto';
 import { EmployeesQueryType } from '../dto/employees-query.schema';
+import { EMPLOYEE_INVITE_TOKEN_EXPIRY_MS } from '../employees.constants';
 import { Language, OrganizationRole, PayoutStatus } from 'generated/prisma';
 
 @Injectable()
@@ -17,6 +22,8 @@ export class EmployeesService {
         private readonly accessControl: AccessControlService,
         private readonly usersService: UsersService,
         private readonly documentsService: DocumentsService,
+        private readonly passwordService: PasswordService,
+        private readonly mailService: ResendMailService,
     ) { }
 
     // Resolves the raw Json full_name map into a plain display string (primary
@@ -38,6 +45,7 @@ export class EmployeesService {
 
         const firstName = dto.full_name.trim().split(/\s+/)[0];
         const linkedUser = await this.usersService.findOrCreateByEmail(dto.email, { first_name: firstName });
+        const shouldInvite = !linkedUser.registered_at;
 
         const employee = await this.prisma.employee.create({
             data: {
@@ -47,11 +55,74 @@ export class EmployeesService {
                 email: dto.email,
                 position: dto.position,
                 photo_document_id: dto.photo_document_id,
+                invited_at: shouldInvite ? new Date() : null,
             },
-            include: { photo_document: true },
+            include: { photo_document: true, user: { select: { registered_at: true } } },
         });
 
+        if (shouldInvite) {
+            await this.sendInviteEmail(employee, linkedUser, store);
+        }
+
         return this.toResponse(employee, store.primary_language);
+    }
+
+    async resendInvite(user: AuthUser, id: string) {
+        const employee = await this.prisma.employee.findUnique({
+            where: { id },
+            include: { user: true },
+        });
+        if (!employee) throw new NotFoundException('Employee not found');
+
+        await this.accessControl.assertStoreAccess(user, employee.store_id, [
+            OrganizationRole.OWNER,
+            OrganizationRole.STORE_MANAGER,
+        ]);
+
+        if (!employee.user) {
+            throw new BadRequestException('This employee has no linked account to invite');
+        }
+        if (employee.user.registered_at) {
+            throw new BadRequestException('This employee has already set up their account');
+        }
+
+        const store = await this.prisma.store.findUnique({ where: { id: employee.store_id } });
+        if (!store) throw new NotFoundException('Store not found');
+
+        const updated = await this.prisma.employee.update({
+            where: { id },
+            data: { invited_at: new Date() },
+            include: { photo_document: true, user: { select: { registered_at: true } } },
+        });
+
+        await this.sendInviteEmail(updated, employee.user, store);
+
+        return this.toResponse(updated, store.primary_language);
+    }
+
+    private async sendInviteEmail<T extends { full_name: unknown }>(
+        employee: T,
+        user: { id: string; email: string },
+        store: { name: string; primary_language: Language },
+    ) {
+        const token = await this.passwordService.issueToken(user.id, EMPLOYEE_INVITE_TOKEN_EXPIRY_MS);
+        const employeeName = resolveTranslatedText(employee.full_name as TranslatedText, undefined, store.primary_language) ?? '';
+
+        setImmediate(async () => {
+            try {
+                await this.mailService.sendEmail({
+                    to: user.email,
+                    from: EmailConfig.email_addresses.alert,
+                    subject: EmailConfig.templates.employee_invite.subject,
+                    template_id: EmailConfig.templates.employee_invite.template_id,
+                    dynamic_template_data: {
+                        employeeName,
+                        storeName: store.name,
+                        inviteUrl: AppUrls.employeeInvite(token),
+                    },
+                });
+            } catch { }
+        });
     }
 
     async findAllForStore(user: AuthUser, storeId: string, query: EmployeesQueryType) {
@@ -71,7 +142,7 @@ export class EmployeesService {
                 skip: (query.page - 1) * query.limit,
                 take: query.limit,
                 orderBy: { created_at: 'desc' },
-                include: { photo_document: true },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
             }),
             this.prisma.employee.count({ where }),
         ]);
@@ -91,7 +162,7 @@ export class EmployeesService {
 
         const full = await this.prisma.employee.findUnique({
             where: { id: employee.id },
-            include: { photo_document: true },
+            include: { photo_document: true, user: { select: { registered_at: true } } },
         });
 
         return this.toResponse(full!, store.primary_language);
@@ -124,7 +195,7 @@ export class EmployeesService {
         const updated = await this.prisma.employee.update({
             where: { id: employee.id },
             data,
-            include: { photo_document: true },
+            include: { photo_document: true, user: { select: { registered_at: true } } },
         });
         return this.toResponse(updated, store.primary_language);
     }

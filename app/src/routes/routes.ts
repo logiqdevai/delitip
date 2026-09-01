@@ -14,6 +14,7 @@ export const Routes = {
     sign_up: "/auth/sign-up",
     forgot_password: "/auth/forgot-password",
     reset_password: "/auth/reset-password",
+    accept_invite: "/auth/accept-invite",
   },
   onboarding: "/onboarding",
   tip: (storeSlug: string, code: string) =>

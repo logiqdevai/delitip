@@ -411,7 +411,7 @@ model Store {
 // ==================================================================
 
 model Employee {
-  id                String   @id @default(uuid())
+  id                String    @id @default(uuid())
   store_id          String
   user_id           String?
   // Multilingual: Json map of lowercase Language code -> text, e.g.
@@ -422,9 +422,10 @@ model Employee {
   email             String
   photo_document_id String?
   position          String?
-  is_active         Boolean  @default(true)
-  created_at        DateTime @default(now())
-  updated_at        DateTime @updatedAt
+  is_active         Boolean   @default(true)
+  invited_at        DateTime? // last time an account-setup invite email was sent to this Employee's User
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
 
   store          Store     @relation(fields: [store_id], references: [id], onDelete: Cascade)
   user           User?     @relation(fields: [user_id], references: [id], onDelete: SetNull)

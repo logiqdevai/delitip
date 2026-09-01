@@ -14,6 +14,7 @@ describe('EmployeesController', () => {
             findOne: jest.fn(),
             update: jest.fn(),
             remove: jest.fn(),
+            resendInvite: jest.fn(),
             dashboard: jest.fn(),
             tips: jest.fn(),
             reviews: jest.fn(),
@@ -57,6 +58,13 @@ describe('EmployeesController', () => {
 
         await expect(controller.remove(user, 'emp1')).resolves.toEqual({ success: true });
         expect(service.remove).toHaveBeenCalledWith(user, 'emp1');
+    });
+
+    it('resendInvite delegates to the service with the current user and id param', async () => {
+        service.resendInvite.mockResolvedValue('resent');
+
+        await expect(controller.resendInvite(user, 'emp1')).resolves.toBe('resent');
+        expect(service.resendInvite).toHaveBeenCalledWith(user, 'emp1');
     });
 
     it('dashboard delegates to the service with the current user and id param', async () => {

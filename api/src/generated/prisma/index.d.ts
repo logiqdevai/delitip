@@ -13756,6 +13756,7 @@ export namespace Prisma {
     photo_document_id: string | null
     position: string | null
     is_active: boolean | null
+    invited_at: Date | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -13768,6 +13769,7 @@ export namespace Prisma {
     photo_document_id: string | null
     position: string | null
     is_active: boolean | null
+    invited_at: Date | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -13781,6 +13783,7 @@ export namespace Prisma {
     photo_document_id: number
     position: number
     is_active: number
+    invited_at: number
     created_at: number
     updated_at: number
     _all: number
@@ -13795,6 +13798,7 @@ export namespace Prisma {
     photo_document_id?: true
     position?: true
     is_active?: true
+    invited_at?: true
     created_at?: true
     updated_at?: true
   }
@@ -13807,6 +13811,7 @@ export namespace Prisma {
     photo_document_id?: true
     position?: true
     is_active?: true
+    invited_at?: true
     created_at?: true
     updated_at?: true
   }
@@ -13820,6 +13825,7 @@ export namespace Prisma {
     photo_document_id?: true
     position?: true
     is_active?: true
+    invited_at?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -13906,6 +13912,7 @@ export namespace Prisma {
     photo_document_id: string | null
     position: string | null
     is_active: boolean
+    invited_at: Date | null
     created_at: Date
     updated_at: Date
     _count: EmployeeCountAggregateOutputType | null
@@ -13936,6 +13943,7 @@ export namespace Prisma {
     photo_document_id?: boolean
     position?: boolean
     is_active?: boolean
+    invited_at?: boolean
     created_at?: boolean
     updated_at?: boolean
     store?: boolean | StoreDefaultArgs<ExtArgs>
@@ -13960,6 +13968,7 @@ export namespace Prisma {
     photo_document_id?: boolean
     position?: boolean
     is_active?: boolean
+    invited_at?: boolean
     created_at?: boolean
     updated_at?: boolean
     store?: boolean | StoreDefaultArgs<ExtArgs>
@@ -13976,6 +13985,7 @@ export namespace Prisma {
     photo_document_id?: boolean
     position?: boolean
     is_active?: boolean
+    invited_at?: boolean
     created_at?: boolean
     updated_at?: boolean
     store?: boolean | StoreDefaultArgs<ExtArgs>
@@ -13992,11 +14002,12 @@ export namespace Prisma {
     photo_document_id?: boolean
     position?: boolean
     is_active?: boolean
+    invited_at?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type EmployeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "store_id" | "user_id" | "full_name" | "email" | "photo_document_id" | "position" | "is_active" | "created_at" | "updated_at", ExtArgs["result"]["employee"]>
+  export type EmployeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "store_id" | "user_id" | "full_name" | "email" | "photo_document_id" | "position" | "is_active" | "invited_at" | "created_at" | "updated_at", ExtArgs["result"]["employee"]>
   export type EmployeeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     store?: boolean | StoreDefaultArgs<ExtArgs>
     user?: boolean | Employee$userArgs<ExtArgs>
@@ -14044,6 +14055,7 @@ export namespace Prisma {
       photo_document_id: string | null
       position: string | null
       is_active: boolean
+      invited_at: Date | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["employee"]>
@@ -14487,6 +14499,7 @@ export namespace Prisma {
     readonly photo_document_id: FieldRef<"Employee", 'String'>
     readonly position: FieldRef<"Employee", 'String'>
     readonly is_active: FieldRef<"Employee", 'Boolean'>
+    readonly invited_at: FieldRef<"Employee", 'DateTime'>
     readonly created_at: FieldRef<"Employee", 'DateTime'>
     readonly updated_at: FieldRef<"Employee", 'DateTime'>
   }
@@ -42174,6 +42187,7 @@ export namespace Prisma {
     photo_document_id: 'photo_document_id',
     position: 'position',
     is_active: 'is_active',
+    invited_at: 'invited_at',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -43708,6 +43722,7 @@ export namespace Prisma {
     photo_document_id?: StringNullableFilter<"Employee"> | string | null
     position?: StringNullableFilter<"Employee"> | string | null
     is_active?: BoolFilter<"Employee"> | boolean
+    invited_at?: DateTimeNullableFilter<"Employee"> | Date | string | null
     created_at?: DateTimeFilter<"Employee"> | Date | string
     updated_at?: DateTimeFilter<"Employee"> | Date | string
     store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
@@ -43731,6 +43746,7 @@ export namespace Prisma {
     photo_document_id?: SortOrderInput | SortOrder
     position?: SortOrderInput | SortOrder
     is_active?: SortOrder
+    invited_at?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     store?: StoreOrderByWithRelationInput
@@ -43757,6 +43773,7 @@ export namespace Prisma {
     photo_document_id?: StringNullableFilter<"Employee"> | string | null
     position?: StringNullableFilter<"Employee"> | string | null
     is_active?: BoolFilter<"Employee"> | boolean
+    invited_at?: DateTimeNullableFilter<"Employee"> | Date | string | null
     created_at?: DateTimeFilter<"Employee"> | Date | string
     updated_at?: DateTimeFilter<"Employee"> | Date | string
     store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
@@ -43780,6 +43797,7 @@ export namespace Prisma {
     photo_document_id?: SortOrderInput | SortOrder
     position?: SortOrderInput | SortOrder
     is_active?: SortOrder
+    invited_at?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: EmployeeCountOrderByAggregateInput
@@ -43799,6 +43817,7 @@ export namespace Prisma {
     photo_document_id?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     position?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     is_active?: BoolWithAggregatesFilter<"Employee"> | boolean
+    invited_at?: DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
     created_at?: DateTimeWithAggregatesFilter<"Employee"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Employee"> | Date | string
   }
@@ -46485,6 +46504,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutEmployeesInput
@@ -46508,6 +46528,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
@@ -46525,6 +46546,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
@@ -46548,6 +46570,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -46568,6 +46591,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -46578,6 +46602,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46591,6 +46616,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -49532,6 +49558,7 @@ export namespace Prisma {
     photo_document_id?: SortOrder
     position?: SortOrder
     is_active?: SortOrder
+    invited_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -49544,6 +49571,7 @@ export namespace Prisma {
     photo_document_id?: SortOrder
     position?: SortOrder
     is_active?: SortOrder
+    invited_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -49556,6 +49584,7 @@ export namespace Prisma {
     photo_document_id?: SortOrder
     position?: SortOrder
     is_active?: SortOrder
+    invited_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -55158,6 +55187,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutEmployeesInput
@@ -55179,6 +55209,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
@@ -55531,6 +55562,7 @@ export namespace Prisma {
     photo_document_id?: StringNullableFilter<"Employee"> | string | null
     position?: StringNullableFilter<"Employee"> | string | null
     is_active?: BoolFilter<"Employee"> | boolean
+    invited_at?: DateTimeNullableFilter<"Employee"> | Date | string | null
     created_at?: DateTimeFilter<"Employee"> | Date | string
     updated_at?: DateTimeFilter<"Employee"> | Date | string
   }
@@ -56107,6 +56139,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutEmployeesInput
@@ -56128,6 +56161,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
@@ -57215,6 +57249,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     user?: UserCreateNestedOneWithoutEmployee_accountsInput
@@ -57236,6 +57271,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
@@ -59880,6 +59916,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutEmployeesInput
@@ -59902,6 +59939,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     distribution_rule_recipients?: DistributionRuleRecipientUncheckedCreateNestedManyWithoutEmployeeInput
@@ -59973,6 +60011,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
@@ -59995,6 +60034,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     distribution_rule_recipients?: DistributionRuleRecipientUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -60600,6 +60640,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutEmployeesInput
@@ -60622,6 +60663,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
@@ -60687,6 +60729,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
@@ -60709,6 +60752,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -61221,6 +61265,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutEmployeesInput
@@ -61243,6 +61288,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
@@ -61657,6 +61703,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
@@ -61679,6 +61726,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -62080,6 +62128,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutEmployeesInput
@@ -62102,6 +62151,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
@@ -62230,6 +62280,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
@@ -62252,6 +62303,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -62408,6 +62460,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutEmployeesInput
@@ -62430,6 +62483,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
@@ -62634,6 +62688,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
@@ -62656,6 +62711,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -63209,6 +63265,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutEmployeesInput
@@ -63231,6 +63288,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
@@ -63546,6 +63604,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
@@ -63568,6 +63627,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -65159,6 +65219,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutEmployeesInput
@@ -65181,6 +65242,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
     qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
@@ -65314,6 +65376,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
@@ -65336,6 +65399,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -65578,6 +65642,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -65742,6 +65807,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
@@ -65763,6 +65829,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -65782,6 +65849,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -66063,6 +66131,7 @@ export namespace Prisma {
     email: string
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -66346,6 +66415,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
@@ -66367,6 +66437,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -66386,6 +66457,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -66593,6 +66665,7 @@ export namespace Prisma {
     photo_document_id?: string | null
     position?: string | null
     is_active?: boolean
+    invited_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -66763,6 +66836,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutEmployee_accountsNestedInput
@@ -66784,6 +66858,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -66803,6 +66878,7 @@ export namespace Prisma {
     photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

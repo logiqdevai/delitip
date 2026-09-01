@@ -132,6 +132,7 @@ describe('PasswordService', () => {
                 user_uuid: 'u1',
                 used_at: null,
                 expires_at: new Date(Date.now() + 10000),
+                user: { registered_at: new Date('2026-01-01') },
             });
             (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-new-password');
             prisma.user.update.mockResolvedValue({});
@@ -141,7 +142,14 @@ describe('PasswordService', () => {
             const result = await service.resetPassword({ token: 'plain-token', password: 'newpass' } as any);
 
             expect(bcrypt.hash).toHaveBeenCalledWith('newpass', 10);
-            expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 'u1' }, data: { password: 'hashed-new-password' } });
+            expect(prisma.passwordResetToken.findUnique).toHaveBeenCalledWith({
+                where: { token_hash: tokenHash },
+                include: { user: true },
+            });
+            expect(prisma.user.update).toHaveBeenCalledWith({
+                where: { id: 'u1' },
+                data: { password: 'hashed-new-password', registered_at: new Date('2026-01-01') },
+            });
             expect(prisma.passwordResetToken.update).toHaveBeenCalledWith({
                 where: { id: 'rt1' },
                 data: { used_at: expect.any(Date) },
@@ -152,6 +160,44 @@ describe('PasswordService', () => {
             });
             expect(prisma.$transaction).toHaveBeenCalled();
             expect(result).toEqual({ message: 'Password has been reset successfully' });
+        });
+
+        it('sets registered_at on first claim when the user has never registered before (e.g. an Employee invite)', async () => {
+            prisma.passwordResetToken.findUnique.mockResolvedValue({
+                id: 'rt1',
+                token_hash: tokenHash,
+                user_uuid: 'u1',
+                used_at: null,
+                expires_at: new Date(Date.now() + 10000),
+                user: { registered_at: null },
+            });
+            (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-new-password');
+
+            await service.resetPassword({ token: 'plain-token', password: 'newpass' } as any);
+
+            expect(prisma.user.update).toHaveBeenCalledWith({
+                where: { id: 'u1' },
+                data: { password: 'hashed-new-password', registered_at: expect.any(Date) },
+            });
+        });
+    });
+
+    describe('issueToken', () => {
+        it('invalidates prior unused tokens, creates a new one with the given expiry, and returns the raw token', async () => {
+            const token = await service.issueToken('u1', 5000);
+
+            expect(prisma.passwordResetToken.updateMany).toHaveBeenCalledWith({
+                where: { user_uuid: 'u1', used_at: null },
+                data: { used_at: expect.any(Date) },
+            });
+            expect(prisma.passwordResetToken.create).toHaveBeenCalledWith({
+                data: {
+                    token_hash: expect.stringMatching(/^[a-f0-9]{64}$/),
+                    user_uuid: 'u1',
+                    expires_at: expect.any(Date),
+                },
+            });
+            expect(token).toEqual(expect.stringMatching(/^[a-f0-9]{64}$/));
         });
     });
 });
