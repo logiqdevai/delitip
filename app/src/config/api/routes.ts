@@ -10,6 +10,7 @@ export const ApiRoutes = {
     },
     forgotPassword: "/auth/forgot-password",
     resetPassword: "/auth/reset-password",
+    changePassword: "/auth/change-password",
   },
   users: {
     prefix: "/users",

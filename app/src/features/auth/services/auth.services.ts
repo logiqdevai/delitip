@@ -3,6 +3,7 @@ import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
   AuthResponse,
+  ChangePasswordPayload,
   ForgotPasswordPayload,
   LoginEmailPayload,
   RegisterEmailPayload,
@@ -111,6 +112,25 @@ export const resetPassword = async (
   } catch (error) {
     throw new Error(
       getApiErrorMessage(error, "Failed to reset password. Please try again."),
+    );
+  }
+};
+
+export const changePassword = async (
+  payload: ChangePasswordPayload,
+): Promise<{ message: string }> => {
+  try {
+    const response = await axiosInstance.post<{ message: string }>(
+      ApiRoutes.auth.changePassword,
+      payload,
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(
+        error,
+        "Failed to change password. Please try again.",
+      ),
     );
   }
 };

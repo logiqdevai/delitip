@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import {
+  changePassword,
   forgotPassword,
   loginWithEmail,
   registerWithEmail,
@@ -8,6 +9,7 @@ import {
 } from "@/features/auth/services/auth.services";
 import type {
   AuthResponse,
+  ChangePasswordPayload,
   ForgotPasswordPayload,
   LoginEmailPayload,
   ResetPasswordPayload,
@@ -172,6 +174,26 @@ export const useResetPassword = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not reset password",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: (payload: ChangePasswordPayload) => changePassword(payload),
+    onSuccess: () => {
+      toast.add({
+        title: "Password updated",
+        description: "Your password has been changed.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not change password",
         description: error.message,
         type: "error",
       });

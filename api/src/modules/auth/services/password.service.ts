@@ -7,6 +7,7 @@ import { EmailConfig } from '@/shared/constants/email';
 import { AppUrls } from '@/shared/config/app-urls';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
+import { ChangePasswordDto } from '../dto/change-password.dto';
 
 const RESET_TOKEN_EXPIRY_MS = 60 * 60 * 1000;
 
@@ -101,6 +102,39 @@ export class PasswordService {
         ]);
 
         return { message: 'Password has been reset successfully' };
+    }
+
+    async changePassword(userId: string, dto: ChangePasswordDto) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+        });
+
+        if (!user || !user.password) {
+            throw new BadRequestException('Password login is not set up for this account');
+        }
+
+        const isCurrentPasswordValid = await bcrypt.compare(dto.current_password, user.password);
+        if (!isCurrentPasswordValid) {
+            throw new BadRequestException('Current password is incorrect');
+        }
+
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+        await this.prisma.$transaction([
+            this.prisma.user.update({
+                where: { id: userId },
+                data: { password: hashedPassword },
+            }),
+            this.prisma.passwordResetToken.updateMany({
+                where: {
+                    user_uuid: userId,
+                    used_at: null,
+                },
+                data: { used_at: new Date() },
+            }),
+        ]);
+
+        return { message: 'Password changed successfully' };
     }
 
     private hashToken(token: string): string {
