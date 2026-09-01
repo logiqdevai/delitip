@@ -81,3 +81,31 @@ export const createStorePayoutAccount = async (
     );
   }
 };
+
+export const refreshMyPayoutAccountStatus = async (): Promise<PayoutAccount> => {
+  try {
+    const response = await axiosInstance.post<PayoutAccount>(
+      ApiRoutes.users.mePayoutAccountRefreshStatus,
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to check payout account status. Please try again."),
+    );
+  }
+};
+
+export const refreshStorePayoutAccountStatus = async (
+  storeId: string,
+): Promise<PayoutAccount> => {
+  try {
+    const response = await axiosInstance.post<PayoutAccount>(
+      ApiRoutes.stores.payoutAccountRefreshStatus(storeId),
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to check payout account status. Please try again."),
+    );
+  }
+};

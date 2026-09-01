@@ -1,6 +1,7 @@
 import { BadGatewayException, ConflictException, NotFoundException } from '@nestjs/common';
 import { AuthRole, OrganizationRole, PaymentProvider, PayoutAccountOwnerType, PayoutAccountStatus, PayoutMethod } from 'generated/prisma';
 import { PayoutAccountsService } from './payout-accounts.service';
+import { VivaApiException } from '@/integrations/viva/http/viva-api.exception';
 
 const VALID_IBAN = 'GR1601101250000000012300695';
 
@@ -25,6 +26,7 @@ describe('PayoutAccountsService', () => {
         vivaBankTransfers = {
             linkBankAccount: jest.fn().mockResolvedValue({ bankAccountId: 'bank-1' }),
             updateBankAccount: jest.fn().mockResolvedValue({}),
+            getBankAccount: jest.fn(),
         };
         service = new PayoutAccountsService(prisma, accessControl, vivaBankTransfers);
     });
@@ -83,6 +85,19 @@ describe('PayoutAccountsService', () => {
             await expect(service.createForStore(user, 'store1', createDto())).rejects.toThrow(BadGatewayException);
             expect(prisma.payoutAccount.create).not.toHaveBeenCalled();
         });
+
+        it.each(['BankAccountCreationValidationFailedAccountExists', 'BankAccountCreationValidationFailedAccountExistsArchived'])(
+            'surfaces a friendly ConflictException instead of the raw Viva code for %s',
+            async (vivaCode) => {
+                prisma.payoutAccount.findUnique.mockResolvedValue(null);
+                vivaBankTransfers.linkBankAccount.mockRejectedValue(
+                    new VivaApiException(409, vivaCode, { message: vivaCode }),
+                );
+
+                await expect(service.createForStore(user, 'store1', createDto())).rejects.toThrow(ConflictException);
+                expect(prisma.payoutAccount.create).not.toHaveBeenCalled();
+            },
+        );
     });
 
     describe('findForStore', () => {
@@ -192,6 +207,94 @@ describe('PayoutAccountsService', () => {
 
             await expect(service.findForUser(user)).resolves.toBe(account);
             expect(prisma.payoutAccount.findUnique).toHaveBeenCalledWith({ where: { user_id: 'u1' } });
+        });
+    });
+
+    describe('promoteIfVerified', () => {
+        it('leaves a non-PENDING account untouched', async () => {
+            const account = { id: 'pa1', status: PayoutAccountStatus.ACTIVE, bank_account_id: 'bank-1' };
+
+            const result = await service.promoteIfVerified(account as any);
+
+            expect(result).toBe(account);
+            expect(vivaBankTransfers.getBankAccount).not.toHaveBeenCalled();
+        });
+
+        it('leaves a PENDING account with no bank_account_id untouched', async () => {
+            const account = { id: 'pa1', status: PayoutAccountStatus.PENDING, bank_account_id: null };
+
+            const result = await service.promoteIfVerified(account as any);
+
+            expect(result).toBe(account);
+            expect(vivaBankTransfers.getBankAccount).not.toHaveBeenCalled();
+        });
+
+        it('promotes a PENDING account to ACTIVE when Viva reports it is not archived', async () => {
+            const account = { id: 'pa1', status: PayoutAccountStatus.PENDING, bank_account_id: 'bank-1' };
+            vivaBankTransfers.getBankAccount.mockResolvedValue({ isArchived: false });
+            prisma.payoutAccount.update.mockResolvedValue({ ...account, status: PayoutAccountStatus.ACTIVE });
+
+            const result = await service.promoteIfVerified(account as any);
+
+            expect(vivaBankTransfers.getBankAccount).toHaveBeenCalledWith('bank-1');
+            expect(prisma.payoutAccount.update).toHaveBeenCalledWith({
+                where: { id: 'pa1' },
+                data: { status: PayoutAccountStatus.ACTIVE },
+            });
+            expect(result.status).toBe(PayoutAccountStatus.ACTIVE);
+        });
+
+        it('leaves the account PENDING when Viva reports it is archived', async () => {
+            const account = { id: 'pa1', status: PayoutAccountStatus.PENDING, bank_account_id: 'bank-1' };
+            vivaBankTransfers.getBankAccount.mockResolvedValue({ isArchived: true });
+
+            const result = await service.promoteIfVerified(account as any);
+
+            expect(result).toBe(account);
+            expect(prisma.payoutAccount.update).not.toHaveBeenCalled();
+        });
+
+        it('leaves the account PENDING when the Viva lookup fails', async () => {
+            const account = { id: 'pa1', status: PayoutAccountStatus.PENDING, bank_account_id: 'bank-1' };
+            vivaBankTransfers.getBankAccount.mockRejectedValue(new Error('network error'));
+
+            const result = await service.promoteIfVerified(account as any);
+
+            expect(result).toBe(account);
+        });
+    });
+
+    describe('refreshStatusForStore', () => {
+        it('requires OWNER-level store access', async () => {
+            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', status: PayoutAccountStatus.ACTIVE, bank_account_id: 'bank-1' });
+
+            await service.refreshStatusForStore(user, 'store1');
+
+            expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1', [OrganizationRole.OWNER]);
+        });
+
+        it('throws NotFoundException when there is no payout account', async () => {
+            prisma.payoutAccount.findUnique.mockResolvedValue(null);
+
+            await expect(service.refreshStatusForStore(user, 'store1')).rejects.toThrow(NotFoundException);
+        });
+    });
+
+    describe('refreshStatusForUser', () => {
+        it('throws NotFoundException when the user has no payout account', async () => {
+            prisma.payoutAccount.findUnique.mockResolvedValue(null);
+
+            await expect(service.refreshStatusForUser(user)).rejects.toThrow(NotFoundException);
+        });
+
+        it('checks Viva and promotes when eligible', async () => {
+            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', status: PayoutAccountStatus.PENDING, bank_account_id: 'bank-1' });
+            vivaBankTransfers.getBankAccount.mockResolvedValue({ isArchived: false });
+            prisma.payoutAccount.update.mockResolvedValue({ id: 'pa1', status: PayoutAccountStatus.ACTIVE });
+
+            const result = await service.refreshStatusForUser(user);
+
+            expect(result.status).toBe(PayoutAccountStatus.ACTIVE);
         });
     });
 });

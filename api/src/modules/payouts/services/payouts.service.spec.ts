@@ -11,6 +11,7 @@ describe('PayoutsService', () => {
     let platformFinanceConfig: any;
     let vivaConfig: any;
     let vivaBankTransfers: any;
+    let payoutAccountsService: any;
 
     beforeEach(() => {
         prisma = {
@@ -29,8 +30,21 @@ describe('PayoutsService', () => {
             createBankTransferFee: jest.fn().mockResolvedValue({ bankCommandId: 'fee-cmd-1' }),
             executeBankTransfer: jest.fn().mockResolvedValue({ commandId: 'exec-cmd-1' }),
         };
+        payoutAccountsService = {
+            // Default: pass the account through unchanged, matching
+            // PayoutAccountsService.promoteIfVerified's no-op behavior when
+            // the account isn't PENDING.
+            promoteIfVerified: jest.fn((account: any) => Promise.resolve(account)),
+        };
 
-        service = new PayoutsService(prisma, accessControl, platformFinanceConfig, vivaConfig, vivaBankTransfers);
+        service = new PayoutsService(
+            prisma,
+            accessControl,
+            platformFinanceConfig,
+            vivaConfig,
+            vivaBankTransfers,
+            payoutAccountsService,
+        );
     });
 
     const storeDistribution = (overrides: Partial<any> = {}) => ({

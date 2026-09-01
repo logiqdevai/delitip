@@ -35,4 +35,13 @@ export class PayoutAccountsController {
     ) {
         return this.payoutAccountsService.updateForStore(user, storeId, dto);
     }
+
+    @Post('refresh-status')
+    @ApiOperation({
+        summary:
+            "Check Viva for a Store's payout account verification status now, instead of waiting for a payout run to opportunistically promote it (Owner only)",
+    })
+    refreshStatus(@CurrentUser() user: AuthUser, @Param('storeId') storeId: string) {
+        return this.payoutAccountsService.refreshStatusForStore(user, storeId);
+    }
 }

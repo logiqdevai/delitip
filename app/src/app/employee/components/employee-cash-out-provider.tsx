@@ -18,6 +18,7 @@ import { useEmployeeTips } from "@/features/tips/hooks/use-tips";
 import {
   useCreateMyPayoutAccount,
   useMyPayoutAccount,
+  useRefreshMyPayoutAccountStatus,
 } from "@/features/payout-accounts/hooks/use-payout-accounts";
 import { getPayoutAccountStatusLabel } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
 import { formatMoney } from "@/lib/money";
@@ -55,6 +56,7 @@ export const EmployeeCashOutProvider: FC<EmployeeCashOutProviderProps> = ({
   const tipsQuery = useEmployeeTips(employeeId ?? "", BALANCE_QUERY);
   const payoutAccountQuery = useMyPayoutAccount(!!employeeId);
   const createPayoutAccount = useCreateMyPayoutAccount();
+  const refreshStatus = useRefreshMyPayoutAccountStatus();
   const infoDialog = useConfirmationDialog();
   const [formOpen, setFormOpen] = useState(false);
 
@@ -66,6 +68,7 @@ export const EmployeeCashOutProvider: FC<EmployeeCashOutProviderProps> = ({
 
   const account = payoutAccountQuery.data;
   const isPayoutActive = account?.status === "ACTIVE";
+  const isPayoutPending = account?.status === "PENDING";
 
   const value = useMemo(
     () => ({
@@ -96,9 +99,14 @@ export const EmployeeCashOutProvider: FC<EmployeeCashOutProviderProps> = ({
             ? `You have ${formattedBalance} pending from unpaid tip distributions. Your Store's owner releases payouts — you'll see them appear here once paid.`
             : `Your personal IBAN is linked but ${account ? getPayoutAccountStatusLabel(account.status).toLowerCase() : "pending"}. You'll be able to receive payouts once it's active.`
         }
-        confirmLabel="Got it"
+        confirmLabel={isPayoutPending ? "Check status" : "Got it"}
         cancelLabel="Close"
-        onConfirm={async () => {}}
+        isPending={refreshStatus.isPending}
+        onConfirm={async () => {
+          if (isPayoutPending) {
+            await refreshStatus.mutateAsync();
+          }
+        }}
       />
 
       <IbanPayoutAccountDialog

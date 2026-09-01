@@ -17,6 +17,7 @@ export const ApiRoutes = {
     meAccounts: "/users/me/accounts",
     byId: (id: string) => `/users/${id}` as const,
     mePayoutAccount: "/users/me/payout-account",
+    mePayoutAccountRefreshStatus: "/users/me/payout-account/refresh-status",
   },
   organizations: {
     prefix: "/organizations",
@@ -69,6 +70,8 @@ export const ApiRoutes = {
     refunds: (storeId: string) => `/stores/${storeId}/refunds` as const,
     payoutAccount: (storeId: string) =>
       `/stores/${storeId}/payout-account` as const,
+    payoutAccountRefreshStatus: (storeId: string) =>
+      `/stores/${storeId}/payout-account/refresh-status` as const,
     payouts: (storeId: string) => `/stores/${storeId}/payouts` as const,
     payoutsRun: (storeId: string) =>
       `/stores/${storeId}/payouts/run` as const,

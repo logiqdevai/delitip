@@ -4,6 +4,7 @@ import { AccessControlService, AuthUser } from '@/shared/services/access-control
 import { PlatformFinanceConfig } from '@/shared/config/platform-finance/platform-finance.config';
 import { VivaConfig } from '@/integrations/viva/viva.config';
 import { VivaBankTransfersService } from '@/integrations/viva/services/viva-bank-transfers.service';
+import { PayoutAccountsService } from '@/modules/payout-accounts/payout-accounts.service';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
 import { RunPayoutDto } from '../dto/run-payout.dto';
 import { PayoutsQueryType } from '../dto/payouts-query.schema';
@@ -42,6 +43,7 @@ export class PayoutsService {
     private readonly platformFinanceConfig: PlatformFinanceConfig,
     private readonly vivaConfig: VivaConfig,
     private readonly vivaBankTransfers: VivaBankTransfersService,
+    private readonly payoutAccountsService: PayoutAccountsService,
   ) {}
 
   async run(user: AuthUser, storeId: string, dto: RunPayoutDto) {
@@ -137,35 +139,17 @@ export class PayoutsService {
       return { payoutAccount: null, reason: 'NO_PAYOUT_ACCOUNT' };
     }
 
-    if (payoutAccount.status === PayoutAccountStatus.PENDING && payoutAccount.bank_account_id) {
-      payoutAccount = await this.tryPromoteToActive(payoutAccount.id, payoutAccount.bank_account_id);
-    }
+    // Opportunistic promotion, in case a payout run is the first thing to
+    // touch this account since it was linked — the same check is also
+    // available on demand via PayoutAccountsService.refreshStatusForStore/
+    // ForUser, so a freshly-linked account isn't stuck waiting for this.
+    payoutAccount = await this.payoutAccountsService.promoteIfVerified(payoutAccount);
 
     if (payoutAccount.status !== PayoutAccountStatus.ACTIVE || !payoutAccount.bank_account_id) {
       return { payoutAccount: null, reason: 'ACCOUNT_NOT_ACTIVE' };
     }
 
     return { payoutAccount: { id: payoutAccount.id, bank_account_id: payoutAccount.bank_account_id } };
-  }
-
-  // Viva's linked-bank-account response has no documented "verified" field
-  // (see VivaBankAccount) — `isArchived === false` is the closest available
-  // signal, so it's the pragmatic proxy used here pending confirmation from
-  // Viva on the actual validation semantics (payment plan §19).
-  private async tryPromoteToActive(payoutAccountId: string, bankAccountId: string) {
-    try {
-      const remote = await this.vivaBankTransfers.getBankAccount(bankAccountId);
-      if (remote.isArchived) {
-        return this.prisma.payoutAccount.findUniqueOrThrow({ where: { id: payoutAccountId } });
-      }
-      return await this.prisma.payoutAccount.update({
-        where: { id: payoutAccountId },
-        data: { status: PayoutAccountStatus.ACTIVE },
-      });
-    } catch (error) {
-      this.logger.warn(`Could not verify bank account ${bankAccountId}: ${error instanceof Error ? error.message : error}`);
-      return this.prisma.payoutAccount.findUniqueOrThrow({ where: { id: payoutAccountId } });
-    }
   }
 
   private async claimGroup(group: RecipientGroup, payoutAccountId: string, _walletId: number) {

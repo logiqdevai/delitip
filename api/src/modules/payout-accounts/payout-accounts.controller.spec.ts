@@ -8,7 +8,7 @@ describe('PayoutAccountsController', () => {
     const user = { id: 'u1', role: AuthRole.USER };
 
     beforeEach(() => {
-        service = { createForStore: jest.fn(), findForStore: jest.fn(), updateForStore: jest.fn() };
+        service = { createForStore: jest.fn(), findForStore: jest.fn(), updateForStore: jest.fn(), refreshStatusForStore: jest.fn() };
         controller = new PayoutAccountsController(service);
     });
 
@@ -33,5 +33,12 @@ describe('PayoutAccountsController', () => {
 
         expect(controller.update(user, 'store1', dto as any)).toBe('updated');
         expect(service.updateForStore).toHaveBeenCalledWith(user, 'store1', dto);
+    });
+
+    it('refreshStatus() delegates to refreshStatusForStore', () => {
+        service.refreshStatusForStore.mockReturnValue('refreshed');
+
+        expect(controller.refreshStatus(user, 'store1')).toBe('refreshed');
+        expect(service.refreshStatusForStore).toHaveBeenCalledWith(user, 'store1');
     });
 });

@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { IbanPayoutAccountDialog } from "@/components/payments/iban-payout-account-dialog";
 import {
   useCreateStorePayoutAccount,
+  useRefreshStorePayoutAccountStatus,
   useStorePayoutAccount,
 } from "@/features/payout-accounts/hooks/use-payout-accounts";
 import { getPayoutAccountStatusLabel } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
@@ -15,6 +16,7 @@ import { cn } from "@/lib/utils";
 export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
   const accountQuery = useStorePayoutAccount(storeId);
   const createAccount = useCreateStorePayoutAccount(storeId);
+  const refreshStatus = useRefreshStorePayoutAccountStatus(storeId);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const account = accountQuery.data;
@@ -57,16 +59,30 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
               {account.provider} · IBAN ····{account.iban_last4 ?? "----"}
             </span>
           </div>
-          <span
-            className={cn(
-              "rounded-full px-2.5 py-1 text-caption font-bold",
-              account.status === "ACTIVE"
-                ? "bg-brand-50 text-brand-700"
-                : "bg-amber-50 text-amber-700",
-            )}
-          >
-            {getPayoutAccountStatusLabel(account.status)}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-1 text-caption font-bold",
+                account.status === "ACTIVE"
+                  ? "bg-brand-50 text-brand-700"
+                  : "bg-amber-50 text-amber-700",
+              )}
+            >
+              {getPayoutAccountStatusLabel(account.status)}
+            </span>
+            {account.status === "PENDING" ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => refreshStatus.mutate()}
+                disabled={refreshStatus.isPending}
+                className="h-7 rounded-lg px-2.5 text-caption"
+              >
+                {refreshStatus.isPending ? "Checking…" : "Check status"}
+              </Button>
+            ) : null}
+          </div>
         </div>
       )}
 

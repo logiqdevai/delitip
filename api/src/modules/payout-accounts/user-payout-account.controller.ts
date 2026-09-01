@@ -27,4 +27,13 @@ export class UserPayoutAccountController {
     findOne(@CurrentUser() user: AuthUser) {
         return this.payoutAccountsService.findForUser(user);
     }
+
+    @Post('refresh-status')
+    @ApiOperation({
+        summary:
+            "Check Viva for the current user's payout account verification status now, instead of waiting for a payout run to opportunistically promote it",
+    })
+    refreshStatus(@CurrentUser() user: AuthUser) {
+        return this.payoutAccountsService.refreshStatusForUser(user);
+    }
 }
