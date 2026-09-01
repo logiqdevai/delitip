@@ -22,6 +22,12 @@ export interface UpdateUserPayload {
   phone?: string;
 }
 
+export interface UsersQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
 export interface UserOrganizationMembership {
   id: string;
   organization_id: string;

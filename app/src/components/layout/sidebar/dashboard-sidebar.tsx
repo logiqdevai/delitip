@@ -16,6 +16,7 @@ import {
   PanelLeftOpen,
   QrCode,
   Settings,
+  ShieldCheck,
   Star,
   Users,
   Wallet,
@@ -51,6 +52,7 @@ import { getStoreIndustryLabel } from "@/config/constants/dropdowns/stores/store
 import { useUnreadAlertsCount } from "@/features/alerts/hooks/use-alerts";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { usePlatformRole } from "@/hooks/use-platform-role";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 
@@ -133,6 +135,13 @@ const navItems = [
     icon: Settings,
     match: (path: string) => path.startsWith(Routes.dashboard.settings.root),
   },
+  {
+    href: Routes.dashboard.admin.users,
+    label: "All Users",
+    icon: ShieldCheck,
+    requiresPlatformAdmin: true,
+    match: (path: string) => path.startsWith(Routes.dashboard.admin.users),
+  },
 ] as const;
 
 const storeInitial = (name: string) => {
@@ -175,9 +184,16 @@ export const DashboardSidebar: FC = () => {
     useWorkspace();
   const employeesQuery = useEmployees(storeId ?? "");
   const unreadAlertsQuery = useUnreadAlertsCount(storeId ?? "");
+  const { isPlatformAdmin } = usePlatformRole();
   const isAccountant = role === "ACCOUNTANT";
   const visibleNavItems = navItems.filter(
-    (item) => !("hideForAccountant" in item && item.hideForAccountant && isAccountant),
+    (item) =>
+      !("hideForAccountant" in item && item.hideForAccountant && isAccountant) &&
+      !(
+        "requiresPlatformAdmin" in item &&
+        item.requiresPlatformAdmin &&
+        !isPlatformAdmin
+      ),
   );
 
   const staffCount = employeesQuery.data?.pagination.total;

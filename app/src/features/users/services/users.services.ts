@@ -1,9 +1,11 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
+import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
 import type {
   UpdateUserPayload,
   UserAccounts,
   UserProfile,
+  UsersQuery,
 } from "@/features/users/interfaces/users.interfaces";
 
 export const getMe = async (): Promise<UserProfile> => {
@@ -26,6 +28,20 @@ export const updateMe = async (
     return response.data;
   } catch {
     throw new Error("Failed to update your profile. Please try again.");
+  }
+};
+
+export const listUsers = async (
+  query?: UsersQuery,
+): Promise<PaginatedResponse<UserProfile>> => {
+  try {
+    const response = await axiosInstance.get<PaginatedResponse<UserProfile>>(
+      ApiRoutes.users.prefix,
+      { params: query },
+    );
+    return response.data;
+  } catch {
+    throw new Error("Failed to load users. Please try again.");
   }
 };
 
