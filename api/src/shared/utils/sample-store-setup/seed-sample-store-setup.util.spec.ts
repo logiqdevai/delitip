@@ -1,3 +1,4 @@
+import { StoreIndustry } from 'generated/prisma';
 import { seedSampleStoreSetup } from './seed-sample-store-setup.util';
 
 describe('seedSampleStoreSetup', () => {
@@ -26,7 +27,7 @@ describe('seedSampleStoreSetup', () => {
     });
 
     it('creates a 100%-to-store distribution rule and returns its id', async () => {
-        const result = await seedSampleStoreSetup(prisma, 'store1');
+        const result = await seedSampleStoreSetup(prisma, 'store1', StoreIndustry.RESTAURANT);
 
         expect(prisma.distributionRule.create).toHaveBeenCalledWith({
             data: { store_id: 'store1', name: 'Default Split' },
@@ -37,15 +38,22 @@ describe('seedSampleStoreSetup', () => {
         expect(result).toEqual({ distributionRuleId: 'rule1' });
     });
 
-    it('creates the sample spots and links each sample QR code to its matching spot', async () => {
-        await seedSampleStoreSetup(prisma, 'store1');
+    it('creates restaurant spots and links each sample QR code to its matching spot', async () => {
+        await seedSampleStoreSetup(prisma, 'store1', StoreIndustry.RESTAURANT);
 
-        expect(prisma.spot.create).toHaveBeenCalledWith({ data: { store_id: 'store1', name: 'Table 1' } });
+        expect(prisma.spot.create).toHaveBeenCalledWith({ data: { store_id: 'store1', name: 'Table 01' } });
         expect(prisma.spot.create).toHaveBeenCalledWith({ data: { store_id: 'store1', name: 'Counter' } });
 
         expect(prisma.qrCode.create).toHaveBeenCalledTimes(2);
         expect(prisma.qrCodeSpot.create).toHaveBeenCalledTimes(2);
         expect(prisma.qrCodeSpot.create).toHaveBeenCalledWith({ data: { qr_code_id: 'qr1', spot_id: 'spot1' } });
         expect(prisma.qrCodeSpot.create).toHaveBeenCalledWith({ data: { qr_code_id: 'qr2', spot_id: 'spot2' } });
+    });
+
+    it('creates hotel-specific spots for hotel stores', async () => {
+        await seedSampleStoreSetup(prisma, 'store1', StoreIndustry.HOTEL);
+
+        expect(prisma.spot.create).toHaveBeenCalledWith({ data: { store_id: 'store1', name: 'Room 01' } });
+        expect(prisma.spot.create).toHaveBeenCalledWith({ data: { store_id: 'store1', name: 'Reception' } });
     });
 });
