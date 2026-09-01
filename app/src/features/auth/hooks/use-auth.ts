@@ -13,7 +13,6 @@ import type {
   ResetPasswordPayload,
 } from "@/features/auth/interfaces/auth.interfaces";
 import type { BusinessSignUpFormData } from "@/features/auth/validation-schemas/auth.schema";
-import { createOrganization } from "@/features/organizations/services/organizations.services";
 import { updateMe } from "@/features/users/services/users.services";
 import { useAuthStore } from "@/stores/auth.store";
 import { Routes } from "@/routes/routes";
@@ -124,43 +123,14 @@ export const useRegisterBusiness = () => {
         } catch {}
       }
 
-      try {
-        const organization = await createOrganization({
-          name: payload.venueName,
-          store: {
-            name: payload.venueName,
-            industry: payload.businessType,
-          },
-        });
-        return { auth, organization, orgCreated: true as const };
-      } catch (error) {
-        return {
-          auth,
-          organization: null,
-          orgCreated: false as const,
-          orgError:
-            error instanceof Error
-              ? error.message
-              : "Business profile setup incomplete.",
-        };
-      }
+      return auth;
     },
-    onSuccess: (result) => {
-      if (result.orgCreated) {
-        toast.add({
-          title: "Business account created",
-          description: "Finish a few details to open your dashboard.",
-          type: "success",
-        });
-      } else {
-        toast.add({
-          title: "Account created",
-          description:
-            result.orgError ??
-            "Signed in — finish setting up your business profile next.",
-          type: "warning",
-        });
-      }
+    onSuccess: () => {
+      toast.add({
+        title: "Account created",
+        description: "Finish a few details to open your dashboard.",
+        type: "success",
+      });
       router.push(Routes.onboarding);
     },
     onError: (error: Error) => {

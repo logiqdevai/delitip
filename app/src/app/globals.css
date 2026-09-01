@@ -187,6 +187,44 @@
   input:disabled {
     @apply cursor-not-allowed;
   }
+
+  :root {
+    --autofill-bg: #fff8c5;
+  }
+
+  .dark {
+    --autofill-bg: #3f3a1f;
+  }
+
+  [data-slot="input-group"]:has(
+    [data-slot="input-group-control"]:is(:-webkit-autofill, :autofill)
+  ) {
+    background-color: var(--autofill-bg);
+  }
+
+  [data-slot="input-group"]:has(
+    [data-slot="input-group-control"]:is(:-webkit-autofill, :autofill)
+  )
+    [data-slot="input-group-addon"]
+    button {
+    background-color: transparent;
+  }
+
+  [data-slot="input-group"]
+    [data-slot="input-group-control"]:is(:-webkit-autofill, :autofill),
+  [data-slot="input-group"]
+    [data-slot="input-group-control"]:is(:-webkit-autofill, :autofill):hover,
+  [data-slot="input-group"]
+    [data-slot="input-group-control"]:is(:-webkit-autofill, :autofill):focus,
+  [data-slot="input-group"]
+    [data-slot="input-group-control"]:is(:-webkit-autofill, :autofill):active {
+    -webkit-text-fill-color: var(--foreground);
+    caret-color: var(--foreground);
+    background-color: transparent !important;
+    box-shadow: 0 0 0 1000px var(--autofill-bg) inset !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--autofill-bg) inset !important;
+    transition: background-color 99999s ease-out;
+  }
 }
 
 @layer utilities {
@@ -210,6 +248,19 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  .auth-tip-marquee {
+    animation: auth-tip-marquee 28s linear infinite;
+  }
+
+  @keyframes auth-tip-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
     }
   }
 }

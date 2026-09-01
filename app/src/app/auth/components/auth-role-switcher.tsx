@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC } from "react";
-import { Building2, User } from "lucide-react";
+import { Store, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const AuthRoles = {
@@ -22,53 +22,63 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
   onSelectBusiness,
   onSelectEmployee,
 }) => {
+  const isBusiness = activeRole === AuthRoles.BUSINESS;
+  const isEmployee = activeRole === AuthRoles.EMPLOYEE;
+
   return (
-    <div className="mb-6 flex w-full rounded-xl border border-zinc-200/60 bg-neutral-fill p-1">
+    <div
+      className={cn(
+        "mb-7 flex w-full border-b border-zinc-200",
+        "lg:mb-6 lg:rounded-xl lg:border lg:border-zinc-200/60 lg:bg-neutral-fill lg:p-1"
+      )}
+    >
       <button
         type="button"
         onClick={onSelectBusiness}
         aria-label="Business Account"
         className={cn(
-          "flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs whitespace-nowrap transition sm:px-3.5",
-          activeRole === AuthRoles.BUSINESS
-            ? "bg-white font-bold text-ink-charcoal shadow-xs"
-            : "font-semibold text-zinc-500 hover:text-ink-charcoal"
+          "relative flex min-w-0 flex-1 items-center justify-center gap-2 pb-3.5 text-sm transition",
+          "lg:gap-1.5 lg:rounded-lg lg:px-3.5 lg:py-1.5 lg:pb-1.5 lg:text-xs lg:whitespace-nowrap",
+          isBusiness
+            ? "font-bold text-ink-charcoal lg:bg-white lg:shadow-xs"
+            : "font-semibold text-zinc-400 hover:text-zinc-600 lg:text-zinc-500 lg:hover:text-ink-charcoal"
         )}
       >
-        <Building2
+        <Store
           className={cn(
-            "size-3.5 shrink-0",
-            activeRole === AuthRoles.BUSINESS
-              ? "text-electric-lime"
-              : "text-zinc-400"
+            "size-4 shrink-0 lg:size-3.5",
+            isBusiness ? "text-electric-lime" : "text-zinc-400"
           )}
-          strokeWidth={2}
+          strokeWidth={2.25}
         />
-        <span className="sm:hidden">Business</span>
-        <span className="hidden sm:inline">Business Account</span>
+        <span className="truncate">Business Account</span>
+        {isBusiness ? (
+          <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-electric-lime lg:hidden" />
+        ) : null}
       </button>
       <button
         type="button"
         onClick={onSelectEmployee}
         aria-label="Staff Access"
         className={cn(
-          "flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs whitespace-nowrap transition sm:px-3.5",
-          activeRole === AuthRoles.EMPLOYEE
-            ? "bg-white font-bold text-ink-charcoal shadow-xs"
-            : "font-semibold text-zinc-500 hover:text-ink-charcoal"
+          "relative flex min-w-0 flex-1 items-center justify-center gap-2 pb-3.5 text-sm transition",
+          "lg:gap-1.5 lg:rounded-lg lg:px-3.5 lg:py-1.5 lg:pb-1.5 lg:text-xs lg:whitespace-nowrap",
+          isEmployee
+            ? "font-bold text-ink-charcoal lg:bg-white lg:shadow-xs"
+            : "font-semibold text-zinc-400 hover:text-zinc-600 lg:text-zinc-500 lg:hover:text-ink-charcoal"
         )}
       >
         <User
           className={cn(
-            "size-3.5 shrink-0",
-            activeRole === AuthRoles.EMPLOYEE
-              ? "text-electric-lime"
-              : "text-zinc-400"
+            "size-4 shrink-0 lg:size-3.5",
+            isEmployee ? "text-electric-lime" : "text-zinc-400"
           )}
-          strokeWidth={2}
+          strokeWidth={2.25}
         />
-        <span className="sm:hidden">Employee</span>
-        <span className="hidden sm:inline">Staff Access</span>
+        <span className="truncate">Staff Access</span>
+        {isEmployee ? (
+          <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-electric-lime lg:hidden" />
+        ) : null}
       </button>
     </div>
   );
