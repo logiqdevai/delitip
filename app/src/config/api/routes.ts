@@ -152,5 +152,9 @@ export const ApiRoutes = {
       prefix: "/admin/payouts",
       byId: (id: string) => `/admin/payouts/${id}` as const,
     },
+    analytics: {
+      overview: "/admin/analytics/overview",
+      trends: "/admin/analytics/trends",
+    },
   },
 } as const;

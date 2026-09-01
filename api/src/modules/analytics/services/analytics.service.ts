@@ -3,7 +3,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { Language, TipStatus } from 'generated/prisma';
-import { bucketKey, resolvePeriod, sortedBucketEntries } from '../utils/period.utils';
+import { bucketCount, bucketKey, bucketSum, resolvePeriod, sortedBucketEntries } from '../utils/period.utils';
 import { DashboardQueryType, PeriodQueryType } from '../dto/dashboard-query.schema';
 import { TrendsQueryType } from '../dto/trends-query.schema';
 
@@ -74,7 +74,7 @@ export class AnalyticsService {
                 where: { store_id: { in: storeIds }, status: TipStatus.COMPLETED, created_at: { gte, lte } },
                 select: { amount: true, created_at: true },
             });
-            return this.bucketSum(tips, query.group_by);
+            return bucketSum(tips, query.group_by);
         }
 
         if (query.metric === 'reviews') {
@@ -82,7 +82,7 @@ export class AnalyticsService {
                 where: { store_id: { in: storeIds }, created_at: { gte, lte } },
                 select: { created_at: true },
             });
-            return this.bucketCount(reviews, query.group_by);
+            return bucketCount(reviews, query.group_by);
         }
 
         const reviews = await this.prisma.review.findMany({
@@ -212,24 +212,6 @@ export class AnalyticsService {
             },
             explanation,
         };
-    }
-
-    private bucketSum(rows: { amount: number; created_at: Date }[], groupBy: 'day' | 'week' | 'month') {
-        const sums = new Map<string, number>();
-        for (const row of rows) {
-            const key = bucketKey(row.created_at, groupBy);
-            sums.set(key, (sums.get(key) ?? 0) + row.amount);
-        }
-        return sortedBucketEntries(sums).map(([bucket, value]) => ({ bucket, value }));
-    }
-
-    private bucketCount(rows: { created_at: Date }[], groupBy: 'day' | 'week' | 'month') {
-        const counts = new Map<string, number>();
-        for (const row of rows) {
-            const key = bucketKey(row.created_at, groupBy);
-            counts.set(key, (counts.get(key) ?? 0) + 1);
-        }
-        return sortedBucketEntries(counts).map(([bucket, value]) => ({ bucket, value }));
     }
 
     private bucketAvg(rows: { rating: number; created_at: Date }[], groupBy: 'day' | 'week' | 'month') {

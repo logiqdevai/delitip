@@ -2,6 +2,10 @@ import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
 import type {
+  AdminOverview,
+  AdminOverviewQuery,
+  AdminTrends,
+  AdminTrendsQuery,
   DashboardOverview,
   DashboardQuery,
   EmployeePerformance,
@@ -115,6 +119,34 @@ export const listInsights = async (
   try {
     const response = await axiosInstance.get<PaginatedResponse<InsightSummary>>(
       ApiRoutes.stores.insights(storeId),
+      { params: query },
+    );
+    return response.data;
+  } catch {
+    throw new Error(FAILED);
+  }
+};
+
+export const getAdminOverview = async (
+  query?: AdminOverviewQuery,
+): Promise<AdminOverview> => {
+  try {
+    const response = await axiosInstance.get<AdminOverview>(
+      ApiRoutes.admin.analytics.overview,
+      { params: query },
+    );
+    return response.data;
+  } catch {
+    throw new Error(FAILED);
+  }
+};
+
+export const getAdminTrends = async (
+  query?: AdminTrendsQuery,
+): Promise<AdminTrends> => {
+  try {
+    const response = await axiosInstance.get<AdminTrends>(
+      ApiRoutes.admin.analytics.trends,
       { params: query },
     );
     return response.data;

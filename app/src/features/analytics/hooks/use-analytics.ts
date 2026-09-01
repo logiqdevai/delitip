@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   generateInsight,
+  getAdminOverview,
+  getAdminTrends,
   getDashboardOverview,
   getDashboardTrends,
   getEmployeesPerformance,
@@ -10,6 +12,8 @@ import {
   listInsights,
 } from "@/features/analytics/services/analytics.services";
 import type {
+  AdminOverviewQuery,
+  AdminTrendsQuery,
   DashboardQuery,
   GenerateInsightPayload,
   PeriodQuery,
@@ -32,6 +36,10 @@ export const analyticsQueryKeys = {
   storeTips: (storeId: string, query?: StoreTipsAnalyticsQuery) =>
     ["analytics", "store-tips", storeId, query] as const,
   insights: (storeId: string) => ["insights", storeId] as const,
+  adminOverview: (query?: AdminOverviewQuery) =>
+    ["analytics", "admin-overview", query] as const,
+  adminTrends: (query?: AdminTrendsQuery) =>
+    ["analytics", "admin-trends", query] as const,
 };
 
 export const useDashboardOverview = (
@@ -97,6 +105,20 @@ export const useStoreTipsAnalytics = (
     queryKey: analyticsQueryKeys.storeTips(storeId, query),
     queryFn: () => getStoreTipsAnalytics(storeId, query),
     enabled: !!storeId,
+  });
+};
+
+export const useAdminOverview = (query?: AdminOverviewQuery) => {
+  return useQuery({
+    queryKey: analyticsQueryKeys.adminOverview(query),
+    queryFn: () => getAdminOverview(query),
+  });
+};
+
+export const useAdminTrends = (query?: AdminTrendsQuery) => {
+  return useQuery({
+    queryKey: analyticsQueryKeys.adminTrends(query),
+    queryFn: () => getAdminTrends(query),
   });
 };
 
