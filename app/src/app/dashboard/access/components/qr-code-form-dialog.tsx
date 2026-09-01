@@ -448,7 +448,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                 <InFlowSelect
                   key={open ? "qr-rule-open" : "qr-rule-closed"}
                   id="qr-rule"
-                  value={field.value}
+                  value={field.value ?? ""}
                   onValueChange={field.onChange}
                   options={[
                     { value: "", label: "Store default" },
