@@ -1,10 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Deployed behind one reverse-proxy hop (Coolify/Traefik) — without this,
+  // request.ip resolves to the proxy's internal address, which breaks
+  // VivaIpAllowlistGuard (it can never match Viva's real public IP).
+  app.set('trust proxy', 1);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 

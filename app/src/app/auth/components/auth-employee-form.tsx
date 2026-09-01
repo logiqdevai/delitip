@@ -57,7 +57,7 @@ export const AuthEmployeeForm: FC = () => {
             htmlFor="employee-email"
             className="mb-2 block text-sm font-bold text-ink-charcoal lg:mb-1.5 lg:text-xs lg:font-semibold lg:text-zinc-700"
           >
-            Work Email
+            Email
           </label>
           <Input
             id="employee-email"

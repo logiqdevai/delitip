@@ -75,7 +75,7 @@ export const AuthSignUpForm: FC = () => {
               htmlFor="sign-up-email"
               className="mb-1.5 block text-xs font-semibold text-zinc-700"
             >
-              Work Email
+              Email
             </label>
             <Input
               id="sign-up-email"

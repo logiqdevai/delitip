@@ -58,7 +58,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { adminNavItems } from "@/app/dashboard/admin/components/admin-nav-items";
 import { getStoreIndustryLabel } from "@/config/constants/dropdowns/stores/store-industry-form.options";
 import { useUnreadAlertsCount } from "@/features/alerts/hooks/use-alerts";
-import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { usePlatformRole } from "@/hooks/use-platform-role";
 import { Routes } from "@/routes/routes";
@@ -90,7 +89,6 @@ const navItems = [
     href: Routes.dashboard.employees,
     label: "Employees",
     icon: Users,
-    showStaffBadge: true,
     hideForAccountant: true,
     match: (path: string) => path.startsWith(Routes.dashboard.employees),
   },
@@ -192,7 +190,6 @@ export const DashboardSidebar: FC = () => {
   const collapsed = !isMobile && state === "collapsed";
   const { store, storeId, storeList, role, isPending, isError, switchStore } =
     useWorkspace();
-  const employeesQuery = useEmployees(storeId ?? "");
   const unreadAlertsQuery = useUnreadAlertsCount(storeId ?? "");
   const { isPlatformAdmin } = usePlatformRole();
   const isAccountant = role === "ACCOUNTANT";
@@ -206,7 +203,6 @@ export const DashboardSidebar: FC = () => {
       ),
   );
 
-  const staffCount = employeesQuery.data?.pagination.total;
   const metaParts = [
     store ? getStoreIndustryLabel(store.industry) : null,
     store?.city?.trim() || null,
@@ -345,9 +341,6 @@ export const DashboardSidebar: FC = () => {
                     )}
                     <div className="truncate text-[10px] font-medium text-zinc-400">
                       {metaParts.length > 0 ? metaParts.join(" • ") : store.currency}
-                      {typeof staffCount === "number"
-                        ? ` • ${staffCount} Staff`
-                        : null}
                     </div>
                   </div>
                 </div>
@@ -381,15 +374,11 @@ export const DashboardSidebar: FC = () => {
                   const Icon = item.icon;
                   const active = item.match(pathname);
                   const badge =
-                    "showStaffBadge" in item &&
-                    item.showStaffBadge &&
-                    typeof staffCount === "number"
-                      ? String(staffCount)
-                      : "showUnreadBadge" in item &&
-                          item.showUnreadBadge &&
-                          unreadAlertsQuery.data
-                        ? String(unreadAlertsQuery.data)
-                        : undefined;
+                    "showUnreadBadge" in item &&
+                    item.showUnreadBadge &&
+                    unreadAlertsQuery.data
+                      ? String(unreadAlertsQuery.data)
+                      : undefined;
 
                   const menuButtonClassName = cn(
                     "h-auto gap-3 rounded-xl px-3 py-2 text-chip group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5!",
