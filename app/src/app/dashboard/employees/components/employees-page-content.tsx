@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, Users } from "lucide-react";
 import {
   ConfirmationDialog,
@@ -26,8 +27,10 @@ import {
 import type { Employee } from "@/features/employees/interfaces/employees.interfaces";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
+import { Routes } from "@/routes/routes";
 
 export const EmployeesPageContent: FC = () => {
+  const router = useRouter();
   const { storeId, store, isPending: workspacePending, isReady } =
     useWorkspace();
   const employeesQuery = useEmployees(storeId ?? "", { limit: 100 });
@@ -189,6 +192,9 @@ export const EmployeesPageContent: FC = () => {
         onOpenChange={handleFormOpenChange}
         storeId={storeId}
         employee={editingEmployee}
+        onCreated={(created) =>
+          router.push(Routes.dashboard.employeeDetail(created.id))
+        }
       />
 
       <ConfirmationDialog

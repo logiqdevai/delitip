@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { VivaHttpClient } from '../http/viva-http.client';
-import { VivaAuthMode, VivaHost } from '../interfaces/viva-common.interface';
+import {
+  VivaAuthMode,
+  VivaHost,
+  VivaOAuthScope,
+} from '../interfaces/viva-common.interface';
 import {
   CreateBankTransferFeeRequest,
   ExecuteBankTransferRequest,
@@ -23,6 +27,7 @@ export class VivaBankTransfersService {
     return this.vivaHttpClient.request<VivaBankAccount>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
       method: 'POST',
       path: '/banktransfers/v1/bankaccounts',
       data: payload,
@@ -35,6 +40,7 @@ export class VivaBankTransfersService {
     return this.vivaHttpClient.request<VivaBankAccount[]>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
       method: 'GET',
       path: '/banktransfers/v1/bankaccounts',
       query,
@@ -45,6 +51,7 @@ export class VivaBankTransfersService {
     return this.vivaHttpClient.request<VivaBankAccount>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
       method: 'GET',
       path: `/banktransfers/v1/bankaccounts/${bankAccountId}`,
     });
@@ -57,6 +64,7 @@ export class VivaBankTransfersService {
     return this.vivaHttpClient.request<VivaBankAccount>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
       method: 'PATCH',
       path: `/banktransfers/v1/bankaccounts/${bankAccountId}`,
       data: payload,
@@ -70,6 +78,7 @@ export class VivaBankTransfersService {
     return this.vivaHttpClient.request<VivaInstructionTypesResponse>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
       method: 'GET',
       path: `/banktransfers/v1/bankaccounts/${bankAccountId}/instructiontypes`,
       query: { amount },
@@ -83,6 +92,7 @@ export class VivaBankTransfersService {
     return this.vivaHttpClient.request<VivaBankTransferFeeResponse>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
       method: 'POST',
       path: `/banktransfers/v1/bankaccounts/${bankAccountId}/fees`,
       data: payload,
@@ -96,6 +106,7 @@ export class VivaBankTransfersService {
     return this.vivaHttpClient.request<VivaBankTransferExecutionResponse>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
       method: 'POST',
       path: `/banktransfers/v1/bankaccounts/${bankAccountId}:send`,
       data: payload,

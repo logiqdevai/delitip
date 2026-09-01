@@ -1,11 +1,13 @@
 "use client";
 
-import { type FC } from "react";
+import { type FC, useState } from "react";
 import { CheckCircle2, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { IbanPayoutAccountDialog } from "@/components/payments/iban-payout-account-dialog";
 import {
   useCreateStorePayoutAccount,
+  useRefreshStorePayoutAccountStatus,
   useStorePayoutAccount,
 } from "@/features/payout-accounts/hooks/use-payout-accounts";
 import { getPayoutAccountStatusLabel } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
@@ -14,6 +16,8 @@ import { cn } from "@/lib/utils";
 export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
   const accountQuery = useStorePayoutAccount(storeId);
   const createAccount = useCreateStorePayoutAccount(storeId);
+  const refreshStatus = useRefreshStorePayoutAccountStatus(storeId);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const account = accountQuery.data;
 
@@ -31,17 +35,15 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
       ) : !account ? (
         <div className="mt-3 space-y-3">
           <p className="text-xs text-zinc-500">
-            Connect a payout account so your Store can receive its share of
-            tips. This is a sandbox connection — no real bank linking happens
-            yet.
+            Link your Store&apos;s business IBAN so it can receive its share
+            of tips via bank transfer.
           </p>
           <Button
             type="button"
-            onClick={() => createAccount.mutate({})}
-            disabled={createAccount.isPending}
+            onClick={() => setDialogOpen(true)}
             className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
           >
-            {createAccount.isPending ? "Connecting…" : "Connect payout account"}
+            Link payout account
           </Button>
         </div>
       ) : (
@@ -54,21 +56,43 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
               )}
             />
             <span>
-              {account.provider} · {account.provider_account_id}
+              {account.provider} · IBAN ····{account.iban_last4 ?? "----"}
             </span>
           </div>
-          <span
-            className={cn(
-              "rounded-full px-2.5 py-1 text-caption font-bold",
-              account.status === "ACTIVE"
-                ? "bg-brand-50 text-brand-700"
-                : "bg-amber-50 text-amber-700",
-            )}
-          >
-            {getPayoutAccountStatusLabel(account.status)}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-1 text-caption font-bold",
+                account.status === "ACTIVE"
+                  ? "bg-brand-50 text-brand-700"
+                  : "bg-amber-50 text-amber-700",
+              )}
+            >
+              {getPayoutAccountStatusLabel(account.status)}
+            </span>
+            {account.status === "PENDING" ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => refreshStatus.mutate()}
+                disabled={refreshStatus.isPending}
+                className="h-7 rounded-lg px-2.5 text-caption"
+              >
+                {refreshStatus.isPending ? "Checking…" : "Check status"}
+              </Button>
+            ) : null}
+          </div>
         </div>
       )}
+
+      <IbanPayoutAccountDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title="Link store payout account"
+        description="Your Store's business IBAN — used to send your share of tips via bank transfer."
+        mutation={createAccount}
+      />
     </div>
   );
 };

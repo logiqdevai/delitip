@@ -7,6 +7,7 @@ import { EmailConfig } from '@/shared/constants/email';
 import { AppUrls } from '@/shared/config/app-urls';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
+import { ChangePasswordDto } from '../dto/change-password.dto';
 
 const RESET_TOKEN_EXPIRY_MS = 60 * 60 * 1000;
 
@@ -26,27 +27,7 @@ export class PasswordService {
         // password yet (e.g. an Employee created by a Store owner) — that's the
         // only way such a "shell" account can ever be claimed and logged into.
         if (user) {
-            const token = randomBytes(32).toString('hex');
-            const tokenHash = this.hashToken(token);
-            const expiresAt = new Date(Date.now() + RESET_TOKEN_EXPIRY_MS);
-
-            await this.prisma.passwordResetToken.updateMany({
-                where: {
-                    user_uuid: user.id,
-                    used_at: null,
-                },
-                data: {
-                    used_at: new Date(),
-                },
-            });
-
-            await this.prisma.passwordResetToken.create({
-                data: {
-                    token_hash: tokenHash,
-                    user_uuid: user.id,
-                    expires_at: expiresAt,
-                },
-            });
+            const token = await this.issueToken(user.id, RESET_TOKEN_EXPIRY_MS);
 
             setImmediate(async () => {
                 try {
@@ -73,6 +54,7 @@ export class PasswordService {
 
         const resetToken = await this.prisma.passwordResetToken.findUnique({
             where: { token_hash: tokenHash },
+            include: { user: true },
         });
 
         if (!resetToken || resetToken.used_at || resetToken.expires_at < new Date()) {
@@ -84,7 +66,12 @@ export class PasswordService {
         await this.prisma.$transaction([
             this.prisma.user.update({
                 where: { id: resetToken.user_uuid },
-                data: { password: hashedPassword },
+                data: {
+                    password: hashedPassword,
+                    // First time this identity is claimed (e.g. an Employee invite) — record it.
+                    // A normal password reset of an already-registered account leaves this untouched.
+                    registered_at: resetToken.user.registered_at ?? new Date(),
+                },
             }),
             this.prisma.passwordResetToken.update({
                 where: { id: resetToken.id },
@@ -101,6 +88,67 @@ export class PasswordService {
         ]);
 
         return { message: 'Password has been reset successfully' };
+    }
+
+    async changePassword(userId: string, dto: ChangePasswordDto) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+        });
+
+        if (!user || !user.password) {
+            throw new BadRequestException('Password login is not set up for this account');
+        }
+
+        const isCurrentPasswordValid = await bcrypt.compare(dto.current_password, user.password);
+        if (!isCurrentPasswordValid) {
+            throw new BadRequestException('Current password is incorrect');
+        }
+
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+        await this.prisma.$transaction([
+            this.prisma.user.update({
+                where: { id: userId },
+                data: { password: hashedPassword },
+            }),
+            this.prisma.passwordResetToken.updateMany({
+                where: {
+                    user_uuid: userId,
+                    used_at: null,
+                },
+                data: { used_at: new Date() },
+            }),
+        ]);
+
+        return { message: 'Password changed successfully' };
+    }
+
+    // Shared by forgotPassword and (from EmployeesService) the invite flow — both
+    // let a User row claim/reset its password through the same token+link mechanism.
+    async issueToken(userId: string, expiryMs: number): Promise<string> {
+        const token = randomBytes(32).toString('hex');
+        const tokenHash = this.hashToken(token);
+        const expiresAt = new Date(Date.now() + expiryMs);
+
+        await this.prisma.passwordResetToken.updateMany({
+            where: {
+                user_uuid: userId,
+                used_at: null,
+            },
+            data: {
+                used_at: new Date(),
+            },
+        });
+
+        await this.prisma.passwordResetToken.create({
+            data: {
+                token_hash: tokenHash,
+                user_uuid: userId,
+                expires_at: expiresAt,
+            },
+        });
+
+        return token;
     }
 
     private hashToken(token: string): string {

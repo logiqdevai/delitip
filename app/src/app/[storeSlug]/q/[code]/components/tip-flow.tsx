@@ -5,8 +5,6 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { PublicQrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import type { PublicStore } from "@/features/stores/interfaces/stores.interfaces";
-import type { CreatePublicTipResponse } from "@/features/tips/interfaces/tips.interfaces";
-import type { CreatePublicReviewResponse } from "@/features/reviews/interfaces/reviews.interfaces";
 import { usePublicReviewConfig } from "@/features/reviews/hooks/use-reviews";
 import { getReadableTextColor } from "@/lib/color";
 import { Routes } from "@/routes/routes";
@@ -18,10 +16,11 @@ import {
   emptyReviewDraft,
   type ReviewDraft,
 } from "@/app/[storeSlug]/q/[code]/components/steps/review-step";
-import { DoneStep } from "@/app/[storeSlug]/q/[code]/components/steps/done-step";
+import { CheckoutStatusStep } from "@/app/[storeSlug]/q/[code]/components/steps/checkout-status-step";
 
 interface TipFlowProps {
   storeSlug: string;
+  code: string;
   store: PublicStore;
   qr: PublicQrCode;
 }
@@ -32,7 +31,7 @@ const TIP_QUERY_PARAM = "tip";
 const DEFAULT_PRIMARY_COLOR = "#C8F169";
 const DEFAULT_SECONDARY_COLOR = "#9FBF3E";
 
-export const TipFlow: FC<TipFlowProps> = ({ storeSlug, store, qr }) => {
+export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
   const { data: reviewConfig } = usePublicReviewConfig(storeSlug);
   const router = useRouter();
   const pathname = usePathname();
@@ -58,11 +57,6 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, store, qr }) => {
   const [selectedEmployeeIds, setSelectedEmployeeIds] =
     useState<string[]>(initialSelectedIds);
   const [amount, setAmount] = useState(0);
-  const [tipResult, setTipResult] = useState<CreatePublicTipResponse | null>(
-    null,
-  );
-  const [reviewResult, setReviewResult] =
-    useState<CreatePublicReviewResponse | null>(null);
   const [reviewDraft, setReviewDraft] = useState<ReviewDraft>(emptyReviewDraft);
 
   const toggleEmployee = (id: string) => {
@@ -109,8 +103,6 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, store, qr }) => {
     setStep("amount");
     setSelectedEmployeeIds(initialSelectedIds);
     setAmount(0);
-    setTipResult(null);
-    setReviewResult(null);
     setReviewDraft(emptyReviewDraft);
     router.replace(pathname, { scroll: false });
   };
@@ -160,6 +152,8 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, store, qr }) => {
         <ReviewStep
           qrCodeId={qr.qr_code.id}
           storeId={store.id}
+          storeSlug={storeSlug}
+          code={code}
           amount={amount}
           currency={store.currency}
           recipientLabel={recipientLabel}
@@ -169,26 +163,13 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, store, qr }) => {
           draft={reviewDraft}
           onChange={setReviewDraft}
           onBack={() => setStep("select")}
-          onSuccess={(tip, review) => {
-            setTipResult(tip);
-            setReviewResult(review);
-            setStep("done");
-            router.replace(`${pathname}?${TIP_QUERY_PARAM}=${tip.tip.id}`, {
-              scroll: false,
-            });
-          }}
         />
       ) : null}
 
-      {step === "done" && (tipResult || recoveredTipId) ? (
-        <DoneStep
-          review={reviewResult}
-          tipId={tipResult?.tip.id ?? recoveredTipId!}
-          amount={tipResult?.tip.amount}
-          currency={tipResult?.tip.currency}
-          storeName={tipResult ? store.name : undefined}
-          recipientLabel={tipResult ? recipientLabel : undefined}
-          thankYouMessage={tipResult?.thank_you_message}
+      {step === "done" && recoveredTipId ? (
+        <CheckoutStatusStep
+          tipId={recoveredTipId}
+          storeName={store.name}
           onRestart={resetFlow}
         />
       ) : null}

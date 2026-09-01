@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { VivaAuthService } from './viva-auth.service';
 import { VivaConfig } from '../viva.config';
+import { VivaOAuthScope } from '../interfaces/viva-common.interface';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -76,5 +77,59 @@ describe('VivaAuthService', () => {
     await expect(service.getAccessToken()).rejects.toThrow(
       'Viva OAuth2 credentials',
     );
+  });
+
+  describe('per-scope token isolation', () => {
+    it('requests separate tokens for CHECKOUT and ACCOUNT_TRANSACTIONS using each scope\'s own client credentials', async () => {
+      vivaConfig.getClientId.mockImplementation(
+        (scope?: string) =>
+          scope === VivaOAuthScope.ACCOUNT_TRANSACTIONS ? 'at_client_id' : 'checkout_client_id',
+      );
+      vivaConfig.getClientSecret.mockImplementation(
+        (scope?: string) =>
+          scope === VivaOAuthScope.ACCOUNT_TRANSACTIONS ? 'at_secret' : 'checkout_secret',
+      );
+      mockedAxios.post
+        .mockResolvedValueOnce({
+          data: { access_token: 'checkout_token', token_type: 'Bearer', expires_in: 3600 },
+        })
+        .mockResolvedValueOnce({
+          data: { access_token: 'account_transactions_token', token_type: 'Bearer', expires_in: 3600 },
+        });
+
+      const checkoutToken = await service.getAccessToken(VivaOAuthScope.CHECKOUT);
+      const accountTransactionsToken = await service.getAccessToken(
+        VivaOAuthScope.ACCOUNT_TRANSACTIONS,
+      );
+
+      expect(checkoutToken).toBe('checkout_token');
+      expect(accountTransactionsToken).toBe('account_transactions_token');
+      expect(mockedAxios.post).toHaveBeenCalledTimes(2);
+      expect(mockedAxios.post).toHaveBeenNthCalledWith(
+        1,
+        expect.any(String),
+        expect.any(String),
+        expect.objectContaining({ auth: { username: 'checkout_client_id', password: 'checkout_secret' } }),
+      );
+      expect(mockedAxios.post).toHaveBeenNthCalledWith(
+        2,
+        expect.any(String),
+        expect.any(String),
+        expect.objectContaining({ auth: { username: 'at_client_id', password: 'at_secret' } }),
+      );
+    });
+
+    it('caches each scope independently — fetching one does not force a refetch of the other', async () => {
+      mockedAxios.post.mockResolvedValue({
+        data: { access_token: 'token_1', token_type: 'Bearer', expires_in: 3600 },
+      });
+
+      await service.getAccessToken(VivaOAuthScope.CHECKOUT);
+      await service.getAccessToken(VivaOAuthScope.CHECKOUT);
+      await service.getAccessToken(VivaOAuthScope.ACCOUNT_TRANSACTIONS);
+      await service.getAccessToken(VivaOAuthScope.ACCOUNT_TRANSACTIONS);
+
+      expect(mockedAxios.post).toHaveBeenCalledTimes(2);
+    });
   });
 });

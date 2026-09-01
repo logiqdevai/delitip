@@ -42,3 +42,21 @@ export function bucketKey(date: Date, groupBy: BucketGroupBy): string {
 export function sortedBucketEntries<T>(map: Map<string, T>): [string, T][] {
     return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
 }
+
+export function bucketSum(rows: { amount: number; created_at: Date }[], groupBy: BucketGroupBy) {
+    const sums = new Map<string, number>();
+    for (const row of rows) {
+        const key = bucketKey(row.created_at, groupBy);
+        sums.set(key, (sums.get(key) ?? 0) + row.amount);
+    }
+    return sortedBucketEntries(sums).map(([bucket, value]) => ({ bucket, value }));
+}
+
+export function bucketCount(rows: { created_at: Date }[], groupBy: BucketGroupBy) {
+    const counts = new Map<string, number>();
+    for (const row of rows) {
+        const key = bucketKey(row.created_at, groupBy);
+        counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+    return sortedBucketEntries(counts).map(([bucket, value]) => ({ bucket, value }));
+}

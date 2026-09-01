@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import {
+  changePassword,
   forgotPassword,
   loginWithEmail,
   registerWithEmail,
@@ -8,6 +9,7 @@ import {
 } from "@/features/auth/services/auth.services";
 import type {
   AuthResponse,
+  ChangePasswordPayload,
   ForgotPasswordPayload,
   LoginEmailPayload,
   ResetPasswordPayload,
@@ -21,6 +23,23 @@ import { toast } from "@/components/ui/toast";
 export const authQueryKeys = {
   root: ["auth"] as const,
   session: ["auth", "session"] as const,
+};
+
+// Remembers which sign-in tab (business vs. employee) a forgot-password
+// request came from, since that context is otherwise lost once the person
+// leaves the app to open the reset link from their email.
+const AUTH_ROLE_HINT_STORAGE_KEY = "delitip-auth-role-hint";
+
+const rememberAuthRoleHint = (role: "employee") => {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(AUTH_ROLE_HINT_STORAGE_KEY, role);
+};
+
+const consumeAuthRoleHint = (): "employee" | null => {
+  if (typeof window === "undefined") return null;
+  const hint = window.localStorage.getItem(AUTH_ROLE_HINT_STORAGE_KEY);
+  if (hint) window.localStorage.removeItem(AUTH_ROLE_HINT_STORAGE_KEY);
+  return hint === "employee" ? "employee" : null;
 };
 
 const splitFullName = (fullName: string) => {
@@ -145,7 +164,10 @@ export const useRegisterBusiness = () => {
 
 export const useForgotPassword = () => {
   return useMutation({
-    mutationFn: (payload: ForgotPasswordPayload) => forgotPassword(payload),
+    mutationFn: (payload: ForgotPasswordPayload & { role?: "employee" }) => {
+      if (payload.role === "employee") rememberAuthRoleHint("employee");
+      return forgotPassword({ email: payload.email });
+    },
     onError: (error: Error) => {
       toast.add({
         title: "Could not send reset email",
@@ -167,11 +189,59 @@ export const useResetPassword = () => {
         description: "You can sign in with your new password.",
         type: "success",
       });
-      router.push(Routes.auth.sign_in);
+      const roleHint = consumeAuthRoleHint();
+      router.push(
+        roleHint === "employee"
+          ? `${Routes.auth.sign_in}?role=employee`
+          : Routes.auth.sign_in,
+      );
     },
     onError: (error: Error) => {
       toast.add({
         title: "Could not reset password",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useAcceptInvite = () => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: (payload: ResetPasswordPayload) => resetPassword(payload),
+    onSuccess: () => {
+      toast.add({
+        title: "Account activated",
+        description: "You can now sign in with your new password.",
+        type: "success",
+      });
+      router.push(Routes.auth.sign_in);
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not activate account",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: (payload: ChangePasswordPayload) => changePassword(payload),
+    onSuccess: () => {
+      toast.add({
+        title: "Password updated",
+        description: "Your password has been changed.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not change password",
         description: error.message,
         type: "error",
       });

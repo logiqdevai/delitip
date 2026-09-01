@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
@@ -23,11 +24,16 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { InsightsModule } from './modules/insights/insights.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { VivaIntegrationModule } from './integrations/viva/viva.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { PayoutsModule } from './modules/payouts/payouts.module';
 
 @Module({
   imports: [
     ConfigModule,
     // GraphQLModule,
+    ScheduleModule.forRoot(),
+    VivaIntegrationModule,
     AuthModule,
     HealthModule,
     UsersModule,
@@ -49,6 +55,8 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
     AlertsModule,
     InsightsModule,
     AnalyticsModule,
+    PaymentsModule,
+    PayoutsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

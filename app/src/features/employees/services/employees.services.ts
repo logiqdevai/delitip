@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -70,6 +71,20 @@ export const deleteEmployee = async (id: string): Promise<void> => {
     await axiosInstance.delete(ApiRoutes.employees.byId(id));
   } catch {
     throw new Error("Failed to delete employee. Please try again.");
+  }
+};
+
+export const resendEmployeeInvite = async (id: string): Promise<Employee> => {
+  try {
+    const response = await axiosInstance.post<Employee>(
+      ApiRoutes.employees.resendInvite(id),
+    );
+    return response.data;
+  } catch (error) {
+    const message = isAxiosError(error)
+      ? (error.response?.data?.message as string | undefined)
+      : undefined;
+    throw new Error(message || "Failed to resend the invite. Please try again.");
   }
 };
 

@@ -103,3 +103,52 @@ export interface GenerateInsightPayload {
   period_start?: string;
   period_end?: string;
 }
+
+export type AdminOverviewPeriod = "today" | "7d" | "30d" | "90d";
+export type AdminTrendsMetric =
+  | "users"
+  | "tips_revenue"
+  | "platform_revenue"
+  | "employee_revenue"
+  | "store_revenue";
+
+export interface AdminOverviewQuery {
+  period?: AdminOverviewPeriod;
+}
+
+export interface AdminCurrencyBreakdown {
+  currency: string;
+  tips_gross_revenue: number;
+  completed_tips_count: number;
+  average_tip_amount: number;
+  platform_net_revenue: number;
+  employee_net_revenue: number;
+  store_net_revenue: number;
+  processing_fees_total: number;
+  payouts_completed_total: number;
+}
+
+export interface AdminOverview {
+  period: AdminOverviewPeriod;
+  primary_currency: string;
+  totals: AdminCurrencyBreakdown;
+  by_currency: AdminCurrencyBreakdown[];
+  total_users: number;
+  new_users_in_period: number;
+  total_stores: number;
+  total_organizations: number;
+  pending_payout_accounts: number;
+}
+
+export interface AdminTrendsQuery {
+  metric?: AdminTrendsMetric;
+  period?: TrendsPeriod;
+  group_by?: TrendsGroupBy;
+  currency?: string;
+}
+
+export interface AdminTrends {
+  metric: AdminTrendsMetric;
+  currency: string | null;
+  data: TrendPoint[];
+}

@@ -41,6 +41,11 @@ export interface ResetPasswordPayload {
   password: string;
 }
 
+export interface ChangePasswordPayload {
+  current_password: string;
+  password: string;
+}
+
 export interface WaitlistPayload {
   email: string;
 }

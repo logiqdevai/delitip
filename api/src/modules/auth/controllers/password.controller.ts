@@ -1,8 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PasswordService } from '../services/password.service';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
+import { ChangePasswordDto } from '../dto/change-password.dto';
+import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 
 @ApiTags('Password Reset')
 @Controller('auth')
@@ -33,5 +36,22 @@ export class PasswordController {
     })
     resetPassword(@Body() dto: ResetPasswordDto) {
         return this.passwordService.resetPassword(dto);
+    }
+
+    @Post('change-password')
+    @UseGuards(JwtGuard)
+    @ApiBearerAuth()
+    @ApiOperation({ summary: "Change the current user's password" })
+    @ApiBody({ type: ChangePasswordDto })
+    @ApiResponse({
+        status: 200,
+        description: 'Password changed successfully',
+    })
+    @ApiResponse({
+        status: 400,
+        description: 'Current password is incorrect',
+    })
+    changePassword(@CurrentUser('id') userId: string, @Body() dto: ChangePasswordDto) {
+        return this.passwordService.changePassword(userId, dto);
     }
 }

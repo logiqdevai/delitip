@@ -52,7 +52,8 @@ export const EmployeeDepositNotice: FC = () => {
         <span>Payouts follow your Store&apos;s schedule</span>
       </div>
       <p className="text-brand-800/80">
-        Instant cash-out is a preview — no live bank transfer yet.
+        Cash-out isn&apos;t instant — your Store&apos;s owner releases
+        payouts via bank transfer on their own schedule.
       </p>
     </div>
   );

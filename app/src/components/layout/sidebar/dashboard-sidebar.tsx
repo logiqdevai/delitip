@@ -2,18 +2,22 @@
 
 import { type FC } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ArrowLeftRight,
   BarChart3,
+  Banknote,
   Bell,
+  ChevronDown,
   CreditCard,
   LayoutGrid,
+  ListChecks,
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
   QrCode,
   Settings,
+  ShieldCheck,
   Star,
   Users,
   Wallet,
@@ -23,6 +27,12 @@ import { AccountSwitcher } from "@/components/auth/account-switcher";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { DashboardUserMenu } from "@/components/layout/sidebar/dashboard-user-menu";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -45,14 +55,30 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { adminNavItems } from "@/app/dashboard/admin/components/admin-nav-items";
 import { getStoreIndustryLabel } from "@/config/constants/dropdowns/stores/store-industry-form.options";
 import { useUnreadAlertsCount } from "@/features/alerts/hooks/use-alerts";
-import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { usePlatformRole } from "@/hooks/use-platform-role";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 
 const navItems = [
+  {
+    href: Routes.dashboard.admin.root,
+    label: "Admin",
+    icon: ShieldCheck,
+    requiresPlatformAdmin: true,
+    match: (path: string) => path.startsWith(Routes.dashboard.admin.root),
+    subItems: adminNavItems,
+  },
+  {
+    href: Routes.dashboard.gettingStarted,
+    label: "Getting Started",
+    icon: ListChecks,
+    hideForAccountant: true,
+    match: (path: string) => path.startsWith(Routes.dashboard.gettingStarted),
+  },
   {
     href: Routes.dashboard.root,
     label: "Overview",
@@ -63,7 +89,6 @@ const navItems = [
     href: Routes.dashboard.employees,
     label: "Employees",
     icon: Users,
-    showStaffBadge: true,
     hideForAccountant: true,
     match: (path: string) => path.startsWith(Routes.dashboard.employees),
   },
@@ -78,6 +103,12 @@ const navItems = [
     label: "Payments",
     icon: CreditCard,
     match: (path: string) => path.startsWith(Routes.dashboard.payments),
+  },
+  {
+    href: Routes.dashboard.payouts,
+    label: "Payouts",
+    icon: Banknote,
+    match: (path: string) => path.startsWith(Routes.dashboard.payouts),
   },
   {
     href: Routes.dashboard.reviews,
@@ -154,18 +185,24 @@ const StoreLogo: FC<{
 
 export const DashboardSidebar: FC = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { state, isMobile, toggleSidebar, setOpenMobile } = useSidebar();
   const collapsed = !isMobile && state === "collapsed";
   const { store, storeId, storeList, role, isPending, isError, switchStore } =
     useWorkspace();
-  const employeesQuery = useEmployees(storeId ?? "");
   const unreadAlertsQuery = useUnreadAlertsCount(storeId ?? "");
+  const { isPlatformAdmin } = usePlatformRole();
   const isAccountant = role === "ACCOUNTANT";
   const visibleNavItems = navItems.filter(
-    (item) => !("hideForAccountant" in item && item.hideForAccountant && isAccountant),
+    (item) =>
+      !("hideForAccountant" in item && item.hideForAccountant && isAccountant) &&
+      !(
+        "requiresPlatformAdmin" in item &&
+        item.requiresPlatformAdmin &&
+        !isPlatformAdmin
+      ),
   );
 
-  const staffCount = employeesQuery.data?.pagination.total;
   const metaParts = [
     store ? getStoreIndustryLabel(store.industry) : null,
     store?.city?.trim() || null,
@@ -207,7 +244,7 @@ export const DashboardSidebar: FC = () => {
               href={Routes.dashboard.root}
               className="flex min-w-0 items-center gap-2.5"
             >
-              <BrandMark size="sm" className="size-7 shrink-0 rounded-lg text-xs" />
+              <BrandMark size="sm" className="size-7 shrink-0 rounded-lg text-xs group-data-[collapsible=icon]:size-8" />
               <div className="min-w-0 group-data-[collapsible=icon]:hidden">
                 <div className="truncate text-sm leading-none font-bold tracking-tight text-ink-charcoal">
                   delitip
@@ -234,7 +271,7 @@ export const DashboardSidebar: FC = () => {
               {isMobile ? (
                 <X className="size-4" />
               ) : collapsed ? (
-                <PanelLeftOpen className="size-4" />
+                <PanelLeftOpen className="size-5" />
               ) : (
                 <PanelLeftClose className="size-4" />
               )}
@@ -304,9 +341,6 @@ export const DashboardSidebar: FC = () => {
                     )}
                     <div className="truncate text-[10px] font-medium text-zinc-400">
                       {metaParts.length > 0 ? metaParts.join(" • ") : store.currency}
-                      {typeof staffCount === "number"
-                        ? ` • ${staffCount} Staff`
-                        : null}
                     </div>
                   </div>
                 </div>
@@ -324,7 +358,7 @@ export const DashboardSidebar: FC = () => {
                 <StoreLogo
                   name={store.name}
                   logoUrl={store.logo_document?.url}
-                  className="size-8"
+                  className="size-10"
                 />
               </TooltipTrigger>
               <TooltipContent side="right">{store.name}</TooltipContent>
@@ -340,15 +374,85 @@ export const DashboardSidebar: FC = () => {
                   const Icon = item.icon;
                   const active = item.match(pathname);
                   const badge =
-                    "showStaffBadge" in item &&
-                    item.showStaffBadge &&
-                    typeof staffCount === "number"
-                      ? String(staffCount)
-                      : "showUnreadBadge" in item &&
-                          item.showUnreadBadge &&
-                          unreadAlertsQuery.data
-                        ? String(unreadAlertsQuery.data)
-                        : undefined;
+                    "showUnreadBadge" in item &&
+                    item.showUnreadBadge &&
+                    unreadAlertsQuery.data
+                      ? String(unreadAlertsQuery.data)
+                      : undefined;
+
+                  const menuButtonClassName = cn(
+                    "h-auto gap-3 rounded-xl px-3 py-2 text-chip group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5!",
+                    active
+                      ? "bg-brand-50 font-semibold text-brand-800"
+                      : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
+                  );
+
+                  if ("subItems" in item && item.subItems) {
+                    return (
+                      <SidebarMenuItem key={item.href}>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger
+                            render={
+                              <SidebarMenuButton
+                                isActive={active}
+                                tooltip={item.label}
+                                className={menuButtonClassName}
+                              />
+                            }
+                          >
+                            <Icon
+                              className={cn(
+                                "size-4 group-data-[collapsible=icon]:size-5",
+                                active ? "text-electric-lime" : "text-zinc-400",
+                              )}
+                              strokeWidth={2}
+                            />
+                            <span>{item.label}</span>
+                            <ChevronDown
+                              className="ml-auto size-3.5 shrink-0 text-zinc-400 transition-transform duration-200 group-data-popup-open:rotate-180 group-data-[collapsible=icon]:hidden"
+                              strokeWidth={2}
+                            />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="start"
+                            side="right"
+                            sideOffset={8}
+                            className="w-56"
+                          >
+                            {item.subItems.map((subItem) => {
+                              const SubIcon = subItem.icon;
+                              const subActive = subItem.match(pathname);
+
+                              return (
+                                <DropdownMenuItem
+                                  key={subItem.href}
+                                  className={cn(
+                                    "cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-chip",
+                                    subActive
+                                      ? "bg-brand-50 font-semibold text-brand-800 focus:bg-brand-50 focus:text-brand-800"
+                                      : "font-medium text-zinc-600",
+                                  )}
+                                  onClick={() => {
+                                    router.push(subItem.href);
+                                    closeMobileNav();
+                                  }}
+                                >
+                                  <SubIcon
+                                    className={cn(
+                                      "size-4",
+                                      subActive ? "text-electric-lime" : "text-zinc-400",
+                                    )}
+                                    strokeWidth={2}
+                                  />
+                                  {subItem.label}
+                                </DropdownMenuItem>
+                              );
+                            })}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </SidebarMenuItem>
+                    );
+                  }
 
                   return (
                     <SidebarMenuItem key={item.href}>
@@ -356,16 +460,11 @@ export const DashboardSidebar: FC = () => {
                         isActive={active}
                         tooltip={item.label}
                         render={<Link href={item.href} onClick={closeMobileNav} />}
-                        className={cn(
-                          "h-auto gap-3 rounded-xl px-3 py-2 text-chip group-data-[collapsible=icon]:mx-auto",
-                          active
-                            ? "bg-brand-50 font-semibold text-brand-800"
-                            : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
-                        )}
+                        className={menuButtonClassName}
                       >
                         <Icon
                           className={cn(
-                            "size-4",
+                            "size-4 group-data-[collapsible=icon]:size-5",
                             active ? "text-electric-lime" : "text-zinc-400",
                           )}
                           strokeWidth={2}

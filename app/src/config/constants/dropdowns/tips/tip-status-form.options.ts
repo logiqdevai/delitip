@@ -4,10 +4,13 @@ import {
 } from "@/features/tips/interfaces/tips.interfaces";
 
 export const TipStatusFormOptions: { id: TipStatus; label: string }[] = [
-  { id: TipStatuses.PENDING, label: "Pending" },
+  { id: TipStatuses.CREATED, label: "Created" },
+  { id: TipStatuses.PROCESSING, label: "Processing" },
   { id: TipStatuses.COMPLETED, label: "Completed" },
   { id: TipStatuses.FAILED, label: "Failed" },
+  { id: TipStatuses.CANCELLED, label: "Cancelled" },
   { id: TipStatuses.REFUNDED, label: "Refunded" },
+  { id: TipStatuses.PENDING, label: "Pending" },
 ];
 
 export function getTipStatusLabel(status: TipStatus | string): string {

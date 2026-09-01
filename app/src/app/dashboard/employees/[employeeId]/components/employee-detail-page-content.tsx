@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   ChevronDown,
+  Mail,
   Pencil,
   Plus,
   QrCode as QrCodeIcon,
@@ -48,15 +49,18 @@ import {
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
+import { EmployeePayoutAccountCard } from "@/app/dashboard/employees/[employeeId]/components/employee-payout-account-card";
 import { QrRow } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
 import { PlatformAuthRoles } from "@/features/auth/interfaces/auth.interfaces";
 import {
   useDeleteEmployee,
   useEmployee,
   useEmployeeDashboard,
+  useResendEmployeeInvite,
   useUpdateEmployee,
 } from "@/features/employees/hooks/use-employees";
 import { getEmployeeStatusLabel } from "@/config/constants/dropdowns/employees/employee-status-form.options";
+import { getEmployeeAccountStatusLabel } from "@/config/constants/dropdowns/employees/employee-account-status-form.options";
 import { getPayoutStatusLabel } from "@/config/constants/dropdowns/tips/payout-status-form.options";
 import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
 import type { QrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
@@ -71,6 +75,7 @@ import { useAuthStore } from "@/stores/auth.store";
 
 const payoutStatusChipClass: Record<PayoutStatus, string> = {
   PENDING: "bg-amber-50 text-amber-700",
+  PROCESSING: "bg-sky-50 text-sky-700",
   PAID: "bg-brand-50 text-brand-700",
   FAILED: "bg-red-50 text-red-700",
   CANCELLED: "bg-zinc-100 text-zinc-600",
@@ -100,6 +105,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   const tipsQuery = useEmployeeTips(employeeId, { limit: 100 });
   const updateEmployee = useUpdateEmployee();
   const deleteEmployee = useDeleteEmployee();
+  const resendInvite = useResendEmployeeInvite();
   const deactivateConfirm = useConfirmationDialog();
   const deleteConfirm = useConfirmationDialog();
   const [formOpen, setFormOpen] = useState(false);
@@ -137,6 +143,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   }
 
   const employee = employeeQuery.data;
+  const isSignedUp = !!employee.user?.registered_at;
   const dashboard = dashboardQuery.data;
   const currency = store?.currency ?? "EUR";
 
@@ -177,15 +184,22 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
             <p className="text-xs text-zinc-500">
               {employee.position?.trim() || "Team member"} · {employee.email}
             </p>
-            <span
-              className={
-                employee.is_active
-                  ? "mt-1.5 inline-block rounded-full bg-brand-50 px-2 py-0.5 text-caption font-bold text-brand-700"
-                  : "mt-1.5 inline-block rounded-full bg-neutral-fill px-2 py-0.5 text-caption font-medium text-zinc-500"
-              }
-            >
-              {getEmployeeStatusLabel(employee.is_active)}
-            </span>
+            <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+              <span
+                className={
+                  employee.is_active
+                    ? "inline-block rounded-full bg-brand-50 px-2 py-0.5 text-caption font-bold text-brand-700"
+                    : "inline-block rounded-full bg-neutral-fill px-2 py-0.5 text-caption font-medium text-zinc-500"
+                }
+              >
+                {getEmployeeStatusLabel(employee.is_active)}
+              </span>
+              {!isSignedUp ? (
+                <span className="inline-block rounded-full bg-amber-50 px-2 py-0.5 text-caption font-bold text-amber-700">
+                  {getEmployeeAccountStatusLabel(employee.user?.registered_at)}
+                </span>
+              ) : null}
+            </div>
           </div>
         </div>
 
@@ -205,6 +219,15 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
               <Pencil />
               Edit
             </DropdownMenuItem>
+            {!isSignedUp ? (
+              <DropdownMenuItem
+                onClick={() => resendInvite.mutate(employee.id)}
+                disabled={resendInvite.isPending}
+              >
+                <Mail />
+                Resend invite
+              </DropdownMenuItem>
+            ) : null}
             <DropdownMenuItem
               onClick={() => {
                 if (employee.is_active) {
@@ -276,6 +299,11 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
           </div>
         </div>
       </div>
+
+      <EmployeePayoutAccountCard
+        employeeId={employee.id}
+        hasLinkedUser={!!employee.user_id}
+      />
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-charcoal">

@@ -1,14 +1,17 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { UsersService } from '@/modules/users/services/users.service';
-import { calculateTipDistribution } from '@/shared/utils/distribution/distribution-calculator.util';
-import { generateMockPaymentReference } from '@/shared/utils/mock-payment/mock-payment.utils';
 import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
+import { toIso4217NumericCode } from '@/shared/utils/currency/currency.util';
+import { PlatformFinanceConfig } from '@/shared/config/platform-finance/platform-finance.config';
+import { VivaConfig } from '@/integrations/viva/viva.config';
+import { VivaCheckoutService } from '@/integrations/viva/services/viva-checkout.service';
 import { CreatePublicTipDto } from '../dto/create-public-tip.dto';
 import { TipsQueryType } from '../dto/tips-query.schema';
-import { Language, TipStatus } from 'generated/prisma';
+import { AdminTipsQueryType } from '../dto/admin-tips-query.schema';
+import { Currency, Language, PaymentTransactionStatus, Tip, TipStatus } from 'generated/prisma';
 
 const PERFORMANCE_CHANGE_THRESHOLD_PERCENT = 20;
 
@@ -18,6 +21,9 @@ export class TipsService {
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
         private readonly usersService: UsersService,
+        private readonly platformFinanceConfig: PlatformFinanceConfig,
+        private readonly vivaConfig: VivaConfig,
+        private readonly vivaCheckout: VivaCheckoutService,
     ) { }
 
     private resolveEmployeeRef(employee: any, primaryLanguage: Language): any {
@@ -40,7 +46,45 @@ export class TipsService {
         };
     }
 
+    private buildCheckoutUrl(orderCode: string | number): string {
+        return `${this.vivaConfig.getNativeBaseUrl()}/web/checkout?ref=${orderCode}`;
+    }
+
+    // Resolves Viva's own order-code redirect param (the "s" query param
+    // Viva appends to the Source's Success/Failure URL) back to our tip —
+    // used only as a lookup key for the checkout-return page's fallback
+    // path (sessionStorage unavailable, e.g. a different device/browser).
+    // The order code is never trusted for the tip's actual status; the
+    // caller still polls GET /public/tips/:id/status, which re-verifies
+    // server-side, same as the primary path.
+    async resolveTipIdByOrderCode(orderCode: string) {
+        const paymentTransaction = await this.prisma.paymentTransaction.findUnique({
+            where: { provider_order_code: orderCode },
+            include: { tip: { include: { store: true, qr_code: true } } },
+        });
+        if (!paymentTransaction) throw new NotFoundException('No tip found for this order code');
+
+        return {
+            tip_id: paymentTransaction.tip.id,
+            store_slug: paymentTransaction.tip.store.slug,
+            qr_code: paymentTransaction.tip.qr_code.code,
+        };
+    }
+
     async createPublicTip(dto: CreatePublicTipDto) {
+        if (dto.client_request_id) {
+            const existing = await this.prisma.paymentTransaction.findUnique({
+                where: { client_request_id: dto.client_request_id },
+                include: { tip: true },
+            });
+            if (
+                existing?.provider_order_code &&
+                (existing.tip.status === TipStatus.CREATED || existing.tip.status === TipStatus.PROCESSING)
+            ) {
+                return { tip_id: existing.tip.id, checkout_url: this.buildCheckoutUrl(existing.provider_order_code) };
+            }
+        }
+
         const qrCode = await this.prisma.qrCode.findUnique({
             where: { id: dto.qr_code_id },
             include: {
@@ -65,78 +109,124 @@ export class TipsService {
         }
 
         const distributionRuleId = qrCode.distribution_rule_id || store.default_distribution_rule_id;
-        const recipients = distributionRuleId
-            ? await this.prisma.distributionRuleRecipient.findMany({ where: { distribution_rule_id: distributionRuleId } })
-            : [];
-
-        const distributionLines = calculateTipDistribution(
-            recipients.map((r) => ({
-                recipient_type: r.recipient_type,
-                employee_id: r.employee_id,
-                percentage: Number(r.percentage),
-                sort_order: r.sort_order,
-            })),
-            selectedEmployeeIds,
-            dto.amount,
-        );
 
         const customerUserId = dto.customer_email
             ? (await this.usersService.findOrCreateByEmail(dto.customer_email, { first_name: dto.customer_name?.split(' ')[0] })).id
             : undefined;
 
-        const currency = dto.currency || store.currency;
+        const currency: Currency = dto.currency || store.currency;
+        const commissionPercentage = this.platformFinanceConfig.getCommissionPercentage();
+        const commissionAmount = Math.round((dto.amount * commissionPercentage) / 100);
 
-        const tip = await this.prisma.$transaction(async (tx) => {
+        const { tip, paymentTransactionId } = await this.prisma.$transaction(async (tx) => {
             const created = await tx.tip.create({
                 data: {
                     store_id: store.id,
                     qr_code_id: qrCode.id,
                     employee_id: selectedEmployeeIds.length === 1 ? selectedEmployeeIds[0] : null,
                     distribution_rule_id: distributionRuleId,
+                    selected_employee_ids: selectedEmployeeIds,
                     customer_user_id: customerUserId,
                     customer_email: dto.customer_email,
                     customer_name: dto.customer_name,
                     amount: dto.amount,
                     currency,
-                    status: TipStatus.COMPLETED,
-                    payment_reference: generateMockPaymentReference(),
-                    paid_at: new Date(),
+                    status: TipStatus.CREATED,
                 },
             });
 
-            await tx.tipDistribution.createMany({
-                data: distributionLines.map((line) => ({
+            const paymentTransaction = await tx.paymentTransaction.create({
+                data: {
                     tip_id: created.id,
-                    recipient_type: line.recipient_type,
-                    employee_id: line.employee_id,
-                    amount: line.amount,
-                    percentage: line.percentage,
-                })),
+                    client_request_id: dto.client_request_id,
+                    gross_amount: dto.amount,
+                    currency,
+                    commission_percentage_used: commissionPercentage,
+                    commission_amount: commissionAmount,
+                    status: PaymentTransactionStatus.CREATED,
+                },
             });
 
-            return created;
+            return { tip: created, paymentTransactionId: paymentTransaction.id };
         });
 
-        const fullTip = await this.prisma.tip.findUnique({
-            where: { id: tip.id },
-            include: { distributions: { include: { employee: true } } },
+        let orderCode: number;
+        try {
+            const order = await this.vivaCheckout.createOrder({
+                amount: dto.amount,
+                tipAmount: dto.amount,
+                currencyCode: toIso4217NumericCode(currency),
+                merchantTrns: tip.id,
+                customerTrns: `Tip for ${store.name}`,
+                sourceCode: this.vivaConfig.getDefaultSourceCode(),
+                paymentTimeout: 600,
+            });
+            orderCode = order.orderCode;
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Unknown error creating Viva order';
+            await this.prisma.$transaction([
+                this.prisma.tip.update({ where: { id: tip.id }, data: { status: TipStatus.FAILED } }),
+                this.prisma.paymentTransaction.update({
+                    where: { id: paymentTransactionId },
+                    data: { status: PaymentTransactionStatus.FAILED, failure_reason: message },
+                }),
+            ]);
+            throw new BadGatewayException('Unable to start checkout with the payment processor. Please try again.');
+        }
+
+        await this.prisma.paymentTransaction.update({
+            where: { id: paymentTransactionId },
+            data: { provider_order_code: String(orderCode) },
         });
 
-        this.triggerPerformanceChangeAlert(store.id).catch(() => { });
+        return { tip_id: tip.id, checkout_url: this.buildCheckoutUrl(orderCode) };
+    }
 
-        const thankedNames = assignedEmployees
-            .filter((e) => selectedEmployeeIds.includes(e.id))
-            .map((e) => resolveTranslatedText(e.full_name as TranslatedText, undefined, store.primary_language))
-            .filter((name): name is string => !!name);
+    async getPublicStatus(id: string) {
+        const tip = await this.prisma.tip.findUnique({
+            where: { id },
+            include: {
+                employee: true,
+                store: true,
+                payment_transaction: true,
+                distributions: { include: { employee: true } },
+            },
+        });
+        if (!tip) throw new NotFoundException('Tip not found');
 
-        const defaultThankYou = `Thank you. Your ${(dto.amount / 100).toFixed(2)} ${currency} tip was sent to ${thankedNames.length ? thankedNames.join(' & ') : store.name}. Your appreciation means a lot.`;
-
-        const storeThankYou = resolveTranslatedText(store.thank_you_message as any, undefined, store.primary_language);
+        const primaryLanguage = tip.store.primary_language;
+        const employee = tip.employee ? this.resolveEmployeeRef(tip.employee, primaryLanguage) : null;
 
         return {
-            tip: fullTip,
-            thank_you_message: storeThankYou || defaultThankYou,
+            id: tip.id,
+            status: tip.status,
+            amount: tip.amount,
+            currency: tip.currency,
+            employee,
+            order_code: tip.payment_transaction?.provider_order_code ?? null,
+            distribution_summary:
+                tip.status === TipStatus.COMPLETED
+                    ? tip.distributions.map((d) => ({
+                        recipient_type: d.recipient_type,
+                        employee: d.employee ? this.resolveEmployeeRef(d.employee, primaryLanguage) : null,
+                        amount: d.amount,
+                        percentage: d.percentage,
+                    }))
+                    : undefined,
+            thank_you_message: tip.status === TipStatus.COMPLETED ? this.buildThankYouMessage(tip, primaryLanguage) : undefined,
         };
+    }
+
+    private buildThankYouMessage(tip: any, primaryLanguage: Language): string {
+        const thankedNames = (tip.distributions as any[])
+            .filter((d) => d.recipient_type === 'EMPLOYEE' && d.employee)
+            .map((d) => resolveTranslatedText(d.employee.full_name as TranslatedText, undefined, primaryLanguage))
+            .filter((name): name is string => !!name);
+
+        const defaultThankYou = `Thank you. Your ${(tip.amount / 100).toFixed(2)} ${tip.currency} tip was sent to ${thankedNames.length ? thankedNames.join(' & ') : tip.store.name}. Your appreciation means a lot.`;
+        const storeThankYou = resolveTranslatedText(tip.store.thank_you_message as TranslatedText, undefined, primaryLanguage);
+
+        return storeThankYou || defaultThankYou;
     }
 
     private resolveSelectedEmployeeIds(
@@ -175,7 +265,7 @@ export class TipsService {
         return [dto.employee_id];
     }
 
-    private async triggerPerformanceChangeAlert(storeId: string) {
+    async triggerPerformanceChangeAlert(storeId: string) {
         const preference = await this.prisma.alertPreference.findFirst({
             where: { store_id: storeId, alert_type: 'PERFORMANCE_CHANGE' },
         });
@@ -258,23 +348,74 @@ export class TipsService {
         );
     }
 
+    async findAllAdmin(query: AdminTipsQueryType) {
+        const where: any = {};
+        if (query.store_id) where.store_id = query.store_id;
+        if (query.status) where.status = query.status;
+        if (query.date_from || query.date_to) {
+            where.created_at = {};
+            if (query.date_from) where.created_at.gte = new Date(query.date_from);
+            if (query.date_to) where.created_at.lte = new Date(query.date_to);
+        }
+        if (query.search) {
+            where.OR = [
+                { customer_email: { contains: query.search, mode: 'insensitive' } },
+                { customer_name: { contains: query.search, mode: 'insensitive' } },
+                { store: { name: { contains: query.search, mode: 'insensitive' } } },
+            ];
+        }
+
+        const [items, total] = await Promise.all([
+            this.prisma.tip.findMany({
+                where,
+                include: {
+                    store: { select: { id: true, name: true, slug: true, primary_language: true } },
+                    employee: true,
+                },
+                skip: (query.page - 1) * query.limit,
+                take: query.limit,
+                orderBy: { created_at: 'desc' },
+            }),
+            this.prisma.tip.count({ where }),
+        ]);
+
+        return paginate(
+            items.map((item) => this.resolveTipEmployeeNames(item, item.store.primary_language)),
+            total,
+            query,
+        );
+    }
+
     async findOne(user: AuthUser, id: string) {
         const tip = await this.prisma.tip.findUnique({
             where: { id },
             include: {
+                store: { select: { id: true, name: true, slug: true, primary_language: true } },
                 employee: true,
                 qr_code: true,
                 distribution_rule: true,
                 distributions: { include: { employee: true } },
                 review: true,
                 refunds: true,
+                payment_transaction: true,
             },
         });
         if (!tip) throw new NotFoundException('Tip not found');
 
-        await this.accessControl.assertStoreAccess(user, tip.store_id);
+        const { membership } = await this.accessControl.assertStoreAccess(user, tip.store_id);
 
-        const store = await this.prisma.store.findUnique({ where: { id: tip.store_id }, select: { primary_language: true } });
-        return this.resolveTipEmployeeNames(tip, store?.primary_language ?? Language.EN);
+        // membership is null only for platform admins (assertStoreAccess
+        // short-circuits for them) — everyone else must be OWNER/ACCOUNTANT
+        // to see the financial breakdown (payment plan §16).
+        const canViewFinancials = membership === null || membership.role === 'OWNER' || membership.role === 'ACCOUNTANT';
+
+        const resolved = this.resolveTipEmployeeNames(tip, tip.store?.primary_language ?? Language.EN);
+
+        if (!canViewFinancials) {
+            const { payment_transaction, ...rest } = resolved;
+            return rest;
+        }
+
+        return resolved;
     }
 }

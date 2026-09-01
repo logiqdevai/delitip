@@ -14,12 +14,15 @@ export const Routes = {
     sign_up: "/auth/sign-up",
     forgot_password: "/auth/forgot-password",
     reset_password: "/auth/reset-password",
+    accept_invite: "/auth/accept-invite",
   },
   onboarding: "/onboarding",
   tip: (storeSlug: string, code: string) =>
     `/${storeSlug}/q/${code}` as const,
+  checkoutReturn: "/checkout/return",
   dashboard: {
     root: "/dashboard",
+    gettingStarted: "/dashboard/getting-started",
     employees: "/dashboard/employees",
     employeeDetail: (employeeId: string) =>
       `/dashboard/employees/${employeeId}` as const,
@@ -38,7 +41,17 @@ export const Routes = {
     access: "/dashboard/access",
     alerts: "/dashboard/alerts",
     payments: "/dashboard/payments",
+    payouts: "/dashboard/payouts",
     account: "/dashboard/account",
+    admin: {
+      root: "/dashboard/admin",
+      users: "/dashboard/admin/users",
+      payments: "/dashboard/admin/payments",
+      paymentDetail: (id: string) =>
+        `/dashboard/admin/payments/${id}` as const,
+      payoutDetail: (id: string) => `/dashboard/admin/payouts/${id}` as const,
+      analytics: "/dashboard/admin/analytics",
+    },
     settings: {
       root: "/dashboard/settings",
       profile: "/dashboard/settings/profile",

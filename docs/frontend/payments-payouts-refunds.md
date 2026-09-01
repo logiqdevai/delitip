@@ -42,7 +42,7 @@ Payments
 **Actions:** Connect / continue onboarding with provider; Refresh status  
 **Unclear:** Exact Viva/Stripe/PayPal KYC embedded UI  
 
-### Refunds Queue
+### Refunds
 
 **Status:** Missing  
 **Purpose:** List `Refund` records; approve/reject/process  
@@ -75,7 +75,7 @@ See [tips-ledger.md](./tips-ledger.md).
 
 ### Process Refund
 
-**Trigger:** Refunds queue  
+**Trigger:** Refunds  
 **Fields:** None or processor notes — **unclear**  
 **Actions:** Approve / Reject  
 

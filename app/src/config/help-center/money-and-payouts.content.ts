@@ -74,12 +74,12 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
       slug: "handling-refund-requests",
       title: "Handling refund requests",
       summary:
-        "Customers can request a refund from the tip page; managers approve, reject, or complete requests from the Refunds queue.",
+        "Customers can request a refund from the tip page; managers approve, reject, or complete requests from the Refunds.",
       sections: [
         {
           paragraphs: [
             "A customer can request a refund directly from the Done step of the tip flow, with an optional reason. From a Dashboard tip's detail page, a manager can also request a refund on a completed tip that doesn't already have an active refund in progress.",
-            "The Refunds Queue on Dashboard → Payments lists every request, filterable by status: Pending, Approved, Rejected, or Completed. Refund history for a specific tip is always visible on that tip's detail page.",
+            "The Refunds on Dashboard → Payments lists every request, filterable by status: Pending, Approved, Rejected, or Completed. Refund history for a specific tip is always visible on that tip's detail page.",
           ],
           links: [{ label: "Dashboard → Payments", href: Routes.dashboard.payments }],
         },

@@ -8,9 +8,11 @@ describe('EmployeesService', () => {
     let accessControl: any;
     let usersService: any;
     let documentsService: any;
+    let passwordService: any;
+    let mailService: any;
 
     const user = { id: 'u1', role: AuthRole.USER };
-    const store1 = { id: 'store1', primary_language: 'EN', supported_languages: ['EN'] };
+    const store1 = { id: 'store1', name: 'Store One', primary_language: 'EN', supported_languages: ['EN'] };
 
     beforeEach(() => {
         prisma = {
@@ -27,12 +29,14 @@ describe('EmployeesService', () => {
         };
         usersService = { findOrCreateByEmail: jest.fn() };
         documentsService = { removeById: jest.fn().mockResolvedValue({ success: true }) };
-        service = new EmployeesService(prisma, accessControl, usersService, documentsService);
+        passwordService = { issueToken: jest.fn().mockResolvedValue('raw-token') };
+        mailService = { sendEmail: jest.fn().mockResolvedValue(undefined) };
+        service = new EmployeesService(prisma, accessControl, usersService, documentsService, passwordService, mailService);
     });
 
     describe('create', () => {
         it('asserts OWNER/STORE_MANAGER access, links/creates the user by email, and creates the employee', async () => {
-            usersService.findOrCreateByEmail.mockResolvedValue({ id: 'linked-user' });
+            usersService.findOrCreateByEmail.mockResolvedValue({ id: 'linked-user', email: 'maria@example.com', registered_at: null });
             const created = { id: 'emp1', full_name: { en: 'Maria Papadopoulou' } };
             prisma.employee.create.mockResolvedValue(created);
 
@@ -52,15 +56,16 @@ describe('EmployeesService', () => {
                     email: 'maria@example.com',
                     position: 'Waiter',
                     photo_document_id: 'doc1',
+                    invited_at: expect.any(Date),
                 },
-                include: { photo_document: true },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
             });
             expect(result.full_name).toBe('Maria Papadopoulou');
             expect(result.full_name_translations).toEqual({ en: 'Maria Papadopoulou' });
         });
 
         it('derives the first name from a single-word full_name', async () => {
-            usersService.findOrCreateByEmail.mockResolvedValue({ id: 'u2' });
+            usersService.findOrCreateByEmail.mockResolvedValue({ id: 'u2', email: 'n@example.com', registered_at: null });
             prisma.employee.create.mockResolvedValue({ full_name: { en: 'Nikos' } });
 
             await service.create(user, 'store1', { full_name: '  Nikos  ', email: 'n@example.com' } as any);
@@ -75,6 +80,106 @@ describe('EmployeesService', () => {
                 service.create(user, 'store1', { full_name: 'Maria', email: 'm@example.com' } as any),
             ).rejects.toThrow(NotFoundException);
             expect(prisma.employee.create).not.toHaveBeenCalled();
+        });
+
+        it('sends an invite email when the linked user has not registered yet', async () => {
+            usersService.findOrCreateByEmail.mockResolvedValue({ id: 'linked-user', email: 'maria@example.com', registered_at: null });
+            prisma.employee.create.mockResolvedValue({ id: 'emp1', full_name: { en: 'Maria' } });
+
+            await service.create(user, 'store1', { full_name: 'Maria', email: 'maria@example.com' } as any);
+            await new Promise((resolve) => setImmediate(resolve));
+
+            expect(passwordService.issueToken).toHaveBeenCalledWith('linked-user', expect.any(Number));
+            expect(mailService.sendEmail).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    to: 'maria@example.com',
+                    dynamic_template_data: expect.objectContaining({
+                        employeeName: 'Maria',
+                        storeName: 'Store One',
+                        inviteUrl: expect.any(String),
+                    }),
+                }),
+            );
+        });
+
+        it('does not send an invite email when the linked user has already registered', async () => {
+            usersService.findOrCreateByEmail.mockResolvedValue({ id: 'linked-user', email: 'maria@example.com', registered_at: new Date() });
+            prisma.employee.create.mockResolvedValue({ id: 'emp1', full_name: { en: 'Maria' } });
+
+            await service.create(user, 'store1', { full_name: 'Maria', email: 'maria@example.com' } as any);
+            await new Promise((resolve) => setImmediate(resolve));
+
+            expect(prisma.employee.create).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ invited_at: null }) }),
+            );
+            expect(passwordService.issueToken).not.toHaveBeenCalled();
+            expect(mailService.sendEmail).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('resendInvite', () => {
+        it('throws NotFoundException when the employee does not exist', async () => {
+            prisma.employee.findUnique.mockResolvedValue(null);
+
+            await expect(service.resendInvite(user, 'emp1')).rejects.toThrow(NotFoundException);
+        });
+
+        it('asserts OWNER/STORE_MANAGER access for the employee\'s store', async () => {
+            prisma.employee.findUnique.mockResolvedValue({
+                id: 'emp1',
+                store_id: 'store1',
+                user: { id: 'linked-user', email: 'maria@example.com', registered_at: null },
+            });
+            prisma.employee.update.mockResolvedValue({ id: 'emp1', full_name: { en: 'Maria' } });
+
+            await service.resendInvite(user, 'emp1');
+
+            expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1', [
+                OrganizationRole.OWNER,
+                OrganizationRole.STORE_MANAGER,
+            ]);
+        });
+
+        it('throws BadRequestException when the employee has no linked account', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'emp1', store_id: 'store1', user: null });
+
+            await expect(service.resendInvite(user, 'emp1')).rejects.toThrow(BadRequestException);
+            expect(prisma.employee.update).not.toHaveBeenCalled();
+        });
+
+        it('throws BadRequestException when the employee has already signed up', async () => {
+            prisma.employee.findUnique.mockResolvedValue({
+                id: 'emp1',
+                store_id: 'store1',
+                user: { id: 'linked-user', email: 'maria@example.com', registered_at: new Date() },
+            });
+
+            await expect(service.resendInvite(user, 'emp1')).rejects.toThrow(BadRequestException);
+            expect(prisma.employee.update).not.toHaveBeenCalled();
+        });
+
+        it('bumps invited_at and re-sends the invite email', async () => {
+            prisma.employee.findUnique.mockResolvedValue({
+                id: 'emp1',
+                store_id: 'store1',
+                user: { id: 'linked-user', email: 'maria@example.com', registered_at: null },
+            });
+            const updated = { id: 'emp1', full_name: { en: 'Maria' } };
+            prisma.employee.update.mockResolvedValue(updated);
+
+            const result = await service.resendInvite(user, 'emp1');
+            await new Promise((resolve) => setImmediate(resolve));
+
+            expect(prisma.employee.update).toHaveBeenCalledWith({
+                where: { id: 'emp1' },
+                data: { invited_at: expect.any(Date) },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
+            });
+            expect(passwordService.issueToken).toHaveBeenCalledWith('linked-user', expect.any(Number));
+            expect(mailService.sendEmail).toHaveBeenCalledWith(
+                expect.objectContaining({ to: 'maria@example.com' }),
+            );
+            expect(result.full_name).toBe('Maria');
         });
     });
 
@@ -91,7 +196,7 @@ describe('EmployeesService', () => {
                 skip: 0,
                 take: 20,
                 orderBy: { created_at: 'desc' },
-                include: { photo_document: true },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
             });
             expect(result.data).toEqual([
                 { id: 'e1', full_name: 'Alice', full_name_translations: { en: 'Alice' } },
@@ -124,7 +229,7 @@ describe('EmployeesService', () => {
             expect(accessControl.assertEmployeeSelfOrStoreAccess).toHaveBeenCalledWith(user, 'emp1');
             expect(prisma.employee.findUnique).toHaveBeenCalledWith({
                 where: { id: 'emp1' },
-                include: { photo_document: true },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
             });
             expect(result.full_name).toBe('Alice');
             expect(result.full_name_translations).toEqual({ en: 'Alice' });
@@ -149,7 +254,7 @@ describe('EmployeesService', () => {
             expect(prisma.employee.update).toHaveBeenCalledWith({
                 where: { id: 'emp1' },
                 data: { position: 'Manager' },
-                include: { photo_document: true },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
             });
             expect(result.full_name).toBe('Alice');
         });
@@ -166,7 +271,7 @@ describe('EmployeesService', () => {
             expect(prisma.employee.update).toHaveBeenCalledWith({
                 where: { id: 'emp1' },
                 data: { full_name: { en: 'Alicia', el: 'Άλις' } },
-                include: { photo_document: true },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
             });
         });
 
@@ -184,7 +289,7 @@ describe('EmployeesService', () => {
             expect(prisma.employee.update).toHaveBeenCalledWith({
                 where: { id: 'emp1' },
                 data: { full_name: { en: 'Alice', fr: 'Alice' } },
-                include: { photo_document: true },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
             });
         });
 
@@ -216,7 +321,7 @@ describe('EmployeesService', () => {
             expect(prisma.employee.update).toHaveBeenCalledWith({
                 where: { id: 'emp1' },
                 data: { photo_document_id: 'doc1' },
-                include: { photo_document: true },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
             });
         });
     });

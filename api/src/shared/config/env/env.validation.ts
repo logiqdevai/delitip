@@ -35,9 +35,16 @@ const EnvSchema = z.object({
     VIVA_ENVIRONMENT: z.enum(['demo', 'production']).optional(),
     VIVA_CLIENT_ID: z.string().optional(),
     VIVA_CLIENT_SECRET: z.string().optional(),
+    VIVA_ACCOUNT_TRANSACTIONS_CLIENT_ID: z.string().optional(),
+    VIVA_ACCOUNT_TRANSACTIONS_CLIENT_SECRET: z.string().optional(),
     VIVA_MERCHANT_ID: z.string().optional(),
     VIVA_API_KEY: z.string().optional(),
     VIVA_SOURCE_CODE: z.string().optional(),
+    VIVA_WALLET_ID: z.coerce.number().optional(),
+    VIVA_WEBHOOK_IP_ALLOWLIST: z.string().optional(),
+    TIP_PLATFORM_COMMISSION_PERCENTAGE: z.coerce.number().optional(),
+    TIP_PROCESSOR_FEE_ESTIMATE_PERCENTAGE: z.coerce.number().optional(),
+    PAYOUT_HOLD_WINDOW_HOURS: z.coerce.number().optional(),
 });
 
 export function validateEnv(config: Record<string, unknown>) {

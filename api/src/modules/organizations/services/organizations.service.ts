@@ -3,6 +3,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { ensureUniqueSlug, withUniqueSlugRetry } from '@/shared/utils/slug/slug.utils';
 import { seedIndustryReviewConfig } from '@/shared/utils/industry-review-config/seed-industry-review-config.util';
+import { seedSampleStoreSetup } from '@/shared/utils/sample-store-setup/seed-sample-store-setup.util';
 import { CreateOrganizationDto } from '../dto/create-organization.dto';
 import { UpdateOrganizationDto } from '../dto/update-organization.dto';
 import { OrganizationRole, SubscriptionPlan, SubscriptionStatus } from 'generated/prisma';
@@ -70,6 +71,11 @@ export class OrganizationsService {
                 });
 
                 await seedIndustryReviewConfig(tx, store.id, store.industry, store.primary_language);
+                const { distributionRuleId } = await seedSampleStoreSetup(tx, store.id, store.industry);
+                store = await tx.store.update({
+                    where: { id: store.id },
+                    data: { default_distribution_rule_id: distributionRuleId },
+                });
             }
 
             return { ...organization, store };

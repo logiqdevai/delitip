@@ -1,0 +1,17 @@
+import { Module } from '@nestjs/common';
+import { PrismaModule } from '@/core/databases/prisma/prisma.module';
+import { AccessControlModule } from '@/shared/services/access-control/access-control.module';
+import { PlatformFinanceModule } from '@/shared/config/platform-finance/platform-finance.module';
+import { VivaIntegrationModule } from '@/integrations/viva/viva.module';
+import { PayoutAccountsModule } from '@/modules/payout-accounts/payout-accounts.module';
+import { PayoutsController } from './controllers/payouts.controller';
+import { AdminPayoutsController } from './controllers/admin-payouts.controller';
+import { PayoutsService } from './services/payouts.service';
+
+@Module({
+  imports: [PrismaModule, AccessControlModule, PlatformFinanceModule, VivaIntegrationModule, PayoutAccountsModule],
+  controllers: [PayoutsController, AdminPayoutsController],
+  providers: [PayoutsService],
+  exports: [PayoutsService],
+})
+export class PayoutsModule {}

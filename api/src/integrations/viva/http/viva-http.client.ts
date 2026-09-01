@@ -63,7 +63,7 @@ export class VivaHttpClient {
     };
 
     if (options.auth === VivaAuthMode.OAUTH2) {
-      headers.Authorization = `Bearer ${await this.vivaAuthService.getAccessToken()}`;
+      headers.Authorization = `Bearer ${await this.vivaAuthService.getAccessToken(options.oauthScope)}`;
     } else if (options.auth === VivaAuthMode.BASIC) {
       headers.Authorization = this.vivaConfig.getBasicAuthHeader();
     }

@@ -100,7 +100,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
               ? "bg-brand-50 text-brand-700"
               : tip.status === "FAILED"
                 ? "bg-red-50 text-red-700"
-                : tip.status === "REFUNDED"
+                : tip.status === "REFUNDED" || tip.status === "CANCELLED"
                   ? "bg-zinc-100 text-zinc-600"
                   : "bg-amber-50 text-amber-700",
           )}
@@ -139,6 +139,43 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
           value={tip.customer_name ?? tip.customer_email ?? "—"}
         />
       </div>
+
+      {tip.payment_transaction ? (
+        <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+          <h2 className="mb-2 text-sm font-bold text-ink-charcoal">
+            Financial breakdown
+          </h2>
+          <SummaryRow
+            label="Gross amount"
+            value={formatMoney(tip.payment_transaction.gross_amount, tip.currency)}
+          />
+          <SummaryRow
+            label="Processor fee"
+            value={
+              tip.payment_transaction.processor_fee_confirmed
+                ? formatMoney(
+                    tip.payment_transaction.processor_fee_confirmed_amount ?? 0,
+                    tip.currency,
+                  )
+                : tip.payment_transaction.processor_fee_estimated != null
+                  ? `~${formatMoney(tip.payment_transaction.processor_fee_estimated, tip.currency)} (estimated)`
+                  : "Not yet confirmed"
+            }
+          />
+          <SummaryRow
+            label="Platform commission"
+            value={`${formatMoney(tip.payment_transaction.commission_amount, tip.currency)} (${tip.payment_transaction.commission_percentage_used}%)`}
+          />
+          <SummaryRow
+            label="Net distributable"
+            value={
+              tip.payment_transaction.net_distributable_amount != null
+                ? formatMoney(tip.payment_transaction.net_distributable_amount, tip.currency)
+                : "—"
+            }
+          />
+        </div>
+      ) : null}
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
         <h2 className="mb-3 text-sm font-bold text-ink-charcoal">

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { TipsModule } from './tips.module';
 import { TipsController } from './tips.controller';
@@ -14,6 +15,8 @@ describe('TipsModule', () => {
         })
             .overrideProvider(PrismaService)
             .useValue({})
+            .overrideProvider(ConfigService)
+            .useValue({ get: () => undefined })
             .compile();
     });
 

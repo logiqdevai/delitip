@@ -2,40 +2,55 @@ import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import { VivaConfig } from '../viva.config';
 import { VivaOAuthTokenResponse } from '../interfaces/viva-auth.interface';
+import { VivaOAuthScope } from '../interfaces/viva-common.interface';
 
-// Viva's OAuth2 client-credentials tokens are valid for ~1 hour. We cache the
-// token in-memory and share a single in-flight refresh across concurrent
-// callers so a burst of requests never triggers duplicate token requests.
+interface CachedToken {
+  accessToken?: string;
+  expiresAt: number;
+  pendingRequest?: Promise<string>;
+}
+
+// Viva's OAuth2 client-credentials tokens are valid for ~1 hour. Each
+// permission scope (Smart Checkout vs. Account Transactions) is a distinct
+// client id/secret pair issued by Viva, so each gets its own cached token
+// and its own shared in-flight refresh — a burst of requests for one scope
+// never triggers duplicate token requests, and the two scopes never share
+// or clobber each other's token.
 @Injectable()
 export class VivaAuthService {
   private readonly logger = new Logger(VivaAuthService.name);
-  private accessToken?: string;
-  private expiresAt = 0;
-  private pendingRequest?: Promise<string>;
+  private readonly tokens = new Map<VivaOAuthScope, CachedToken>();
 
   constructor(private readonly vivaConfig: VivaConfig) {}
 
-  async getAccessToken(): Promise<string> {
-    if (this.accessToken && Date.now() < this.expiresAt) {
-      return this.accessToken;
+  async getAccessToken(
+    scope: VivaOAuthScope = VivaOAuthScope.CHECKOUT,
+  ): Promise<string> {
+    const cached = this.tokens.get(scope);
+
+    if (cached?.accessToken && Date.now() < cached.expiresAt) {
+      return cached.accessToken;
     }
 
-    if (!this.pendingRequest) {
-      this.pendingRequest = this.requestNewToken().finally(() => {
-        this.pendingRequest = undefined;
+    if (!cached?.pendingRequest) {
+      const pendingRequest = this.requestNewToken(scope).finally(() => {
+        const entry = this.tokens.get(scope);
+        if (entry) entry.pendingRequest = undefined;
       });
+      this.tokens.set(scope, { ...cached, expiresAt: cached?.expiresAt ?? 0, pendingRequest });
+      return pendingRequest;
     }
 
-    return this.pendingRequest;
+    return cached.pendingRequest;
   }
 
-  private async requestNewToken(): Promise<string> {
-    const clientId = this.vivaConfig.getClientId();
-    const clientSecret = this.vivaConfig.getClientSecret();
+  private async requestNewToken(scope: VivaOAuthScope): Promise<string> {
+    const clientId = this.vivaConfig.getClientId(scope);
+    const clientSecret = this.vivaConfig.getClientSecret(scope);
 
     if (!clientId || !clientSecret) {
       throw new Error(
-        'Viva OAuth2 credentials (VIVA_CLIENT_ID / VIVA_CLIENT_SECRET) are required',
+        `Viva OAuth2 credentials for scope "${scope}" are not configured`,
       );
     }
 
@@ -50,12 +65,13 @@ export class VivaAuthService {
       },
     );
 
-    this.accessToken = response.data.access_token;
-    this.expiresAt =
+    const accessToken = response.data.access_token;
+    const expiresAt =
       Date.now() + Math.max(response.data.expires_in - 60, 0) * 1000;
 
-    this.logger.debug('Viva OAuth2 access token refreshed');
+    this.tokens.set(scope, { accessToken, expiresAt, pendingRequest: undefined });
+    this.logger.debug(`Viva OAuth2 access token refreshed (scope=${scope})`);
 
-    return this.accessToken;
+    return accessToken;
   }
 }

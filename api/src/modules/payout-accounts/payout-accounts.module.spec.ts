@@ -1,8 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { PayoutAccountsModule } from './payout-accounts.module';
 import { PayoutAccountsController } from './payout-accounts.controller';
 import { UserPayoutAccountController } from './user-payout-account.controller';
+import { EmployeePayoutAccountController } from './employee-payout-account.controller';
+import { AdminPayoutAccountsController } from './admin-payout-accounts.controller';
 import { PayoutAccountsService } from './payout-accounts.service';
 
 describe('PayoutAccountsModule', () => {
@@ -14,6 +17,8 @@ describe('PayoutAccountsModule', () => {
         })
             .overrideProvider(PrismaService)
             .useValue({})
+            .overrideProvider(ConfigService)
+            .useValue({ get: () => undefined })
             .compile();
     });
 
@@ -35,5 +40,13 @@ describe('PayoutAccountsModule', () => {
 
     it('should resolve UserPayoutAccountController', () => {
         expect(module.get(UserPayoutAccountController)).toBeInstanceOf(UserPayoutAccountController);
+    });
+
+    it('should resolve EmployeePayoutAccountController', () => {
+        expect(module.get(EmployeePayoutAccountController)).toBeInstanceOf(EmployeePayoutAccountController);
+    });
+
+    it('should resolve AdminPayoutAccountsController', () => {
+        expect(module.get(AdminPayoutAccountsController)).toBeInstanceOf(AdminPayoutAccountsController);
     });
 });

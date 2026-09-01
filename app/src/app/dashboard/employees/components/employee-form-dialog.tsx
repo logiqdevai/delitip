@@ -41,6 +41,7 @@ interface EmployeeFormDialogProps {
   onOpenChange: (open: boolean) => void;
   storeId: string;
   employee?: Employee | null;
+  onCreated?: (employee: Employee) => void;
 }
 
 export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
@@ -48,6 +49,7 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
   onOpenChange,
   storeId,
   employee,
+  onCreated,
 }) => {
   const isEdit = !!employee;
   const { store } = useWorkspace();
@@ -172,12 +174,15 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
           },
         });
       } else {
-        await createEmployee.mutateAsync({
+        const created = await createEmployee.mutateAsync({
           full_name: fullName,
           email: values.email,
           position,
           photo_document_id: photoDocumentId ?? undefined,
         });
+        onOpenChange(false);
+        onCreated?.(created);
+        return;
       }
 
       onOpenChange(false);

@@ -1,5 +1,9 @@
 import { VivaWalletsService } from './viva-wallets.service';
-import { VivaAuthMode, VivaHost } from '../interfaces/viva-common.interface';
+import {
+  VivaAuthMode,
+  VivaHost,
+  VivaOAuthScope,
+} from '../interfaces/viva-common.interface';
 
 describe('VivaWalletsService', () => {
   let service: VivaWalletsService;
@@ -39,6 +43,7 @@ describe('VivaWalletsService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
         method: 'GET',
         path: '/merchants/v1/wallets',
       });
@@ -60,6 +65,7 @@ describe('VivaWalletsService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
         method: 'POST',
         path: '/dataservices/v2/accounttransactions/Search',
         query: { Page: 1, PageSize: 100 },

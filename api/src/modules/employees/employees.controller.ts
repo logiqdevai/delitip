@@ -64,6 +64,12 @@ export class EmployeesController {
         return this.employeesService.remove(user, id);
     }
 
+    @Post('employees/:id/resend-invite')
+    @ApiOperation({ summary: 'Resend the account-setup invite email to an Employee who has not signed up yet' })
+    resendInvite(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+        return this.employeesService.resendInvite(user, id);
+    }
+
     @Get('employees/:id/dashboard')
     @ApiOperation({ summary: 'Employee Dashboard (§13) — self or a store role' })
     dashboard(@CurrentUser() user: AuthUser, @Param('id') id: string) {

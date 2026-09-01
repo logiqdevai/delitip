@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { AuthRole, OrganizationRole, PayoutStatus, RefundStatus, TipStatus } from 'generated/prisma';
 import { RefundsService } from './refunds.service';
 
@@ -7,8 +7,17 @@ describe('RefundsService', () => {
     let prisma: any;
     let accessControl: any;
     let usersService: any;
+    let vivaTransactions: any;
 
     const user = { id: 'u1', role: AuthRole.USER };
+
+    const paidTip = (overrides: Partial<any> = {}) => ({
+        store_id: 'store1',
+        payment_transaction: { provider_transaction_id: 'vt1', confirmed_at: new Date() },
+        distributions: [],
+        created_at: new Date(),
+        ...overrides,
+    });
 
     beforeEach(() => {
         prisma = {
@@ -19,7 +28,11 @@ describe('RefundsService', () => {
         };
         accessControl = { assertStoreAccess: jest.fn() };
         usersService = { findOrCreateByEmail: jest.fn() };
-        service = new RefundsService(prisma, accessControl, usersService);
+        vivaTransactions = {
+            createFastRefund: jest.fn().mockResolvedValue({ transactionId: 'refund-tx-1' }),
+            createRebate: jest.fn().mockResolvedValue({ transactionId: 'refund-tx-1' }),
+        };
+        service = new RefundsService(prisma, accessControl, usersService, vivaTransactions);
     });
 
     describe('createPublicRequest', () => {
@@ -205,21 +218,29 @@ describe('RefundsService', () => {
             );
         });
 
-        it('flips the tip to REFUNDED inside the same transaction when the refund becomes COMPLETED', async () => {
+        it('calls Viva\'s fast-refund endpoint and flips the tip to REFUNDED when the refund becomes COMPLETED same-day', async () => {
             prisma.refund.findUnique.mockResolvedValue({
                 id: 'refund1',
+                amount: 500,
                 status: RefundStatus.APPROVED,
                 tip_id: 'tip1',
-                tip: { store_id: 'store1' },
+                tip: paidTip(),
             });
             prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
 
             await service.update(user, 'refund1', { status: RefundStatus.COMPLETED });
 
+            expect(vivaTransactions.createFastRefund).toHaveBeenCalledWith('vt1', { amount: 500, merchantTrns: 'refund1' });
             expect(prisma.$transaction).toHaveBeenCalledTimes(1);
             expect(prisma.refund.update).toHaveBeenCalledWith({
                 where: { id: 'refund1' },
-                data: { status: RefundStatus.COMPLETED, processed_by_user_id: 'u1' },
+                data: {
+                    status: RefundStatus.COMPLETED,
+                    processed_by_user_id: 'u1',
+                    provider_reference: 'refund-tx-1',
+                    provider_status: 'REQUESTED',
+                    requires_manual_reconciliation: false,
+                },
             });
             expect(prisma.tip.update).toHaveBeenCalledWith({
                 where: { id: 'tip1' },
@@ -227,12 +248,74 @@ describe('RefundsService', () => {
             });
         });
 
+        it('uses the rebate endpoint instead of fast-refund when the payment was confirmed on a previous day', async () => {
+            const yesterday = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                amount: 500,
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: paidTip({ payment_transaction: { provider_transaction_id: 'vt1', confirmed_at: yesterday } }),
+            });
+            prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
+
+            await service.update(user, 'refund1', { status: RefundStatus.COMPLETED });
+
+            expect(vivaTransactions.createRebate).toHaveBeenCalledWith('vt1', { amount: 500, merchantTrns: 'refund1' });
+            expect(vivaTransactions.createFastRefund).not.toHaveBeenCalled();
+        });
+
+        it('throws BadRequestException when the tip has no confirmed payment to refund', async () => {
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                amount: 500,
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: paidTip({ payment_transaction: null }),
+            });
+
+            await expect(service.update(user, 'refund1', { status: RefundStatus.COMPLETED })).rejects.toThrow(BadRequestException);
+            expect(prisma.refund.update).not.toHaveBeenCalled();
+        });
+
+        it('wraps a Viva refund failure in BadGatewayException and never finalizes locally', async () => {
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                amount: 500,
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: paidTip(),
+            });
+            vivaTransactions.createFastRefund.mockRejectedValue(new Error('Viva rejected the refund'));
+
+            await expect(service.update(user, 'refund1', { status: RefundStatus.COMPLETED })).rejects.toThrow(BadGatewayException);
+            expect(prisma.refund.update).not.toHaveBeenCalled();
+        });
+
+        it('flags the refund for manual reconciliation when a distribution was already paid out', async () => {
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                amount: 500,
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: paidTip({ distributions: [{ payout_status: PayoutStatus.PAID }] }),
+            });
+            prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
+
+            await service.update(user, 'refund1', { status: RefundStatus.COMPLETED });
+
+            expect(prisma.refund.update).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ requires_manual_reconciliation: true }) }),
+            );
+        });
+
         it('cancels the tip\'s still-pending distributions when the refund becomes COMPLETED', async () => {
             prisma.refund.findUnique.mockResolvedValue({
                 id: 'refund1',
+                amount: 500,
                 status: RefundStatus.APPROVED,
                 tip_id: 'tip1',
-                tip: { store_id: 'store1' },
+                tip: paidTip(),
             });
             prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
 

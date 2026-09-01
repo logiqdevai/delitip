@@ -21,6 +21,7 @@ import {
   EmployeeBalanceCard,
   EmployeeDepositNotice,
 } from "./components/employee-balance-card";
+import { EmployeePayoutHistoryCard } from "./components/employee-payout-history-card";
 
 const TREND_DAYS = 7;
 const TIPS_QUERY = { limit: 200 };
@@ -234,6 +235,8 @@ const EarningsPage: FC = () => {
           <EmployeeDepositNotice />
         </div>
       </div>
+
+      {employeeId ? <EmployeePayoutHistoryCard employeeId={employeeId} /> : null}
 
       {dashboard?.recent_feedback.length ? (
         <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white p-5 shadow-xs sm:p-6">

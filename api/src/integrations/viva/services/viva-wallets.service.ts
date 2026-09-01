@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { VivaHttpClient } from '../http/viva-http.client';
-import { VivaAuthMode, VivaHost } from '../interfaces/viva-common.interface';
+import {
+  VivaAuthMode,
+  VivaHost,
+  VivaOAuthScope,
+} from '../interfaces/viva-common.interface';
 import {
   BalanceTransferResponse,
   CreateBalanceTransferRequest,
@@ -28,10 +32,15 @@ export class VivaWalletsService {
     });
   }
 
+  // Confirmed empirically against Viva's demo sandbox: the Smart Checkout
+  // client is rejected (403) here — wallet/account endpoints live under the
+  // same "Account Transactions" permission group as the Bank Transfer API,
+  // not Checkout.
   async getMerchantWallets(): Promise<VivaMerchantWallet[]> {
     return this.vivaHttpClient.request<VivaMerchantWallet[]>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
       method: 'GET',
       path: '/merchants/v1/wallets',
     });
@@ -48,6 +57,7 @@ export class VivaWalletsService {
     >({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.ACCOUNT_TRANSACTIONS,
       method: 'POST',
       path: '/dataservices/v2/accounttransactions/Search',
       query,

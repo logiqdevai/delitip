@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
@@ -15,6 +16,10 @@ import { ActionButtonWithPending } from "@/components/ui/action-button-with-pend
 import { Input } from "@/components/ui/input";
 
 export const AuthForgotPasswordForm: FC = () => {
+  const searchParams = useSearchParams();
+  const role = searchParams.get("role") === "employee" ? "employee" : undefined;
+  const signInHref =
+    role === "employee" ? `${Routes.auth.sign_in}?role=employee` : Routes.auth.sign_in;
   const forgotPassword = useForgotPassword();
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
@@ -30,11 +35,14 @@ export const AuthForgotPasswordForm: FC = () => {
   const isPending = forgotPassword.isPending;
 
   const onSubmit = handleSubmit((values) => {
-    forgotPassword.mutate(values, {
-      onSuccess: () => {
-        setSubmittedEmail(values.email);
+    forgotPassword.mutate(
+      { ...values, role },
+      {
+        onSuccess: () => {
+          setSubmittedEmail(values.email);
+        },
       },
-    });
+    );
   });
 
   if (submittedEmail) {
@@ -55,7 +63,7 @@ export const AuthForgotPasswordForm: FC = () => {
           </p>
         </div>
         <Link
-          href={Routes.auth.sign_in}
+          href={signInHref}
           className="inline-flex items-center gap-2 text-xs font-bold text-brand-700 hover:underline"
         >
           Back to sign in
@@ -113,7 +121,7 @@ export const AuthForgotPasswordForm: FC = () => {
         <p className="text-xs text-zinc-500">
           Remembered it?{" "}
           <Link
-            href={Routes.auth.sign_in}
+            href={signInHref}
             className="font-bold text-brand-700 hover:underline"
           >
             Sign in

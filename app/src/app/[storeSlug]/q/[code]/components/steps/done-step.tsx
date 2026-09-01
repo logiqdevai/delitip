@@ -165,7 +165,7 @@ export const DoneStep: FC<DoneStepProps> = ({
           href={review.redirect.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-ink-charcoal py-3.5 text-sm font-semibold text-paper-offwhite shadow transition hover:bg-zinc-800"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-(--tip-primary) py-3.5 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary)"
         >
           <span>Share it publicly</span>
           <ExternalLink className="size-4" strokeWidth={2} />

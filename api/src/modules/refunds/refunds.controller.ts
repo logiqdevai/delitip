@@ -27,6 +27,8 @@ export class RefundsController {
     @ApiQuery({ name: 'page', required: false })
     @ApiQuery({ name: 'limit', required: false })
     @ApiQuery({ name: 'status', required: false })
+    @ApiQuery({ name: 'date_from', required: false })
+    @ApiQuery({ name: 'date_to', required: false })
     findAll(
         @CurrentUser() user: AuthUser,
         @Param('storeId') storeId: string,

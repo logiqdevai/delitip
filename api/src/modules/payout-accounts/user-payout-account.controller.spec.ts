@@ -8,7 +8,7 @@ describe('UserPayoutAccountController', () => {
     const user = { id: 'u1', role: AuthRole.USER };
 
     beforeEach(() => {
-        service = { createForUser: jest.fn(), findForUser: jest.fn() };
+        service = { createForUser: jest.fn(), findForUser: jest.fn(), refreshStatusForUser: jest.fn() };
         controller = new UserPayoutAccountController(service);
     });
 
@@ -25,5 +25,12 @@ describe('UserPayoutAccountController', () => {
 
         expect(controller.findOne(user)).toBe('found');
         expect(service.findForUser).toHaveBeenCalledWith(user);
+    });
+
+    it('refreshStatus() delegates to refreshStatusForUser with the current user', () => {
+        service.refreshStatusForUser.mockReturnValue('refreshed');
+
+        expect(controller.refreshStatus(user)).toBe('refreshed');
+        expect(service.refreshStatusForUser).toHaveBeenCalledWith(user);
     });
 });

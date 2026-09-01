@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule } from '@nestjs/config';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { DocumentsService } from '@/modules/documents/services/documents.service';
 import { EmployeesModule } from './employees.module';
@@ -9,8 +10,10 @@ describe('EmployeesModule', () => {
     let module: TestingModule;
 
     beforeAll(async () => {
+        process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
+
         module = await Test.createTestingModule({
-            imports: [EmployeesModule],
+            imports: [ConfigModule.forRoot({ isGlobal: true }), EmployeesModule],
         })
             .overrideProvider(PrismaService)
             .useValue({})

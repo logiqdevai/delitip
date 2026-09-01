@@ -14,11 +14,26 @@ export const VivaAuthMode = {
 
 export type VivaAuthMode = (typeof VivaAuthMode)[keyof typeof VivaAuthMode];
 
+// Viva's merchant portal grants OAuth2 client-credentials access per API
+// permission group, not per merchant account — "Smart Checkout" and
+// "Account Transactions" (which gates the Bank Transfer API) are issued as
+// two separate client id/secret pairs, each only valid for its own group of
+// endpoints. Only relevant when auth is OAUTH2; ignored otherwise.
+export const VivaOAuthScope = {
+  CHECKOUT: 'checkout',
+  ACCOUNT_TRANSACTIONS: 'account_transactions',
+} as const;
+
+export type VivaOAuthScope =
+  (typeof VivaOAuthScope)[keyof typeof VivaOAuthScope];
+
 export type VivaHttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export interface VivaRequestOptions {
   host: VivaHost;
   auth: VivaAuthMode;
+  /** Defaults to CHECKOUT when auth is OAUTH2 and this is omitted. */
+  oauthScope?: VivaOAuthScope;
   method: VivaHttpMethod;
   path: string;
   query?: object;

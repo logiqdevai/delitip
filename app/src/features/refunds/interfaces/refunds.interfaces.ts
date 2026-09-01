@@ -18,6 +18,9 @@ export interface Refund {
   status: RefundStatus;
   requested_by_user_id?: string | null;
   processed_by_user_id?: string | null;
+  provider_reference?: string | null;
+  provider_status?: string | null;
+  requires_manual_reconciliation?: boolean;
   created_at: string;
   updated_at: string;
   tip?: Tip;
@@ -29,6 +32,8 @@ export interface RefundsQuery {
   page?: number;
   limit?: number;
   status?: RefundStatus;
+  date_from?: string;
+  date_to?: string;
 }
 
 export interface CreateRefundPayload {

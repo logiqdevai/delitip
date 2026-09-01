@@ -46,8 +46,11 @@ import { Routes } from "@/routes/routes";
 
 const statusChipClass: Record<TipStatus, string> = {
   PENDING: "bg-amber-50 text-amber-700",
+  CREATED: "bg-amber-50 text-amber-700",
+  PROCESSING: "bg-sky-50 text-sky-700",
   COMPLETED: "bg-brand-50 text-brand-700",
   FAILED: "bg-red-50 text-red-700",
+  CANCELLED: "bg-zinc-100 text-zinc-600",
   REFUNDED: "bg-zinc-100 text-zinc-600",
 };
 

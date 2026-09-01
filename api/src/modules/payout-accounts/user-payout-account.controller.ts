@@ -16,7 +16,7 @@ export class UserPayoutAccountController {
     @Post()
     @ApiOperation({
         summary:
-            "Connect the current user's own payout account (mocked — instantly ACTIVE; shared across every Employee Account they hold, §11)",
+            "Link the current user's own personal IBAN payout account (shared across every Employee Account they hold)",
     })
     create(@CurrentUser() user: AuthUser, @Body() dto: CreatePayoutAccountDto) {
         return this.payoutAccountsService.createForUser(user, dto);
@@ -26,5 +26,14 @@ export class UserPayoutAccountController {
     @ApiOperation({ summary: "Get the current user's own payout account" })
     findOne(@CurrentUser() user: AuthUser) {
         return this.payoutAccountsService.findForUser(user);
+    }
+
+    @Post('refresh-status')
+    @ApiOperation({
+        summary:
+            "Check Viva for the current user's payout account verification status now, instead of waiting for a payout run to opportunistically promote it",
+    })
+    refreshStatus(@CurrentUser() user: AuthUser) {
+        return this.payoutAccountsService.refreshStatusForUser(user);
     }
 }

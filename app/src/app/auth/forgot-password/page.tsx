@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, Suspense } from "react";
 import type { Metadata } from "next";
 import { AuthForgotPasswordForm } from "../components/auth-forgot-password-form";
 
@@ -8,7 +8,11 @@ export const metadata: Metadata = {
 };
 
 const ForgotPasswordPage: FC = () => {
-  return <AuthForgotPasswordForm />;
+  return (
+    <Suspense fallback={null}>
+      <AuthForgotPasswordForm />
+    </Suspense>
+  );
 };
 
 export default ForgotPasswordPage;

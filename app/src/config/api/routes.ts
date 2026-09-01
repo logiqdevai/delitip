@@ -10,6 +10,7 @@ export const ApiRoutes = {
     },
     forgotPassword: "/auth/forgot-password",
     resetPassword: "/auth/reset-password",
+    changePassword: "/auth/change-password",
   },
   users: {
     prefix: "/users",
@@ -17,6 +18,7 @@ export const ApiRoutes = {
     meAccounts: "/users/me/accounts",
     byId: (id: string) => `/users/${id}` as const,
     mePayoutAccount: "/users/me/payout-account",
+    mePayoutAccountRefreshStatus: "/users/me/payout-account/refresh-status",
   },
   organizations: {
     prefix: "/organizations",
@@ -69,6 +71,13 @@ export const ApiRoutes = {
     refunds: (storeId: string) => `/stores/${storeId}/refunds` as const,
     payoutAccount: (storeId: string) =>
       `/stores/${storeId}/payout-account` as const,
+    payoutAccountRefreshStatus: (storeId: string) =>
+      `/stores/${storeId}/payout-account/refresh-status` as const,
+    payouts: (storeId: string) => `/stores/${storeId}/payouts` as const,
+    payoutsRun: (storeId: string) =>
+      `/stores/${storeId}/payouts/run` as const,
+    distributions: (storeId: string) =>
+      `/stores/${storeId}/distributions` as const,
     alerts: (storeId: string) => `/stores/${storeId}/alerts` as const,
     alertsReadAll: (storeId: string) =>
       `/stores/${storeId}/alerts/read-all` as const,
@@ -84,9 +93,14 @@ export const ApiRoutes = {
   },
   employees: {
     byId: (id: string) => `/employees/${id}` as const,
+    resendInvite: (id: string) => `/employees/${id}/resend-invite` as const,
     dashboard: (id: string) => `/employees/${id}/dashboard` as const,
     tips: (id: string) => `/employees/${id}/tips` as const,
     reviews: (id: string) => `/employees/${id}/reviews` as const,
+    payouts: (id: string) => `/employees/${id}/payouts` as const,
+    payoutAccount: (id: string) => `/employees/${id}/payout-account` as const,
+    payoutAccountRefreshStatus: (id: string) =>
+      `/employees/${id}/payout-account/refresh-status` as const,
   },
   qrCodes: {
     byId: (id: string) => `/qr-codes/${id}` as const,
@@ -119,6 +133,9 @@ export const ApiRoutes = {
   public: {
     qr: (code: string) => `/public/qr/${code}` as const,
     tips: "/public/tips",
+    tipStatus: (id: string) => `/public/tips/${id}/status` as const,
+    tipByOrderCode: (orderCode: string) =>
+      `/public/tips/by-order-code/${orderCode}` as const,
     tipRefundRequest: (tipId: string) =>
       `/public/tips/${tipId}/refund-request` as const,
     store: (slug: string) => `/public/stores/${slug}` as const,
@@ -128,5 +145,18 @@ export const ApiRoutes = {
   },
   googleMaps: {
     timezone: "/google-maps/timezone",
+  },
+  admin: {
+    payments: {
+      prefix: "/admin/payments",
+    },
+    payouts: {
+      prefix: "/admin/payouts",
+      byId: (id: string) => `/admin/payouts/${id}` as const,
+    },
+    analytics: {
+      overview: "/admin/analytics/overview",
+      trends: "/admin/analytics/trends",
+    },
   },
 } as const;

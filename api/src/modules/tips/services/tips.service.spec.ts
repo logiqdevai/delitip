@@ -1,5 +1,5 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { Currency, Language, QrCodeSelectionMode, TipStatus } from 'generated/prisma';
+import { BadGatewayException, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Currency, Language, OrganizationRole, QrCodeSelectionMode, TipStatus } from 'generated/prisma';
 import { AuthRole } from 'generated/prisma';
 import { TipsService } from './tips.service';
 import { CreatePublicTipDto } from '../dto/create-public-tip.dto';
@@ -11,6 +11,9 @@ describe('TipsService', () => {
     let prisma: any;
     let accessControl: any;
     let usersService: any;
+    let platformFinanceConfig: any;
+    let vivaConfig: any;
+    let vivaCheckout: any;
 
     const store = (overrides: Partial<any> = {}) => ({
         id: 'store1',
@@ -55,22 +58,42 @@ describe('TipsService', () => {
             distributionRuleRecipient: { findMany: jest.fn().mockResolvedValue([]) },
             tip: {
                 create: jest.fn(),
+                update: jest.fn(),
                 findUnique: jest.fn(),
                 findMany: jest.fn(),
                 count: jest.fn(),
                 aggregate: jest.fn(),
             },
+            paymentTransaction: {
+                create: jest.fn(),
+                update: jest.fn().mockResolvedValue({}),
+                findUnique: jest.fn().mockResolvedValue(null),
+            },
             tipDistribution: { createMany: jest.fn() },
             alertPreference: { findFirst: jest.fn().mockResolvedValue(null) },
             alert: { findFirst: jest.fn().mockResolvedValue(null), create: jest.fn() },
             store: { findUnique: jest.fn() },
-            $transaction: jest.fn((fn) => fn(prisma)),
+            $transaction: jest.fn((arg) => (Array.isArray(arg) ? Promise.all(arg) : arg(prisma))),
         };
-        accessControl = { assertStoreAccess: jest.fn() };
+        accessControl = {
+            assertStoreAccess: jest.fn().mockResolvedValue({ membership: { role: OrganizationRole.OWNER }, organizationId: 'org1' }),
+            isPlatformAdmin: jest.fn().mockReturnValue(false),
+        };
         usersService = { findOrCreateByEmail: jest.fn() };
-        service = new TipsService(prisma, accessControl, usersService);
+        platformFinanceConfig = {
+            getCommissionPercentage: jest.fn().mockReturnValue(5),
+            getProcessorFeeEstimatePercentage: jest.fn().mockReturnValue(1.5),
+        };
+        vivaConfig = {
+            getDefaultSourceCode: jest.fn().mockReturnValue('Default'),
+            getNativeBaseUrl: jest.fn().mockReturnValue('https://demo.vivapayments.com'),
+        };
+        vivaCheckout = { createOrder: jest.fn().mockResolvedValue({ orderCode: 123456789 }) };
+
+        service = new TipsService(prisma, accessControl, usersService, platformFinanceConfig, vivaConfig, vivaCheckout);
 
         prisma.tip.create.mockImplementation(async ({ data }: any) => ({ id: 'tip1', ...data }));
+        prisma.paymentTransaction.create.mockImplementation(async ({ data }: any) => ({ id: 'pt1', ...data }));
         prisma.tip.findUnique.mockResolvedValue({ id: 'tip1', distributions: [] });
     });
 
@@ -124,7 +147,7 @@ describe('TipsService', () => {
                 await service.createPublicTip(baseDto());
 
                 expect(prisma.tip.create).toHaveBeenCalledWith(
-                    expect.objectContaining({ data: expect.objectContaining({ employee_id: null }) }),
+                    expect.objectContaining({ data: expect.objectContaining({ employee_id: null, selected_employee_ids: [] }) }),
                 );
             });
 
@@ -153,10 +176,10 @@ describe('TipsService', () => {
 
                 await service.createPublicTip(baseDto());
 
-                expect(prisma.tipDistribution.createMany).toHaveBeenCalled();
-                // employee_id on the tip itself is only set for a single selected employee
+                // employee_id on the tip itself is only set for a single selected employee;
+                // the full set is preserved on selected_employee_ids for the webhook handler.
                 expect(prisma.tip.create).toHaveBeenCalledWith(
-                    expect.objectContaining({ data: expect.objectContaining({ employee_id: null }) }),
+                    expect.objectContaining({ data: expect.objectContaining({ employee_id: null, selected_employee_ids: ['e1', 'e2'] }) }),
                 );
             });
 
@@ -241,9 +264,9 @@ describe('TipsService', () => {
 
                 await service.createPublicTip(baseDto());
 
-                expect(prisma.distributionRuleRecipient.findMany).toHaveBeenCalledWith({
-                    where: { distribution_rule_id: 'qr-rule' },
-                });
+                expect(prisma.tip.create).toHaveBeenCalledWith(
+                    expect.objectContaining({ data: expect.objectContaining({ distribution_rule_id: 'qr-rule' }) }),
+                );
             });
 
             it('falls back to the store default distribution rule when the QR has none', async () => {
@@ -253,17 +276,9 @@ describe('TipsService', () => {
 
                 await service.createPublicTip(baseDto());
 
-                expect(prisma.distributionRuleRecipient.findMany).toHaveBeenCalledWith({
-                    where: { distribution_rule_id: 'store-rule' },
-                });
-            });
-
-            it('does not query recipients at all when neither the QR nor the store has a rule', async () => {
-                prisma.qrCode.findUnique.mockResolvedValue(qrCode());
-
-                await service.createPublicTip(baseDto());
-
-                expect(prisma.distributionRuleRecipient.findMany).not.toHaveBeenCalled();
+                expect(prisma.tip.create).toHaveBeenCalledWith(
+                    expect.objectContaining({ data: expect.objectContaining({ distribution_rule_id: 'store-rule' }) }),
+                );
             });
         });
 
@@ -314,72 +329,148 @@ describe('TipsService', () => {
             });
         });
 
-        it('creates the tip and its distributions inside a single transaction with COMPLETED status and a mock payment reference', async () => {
+        it('creates the tip as CREATED with a PaymentTransaction, opens a Viva order, and returns a checkout URL', async () => {
             prisma.qrCode.findUnique.mockResolvedValue(qrCode());
 
-            await service.createPublicTip(baseDto());
+            const result = await service.createPublicTip(baseDto({ amount: 1000 }));
 
-            expect(prisma.$transaction).toHaveBeenCalledTimes(1);
             expect(prisma.tip.create).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ status: TipStatus.CREATED }) }),
+            );
+            expect(prisma.paymentTransaction.create).toHaveBeenCalledWith(
                 expect.objectContaining({
                     data: expect.objectContaining({
-                        status: TipStatus.COMPLETED,
-                        payment_reference: expect.stringMatching(/^MOCK-/),
+                        gross_amount: 1000,
+                        commission_percentage_used: 5,
+                        commission_amount: 50,
                     }),
                 }),
             );
-            expect(prisma.tipDistribution.createMany).toHaveBeenCalled();
+            expect(vivaCheckout.createOrder).toHaveBeenCalledWith(
+                expect.objectContaining({ amount: 1000, tipAmount: 1000, merchantTrns: 'tip1' }),
+            );
+            expect(prisma.tipDistribution.createMany).not.toHaveBeenCalled();
+            expect(result).toEqual({ tip_id: 'tip1', checkout_url: expect.stringContaining('123456789') });
         });
 
-        it('does not let a failure in the fire-and-forget performance alert propagate', async () => {
+        it('reuses an in-flight order for the same client_request_id instead of creating a new one', async () => {
+            prisma.paymentTransaction.findUnique.mockResolvedValue({
+                provider_order_code: '999',
+                tip: { id: 'existing-tip', status: TipStatus.CREATED },
+            });
+
+            const result = await service.createPublicTip(baseDto({ client_request_id: '11111111-1111-1111-1111-111111111111' }));
+
+            expect(prisma.qrCode.findUnique).not.toHaveBeenCalled();
+            expect(vivaCheckout.createOrder).not.toHaveBeenCalled();
+            expect(result).toEqual({ tip_id: 'existing-tip', checkout_url: expect.stringContaining('999') });
+        });
+
+        it('marks the tip/payment transaction FAILED and throws BadGatewayException when Viva order creation fails', async () => {
             prisma.qrCode.findUnique.mockResolvedValue(qrCode());
-            prisma.alertPreference.findFirst.mockRejectedValue(new Error('boom'));
+            vivaCheckout.createOrder.mockRejectedValue(new Error('Viva is down'));
 
-            await expect(service.createPublicTip(baseDto())).resolves.toBeDefined();
-            await flush();
+            await expect(service.createPublicTip(baseDto())).rejects.toThrow(BadGatewayException);
+            expect(prisma.tip.update).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ status: TipStatus.FAILED }) }),
+            );
+        });
+    });
+
+    describe('getPublicStatus', () => {
+        const completedTip = (overrides: Partial<any> = {}) => ({
+            id: 'tip1',
+            status: TipStatus.COMPLETED,
+            amount: 1000,
+            currency: Currency.EUR,
+            employee: null,
+            store: store(),
+            payment_transaction: { provider_order_code: '123' },
+            distributions: [],
+            ...overrides,
         });
 
-        describe('thank-you message', () => {
-            it('uses the store\'s translated thank-you message when present', async () => {
-                prisma.qrCode.findUnique.mockResolvedValue(
-                    qrCode({
-                        store: store({
-                            thank_you_message: { en: 'Cheers from the team!' },
-                            primary_language: Language.EN,
-                        }),
-                    }),
-                );
+        it('throws NotFoundException when the tip does not exist', async () => {
+            prisma.tip.findUnique.mockResolvedValue(null);
 
-                const result = await service.createPublicTip(baseDto());
+            await expect(service.getPublicStatus('missing')).rejects.toThrow(NotFoundException);
+        });
 
-                expect(result.thank_you_message).toBe('Cheers from the team!');
+        it('uses the store\'s translated thank-you message when present', async () => {
+            prisma.tip.findUnique.mockResolvedValue(
+                completedTip({ store: store({ thank_you_message: { en: 'Cheers from the team!' } }) }),
+            );
+
+            const result = await service.getPublicStatus('tip1');
+
+            expect(result.thank_you_message).toBe('Cheers from the team!');
+        });
+
+        it('falls back to a generated default naming the store when no employee was thanked', async () => {
+            prisma.tip.findUnique.mockResolvedValue(
+                completedTip({ store: store({ thank_you_message: null, name: 'The Corner Cafe' }) }),
+            );
+
+            const result = await service.getPublicStatus('tip1');
+
+            expect(result.thank_you_message).toContain('The Corner Cafe');
+        });
+
+        it('falls back to a generated default naming the thanked employee', async () => {
+            prisma.tip.findUnique.mockResolvedValue(
+                completedTip({
+                    store: store({ thank_you_message: null }),
+                    distributions: [{ recipient_type: 'EMPLOYEE', employee: employee('e1', { full_name: { en: 'Nikos' } }), amount: 950, percentage: 95 }],
+                }),
+            );
+
+            const result = await service.getPublicStatus('tip1');
+
+            expect(result.thank_you_message).toContain('Nikos');
+        });
+
+        it('omits distribution_summary and thank_you_message while not yet COMPLETED', async () => {
+            prisma.tip.findUnique.mockResolvedValue(completedTip({ status: TipStatus.PROCESSING }));
+
+            const result = await service.getPublicStatus('tip1');
+
+            expect(result.distribution_summary).toBeUndefined();
+            expect(result.thank_you_message).toBeUndefined();
+        });
+    });
+
+    describe('resolveTipIdByOrderCode', () => {
+        it('throws NotFoundException when no PaymentTransaction has that order code', async () => {
+            prisma.paymentTransaction.findUnique.mockResolvedValue(null);
+
+            await expect(service.resolveTipIdByOrderCode('999')).rejects.toThrow(NotFoundException);
+        });
+
+        it('resolves the tip id, store slug, and QR code for a known order code', async () => {
+            prisma.paymentTransaction.findUnique.mockResolvedValue({
+                provider_order_code: '123',
+                tip: {
+                    id: 'tip1',
+                    store: { slug: 'the-corner-cafe' },
+                    qr_code: { code: 'abcd1234' },
+                },
             });
 
-            it('falls back to a generated default naming the store when no employee was thanked', async () => {
-                prisma.qrCode.findUnique.mockResolvedValue(qrCode({ store: store({ thank_you_message: null, name: 'The Corner Cafe' }) }));
+            const result = await service.resolveTipIdByOrderCode('123');
 
-                const result = await service.createPublicTip(baseDto({ amount: 1000 }));
-
-                expect(result.thank_you_message).toContain('The Corner Cafe');
-            });
-
-            it('falls back to a generated default naming the thanked employee', async () => {
-                prisma.qrCode.findUnique.mockResolvedValue(
-                    qrCode({
-                        store: store({ thank_you_message: null }),
-                        employees: [{ employee: employee('e1', { full_name: { en: 'Nikos' } }) }],
-                    }),
-                );
-
-                const result = await service.createPublicTip(baseDto());
-
-                expect(result.thank_you_message).toContain('Nikos');
+            expect(prisma.paymentTransaction.findUnique).toHaveBeenCalledWith(
+                expect.objectContaining({ where: { provider_order_code: '123' } }),
+            );
+            expect(result).toEqual({
+                tip_id: 'tip1',
+                store_slug: 'the-corner-cafe',
+                qr_code: 'abcd1234',
             });
         });
     });
 
     describe('triggerPerformanceChangeAlert (isolated)', () => {
-        const call = (storeId = 'store1') => (service as any).triggerPerformanceChangeAlert(storeId);
+        const call = (storeId = 'store1') => service.triggerPerformanceChangeAlert(storeId);
 
         it('does nothing when the alert preference is disabled', async () => {
             prisma.alertPreference.findFirst.mockResolvedValue({ is_enabled: false });
@@ -521,14 +612,26 @@ describe('TipsService', () => {
             await expect(service.findOne(user, 'missing')).rejects.toThrow(NotFoundException);
         });
 
-        it('asserts store access using the tip\'s store_id and returns the tip', async () => {
-            const tip = { id: 'tip1', store_id: 'store1' };
+        it('asserts store access using the tip\'s store_id and returns the tip with financials for an OWNER', async () => {
+            const tip = { id: 'tip1', store_id: 'store1', payment_transaction: { gross_amount: 1000 } };
             prisma.tip.findUnique.mockResolvedValue(tip);
+            prisma.store.findUnique.mockResolvedValue(store());
 
             const result = await service.findOne(user, 'tip1');
 
             expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1');
-            expect(result).toEqual(tip);
+            expect(result.payment_transaction).toEqual({ gross_amount: 1000 });
+        });
+
+        it('strips the financial breakdown for a non-OWNER/ACCOUNTANT store member', async () => {
+            accessControl.assertStoreAccess.mockResolvedValue({ membership: { role: OrganizationRole.STORE_MANAGER }, organizationId: 'org1' });
+            const tip = { id: 'tip1', store_id: 'store1', payment_transaction: { gross_amount: 1000 } };
+            prisma.tip.findUnique.mockResolvedValue(tip);
+            prisma.store.findUnique.mockResolvedValue(store());
+
+            const result = await service.findOne(user, 'tip1');
+
+            expect(result.payment_transaction).toBeUndefined();
         });
     });
 });

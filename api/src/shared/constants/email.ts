@@ -14,5 +14,9 @@ export const EmailConfig = {
             subject: 'Reset your password',
             template_id: EmailTemplates.PASSWORD_RESET,
         },
+        employee_invite: {
+            subject: 'Welcome to Delitip — set up your account',
+            template_id: EmailTemplates.EMPLOYEE_INVITE,
+        },
     }
 }

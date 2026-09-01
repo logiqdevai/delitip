@@ -2,14 +2,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getMe,
   getMyAccounts,
+  listUsers,
   updateMe,
 } from "@/features/users/services/users.services";
+import type { UsersQuery } from "@/features/users/interfaces/users.interfaces";
 import { toast } from "@/components/ui/toast";
 
 export const usersQueryKeys = {
   root: ["users"] as const,
   me: ["users", "me"] as const,
   accounts: ["users", "me", "accounts"] as const,
+  list: (query?: UsersQuery) => ["users", "list", query] as const,
 };
 
 export const useMe = (enabled = true) => {
@@ -49,5 +52,13 @@ export const useMyAccounts = (enabled = true) => {
     queryFn: getMyAccounts,
     enabled,
     staleTime: 30_000,
+  });
+};
+
+export const useUsers = (query?: UsersQuery, enabled = true) => {
+  return useQuery({
+    queryKey: usersQueryKeys.list(query),
+    queryFn: () => listUsers(query),
+    enabled,
   });
 };
