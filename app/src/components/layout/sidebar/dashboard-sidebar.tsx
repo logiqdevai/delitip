@@ -10,6 +10,7 @@ import {
   Bell,
   CreditCard,
   LayoutGrid,
+  ListChecks,
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
@@ -59,6 +60,13 @@ const navItems = [
     label: "Overview",
     icon: LayoutGrid,
     match: (path: string) => path === Routes.dashboard.root,
+  },
+  {
+    href: Routes.dashboard.gettingStarted,
+    label: "Getting Started",
+    icon: ListChecks,
+    hideForAccountant: true,
+    match: (path: string) => path.startsWith(Routes.dashboard.gettingStarted),
   },
   {
     href: Routes.dashboard.employees,

@@ -3,7 +3,7 @@
 import { type FC } from "react";
 import Link from "next/link";
 import { format, parseISO, startOfDay, subDays } from "date-fns";
-import { Download, Plus, Star } from "lucide-react";
+import { Download, ListChecks, Plus, Star } from "lucide-react";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 import { formatMoney } from "@/lib/money";
@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useStoreReviews } from "@/features/reviews/hooks/use-reviews";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
+import { useGettingStartedSteps } from "@/hooks/use-getting-started-steps";
 import {
   useDashboardOverview,
   useDashboardTrends,
@@ -60,6 +61,7 @@ export const OverviewPageContent: FC = () => {
     limit: 100,
     is_active: true,
   });
+  const gettingStarted = useGettingStartedSteps();
 
   if (workspacePending) {
     return (
@@ -117,6 +119,31 @@ export const OverviewPageContent: FC = () => {
           </>
         }
       />
+
+      {!gettingStarted.isPending &&
+      gettingStarted.total > 0 &&
+      gettingStarted.completedCount < gettingStarted.total ? (
+        <Link
+          href={Routes.dashboard.gettingStarted}
+          className="flex items-center justify-between gap-3 rounded-2xl border border-brand-200/80 bg-brand-50 p-4 shadow-xs transition hover:border-brand-300"
+        >
+          <div className="flex items-center gap-3">
+            <ListChecks className="size-4 text-brand-700" strokeWidth={2} />
+            <div>
+              <p className="text-sm font-bold text-ink-charcoal">
+                Finish setting up your business
+              </p>
+              <p className="text-xs text-zinc-500">
+                {gettingStarted.completedCount} of {gettingStarted.total}{" "}
+                setup steps done
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-semibold text-brand-700">
+            View checklist →
+          </span>
+        </Link>
+      ) : null}
 
       {isLoading ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

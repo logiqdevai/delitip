@@ -21,6 +21,7 @@ export const Routes = {
   checkoutReturn: "/checkout/return",
   dashboard: {
     root: "/dashboard",
+    gettingStarted: "/dashboard/getting-started",
     employees: "/dashboard/employees",
     employeeDetail: (employeeId: string) =>
       `/dashboard/employees/${employeeId}` as const,
