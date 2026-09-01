@@ -1,4 +1,5 @@
 import { BadGatewayException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { VivaBankTransfersService } from '@/integrations/viva/services/viva-bank-transfers.service';
@@ -171,5 +172,30 @@ export class PayoutAccountsService {
             );
             return account;
         }
+    }
+
+    // Background safety net for the same check the manual "Check status"
+    // action and the opportunistic payout-run promotion already do — so an
+    // account left PENDING is still eventually promoted even if no owner
+    // clicks the button and no payout run ever touches it. Every account is
+    // still re-verified against Viva individually (never trusted from a
+    // cached/local flag), same as the on-demand paths.
+    @Cron(CronExpression.EVERY_10_MINUTES)
+    async sweepPendingAccounts(): Promise<{ checked: number; promoted: number }> {
+        const pending = await this.prisma.payoutAccount.findMany({
+            where: { status: PayoutAccountStatus.PENDING, bank_account_id: { not: null } },
+        });
+
+        let promoted = 0;
+        for (const account of pending) {
+            const result = await this.promoteIfVerified(account);
+            if (result.status === PayoutAccountStatus.ACTIVE) promoted += 1;
+        }
+
+        if (promoted > 0) {
+            this.logger.log(`Payout account sweep promoted ${promoted}/${pending.length} pending account(s) to ACTIVE`);
+        }
+
+        return { checked: pending.length, promoted };
     }
 }

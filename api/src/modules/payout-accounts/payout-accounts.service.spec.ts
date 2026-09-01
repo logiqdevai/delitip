@@ -20,7 +20,7 @@ describe('PayoutAccountsService', () => {
 
     beforeEach(() => {
         prisma = {
-            payoutAccount: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn() },
+            payoutAccount: { findUnique: jest.fn(), findMany: jest.fn(), create: jest.fn(), update: jest.fn() },
         };
         accessControl = { assertStoreAccess: jest.fn() };
         vivaBankTransfers = {
@@ -295,6 +295,47 @@ describe('PayoutAccountsService', () => {
             const result = await service.refreshStatusForUser(user);
 
             expect(result.status).toBe(PayoutAccountStatus.ACTIVE);
+        });
+    });
+
+    describe('sweepPendingAccounts', () => {
+        it('only queries PENDING accounts that have a linked bank account', async () => {
+            prisma.payoutAccount.findMany.mockResolvedValue([]);
+
+            await service.sweepPendingAccounts();
+
+            expect(prisma.payoutAccount.findMany).toHaveBeenCalledWith({
+                where: { status: PayoutAccountStatus.PENDING, bank_account_id: { not: null } },
+            });
+        });
+
+        it('re-verifies every pending account against Viva and reports how many were promoted', async () => {
+            const stillPending = { id: 'pa1', status: PayoutAccountStatus.PENDING, bank_account_id: 'bank-1' };
+            const nowActive = { id: 'pa2', status: PayoutAccountStatus.PENDING, bank_account_id: 'bank-2' };
+            prisma.payoutAccount.findMany.mockResolvedValue([stillPending, nowActive]);
+            vivaBankTransfers.getBankAccount.mockImplementation((bankAccountId: string) =>
+                Promise.resolve({ isArchived: bankAccountId === 'bank-1' }),
+            );
+            prisma.payoutAccount.update.mockResolvedValue({ ...nowActive, status: PayoutAccountStatus.ACTIVE });
+
+            const result = await service.sweepPendingAccounts();
+
+            expect(vivaBankTransfers.getBankAccount).toHaveBeenCalledWith('bank-1');
+            expect(vivaBankTransfers.getBankAccount).toHaveBeenCalledWith('bank-2');
+            expect(prisma.payoutAccount.update).toHaveBeenCalledTimes(1);
+            expect(prisma.payoutAccount.update).toHaveBeenCalledWith({
+                where: { id: 'pa2' },
+                data: { status: PayoutAccountStatus.ACTIVE },
+            });
+            expect(result).toEqual({ checked: 2, promoted: 1 });
+        });
+
+        it('reports zero promotions when nothing is pending', async () => {
+            prisma.payoutAccount.findMany.mockResolvedValue([]);
+
+            const result = await service.sweepPendingAccounts();
+
+            expect(result).toEqual({ checked: 0, promoted: 0 });
         });
     });
 });

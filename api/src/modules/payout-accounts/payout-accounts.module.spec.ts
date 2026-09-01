@@ -4,6 +4,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { PayoutAccountsModule } from './payout-accounts.module';
 import { PayoutAccountsController } from './payout-accounts.controller';
 import { UserPayoutAccountController } from './user-payout-account.controller';
+import { AdminPayoutAccountsController } from './admin-payout-accounts.controller';
 import { PayoutAccountsService } from './payout-accounts.service';
 
 describe('PayoutAccountsModule', () => {
@@ -38,5 +39,9 @@ describe('PayoutAccountsModule', () => {
 
     it('should resolve UserPayoutAccountController', () => {
         expect(module.get(UserPayoutAccountController)).toBeInstanceOf(UserPayoutAccountController);
+    });
+
+    it('should resolve AdminPayoutAccountsController', () => {
+        expect(module.get(AdminPayoutAccountsController)).toBeInstanceOf(AdminPayoutAccountsController);
     });
 });
