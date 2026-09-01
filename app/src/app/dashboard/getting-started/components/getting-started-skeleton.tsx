@@ -10,7 +10,7 @@ export const GettingStartedSkeleton: FC = () => (
     <Skeleton className="h-2 w-full rounded-full" />
     <div className="space-y-3">
       {Array.from({ length: 7 }).map((_, index) => (
-        <Skeleton key={index} className="h-[76px] w-full rounded-2xl" />
+        <Skeleton key={index} className="h-[148px] w-full rounded-2xl md:h-[76px]" />
       ))}
     </div>
   </div>

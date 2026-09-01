@@ -92,7 +92,7 @@ export const BillingSettingsPanel: FC = () => {
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-stretch gap-2">
             <Select
               items={SubscriptionPlanFormOptions.map((option) => ({
                 label: option.label,
@@ -108,7 +108,10 @@ export const BillingSettingsPanel: FC = () => {
               }}
               disabled={changePlan.isPending}
             >
-              <SelectTrigger size="sm">
+              <SelectTrigger
+                size="sm"
+                className="h-11 min-h-11 flex-1 sm:h-(--control-height-sm) sm:min-h-(--control-height-sm) sm:flex-none sm:w-fit"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -126,6 +129,7 @@ export const BillingSettingsPanel: FC = () => {
                 type="button"
                 variant="outline"
                 size="sm"
+                className="h-11 min-h-11 flex-1 sm:h-(--control-height-sm) sm:min-h-(--control-height-sm) sm:flex-none"
                 onClick={() => cancelConfirm.openDialog()}
               >
                 Cancel subscription

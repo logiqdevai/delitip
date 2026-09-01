@@ -125,21 +125,21 @@ export const OverviewPageContent: FC = () => {
       gettingStarted.completedCount < gettingStarted.total ? (
         <Link
           href={Routes.dashboard.gettingStarted}
-          className="flex items-center justify-between gap-3 rounded-2xl border border-brand-200/80 bg-brand-50 p-4 shadow-xs transition hover:border-brand-300"
+          className="flex flex-col gap-4 rounded-2xl border border-brand-200/80 bg-brand-50 p-5 shadow-xs transition hover:border-brand-300 md:flex-row md:items-center md:justify-between md:gap-3 md:p-4"
         >
-          <div className="flex items-center gap-3">
-            <ListChecks className="size-4 text-brand-700" strokeWidth={2} />
-            <div>
-              <p className="text-sm font-bold text-ink-charcoal">
-                Finish setting up your business
-              </p>
-              <p className="text-xs text-zinc-500">
-                {gettingStarted.completedCount} of {gettingStarted.total}{" "}
-                setup steps done
-              </p>
-            </div>
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-brand-700">
+            <ListChecks className="size-4" strokeWidth={2} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-ink-charcoal">
+              Finish setting up your business
+            </p>
+            <p className="mt-0.5 text-xs text-zinc-500">
+              {gettingStarted.completedCount} of {gettingStarted.total}{" "}
+              setup steps done
+            </p>
           </div>
-          <span className="text-xs font-semibold text-brand-700">
+          <span className="flex w-full items-center justify-center rounded-full bg-white px-3 py-2 text-caption font-bold text-brand-700 md:w-auto md:shrink-0 md:bg-transparent md:px-0 md:py-0 md:text-xs md:font-semibold">
             View checklist →
           </span>
         </Link>

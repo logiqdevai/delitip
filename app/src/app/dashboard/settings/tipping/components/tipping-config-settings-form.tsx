@@ -2,7 +2,7 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
-import { Plus, Trash2, Wallet } from "lucide-react";
+import { Plus, Split, Trash2, Wallet } from "lucide-react";
 import { DistributionRuleFormDialog } from "@/app/dashboard/distribution/components/distribution-rule-form-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -215,9 +215,12 @@ export const TippingConfigSettingsForm: FC = () => {
         />
       </div>
 
-      <div className="space-y-2 rounded-2xl border border-zinc-200/80 px-4 py-3.5">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
+      <div className="space-y-4 rounded-2xl border border-zinc-200/80 px-4 py-3.5 sm:space-y-2">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-3">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-neutral-fill text-zinc-400">
+            <Split className="size-4" strokeWidth={2} />
+          </span>
+          <div className="min-w-0 flex-1">
             <Label htmlFor="default-distribution-rule" className="text-xs font-semibold text-ink-charcoal">
               Default distribution rule
             </Label>
@@ -227,9 +230,9 @@ export const TippingConfigSettingsForm: FC = () => {
           </div>
           <Link
             href={Routes.dashboard.distribution}
-            className="shrink-0 text-[11px] font-semibold text-brand-700 hover:underline"
+            className="flex w-full items-center justify-center rounded-full bg-neutral-fill px-3 py-2 text-caption font-bold text-brand-700 transition hover:bg-zinc-200 md:w-auto md:shrink-0 md:bg-transparent md:px-0 md:py-0 md:text-[11px] md:font-semibold md:hover:bg-transparent md:hover:underline"
           >
-            Manage all
+            Manage all →
           </Link>
         </div>
 
