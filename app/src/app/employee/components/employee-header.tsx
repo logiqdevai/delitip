@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { ImagePlus, LogOut } from "lucide-react";
+import { ImagePlus, KeyRound, LogOut } from "lucide-react";
 import { AccountSwitcher } from "@/components/auth/account-switcher";
 import { BrandMark } from "@/components/brand/brand-mark";
 import {
@@ -18,11 +18,14 @@ import { useLogout } from "@/features/auth/hooks/use-auth";
 import { useCurrentEmployee } from "@/features/employees/hooks/use-employees";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
+import { EmployeeChangePasswordDialog } from "./employee-change-password-dialog";
 import { EmployeePhotoDialog } from "./employee-photo-dialog";
 
 export const EmployeeHeader: FC = () => {
   const [onShift, setOnShift] = useState(true);
   const [photoDialogOpen, setPhotoDialogOpen] = useState(false);
+  const [changePasswordDialogOpen, setChangePasswordDialogOpen] =
+    useState(false);
   const { employee, store } = useCurrentEmployee();
   const logout = useLogout();
 
@@ -102,6 +105,12 @@ export const EmployeeHeader: FC = () => {
                 <ImagePlus />
                 Edit photo
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setChangePasswordDialogOpen(true)}
+              >
+                <KeyRound />
+                Change password
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 variant="destructive"
@@ -126,6 +135,11 @@ export const EmployeeHeader: FC = () => {
           employee={employee}
         />
       ) : null}
+
+      <EmployeeChangePasswordDialog
+        open={changePasswordDialogOpen}
+        onOpenChange={setChangePasswordDialogOpen}
+      />
     </header>
   );
 };

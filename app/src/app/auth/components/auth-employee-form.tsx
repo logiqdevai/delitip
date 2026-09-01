@@ -84,7 +84,7 @@ export const AuthEmployeeForm: FC = () => {
               Password
             </label>
             <Link
-              href={Routes.auth.forgot_password}
+              href={`${Routes.auth.forgot_password}?role=employee`}
               className="text-caption font-semibold text-brand-700 hover:underline"
             >
               Forgot password?
