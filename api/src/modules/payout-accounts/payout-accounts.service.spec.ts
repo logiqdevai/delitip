@@ -1,4 +1,4 @@
-import { BadGatewayException, ConflictException, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { AuthRole, OrganizationRole, PaymentProvider, PayoutAccountOwnerType, PayoutAccountStatus, PayoutMethod } from 'generated/prisma';
 import { PayoutAccountsService } from './payout-accounts.service';
 import { VivaApiException } from '@/integrations/viva/http/viva-api.exception';
@@ -21,6 +21,7 @@ describe('PayoutAccountsService', () => {
     beforeEach(() => {
         prisma = {
             payoutAccount: { findUnique: jest.fn(), findMany: jest.fn(), create: jest.fn(), update: jest.fn() },
+            employee: { findUnique: jest.fn() },
         };
         accessControl = { assertStoreAccess: jest.fn() };
         vivaBankTransfers = {
@@ -207,6 +208,117 @@ describe('PayoutAccountsService', () => {
 
             await expect(service.findForUser(user)).resolves.toBe(account);
             expect(prisma.payoutAccount.findUnique).toHaveBeenCalledWith({ where: { user_id: 'u1' } });
+        });
+    });
+
+    describe('createForEmployee', () => {
+        it('requires OWNER-level access to the employee\'s store', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'e1', store_id: 'store1', user_id: 'linked-user' });
+            prisma.payoutAccount.findUnique.mockResolvedValue(null);
+            prisma.payoutAccount.create.mockResolvedValue({});
+
+            await service.createForEmployee(user, 'e1', createDto());
+
+            expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1', [OrganizationRole.OWNER]);
+        });
+
+        it('throws NotFoundException when the employee does not exist', async () => {
+            prisma.employee.findUnique.mockResolvedValue(null);
+
+            await expect(service.createForEmployee(user, 'missing', createDto())).rejects.toThrow(NotFoundException);
+            expect(prisma.payoutAccount.create).not.toHaveBeenCalled();
+        });
+
+        it('throws BadRequestException when the employee has no linked user', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'e1', store_id: 'store1', user_id: null });
+
+            await expect(service.createForEmployee(user, 'e1', createDto())).rejects.toThrow(BadRequestException);
+            expect(vivaBankTransfers.linkBankAccount).not.toHaveBeenCalled();
+        });
+
+        it('links the IBAN and creates a PENDING payout account owned by the employee\'s linked user', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'e1', store_id: 'store1', user_id: 'linked-user' });
+            prisma.payoutAccount.findUnique.mockResolvedValue(null);
+            const created = { id: 'pa1' };
+            prisma.payoutAccount.create.mockResolvedValue(created);
+
+            const result = await service.createForEmployee(user, 'e1', createDto());
+
+            expect(result).toBe(created);
+            expect(prisma.payoutAccount.findUnique).toHaveBeenCalledWith({ where: { user_id: 'linked-user' } });
+            expect(prisma.payoutAccount.create).toHaveBeenCalledWith({
+                data: expect.objectContaining({
+                    owner_type: PayoutAccountOwnerType.USER,
+                    user_id: 'linked-user',
+                    status: PayoutAccountStatus.PENDING,
+                }),
+            });
+        });
+
+        it('throws ConflictException when that user already has a payout account', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'e1', store_id: 'store1', user_id: 'linked-user' });
+            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'existing' });
+
+            await expect(service.createForEmployee(user, 'e1', createDto())).rejects.toThrow(ConflictException);
+            expect(vivaBankTransfers.linkBankAccount).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('findForEmployee', () => {
+        it('throws NotFoundException when the employee has no linked user', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'e1', store_id: 'store1', user_id: null });
+
+            await expect(service.findForEmployee(user, 'e1')).rejects.toThrow(NotFoundException);
+        });
+
+        it('returns the linked user\'s payout account', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'e1', store_id: 'store1', user_id: 'linked-user' });
+            const account = { id: 'pa1' };
+            prisma.payoutAccount.findUnique.mockResolvedValue(account);
+
+            await expect(service.findForEmployee(user, 'e1')).resolves.toBe(account);
+            expect(prisma.payoutAccount.findUnique).toHaveBeenCalledWith({ where: { user_id: 'linked-user' } });
+        });
+    });
+
+    describe('updateForEmployee', () => {
+        it('throws BadRequestException when the employee has no linked user', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'e1', store_id: 'store1', user_id: null });
+
+            await expect(service.updateForEmployee(user, 'e1', {})).rejects.toThrow(BadRequestException);
+        });
+
+        it('updates the beneficiary name for the employee\'s linked user', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'e1', store_id: 'store1', user_id: 'linked-user' });
+            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', bank_account_id: 'bank-1' });
+            prisma.payoutAccount.update.mockResolvedValue({});
+
+            await service.updateForEmployee(user, 'e1', { beneficiary_name: 'New Name' });
+
+            expect(vivaBankTransfers.updateBankAccount).toHaveBeenCalledWith('bank-1', expect.objectContaining({ beneficiaryName: 'New Name' }));
+            expect(prisma.payoutAccount.update).toHaveBeenCalledWith({
+                where: { user_id: 'linked-user' },
+                data: { beneficiary_name: 'New Name' },
+            });
+        });
+    });
+
+    describe('refreshStatusForEmployee', () => {
+        it('throws NotFoundException when the employee has no linked user', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'e1', store_id: 'store1', user_id: null });
+
+            await expect(service.refreshStatusForEmployee(user, 'e1')).rejects.toThrow(NotFoundException);
+        });
+
+        it('checks Viva and promotes when eligible', async () => {
+            prisma.employee.findUnique.mockResolvedValue({ id: 'e1', store_id: 'store1', user_id: 'linked-user' });
+            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', status: PayoutAccountStatus.PENDING, bank_account_id: 'bank-1' });
+            vivaBankTransfers.getBankAccount.mockResolvedValue({ isArchived: false });
+            prisma.payoutAccount.update.mockResolvedValue({ id: 'pa1', status: PayoutAccountStatus.ACTIVE });
+
+            const result = await service.refreshStatusForEmployee(user, 'e1');
+
+            expect(result.status).toBe(PayoutAccountStatus.ACTIVE);
         });
     });
 

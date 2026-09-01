@@ -4,12 +4,18 @@ import { AccessControlModule } from '@/shared/services/access-control/access-con
 import { VivaIntegrationModule } from '@/integrations/viva/viva.module';
 import { PayoutAccountsController } from './payout-accounts.controller';
 import { UserPayoutAccountController } from './user-payout-account.controller';
+import { EmployeePayoutAccountController } from './employee-payout-account.controller';
 import { AdminPayoutAccountsController } from './admin-payout-accounts.controller';
 import { PayoutAccountsService } from './payout-accounts.service';
 
 @Module({
     imports: [PrismaModule, AccessControlModule, VivaIntegrationModule],
-    controllers: [PayoutAccountsController, UserPayoutAccountController, AdminPayoutAccountsController],
+    controllers: [
+        PayoutAccountsController,
+        UserPayoutAccountController,
+        EmployeePayoutAccountController,
+        AdminPayoutAccountsController,
+    ],
     providers: [PayoutAccountsService],
     exports: [PayoutAccountsService],
 })

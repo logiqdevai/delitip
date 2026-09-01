@@ -109,3 +109,51 @@ export const refreshStorePayoutAccountStatus = async (
     );
   }
 };
+
+export const getEmployeePayoutAccount = async (
+  employeeId: string,
+): Promise<PayoutAccount | null> => {
+  try {
+    const response = await axiosInstance.get<PayoutAccount>(
+      ApiRoutes.employees.payoutAccount(employeeId),
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response?.status === 404) {
+      return null;
+    }
+    throw new Error("Failed to load payout account. Please try again.");
+  }
+};
+
+export const createEmployeePayoutAccount = async (
+  employeeId: string,
+  payload: CreatePayoutAccountPayload,
+): Promise<PayoutAccount> => {
+  try {
+    const response = await axiosInstance.post<PayoutAccount>(
+      ApiRoutes.employees.payoutAccount(employeeId),
+      payload,
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to link payout account. Please try again."),
+    );
+  }
+};
+
+export const refreshEmployeePayoutAccountStatus = async (
+  employeeId: string,
+): Promise<PayoutAccount> => {
+  try {
+    const response = await axiosInstance.post<PayoutAccount>(
+      ApiRoutes.employees.payoutAccountRefreshStatus(employeeId),
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to check payout account status. Please try again."),
+    );
+  }
+};

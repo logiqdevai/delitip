@@ -1,9 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  createEmployeePayoutAccount,
   createMyPayoutAccount,
   createStorePayoutAccount,
+  getEmployeePayoutAccount,
   getMyPayoutAccount,
   getStorePayoutAccount,
+  refreshEmployeePayoutAccountStatus,
   refreshMyPayoutAccountStatus,
   refreshStorePayoutAccountStatus,
 } from "@/features/payout-accounts/services/payout-accounts.services";
@@ -25,6 +28,8 @@ const describeRefreshResult = (account: PayoutAccount) =>
 export const payoutAccountsQueryKeys = {
   mine: ["payout-account", "me"] as const,
   store: (storeId: string) => ["payout-account", "store", storeId] as const,
+  employee: (employeeId: string) =>
+    ["payout-account", "employee", employeeId] as const,
 };
 
 export const useMyPayoutAccount = (enabled = true) => {
@@ -121,6 +126,59 @@ export const useRefreshStorePayoutAccountStatus = (storeId: string) => {
     mutationFn: () => refreshStorePayoutAccountStatus(storeId),
     onSuccess: (account) => {
       queryClient.setQueryData(payoutAccountsQueryKeys.store(storeId), account);
+      toast.add(describeRefreshResult(account));
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not check payout account status",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useEmployeePayoutAccount = (employeeId: string, enabled = true) => {
+  return useQuery({
+    queryKey: payoutAccountsQueryKeys.employee(employeeId),
+    queryFn: () => getEmployeePayoutAccount(employeeId),
+    enabled: !!employeeId && enabled,
+  });
+};
+
+export const useCreateEmployeePayoutAccount = (employeeId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: CreatePayoutAccountPayload) =>
+      createEmployeePayoutAccount(employeeId, payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: payoutAccountsQueryKeys.employee(employeeId),
+      });
+      toast.add({
+        title: "Payout account linked",
+        description: "This employee is ready to receive payouts.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not link payout account",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useRefreshEmployeePayoutAccountStatus = (employeeId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => refreshEmployeePayoutAccountStatus(employeeId),
+    onSuccess: (account) => {
+      queryClient.setQueryData(payoutAccountsQueryKeys.employee(employeeId), account);
       toast.add(describeRefreshResult(account));
     },
     onError: (error: Error) => {

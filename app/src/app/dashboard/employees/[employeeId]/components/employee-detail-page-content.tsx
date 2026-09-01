@@ -48,6 +48,7 @@ import {
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
+import { EmployeePayoutAccountCard } from "@/app/dashboard/employees/[employeeId]/components/employee-payout-account-card";
 import { QrRow } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
 import { PlatformAuthRoles } from "@/features/auth/interfaces/auth.interfaces";
 import {
@@ -277,6 +278,11 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
           </div>
         </div>
       </div>
+
+      <EmployeePayoutAccountCard
+        employeeId={employee.id}
+        hasLinkedUser={!!employee.user_id}
+      />
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-charcoal">

@@ -1,4 +1,4 @@
-import { BadGatewayException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
@@ -102,16 +102,20 @@ export class PayoutAccountsService {
         });
     }
 
-    async createForUser(user: AuthUser, dto: CreatePayoutAccountDto) {
-        const existing = await this.prisma.payoutAccount.findUnique({ where: { user_id: user.id } });
-        if (existing) throw new ConflictException('You already have a payout account');
+    // Shared by a User's own self-service flow (users/me/payout-account) and
+    // a Store Owner managing an Employee's account on their behalf — both
+    // ultimately create/read/update the same USER-owned PayoutAccount, just
+    // reached via a different `userId` resolution + access-control path.
+    private async createUserPayoutAccount(userId: string, dto: CreatePayoutAccountDto) {
+        const existing = await this.prisma.payoutAccount.findUnique({ where: { user_id: userId } });
+        if (existing) throw new ConflictException('A payout account is already linked for this person');
 
         const linked = await this.linkIban(dto);
 
         return this.prisma.payoutAccount.create({
             data: {
                 owner_type: PayoutAccountOwnerType.USER,
-                user_id: user.id,
+                user_id: userId,
                 provider: PaymentProvider.VIVA,
                 provider_account_id: linked.bankAccountId ?? '',
                 bank_account_id: linked.bankAccountId,
@@ -123,10 +127,85 @@ export class PayoutAccountsService {
         });
     }
 
-    async findForUser(user: AuthUser) {
-        const account = await this.prisma.payoutAccount.findUnique({ where: { user_id: user.id } });
+    private async getUserPayoutAccountOrThrow(userId: string) {
+        const account = await this.prisma.payoutAccount.findUnique({ where: { user_id: userId } });
         if (!account) throw new NotFoundException('No payout account found');
         return account;
+    }
+
+    private async updateUserPayoutAccount(userId: string, dto: UpdatePayoutAccountDto) {
+        const account = await this.getUserPayoutAccountOrThrow(userId);
+
+        if ((dto.beneficiary_name || dto.friendly_name) && account.bank_account_id) {
+            await this.vivaBankTransfers.updateBankAccount(account.bank_account_id, {
+                archive: false,
+                beneficiaryName: dto.beneficiary_name,
+                friendlyName: dto.friendly_name,
+            });
+        }
+
+        return this.prisma.payoutAccount.update({
+            where: { user_id: userId },
+            data: {
+                ...(dto.beneficiary_name !== undefined ? { beneficiary_name: dto.beneficiary_name } : {}),
+            },
+        });
+    }
+
+    // Resolves the Employee and confirms the acting user OWNS the Store that
+    // employs them — this is a Store Owner managing someone else's payout
+    // details, so it deliberately requires more than generic store access.
+    private async resolveEmployeeOwnedByCaller(user: AuthUser, employeeId: string) {
+        const employee = await this.prisma.employee.findUnique({ where: { id: employeeId } });
+        if (!employee) throw new NotFoundException('Employee not found');
+
+        await this.accessControl.assertStoreAccess(user, employee.store_id, [OrganizationRole.OWNER]);
+        return employee;
+    }
+
+    // A payout account is keyed to a User, not an Employee record (payment plan
+    // §5.2) — an Employee with no linked login (`user_id` is nullable) has
+    // nothing to attach an account to yet.
+    private requireLinkedUser(employee: { id: string; user_id: string | null }): string {
+        if (!employee.user_id) {
+            throw new BadRequestException(
+                'This employee has no linked login yet — they need to sign in at least once before a payout account can be added for them.',
+            );
+        }
+        return employee.user_id;
+    }
+
+    async createForUser(user: AuthUser, dto: CreatePayoutAccountDto) {
+        return this.createUserPayoutAccount(user.id, dto);
+    }
+
+    async findForUser(user: AuthUser) {
+        return this.getUserPayoutAccountOrThrow(user.id);
+    }
+
+    async createForEmployee(user: AuthUser, employeeId: string, dto: CreatePayoutAccountDto) {
+        const employee = await this.resolveEmployeeOwnedByCaller(user, employeeId);
+        const userId = this.requireLinkedUser(employee);
+        return this.createUserPayoutAccount(userId, dto);
+    }
+
+    async findForEmployee(user: AuthUser, employeeId: string) {
+        const employee = await this.resolveEmployeeOwnedByCaller(user, employeeId);
+        if (!employee.user_id) throw new NotFoundException('No payout account for this employee');
+        return this.getUserPayoutAccountOrThrow(employee.user_id);
+    }
+
+    async updateForEmployee(user: AuthUser, employeeId: string, dto: UpdatePayoutAccountDto) {
+        const employee = await this.resolveEmployeeOwnedByCaller(user, employeeId);
+        const userId = this.requireLinkedUser(employee);
+        return this.updateUserPayoutAccount(userId, dto);
+    }
+
+    async refreshStatusForEmployee(user: AuthUser, employeeId: string) {
+        const employee = await this.resolveEmployeeOwnedByCaller(user, employeeId);
+        if (!employee.user_id) throw new NotFoundException('No payout account for this employee');
+        const account = await this.getUserPayoutAccountOrThrow(employee.user_id);
+        return this.promoteIfVerified(account);
     }
 
     // On-demand version of the same check PayoutsService otherwise only
@@ -142,8 +221,7 @@ export class PayoutAccountsService {
     }
 
     async refreshStatusForUser(user: AuthUser) {
-        const account = await this.prisma.payoutAccount.findUnique({ where: { user_id: user.id } });
-        if (!account) throw new NotFoundException('No payout account found');
+        const account = await this.getUserPayoutAccountOrThrow(user.id);
         return this.promoteIfVerified(account);
     }
 

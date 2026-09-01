@@ -94,6 +94,9 @@ export const ApiRoutes = {
     tips: (id: string) => `/employees/${id}/tips` as const,
     reviews: (id: string) => `/employees/${id}/reviews` as const,
     payouts: (id: string) => `/employees/${id}/payouts` as const,
+    payoutAccount: (id: string) => `/employees/${id}/payout-account` as const,
+    payoutAccountRefreshStatus: (id: string) =>
+      `/employees/${id}/payout-account/refresh-status` as const,
   },
   qrCodes: {
     byId: (id: string) => `/qr-codes/${id}` as const,
