@@ -78,6 +78,8 @@ export class PaymentWebhooksService {
         // (payouts.service sets provider_transfer_id from the :send
         // response) — nothing further to do here.
         return;
+      case VivaWebhookEventTypeId.ORDER_UPDATED:
+        return this.handleOrderUpdated(payload.EventData);
       default:
         this.logger.log(`Unhandled Viva webhook EventTypeId ${payload.EventTypeId}`);
         return;
@@ -236,6 +238,51 @@ export class PaymentWebhooksService {
       this.prisma.paymentTransaction.update({
         where: { id: tip.payment_transaction.id },
         data: { status: 'FAILED', failure_reason: `Viva transaction status ${transaction.statusId ?? 'unknown'}` },
+      }),
+    ]);
+  }
+
+  // The one case Viva's docs say produces no webhook at all elsewhere — a
+  // customer backing out via Smart Checkout's cancel/back button. No money
+  // ever moved for this order, so unlike the payment/failure handlers above
+  // there's nothing to re-verify against a transaction lookup; MerchantTrns
+  // in the payload is trusted only as a lookup key, and the status write is
+  // itself guarded to only ever downgrade a still-in-flight tip.
+  private async handleOrderUpdated(eventData?: Record<string, unknown>): Promise<void> {
+    if (eventData?.IsCancelled !== true) return;
+
+    const merchantTrns = eventData?.MerchantTrns;
+    const orderCode = eventData?.OrderCode;
+
+    const tip =
+      typeof merchantTrns === 'string'
+        ? await this.prisma.tip.findUnique({
+            where: { id: merchantTrns },
+            include: { payment_transaction: true },
+          })
+        : orderCode !== undefined
+          ? await this.prisma.tip.findFirst({
+              where: { payment_transaction: { provider_order_code: String(orderCode) } },
+              include: { payment_transaction: true },
+            })
+          : null;
+
+    if (!tip || !tip.payment_transaction) {
+      this.logger.warn(
+        `Order-updated (cancelled) webhook could not be matched to a Tip (merchantTrns=${merchantTrns}, orderCode=${orderCode})`,
+      );
+      return;
+    }
+
+    // Never override a tip that already resolved some other way (completed,
+    // failed, or a duplicate/out-of-order delivery of this same event).
+    if (tip.status !== TipStatus.CREATED && tip.status !== TipStatus.PROCESSING) return;
+
+    await this.prisma.$transaction([
+      this.prisma.tip.update({ where: { id: tip.id }, data: { status: TipStatus.CANCELLED } }),
+      this.prisma.paymentTransaction.update({
+        where: { id: tip.payment_transaction.id },
+        data: { status: 'CANCELLED' },
       }),
     ]);
   }

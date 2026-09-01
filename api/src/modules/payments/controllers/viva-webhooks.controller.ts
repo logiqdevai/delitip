@@ -20,8 +20,8 @@ export class VivaWebhooksController {
   // verification key echoed back.
   @Get()
   async getHandshake() {
-    const { key } = await this.vivaWebhooksService.getVerificationKey();
-    return this.vivaWebhooksService.buildHandshakeResponse(key);
+    const { Key } = await this.vivaWebhooksService.getVerificationKey();
+    return this.vivaWebhooksService.buildHandshakeResponse(Key);
   }
 
   @Post()

@@ -7,6 +7,10 @@ export const VivaWebhookEventTypeId = {
   TRANSACTION_PRICE_CALCULATED: 1799,
   COMMAND_BANK_TRANSFER_CREATED: 768,
   COMMAND_BANK_TRANSFER_EXECUTED: 769,
+  // Fires when a customer cancels checkout via Smart Checkout's cancel/back
+  // button (or via API) — the one case Viva's docs otherwise say produces no
+  // webhook at all. EventData carries MerchantTrns/OrderCode/IsCancelled.
+  ORDER_UPDATED: 4865,
 } as const;
 
 // Viva's checkout-v2 transaction statusId — 'F' (Finalized) is the only

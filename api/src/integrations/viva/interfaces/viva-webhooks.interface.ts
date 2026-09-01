@@ -1,5 +1,10 @@
+// Viva's actual response is capitalized `Key` (confirmed against
+// developer.viva.com's own example payload: `{"Key": "B3248222..."}`) —
+// do not lowercase this, a prior version of this interface did and silently
+// broke the handshake (buildHandshakeResponse received `undefined`, which
+// JSON.stringify drops, so the endpoint returned `{}` instead of the key).
 export interface VivaWebhookVerificationKeyResponse {
-  key: string;
+  Key: string;
 }
 
 /**

@@ -13,7 +13,7 @@ describe('VivaWebhooksService', () => {
 
   describe('getVerificationKey', () => {
     it('fetches the key from the native host using Basic auth', async () => {
-      vivaHttpClient.request.mockResolvedValue({ key: 'verification_key' });
+      vivaHttpClient.request.mockResolvedValue({ Key: 'verification_key' });
 
       const result = await service.getVerificationKey();
 
@@ -23,7 +23,7 @@ describe('VivaWebhooksService', () => {
         method: 'GET',
         path: '/api/messages/config/token',
       });
-      expect(result).toEqual({ key: 'verification_key' });
+      expect(result).toEqual({ Key: 'verification_key' });
     });
   });
 

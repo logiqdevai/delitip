@@ -20,7 +20,7 @@ describe('PaymentWebhooksService', () => {
     beforeEach(() => {
         prisma = {
             webhookEvent: { create: jest.fn(), update: jest.fn() },
-            tip: { findUnique: jest.fn(), update: jest.fn() },
+            tip: { findUnique: jest.fn(), findFirst: jest.fn(), update: jest.fn() },
             paymentTransaction: { update: jest.fn(), findFirst: jest.fn() },
             distributionRuleRecipient: { findMany: jest.fn().mockResolvedValue([]) },
             tipDistribution: { createMany: jest.fn(), updateMany: jest.fn() },
@@ -217,6 +217,76 @@ describe('PaymentWebhooksService', () => {
             } as any);
 
             expect(prisma.refund.update).toHaveBeenCalledWith({ where: { id: 'refund1' }, data: { provider_status: 'CONFIRMED' } });
+        });
+    });
+
+    describe('4865 order updated (customer cancelled checkout)', () => {
+        it('cancels a still-in-flight tip found via MerchantTrns', async () => {
+            prisma.tip.findUnique.mockResolvedValue({
+                id: 'tip1',
+                status: TipStatus.CREATED,
+                payment_transaction: { id: 'pt1' },
+            });
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.ORDER_UPDATED,
+                MessageId: 'm8',
+                EventData: { MerchantTrns: 'tip1', OrderCode: 123, IsCancelled: true },
+            } as any);
+
+            expect(prisma.tip.findUnique).toHaveBeenCalledWith(
+                expect.objectContaining({ where: { id: 'tip1' } }),
+            );
+            expect(prisma.tip.update).toHaveBeenCalledWith({ where: { id: 'tip1' }, data: { status: TipStatus.CANCELLED } });
+            expect(prisma.paymentTransaction.update).toHaveBeenCalledWith({
+                where: { id: 'pt1' },
+                data: { status: 'CANCELLED' },
+            });
+        });
+
+        it('falls back to looking the tip up by order code when MerchantTrns is missing', async () => {
+            prisma.tip.findFirst.mockResolvedValue({
+                id: 'tip1',
+                status: TipStatus.PROCESSING,
+                payment_transaction: { id: 'pt1' },
+            });
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.ORDER_UPDATED,
+                MessageId: 'm9',
+                EventData: { OrderCode: 456, IsCancelled: true },
+            } as any);
+
+            expect(prisma.tip.findFirst).toHaveBeenCalledWith(
+                expect.objectContaining({ where: { payment_transaction: { provider_order_code: '456' } } }),
+            );
+            expect(prisma.tip.update).toHaveBeenCalledWith({ where: { id: 'tip1' }, data: { status: TipStatus.CANCELLED } });
+        });
+
+        it('is a no-op when IsCancelled is not true', async () => {
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.ORDER_UPDATED,
+                MessageId: 'm10',
+                EventData: { MerchantTrns: 'tip1', IsCancelled: false },
+            } as any);
+
+            expect(prisma.tip.update).not.toHaveBeenCalled();
+        });
+
+        it('never overrides a tip that already reached a terminal status', async () => {
+            prisma.tip.findUnique.mockResolvedValue({
+                id: 'tip1',
+                status: TipStatus.COMPLETED,
+                payment_transaction: { id: 'pt1' },
+            });
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.ORDER_UPDATED,
+                MessageId: 'm11',
+                EventData: { MerchantTrns: 'tip1', IsCancelled: true },
+            } as any);
+
+            expect(prisma.tip.update).not.toHaveBeenCalled();
         });
     });
 
