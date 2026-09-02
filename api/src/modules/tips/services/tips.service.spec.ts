@@ -1,5 +1,5 @@
 import { BadGatewayException, BadRequestException, NotFoundException } from '@nestjs/common';
-import { Currency, Language, OrganizationRole, QrCodeSelectionMode, TipStatus } from 'generated/prisma';
+import { Currency, Language, OrganizationRole, PaymentTransactionStatus, QrCodeSelectionMode, TipStatus } from 'generated/prisma';
 import { AuthRole } from 'generated/prisma';
 import { TipsService } from './tips.service';
 import { CreatePublicTipDto } from '../dto/create-public-tip.dto';
@@ -88,7 +88,10 @@ describe('TipsService', () => {
             getDefaultSourceCode: jest.fn().mockReturnValue('Default'),
             getNativeBaseUrl: jest.fn().mockReturnValue('https://demo.vivapayments.com'),
         };
-        vivaCheckout = { createOrder: jest.fn().mockResolvedValue({ orderCode: 123456789 }) };
+        vivaCheckout = {
+            createOrder: jest.fn().mockResolvedValue({ orderCode: 123456789 }),
+            getOrder: jest.fn().mockResolvedValue({ OrderCode: 123456789 }),
+        };
 
         service = new TipsService(prisma, accessControl, usersService, platformFinanceConfig, vivaConfig, vivaCheckout);
 
@@ -373,6 +376,22 @@ describe('TipsService', () => {
             await expect(service.createPublicTip(baseDto())).rejects.toThrow(BadGatewayException);
             expect(prisma.tip.update).toHaveBeenCalledWith(
                 expect.objectContaining({ data: expect.objectContaining({ status: TipStatus.FAILED }) }),
+            );
+        });
+
+        it('marks the tip/payment transaction FAILED and throws BadGatewayException when the created order fails verification', async () => {
+            prisma.qrCode.findUnique.mockResolvedValue(qrCode());
+            vivaCheckout.getOrder.mockRejectedValue(new Error('Order not found'));
+
+            await expect(service.createPublicTip(baseDto())).rejects.toThrow(BadGatewayException);
+            expect(vivaCheckout.getOrder).toHaveBeenCalledWith(123456789);
+            expect(prisma.tip.update).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ status: TipStatus.FAILED }) }),
+            );
+            expect(prisma.paymentTransaction.update).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({ status: PaymentTransactionStatus.FAILED, failure_reason: 'Order not found' }),
+                }),
             );
         });
     });

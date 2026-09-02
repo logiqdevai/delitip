@@ -1,4 +1,4 @@
-import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { UsersService } from '@/modules/users/services/users.service';
@@ -17,6 +17,8 @@ const PERFORMANCE_CHANGE_THRESHOLD_PERCENT = 20;
 
 @Injectable()
 export class TipsService {
+    private readonly logger = new Logger(TipsService.name);
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
@@ -162,8 +164,18 @@ export class TipsService {
                 paymentTimeout: 600,
             });
             orderCode = order.orderCode;
+
+            // Viva's sandbox has occasionally returned a 200 with an orderCode
+            // for an order that then 404s on every subsequent lookup (both the
+            // native orders API and the hosted checkout page) — sending the
+            // customer to a checkout URL that immediately errors with no way
+            // to recover. Confirm the order is actually retrievable before we
+            // hand out that URL, so a bad create surfaces as a "try again" here
+            // instead of a dead end on Viva's page.
+            await this.vivaCheckout.getOrder(orderCode);
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Unknown error creating Viva order';
+            this.logger.warn(`Viva order creation/verification failed for tip ${tip.id}: ${message}`);
             await this.prisma.$transaction([
                 this.prisma.tip.update({ where: { id: tip.id }, data: { status: TipStatus.FAILED } }),
                 this.prisma.paymentTransaction.update({
