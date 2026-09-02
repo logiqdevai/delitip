@@ -4,6 +4,7 @@ import { type FC, useState } from "react";
 import { SlidersHorizontal, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
+import { EmployeeSelect } from "@/components/ui/employee-select";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
   Table,
@@ -31,6 +32,7 @@ import {
 } from "@/components/ui/empty";
 import { TablePagination } from "@/app/dashboard/payments/components/table-pagination";
 import { PayOutNowDialog } from "@/app/dashboard/payments/components/pay-out-now-dialog";
+import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useStoreDistributions } from "@/features/payouts/hooks/use-payouts";
 import type { DistributionsQuery } from "@/features/payouts/interfaces/payouts.interfaces";
 import type {
@@ -69,14 +71,18 @@ export const DistributionsTable: FC<{
   const [recipientType, setRecipientType] = useState<
     DistributionRecipientType | "all"
   >("all");
+  const [employeeId, setEmployeeId] = useState("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+
+  const employeesQuery = useEmployees(storeId, { limit: 100 });
 
   const query: DistributionsQuery = {
     page,
     limit: 20,
     ...(status !== "all" ? { payout_status: status } : {}),
     ...(recipientType !== "all" ? { recipient_type: recipientType } : {}),
+    ...(employeeId !== "all" ? { employee_id: employeeId } : {}),
     ...(dateFrom ? { date_from: dateFrom } : {}),
     ...(dateTo ? { date_to: dateTo } : {}),
   };
@@ -84,6 +90,7 @@ export const DistributionsTable: FC<{
   const distributionsQuery = useStoreDistributions(storeId, query);
   const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
 
+  const employees = employeesQuery.data?.data ?? [];
   const distributions = distributionsQuery.data?.data ?? [];
   const pagination = distributionsQuery.data?.pagination;
   const summary = distributionsQuery.data?.summary;
@@ -164,6 +171,18 @@ export const DistributionsTable: FC<{
             </SelectGroup>
           </SelectContent>
         </Select>
+        <EmployeeSelect
+          employees={employees}
+          value={employeeId}
+          onValueChange={(value) => {
+            setEmployeeId(value);
+            setPage(1);
+          }}
+          includeAll
+          triggerClassName="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs"
+          contentClassName="min-w-44"
+          aria-label="Filter by employee"
+        />
         <DatePicker
           value={dateFrom}
           onChange={(value) => {
