@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { DocumentsService } from '@/modules/documents/services/documents.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
@@ -17,6 +17,8 @@ import { Language, OrganizationRole, PayoutStatus } from 'generated/prisma';
 
 @Injectable()
 export class EmployeesService {
+    private readonly logger = new Logger(EmployeesService.name);
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
@@ -121,7 +123,9 @@ export class EmployeesService {
                         inviteUrl: AppUrls.employeeInvite(token),
                     },
                 });
-            } catch { }
+            } catch (error) {
+                this.logger.error('Failed to send employee invite email', error);
+            }
         });
     }
 

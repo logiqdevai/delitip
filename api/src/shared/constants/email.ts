@@ -4,6 +4,7 @@ export const EmailConfig = {
     email_addresses: {
         verification: 'delitip@logiqdev.com',
         alert: 'delitip@logiqdev.com',
+        contact: 'info@delitip.com',
     },
     templates: {
         waitlist: {
@@ -17,6 +18,10 @@ export const EmailConfig = {
         employee_invite: {
             subject: 'Welcome to Delitip — set up your account',
             template_id: EmailTemplates.EMPLOYEE_INVITE,
+        },
+        contact: {
+            subject: 'New contact form message',
+            template_id: EmailTemplates.CONTACT,
         },
     }
 }

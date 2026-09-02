@@ -90,7 +90,7 @@ export const RecipientStep: FC<RecipientStepProps> = ({
   const canContinue = interactive ? selectedEmployeeIds.length > 0 : true;
 
   return (
-    <div className="auth-fade-enter flex flex-1 flex-col gap-6 px-5 py-8">
+    <div className="flex flex-1 flex-col gap-6 px-5 py-8">
       <div className="flex items-center gap-2 text-xs font-semibold tracking-wide text-zinc-400 uppercase">
         <Users className="size-3.5 shrink-0" />
         <span className="truncate">

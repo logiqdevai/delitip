@@ -137,7 +137,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
   };
 
   return (
-    <div className="auth-fade-enter flex flex-1 flex-col gap-6 px-5 py-8">
+    <div className="flex flex-1 flex-col gap-6 px-5 py-8">
       <div className="text-center">
         <h1 className="text-lg font-bold text-ink-charcoal">
           How was your experience?

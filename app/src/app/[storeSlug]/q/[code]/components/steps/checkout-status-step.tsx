@@ -112,7 +112,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
 
   if (status === TipStatuses.FAILED || status === TipStatuses.CANCELLED) {
     return (
-      <div className="auth-fade-enter flex flex-1 flex-col items-center justify-center gap-4 px-5 py-8 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-5 py-8 text-center">
         <div className="flex size-16 items-center justify-center rounded-full bg-red-50 text-red-500">
           <XCircle className="size-8" strokeWidth={2} />
         </div>
@@ -141,7 +141,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
 
   if (timedOut) {
     return (
-      <div className="auth-fade-enter flex flex-1 flex-col items-center justify-center gap-4 px-5 py-8 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-5 py-8 text-center">
         <div className="flex size-16 items-center justify-center rounded-full bg-amber-50 text-amber-500">
           <AlertTriangle className="size-8" strokeWidth={2} />
         </div>
@@ -170,7 +170,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
   }
 
   return (
-    <div className="auth-fade-enter flex flex-1 flex-col items-center justify-center gap-4 px-5 py-8 text-center">
+    <div className="flex flex-1 flex-col items-center justify-center gap-4 px-5 py-8 text-center">
       <Loader2 className="size-10 animate-spin text-zinc-400" strokeWidth={2} />
       <div>
         <h1 className="text-lg font-bold text-ink-charcoal">

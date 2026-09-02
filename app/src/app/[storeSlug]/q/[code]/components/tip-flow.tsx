@@ -3,6 +3,7 @@
 import { type CSSProperties, type FC, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
 import type { PublicQrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import type { PublicStore } from "@/features/stores/interfaces/stores.interfaces";
 import { usePublicReviewConfig } from "@/features/reviews/hooks/use-reviews";
@@ -30,6 +31,13 @@ type FlowStep = "amount" | "select" | "review" | "done";
 const TIP_QUERY_PARAM = "tip";
 const DEFAULT_PRIMARY_COLOR = "#C8F169";
 const DEFAULT_SECONDARY_COLOR = "#9FBF3E";
+
+const stepEase = [0.22, 1, 0.36, 1] as const;
+const stepVariants = {
+  enter: { opacity: 0, y: 16 },
+  center: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -16 },
+};
 
 export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
   const { data: reviewConfig } = usePublicReviewConfig(storeSlug);
@@ -112,67 +120,101 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
       className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-paper-offwhite"
       style={themeStyle}
     >
-      {step === "amount" ? (
-        <div className="flex flex-1 flex-col">
-          <StoreHero
-            store={store}
-            logoUrl={logoUrl}
-            primary={primary}
-            secondary={secondary}
-            welcome={welcome}
-          />
-          <AmountStep
-            currency={store.currency}
-            suggestedAmounts={store.suggested_tip_amounts}
-            allowCustomAmount={store.allow_custom_tip_amount}
-            subtitle={interactive ? undefined : `for ${recipientLabel}`}
-            recipientLabel={recipientLabel}
-            onContinue={(value) => {
-              setAmount(value);
-              setStep("select");
-            }}
-          />
-        </div>
-      ) : null}
-
-      {step === "select" ? (
-        <RecipientStep
-          storeName={store.name}
-          employees={employees}
-          mode={mode}
-          interactive={interactive}
-          selectedEmployeeIds={selectedEmployeeIds}
-          onToggle={toggleEmployee}
-          onBack={() => setStep("amount")}
-          onContinue={() => setStep("review")}
-        />
-      ) : null}
-
-      {step === "review" ? (
-        <ReviewStep
-          qrCodeId={qr.qr_code.id}
-          storeId={store.id}
-          storeSlug={storeSlug}
-          code={code}
-          amount={amount}
-          currency={store.currency}
-          recipientLabel={recipientLabel}
-          selectionMode={mode}
-          selectedEmployeeIds={selectedEmployeeIds}
-          config={reviewConfig}
-          draft={reviewDraft}
-          onChange={setReviewDraft}
-          onBack={() => setStep("select")}
-        />
-      ) : null}
-
-      {step === "done" && recoveredTipId ? (
-        <CheckoutStatusStep
-          tipId={recoveredTipId}
-          storeName={store.name}
-          onRestart={resetFlow}
-        />
-      ) : null}
+      <AnimatePresence mode="wait" initial={false}>
+        {step === "amount" ? (
+          <motion.div
+            key="amount"
+            variants={stepVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.28, ease: stepEase }}
+            className="flex flex-1 flex-col"
+          >
+            <StoreHero
+              store={store}
+              logoUrl={logoUrl}
+              primary={primary}
+              secondary={secondary}
+              welcome={welcome}
+            />
+            <AmountStep
+              currency={store.currency}
+              suggestedAmounts={store.suggested_tip_amounts}
+              allowCustomAmount={store.allow_custom_tip_amount}
+              subtitle={interactive ? undefined : `for ${recipientLabel}`}
+              recipientLabel={recipientLabel}
+              onContinue={(value) => {
+                setAmount(value);
+                setStep("select");
+              }}
+            />
+          </motion.div>
+        ) : step === "select" ? (
+          <motion.div
+            key="select"
+            variants={stepVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.28, ease: stepEase }}
+            className="flex flex-1 flex-col"
+          >
+            <RecipientStep
+              storeName={store.name}
+              employees={employees}
+              mode={mode}
+              interactive={interactive}
+              selectedEmployeeIds={selectedEmployeeIds}
+              onToggle={toggleEmployee}
+              onBack={() => setStep("amount")}
+              onContinue={() => setStep("review")}
+            />
+          </motion.div>
+        ) : step === "review" ? (
+          <motion.div
+            key="review"
+            variants={stepVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.28, ease: stepEase }}
+            className="flex flex-1 flex-col"
+          >
+            <ReviewStep
+              qrCodeId={qr.qr_code.id}
+              storeId={store.id}
+              storeSlug={storeSlug}
+              code={code}
+              amount={amount}
+              currency={store.currency}
+              recipientLabel={recipientLabel}
+              selectionMode={mode}
+              selectedEmployeeIds={selectedEmployeeIds}
+              config={reviewConfig}
+              draft={reviewDraft}
+              onChange={setReviewDraft}
+              onBack={() => setStep("select")}
+            />
+          </motion.div>
+        ) : step === "done" && recoveredTipId ? (
+          <motion.div
+            key="done"
+            variants={stepVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.28, ease: stepEase }}
+            className="flex flex-1 flex-col"
+          >
+            <CheckoutStatusStep
+              tipId={recoveredTipId}
+              storeName={store.name}
+              onRestart={resetFlow}
+            />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
       <footer className="border-t border-zinc-100 px-5 py-4 text-center text-[11px] font-medium text-zinc-400">
         Powered by{" "}
