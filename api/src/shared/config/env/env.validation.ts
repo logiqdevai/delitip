@@ -44,6 +44,7 @@ const EnvSchema = z.object({
     VIVA_WEBHOOK_IP_ALLOWLIST: z.string().optional(),
     TIP_PLATFORM_COMMISSION_PERCENTAGE: z.coerce.number().optional(),
     TIP_PROCESSOR_FEE_ESTIMATE_PERCENTAGE: z.coerce.number().optional(),
+    TIP_PROCESSOR_FEE_ESTIMATE_FIXED_AMOUNT: z.coerce.number().optional(),
     PAYOUT_HOLD_WINDOW_HOURS: z.coerce.number().optional(),
 });
 
