@@ -148,8 +148,13 @@ export const ApiRoutes = {
     timezone: "/google-maps/timezone",
   },
   admin: {
+    stores: "/admin/stores",
     payments: {
       prefix: "/admin/payments",
+      reconcile: "/admin/payments/reconcile",
+    },
+    payoutAccounts: {
+      reconcile: "/admin/payout-accounts/reconcile",
     },
     payouts: {
       prefix: "/admin/payouts",

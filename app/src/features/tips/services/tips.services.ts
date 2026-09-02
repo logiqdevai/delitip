@@ -55,6 +55,17 @@ export const listAdminTips = async (
   }
 };
 
+export const reconcilePayments = async (): Promise<{ corrected: number }> => {
+  try {
+    const response = await axiosInstance.post<{ corrected: number }>(
+      ApiRoutes.admin.payments.reconcile,
+    );
+    return response.data;
+  } catch {
+    throw new Error("Failed to reconcile payments. Please try again.");
+  }
+};
+
 export const getTip = async (id: string): Promise<Tip> => {
   try {
     const response = await axiosInstance.get<Tip>(ApiRoutes.tips.byId(id));

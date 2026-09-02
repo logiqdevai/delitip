@@ -53,11 +53,13 @@ export interface CreatePaymentOrderResponse {
   orderCode: number;
 }
 
+// Numeric on the wire (Viva returns `"StateId":3` as a JSON number, not a
+// string) — a string-valued enum here silently never matches via `===`.
 export const VivaOrderState = {
-  PENDING: '0',
-  EXPIRED: '1',
-  CANCELED: '2',
-  PAID: '3',
+  PENDING: 0,
+  EXPIRED: 1,
+  CANCELED: 2,
+  PAID: 3,
 } as const;
 
 export type VivaOrderState =

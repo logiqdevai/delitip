@@ -6,6 +6,7 @@ import {
   listAdminTips,
   listEmployeeTips,
   listStoreTips,
+  reconcilePayments,
 } from "@/features/tips/services/tips.services";
 import {
   TipStatuses,
@@ -13,6 +14,7 @@ import {
   type CreatePublicTipPayload,
   type TipsQuery,
 } from "@/features/tips/interfaces/tips.interfaces";
+import { toast } from "@/components/ui/toast";
 
 export const tipsQueryKeys = {
   root: ["tips"] as const,
@@ -60,6 +62,32 @@ export const useAdminTips = (query?: AdminTipsQuery) => {
   return useQuery({
     queryKey: tipsQueryKeys.adminList(query),
     queryFn: () => listAdminTips(query),
+  });
+};
+
+export const useReconcilePayments = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: reconcilePayments,
+    onSuccess: ({ corrected }) => {
+      void queryClient.invalidateQueries({ queryKey: tipsQueryKeys.root });
+      toast.add({
+        title: "Payments reconciled",
+        description:
+          corrected > 0
+            ? `${corrected} stuck payment${corrected === 1 ? "" : "s"} corrected against Viva.`
+            : "No stuck payments found — everything's up to date.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not reconcile payments",
+        description: error.message,
+        type: "error",
+      });
+    },
   });
 };
 
