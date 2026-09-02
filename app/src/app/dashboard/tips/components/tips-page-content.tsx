@@ -79,7 +79,7 @@ export const TipsPageContent: FC = () => {
   const tipsQuery = useStoreTips(storeId ?? "", query);
 
   if (workspacePending) {
-    return <TableSkeleton columns={6} />;
+    return <TableSkeleton columns={5} />;
   }
 
   if (!isReady || !storeId) {
@@ -164,7 +164,7 @@ export const TipsPageContent: FC = () => {
       </div>
 
       {tipsQuery.isPending ? (
-        <TableSkeleton columns={6} />
+        <TableSkeleton columns={5} />
       ) : tipsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
@@ -214,7 +214,6 @@ export const TipsPageContent: FC = () => {
                 <TableHead className="px-4">Employee</TableHead>
                 <TableHead className="px-4">QR</TableHead>
                 <TableHead className="px-4">Amount</TableHead>
-                <TableHead className="px-4">Provider</TableHead>
                 <TableHead className="px-4 text-right">Status</TableHead>
               </TableRow>
             </TableHeader>
@@ -236,9 +235,6 @@ export const TipsPageContent: FC = () => {
                   </TableCell>
                   <TableCell className="px-4 py-3.5 font-bold text-brand-700">
                     {formatMoney(tip.amount, tip.currency)}
-                  </TableCell>
-                  <TableCell className="px-4 py-3.5 text-zinc-500">
-                    {tip.payment_provider ?? "—"}
                   </TableCell>
                   <TableCell className="px-4 py-3.5 text-right">
                     <span

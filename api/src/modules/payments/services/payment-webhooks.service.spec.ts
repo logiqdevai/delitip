@@ -29,7 +29,10 @@ describe('PaymentWebhooksService', () => {
             $transaction: jest.fn((arg) => (Array.isArray(arg) ? Promise.all(arg) : arg(prisma))),
         };
         vivaTransactions = { getTransaction: jest.fn() };
-        platformFinanceConfig = { getProcessorFeeEstimatePercentage: jest.fn().mockReturnValue(1.5) };
+        platformFinanceConfig = {
+            getProcessorFeeEstimatePercentage: jest.fn().mockReturnValue(1.5),
+            getProcessorFeeEstimateFixedAmount: jest.fn().mockReturnValue(24),
+        };
         tipsService = { triggerPerformanceChangeAlert: jest.fn().mockResolvedValue(undefined) };
 
         service = new PaymentWebhooksService(prisma, vivaTransactions, platformFinanceConfig, tipsService);
@@ -151,12 +154,12 @@ describe('PaymentWebhooksService', () => {
             expect(prisma.paymentTransaction.update).toHaveBeenCalledWith(
                 expect.objectContaining({
                     where: { id: 'pt1' },
-                    data: expect.objectContaining({ status: 'SUCCEEDED', processor_fee_estimated: 15, net_distributable_amount: 935 }),
+                    data: expect.objectContaining({ status: 'SUCCEEDED', processor_fee_estimated: 39, net_distributable_amount: 911 }),
                 }),
             );
             // no recipients configured -> falls back to 100% STORE
             expect(prisma.tipDistribution.createMany).toHaveBeenCalledWith({
-                data: [expect.objectContaining({ recipient_type: 'STORE', amount: 935 })],
+                data: [expect.objectContaining({ recipient_type: 'STORE', amount: 911 })],
             });
             expect(tipsService.triggerPerformanceChangeAlert).toHaveBeenCalled();
         });

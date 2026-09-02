@@ -31,7 +31,20 @@ describe('PlatformFinanceConfig', () => {
     it('falls back to the default processor fee estimate percentage when unset', () => {
         configService.get.mockReturnValue(undefined);
 
-        expect(config.getProcessorFeeEstimatePercentage()).toBe(4.8);
+        expect(config.getProcessorFeeEstimatePercentage()).toBe(2.4);
+    });
+
+    it('reads the processor fee estimate fixed amount from env when set', () => {
+        configService.get.mockReturnValue(30);
+
+        expect(config.getProcessorFeeEstimateFixedAmount()).toBe(30);
+        expect(configService.get).toHaveBeenCalledWith('TIP_PROCESSOR_FEE_ESTIMATE_FIXED_AMOUNT');
+    });
+
+    it('falls back to the default processor fee estimate fixed amount when unset', () => {
+        configService.get.mockReturnValue(undefined);
+
+        expect(config.getProcessorFeeEstimateFixedAmount()).toBe(24);
     });
 
     it('reads the payout hold window from env when set', () => {

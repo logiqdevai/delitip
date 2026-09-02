@@ -172,7 +172,9 @@ export class PaymentWebhooksService {
     const grossAmount = tip.payment_transaction.gross_amount;
     const commissionAmount = tip.payment_transaction.commission_amount;
     const processorFeePercentageUsed = this.platformFinanceConfig.getProcessorFeeEstimatePercentage();
-    const processorFeeEstimated = Math.round((grossAmount * processorFeePercentageUsed) / 100);
+    const processorFeeFixedAmount = this.platformFinanceConfig.getProcessorFeeEstimateFixedAmount();
+    const processorFeeEstimated =
+      Math.round((grossAmount * processorFeePercentageUsed) / 100) + processorFeeFixedAmount;
     const paymentFeePercentage = Math.round(((processorFeeEstimated / grossAmount) * 100) * 100) / 100;
     const totalFeeAmount = commissionAmount + processorFeeEstimated;
     const totalFeePercentage = Math.round(((totalFeeAmount / grossAmount) * 100) * 100) / 100;
