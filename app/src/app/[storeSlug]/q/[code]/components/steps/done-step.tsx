@@ -1,11 +1,46 @@
 "use client";
 
-import { type FC, useState } from "react";
+import { type FC, useEffect, useRef, useState } from "react";
+import confetti from "canvas-confetti";
+import { motion } from "motion/react";
 import { AlertTriangle, Check, CheckCircle2, ExternalLink } from "lucide-react";
 import { useCreatePublicRefundRequest } from "@/features/refunds/hooks/use-refunds";
 import type { CreatePublicReviewResponse } from "@/features/reviews/interfaces/reviews.interfaces";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
+
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease } },
+};
+
+// Fires a couple of side cannons plus a center burst, colored from the
+// store's theme so the celebration matches the brand instead of looking generic.
+const celebrate = (colors: string[]) => {
+  const duration = 1200;
+  const end = Date.now() + duration;
+
+  confetti({
+    particleCount: 90,
+    spread: 100,
+    startVelocity: 45,
+    origin: { y: 0.3 },
+    colors,
+  });
+
+  (function frame() {
+    confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0, y: 0.4 }, colors });
+    confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1, y: 0.4 }, colors });
+    if (Date.now() < end) requestAnimationFrame(frame);
+  })();
+};
 
 interface DoneStepProps {
   review: CreatePublicReviewResponse | null;
@@ -122,20 +157,56 @@ export const DoneStep: FC<DoneStepProps> = ({
       ? `Your ${formatMoney(amount, currency)} tip${review ? " and compliments" : ""} were sent to ${recipientLabel}.`
       : "Your tip has already been sent.");
 
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const styles = rootRef.current ? getComputedStyle(rootRef.current) : null;
+    const primary = styles?.getPropertyValue("--tip-primary").trim();
+    const secondary = styles?.getPropertyValue("--tip-secondary").trim();
+    const colors = [primary || "#C8F169", secondary || "#9FBF3E", "#FFD166", "#FFFFFF"];
+
+    const timer = window.setTimeout(() => celebrate(colors), 150);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="auth-fade-enter flex flex-1 flex-col gap-5 px-5 py-8 text-center">
-      <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-(--tip-primary)/15 text-(--tip-secondary) shadow-inner">
-        <Check className="size-8" strokeWidth={2.5} />
+    <motion.div
+      ref={rootRef}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="flex flex-1 flex-col gap-5 px-5 py-8 text-center"
+    >
+      <div className="relative mx-auto flex size-16 items-center justify-center">
+        <motion.div
+          className="absolute inset-0 rounded-full bg-(--tip-primary)/40"
+          initial={{ scale: 1, opacity: 0.6 }}
+          animate={{ scale: 1.8, opacity: 0 }}
+          transition={{ duration: 1.4, ease: "easeOut", delay: 0.2, repeat: 1 }}
+        />
+        <motion.div
+          className="relative flex size-16 items-center justify-center rounded-full bg-(--tip-primary)/15 text-(--tip-secondary) shadow-inner"
+          initial={{ scale: 0, rotate: -20 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.05 }}
+        >
+          <Check className="size-8" strokeWidth={2.5} />
+        </motion.div>
       </div>
 
-      <div>
+      <motion.div variants={itemVariants}>
         <h1 className="text-xl font-bold text-ink-charcoal">Thank you!</h1>
         <p className="mt-2 text-sm leading-relaxed text-zinc-600">
           {description}
         </p>
-      </div>
+      </motion.div>
 
-      <div className="space-y-2 rounded-2xl border border-zinc-100 bg-zinc-50 p-4 text-left">
+      <motion.div
+        variants={itemVariants}
+        className="space-y-2 rounded-2xl border border-zinc-100 bg-zinc-50 p-4 text-left"
+      >
         <div className="flex items-center justify-between gap-3 text-xs text-zinc-600">
           <span className="shrink-0">Receipt ID</span>
           <span className="min-w-0 truncate font-mono text-ink-charcoal">
@@ -158,10 +229,11 @@ export const DoneStep: FC<DoneStepProps> = ({
             </span>
           </div>
         ) : null}
-      </div>
+      </motion.div>
 
       {review?.redirect.should_redirect && review.redirect.url ? (
-        <a
+        <motion.a
+          variants={itemVariants}
           href={review.redirect.url}
           target="_blank"
           rel="noopener noreferrer"
@@ -169,20 +241,21 @@ export const DoneStep: FC<DoneStepProps> = ({
         >
           <span>Share it publicly</span>
           <ExternalLink className="size-4" strokeWidth={2} />
-        </a>
+        </motion.a>
       ) : null}
 
-      <button
+      <motion.button
+        variants={itemVariants}
         type="button"
         onClick={onRestart}
         className="mx-auto block pt-2 text-xs font-semibold text-(--tip-secondary) hover:underline"
       >
         Make another tip
-      </button>
+      </motion.button>
 
-      <div className="mt-auto pt-6">
+      <motion.div variants={itemVariants} className="mt-auto pt-6">
         <RefundRequest tipId={tipId} amount={amount} currency={currency} />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
