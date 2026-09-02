@@ -42,7 +42,7 @@ export class AdminAnalyticsService {
         const [
             tipRevenueByCurrency,
             platformRevenueByCurrency,
-            feesByCurrency,
+            feeTransactions,
             distributions,
             payoutsByCurrency,
             totalUsers,
@@ -63,10 +63,25 @@ export class AdminAnalyticsService {
                 where: { created_at: { gte, lte }, tip: { status: TipStatus.COMPLETED } },
                 _sum: { commission_amount: true },
             }),
-            this.prisma.paymentTransaction.groupBy({
-                by: ['currency'],
-                where: { created_at: { gte, lte }, processor_fee_confirmed: true },
-                _sum: { processor_fee_confirmed_amount: true },
+            // Viva only confirms the real fee via a separate, best-effort
+            // webhook (1799) that parses an undocumented payload field — most
+            // transactions never get processor_fee_confirmed=true even though
+            // a perfectly good processor_fee_estimated was stamped at payment
+            // time (payment-webhooks.service.ts). A confirmed-only sum here
+            // would read ~0 in practice, so this display stat falls back to
+            // the estimate per row — unlike payout eligibility, which must
+            // stay confirmed-only (payouts.service.ts).
+            this.prisma.paymentTransaction.findMany({
+                where: {
+                    created_at: { gte, lte },
+                    OR: [{ processor_fee_confirmed: true }, { processor_fee_estimated: { not: null } }],
+                },
+                select: {
+                    currency: true,
+                    processor_fee_confirmed: true,
+                    processor_fee_confirmed_amount: true,
+                    processor_fee_estimated: true,
+                },
             }),
             this.prisma.tipDistribution.findMany({
                 where: { created_at: { gte, lte }, tip: { status: TipStatus.COMPLETED } },
@@ -103,8 +118,9 @@ export class AdminAnalyticsService {
         for (const row of platformRevenueByCurrency) {
             ensure(row.currency).platform_net_revenue = row._sum.commission_amount ?? 0;
         }
-        for (const row of feesByCurrency) {
-            ensure(row.currency).processing_fees_total = row._sum.processor_fee_confirmed_amount ?? 0;
+        for (const row of feeTransactions) {
+            const fee = row.processor_fee_confirmed ? (row.processor_fee_confirmed_amount ?? 0) : (row.processor_fee_estimated ?? 0);
+            ensure(row.currency).processing_fees_total += fee;
         }
         for (const row of payoutsByCurrency) {
             ensure(row.currency).payouts_completed_total = row._sum.amount ?? 0;
