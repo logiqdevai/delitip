@@ -122,7 +122,7 @@ const RefundRequest: FC<{
               payload: { reason: reason.trim() || undefined },
             })
           }
-          className="flex-1 rounded-xl bg-ink-charcoal py-2 text-xs font-semibold text-paper-offwhite transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex-1 rounded-xl bg-(--tip-primary) py-2 text-xs font-semibold text-(--tip-primary-foreground) shadow-md shadow-(--tip-primary)/25 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-60"
         >
           {requestRefund.isPending ? "Submitting…" : "Submit request"}
         </button>
