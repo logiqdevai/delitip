@@ -6,7 +6,7 @@ import { VivaConfig } from '@/integrations/viva/viva.config';
 import { VivaBankTransfersService } from '@/integrations/viva/services/viva-bank-transfers.service';
 import { PayoutAccountsService } from '@/modules/payout-accounts/payout-accounts.service';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
-import { resolveTranslatedText } from '@/shared/utils/translation/translation.utils';
+import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { RunPayoutDto } from '../dto/run-payout.dto';
 import { PayoutsQueryType } from '../dto/payouts-query.schema';
 import { DistributionsQueryType } from '../dto/distributions-query.schema';
@@ -364,7 +364,7 @@ export class PayoutsService {
       if (query.date_to) where.created_at.lte = new Date(query.date_to);
     }
 
-    const [items, total] = await Promise.all([
+    const [items, total, store] = await Promise.all([
       this.prisma.tipDistribution.findMany({
         where,
         include: { tip: { include: { payment_transaction: true } }, employee: true },
@@ -373,11 +373,24 @@ export class PayoutsService {
         orderBy: { created_at: 'desc' },
       }),
       this.prisma.tipDistribution.count({ where }),
+      this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } }),
     ]);
 
     const holdCutoff = this.holdCutoff();
+    const primaryLanguage = store?.primary_language ?? Language.EN;
     const data = items.map((distribution) => ({
       ...distribution,
+      employee: distribution.employee
+        ? {
+            id: distribution.employee.id,
+            full_name:
+              resolveTranslatedText(
+                distribution.employee.full_name as TranslatedText,
+                undefined,
+                primaryLanguage,
+              ) ?? '',
+          }
+        : null,
       eligible_now: this.isEligibleNow(distribution, holdCutoff),
     }));
 

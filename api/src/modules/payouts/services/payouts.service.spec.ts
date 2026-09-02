@@ -15,9 +15,15 @@ describe('PayoutsService', () => {
 
     beforeEach(() => {
         prisma = {
-            tipDistribution: { findMany: jest.fn().mockResolvedValue([]), updateMany: jest.fn(), aggregate: jest.fn() },
+            tipDistribution: {
+                findMany: jest.fn().mockResolvedValue([]),
+                updateMany: jest.fn(),
+                aggregate: jest.fn(),
+                count: jest.fn().mockResolvedValue(0),
+            },
             payoutAccount: { findUnique: jest.fn(), update: jest.fn(), findUniqueOrThrow: jest.fn() },
             employee: { findUnique: jest.fn() },
+            store: { findUnique: jest.fn().mockResolvedValue({ primary_language: 'EN' }) },
             payout: { create: jest.fn(), delete: jest.fn(), update: jest.fn(), findUniqueOrThrow: jest.fn(), findMany: jest.fn(), count: jest.fn() },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
@@ -198,6 +204,39 @@ describe('PayoutsService', () => {
 
             expect(accessControl.assertEmployeeSelfOrStoreAccess).toHaveBeenCalledWith(user, 'emp1');
             expect(prisma.payout.findMany).toHaveBeenCalledWith(expect.objectContaining({ where: { employee_id: 'emp1' } }));
+        });
+    });
+
+    describe('findDistributionsForStore', () => {
+        it('resolves employee full_name from the translation map before returning', async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                {
+                    id: 'dist1',
+                    recipient_type: DistributionRecipientType.EMPLOYEE,
+                    payout_status: PayoutStatus.PENDING,
+                    employee: { id: 'emp1', full_name: { en: 'Maria Papadopoulou' } },
+                    tip: {
+                        status: TipStatus.COMPLETED,
+                        paid_at: new Date('2020-01-01'),
+                        payment_transaction: { processor_fee_confirmed: true },
+                    },
+                },
+            ]);
+            prisma.tipDistribution.count.mockResolvedValue(1);
+            prisma.tipDistribution.aggregate
+                .mockResolvedValueOnce({ _sum: { amount: 10 } })
+                .mockResolvedValueOnce({ _sum: { amount: 10 } });
+            prisma.store.findUnique.mockResolvedValue({ primary_language: 'EN' });
+
+            const result = await service.findDistributionsForStore(user, 'store1', {
+                page: 1,
+                limit: 20,
+            } as any);
+
+            expect(result.data[0].employee).toEqual({
+                id: 'emp1',
+                full_name: 'Maria Papadopoulou',
+            });
         });
     });
 });
