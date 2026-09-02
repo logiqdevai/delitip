@@ -386,6 +386,7 @@ export class TipsService {
                 include: {
                     store: { select: { id: true, name: true, slug: true, primary_language: true } },
                     employee: true,
+                    payment_transaction: true,
                 },
                 skip: (query.page - 1) * query.limit,
                 take: query.limit,

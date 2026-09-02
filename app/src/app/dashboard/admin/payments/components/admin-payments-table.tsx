@@ -2,7 +2,7 @@
 
 import { type FC, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Receipt, Search, SlidersHorizontal } from "lucide-react";
+import { Info, Receipt, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Select,
   SelectContent,
@@ -36,9 +41,25 @@ import { getTipStatusLabel } from "@/config/constants/dropdowns/tips/tip-status-
 import { useAdminTips } from "@/features/tips/hooks/use-tips";
 import type { TipStatus } from "@/features/tips/interfaces/tips.interfaces";
 import { AdminStoreFilter } from "@/app/dashboard/admin/payments/components/admin-store-filter";
+import { AdminPaymentFeesCell } from "@/app/dashboard/admin/payments/components/admin-payment-fees-cell";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+
+const ColumnHeaderWithTooltip: FC<{ label: string; explanation: string }> = ({
+  label,
+  explanation,
+}) => (
+  <span className="inline-flex items-center gap-1">
+    {label}
+    <Tooltip>
+      <TooltipTrigger className="text-zinc-300 hover:text-zinc-500">
+        <Info className="size-3" />
+      </TooltipTrigger>
+      <TooltipContent>{explanation}</TooltipContent>
+    </Tooltip>
+  </span>
+);
 
 const statusChipClass: Record<TipStatus, string> = {
   PENDING: "bg-amber-50 text-amber-700",
@@ -162,7 +183,7 @@ export const AdminPaymentsTable: FC = () => {
       </div>
 
       {tipsQuery.isPending ? (
-        <TableSkeleton columns={6} />
+        <TableSkeleton columns={8} />
       ) : tipsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
@@ -203,7 +224,24 @@ export const AdminPaymentsTable: FC = () => {
                   <TableHead className="px-4">Store</TableHead>
                   <TableHead className="px-4">Customer</TableHead>
                   <TableHead className="px-4">Employee</TableHead>
-                  <TableHead className="px-4">Amount</TableHead>
+                  <TableHead className="px-4">
+                    <ColumnHeaderWithTooltip
+                      label="Tip amount"
+                      explanation="The full amount the customer paid, before any fees are deducted."
+                    />
+                  </TableHead>
+                  <TableHead className="px-4">
+                    <ColumnHeaderWithTooltip
+                      label="Fees"
+                      explanation="Platform commission and payment processor fee taken out of this tip, each shown with its share of the tip amount, plus the combined total."
+                    />
+                  </TableHead>
+                  <TableHead className="px-4">
+                    <ColumnHeaderWithTooltip
+                      label="Net"
+                      explanation="What's left after platform and payment fees are deducted — the pool the store then splits with its employees."
+                    />
+                  </TableHead>
                   <TableHead className="px-4 text-right">Status</TableHead>
                 </TableRow>
               </TableHeader>
@@ -230,6 +268,17 @@ export const AdminPaymentsTable: FC = () => {
                     </TableCell>
                     <TableCell className="px-4 py-3.5 font-bold text-brand-700">
                       {formatMoney(tip.amount, tip.currency)}
+                    </TableCell>
+                    <TableCell className="px-4 py-3.5">
+                      <AdminPaymentFeesCell
+                        paymentTransaction={tip.payment_transaction}
+                        currency={tip.currency}
+                      />
+                    </TableCell>
+                    <TableCell className="px-4 py-3.5 font-semibold text-ink-charcoal">
+                      {tip.payment_transaction?.net_distributable_amount != null
+                        ? formatMoney(tip.payment_transaction.net_distributable_amount, tip.currency)
+                        : "—"}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-right">
                       <span

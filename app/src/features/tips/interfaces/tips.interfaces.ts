@@ -122,9 +122,14 @@ export interface PaymentTransaction {
   currency: Currency;
   commission_percentage_used: number;
   commission_amount: number;
+  platform_fee_percentage: number;
   processor_fee_estimated?: number | null;
   processor_fee_confirmed_amount?: number | null;
   processor_fee_confirmed: boolean;
+  payment_fee_percentage?: number | null;
+  total_fee_amount?: number | null;
+  total_fee_percentage?: number | null;
+  total_fee_percentage_sum?: number | null;
   net_distributable_amount?: number | null;
   payment_method?: string | null;
   status: PaymentTransactionStatus;

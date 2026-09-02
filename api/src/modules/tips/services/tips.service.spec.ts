@@ -622,6 +622,23 @@ describe('TipsService', () => {
         });
     });
 
+    describe('findAllAdmin', () => {
+        beforeEach(() => {
+            prisma.tip.findMany.mockResolvedValue([]);
+            prisma.tip.count.mockResolvedValue(0);
+        });
+
+        it('includes the payment_transaction so callers get the per-tip fee breakdown', async () => {
+            await service.findAllAdmin({ page: 1, limit: 20 } as any);
+
+            expect(prisma.tip.findMany).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    include: expect.objectContaining({ payment_transaction: true }),
+                }),
+            );
+        });
+    });
+
     describe('findOne', () => {
         const user = { id: 'u1', role: AuthRole.USER };
 

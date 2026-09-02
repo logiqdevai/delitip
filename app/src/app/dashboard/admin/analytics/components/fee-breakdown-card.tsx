@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
-import { formatMoney } from "@/lib/money";
+import { formatMoney, formatPercent } from "@/lib/money";
 import { cn } from "@/lib/utils";
 
 interface FeeRow {
@@ -30,8 +30,7 @@ interface FeeBreakdownCardProps {
   netDistributable: number;
 }
 
-const percent = (value: number) =>
-  new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(value) + "%";
+const percent = formatPercent;
 
 const LabelWithTooltip: FC<{ label: string; explanation: string }> = ({
   label,
