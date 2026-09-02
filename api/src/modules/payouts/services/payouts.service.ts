@@ -426,7 +426,8 @@ export class PayoutsService {
       this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } }),
     ]);
 
-    const holdCutoff = this.holdCutoff();
+    const holdWindowHours = this.platformFinanceConfig.getPayoutHoldWindowHours();
+    const holdCutoff = this.holdCutoff(holdWindowHours);
     const primaryLanguage = store?.primary_language ?? Language.EN;
     const data = items.map((distribution) => ({
       ...distribution,
@@ -441,36 +442,52 @@ export class PayoutsService {
               ) ?? '',
           }
         : null,
-      eligible_now: this.isEligibleNow(distribution, holdCutoff),
+      ...this.resolveEligibility(distribution, holdCutoff, holdWindowHours),
     }));
 
-    const summary = await this.summarizePendingDistributions(storeId, holdCutoff);
+    const summary = await this.summarizePendingDistributions(storeId, holdCutoff, holdWindowHours);
 
     return { ...paginate(data, total, query), summary };
   }
 
-  private holdCutoff(): Date {
-    const holdWindowHours = this.platformFinanceConfig.getPayoutHoldWindowHours();
+  private holdCutoff(holdWindowHours: number): Date {
     return new Date(Date.now() - holdWindowHours * 60 * 60 * 1000);
   }
 
-  private isEligibleNow(
+  // Distinguishes *why* a distribution isn't payable yet, and gives an ETA
+  // when one is knowable — the hold window is a fixed, predictable clock
+  // (paid_at + holdWindowHours), but fee confirmation depends entirely on
+  // Viva sending the 1799 webhook, which has no schedule we can promise.
+  private resolveEligibility(
     distribution: {
       payout_status: PayoutStatus;
       tip: { status: TipStatus; paid_at: Date | null; payment_transaction: { processor_fee_confirmed: boolean } | null };
     },
     holdCutoff: Date,
-  ): boolean {
-    return (
-      distribution.payout_status === PayoutStatus.PENDING &&
-      distribution.tip.status === TipStatus.COMPLETED &&
-      !!distribution.tip.paid_at &&
-      distribution.tip.paid_at <= holdCutoff &&
-      !!distribution.tip.payment_transaction?.processor_fee_confirmed
-    );
+    holdWindowHours: number,
+  ): { eligible_now: boolean; hold_reason: 'HOLD_WINDOW' | 'FEE_NOT_CONFIRMED' | null; eligible_at: Date | null } {
+    if (
+      distribution.payout_status !== PayoutStatus.PENDING ||
+      distribution.tip.status !== TipStatus.COMPLETED ||
+      !distribution.tip.paid_at
+    ) {
+      return { eligible_now: false, hold_reason: null, eligible_at: null };
+    }
+
+    const holdWindowEligibleAt = new Date(distribution.tip.paid_at.getTime() + holdWindowHours * 60 * 60 * 1000);
+
+    if (distribution.tip.paid_at > holdCutoff) {
+      return { eligible_now: false, hold_reason: 'HOLD_WINDOW', eligible_at: holdWindowEligibleAt };
+    }
+
+    if (!distribution.tip.payment_transaction?.processor_fee_confirmed) {
+      return { eligible_now: false, hold_reason: 'FEE_NOT_CONFIRMED', eligible_at: null };
+    }
+
+    return { eligible_now: true, hold_reason: null, eligible_at: null };
   }
 
-  private async summarizePendingDistributions(storeId: string, holdCutoff: Date) {
+  private async summarizePendingDistributions(storeId: string, holdCutoff: Date, holdWindowHours: number) {
     const pendingWhere = { tip: { store_id: storeId }, payout_status: PayoutStatus.PENDING };
     const eligibleWhere = {
       payout_status: PayoutStatus.PENDING,
@@ -482,14 +499,31 @@ export class PayoutsService {
       },
     };
 
-    const [pendingTotal, eligibleTotal] = await Promise.all([
+    const [pendingTotal, eligibleTotal, earliestHeld] = await Promise.all([
       this.prisma.tipDistribution.aggregate({ where: pendingWhere, _sum: { amount: true } }),
       this.prisma.tipDistribution.aggregate({ where: eligibleWhere, _sum: { amount: true } }),
+      // The next distribution to clear the hold window — an ETA is only
+      // knowable for that reason, not for fee-confirmation holds, so this
+      // deliberately only looks at still-within-the-window distributions.
+      this.prisma.tipDistribution.findFirst({
+        where: {
+          payout_status: PayoutStatus.PENDING,
+          tip: { store_id: storeId, status: TipStatus.COMPLETED, paid_at: { gt: holdCutoff } },
+        },
+        orderBy: { tip: { paid_at: 'asc' } },
+        select: { tip: { select: { paid_at: true } } },
+      }),
     ]);
+
+    const nextEligibleAt = earliestHeld?.tip.paid_at
+      ? new Date(earliestHeld.tip.paid_at.getTime() + holdWindowHours * 60 * 60 * 1000)
+      : null;
 
     return {
       pending_total_amount: pendingTotal._sum.amount ?? 0,
       eligible_total_amount: eligibleTotal._sum.amount ?? 0,
+      hold_window_hours: holdWindowHours,
+      next_eligible_at: nextEligibleAt,
     };
   }
 }

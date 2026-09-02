@@ -17,6 +17,7 @@ describe('PayoutsService', () => {
         prisma = {
             tipDistribution: {
                 findMany: jest.fn().mockResolvedValue([]),
+                findFirst: jest.fn().mockResolvedValue(null),
                 updateMany: jest.fn(),
                 aggregate: jest.fn(),
                 count: jest.fn().mockResolvedValue(0),
@@ -305,25 +306,29 @@ describe('PayoutsService', () => {
     });
 
     describe('findDistributionsForStore', () => {
-        it('resolves employee full_name from the translation map before returning', async () => {
-            prisma.tipDistribution.findMany.mockResolvedValue([
-                {
-                    id: 'dist1',
-                    recipient_type: DistributionRecipientType.EMPLOYEE,
-                    payout_status: PayoutStatus.PENDING,
-                    employee: { id: 'emp1', full_name: { en: 'Maria Papadopoulou' } },
-                    tip: {
-                        status: TipStatus.COMPLETED,
-                        paid_at: new Date('2020-01-01'),
-                        payment_transaction: { processor_fee_confirmed: true },
-                    },
-                },
-            ]);
+        const baseDistribution = (overrides: Partial<any> = {}) => ({
+            id: 'dist1',
+            recipient_type: DistributionRecipientType.EMPLOYEE,
+            payout_status: PayoutStatus.PENDING,
+            employee: { id: 'emp1', full_name: { en: 'Maria Papadopoulou' } },
+            tip: {
+                status: TipStatus.COMPLETED,
+                paid_at: new Date('2020-01-01'),
+                payment_transaction: { processor_fee_confirmed: true },
+            },
+            ...overrides,
+        });
+
+        beforeEach(() => {
             prisma.tipDistribution.count.mockResolvedValue(1);
             prisma.tipDistribution.aggregate
                 .mockResolvedValueOnce({ _sum: { amount: 10 } })
                 .mockResolvedValueOnce({ _sum: { amount: 10 } });
             prisma.store.findUnique.mockResolvedValue({ primary_language: 'EN' });
+        });
+
+        it('resolves employee full_name from the translation map before returning', async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([baseDistribution()]);
 
             const result = await service.findDistributionsForStore(user, 'store1', {
                 page: 1,
@@ -334,6 +339,70 @@ describe('PayoutsService', () => {
                 id: 'emp1',
                 full_name: 'Maria Papadopoulou',
             });
+        });
+
+        it('marks a fully-cleared distribution eligible now, with no hold reason or ETA', async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([baseDistribution()]);
+
+            const result = await service.findDistributionsForStore(user, 'store1', {
+                page: 1,
+                limit: 20,
+            } as any);
+
+            expect(result.data[0]).toEqual(
+                expect.objectContaining({ eligible_now: true, hold_reason: null, eligible_at: null }),
+            );
+        });
+
+        it('reports HOLD_WINDOW with an ETA (paid_at + hold window) while still within the hold window', async () => {
+            const paidAt = new Date(Date.now() - 10 * 60 * 60 * 1000); // 10h ago, well within the 48h default
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                baseDistribution({ tip: { status: TipStatus.COMPLETED, paid_at: paidAt, payment_transaction: { processor_fee_confirmed: true } } }),
+            ]);
+
+            const result = await service.findDistributionsForStore(user, 'store1', {
+                page: 1,
+                limit: 20,
+            } as any);
+
+            expect(result.data[0].eligible_now).toBe(false);
+            expect(result.data[0].hold_reason).toBe('HOLD_WINDOW');
+            expect(result.data[0].eligible_at).toEqual(new Date(paidAt.getTime() + 48 * 60 * 60 * 1000));
+        });
+
+        it('reports FEE_NOT_CONFIRMED with no ETA once past the hold window but the fee is still unconfirmed', async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                baseDistribution({
+                    tip: { status: TipStatus.COMPLETED, paid_at: new Date('2020-01-01'), payment_transaction: { processor_fee_confirmed: false } },
+                }),
+            ]);
+
+            const result = await service.findDistributionsForStore(user, 'store1', {
+                page: 1,
+                limit: 20,
+            } as any);
+
+            expect(result.data[0].eligible_now).toBe(false);
+            expect(result.data[0].hold_reason).toBe('FEE_NOT_CONFIRMED');
+            expect(result.data[0].eligible_at).toBeNull();
+        });
+
+        it("includes the store's hold window and the next held distribution's ETA in the summary", async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([baseDistribution()]);
+            const paidAt = new Date('2020-01-02T00:00:00.000Z');
+            prisma.tipDistribution.findFirst.mockResolvedValue({ tip: { paid_at: paidAt } });
+
+            const result = await service.findDistributionsForStore(user, 'store1', {
+                page: 1,
+                limit: 20,
+            } as any);
+
+            expect(result.summary).toEqual(
+                expect.objectContaining({
+                    hold_window_hours: 48,
+                    next_eligible_at: new Date(paidAt.getTime() + 48 * 60 * 60 * 1000),
+                }),
+            );
         });
     });
 });

@@ -34,7 +34,10 @@ import { TablePagination } from "@/app/dashboard/payments/components/table-pagin
 import { PayOutNowDialog } from "@/app/dashboard/payments/components/pay-out-now-dialog";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useStoreDistributions } from "@/features/payouts/hooks/use-payouts";
-import type { DistributionsQuery } from "@/features/payouts/interfaces/payouts.interfaces";
+import type {
+  Distribution,
+  DistributionsQuery,
+} from "@/features/payouts/interfaces/payouts.interfaces";
 import type {
   DistributionRecipientType,
   PayoutStatus,
@@ -60,6 +63,20 @@ const formatDateTime = (value?: string | null) => {
     dateStyle: "medium",
     timeStyle: "short",
   });
+};
+
+// Distinguishes a knowable ETA (still inside the hold window — clears at a
+// fixed, predictable time) from an unpredictable one (waiting on Viva's own
+// fee-confirmation webhook, which has no schedule we can promise).
+const eligibilityLabel = (distribution: Distribution) => {
+  if (distribution.eligible_now) return "Eligible now";
+  if (distribution.hold_reason === "HOLD_WINDOW" && distribution.eligible_at) {
+    return `Eligible ${formatDateTime(distribution.eligible_at)}`;
+  }
+  if (distribution.hold_reason === "FEE_NOT_CONFIRMED") {
+    return "Awaiting payment confirmation";
+  }
+  return "Held";
 };
 
 export const DistributionsTable: FC<{
@@ -97,21 +114,40 @@ export const DistributionsTable: FC<{
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
-        <div>
-          <p className="text-xs text-zinc-400">Pending total</p>
-          <p className="text-lg font-bold text-ink-charcoal">
-            {formatMoney(summary?.pending_total_amount ?? 0, currency)}
-          </p>
+      <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-6">
+            <div>
+              <p className="text-xs text-zinc-400">Pending total</p>
+              <p className="text-lg font-bold text-ink-charcoal">
+                {formatMoney(summary?.pending_total_amount ?? 0, currency)}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-zinc-400">Eligible now</p>
+              <p className="text-lg font-bold text-brand-700">
+                {formatMoney(summary?.eligible_total_amount ?? 0, currency)}
+              </p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            onClick={() => setPayoutDialogOpen(true)}
+            disabled={!summary || summary.eligible_total_amount === 0}
+            className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+          >
+            Pay out now
+          </Button>
         </div>
-        <Button
-          type="button"
-          onClick={() => setPayoutDialogOpen(true)}
-          disabled={!summary || summary.eligible_total_amount === 0}
-          className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
-        >
-          Pay out now
-        </Button>
+        {summary ? (
+          <p className="text-caption text-zinc-500">
+            Payouts are held for {summary.hold_window_hours}h after a tip is
+            paid, then released once Viva confirms the processing fee.
+            {summary.next_eligible_at
+              ? ` Next batch eligible ${formatDateTime(summary.next_eligible_at)}.`
+              : ""}
+          </p>
+        ) : null}
       </div>
 
       <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5">
@@ -279,9 +315,7 @@ export const DistributionsTable: FC<{
                               : "text-zinc-400",
                           )}
                         >
-                          {distribution.eligible_now
-                            ? "Eligible now"
-                            : "Held"}
+                          {eligibilityLabel(distribution)}
                         </span>
                       ) : null}
                     </TableCell>
