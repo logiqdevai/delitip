@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import Link from "next/link";
-import { Clock3, Mail, MessageSquare } from "lucide-react";
+import { BookOpen, Clock3, Mail } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Routes } from "@/routes/routes";
 
@@ -12,10 +12,11 @@ const channels = [
     href: "mailto:info@delitip.com",
   },
   {
-    icon: MessageSquare,
-    title: "Account help",
-    detail: "Signed-in teams can open a ticket from the dashboard.",
-    href: Routes.auth.sign_in,
+    icon: BookOpen,
+    title: "Help Center",
+    detail:
+      "Browse guides for your store, team, and tip page on delitip.com.",
+    href: Routes.help.root,
   },
   {
     icon: Clock3,

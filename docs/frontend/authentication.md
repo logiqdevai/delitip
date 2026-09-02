@@ -65,7 +65,7 @@ Authentication
 **Access:** Public  
 **Role switcher:** Employee selection navigates to sign-in `?role=employee` (no employee self sign-up)  
 
-**Fields (existing):** Venue name, Business Type select, Team Size select, Full name, Work email, Password; agree to Terms/Privacy  
+**Fields (existing):** Venue name, Business Type select, Team Size select, Full name, Email, Password; agree to Terms/Privacy  
 
 **Dropdown sources (existing):**  
 - `config/constants/dropdowns/businesses/business-type-form.options.ts` (aliases `StoreIndustry`)  

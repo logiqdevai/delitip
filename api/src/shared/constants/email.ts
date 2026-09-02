@@ -4,7 +4,7 @@ export const EmailConfig = {
     email_addresses: {
         verification: 'no-reply@delitip.com',
         alert: 'no-reply@delitip.com',
-        contact: 'info@delitip.com',
+        contact: 'petrosrodinos@gmail.com',
     },
     templates: {
         waitlist: {

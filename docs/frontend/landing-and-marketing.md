@@ -52,7 +52,7 @@ Marketing
 **Purpose:** Sales, support, billing, partnerships inquiries  
 **Access:** Public  
 **Sections:** LandingHeader, ContactHero (form + aside), LandingFooter  
-**Form fields:** Topic chips (Sales & demos / Account support / Billing / Partnerships), Full name, Work email, Business (optional), Message  
+**Form fields:** Topic chips (Sales & demos / Account support / Billing / Partnerships), Full name, Email, Business (optional), Message  
 **Actions:** Submit (fake pending → success)  
 **Aside:** `info@delitip.com`; Account help → sign-in  
 **Data model:** **Frontend-only** — no Prisma model (**schema gap** if persistence required)  
