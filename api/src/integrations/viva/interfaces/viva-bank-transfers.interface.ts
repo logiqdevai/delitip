@@ -57,8 +57,14 @@ export interface CreateBankTransferFeeRequest {
   /** The wallet id from which the amount will be transferred. */
   walletId: number;
   isInstant?: boolean;
-  /** The instruction type(s) for this bank transfer. */
-  instructionType: number[];
+  /**
+   * Single instruction type for this bank transfer (1 = Shared, 2 = Ours) —
+   * Viva's prose docs say "Array of integers" but every one of their own
+   * code samples sends a bare number; a real array (matching
+   * `VivaInstructionTypesResponse.instructionTypes`) gets rejected with
+   * `400 "Null options"` — confirmed against the live demo API.
+   */
+  instructionType: number;
 }
 
 export interface VivaBankTransferFeeResponse {

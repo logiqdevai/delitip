@@ -241,11 +241,14 @@ export class PayoutsService {
       if (instructionTypes.length === 0) {
         throw new Error('No supported bank transfer instruction types for this account');
       }
+      // 1 (Shared) is Viva's own default when unspecified — prefer it when
+      // supported, otherwise fall back to whatever this account does support.
+      const instructionType = instructionTypes.includes(1) ? 1 : instructionTypes[0];
 
       const fee = await this.vivaBankTransfers.createBankTransferFee(bankAccountId, {
         amount: payout.amount,
         walletId,
-        instructionType: instructionTypes,
+        instructionType,
       });
 
       const execution = await this.vivaBankTransfers.executeBankTransfer(bankAccountId, {
@@ -284,7 +287,12 @@ export class PayoutsService {
     const [items, total] = await Promise.all([
       this.prisma.payout.findMany({
         where,
-        include: { employee: true, payout_account: true },
+        include: {
+          employee: {
+            include: { store: { select: { primary_language: true } } },
+          },
+          payout_account: true,
+        },
         skip: (query.page - 1) * query.limit,
         take: query.limit,
         orderBy: { created_at: 'desc' },
@@ -292,7 +300,7 @@ export class PayoutsService {
       this.prisma.payout.count({ where }),
     ]);
 
-    return paginate(items, total, query);
+    return paginate(items.map((item) => this.resolvePayoutRefs(item)), total, query);
   }
 
   async findForEmployee(user: AuthUser, employeeId: string, query: PayoutsQueryType) {
@@ -324,7 +332,7 @@ export class PayoutsService {
   // via the recipient Employee's own store for EMPLOYEE recipients — this
   // normalizes both into a single `store` ref and resolves the employee's
   // translated display name (raw Json otherwise).
-  private resolvePayoutRefs<T extends { store: any; employee: any }>(payout: T) {
+  private resolvePayoutRefs<T extends { store?: any; employee: any }>(payout: T) {
     const store = payout.store ?? payout.employee?.store ?? null;
     return {
       ...payout,

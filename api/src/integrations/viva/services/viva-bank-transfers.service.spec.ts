@@ -123,7 +123,7 @@ describe('VivaBankTransfersService', () => {
         bankCommandId: 'cmd_1',
       });
 
-      const payload = { amount: 5000, walletId: 1, instructionType: [1] };
+      const payload = { amount: 5000, walletId: 1, instructionType: 1 };
       const result = await service.createBankTransferFee('ba_1', payload);
 
       expect(vivaHttpClient.request).toHaveBeenCalledWith({

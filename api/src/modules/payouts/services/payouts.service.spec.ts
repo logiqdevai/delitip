@@ -124,11 +124,33 @@ describe('PayoutsService', () => {
             where: { id: { in: ['dist1'] }, payout_id: null, payout_status: PayoutStatus.PENDING },
             data: { payout_id: 'payout1', payout_status: PayoutStatus.PROCESSING },
         });
-        expect(vivaBankTransfers.createBankTransferFee).toHaveBeenCalledWith('bank1', expect.objectContaining({ amount: 500, walletId: 999 }));
+        expect(vivaBankTransfers.createBankTransferFee).toHaveBeenCalledWith(
+            'bank1',
+            // Regression: Viva rejects an array here with 400 "Null options" —
+            // it wants a single instruction type, not the whole supported list.
+            expect.objectContaining({ amount: 500, walletId: 999, instructionType: 1 }),
+        );
         expect(vivaBankTransfers.executeBankTransfer).toHaveBeenCalledWith('bank1', expect.objectContaining({ bankCommandId: 'fee-cmd-1' }));
         expect(result.payouts).toHaveLength(1);
         expect(result.payouts[0]).toEqual(expect.objectContaining({ provider_transfer_id: 'exec-cmd-1' }));
         expect(result.skipped_recipients).toEqual([]);
+    });
+
+    it('falls back to the first supported instruction type when the account does not support Shared (1)', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([storeDistribution()]);
+        prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', status: PayoutAccountStatus.ACTIVE, bank_account_id: 'bank1' });
+        prisma.payout.create.mockResolvedValue({ id: 'payout1', amount: 500, currency: 'EUR' });
+        prisma.tipDistribution.updateMany.mockResolvedValue({ count: 1 });
+        prisma.payout.findUniqueOrThrow.mockResolvedValue({ id: 'payout1', amount: 500 });
+        prisma.payout.update.mockImplementation(async ({ data }: any) => ({ id: 'payout1', ...data }));
+        vivaBankTransfers.getInstructionTypes.mockResolvedValue({ instructionTypes: [2] });
+
+        await service.run(user, 'store1', {});
+
+        expect(vivaBankTransfers.createBankTransferFee).toHaveBeenCalledWith(
+            'bank1',
+            expect.objectContaining({ instructionType: 2 }),
+        );
     });
 
     it('deletes the just-created Payout and skips the group when the claim loses a race (count 0)', async () => {
@@ -246,6 +268,28 @@ describe('PayoutsService', () => {
             expect(prisma.payout.findMany).toHaveBeenCalledWith(
                 expect.objectContaining({ where: { OR: [{ store_id: 'store1' }, { employee: { store_id: 'store1' } }] } }),
             );
+        });
+
+        it('resolves employee full_name from the translation map before returning', async () => {
+            prisma.payout.findMany.mockResolvedValue([
+                {
+                    id: 'payout1',
+                    recipient_type: DistributionRecipientType.EMPLOYEE,
+                    employee: {
+                        id: 'emp1',
+                        full_name: { en: 'Maria Papadopoulou' },
+                        store: { primary_language: 'EN' },
+                    },
+                },
+            ]);
+            prisma.payout.count.mockResolvedValue(1);
+
+            const result = await service.findForStore(user, 'store1', { page: 1, limit: 20 } as any);
+
+            expect(result.data[0].employee).toEqual({
+                id: 'emp1',
+                full_name: 'Maria Papadopoulou',
+            });
         });
 
         it('checks self-or-store access for an employee\'s payout history', async () => {
