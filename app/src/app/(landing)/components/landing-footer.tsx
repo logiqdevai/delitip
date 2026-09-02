@@ -32,8 +32,8 @@ const trustLinks = [
 export const LandingFooter: FC = () => {
   return (
     <footer className="border-t border-zinc-800 bg-ink-charcoal py-14 text-xs text-zinc-400">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 sm:px-6 md:grid-cols-5 lg:px-8">
-        <div className="col-span-2 space-y-3">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-5 lg:px-8">
+        <div className="space-y-3 md:col-span-2">
           <div className="flex items-center gap-2.5">
             <BrandMark size="sm" />
             <span className="text-base font-extrabold tracking-tight text-paper-offwhite">

@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check, MessageSquare, Zap } from "lucide-react";
+import { ArrowRight, Check, LayoutDashboard, MessageSquare, Zap } from "lucide-react";
 import { Routes } from "@/routes/routes";
 import { BrandMark } from "@/components/brand/brand-mark";
 
@@ -9,6 +9,11 @@ const trustBadges = [
   "No app for customers",
   "Apple Pay & Google Pay",
   "Tips go to your team",
+] as const;
+
+const recentTips = [
+  { name: "Alex R. · Support", amount: "+$8.00", rating: "★ 5.0" },
+  { name: "Jordan M. · Support", amount: "+$5.00", rating: "★ 5.0" },
 ] as const;
 
 export const LandingHero: FC = () => {
@@ -125,74 +130,79 @@ export const LandingHero: FC = () => {
               </div>
             </div>
 
-            <div className="space-y-4 lg:col-span-7">
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-bold tracking-widest text-electric-lime uppercase">
-                    Business dashboard
-                  </span>
-                  <h3 className="text-lg font-bold text-paper-offwhite sm:text-xl">
+            <div className="space-y-4 rounded-2xl border border-zinc-800/80 bg-ink-charcoal/40 p-4 sm:border-transparent sm:bg-transparent sm:p-0 lg:col-span-7">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-bold tracking-widest text-electric-lime uppercase">
+                      Business dashboard
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-800/60 bg-brand-900/30 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-electric-lime uppercase sm:hidden">
+                      Live
+                    </span>
+                  </div>
+                  <h3 className="max-w-xs text-xl leading-snug font-bold text-paper-offwhite sm:max-w-none sm:text-xl">
                     Tips and feedback in one place
                   </h3>
                 </div>
-                <span className="rounded-lg border border-brand-800/60 bg-ink-charcoal/80 px-2.5 py-1 text-xs font-bold text-electric-lime">
+                <span className="hidden shrink-0 rounded-lg border border-brand-800/60 bg-ink-charcoal/80 px-2.5 py-1 text-xs font-bold text-electric-lime sm:inline-flex">
                   Live
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
-                <div className="rounded-2xl border border-zinc-800 bg-ink-charcoal/80 p-3">
-                  <span className="block text-xs font-medium text-zinc-400">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
+                <div className="flex items-center justify-between rounded-2xl border border-zinc-800 bg-ink-charcoal/80 px-4 py-3 sm:block sm:p-3">
+                  <span className="text-xs font-medium text-zinc-400">
                     Tips (7 days)
                   </span>
-                  <span className="mt-1 block text-base font-extrabold text-paper-offwhite sm:text-lg">
+                  <span className="text-base font-extrabold text-paper-offwhite sm:mt-1 sm:block sm:text-lg">
                     $1,240.00
                   </span>
                 </div>
-                <div className="rounded-2xl border border-zinc-800 bg-ink-charcoal/80 p-3">
-                  <span className="block text-xs font-medium text-zinc-400">
+                <div className="flex items-center justify-between rounded-2xl border border-zinc-800 bg-ink-charcoal/80 px-4 py-3 sm:block sm:p-3">
+                  <span className="text-xs font-medium text-zinc-400">
                     Feedback score
                   </span>
-                  <span className="mt-1 block text-base font-extrabold text-rating-amber sm:text-lg">
+                  <span className="text-base font-extrabold text-rating-amber sm:mt-1 sm:block sm:text-lg">
                     ★ 4.9 / 5
                   </span>
                 </div>
-                <div className="rounded-2xl border border-zinc-800 bg-ink-charcoal/80 p-3">
-                  <span className="block text-xs font-medium text-zinc-400">
+                <div className="flex items-center justify-between rounded-2xl border border-zinc-800 bg-ink-charcoal/80 px-4 py-3 sm:block sm:p-3">
+                  <span className="text-xs font-medium text-zinc-400">
                     To your team
                   </span>
-                  <span className="mt-1 block text-base font-extrabold text-electric-lime sm:text-lg">
+                  <span className="text-base font-extrabold text-electric-lime sm:mt-1 sm:block sm:text-lg">
                     100% direct
                   </span>
                 </div>
               </div>
 
-              <div className="space-y-2 rounded-2xl border border-zinc-800 bg-ink-charcoal/90 p-3.5 text-xs">
-                <div className="flex items-center justify-between text-xs font-bold tracking-wider text-zinc-400 uppercase">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between px-0.5 text-xs font-bold tracking-wider text-zinc-400 uppercase sm:px-0">
                   <span>Recent tips & feedback</span>
-                  <span>Amount</span>
+                  <span className="hidden sm:inline">Amount</span>
                 </div>
-                <div className="flex items-center justify-between border-t border-zinc-800/80 py-1.5 text-paper-offwhite">
-                  <span className="flex items-center gap-2 font-bold">
-                    <span className="size-2 rounded-full bg-electric-lime" />
-                    Alex R. · Support
-                  </span>
-                  <span className="font-bold text-electric-lime">
-                    +$8.00 · ★ 5.0
-                  </span>
-                </div>
-                <div className="flex items-center justify-between border-t border-zinc-800/80 py-1.5 text-paper-offwhite">
-                  <span className="flex items-center gap-2 font-bold">
-                    <span className="size-2 rounded-full bg-electric-lime" />
-                    Jordan M. · Support
-                  </span>
-                  <span className="font-bold text-electric-lime">
-                    +$5.00 · ★ 5.0
-                  </span>
+
+                <div className="flex flex-col gap-2 sm:gap-0 sm:space-y-2 sm:rounded-2xl sm:border sm:border-zinc-800 sm:bg-ink-charcoal/90 sm:p-3.5">
+                  {recentTips.map((tip) => (
+                    <div
+                      key={tip.name}
+                      className="flex items-center justify-between rounded-xl border border-zinc-800 bg-ink-charcoal/80 px-4 py-3 text-paper-offwhite sm:rounded-none sm:border-0 sm:border-t sm:border-zinc-800/80 sm:bg-transparent sm:px-0 sm:py-1.5 sm:first:border-t-0"
+                    >
+                      <span className="flex min-w-0 items-center gap-2 font-bold">
+                        <span className="size-2 shrink-0 rounded-full bg-electric-lime" />
+                        <span className="truncate">{tip.name}</span>
+                      </span>
+                      <span className="flex shrink-0 items-center gap-2 pl-3 font-bold text-electric-lime">
+                        <span>{tip.amount}</span>
+                        <span className="text-rating-amber">{tip.rating}</span>
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <p className="text-xs font-medium text-zinc-400">
+              <p className="text-xs leading-relaxed font-medium text-zinc-400">
                 See who customers thank — and what they said — without chasing
                 reviews elsewhere.
               </p>
