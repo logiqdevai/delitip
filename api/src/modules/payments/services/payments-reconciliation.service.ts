@@ -5,6 +5,7 @@ import { VivaCheckoutService } from '@/integrations/viva/services/viva-checkout.
 import { VivaDataServicesService } from '@/integrations/viva/services/viva-data-services.service';
 import { VivaOrderState } from '@/integrations/viva/interfaces/viva-checkout.interface';
 import { VivaTransaction } from '@/integrations/viva/interfaces/viva-transactions.interface';
+import { VivaApiException } from '@/integrations/viva/http/viva-api.exception';
 import { TipStatus, PaymentTransactionStatus } from 'generated/prisma';
 import { PaymentWebhooksService } from './payment-webhooks.service';
 
@@ -53,7 +54,17 @@ export class PaymentsReconciliationService {
   private async reconcileTip(tipId: string, orderCode: string | null): Promise<boolean> {
     if (!orderCode) return false;
 
-    const order = await this.vivaCheckout.getOrder(orderCode);
+    let order;
+    try {
+      order = await this.vivaCheckout.getOrder(orderCode);
+    } catch (error) {
+      if (error instanceof VivaApiException && error.getStatus() === 404) {
+        this.logger.warn(`Order ${orderCode} no longer exists at Viva; marking tip ${tipId} as failed`);
+        await this.markFailed(tipId);
+        return true;
+      }
+      throw error;
+    }
 
     if (order.StateId === VivaOrderState.PAID) {
       const transaction = await this.findTransactionForOrder(orderCode, tipId);
@@ -94,6 +105,23 @@ export class PaymentsReconciliationService {
             this.prisma.paymentTransaction.update({
               where: { id: tip.payment_transaction.id },
               data: { status: PaymentTransactionStatus.EXPIRED },
+            }),
+          ]
+        : []),
+    ]);
+  }
+
+  private async markFailed(tipId: string): Promise<void> {
+    const tip = await this.prisma.tip.findUnique({ where: { id: tipId }, include: { payment_transaction: true } });
+    if (!tip || tip.status === TipStatus.COMPLETED) return;
+
+    await this.prisma.$transaction([
+      this.prisma.tip.update({ where: { id: tipId }, data: { status: TipStatus.FAILED } }),
+      ...(tip.payment_transaction
+        ? [
+            this.prisma.paymentTransaction.update({
+              where: { id: tip.payment_transaction.id },
+              data: { status: PaymentTransactionStatus.FAILED },
             }),
           ]
         : []),
