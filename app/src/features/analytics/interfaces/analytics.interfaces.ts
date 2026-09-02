@@ -122,9 +122,14 @@ export interface AdminCurrencyBreakdown {
   completed_tips_count: number;
   average_tip_amount: number;
   platform_net_revenue: number;
+  platform_fee_percentage: number;
   employee_net_revenue: number;
   store_net_revenue: number;
   processing_fees_total: number;
+  payment_fee_percentage: number;
+  total_fee_total: number;
+  total_fee_percentage: number;
+  net_distributable_total: number;
   payouts_completed_total: number;
 }
 

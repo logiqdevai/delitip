@@ -24559,8 +24559,13 @@ export namespace Prisma {
     gross_amount: number | null
     commission_percentage_used: Decimal | null
     commission_amount: number | null
+    platform_fee_percentage: Decimal | null
     processor_fee_estimated: number | null
     processor_fee_confirmed_amount: number | null
+    payment_fee_percentage: Decimal | null
+    total_fee_amount: number | null
+    total_fee_percentage: Decimal | null
+    total_fee_percentage_sum: Decimal | null
     net_distributable_amount: number | null
   }
 
@@ -24568,8 +24573,13 @@ export namespace Prisma {
     gross_amount: number | null
     commission_percentage_used: Decimal | null
     commission_amount: number | null
+    platform_fee_percentage: Decimal | null
     processor_fee_estimated: number | null
     processor_fee_confirmed_amount: number | null
+    payment_fee_percentage: Decimal | null
+    total_fee_amount: number | null
+    total_fee_percentage: Decimal | null
+    total_fee_percentage_sum: Decimal | null
     net_distributable_amount: number | null
   }
 
@@ -24584,9 +24594,14 @@ export namespace Prisma {
     currency: $Enums.Currency | null
     commission_percentage_used: Decimal | null
     commission_amount: number | null
+    platform_fee_percentage: Decimal | null
     processor_fee_estimated: number | null
     processor_fee_confirmed_amount: number | null
     processor_fee_confirmed: boolean | null
+    payment_fee_percentage: Decimal | null
+    total_fee_amount: number | null
+    total_fee_percentage: Decimal | null
+    total_fee_percentage_sum: Decimal | null
     net_distributable_amount: number | null
     payment_method: string | null
     status: $Enums.PaymentTransactionStatus | null
@@ -24607,9 +24622,14 @@ export namespace Prisma {
     currency: $Enums.Currency | null
     commission_percentage_used: Decimal | null
     commission_amount: number | null
+    platform_fee_percentage: Decimal | null
     processor_fee_estimated: number | null
     processor_fee_confirmed_amount: number | null
     processor_fee_confirmed: boolean | null
+    payment_fee_percentage: Decimal | null
+    total_fee_amount: number | null
+    total_fee_percentage: Decimal | null
+    total_fee_percentage_sum: Decimal | null
     net_distributable_amount: number | null
     payment_method: string | null
     status: $Enums.PaymentTransactionStatus | null
@@ -24630,9 +24650,14 @@ export namespace Prisma {
     currency: number
     commission_percentage_used: number
     commission_amount: number
+    platform_fee_percentage: number
     processor_fee_estimated: number
     processor_fee_confirmed_amount: number
     processor_fee_confirmed: number
+    payment_fee_percentage: number
+    total_fee_amount: number
+    total_fee_percentage: number
+    total_fee_percentage_sum: number
     net_distributable_amount: number
     payment_method: number
     status: number
@@ -24648,8 +24673,13 @@ export namespace Prisma {
     gross_amount?: true
     commission_percentage_used?: true
     commission_amount?: true
+    platform_fee_percentage?: true
     processor_fee_estimated?: true
     processor_fee_confirmed_amount?: true
+    payment_fee_percentage?: true
+    total_fee_amount?: true
+    total_fee_percentage?: true
+    total_fee_percentage_sum?: true
     net_distributable_amount?: true
   }
 
@@ -24657,8 +24687,13 @@ export namespace Prisma {
     gross_amount?: true
     commission_percentage_used?: true
     commission_amount?: true
+    platform_fee_percentage?: true
     processor_fee_estimated?: true
     processor_fee_confirmed_amount?: true
+    payment_fee_percentage?: true
+    total_fee_amount?: true
+    total_fee_percentage?: true
+    total_fee_percentage_sum?: true
     net_distributable_amount?: true
   }
 
@@ -24673,9 +24708,14 @@ export namespace Prisma {
     currency?: true
     commission_percentage_used?: true
     commission_amount?: true
+    platform_fee_percentage?: true
     processor_fee_estimated?: true
     processor_fee_confirmed_amount?: true
     processor_fee_confirmed?: true
+    payment_fee_percentage?: true
+    total_fee_amount?: true
+    total_fee_percentage?: true
+    total_fee_percentage_sum?: true
     net_distributable_amount?: true
     payment_method?: true
     status?: true
@@ -24696,9 +24736,14 @@ export namespace Prisma {
     currency?: true
     commission_percentage_used?: true
     commission_amount?: true
+    platform_fee_percentage?: true
     processor_fee_estimated?: true
     processor_fee_confirmed_amount?: true
     processor_fee_confirmed?: true
+    payment_fee_percentage?: true
+    total_fee_amount?: true
+    total_fee_percentage?: true
+    total_fee_percentage_sum?: true
     net_distributable_amount?: true
     payment_method?: true
     status?: true
@@ -24719,9 +24764,14 @@ export namespace Prisma {
     currency?: true
     commission_percentage_used?: true
     commission_amount?: true
+    platform_fee_percentage?: true
     processor_fee_estimated?: true
     processor_fee_confirmed_amount?: true
     processor_fee_confirmed?: true
+    payment_fee_percentage?: true
+    total_fee_amount?: true
+    total_fee_percentage?: true
+    total_fee_percentage_sum?: true
     net_distributable_amount?: true
     payment_method?: true
     status?: true
@@ -24829,9 +24879,14 @@ export namespace Prisma {
     currency: $Enums.Currency
     commission_percentage_used: Decimal
     commission_amount: number
+    platform_fee_percentage: Decimal
     processor_fee_estimated: number | null
     processor_fee_confirmed_amount: number | null
     processor_fee_confirmed: boolean
+    payment_fee_percentage: Decimal | null
+    total_fee_amount: number | null
+    total_fee_percentage: Decimal | null
+    total_fee_percentage_sum: Decimal | null
     net_distributable_amount: number | null
     payment_method: string | null
     status: $Enums.PaymentTransactionStatus
@@ -24871,9 +24926,14 @@ export namespace Prisma {
     currency?: boolean
     commission_percentage_used?: boolean
     commission_amount?: boolean
+    platform_fee_percentage?: boolean
     processor_fee_estimated?: boolean
     processor_fee_confirmed_amount?: boolean
     processor_fee_confirmed?: boolean
+    payment_fee_percentage?: boolean
+    total_fee_amount?: boolean
+    total_fee_percentage?: boolean
+    total_fee_percentage_sum?: boolean
     net_distributable_amount?: boolean
     payment_method?: boolean
     status?: boolean
@@ -24895,9 +24955,14 @@ export namespace Prisma {
     currency?: boolean
     commission_percentage_used?: boolean
     commission_amount?: boolean
+    platform_fee_percentage?: boolean
     processor_fee_estimated?: boolean
     processor_fee_confirmed_amount?: boolean
     processor_fee_confirmed?: boolean
+    payment_fee_percentage?: boolean
+    total_fee_amount?: boolean
+    total_fee_percentage?: boolean
+    total_fee_percentage_sum?: boolean
     net_distributable_amount?: boolean
     payment_method?: boolean
     status?: boolean
@@ -24919,9 +24984,14 @@ export namespace Prisma {
     currency?: boolean
     commission_percentage_used?: boolean
     commission_amount?: boolean
+    platform_fee_percentage?: boolean
     processor_fee_estimated?: boolean
     processor_fee_confirmed_amount?: boolean
     processor_fee_confirmed?: boolean
+    payment_fee_percentage?: boolean
+    total_fee_amount?: boolean
+    total_fee_percentage?: boolean
+    total_fee_percentage_sum?: boolean
     net_distributable_amount?: boolean
     payment_method?: boolean
     status?: boolean
@@ -24943,9 +25013,14 @@ export namespace Prisma {
     currency?: boolean
     commission_percentage_used?: boolean
     commission_amount?: boolean
+    platform_fee_percentage?: boolean
     processor_fee_estimated?: boolean
     processor_fee_confirmed_amount?: boolean
     processor_fee_confirmed?: boolean
+    payment_fee_percentage?: boolean
+    total_fee_amount?: boolean
+    total_fee_percentage?: boolean
+    total_fee_percentage_sum?: boolean
     net_distributable_amount?: boolean
     payment_method?: boolean
     status?: boolean
@@ -24955,7 +25030,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type PaymentTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "provider" | "client_request_id" | "provider_order_code" | "provider_transaction_id" | "gross_amount" | "currency" | "commission_percentage_used" | "commission_amount" | "processor_fee_estimated" | "processor_fee_confirmed_amount" | "processor_fee_confirmed" | "net_distributable_amount" | "payment_method" | "status" | "failure_reason" | "confirmed_at" | "created_at" | "updated_at", ExtArgs["result"]["paymentTransaction"]>
+  export type PaymentTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "provider" | "client_request_id" | "provider_order_code" | "provider_transaction_id" | "gross_amount" | "currency" | "commission_percentage_used" | "commission_amount" | "platform_fee_percentage" | "processor_fee_estimated" | "processor_fee_confirmed_amount" | "processor_fee_confirmed" | "payment_fee_percentage" | "total_fee_amount" | "total_fee_percentage" | "total_fee_percentage_sum" | "net_distributable_amount" | "payment_method" | "status" | "failure_reason" | "confirmed_at" | "created_at" | "updated_at", ExtArgs["result"]["paymentTransaction"]>
   export type PaymentTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
   }
@@ -24982,9 +25057,14 @@ export namespace Prisma {
       currency: $Enums.Currency
       commission_percentage_used: Prisma.Decimal
       commission_amount: number
+      platform_fee_percentage: Prisma.Decimal
       processor_fee_estimated: number | null
       processor_fee_confirmed_amount: number | null
       processor_fee_confirmed: boolean
+      payment_fee_percentage: Prisma.Decimal | null
+      total_fee_amount: number | null
+      total_fee_percentage: Prisma.Decimal | null
+      total_fee_percentage_sum: Prisma.Decimal | null
       net_distributable_amount: number | null
       payment_method: string | null
       status: $Enums.PaymentTransactionStatus
@@ -25426,9 +25506,14 @@ export namespace Prisma {
     readonly currency: FieldRef<"PaymentTransaction", 'Currency'>
     readonly commission_percentage_used: FieldRef<"PaymentTransaction", 'Decimal'>
     readonly commission_amount: FieldRef<"PaymentTransaction", 'Int'>
+    readonly platform_fee_percentage: FieldRef<"PaymentTransaction", 'Decimal'>
     readonly processor_fee_estimated: FieldRef<"PaymentTransaction", 'Int'>
     readonly processor_fee_confirmed_amount: FieldRef<"PaymentTransaction", 'Int'>
     readonly processor_fee_confirmed: FieldRef<"PaymentTransaction", 'Boolean'>
+    readonly payment_fee_percentage: FieldRef<"PaymentTransaction", 'Decimal'>
+    readonly total_fee_amount: FieldRef<"PaymentTransaction", 'Int'>
+    readonly total_fee_percentage: FieldRef<"PaymentTransaction", 'Decimal'>
+    readonly total_fee_percentage_sum: FieldRef<"PaymentTransaction", 'Decimal'>
     readonly net_distributable_amount: FieldRef<"PaymentTransaction", 'Int'>
     readonly payment_method: FieldRef<"PaymentTransaction", 'String'>
     readonly status: FieldRef<"PaymentTransaction", 'PaymentTransactionStatus'>
@@ -42319,9 +42404,14 @@ export namespace Prisma {
     currency: 'currency',
     commission_percentage_used: 'commission_percentage_used',
     commission_amount: 'commission_amount',
+    platform_fee_percentage: 'platform_fee_percentage',
     processor_fee_estimated: 'processor_fee_estimated',
     processor_fee_confirmed_amount: 'processor_fee_confirmed_amount',
     processor_fee_confirmed: 'processor_fee_confirmed',
+    payment_fee_percentage: 'payment_fee_percentage',
+    total_fee_amount: 'total_fee_amount',
+    total_fee_percentage: 'total_fee_percentage',
+    total_fee_percentage_sum: 'total_fee_percentage_sum',
     net_distributable_amount: 'net_distributable_amount',
     payment_method: 'payment_method',
     status: 'status',
@@ -44474,9 +44564,14 @@ export namespace Prisma {
     currency?: EnumCurrencyFilter<"PaymentTransaction"> | $Enums.Currency
     commission_percentage_used?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFilter<"PaymentTransaction"> | number
+    platform_fee_percentage?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: IntNullableFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed_amount?: IntNullableFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed?: BoolFilter<"PaymentTransaction"> | boolean
+    payment_fee_percentage?: DecimalNullableFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: IntNullableFilter<"PaymentTransaction"> | number | null
+    total_fee_percentage?: DecimalNullableFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: DecimalNullableFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: IntNullableFilter<"PaymentTransaction"> | number | null
     payment_method?: StringNullableFilter<"PaymentTransaction"> | string | null
     status?: EnumPaymentTransactionStatusFilter<"PaymentTransaction"> | $Enums.PaymentTransactionStatus
@@ -44498,9 +44593,14 @@ export namespace Prisma {
     currency?: SortOrder
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
+    platform_fee_percentage?: SortOrder
     processor_fee_estimated?: SortOrderInput | SortOrder
     processor_fee_confirmed_amount?: SortOrderInput | SortOrder
     processor_fee_confirmed?: SortOrder
+    payment_fee_percentage?: SortOrderInput | SortOrder
+    total_fee_amount?: SortOrderInput | SortOrder
+    total_fee_percentage?: SortOrderInput | SortOrder
+    total_fee_percentage_sum?: SortOrderInput | SortOrder
     net_distributable_amount?: SortOrderInput | SortOrder
     payment_method?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -44525,9 +44625,14 @@ export namespace Prisma {
     currency?: EnumCurrencyFilter<"PaymentTransaction"> | $Enums.Currency
     commission_percentage_used?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFilter<"PaymentTransaction"> | number
+    platform_fee_percentage?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: IntNullableFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed_amount?: IntNullableFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed?: BoolFilter<"PaymentTransaction"> | boolean
+    payment_fee_percentage?: DecimalNullableFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: IntNullableFilter<"PaymentTransaction"> | number | null
+    total_fee_percentage?: DecimalNullableFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: DecimalNullableFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: IntNullableFilter<"PaymentTransaction"> | number | null
     payment_method?: StringNullableFilter<"PaymentTransaction"> | string | null
     status?: EnumPaymentTransactionStatusFilter<"PaymentTransaction"> | $Enums.PaymentTransactionStatus
@@ -44549,9 +44654,14 @@ export namespace Prisma {
     currency?: SortOrder
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
+    platform_fee_percentage?: SortOrder
     processor_fee_estimated?: SortOrderInput | SortOrder
     processor_fee_confirmed_amount?: SortOrderInput | SortOrder
     processor_fee_confirmed?: SortOrder
+    payment_fee_percentage?: SortOrderInput | SortOrder
+    total_fee_amount?: SortOrderInput | SortOrder
+    total_fee_percentage?: SortOrderInput | SortOrder
+    total_fee_percentage_sum?: SortOrderInput | SortOrder
     net_distributable_amount?: SortOrderInput | SortOrder
     payment_method?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -44580,9 +44690,14 @@ export namespace Prisma {
     currency?: EnumCurrencyWithAggregatesFilter<"PaymentTransaction"> | $Enums.Currency
     commission_percentage_used?: DecimalWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
     commission_amount?: IntWithAggregatesFilter<"PaymentTransaction"> | number
+    platform_fee_percentage?: DecimalWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: IntNullableWithAggregatesFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed_amount?: IntNullableWithAggregatesFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed?: BoolWithAggregatesFilter<"PaymentTransaction"> | boolean
+    payment_fee_percentage?: DecimalNullableWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: IntNullableWithAggregatesFilter<"PaymentTransaction"> | number | null
+    total_fee_percentage?: DecimalNullableWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: DecimalNullableWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: IntNullableWithAggregatesFilter<"PaymentTransaction"> | number | null
     payment_method?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
     status?: EnumPaymentTransactionStatusWithAggregatesFilter<"PaymentTransaction"> | $Enums.PaymentTransactionStatus
@@ -47289,9 +47404,14 @@ export namespace Prisma {
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
     commission_amount: number
+    platform_fee_percentage: Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: number | null
     processor_fee_confirmed_amount?: number | null
     processor_fee_confirmed?: boolean
+    payment_fee_percentage?: Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: number | null
+    total_fee_percentage?: Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: number | null
     payment_method?: string | null
     status?: $Enums.PaymentTransactionStatus
@@ -47313,9 +47433,14 @@ export namespace Prisma {
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
     commission_amount: number
+    platform_fee_percentage: Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: number | null
     processor_fee_confirmed_amount?: number | null
     processor_fee_confirmed?: boolean
+    payment_fee_percentage?: Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: number | null
+    total_fee_percentage?: Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: number | null
     payment_method?: string | null
     status?: $Enums.PaymentTransactionStatus
@@ -47335,9 +47460,14 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
+    platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
+    payment_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: NullableIntFieldUpdateOperationsInput | number | null
+    total_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: NullableIntFieldUpdateOperationsInput | number | null
     payment_method?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumPaymentTransactionStatusFieldUpdateOperationsInput | $Enums.PaymentTransactionStatus
@@ -47359,9 +47489,14 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
+    platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
+    payment_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: NullableIntFieldUpdateOperationsInput | number | null
+    total_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: NullableIntFieldUpdateOperationsInput | number | null
     payment_method?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumPaymentTransactionStatusFieldUpdateOperationsInput | $Enums.PaymentTransactionStatus
@@ -47382,9 +47517,14 @@ export namespace Prisma {
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
     commission_amount: number
+    platform_fee_percentage: Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: number | null
     processor_fee_confirmed_amount?: number | null
     processor_fee_confirmed?: boolean
+    payment_fee_percentage?: Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: number | null
+    total_fee_percentage?: Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: number | null
     payment_method?: string | null
     status?: $Enums.PaymentTransactionStatus
@@ -47404,9 +47544,14 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
+    platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
+    payment_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: NullableIntFieldUpdateOperationsInput | number | null
+    total_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: NullableIntFieldUpdateOperationsInput | number | null
     payment_method?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumPaymentTransactionStatusFieldUpdateOperationsInput | $Enums.PaymentTransactionStatus
@@ -47427,9 +47572,14 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
+    platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
+    payment_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: NullableIntFieldUpdateOperationsInput | number | null
+    total_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: NullableIntFieldUpdateOperationsInput | number | null
     payment_method?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumPaymentTransactionStatusFieldUpdateOperationsInput | $Enums.PaymentTransactionStatus
@@ -50121,6 +50271,17 @@ export namespace Prisma {
     _max?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type EnumPaymentTransactionStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentTransactionStatus | EnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentTransactionStatus[] | ListEnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
@@ -50144,9 +50305,14 @@ export namespace Prisma {
     currency?: SortOrder
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
+    platform_fee_percentage?: SortOrder
     processor_fee_estimated?: SortOrder
     processor_fee_confirmed_amount?: SortOrder
     processor_fee_confirmed?: SortOrder
+    payment_fee_percentage?: SortOrder
+    total_fee_amount?: SortOrder
+    total_fee_percentage?: SortOrder
+    total_fee_percentage_sum?: SortOrder
     net_distributable_amount?: SortOrder
     payment_method?: SortOrder
     status?: SortOrder
@@ -50160,8 +50326,13 @@ export namespace Prisma {
     gross_amount?: SortOrder
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
+    platform_fee_percentage?: SortOrder
     processor_fee_estimated?: SortOrder
     processor_fee_confirmed_amount?: SortOrder
+    payment_fee_percentage?: SortOrder
+    total_fee_amount?: SortOrder
+    total_fee_percentage?: SortOrder
+    total_fee_percentage_sum?: SortOrder
     net_distributable_amount?: SortOrder
   }
 
@@ -50176,9 +50347,14 @@ export namespace Prisma {
     currency?: SortOrder
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
+    platform_fee_percentage?: SortOrder
     processor_fee_estimated?: SortOrder
     processor_fee_confirmed_amount?: SortOrder
     processor_fee_confirmed?: SortOrder
+    payment_fee_percentage?: SortOrder
+    total_fee_amount?: SortOrder
+    total_fee_percentage?: SortOrder
+    total_fee_percentage_sum?: SortOrder
     net_distributable_amount?: SortOrder
     payment_method?: SortOrder
     status?: SortOrder
@@ -50199,9 +50375,14 @@ export namespace Prisma {
     currency?: SortOrder
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
+    platform_fee_percentage?: SortOrder
     processor_fee_estimated?: SortOrder
     processor_fee_confirmed_amount?: SortOrder
     processor_fee_confirmed?: SortOrder
+    payment_fee_percentage?: SortOrder
+    total_fee_amount?: SortOrder
+    total_fee_percentage?: SortOrder
+    total_fee_percentage_sum?: SortOrder
     net_distributable_amount?: SortOrder
     payment_method?: SortOrder
     status?: SortOrder
@@ -50215,9 +50396,30 @@ export namespace Prisma {
     gross_amount?: SortOrder
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
+    platform_fee_percentage?: SortOrder
     processor_fee_estimated?: SortOrder
     processor_fee_confirmed_amount?: SortOrder
+    payment_fee_percentage?: SortOrder
+    total_fee_amount?: SortOrder
+    total_fee_percentage?: SortOrder
+    total_fee_percentage_sum?: SortOrder
     net_distributable_amount?: SortOrder
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type EnumPaymentTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -50926,17 +51128,6 @@ export namespace Prisma {
     created_at?: SortOrder
   }
 
-  export type DecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type InsightSummaryCountOrderByAggregateInput = {
     id?: SortOrder
     store_id?: SortOrder
@@ -50979,22 +51170,6 @@ export namespace Prisma {
 
   export type InsightSummarySumOrderByAggregateInput = {
     satisfaction_change_percent?: SortOrder
-  }
-
-  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type PasswordResetTokenCreateNestedManyWithoutUserInput = {
@@ -53673,6 +53848,14 @@ export namespace Prisma {
     connect?: TipWhereUniqueInput
   }
 
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type EnumPaymentTransactionStatusFieldUpdateOperationsInput = {
     set?: $Enums.PaymentTransactionStatus
   }
@@ -54379,14 +54562,6 @@ export namespace Prisma {
     connect?: StoreWhereUniqueInput
   }
 
-  export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string | null
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
-  }
-
   export type StoreUpdateOneRequiredWithoutInsight_summariesNestedInput = {
     create?: XOR<StoreCreateWithoutInsight_summariesInput, StoreUncheckedCreateWithoutInsight_summariesInput>
     connectOrCreate?: StoreCreateOrConnectWithoutInsight_summariesInput
@@ -54941,11 +55116,38 @@ export namespace Prisma {
     _max?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type NestedEnumPaymentTransactionStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentTransactionStatus | EnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentTransactionStatus[] | ListEnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.PaymentTransactionStatus[] | ListEnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumPaymentTransactionStatusFilter<$PrismaModel> | $Enums.PaymentTransactionStatus
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumPaymentTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -55058,33 +55260,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAlertTypeFilter<$PrismaModel>
     _max?: NestedEnumAlertTypeFilter<$PrismaModel>
-  }
-
-  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
-  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type PasswordResetTokenCreateWithoutUserInput = {
@@ -61507,9 +61682,14 @@ export namespace Prisma {
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
     commission_amount: number
+    platform_fee_percentage: Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: number | null
     processor_fee_confirmed_amount?: number | null
     processor_fee_confirmed?: boolean
+    payment_fee_percentage?: Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: number | null
+    total_fee_percentage?: Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: number | null
     payment_method?: string | null
     status?: $Enums.PaymentTransactionStatus
@@ -61529,9 +61709,14 @@ export namespace Prisma {
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
     commission_amount: number
+    platform_fee_percentage: Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: number | null
     processor_fee_confirmed_amount?: number | null
     processor_fee_confirmed?: boolean
+    payment_fee_percentage?: Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: number | null
+    total_fee_percentage?: Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: number | null
     payment_method?: string | null
     status?: $Enums.PaymentTransactionStatus
@@ -61929,9 +62114,14 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
+    platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
+    payment_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: NullableIntFieldUpdateOperationsInput | number | null
+    total_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: NullableIntFieldUpdateOperationsInput | number | null
     payment_method?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumPaymentTransactionStatusFieldUpdateOperationsInput | $Enums.PaymentTransactionStatus
@@ -61951,9 +62141,14 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
+    platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
+    payment_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_amount?: NullableIntFieldUpdateOperationsInput | number | null
+    total_fee_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total_fee_percentage_sum?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_distributable_amount?: NullableIntFieldUpdateOperationsInput | number | null
     payment_method?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumPaymentTransactionStatusFieldUpdateOperationsInput | $Enums.PaymentTransactionStatus

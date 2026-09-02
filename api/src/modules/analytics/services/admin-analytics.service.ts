@@ -4,15 +4,22 @@ import { Currency, DistributionRecipientType, PayoutAccountStatus, PayoutExecuti
 import { bucketCount, bucketSum, resolvePeriod } from '../utils/period.utils';
 import { AdminOverviewQueryType, AdminTrendsQueryType } from '../dto/admin-analytics-query.schema';
 
+const round2 = (value: number) => Math.round(value * 100) / 100;
+
 export interface CurrencyBreakdown {
     currency: string;
     tips_gross_revenue: number;
     completed_tips_count: number;
     average_tip_amount: number;
     platform_net_revenue: number;
+    platform_fee_percentage: number;
     employee_net_revenue: number;
     store_net_revenue: number;
     processing_fees_total: number;
+    payment_fee_percentage: number;
+    total_fee_total: number;
+    total_fee_percentage: number;
+    net_distributable_total: number;
     payouts_completed_total: number;
 }
 
@@ -22,9 +29,14 @@ const emptyBreakdown = (currency: string): CurrencyBreakdown => ({
     completed_tips_count: 0,
     average_tip_amount: 0,
     platform_net_revenue: 0,
+    platform_fee_percentage: 0,
     employee_net_revenue: 0,
     store_net_revenue: 0,
     processing_fees_total: 0,
+    payment_fee_percentage: 0,
+    total_fee_total: 0,
+    total_fee_percentage: 0,
+    net_distributable_total: 0,
     payouts_completed_total: 0,
 });
 
@@ -131,6 +143,20 @@ export class AdminAnalyticsService {
                 entry.employee_net_revenue += distribution.amount;
             } else {
                 entry.store_net_revenue += distribution.amount;
+            }
+        }
+
+        // Derived fee figures — computed from the aggregate sums above rather
+        // than averaging each tip's own percentage, so they stay weighted by
+        // tip size (a handful of large tips don't get drowned out by many
+        // small ones).
+        for (const entry of byCurrency.values()) {
+            entry.total_fee_total = entry.platform_net_revenue + entry.processing_fees_total;
+            entry.net_distributable_total = entry.tips_gross_revenue - entry.total_fee_total;
+            if (entry.tips_gross_revenue > 0) {
+                entry.platform_fee_percentage = round2((entry.platform_net_revenue / entry.tips_gross_revenue) * 100);
+                entry.payment_fee_percentage = round2((entry.processing_fees_total / entry.tips_gross_revenue) * 100);
+                entry.total_fee_percentage = round2((entry.total_fee_total / entry.tips_gross_revenue) * 100);
             }
         }
 

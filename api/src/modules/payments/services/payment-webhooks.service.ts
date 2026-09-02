@@ -174,10 +174,12 @@ export class PaymentWebhooksService {
     const processorFeeEstimated = Math.round(
       (grossAmount * this.platformFinanceConfig.getProcessorFeeEstimatePercentage()) / 100,
     );
-    const netDistributableAmount = Math.max(
-      grossAmount - commissionAmount - processorFeeEstimated,
-      0,
-    );
+    const paymentFeePercentage = Math.round(((processorFeeEstimated / grossAmount) * 100) * 100) / 100;
+    const totalFeeAmount = commissionAmount + processorFeeEstimated;
+    const totalFeePercentage = Math.round(((totalFeeAmount / grossAmount) * 100) * 100) / 100;
+    const totalFeePercentageSum =
+      Math.round((Number(tip.payment_transaction.platform_fee_percentage) + paymentFeePercentage) * 100) / 100;
+    const netDistributableAmount = Math.max(grossAmount - totalFeeAmount, 0);
 
     const distributionLines = calculateTipDistribution(recipients, selectedEmployeeIds, netDistributableAmount);
 
@@ -198,6 +200,10 @@ export class PaymentWebhooksService {
           status: 'SUCCEEDED',
           confirmed_at: new Date(),
           processor_fee_estimated: processorFeeEstimated,
+          payment_fee_percentage: paymentFeePercentage,
+          total_fee_amount: totalFeeAmount,
+          total_fee_percentage: totalFeePercentage,
+          total_fee_percentage_sum: totalFeePercentageSum,
           net_distributable_amount: netDistributableAmount,
           payment_method: transaction.cardTypeId ? String(transaction.cardTypeId) : undefined,
         },
@@ -324,16 +330,23 @@ export class PaymentWebhooksService {
       return;
     }
 
-    const netDistributableAmount = Math.max(
-      paymentTransaction.gross_amount - paymentTransaction.commission_amount - confirmedFee,
-      0,
-    );
+    const grossAmount = paymentTransaction.gross_amount;
+    const paymentFeePercentage = Math.round(((confirmedFee / grossAmount) * 100) * 100) / 100;
+    const totalFeeAmount = paymentTransaction.commission_amount + confirmedFee;
+    const totalFeePercentage = Math.round(((totalFeeAmount / grossAmount) * 100) * 100) / 100;
+    const totalFeePercentageSum =
+      Math.round((Number(paymentTransaction.platform_fee_percentage) + paymentFeePercentage) * 100) / 100;
+    const netDistributableAmount = Math.max(grossAmount - totalFeeAmount, 0);
 
     await this.prisma.paymentTransaction.update({
       where: { id: paymentTransaction.id },
       data: {
         processor_fee_confirmed_amount: confirmedFee,
         processor_fee_confirmed: true,
+        payment_fee_percentage: paymentFeePercentage,
+        total_fee_amount: totalFeeAmount,
+        total_fee_percentage: totalFeePercentage,
+        total_fee_percentage_sum: totalFeePercentageSum,
         net_distributable_amount: netDistributableAmount,
       },
     });

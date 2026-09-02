@@ -17,6 +17,7 @@ import {
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdminAnalyticsPeriodSelect } from "@/app/dashboard/admin/analytics/components/admin-analytics-period-select";
+import { FeeBreakdownCard } from "@/app/dashboard/admin/analytics/components/fee-breakdown-card";
 import { RevenueSplitCard } from "@/app/dashboard/admin/analytics/components/revenue-split-card";
 import { RevenueTrendChart } from "@/app/dashboard/admin/analytics/components/revenue-trend-chart";
 import { StatTile } from "@/app/dashboard/admin/analytics/components/stat-tile";
@@ -173,12 +174,25 @@ export const AdminAnalyticsPageContent: FC = () => {
         <RevenueTrendChart />
       </div>
 
-      <RevenueSplitCard
-        platform={totals?.platform_net_revenue ?? 0}
-        employee={totals?.employee_net_revenue ?? 0}
-        store={totals?.store_net_revenue ?? 0}
-        currency={currency}
-      />
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <FeeBreakdownCard
+          currency={currency}
+          tipsGrossRevenue={totals?.tips_gross_revenue ?? 0}
+          platformFee={totals?.platform_net_revenue ?? 0}
+          platformFeePercentage={totals?.platform_fee_percentage ?? 0}
+          paymentFee={totals?.processing_fees_total ?? 0}
+          paymentFeePercentage={totals?.payment_fee_percentage ?? 0}
+          totalFee={totals?.total_fee_total ?? 0}
+          totalFeePercentage={totals?.total_fee_percentage ?? 0}
+          netDistributable={totals?.net_distributable_total ?? 0}
+        />
+        <RevenueSplitCard
+          platform={totals?.platform_net_revenue ?? 0}
+          employee={totals?.employee_net_revenue ?? 0}
+          store={totals?.store_net_revenue ?? 0}
+          currency={currency}
+        />
+      </div>
     </>
   );
 };

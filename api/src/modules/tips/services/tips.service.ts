@@ -119,6 +119,7 @@ export class TipsService {
         const currency: Currency = dto.currency || store.currency;
         const commissionPercentage = this.platformFinanceConfig.getCommissionPercentage();
         const commissionAmount = Math.round((dto.amount * commissionPercentage) / 100);
+        const platformFeePercentage = Math.round(((commissionAmount / dto.amount) * 100) * 100) / 100;
 
         const { tip, paymentTransactionId } = await this.prisma.$transaction(async (tx) => {
             const created = await tx.tip.create({
@@ -145,6 +146,7 @@ export class TipsService {
                     currency,
                     commission_percentage_used: commissionPercentage,
                     commission_amount: commissionAmount,
+                    platform_fee_percentage: platformFeePercentage,
                     status: PaymentTransactionStatus.CREATED,
                 },
             });

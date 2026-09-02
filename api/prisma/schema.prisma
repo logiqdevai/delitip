@@ -670,9 +670,14 @@ model PaymentTransaction {
   currency                       Currency
   commission_percentage_used     Decimal                  @db.Decimal(5, 2) // snapshotted from PlatformFinanceConfig at creation time — never recomputed from live config later
   commission_amount              Int
+  platform_fee_percentage        Decimal                  @db.Decimal(5, 2) // commission_amount / gross_amount — the actual realized rate, distinct from the configured commission_percentage_used above (rounding can make them differ)
   processor_fee_estimated        Int?
   processor_fee_confirmed_amount Int?
   processor_fee_confirmed        Boolean                  @default(false) // gates payout eligibility — a payout can never be computed from an estimate
+  payment_fee_percentage         Decimal?                 @db.Decimal(5, 2) // processor fee / gross_amount, using whichever of the two fields above is current
+  total_fee_amount               Int? // commission_amount + processor fee (estimated until processor_fee_confirmed, then confirmed)
+  total_fee_percentage           Decimal?                 @db.Decimal(5, 2) // total_fee_amount / gross_amount
+  total_fee_percentage_sum       Decimal?                 @db.Decimal(5, 2) // platform_fee_percentage + payment_fee_percentage — the two rates added directly, kept alongside total_fee_percentage as a cross-check since per-fee rounding can make them differ slightly
   net_distributable_amount       Int?
   payment_method                 String?
   status                         PaymentTransactionStatus @default(CREATED)

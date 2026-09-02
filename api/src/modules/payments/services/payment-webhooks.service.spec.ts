@@ -200,7 +200,12 @@ describe('PaymentWebhooksService', () => {
 
     describe('1799 transaction price calculated', () => {
         it('records the confirmed processor fee and net amount', async () => {
-            prisma.paymentTransaction.findFirst.mockResolvedValue({ id: 'pt1', gross_amount: 1000, commission_amount: 50 });
+            prisma.paymentTransaction.findFirst.mockResolvedValue({
+                id: 'pt1',
+                gross_amount: 1000,
+                commission_amount: 50,
+                platform_fee_percentage: 5,
+            });
 
             await service.process({
                 EventTypeId: VivaWebhookEventTypeId.TRANSACTION_PRICE_CALCULATED,
@@ -210,7 +215,15 @@ describe('PaymentWebhooksService', () => {
 
             expect(prisma.paymentTransaction.update).toHaveBeenCalledWith({
                 where: { id: 'pt1' },
-                data: { processor_fee_confirmed_amount: 20, processor_fee_confirmed: true, net_distributable_amount: 930 },
+                data: {
+                    processor_fee_confirmed_amount: 20,
+                    processor_fee_confirmed: true,
+                    payment_fee_percentage: 2,
+                    total_fee_amount: 70,
+                    total_fee_percentage: 7,
+                    total_fee_percentage_sum: 7,
+                    net_distributable_amount: 930,
+                },
             });
         });
 
