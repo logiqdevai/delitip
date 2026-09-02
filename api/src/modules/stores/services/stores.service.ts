@@ -70,6 +70,13 @@ export class StoresService {
         });
     }
 
+    async findAllForAdmin() {
+        return this.prisma.store.findMany({
+            select: { id: true, name: true, slug: true },
+            orderBy: { name: 'asc' },
+        });
+    }
+
     async findOne(user: AuthUser, id: string) {
         await this.accessControl.assertStoreAccess(user, id);
 

@@ -1,11 +1,23 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
+  AdminStoreOption,
   CreateStorePayload,
   PublicStore,
   Store,
   UpdateStorePayload,
 } from "@/features/stores/interfaces/stores.interfaces";
+
+export const listAdminStores = async (): Promise<AdminStoreOption[]> => {
+  try {
+    const response = await axiosInstance.get<AdminStoreOption[]>(
+      ApiRoutes.admin.stores,
+    );
+    return response.data;
+  } catch {
+    throw new Error("Failed to load stores. Please try again.");
+  }
+};
 
 export const listStores = async (
   organizationId: string,

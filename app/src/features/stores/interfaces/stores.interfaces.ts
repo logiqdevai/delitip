@@ -48,6 +48,13 @@ export interface StoreDocumentRef {
   url: string;
 }
 
+// GET /admin/stores — minimal shape for admin-wide store filters.
+export interface AdminStoreOption {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export interface Store {
   id: string;
   organization_id: string;

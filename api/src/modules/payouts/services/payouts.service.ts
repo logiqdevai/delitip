@@ -299,7 +299,8 @@ export class PayoutsService {
 
   async findAllAdmin(query: AdminPayoutsQueryType) {
     const where: any = {};
-    if (query.store_id) where.OR = [{ store_id: query.store_id }, { employee: { store_id: query.store_id } }];
+    const and: any[] = [];
+    if (query.store_id) and.push({ OR: [{ store_id: query.store_id }, { employee: { store_id: query.store_id } }] });
     if (query.recipient_type) where.recipient_type = query.recipient_type;
     if (query.status) where.status = query.status;
     if (query.date_from || query.date_to) {
@@ -307,6 +308,16 @@ export class PayoutsService {
       if (query.date_from) where.created_at.gte = new Date(query.date_from);
       if (query.date_to) where.created_at.lte = new Date(query.date_to);
     }
+    if (query.search) {
+      and.push({
+        OR: [
+          { id: { contains: query.search, mode: 'insensitive' } },
+          { store: { name: { contains: query.search, mode: 'insensitive' } } },
+          { employee: { full_name: { contains: query.search, mode: 'insensitive' } } },
+        ],
+      });
+    }
+    if (and.length) where.AND = and;
 
     const [items, total] = await Promise.all([
       this.prisma.payout.findMany({

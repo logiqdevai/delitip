@@ -371,6 +371,7 @@ export class TipsService {
         }
         if (query.search) {
             where.OR = [
+                { id: { contains: query.search, mode: 'insensitive' } },
                 { customer_email: { contains: query.search, mode: 'insensitive' } },
                 { customer_name: { contains: query.search, mode: 'insensitive' } },
                 { store: { name: { contains: query.search, mode: 'insensitive' } } },

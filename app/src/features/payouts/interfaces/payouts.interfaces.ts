@@ -123,6 +123,7 @@ export interface AdminPayoutsQuery {
   store_id?: string;
   recipient_type?: DistributionRecipientType;
   status?: PayoutExecutionStatus;
+  search?: string;
   date_from?: string;
   date_to?: string;
 }

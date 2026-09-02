@@ -35,6 +35,7 @@ import { TipStatusFilterOptions } from "@/config/constants/dropdowns/tips/tip-st
 import { getTipStatusLabel } from "@/config/constants/dropdowns/tips/tip-status-form.options";
 import { useAdminTips } from "@/features/tips/hooks/use-tips";
 import type { TipStatus } from "@/features/tips/interfaces/tips.interfaces";
+import { AdminStoreFilter } from "@/app/dashboard/admin/payments/components/admin-store-filter";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
@@ -63,6 +64,7 @@ export const AdminPaymentsTable: FC = () => {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<TipStatus | "all">("all");
+  const [storeId, setStoreId] = useState<string | null>(null);
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(1);
@@ -72,6 +74,7 @@ export const AdminPaymentsTable: FC = () => {
     limit: PAGE_LIMIT,
     ...(search ? { search } : {}),
     ...(status !== "all" ? { status } : {}),
+    ...(storeId ? { store_id: storeId } : {}),
     ...(dateFrom ? { date_from: dateFrom } : {}),
     ...(dateTo ? { date_to: dateTo } : {}),
   };
@@ -97,7 +100,7 @@ export const AdminPaymentsTable: FC = () => {
               setSearch(event.target.value);
               resetPage();
             }}
-            placeholder="Customer or store"
+            placeholder="Customer, store, or payment ID"
             aria-label="Search payments"
             className="w-48 rounded-xl border-zinc-200 bg-white pl-8 font-medium text-ink-charcoal shadow-xs"
           />
@@ -128,6 +131,13 @@ export const AdminPaymentsTable: FC = () => {
             </SelectGroup>
           </SelectContent>
         </Select>
+        <AdminStoreFilter
+          value={storeId}
+          onValueChange={(value) => {
+            setStoreId(value);
+            resetPage();
+          }}
+        />
         <DatePicker
           value={dateFrom}
           onChange={(value) => {
@@ -177,7 +187,7 @@ export const AdminPaymentsTable: FC = () => {
             </EmptyMedia>
             <EmptyTitle>No payments found</EmptyTitle>
             <EmptyDescription>
-              {search || status !== "all" || dateFrom || dateTo
+              {search || status !== "all" || storeId || dateFrom || dateTo
                 ? "No payments match your filters."
                 : "No one has paid a tip yet."}
             </EmptyDescription>

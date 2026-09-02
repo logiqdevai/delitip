@@ -3,6 +3,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { StoresModule } from './stores.module';
 import { StoresController } from './stores.controller';
 import { PublicStoresController } from './public-stores.controller';
+import { AdminStoresController } from './admin-stores.controller';
 import { StoresService } from './services/stores.service';
 
 describe('StoresModule', () => {
@@ -35,5 +36,9 @@ describe('StoresModule', () => {
 
     it('should resolve PublicStoresController', () => {
         expect(module.get(PublicStoresController)).toBeInstanceOf(PublicStoresController);
+    });
+
+    it('should resolve AdminStoresController', () => {
+        expect(module.get(AdminStoresController)).toBeInstanceOf(AdminStoresController);
     });
 });
