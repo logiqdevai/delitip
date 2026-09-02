@@ -54,7 +54,7 @@ export const AuthAcceptInviteForm: FC = () => {
           </p>
         </div>
         <Link
-          href={Routes.auth.sign_in}
+          href={`${Routes.auth.sign_in}?role=employee`}
           className="inline-flex items-center gap-2 text-xs font-bold text-brand-700 hover:underline"
         >
           Back to sign in
@@ -142,7 +142,7 @@ export const AuthAcceptInviteForm: FC = () => {
       <div className="pt-2 text-center">
         <p className="text-xs text-zinc-500">
           <Link
-            href={Routes.auth.sign_in}
+            href={`${Routes.auth.sign_in}?role=employee`}
             className="font-bold text-brand-700 hover:underline"
           >
             Back to sign in

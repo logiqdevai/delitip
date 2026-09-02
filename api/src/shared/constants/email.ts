@@ -2,8 +2,8 @@ import { EmailTemplates } from '@/integrations/notifications/resend/interfaces/m
 
 export const EmailConfig = {
     email_addresses: {
-        verification: 'delitip@logiqdev.com',
-        alert: 'delitip@logiqdev.com',
+        verification: 'no-reply@delitip.com',
+        alert: 'no-reply@delitip.com',
         contact: 'info@delitip.com',
     },
     templates: {
