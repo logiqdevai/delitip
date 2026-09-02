@@ -16,6 +16,14 @@ import { DistributionsQuerySchema, DistributionsQueryType } from '../dto/distrib
 export class PayoutsController {
   constructor(private readonly payoutsService: PayoutsService) {}
 
+  @Get('stores/:storeId/payouts/preview')
+  @ApiOperation({
+    summary: "Preview what a 'Pay out now' run would do — per-recipient amounts and who'd be skipped, without executing anything",
+  })
+  preview(@CurrentUser() user: AuthUser, @Param('storeId') storeId: string) {
+    return this.payoutsService.previewEligiblePayouts(user, storeId);
+  }
+
   @Post('stores/:storeId/payouts/run')
   @ApiOperation({
     summary:

@@ -50,6 +50,48 @@ export class PayoutsService {
     private readonly payoutAccountsService: PayoutAccountsService,
   ) {}
 
+  // Read-only breakdown of what a "Pay out now" run would actually do —
+  // same grouping/account-resolution logic as run(), without claiming or
+  // transferring anything, so the confirmation UI can show real per-recipient
+  // amounts and who'll be skipped (and why) before the owner commits.
+  async previewEligiblePayouts(user: AuthUser, storeId: string) {
+    await this.accessControl.assertStoreAccess(user, storeId, [OrganizationRole.OWNER]);
+
+    const [groups, store] = await Promise.all([
+      this.loadEligibleGroups(storeId),
+      this.prisma.store.findUnique({ where: { id: storeId }, select: { name: true, primary_language: true } }),
+    ]);
+
+    const recipients = await Promise.all(
+      groups.map(async (group) => {
+        const account = await this.resolvePayoutAccount(group);
+        const name =
+          group.recipientType === DistributionRecipientType.STORE
+            ? (store?.name ?? 'Store')
+            : await this.resolveEmployeeName(group.employeeId!, store?.primary_language ?? Language.EN);
+
+        return {
+          recipient_type: group.recipientType,
+          employee_id: group.employeeId,
+          name,
+          amount: group.amount,
+          currency: group.currency,
+          will_be_paid: !!account.payoutAccount,
+          skip_reason: account.reason,
+        };
+      }),
+    );
+
+    const total_amount = recipients.filter((r) => r.will_be_paid).reduce((sum, r) => sum + r.amount, 0);
+
+    return { total_amount, recipients };
+  }
+
+  private async resolveEmployeeName(employeeId: string, primaryLanguage: Language): Promise<string> {
+    const employee = await this.prisma.employee.findUnique({ where: { id: employeeId } });
+    return (employee && resolveTranslatedText(employee.full_name as TranslatedText, undefined, primaryLanguage)) || 'Employee';
+  }
+
   async run(user: AuthUser, storeId: string, dto: RunPayoutDto) {
     await this.accessControl.assertStoreAccess(user, storeId, [OrganizationRole.OWNER]);
 

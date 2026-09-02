@@ -74,6 +74,21 @@ export interface RunPayoutResponse {
   skipped_recipients: SkippedPayoutRecipient[];
 }
 
+export interface PayoutPreviewRecipient {
+  recipient_type: DistributionRecipientType;
+  employee_id?: string;
+  name: string;
+  amount: number;
+  currency: Currency;
+  will_be_paid: boolean;
+  skip_reason?: PayoutSkipReason;
+}
+
+export interface PayoutPreview {
+  total_amount: number;
+  recipients: PayoutPreviewRecipient[];
+}
+
 export interface PayoutsQuery {
   page?: number;
   limit?: number;

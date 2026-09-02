@@ -182,6 +182,59 @@ describe('PayoutsService', () => {
         );
     });
 
+    describe('previewEligiblePayouts', () => {
+        it('requires OWNER-level store access', async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([]);
+
+            await service.previewEligiblePayouts(user, 'store1');
+
+            expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1', [OrganizationRole.OWNER]);
+        });
+
+        it('reports the Store and each employee with their amount and whether they will actually be paid', async () => {
+            prisma.store.findUnique.mockResolvedValue({ name: 'Artisan Cafe', primary_language: 'EN' });
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                storeDistribution({ id: 'dist1', amount: 500 }),
+                storeDistribution({
+                    id: 'dist2',
+                    recipient_type: DistributionRecipientType.EMPLOYEE,
+                    employee_id: 'emp1',
+                    amount: 300,
+                }),
+            ]);
+            prisma.payoutAccount.findUnique.mockImplementation(async ({ where }: any) =>
+                where.store_id
+                    ? { id: 'pa-store', status: PayoutAccountStatus.ACTIVE, bank_account_id: 'bank-store' }
+                    : null,
+            );
+            prisma.employee.findUnique.mockResolvedValue({ id: 'emp1', user_id: 'user1', full_name: { en: 'Anna Zoi' } });
+
+            const result = await service.previewEligiblePayouts(user, 'store1');
+
+            expect(result.recipients).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        recipient_type: DistributionRecipientType.STORE,
+                        name: 'Artisan Cafe',
+                        amount: 500,
+                        will_be_paid: true,
+                        skip_reason: undefined,
+                    }),
+                    expect.objectContaining({
+                        recipient_type: DistributionRecipientType.EMPLOYEE,
+                        employee_id: 'emp1',
+                        name: 'Anna Zoi',
+                        amount: 300,
+                        will_be_paid: false,
+                        skip_reason: 'NO_PAYOUT_ACCOUNT',
+                    }),
+                ]),
+            );
+            // Only the Store will actually be paid -> total excludes the skipped employee.
+            expect(result.total_amount).toBe(500);
+        });
+    });
+
     describe('findForStore / findForEmployee', () => {
         it('scopes a store\'s payout history to its own and its employees\' payouts', async () => {
             prisma.payout.findMany.mockResolvedValue([]);

@@ -29,15 +29,9 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import {
-  ConfirmationDialog,
-  useConfirmationDialog,
-} from "@/components/ui/confirmation-dialog";
 import { TablePagination } from "@/app/dashboard/payments/components/table-pagination";
-import {
-  useRunStorePayouts,
-  useStoreDistributions,
-} from "@/features/payouts/hooks/use-payouts";
+import { PayOutNowDialog } from "@/app/dashboard/payments/components/pay-out-now-dialog";
+import { useStoreDistributions } from "@/features/payouts/hooks/use-payouts";
 import type { DistributionsQuery } from "@/features/payouts/interfaces/payouts.interfaces";
 import type {
   DistributionRecipientType,
@@ -88,8 +82,7 @@ export const DistributionsTable: FC<{
   };
 
   const distributionsQuery = useStoreDistributions(storeId, query);
-  const runPayouts = useRunStorePayouts(storeId);
-  const confirmDialog = useConfirmationDialog();
+  const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
 
   const distributions = distributionsQuery.data?.data ?? [];
   const pagination = distributionsQuery.data?.pagination;
@@ -106,7 +99,7 @@ export const DistributionsTable: FC<{
         </div>
         <Button
           type="button"
-          onClick={confirmDialog.openDialog}
+          onClick={() => setPayoutDialogOpen(true)}
           disabled={!summary || summary.eligible_total_amount === 0}
           className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
         >
@@ -289,16 +282,11 @@ export const DistributionsTable: FC<{
         </>
       )}
 
-      <ConfirmationDialog
-        state={confirmDialog}
-        variant="default"
-        title="Pay out eligible distributions?"
-        description={`This sends ${formatMoney(summary?.eligible_total_amount ?? 0, currency)} to your Store and any employees with a linked, active payout account. Held distributions and recipients without an active account are skipped.`}
-        confirmLabel="Pay out now"
-        isPending={runPayouts.isPending}
-        onConfirm={async () => {
-          await runPayouts.mutateAsync({});
-        }}
+      <PayOutNowDialog
+        open={payoutDialogOpen}
+        onOpenChange={setPayoutDialogOpen}
+        storeId={storeId}
+        currency={currency}
       />
     </div>
   );
