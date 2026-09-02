@@ -24560,6 +24560,7 @@ export namespace Prisma {
     commission_percentage_used: Decimal | null
     commission_amount: number | null
     platform_fee_percentage: Decimal | null
+    processor_fee_percentage_used: Decimal | null
     processor_fee_estimated: number | null
     processor_fee_confirmed_amount: number | null
     payment_fee_percentage: Decimal | null
@@ -24574,6 +24575,7 @@ export namespace Prisma {
     commission_percentage_used: Decimal | null
     commission_amount: number | null
     platform_fee_percentage: Decimal | null
+    processor_fee_percentage_used: Decimal | null
     processor_fee_estimated: number | null
     processor_fee_confirmed_amount: number | null
     payment_fee_percentage: Decimal | null
@@ -24595,6 +24597,7 @@ export namespace Prisma {
     commission_percentage_used: Decimal | null
     commission_amount: number | null
     platform_fee_percentage: Decimal | null
+    processor_fee_percentage_used: Decimal | null
     processor_fee_estimated: number | null
     processor_fee_confirmed_amount: number | null
     processor_fee_confirmed: boolean | null
@@ -24623,6 +24626,7 @@ export namespace Prisma {
     commission_percentage_used: Decimal | null
     commission_amount: number | null
     platform_fee_percentage: Decimal | null
+    processor_fee_percentage_used: Decimal | null
     processor_fee_estimated: number | null
     processor_fee_confirmed_amount: number | null
     processor_fee_confirmed: boolean | null
@@ -24651,6 +24655,7 @@ export namespace Prisma {
     commission_percentage_used: number
     commission_amount: number
     platform_fee_percentage: number
+    processor_fee_percentage_used: number
     processor_fee_estimated: number
     processor_fee_confirmed_amount: number
     processor_fee_confirmed: number
@@ -24674,6 +24679,7 @@ export namespace Prisma {
     commission_percentage_used?: true
     commission_amount?: true
     platform_fee_percentage?: true
+    processor_fee_percentage_used?: true
     processor_fee_estimated?: true
     processor_fee_confirmed_amount?: true
     payment_fee_percentage?: true
@@ -24688,6 +24694,7 @@ export namespace Prisma {
     commission_percentage_used?: true
     commission_amount?: true
     platform_fee_percentage?: true
+    processor_fee_percentage_used?: true
     processor_fee_estimated?: true
     processor_fee_confirmed_amount?: true
     payment_fee_percentage?: true
@@ -24709,6 +24716,7 @@ export namespace Prisma {
     commission_percentage_used?: true
     commission_amount?: true
     platform_fee_percentage?: true
+    processor_fee_percentage_used?: true
     processor_fee_estimated?: true
     processor_fee_confirmed_amount?: true
     processor_fee_confirmed?: true
@@ -24737,6 +24745,7 @@ export namespace Prisma {
     commission_percentage_used?: true
     commission_amount?: true
     platform_fee_percentage?: true
+    processor_fee_percentage_used?: true
     processor_fee_estimated?: true
     processor_fee_confirmed_amount?: true
     processor_fee_confirmed?: true
@@ -24765,6 +24774,7 @@ export namespace Prisma {
     commission_percentage_used?: true
     commission_amount?: true
     platform_fee_percentage?: true
+    processor_fee_percentage_used?: true
     processor_fee_estimated?: true
     processor_fee_confirmed_amount?: true
     processor_fee_confirmed?: true
@@ -24880,6 +24890,7 @@ export namespace Prisma {
     commission_percentage_used: Decimal
     commission_amount: number
     platform_fee_percentage: Decimal
+    processor_fee_percentage_used: Decimal | null
     processor_fee_estimated: number | null
     processor_fee_confirmed_amount: number | null
     processor_fee_confirmed: boolean
@@ -24927,6 +24938,7 @@ export namespace Prisma {
     commission_percentage_used?: boolean
     commission_amount?: boolean
     platform_fee_percentage?: boolean
+    processor_fee_percentage_used?: boolean
     processor_fee_estimated?: boolean
     processor_fee_confirmed_amount?: boolean
     processor_fee_confirmed?: boolean
@@ -24956,6 +24968,7 @@ export namespace Prisma {
     commission_percentage_used?: boolean
     commission_amount?: boolean
     platform_fee_percentage?: boolean
+    processor_fee_percentage_used?: boolean
     processor_fee_estimated?: boolean
     processor_fee_confirmed_amount?: boolean
     processor_fee_confirmed?: boolean
@@ -24985,6 +24998,7 @@ export namespace Prisma {
     commission_percentage_used?: boolean
     commission_amount?: boolean
     platform_fee_percentage?: boolean
+    processor_fee_percentage_used?: boolean
     processor_fee_estimated?: boolean
     processor_fee_confirmed_amount?: boolean
     processor_fee_confirmed?: boolean
@@ -25014,6 +25028,7 @@ export namespace Prisma {
     commission_percentage_used?: boolean
     commission_amount?: boolean
     platform_fee_percentage?: boolean
+    processor_fee_percentage_used?: boolean
     processor_fee_estimated?: boolean
     processor_fee_confirmed_amount?: boolean
     processor_fee_confirmed?: boolean
@@ -25030,7 +25045,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type PaymentTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "provider" | "client_request_id" | "provider_order_code" | "provider_transaction_id" | "gross_amount" | "currency" | "commission_percentage_used" | "commission_amount" | "platform_fee_percentage" | "processor_fee_estimated" | "processor_fee_confirmed_amount" | "processor_fee_confirmed" | "payment_fee_percentage" | "total_fee_amount" | "total_fee_percentage" | "total_fee_percentage_sum" | "net_distributable_amount" | "payment_method" | "status" | "failure_reason" | "confirmed_at" | "created_at" | "updated_at", ExtArgs["result"]["paymentTransaction"]>
+  export type PaymentTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "provider" | "client_request_id" | "provider_order_code" | "provider_transaction_id" | "gross_amount" | "currency" | "commission_percentage_used" | "commission_amount" | "platform_fee_percentage" | "processor_fee_percentage_used" | "processor_fee_estimated" | "processor_fee_confirmed_amount" | "processor_fee_confirmed" | "payment_fee_percentage" | "total_fee_amount" | "total_fee_percentage" | "total_fee_percentage_sum" | "net_distributable_amount" | "payment_method" | "status" | "failure_reason" | "confirmed_at" | "created_at" | "updated_at", ExtArgs["result"]["paymentTransaction"]>
   export type PaymentTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
   }
@@ -25058,6 +25073,7 @@ export namespace Prisma {
       commission_percentage_used: Prisma.Decimal
       commission_amount: number
       platform_fee_percentage: Prisma.Decimal
+      processor_fee_percentage_used: Prisma.Decimal | null
       processor_fee_estimated: number | null
       processor_fee_confirmed_amount: number | null
       processor_fee_confirmed: boolean
@@ -25507,6 +25523,7 @@ export namespace Prisma {
     readonly commission_percentage_used: FieldRef<"PaymentTransaction", 'Decimal'>
     readonly commission_amount: FieldRef<"PaymentTransaction", 'Int'>
     readonly platform_fee_percentage: FieldRef<"PaymentTransaction", 'Decimal'>
+    readonly processor_fee_percentage_used: FieldRef<"PaymentTransaction", 'Decimal'>
     readonly processor_fee_estimated: FieldRef<"PaymentTransaction", 'Int'>
     readonly processor_fee_confirmed_amount: FieldRef<"PaymentTransaction", 'Int'>
     readonly processor_fee_confirmed: FieldRef<"PaymentTransaction", 'Boolean'>
@@ -42405,6 +42422,7 @@ export namespace Prisma {
     commission_percentage_used: 'commission_percentage_used',
     commission_amount: 'commission_amount',
     platform_fee_percentage: 'platform_fee_percentage',
+    processor_fee_percentage_used: 'processor_fee_percentage_used',
     processor_fee_estimated: 'processor_fee_estimated',
     processor_fee_confirmed_amount: 'processor_fee_confirmed_amount',
     processor_fee_confirmed: 'processor_fee_confirmed',
@@ -44565,6 +44583,7 @@ export namespace Prisma {
     commission_percentage_used?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFilter<"PaymentTransaction"> | number
     platform_fee_percentage?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: DecimalNullableFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: IntNullableFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed_amount?: IntNullableFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed?: BoolFilter<"PaymentTransaction"> | boolean
@@ -44594,6 +44613,7 @@ export namespace Prisma {
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
     platform_fee_percentage?: SortOrder
+    processor_fee_percentage_used?: SortOrderInput | SortOrder
     processor_fee_estimated?: SortOrderInput | SortOrder
     processor_fee_confirmed_amount?: SortOrderInput | SortOrder
     processor_fee_confirmed?: SortOrder
@@ -44626,6 +44646,7 @@ export namespace Prisma {
     commission_percentage_used?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFilter<"PaymentTransaction"> | number
     platform_fee_percentage?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: DecimalNullableFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: IntNullableFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed_amount?: IntNullableFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed?: BoolFilter<"PaymentTransaction"> | boolean
@@ -44655,6 +44676,7 @@ export namespace Prisma {
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
     platform_fee_percentage?: SortOrder
+    processor_fee_percentage_used?: SortOrderInput | SortOrder
     processor_fee_estimated?: SortOrderInput | SortOrder
     processor_fee_confirmed_amount?: SortOrderInput | SortOrder
     processor_fee_confirmed?: SortOrder
@@ -44691,6 +44713,7 @@ export namespace Prisma {
     commission_percentage_used?: DecimalWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
     commission_amount?: IntWithAggregatesFilter<"PaymentTransaction"> | number
     platform_fee_percentage?: DecimalWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: DecimalNullableWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: IntNullableWithAggregatesFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed_amount?: IntNullableWithAggregatesFilter<"PaymentTransaction"> | number | null
     processor_fee_confirmed?: BoolWithAggregatesFilter<"PaymentTransaction"> | boolean
@@ -47405,6 +47428,7 @@ export namespace Prisma {
     commission_percentage_used: Decimal | DecimalJsLike | number | string
     commission_amount: number
     platform_fee_percentage: Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: number | null
     processor_fee_confirmed_amount?: number | null
     processor_fee_confirmed?: boolean
@@ -47434,6 +47458,7 @@ export namespace Prisma {
     commission_percentage_used: Decimal | DecimalJsLike | number | string
     commission_amount: number
     platform_fee_percentage: Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: number | null
     processor_fee_confirmed_amount?: number | null
     processor_fee_confirmed?: boolean
@@ -47461,6 +47486,7 @@ export namespace Prisma {
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
     platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
@@ -47490,6 +47516,7 @@ export namespace Prisma {
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
     platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
@@ -47518,6 +47545,7 @@ export namespace Prisma {
     commission_percentage_used: Decimal | DecimalJsLike | number | string
     commission_amount: number
     platform_fee_percentage: Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: number | null
     processor_fee_confirmed_amount?: number | null
     processor_fee_confirmed?: boolean
@@ -47545,6 +47573,7 @@ export namespace Prisma {
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
     platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
@@ -47573,6 +47602,7 @@ export namespace Prisma {
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
     platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
@@ -50306,6 +50336,7 @@ export namespace Prisma {
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
     platform_fee_percentage?: SortOrder
+    processor_fee_percentage_used?: SortOrder
     processor_fee_estimated?: SortOrder
     processor_fee_confirmed_amount?: SortOrder
     processor_fee_confirmed?: SortOrder
@@ -50327,6 +50358,7 @@ export namespace Prisma {
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
     platform_fee_percentage?: SortOrder
+    processor_fee_percentage_used?: SortOrder
     processor_fee_estimated?: SortOrder
     processor_fee_confirmed_amount?: SortOrder
     payment_fee_percentage?: SortOrder
@@ -50348,6 +50380,7 @@ export namespace Prisma {
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
     platform_fee_percentage?: SortOrder
+    processor_fee_percentage_used?: SortOrder
     processor_fee_estimated?: SortOrder
     processor_fee_confirmed_amount?: SortOrder
     processor_fee_confirmed?: SortOrder
@@ -50376,6 +50409,7 @@ export namespace Prisma {
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
     platform_fee_percentage?: SortOrder
+    processor_fee_percentage_used?: SortOrder
     processor_fee_estimated?: SortOrder
     processor_fee_confirmed_amount?: SortOrder
     processor_fee_confirmed?: SortOrder
@@ -50397,6 +50431,7 @@ export namespace Prisma {
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
     platform_fee_percentage?: SortOrder
+    processor_fee_percentage_used?: SortOrder
     processor_fee_estimated?: SortOrder
     processor_fee_confirmed_amount?: SortOrder
     payment_fee_percentage?: SortOrder
@@ -61683,6 +61718,7 @@ export namespace Prisma {
     commission_percentage_used: Decimal | DecimalJsLike | number | string
     commission_amount: number
     platform_fee_percentage: Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: number | null
     processor_fee_confirmed_amount?: number | null
     processor_fee_confirmed?: boolean
@@ -61710,6 +61746,7 @@ export namespace Prisma {
     commission_percentage_used: Decimal | DecimalJsLike | number | string
     commission_amount: number
     platform_fee_percentage: Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: number | null
     processor_fee_confirmed_amount?: number | null
     processor_fee_confirmed?: boolean
@@ -62115,6 +62152,7 @@ export namespace Prisma {
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
     platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean
@@ -62142,6 +62180,7 @@ export namespace Prisma {
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     commission_amount?: IntFieldUpdateOperationsInput | number
     platform_fee_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    processor_fee_percentage_used?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     processor_fee_estimated?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed_amount?: NullableIntFieldUpdateOperationsInput | number | null
     processor_fee_confirmed?: BoolFieldUpdateOperationsInput | boolean

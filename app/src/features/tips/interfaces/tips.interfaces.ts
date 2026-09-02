@@ -123,6 +123,7 @@ export interface PaymentTransaction {
   commission_percentage_used: number;
   commission_amount: number;
   platform_fee_percentage: number;
+  processor_fee_percentage_used?: number | null;
   processor_fee_estimated?: number | null;
   processor_fee_confirmed_amount?: number | null;
   processor_fee_confirmed: boolean;

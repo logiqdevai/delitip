@@ -671,6 +671,7 @@ model PaymentTransaction {
   commission_percentage_used     Decimal                  @db.Decimal(5, 2) // snapshotted from PlatformFinanceConfig at creation time — never recomputed from live config later
   commission_amount              Int
   platform_fee_percentage        Decimal                  @db.Decimal(5, 2) // commission_amount / gross_amount — the actual realized rate, distinct from the configured commission_percentage_used above (rounding can make them differ)
+  processor_fee_percentage_used  Decimal?                 @db.Decimal(5, 2) // snapshotted from PlatformFinanceConfig when processor_fee_estimated was computed — the processor-fee mirror of commission_percentage_used above; never recomputed from live config later, and stays unset for tips that never reached that step
   processor_fee_estimated        Int?
   processor_fee_confirmed_amount Int?
   processor_fee_confirmed        Boolean                  @default(false) // gates payout eligibility — a payout can never be computed from an estimate

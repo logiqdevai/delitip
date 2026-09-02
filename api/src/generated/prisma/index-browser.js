@@ -336,6 +336,7 @@ exports.Prisma.PaymentTransactionScalarFieldEnum = {
   commission_percentage_used: 'commission_percentage_used',
   commission_amount: 'commission_amount',
   platform_fee_percentage: 'platform_fee_percentage',
+  processor_fee_percentage_used: 'processor_fee_percentage_used',
   processor_fee_estimated: 'processor_fee_estimated',
   processor_fee_confirmed_amount: 'processor_fee_confirmed_amount',
   processor_fee_confirmed: 'processor_fee_confirmed',
