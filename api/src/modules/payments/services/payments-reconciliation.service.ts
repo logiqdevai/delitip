@@ -86,16 +86,18 @@ export class PaymentsReconciliationService {
     return false;
   }
 
-  // Viva's native v1 orders API reports amounts in major currency units
-  // (e.g. 5.00), unlike the checkout v2 transactions API (minor units,
-  // e.g. 500) that applyVerifiedTransaction's amount check expects.
+  // Both the native v1 orders API and the checkout v2 transactions API
+  // report amounts in major currency units (e.g. 5.00) — confirmed against
+  // Viva's real responses. applyVerifiedTransaction is the single place
+  // that converts to minor units, so this passes the raw major-unit values
+  // through unchanged, same as a real getTransaction() response would.
   private buildTransactionFromOrder(order: VivaOrder): VivaTransaction {
     return {
       merchantTrns: order.MerchantTrns,
       orderCode: order.OrderCode,
       statusId: VIVA_TRANSACTION_STATUS_SUCCESS,
-      amount: order.RequestAmount !== undefined ? Math.round(order.RequestAmount * 100) : undefined,
-      tipAmount: order.TipAmount !== undefined ? Math.round(order.TipAmount * 100) : undefined,
+      amount: order.RequestAmount,
+      tipAmount: order.TipAmount,
     };
   }
 

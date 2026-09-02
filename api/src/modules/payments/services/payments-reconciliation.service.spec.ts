@@ -51,7 +51,11 @@ describe('PaymentsReconciliationService', () => {
             expect(result).toEqual({ corrected: 0 });
         });
 
-        it('applies a PAID order directly from the order GET, converting major-unit amounts to minor units', async () => {
+        it('applies a PAID order directly from the order GET, passing major-unit amounts through unconverted', async () => {
+            // applyVerifiedTransaction is the single place that converts
+            // major -> minor units, so this must pass the order's raw
+            // RequestAmount/TipAmount straight through, same as a real
+            // getTransaction() response would.
             prisma.tip.findMany.mockResolvedValue([stuckTip()]);
             vivaCheckout.getOrder.mockResolvedValue({
                 OrderCode: 123456,
@@ -68,8 +72,8 @@ describe('PaymentsReconciliationService', () => {
                     merchantTrns: 'tip1',
                     orderCode: 123456,
                     statusId: 'F',
-                    amount: 1050,
-                    tipAmount: 1050,
+                    amount: 10.5,
+                    tipAmount: 10.5,
                 }),
             );
             expect(result).toEqual({ corrected: 1 });

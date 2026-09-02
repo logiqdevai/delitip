@@ -77,10 +77,14 @@ describe('PaymentWebhooksService', () => {
     });
 
     describe('applyVerifiedTransaction (1796 payment created)', () => {
+        // Viva's checkout v2 GET /transactions/{id} reports `amount` in major
+        // currency units (confirmed against a real response: 20.00 for a
+        // €20.00 tip) — 10 here represents a €10.00 charge against a 1000
+        // (minor-unit) gross_amount.
         const transaction = {
             merchantTrns: 'tip1',
             statusId: 'F',
-            amount: 1000,
+            amount: 10,
             orderCode: 123,
             authorizationId: 'auth1',
         };
@@ -155,6 +159,23 @@ describe('PaymentWebhooksService', () => {
                 data: [expect.objectContaining({ recipient_type: 'STORE', amount: 935 })],
             });
             expect(tipsService.triggerPerformanceChangeAlert).toHaveBeenCalled();
+        });
+
+        it('converts major-unit transaction.amount to minor units before comparing (regression: was never matching any real payment)', async () => {
+            prisma.tip.findUnique.mockResolvedValue({
+                id: 'tip1',
+                status: TipStatus.CREATED,
+                distribution_rule_id: null,
+                selected_employee_ids: null,
+                employee_id: null,
+                payment_transaction: { id: 'pt1', gross_amount: 2000, commission_amount: 100 },
+            });
+
+            await service.applyVerifiedTransaction({ ...transaction, amount: 20 } as any);
+
+            expect(prisma.tip.update).toHaveBeenCalledWith(
+                expect.objectContaining({ where: { id: 'tip1' }, data: expect.objectContaining({ status: TipStatus.COMPLETED }) }),
+            );
         });
     });
 

@@ -134,9 +134,18 @@ export class PaymentWebhooksService {
       return;
     }
 
-    if (transaction.amount !== tip.payment_transaction.gross_amount) {
+    // `GET /checkout/v2/transactions/{id}` reports amount in major currency
+    // units (e.g. 20.00 for a €20.00 tip), unlike the minor-unit amount we
+    // send when creating the order — confirmed against Viva's real response,
+    // not just its docs. Every other VivaTransaction producer (the
+    // reconciliation sweep's order-derived fallback included) must supply
+    // major units here too, since this is the one place the conversion happens.
+    const amountMinorUnits =
+      transaction.amount !== undefined ? Math.round(transaction.amount * 100) : undefined;
+
+    if (amountMinorUnits !== tip.payment_transaction.gross_amount) {
       this.logger.error(
-        `Amount mismatch for tip ${tip.id}: expected ${tip.payment_transaction.gross_amount}, Viva reports ${transaction.amount}`,
+        `Amount mismatch for tip ${tip.id}: expected ${tip.payment_transaction.gross_amount}, Viva reports ${transaction.amount} (${amountMinorUnits} minor units)`,
       );
       return;
     }
