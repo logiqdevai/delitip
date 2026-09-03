@@ -267,8 +267,14 @@ export class QrCodesService {
             },
         });
 
-        if (!qrCode || !qrCode.is_active || !qrCode.store.is_active) {
+        if (!qrCode) {
             throw new NotFoundException('QR code not found');
+        }
+        if (!qrCode.is_active) {
+            throw new BadRequestException('This QR code is no longer active');
+        }
+        if (!qrCode.store.is_active) {
+            throw new BadRequestException('This store is no longer active');
         }
 
         const activeEmployees = qrCode.employees

@@ -308,18 +308,18 @@ describe('QrCodesService', () => {
             await expect(service.findPublicByCode('nope')).rejects.toThrow(NotFoundException);
         });
 
-        it('throws NotFoundException when the QR code is inactive', async () => {
+        it('throws BadRequestException when the QR code is inactive', async () => {
             prisma.qrCode.findUnique.mockResolvedValue(buildQrCode({ is_active: false }));
 
-            await expect(service.findPublicByCode('code1')).rejects.toThrow(NotFoundException);
+            await expect(service.findPublicByCode('code1')).rejects.toThrow(BadRequestException);
         });
 
-        it('throws NotFoundException when the store is inactive', async () => {
+        it('throws BadRequestException when the store is inactive', async () => {
             prisma.qrCode.findUnique.mockResolvedValue(
                 buildQrCode({ store: { ...buildQrCode().store, is_active: false } }),
             );
 
-            await expect(service.findPublicByCode('code1')).rejects.toThrow(NotFoundException);
+            await expect(service.findPublicByCode('code1')).rejects.toThrow(BadRequestException);
         });
 
         it('returns the public shape, filters out inactive employees, and null-coalesces missing photo/logo urls', async () => {
