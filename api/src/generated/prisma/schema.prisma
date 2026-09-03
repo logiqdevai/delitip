@@ -327,7 +327,7 @@ model OrganizationMember {
 model Subscription {
   id                               String             @id @default(uuid())
   organization_id                  String             @unique
-  plan                             SubscriptionPlan   @default(STARTER)
+  plan                             SubscriptionPlan   @default(ENTERPRISE)
   status                           SubscriptionStatus @default(TRIALING)
   billing_provider_customer_id     String?
   billing_provider_subscription_id String?
