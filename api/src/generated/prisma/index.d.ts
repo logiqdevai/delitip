@@ -22020,6 +22020,8 @@ export namespace Prisma {
     bank_account_id: string | null
     iban_last4: string | null
     beneficiary_name: string | null
+    connected_account_id: string | null
+    onboarding_url: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -22036,6 +22038,8 @@ export namespace Prisma {
     bank_account_id: string | null
     iban_last4: string | null
     beneficiary_name: string | null
+    connected_account_id: string | null
+    onboarding_url: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -22052,6 +22056,8 @@ export namespace Prisma {
     bank_account_id: number
     iban_last4: number
     beneficiary_name: number
+    connected_account_id: number
+    onboarding_url: number
     created_at: number
     updated_at: number
     _all: number
@@ -22070,6 +22076,8 @@ export namespace Prisma {
     bank_account_id?: true
     iban_last4?: true
     beneficiary_name?: true
+    connected_account_id?: true
+    onboarding_url?: true
     created_at?: true
     updated_at?: true
   }
@@ -22086,6 +22094,8 @@ export namespace Prisma {
     bank_account_id?: true
     iban_last4?: true
     beneficiary_name?: true
+    connected_account_id?: true
+    onboarding_url?: true
     created_at?: true
     updated_at?: true
   }
@@ -22102,6 +22112,8 @@ export namespace Prisma {
     bank_account_id?: true
     iban_last4?: true
     beneficiary_name?: true
+    connected_account_id?: true
+    onboarding_url?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -22191,6 +22203,8 @@ export namespace Prisma {
     bank_account_id: string | null
     iban_last4: string | null
     beneficiary_name: string | null
+    connected_account_id: string | null
+    onboarding_url: string | null
     created_at: Date
     updated_at: Date
     _count: PayoutAccountCountAggregateOutputType | null
@@ -22224,6 +22238,8 @@ export namespace Prisma {
     bank_account_id?: boolean
     iban_last4?: boolean
     beneficiary_name?: boolean
+    connected_account_id?: boolean
+    onboarding_url?: boolean
     created_at?: boolean
     updated_at?: boolean
     store?: boolean | PayoutAccount$storeArgs<ExtArgs>
@@ -22244,6 +22260,8 @@ export namespace Prisma {
     bank_account_id?: boolean
     iban_last4?: boolean
     beneficiary_name?: boolean
+    connected_account_id?: boolean
+    onboarding_url?: boolean
     created_at?: boolean
     updated_at?: boolean
     store?: boolean | PayoutAccount$storeArgs<ExtArgs>
@@ -22262,6 +22280,8 @@ export namespace Prisma {
     bank_account_id?: boolean
     iban_last4?: boolean
     beneficiary_name?: boolean
+    connected_account_id?: boolean
+    onboarding_url?: boolean
     created_at?: boolean
     updated_at?: boolean
     store?: boolean | PayoutAccount$storeArgs<ExtArgs>
@@ -22280,11 +22300,13 @@ export namespace Prisma {
     bank_account_id?: boolean
     iban_last4?: boolean
     beneficiary_name?: boolean
+    connected_account_id?: boolean
+    onboarding_url?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type PayoutAccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "owner_type" | "store_id" | "user_id" | "provider" | "provider_account_id" | "status" | "payout_method" | "bank_account_id" | "iban_last4" | "beneficiary_name" | "created_at" | "updated_at", ExtArgs["result"]["payoutAccount"]>
+  export type PayoutAccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "owner_type" | "store_id" | "user_id" | "provider" | "provider_account_id" | "status" | "payout_method" | "bank_account_id" | "iban_last4" | "beneficiary_name" | "connected_account_id" | "onboarding_url" | "created_at" | "updated_at", ExtArgs["result"]["payoutAccount"]>
   export type PayoutAccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     store?: boolean | PayoutAccount$storeArgs<ExtArgs>
     user?: boolean | PayoutAccount$userArgs<ExtArgs>
@@ -22319,6 +22341,8 @@ export namespace Prisma {
       bank_account_id: string | null
       iban_last4: string | null
       beneficiary_name: string | null
+      connected_account_id: string | null
+      onboarding_url: string | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["payoutAccount"]>
@@ -22758,6 +22782,8 @@ export namespace Prisma {
     readonly bank_account_id: FieldRef<"PayoutAccount", 'String'>
     readonly iban_last4: FieldRef<"PayoutAccount", 'String'>
     readonly beneficiary_name: FieldRef<"PayoutAccount", 'String'>
+    readonly connected_account_id: FieldRef<"PayoutAccount", 'String'>
+    readonly onboarding_url: FieldRef<"PayoutAccount", 'String'>
     readonly created_at: FieldRef<"PayoutAccount", 'DateTime'>
     readonly updated_at: FieldRef<"PayoutAccount", 'DateTime'>
   }
@@ -42571,6 +42597,8 @@ export namespace Prisma {
     bank_account_id: 'bank_account_id',
     iban_last4: 'iban_last4',
     beneficiary_name: 'beneficiary_name',
+    connected_account_id: 'connected_account_id',
+    onboarding_url: 'onboarding_url',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -44585,6 +44613,8 @@ export namespace Prisma {
     bank_account_id?: StringNullableFilter<"PayoutAccount"> | string | null
     iban_last4?: StringNullableFilter<"PayoutAccount"> | string | null
     beneficiary_name?: StringNullableFilter<"PayoutAccount"> | string | null
+    connected_account_id?: StringNullableFilter<"PayoutAccount"> | string | null
+    onboarding_url?: StringNullableFilter<"PayoutAccount"> | string | null
     created_at?: DateTimeFilter<"PayoutAccount"> | Date | string
     updated_at?: DateTimeFilter<"PayoutAccount"> | Date | string
     store?: XOR<StoreNullableScalarRelationFilter, StoreWhereInput> | null
@@ -44604,6 +44634,8 @@ export namespace Prisma {
     bank_account_id?: SortOrderInput | SortOrder
     iban_last4?: SortOrderInput | SortOrder
     beneficiary_name?: SortOrderInput | SortOrder
+    connected_account_id?: SortOrderInput | SortOrder
+    onboarding_url?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     store?: StoreOrderByWithRelationInput
@@ -44626,6 +44658,8 @@ export namespace Prisma {
     bank_account_id?: StringNullableFilter<"PayoutAccount"> | string | null
     iban_last4?: StringNullableFilter<"PayoutAccount"> | string | null
     beneficiary_name?: StringNullableFilter<"PayoutAccount"> | string | null
+    connected_account_id?: StringNullableFilter<"PayoutAccount"> | string | null
+    onboarding_url?: StringNullableFilter<"PayoutAccount"> | string | null
     created_at?: DateTimeFilter<"PayoutAccount"> | Date | string
     updated_at?: DateTimeFilter<"PayoutAccount"> | Date | string
     store?: XOR<StoreNullableScalarRelationFilter, StoreWhereInput> | null
@@ -44645,6 +44679,8 @@ export namespace Prisma {
     bank_account_id?: SortOrderInput | SortOrder
     iban_last4?: SortOrderInput | SortOrder
     beneficiary_name?: SortOrderInput | SortOrder
+    connected_account_id?: SortOrderInput | SortOrder
+    onboarding_url?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: PayoutAccountCountOrderByAggregateInput
@@ -44667,6 +44703,8 @@ export namespace Prisma {
     bank_account_id?: StringNullableWithAggregatesFilter<"PayoutAccount"> | string | null
     iban_last4?: StringNullableWithAggregatesFilter<"PayoutAccount"> | string | null
     beneficiary_name?: StringNullableWithAggregatesFilter<"PayoutAccount"> | string | null
+    connected_account_id?: StringNullableWithAggregatesFilter<"PayoutAccount"> | string | null
+    onboarding_url?: StringNullableWithAggregatesFilter<"PayoutAccount"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"PayoutAccount"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"PayoutAccount"> | Date | string
   }
@@ -47491,6 +47529,8 @@ export namespace Prisma {
     bank_account_id?: string | null
     iban_last4?: string | null
     beneficiary_name?: string | null
+    connected_account_id?: string | null
+    onboarding_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     store?: StoreCreateNestedOneWithoutPayout_accountInput
@@ -47510,6 +47550,8 @@ export namespace Prisma {
     bank_account_id?: string | null
     iban_last4?: string | null
     beneficiary_name?: string | null
+    connected_account_id?: string | null
+    onboarding_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     payouts?: PayoutUncheckedCreateNestedManyWithoutPayout_accountInput
@@ -47525,6 +47567,8 @@ export namespace Prisma {
     bank_account_id?: NullableStringFieldUpdateOperationsInput | string | null
     iban_last4?: NullableStringFieldUpdateOperationsInput | string | null
     beneficiary_name?: NullableStringFieldUpdateOperationsInput | string | null
+    connected_account_id?: NullableStringFieldUpdateOperationsInput | string | null
+    onboarding_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneWithoutPayout_accountNestedInput
@@ -47544,6 +47588,8 @@ export namespace Prisma {
     bank_account_id?: NullableStringFieldUpdateOperationsInput | string | null
     iban_last4?: NullableStringFieldUpdateOperationsInput | string | null
     beneficiary_name?: NullableStringFieldUpdateOperationsInput | string | null
+    connected_account_id?: NullableStringFieldUpdateOperationsInput | string | null
+    onboarding_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     payouts?: PayoutUncheckedUpdateManyWithoutPayout_accountNestedInput
@@ -47561,6 +47607,8 @@ export namespace Prisma {
     bank_account_id?: string | null
     iban_last4?: string | null
     beneficiary_name?: string | null
+    connected_account_id?: string | null
+    onboarding_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -47575,6 +47623,8 @@ export namespace Prisma {
     bank_account_id?: NullableStringFieldUpdateOperationsInput | string | null
     iban_last4?: NullableStringFieldUpdateOperationsInput | string | null
     beneficiary_name?: NullableStringFieldUpdateOperationsInput | string | null
+    connected_account_id?: NullableStringFieldUpdateOperationsInput | string | null
+    onboarding_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47591,6 +47641,8 @@ export namespace Prisma {
     bank_account_id?: NullableStringFieldUpdateOperationsInput | string | null
     iban_last4?: NullableStringFieldUpdateOperationsInput | string | null
     beneficiary_name?: NullableStringFieldUpdateOperationsInput | string | null
+    connected_account_id?: NullableStringFieldUpdateOperationsInput | string | null
+    onboarding_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -50522,6 +50574,8 @@ export namespace Prisma {
     bank_account_id?: SortOrder
     iban_last4?: SortOrder
     beneficiary_name?: SortOrder
+    connected_account_id?: SortOrder
+    onboarding_url?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -50538,6 +50592,8 @@ export namespace Prisma {
     bank_account_id?: SortOrder
     iban_last4?: SortOrder
     beneficiary_name?: SortOrder
+    connected_account_id?: SortOrder
+    onboarding_url?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -50554,6 +50610,8 @@ export namespace Prisma {
     bank_account_id?: SortOrder
     iban_last4?: SortOrder
     beneficiary_name?: SortOrder
+    connected_account_id?: SortOrder
+    onboarding_url?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -56024,6 +56082,8 @@ export namespace Prisma {
     bank_account_id?: string | null
     iban_last4?: string | null
     beneficiary_name?: string | null
+    connected_account_id?: string | null
+    onboarding_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     store?: StoreCreateNestedOneWithoutPayout_accountInput
@@ -56041,6 +56101,8 @@ export namespace Prisma {
     bank_account_id?: string | null
     iban_last4?: string | null
     beneficiary_name?: string | null
+    connected_account_id?: string | null
+    onboarding_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     payouts?: PayoutUncheckedCreateNestedManyWithoutPayout_accountInput
@@ -56317,6 +56379,8 @@ export namespace Prisma {
     bank_account_id?: NullableStringFieldUpdateOperationsInput | string | null
     iban_last4?: NullableStringFieldUpdateOperationsInput | string | null
     beneficiary_name?: NullableStringFieldUpdateOperationsInput | string | null
+    connected_account_id?: NullableStringFieldUpdateOperationsInput | string | null
+    onboarding_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneWithoutPayout_accountNestedInput
@@ -56334,6 +56398,8 @@ export namespace Prisma {
     bank_account_id?: NullableStringFieldUpdateOperationsInput | string | null
     iban_last4?: NullableStringFieldUpdateOperationsInput | string | null
     beneficiary_name?: NullableStringFieldUpdateOperationsInput | string | null
+    connected_account_id?: NullableStringFieldUpdateOperationsInput | string | null
+    onboarding_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     payouts?: PayoutUncheckedUpdateManyWithoutPayout_accountNestedInput
@@ -58416,6 +58482,8 @@ export namespace Prisma {
     bank_account_id?: string | null
     iban_last4?: string | null
     beneficiary_name?: string | null
+    connected_account_id?: string | null
+    onboarding_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user?: UserCreateNestedOneWithoutPayout_accountInput
@@ -58433,6 +58501,8 @@ export namespace Prisma {
     bank_account_id?: string | null
     iban_last4?: string | null
     beneficiary_name?: string | null
+    connected_account_id?: string | null
+    onboarding_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     payouts?: PayoutUncheckedCreateNestedManyWithoutPayout_accountInput
@@ -59003,6 +59073,8 @@ export namespace Prisma {
     bank_account_id?: NullableStringFieldUpdateOperationsInput | string | null
     iban_last4?: NullableStringFieldUpdateOperationsInput | string | null
     beneficiary_name?: NullableStringFieldUpdateOperationsInput | string | null
+    connected_account_id?: NullableStringFieldUpdateOperationsInput | string | null
+    onboarding_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutPayout_accountNestedInput
@@ -59020,6 +59092,8 @@ export namespace Prisma {
     bank_account_id?: NullableStringFieldUpdateOperationsInput | string | null
     iban_last4?: NullableStringFieldUpdateOperationsInput | string | null
     beneficiary_name?: NullableStringFieldUpdateOperationsInput | string | null
+    connected_account_id?: NullableStringFieldUpdateOperationsInput | string | null
+    onboarding_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     payouts?: PayoutUncheckedUpdateManyWithoutPayout_accountNestedInput
@@ -63326,6 +63400,8 @@ export namespace Prisma {
     bank_account_id?: string | null
     iban_last4?: string | null
     beneficiary_name?: string | null
+    connected_account_id?: string | null
+    onboarding_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     store?: StoreCreateNestedOneWithoutPayout_accountInput
@@ -63344,6 +63420,8 @@ export namespace Prisma {
     bank_account_id?: string | null
     iban_last4?: string | null
     beneficiary_name?: string | null
+    connected_account_id?: string | null
+    onboarding_url?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -63562,6 +63640,8 @@ export namespace Prisma {
     bank_account_id?: NullableStringFieldUpdateOperationsInput | string | null
     iban_last4?: NullableStringFieldUpdateOperationsInput | string | null
     beneficiary_name?: NullableStringFieldUpdateOperationsInput | string | null
+    connected_account_id?: NullableStringFieldUpdateOperationsInput | string | null
+    onboarding_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneWithoutPayout_accountNestedInput
@@ -63580,6 +63660,8 @@ export namespace Prisma {
     bank_account_id?: NullableStringFieldUpdateOperationsInput | string | null
     iban_last4?: NullableStringFieldUpdateOperationsInput | string | null
     beneficiary_name?: NullableStringFieldUpdateOperationsInput | string | null
+    connected_account_id?: NullableStringFieldUpdateOperationsInput | string | null
+    onboarding_url?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

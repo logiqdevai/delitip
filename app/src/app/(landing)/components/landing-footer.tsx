@@ -4,14 +4,13 @@ import { Routes } from "@/routes/routes";
 import { BrandMark } from "@/components/brand/brand-mark";
 
 const productLinks = [
-  { href: Routes.landing.howItWorks, label: "How it works" },
-  { href: Routes.landing.ecosystem, label: "For businesses" },
-  { href: Routes.landing.ecosystem, label: "For staff" },
-  { href: Routes.landing.pricing, label: "Pricing" },
+  { href: Routes.landing.howItWorks, label: "How it works", hidden: false },
+  { href: Routes.landing.ecosystem, label: "For businesses", hidden: false },
+  { href: Routes.landing.ecosystem, label: "For staff", hidden: false },
+  { href: Routes.landing.pricing, label: "Pricing", hidden: true },
 ] as const;
 
 const industryLinks = [
-  "Customer support",
   "Retail & checkout",
   "Hotels & hospitality",
   "Restaurants & cafés",
@@ -43,7 +42,7 @@ export const LandingFooter: FC = () => {
           </div>
           <p className="max-w-sm text-xs leading-relaxed text-zinc-500">
             Digital tipping and customer feedback for businesses with
-            customer-facing teams — from support desks to hospitality.
+            customer-facing teams, from support desks to hospitality.
           </p>
         </div>
 
@@ -52,7 +51,7 @@ export const LandingFooter: FC = () => {
             Product
           </span>
           <ul className="space-y-1.5 text-zinc-400">
-            {productLinks.map((link) => (
+            {productLinks.filter((link) => !link.hidden).map((link) => (
               <li key={link.label}>
                 <Link
                   href={link.href}

@@ -5,10 +5,10 @@ import { BrandMark } from "@/components/brand/brand-mark";
 import { Routes } from "@/routes/routes";
 
 const navLinks = [
-  { href: Routes.landing.howItWorks, label: "How it works" },
-  { href: Routes.landing.ecosystem, label: "For teams" },
-  { href: Routes.landing.calculator, label: "Estimate" },
-  { href: Routes.landing.pricing, label: "Pricing" },
+  { href: Routes.landing.howItWorks, label: "How it works", hidden: false },
+  { href: Routes.landing.ecosystem, label: "For teams", hidden: false },
+  { href: Routes.landing.calculator, label: "Estimate", hidden: false },
+  { href: Routes.landing.pricing, label: "Pricing", hidden: true },
 ] as const;
 
 export const LandingHeader: FC = () => {
@@ -23,7 +23,7 @@ export const LandingHeader: FC = () => {
         </Link>
 
         <nav className="hidden items-center gap-8 text-xs font-semibold text-zinc-600 md:flex">
-          {navLinks.map((link) => (
+          {navLinks.filter((link) => !link.hidden).map((link) => (
             <Link
               key={link.label}
               href={link.href}

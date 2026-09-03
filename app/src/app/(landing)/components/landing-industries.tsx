@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 
 const industries = [
-  { label: "Customer support", Icon: Headphones },
   { label: "Retail & checkout", Icon: Store },
   { label: "Hotels & hospitality", Icon: Hotel },
   { label: "Salons & clinics", Icon: Scissors },

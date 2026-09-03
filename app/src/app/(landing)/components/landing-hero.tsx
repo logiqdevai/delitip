@@ -7,7 +7,7 @@ import { BrandMark } from "@/components/brand/brand-mark";
 
 const trustBadges = [
   "No app for customers",
-  "Apple Pay & Google Pay",
+  "Online payments",
   "Tips go to your team",
 ] as const;
 
@@ -22,7 +22,7 @@ export const LandingHero: FC = () => {
 
         <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed font-normal text-zinc-600 sm:text-base">
           Customers scan a QR code, tip the team member who helped them, and
-          leave feedback — no app required. You see who was recognized and what
+          leave feedback. No app required. You see who was recognized and what
           customers said.
         </p>
 
@@ -69,41 +69,41 @@ export const LandingHero: FC = () => {
                   </span>
                 </div>
                 <span className="rounded-full bg-neutral-fill px-2 py-0.5 text-xs font-bold text-zinc-400">
-                  Support desk
+                  Cafe
                 </span>
               </div>
 
               <div className="pt-1 text-center">
                 <Image
                   src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80"
-                  alt="Alex, customer support at Northline"
+                  alt="Eleni, barista at Aegli"
                   width={56}
                   height={56}
                   className="mx-auto size-14 rounded-full object-cover ring-2 ring-brand-100"
                 />
                 <h3 className="mt-2 text-sm font-bold text-ink-charcoal">
-                  Alex R.
+                  Eleni K.
                 </h3>
                 <p className="text-xs font-medium text-zinc-400">
-                  Northline · Customer Support
+                  Aegli · Barista
                 </p>
               </div>
 
               <div className="grid grid-cols-3 gap-2">
                 <div className="rounded-xl border border-zinc-200 p-2 text-center">
                   <div className="text-xs font-bold text-ink-charcoal">
-                    $3.00
+                    €3.00
                   </div>
                 </div>
                 <div className="rounded-xl border-2 border-electric-lime bg-brand-50/70 p-2 text-center">
-                  <div className="text-xs font-bold text-brand-700">$5.00</div>
+                  <div className="text-xs font-bold text-brand-700">€5.00</div>
                   <div className="text-xs font-bold text-electric-lime">
                     Popular
                   </div>
                 </div>
                 <div className="rounded-xl border border-zinc-200 p-2 text-center">
                   <div className="text-xs font-bold text-ink-charcoal">
-                    $8.00
+                    €8.00
                   </div>
                 </div>
               </div>
@@ -120,7 +120,7 @@ export const LandingHero: FC = () => {
                   </span>
                 </div>
                 <div className="flex items-center justify-center gap-1.5 rounded-xl bg-ink-charcoal py-2.5 text-center text-xs font-bold text-paper-offwhite shadow">
-                  <span>Pay with Apple Pay</span>
+                  <span>Pay online</span>
                 </div>
               </div>
             </div>
@@ -146,7 +146,7 @@ export const LandingHero: FC = () => {
                     Tips (7 days)
                   </span>
                   <span className="mt-1 block text-base font-extrabold text-paper-offwhite sm:text-lg">
-                    $1,240.00
+                    €1,240.00
                   </span>
                 </div>
                 <div className="rounded-2xl border border-zinc-800 bg-ink-charcoal/80 p-3">
@@ -175,25 +175,25 @@ export const LandingHero: FC = () => {
                 <div className="flex items-center justify-between border-t border-zinc-800/80 py-1.5 text-paper-offwhite">
                   <span className="flex items-center gap-2 font-bold">
                     <span className="size-2 rounded-full bg-electric-lime" />
-                    Alex R. · Support
+                    Eleni K. · Barista
                   </span>
                   <span className="font-bold text-electric-lime">
-                    +$8.00 · ★ 5.0
+                    +€8.00 · ★ 5.0
                   </span>
                 </div>
                 <div className="flex items-center justify-between border-t border-zinc-800/80 py-1.5 text-paper-offwhite">
                   <span className="flex items-center gap-2 font-bold">
                     <span className="size-2 rounded-full bg-electric-lime" />
-                    Jordan M. · Support
+                    Nikos P. · Server
                   </span>
                   <span className="font-bold text-electric-lime">
-                    +$5.00 · ★ 5.0
+                    +€5.00 · ★ 5.0
                   </span>
                 </div>
               </div>
 
               <p className="text-xs font-medium text-zinc-400">
-                See who customers thank — and what they said — without chasing
+                See who customers thank and what they said, without chasing
                 reviews elsewhere.
               </p>
             </div>

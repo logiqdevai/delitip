@@ -45,7 +45,7 @@ export const ContactAside: FC = () => {
               We&apos;re here to help
             </h2>
             <p className="text-xs leading-relaxed text-zinc-400 sm:text-sm">
-              From your first customer support tip to feedback across locations —
+              From your first tip to feedback across locations,
               ask us anything. Printed QR cards available.
             </p>
           </div>

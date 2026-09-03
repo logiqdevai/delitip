@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { PlatformFinanceConfig } from '@/shared/config/platform-finance/platform-finance.config';
@@ -7,6 +7,10 @@ import { VivaBankTransfersService } from '@/integrations/viva/services/viva-bank
 import { PayoutAccountsService } from '@/modules/payout-accounts/payout-accounts.service';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
 import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
+import {
+  CONNECTED_ACCOUNTS_PROVIDER,
+  ConnectedAccountsProvider,
+} from '@/shared/services/connected-accounts/connected-accounts-provider.interface';
 import { RunPayoutDto } from '../dto/run-payout.dto';
 import { PayoutsQueryType } from '../dto/payouts-query.schema';
 import { DistributionsQueryType } from '../dto/distributions-query.schema';
@@ -17,6 +21,7 @@ import {
   OrganizationRole,
   PayoutAccountStatus,
   PayoutExecutionStatus,
+  PayoutMethod,
   PayoutStatus,
   TipStatus,
 } from 'generated/prisma';
@@ -48,6 +53,7 @@ export class PayoutsService {
     private readonly vivaConfig: VivaConfig,
     private readonly vivaBankTransfers: VivaBankTransfersService,
     private readonly payoutAccountsService: PayoutAccountsService,
+    @Inject(CONNECTED_ACCOUNTS_PROVIDER) private readonly connectedAccountsProvider: ConnectedAccountsProvider,
   ) {}
 
   // Read-only breakdown of what a "Pay out now" run would actually do —
@@ -114,7 +120,7 @@ export class PayoutsService {
       const claimed = await this.claimGroup(group, account.payoutAccount.id, walletId);
       if (!claimed) continue;
 
-      const executed = await this.executeTransfer(claimed, account.payoutAccount.bank_account_id!, walletId);
+      const executed = await this.executeTransfer(claimed, account.payoutAccount, walletId);
       payouts.push(executed);
       if (executed.status === PayoutExecutionStatus.FAILED) {
         skipped.push({ recipient_type: group.recipientType, employee_id: group.employeeId, reason: 'TRANSFER_FAILED' });
@@ -166,9 +172,15 @@ export class PayoutsService {
     return Array.from(groups.values());
   }
 
-  private async resolvePayoutAccount(
-    group: RecipientGroup,
-  ): Promise<{ payoutAccount: { id: string; bank_account_id: string | null } | null; reason?: SkippedRecipient['reason'] }> {
+  private async resolvePayoutAccount(group: RecipientGroup): Promise<{
+    payoutAccount: {
+      id: string;
+      payout_method: PayoutMethod;
+      bank_account_id: string | null;
+      connected_account_id: string | null;
+    } | null;
+    reason?: SkippedRecipient['reason'];
+  }> {
     let payoutAccount;
 
     if (group.recipientType === DistributionRecipientType.STORE) {
@@ -191,11 +203,23 @@ export class PayoutsService {
     // ForUser, so a freshly-linked account isn't stuck waiting for this.
     payoutAccount = await this.payoutAccountsService.promoteIfVerified(payoutAccount);
 
-    if (payoutAccount.status !== PayoutAccountStatus.ACTIVE || !payoutAccount.bank_account_id) {
+    const usable =
+      payoutAccount.payout_method === PayoutMethod.CONNECTED_ACCOUNT
+        ? !!payoutAccount.connected_account_id
+        : !!payoutAccount.bank_account_id;
+
+    if (payoutAccount.status !== PayoutAccountStatus.ACTIVE || !usable) {
       return { payoutAccount: null, reason: 'ACCOUNT_NOT_ACTIVE' };
     }
 
-    return { payoutAccount: { id: payoutAccount.id, bank_account_id: payoutAccount.bank_account_id } };
+    return {
+      payoutAccount: {
+        id: payoutAccount.id,
+        payout_method: payoutAccount.payout_method,
+        bank_account_id: payoutAccount.bank_account_id,
+        connected_account_id: payoutAccount.connected_account_id,
+      },
+    };
   }
 
   private async claimGroup(group: RecipientGroup, payoutAccountId: string, _walletId: number) {
@@ -234,37 +258,24 @@ export class PayoutsService {
     });
   }
 
-  private async executeTransfer(payout: any, bankAccountId: string, walletId: number) {
+  private async executeTransfer(
+    payout: any,
+    account: { payout_method: PayoutMethod; bank_account_id: string | null; connected_account_id: string | null },
+    walletId: number,
+  ) {
     try {
-      const instructionTypesResponse = await this.vivaBankTransfers.getInstructionTypes(bankAccountId, payout.amount);
-      const instructionTypes = instructionTypesResponse.instructionTypes ?? [];
-      if (instructionTypes.length === 0) {
-        throw new Error('No supported bank transfer instruction types for this account');
-      }
-      // 1 (Shared) is Viva's own default when unspecified — prefer it when
-      // supported, otherwise fall back to whatever this account does support.
-      const instructionType = instructionTypes.includes(1) ? 1 : instructionTypes[0];
-
-      const fee = await this.vivaBankTransfers.createBankTransferFee(bankAccountId, {
-        amount: payout.amount,
-        walletId,
-        instructionType,
-      });
-
-      const execution = await this.vivaBankTransfers.executeBankTransfer(bankAccountId, {
-        amount: payout.amount,
-        walletId,
-        bankCommandId: fee.bankCommandId,
-        description: 'Delitip tip payout',
-      });
+      const providerTransferId =
+        account.payout_method === PayoutMethod.CONNECTED_ACCOUNT
+          ? await this.executeConnectedAccountTransfer(payout, account.connected_account_id!)
+          : await this.executeBankTransfer(payout, account.bank_account_id!, walletId);
 
       return this.prisma.payout.update({
         where: { id: payout.id },
-        data: { provider_transfer_id: execution.commandId ?? fee.bankCommandId },
+        data: { provider_transfer_id: providerTransferId },
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Bank transfer failed for payout ${payout.id}: ${message}`);
+      this.logger.error(`Transfer failed for payout ${payout.id}: ${message}`);
 
       return this.prisma.$transaction(async (tx) => {
         const failed = await tx.payout.update({
@@ -278,6 +289,50 @@ export class PayoutsService {
         return failed;
       });
     }
+  }
+
+  private async executeBankTransfer(payout: any, bankAccountId: string, walletId: number): Promise<string> {
+    const instructionTypesResponse = await this.vivaBankTransfers.getInstructionTypes(bankAccountId, payout.amount);
+    const instructionTypes = instructionTypesResponse.instructionTypes ?? [];
+    if (instructionTypes.length === 0) {
+      throw new Error('No supported bank transfer instruction types for this account');
+    }
+    // 1 (Shared) is Viva's own default when unspecified — prefer it when
+    // supported, otherwise fall back to whatever this account does support.
+    const instructionType = instructionTypes.includes(1) ? 1 : instructionTypes[0];
+
+    const fee = await this.vivaBankTransfers.createBankTransferFee(bankAccountId, {
+      amount: payout.amount,
+      walletId,
+      instructionType,
+    });
+
+    const execution = await this.vivaBankTransfers.executeBankTransfer(bankAccountId, {
+      amount: payout.amount,
+      walletId,
+      bankCommandId: fee.bankCommandId,
+      description: 'Delitip tip payout',
+    });
+
+    return execution.commandId ?? fee.bankCommandId;
+  }
+
+  // No fee-quote step here (unlike executeBankTransfer) — Marketplace
+  // transfers don't have Viva's Bank Transfer fee-quote concept. `transactionId`
+  // is deliberately omitted: a Payout here bundles distributions across
+  // possibly many settled Tips (accumulated since the hold window), not one
+  // specific customer payment, so there's no single transaction to anchor
+  // to — Viva's own docs say an empty/already-settled transactionId makes
+  // this an instant balance transfer, which is exactly the batched-payout
+  // model this method is called from.
+  private async executeConnectedAccountTransfer(payout: any, connectedAccountId: string): Promise<string> {
+    const transfer = await this.connectedAccountsProvider.createTransfer({
+      connectedAccountId,
+      amount: payout.amount,
+      description: 'Delitip tip payout',
+    });
+
+    return transfer.transferId;
   }
 
   async findForStore(user: AuthUser, storeId: string, query: PayoutsQueryType) {

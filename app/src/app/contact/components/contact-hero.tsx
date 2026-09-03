@@ -13,7 +13,7 @@ export const ContactHero: FC = () => {
           </h1>
           <p className="text-sm leading-relaxed text-zinc-600 sm:text-base">
             Questions about setting up your team, customer support tipping, or
-            your account — send a note and we&apos;ll reply within one business
+            your account? Send a note and we&apos;ll reply within one business
             day.
           </p>
         </div>

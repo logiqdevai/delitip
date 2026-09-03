@@ -11,22 +11,22 @@ import { cn } from "@/lib/utils";
 const TIPS = [
   {
     name: "Maria S.",
-    role: "Head Server",
-    tip: "+$8",
+    role: "Server",
+    tip: "+€8",
     avatar:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80",
   },
   {
-    name: "James K.",
+    name: "Giorgos K.",
     role: "Bartender",
-    tip: "+$12",
+    tip: "+€12",
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=80",
   },
   {
-    name: "Aya R.",
-    role: "Host",
-    tip: "+$6.50",
+    name: "Katerina L.",
+    role: "Barista",
+    tip: "+€6.50",
     avatar:
       "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=80",
   },

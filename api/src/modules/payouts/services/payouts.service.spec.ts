@@ -12,6 +12,7 @@ describe('PayoutsService', () => {
     let vivaConfig: any;
     let vivaBankTransfers: any;
     let payoutAccountsService: any;
+    let connectedAccountsProvider: any;
 
     beforeEach(() => {
         prisma = {
@@ -43,6 +44,9 @@ describe('PayoutsService', () => {
             // the account isn't PENDING.
             promoteIfVerified: jest.fn((account: any) => Promise.resolve(account)),
         };
+        connectedAccountsProvider = {
+            createTransfer: jest.fn(),
+        };
 
         service = new PayoutsService(
             prisma,
@@ -51,6 +55,7 @@ describe('PayoutsService', () => {
             vivaConfig,
             vivaBankTransfers,
             payoutAccountsService,
+            connectedAccountsProvider,
         );
     });
 
@@ -152,6 +157,73 @@ describe('PayoutsService', () => {
             'bank1',
             expect.objectContaining({ instructionType: 2 }),
         );
+    });
+
+    it('executes a connected-account transfer (no fee quote) when the payout account is CONNECTED_ACCOUNT', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([storeDistribution()]);
+        prisma.payoutAccount.findUnique.mockResolvedValue({
+            id: 'pa1',
+            status: PayoutAccountStatus.ACTIVE,
+            payout_method: 'CONNECTED_ACCOUNT',
+            bank_account_id: null,
+            connected_account_id: 'acc_1',
+        });
+        prisma.payout.create.mockResolvedValue({ id: 'payout1', amount: 500, currency: 'EUR' });
+        prisma.tipDistribution.updateMany.mockResolvedValue({ count: 1 });
+        prisma.payout.findUniqueOrThrow.mockResolvedValue({ id: 'payout1', amount: 500 });
+        prisma.payout.update.mockImplementation(async ({ data }: any) => ({ id: 'payout1', ...data }));
+        connectedAccountsProvider.createTransfer.mockResolvedValue({ transferId: 'tr_1' });
+
+        const result = await service.run(user, 'store1', {});
+
+        expect(connectedAccountsProvider.createTransfer).toHaveBeenCalledWith({
+            connectedAccountId: 'acc_1',
+            amount: 500,
+            description: 'Delitip tip payout',
+        });
+        expect(vivaBankTransfers.getInstructionTypes).not.toHaveBeenCalled();
+        expect(vivaBankTransfers.createBankTransferFee).not.toHaveBeenCalled();
+        expect(result.payouts[0]).toEqual(expect.objectContaining({ provider_transfer_id: 'tr_1' }));
+        expect(result.skipped_recipients).toEqual([]);
+    });
+
+    it('skips with ACCOUNT_NOT_ACTIVE when a CONNECTED_ACCOUNT payout account has no connected_account_id yet', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([storeDistribution()]);
+        prisma.payoutAccount.findUnique.mockResolvedValue({
+            id: 'pa1',
+            status: PayoutAccountStatus.ACTIVE,
+            payout_method: 'CONNECTED_ACCOUNT',
+            bank_account_id: null,
+            connected_account_id: null,
+        });
+
+        const result = await service.run(user, 'store1', {});
+
+        expect(result.skipped_recipients[0].reason).toBe('ACCOUNT_NOT_ACTIVE');
+        expect(prisma.payout.create).not.toHaveBeenCalled();
+    });
+
+    it('marks the Payout FAILED and releases the claim when the connected-account transfer fails', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([storeDistribution()]);
+        prisma.payoutAccount.findUnique.mockResolvedValue({
+            id: 'pa1',
+            status: PayoutAccountStatus.ACTIVE,
+            payout_method: 'CONNECTED_ACCOUNT',
+            bank_account_id: null,
+            connected_account_id: 'acc_1',
+        });
+        prisma.payout.create.mockResolvedValue({ id: 'payout1', amount: 500, currency: 'EUR' });
+        prisma.tipDistribution.updateMany.mockResolvedValue({ count: 1 });
+        prisma.payout.findUniqueOrThrow.mockResolvedValue({ id: 'payout1', amount: 500 });
+        prisma.payout.update.mockImplementation(async ({ data }: any) => ({ id: 'payout1', ...data }));
+        connectedAccountsProvider.createTransfer.mockRejectedValue(new Error('provider rejected transfer'));
+
+        const result = await service.run(user, 'store1', {});
+
+        expect(prisma.payout.update).toHaveBeenCalledWith(
+            expect.objectContaining({ data: expect.objectContaining({ status: PayoutExecutionStatus.FAILED }) }),
+        );
+        expect(result.skipped_recipients[0].reason).toBe('TRANSFER_FAILED');
     });
 
     it('deletes the just-created Payout and skips the group when the claim loses a race (count 0)', async () => {

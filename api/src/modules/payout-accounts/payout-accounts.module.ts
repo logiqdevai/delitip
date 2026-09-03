@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '@/core/databases/prisma/prisma.module';
 import { AccessControlModule } from '@/shared/services/access-control/access-control.module';
+import { PlatformFinanceModule } from '@/shared/config/platform-finance/platform-finance.module';
 import { VivaIntegrationModule } from '@/integrations/viva/viva.module';
 import { PayoutAccountsController } from './payout-accounts.controller';
 import { UserPayoutAccountController } from './user-payout-account.controller';
@@ -9,7 +10,7 @@ import { AdminPayoutAccountsController } from './admin-payout-accounts.controlle
 import { PayoutAccountsService } from './payout-accounts.service';
 
 @Module({
-    imports: [PrismaModule, AccessControlModule, VivaIntegrationModule],
+    imports: [PrismaModule, AccessControlModule, PlatformFinanceModule, VivaIntegrationModule],
     controllers: [
         PayoutAccountsController,
         UserPayoutAccountController,

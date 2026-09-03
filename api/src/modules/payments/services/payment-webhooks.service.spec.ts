@@ -16,6 +16,7 @@ describe('PaymentWebhooksService', () => {
     let vivaTransactions: any;
     let platformFinanceConfig: any;
     let tipsService: any;
+    let payoutAccountsService: any;
 
     beforeEach(() => {
         prisma = {
@@ -26,6 +27,7 @@ describe('PaymentWebhooksService', () => {
             tipDistribution: { createMany: jest.fn(), updateMany: jest.fn() },
             refund: { findUnique: jest.fn(), update: jest.fn() },
             payout: { findFirst: jest.fn(), update: jest.fn() },
+            payoutAccount: { findFirst: jest.fn() },
             $transaction: jest.fn((arg) => (Array.isArray(arg) ? Promise.all(arg) : arg(prisma))),
         };
         vivaTransactions = { getTransaction: jest.fn() };
@@ -34,8 +36,9 @@ describe('PaymentWebhooksService', () => {
             getProcessorFeeEstimateFixedAmount: jest.fn().mockReturnValue(24),
         };
         tipsService = { triggerPerformanceChangeAlert: jest.fn().mockResolvedValue(undefined) };
+        payoutAccountsService = { promoteIfVerified: jest.fn().mockResolvedValue(undefined) };
 
-        service = new PaymentWebhooksService(prisma, vivaTransactions, platformFinanceConfig, tipsService);
+        service = new PaymentWebhooksService(prisma, vivaTransactions, platformFinanceConfig, tipsService, payoutAccountsService);
         prisma.webhookEvent.create.mockResolvedValue({ id: 'we1' });
     });
 
@@ -411,6 +414,87 @@ describe('PaymentWebhooksService', () => {
             expect(prisma.tipDistribution.updateMany).toHaveBeenCalledWith(
                 expect.objectContaining({ data: expect.objectContaining({ payout_status: PayoutStatus.PENDING, payout_id: null }) }),
             );
+        });
+    });
+
+    describe('8193/8194 connected-account status changed', () => {
+        it('looks up the PayoutAccount by connected_account_id and re-verifies it, never trusting the payload', async () => {
+            prisma.payoutAccount.findFirst.mockResolvedValue({ id: 'pa1', connected_account_id: 'acc_1' });
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.ACCOUNT_VERIFICATION_STATUS_CHANGED,
+                MessageId: 'm8',
+                EventData: { AccountId: 'acc_1' },
+            } as any);
+
+            expect(prisma.payoutAccount.findFirst).toHaveBeenCalledWith({ where: { connected_account_id: 'acc_1' } });
+            expect(payoutAccountsService.promoteIfVerified).toHaveBeenCalledWith({ id: 'pa1', connected_account_id: 'acc_1' });
+        });
+
+        it('no-ops when no PayoutAccount matches the connected account id', async () => {
+            prisma.payoutAccount.findFirst.mockResolvedValue(null);
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.ACCOUNT_CONNECTED,
+                MessageId: 'm9',
+                EventData: { AccountId: 'acc_unknown' },
+            } as any);
+
+            expect(payoutAccountsService.promoteIfVerified).not.toHaveBeenCalled();
+        });
+
+        it('no-ops when EventData carries no account id', async () => {
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.ACCOUNT_CONNECTED,
+                MessageId: 'm10',
+                EventData: {},
+            } as any);
+
+            expect(prisma.payoutAccount.findFirst).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('8448 connected-account transfer created', () => {
+        it('completes the Payout and marks its distributions PAID', async () => {
+            prisma.payout.findFirst.mockResolvedValue({ id: 'payout1', status: PayoutExecutionStatus.PROCESSING });
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.TRANSFER_CREATED,
+                MessageId: 'm11',
+                EventData: { TransferId: 'tr_1' },
+            } as any);
+
+            expect(prisma.payout.findFirst).toHaveBeenCalledWith({ where: { provider_transfer_id: 'tr_1' } });
+            expect(prisma.payout.update).toHaveBeenCalledWith(
+                expect.objectContaining({ where: { id: 'payout1' }, data: expect.objectContaining({ status: PayoutExecutionStatus.COMPLETED }) }),
+            );
+            expect(prisma.tipDistribution.updateMany).toHaveBeenCalledWith(
+                expect.objectContaining({ where: { payout_id: 'payout1' }, data: expect.objectContaining({ payout_status: PayoutStatus.PAID }) }),
+            );
+        });
+
+        it('no-ops when no Payout matches the transfer id', async () => {
+            prisma.payout.findFirst.mockResolvedValue(null);
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.TRANSFER_CREATED,
+                MessageId: 'm12',
+                EventData: { TransferId: 'tr_unknown' },
+            } as any);
+
+            expect(prisma.payout.update).not.toHaveBeenCalled();
+        });
+
+        it('does not re-complete a Payout that is no longer PROCESSING', async () => {
+            prisma.payout.findFirst.mockResolvedValue({ id: 'payout1', status: PayoutExecutionStatus.COMPLETED });
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.TRANSFER_CREATED,
+                MessageId: 'm13',
+                EventData: { TransferId: 'tr_1' },
+            } as any);
+
+            expect(prisma.payout.update).not.toHaveBeenCalled();
         });
     });
 });

@@ -51,7 +51,7 @@ describe('OrganizationsService', () => {
             expect(prisma.subscription.create).toHaveBeenCalledWith({
                 data: expect.objectContaining({
                     organization_id: 'org1',
-                    plan: SubscriptionPlan.STARTER,
+                    plan: SubscriptionPlan.ENTERPRISE,
                     status: SubscriptionStatus.TRIALING,
                 }),
             });

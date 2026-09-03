@@ -40,12 +40,15 @@ export interface PayoutAccount {
   bank_account_id?: string | null;
   iban_last4?: string | null;
   beneficiary_name?: string | null;
+  connected_account_id?: string | null;
+  onboarding_url?: string | null;
   created_at: string;
   updated_at: string;
 }
 
 export interface CreatePayoutAccountPayload {
-  iban: string;
-  beneficiary_name: string;
+  payout_method?: PayoutMethod;
+  iban?: string;
+  beneficiary_name?: string;
   friendly_name?: string;
 }

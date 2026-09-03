@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { VivaHttpClient } from '../http/viva-http.client';
-import { VivaAuthMode, VivaHost } from '../interfaces/viva-common.interface';
+import { VivaAuthMode, VivaHost, VivaOAuthScope } from '../interfaces/viva-common.interface';
 import {
   CancelMarketplaceTransactionQuery,
   CancelMarketplaceTransactionResponse,
@@ -28,6 +28,7 @@ export class VivaMarketplaceService {
     return this.vivaHttpClient.request<CreateConnectedAccountResponse>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.PLATFORM,
       method: 'POST',
       path: '/platforms/v1/accounts',
       data: payload,
@@ -38,6 +39,7 @@ export class VivaMarketplaceService {
     return this.vivaHttpClient.request<ConnectedAccount>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.PLATFORM,
       method: 'GET',
       path: `/platforms/v1/accounts/${accountId}`,
     });
@@ -50,6 +52,7 @@ export class VivaMarketplaceService {
     await this.vivaHttpClient.request<void>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.PLATFORM,
       method: 'PATCH',
       path: `/platforms/v1/accounts/${accountId}`,
       data: payload,
@@ -62,6 +65,7 @@ export class VivaMarketplaceService {
     return this.vivaHttpClient.request<MarketplaceTransferResponse>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.PLATFORM,
       method: 'POST',
       path: '/platforms/v1/transfers',
       data: payload,
@@ -75,6 +79,7 @@ export class VivaMarketplaceService {
     return this.vivaHttpClient.request<MarketplaceTransferResponse>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.PLATFORM,
       method: 'POST',
       path: `/platforms/v1/transfers/${transferId}:reverse`,
       data: payload,
@@ -87,6 +92,7 @@ export class VivaMarketplaceService {
     return this.vivaHttpClient.request<CreateMarketplaceOrderResponse>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.PLATFORM,
       method: 'POST',
       path: '/checkout/v2/orders',
       data: payload,
@@ -100,6 +106,7 @@ export class VivaMarketplaceService {
     return this.vivaHttpClient.request<CancelMarketplaceTransactionResponse>({
       host: VivaHost.API,
       auth: VivaAuthMode.OAUTH2,
+      oauthScope: VivaOAuthScope.PLATFORM,
       method: 'DELETE',
       path: `/acquiring/v1/transactions/${transactionId}`,
       query,
