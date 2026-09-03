@@ -1,10 +1,16 @@
-import { BadGatewayException, BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, ConflictException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { VivaBankTransfersService } from '@/integrations/viva/services/viva-bank-transfers.service';
 import { VivaApiException } from '@/integrations/viva/http/viva-api.exception';
 import { maskIban } from '@/shared/utils/iban/iban.util';
+import { PlatformFinanceConfig } from '@/shared/config/platform-finance/platform-finance.config';
+import { AppUrls } from '@/shared/config/app-urls';
+import {
+    CONNECTED_ACCOUNTS_PROVIDER,
+    ConnectedAccountsProvider,
+} from '@/shared/services/connected-accounts/connected-accounts-provider.interface';
 import { CreatePayoutAccountDto } from './dto/create-payout-account.dto';
 import { UpdatePayoutAccountDto } from './dto/update-payout-account.dto';
 import { OrganizationRole, PaymentProvider, PayoutAccount, PayoutAccountOwnerType, PayoutAccountStatus, PayoutMethod } from 'generated/prisma';
@@ -17,6 +23,8 @@ export class PayoutAccountsService {
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
         private readonly vivaBankTransfers: VivaBankTransfersService,
+        private readonly platformFinanceConfig: PlatformFinanceConfig,
+        @Inject(CONNECTED_ACCOUNTS_PROVIDER) private readonly connectedAccountsProvider: ConnectedAccountsProvider,
     ) { }
 
     private async linkIban(dto: CreatePayoutAccountDto) {
@@ -53,6 +61,10 @@ export class PayoutAccountsService {
         const existing = await this.prisma.payoutAccount.findUnique({ where: { store_id: storeId } });
         if (existing) throw new ConflictException('This store already has a payout account');
 
+        if (dto.payout_method === PayoutMethod.CONNECTED_ACCOUNT) {
+            return this.createConnectedAccountForStore(user, storeId);
+        }
+
         const linked = await this.linkIban(dto);
 
         // The raw IBAN is never persisted — only Viva's own bankAccountId
@@ -67,6 +79,46 @@ export class PayoutAccountsService {
                 iban_last4: maskIban(dto.iban),
                 beneficiary_name: dto.beneficiary_name,
                 payout_method: PayoutMethod.IBAN,
+                status: PayoutAccountStatus.PENDING,
+            },
+        });
+    }
+
+    // Store-only (never offered to employee/user accounts — see
+    // createUserPayoutAccount's guard) and gated behind the central rollout
+    // flag, since it requires a real Viva platform account that doesn't
+    // exist until Viva Sales provisions one.
+    private async createConnectedAccountForStore(user: AuthUser, storeId: string) {
+        if (!this.platformFinanceConfig.isConnectedAccountPayoutsEnabled()) {
+            throw new BadRequestException('Connected-account payouts are not enabled yet');
+        }
+
+        const [store, owner] = await Promise.all([
+            this.prisma.store.findUniqueOrThrow({ where: { id: storeId }, select: { name: true } }),
+            this.prisma.user.findUniqueOrThrow({ where: { id: user.id }, select: { email: true } }),
+        ]);
+
+        let created;
+        try {
+            created = await this.connectedAccountsProvider.createConnectedAccount({
+                email: owner.email,
+                returnUrl: AppUrls.payoutAccountOnboardingReturn(storeId),
+                legalName: store.name,
+            });
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Unknown error';
+            throw new BadGatewayException(`Unable to create a connected account with the payment processor: ${message}`);
+        }
+
+        return this.prisma.payoutAccount.create({
+            data: {
+                owner_type: PayoutAccountOwnerType.STORE,
+                store_id: storeId,
+                provider: PaymentProvider.VIVA,
+                provider_account_id: created.accountId,
+                connected_account_id: created.accountId,
+                onboarding_url: created.onboardingUrl,
+                payout_method: PayoutMethod.CONNECTED_ACCOUNT,
                 status: PayoutAccountStatus.PENDING,
             },
         });
@@ -107,6 +159,13 @@ export class PayoutAccountsService {
     // ultimately create/read/update the same USER-owned PayoutAccount, just
     // reached via a different `userId` resolution + access-control path.
     private async createUserPayoutAccount(userId: string, dto: CreatePayoutAccountDto) {
+        // Employees/users always stay on the IBAN path — connected-account
+        // payouts are Store-only (research doc's phased recommendation:
+        // individual/employee onboarding UX is unconfirmed).
+        if (dto.payout_method === PayoutMethod.CONNECTED_ACCOUNT) {
+            throw new BadRequestException('Connected-account payouts are only available for Stores');
+        }
+
         const existing = await this.prisma.payoutAccount.findUnique({ where: { user_id: userId } });
         if (existing) throw new ConflictException('A payout account is already linked for this person');
 
@@ -227,14 +286,28 @@ export class PayoutAccountsService {
 
     // Shared by the manual "check status" actions above and PayoutsService's
     // opportunistic promotion during a payout run — single source of truth
-    // for the PENDING -> ACTIVE transition. Viva's linked-bank-account
-    // response has no documented "verified" field — `isArchived === false`
-    // is the closest available signal, pending direct confirmation from
-    // Viva on the actual validation semantics (payment plan §19).
+    // for the PENDING -> ACTIVE transition. Branches on payout_method since
+    // IBAN and CONNECTED_ACCOUNT accounts are verified against entirely
+    // different processor signals; every account is still re-verified live
+    // against the processor, never trusted from a cached/local flag.
     async promoteIfVerified(account: PayoutAccount): Promise<PayoutAccount> {
-        if (account.status !== PayoutAccountStatus.PENDING || !account.bank_account_id) {
+        if (account.status !== PayoutAccountStatus.PENDING) {
             return account;
         }
+
+        if (account.payout_method === PayoutMethod.CONNECTED_ACCOUNT) {
+            return this.promoteConnectedAccountIfVerified(account);
+        }
+
+        return this.promoteIbanAccountIfVerified(account);
+    }
+
+    // Viva's linked-bank-account response has no documented "verified"
+    // field — `isArchived === false` is the closest available signal,
+    // pending direct confirmation from Viva on the actual validation
+    // semantics (payment plan §19).
+    private async promoteIbanAccountIfVerified(account: PayoutAccount): Promise<PayoutAccount> {
+        if (!account.bank_account_id) return account;
 
         try {
             const remote = await this.vivaBankTransfers.getBankAccount(account.bank_account_id);
@@ -252,16 +325,41 @@ export class PayoutAccountsService {
         }
     }
 
+    private async promoteConnectedAccountIfVerified(account: PayoutAccount): Promise<PayoutAccount> {
+        if (!account.connected_account_id) return account;
+
+        try {
+            const remote = await this.connectedAccountsProvider.getConnectedAccountStatus(account.connected_account_id);
+            if (!remote.verified || !remote.payoutsEnabled) return account;
+
+            return await this.prisma.payoutAccount.update({
+                where: { id: account.id },
+                data: { status: PayoutAccountStatus.ACTIVE },
+            });
+        } catch (error) {
+            this.logger.warn(
+                `Could not verify connected account ${account.connected_account_id}: ${error instanceof Error ? error.message : error}`,
+            );
+            return account;
+        }
+    }
+
     // Background safety net for the same check the manual "Check status"
     // action and the opportunistic payout-run promotion already do — so an
     // account left PENDING is still eventually promoted even if no owner
     // clicks the button and no payout run ever touches it. Every account is
-    // still re-verified against Viva individually (never trusted from a
-    // cached/local flag), same as the on-demand paths.
+    // still re-verified against the processor individually (never trusted
+    // from a cached/local flag), same as the on-demand paths. This is also
+    // the fallback path that keeps connected-account promotion correct even
+    // if the Marketplace webhook EventTypeIds turn out wrong (unverified —
+    // see docs/VIVA_MARKETPLACE_MIGRATION_RESEARCH.md).
     @Cron(CronExpression.EVERY_10_MINUTES)
     async sweepPendingAccounts(): Promise<{ checked: number; promoted: number }> {
         const pending = await this.prisma.payoutAccount.findMany({
-            where: { status: PayoutAccountStatus.PENDING, bank_account_id: { not: null } },
+            where: {
+                status: PayoutAccountStatus.PENDING,
+                OR: [{ bank_account_id: { not: null } }, { connected_account_id: { not: null } }],
+            },
         });
 
         let promoted = 0;

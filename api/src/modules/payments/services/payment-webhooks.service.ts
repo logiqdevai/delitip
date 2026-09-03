@@ -5,6 +5,7 @@ import { TipsService } from '@/modules/tips/services/tips.service';
 import { VivaTransactionsService } from '@/integrations/viva/services/viva-transactions.service';
 import { VivaTransaction } from '@/integrations/viva/interfaces/viva-transactions.interface';
 import { PlatformFinanceConfig } from '@/shared/config/platform-finance/platform-finance.config';
+import { PayoutAccountsService } from '@/modules/payout-accounts/payout-accounts.service';
 import {
   calculateTipDistribution,
   RuleRecipientInput,
@@ -24,6 +25,7 @@ export class PaymentWebhooksService {
     private readonly vivaTransactions: VivaTransactionsService,
     private readonly platformFinanceConfig: PlatformFinanceConfig,
     private readonly tipsService: TipsService,
+    private readonly payoutAccountsService: PayoutAccountsService,
   ) {}
 
   async process(payload: VivaWebhookPayloadDto): Promise<void> {
@@ -80,6 +82,11 @@ export class PaymentWebhooksService {
         return;
       case VivaWebhookEventTypeId.ORDER_UPDATED:
         return this.handleOrderUpdated(payload.EventData);
+      case VivaWebhookEventTypeId.ACCOUNT_CONNECTED:
+      case VivaWebhookEventTypeId.ACCOUNT_VERIFICATION_STATUS_CHANGED:
+        return this.handleConnectedAccountStatusChanged(payload.EventData);
+      case VivaWebhookEventTypeId.TRANSFER_CREATED:
+        return this.handleConnectedAccountTransferCreated(payload.EventData);
       default:
         this.logger.log(`Unhandled Viva webhook EventTypeId ${payload.EventTypeId}`);
         return;
@@ -417,6 +424,59 @@ export class PaymentWebhooksService {
           data: { payout_status: PayoutStatus.PENDING, payout_id: null },
         });
       }
+    });
+  }
+
+  // The exact EventData field name is unverified (see VivaWebhookEventTypeId
+  // comment) — try the plausible candidates. Never trust the payload's
+  // claimed status directly: PayoutAccountsService.promoteIfVerified always
+  // re-fetches the connected account from Viva before promoting, same "go
+  // check, don't trust" pattern as every other handler in this file.
+  private async handleConnectedAccountStatusChanged(eventData?: Record<string, unknown>): Promise<void> {
+    const accountId = this.extractConnectedAccountId(eventData);
+    if (!accountId) {
+      this.logger.warn('Account-status webhook missing a connected account id in EventData');
+      return;
+    }
+
+    const account = await this.prisma.payoutAccount.findFirst({ where: { connected_account_id: accountId } });
+    if (!account) {
+      this.logger.warn(`No PayoutAccount found for connected_account_id=${accountId}`);
+      return;
+    }
+
+    await this.payoutAccountsService.promoteIfVerified(account);
+  }
+
+  private extractConnectedAccountId(eventData?: Record<string, unknown>): string | undefined {
+    if (!eventData) return undefined;
+    const candidate = eventData.AccountId ?? eventData.accountId ?? eventData.Id ?? eventData.id;
+    return typeof candidate === 'string' ? candidate : undefined;
+  }
+
+  private async handleConnectedAccountTransferCreated(eventData?: Record<string, unknown>): Promise<void> {
+    const transferId = eventData?.TransferId ?? eventData?.transferId ?? eventData?.Id;
+    if (typeof transferId !== 'string') {
+      this.logger.warn('Transfer-created webhook missing a transfer id to match a Payout');
+      return;
+    }
+
+    const payout = await this.prisma.payout.findFirst({ where: { provider_transfer_id: transferId } });
+    if (!payout) {
+      this.logger.warn(`No Payout found for provider_transfer_id=${transferId}`);
+      return;
+    }
+    if (payout.status !== PayoutExecutionStatus.PROCESSING) return;
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.payout.update({
+        where: { id: payout.id },
+        data: { status: PayoutExecutionStatus.COMPLETED, executed_at: new Date() },
+      });
+      await tx.tipDistribution.updateMany({
+        where: { payout_id: payout.id },
+        data: { payout_status: PayoutStatus.PAID, paid_out_at: new Date() },
+      });
     });
   }
 }

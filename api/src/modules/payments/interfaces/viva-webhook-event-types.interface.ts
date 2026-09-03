@@ -11,6 +11,16 @@ export const VivaWebhookEventTypeId = {
   // button (or via API) — the one case Viva's docs otherwise say produces no
   // webhook at all. EventData carries MerchantTrns/OrderCode/IsCancelled.
   ORDER_UPDATED: 4865,
+  // Marketplace/connected-accounts events. UNVERIFIED — sourced from a
+  // search snippet in docs/VIVA_MARKETPLACE_MIGRATION_RESEARCH.md, not
+  // found in either downloaded Viva OpenAPI spec (api/docs/viva/*.yaml).
+  // Confirm against the real sandbox merchant portal's webhook event-type
+  // list before relying on these alone — PayoutAccountsService's
+  // sweepPendingAccounts cron re-verifies connected accounts independently
+  // of these IDs being correct, so promotion still works even if they're wrong.
+  ACCOUNT_CONNECTED: 8193,
+  ACCOUNT_VERIFICATION_STATUS_CHANGED: 8194,
+  TRANSFER_CREATED: 8448,
 } as const;
 
 // Viva's checkout-v2 transaction statusId — 'F' (Finalized) is the only

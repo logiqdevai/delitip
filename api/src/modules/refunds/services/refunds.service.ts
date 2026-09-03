@@ -1,13 +1,17 @@
-import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { UsersService } from '@/modules/users/services/users.service';
 import { VivaTransactionsService } from '@/integrations/viva/services/viva-transactions.service';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
+import {
+    CONNECTED_ACCOUNTS_PROVIDER,
+    ConnectedAccountsProvider,
+} from '@/shared/services/connected-accounts/connected-accounts-provider.interface';
 import { CreatePublicRefundRequestDto, CreateRefundDto } from '../dto/create-refund.dto';
 import { UpdateRefundDto } from '../dto/update-refund.dto';
 import { RefundsQueryType } from '../dto/refunds-query.schema';
-import { PayoutStatus, RefundStatus, TipStatus } from 'generated/prisma';
+import { PayoutMethod, PayoutStatus, RefundStatus, TipStatus } from 'generated/prisma';
 
 @Injectable()
 export class RefundsService {
@@ -16,6 +20,7 @@ export class RefundsService {
         private readonly accessControl: AccessControlService,
         private readonly usersService: UsersService,
         private readonly vivaTransactions: VivaTransactionsService,
+        @Inject(CONNECTED_ACCOUNTS_PROVIDER) private readonly connectedAccountsProvider: ConnectedAccountsProvider,
     ) { }
 
     private async loadTip(tipId: string) {
@@ -94,7 +99,9 @@ export class RefundsService {
     async update(user: AuthUser, id: string, dto: UpdateRefundDto) {
         const refund = await this.prisma.refund.findUnique({
             where: { id },
-            include: { tip: { include: { payment_transaction: true, distributions: true } } },
+            include: {
+                tip: { include: { payment_transaction: true, distributions: true, store: { include: { payout_account: true } } } },
+            },
         });
         if (!refund) throw new NotFoundException('Refund not found');
 
@@ -106,6 +113,10 @@ export class RefundsService {
 
         let providerReference: string | undefined;
         let alreadyPaidOut = false;
+        // Connected-account cancellations reverse the seller-side transfer
+        // automatically and synchronously (reverseTransfers), so unlike the
+        // IBAN path there's nothing left for a human to reconcile.
+        let requiresManualReconciliation = false;
 
         if (dto.status === RefundStatus.COMPLETED) {
             const paymentTransaction = refund.tip.payment_transaction;
@@ -114,21 +125,34 @@ export class RefundsService {
             }
 
             alreadyPaidOut = refund.tip.distributions.some((d) => d.payout_status === PayoutStatus.PAID);
-
-            const confirmedAt = paymentTransaction.confirmed_at ?? refund.tip.created_at;
-            const isSameCalendarDay = this.isSameCalendarDay(confirmedAt, new Date());
+            const usesConnectedAccount = refund.tip.store?.payout_account?.payout_method === PayoutMethod.CONNECTED_ACCOUNT;
 
             try {
-                const response = isSameCalendarDay
-                    ? await this.vivaTransactions.createFastRefund(paymentTransaction.provider_transaction_id, {
+                if (usesConnectedAccount) {
+                    const response = await this.connectedAccountsProvider.cancelWithReversal({
+                        transactionId: paymentTransaction.provider_transaction_id,
                         amount: refund.amount,
-                        merchantTrns: refund.id,
-                    })
-                    : await this.vivaTransactions.createRebate(paymentTransaction.provider_transaction_id, {
-                        amount: refund.amount,
-                        merchantTrns: refund.id,
+                        reverseTransfers: true,
+                        refundPlatformFee: true,
                     });
-                providerReference = response.transactionId;
+                    providerReference = response.transactionId;
+                    requiresManualReconciliation = false;
+                } else {
+                    const confirmedAt = paymentTransaction.confirmed_at ?? refund.tip.created_at;
+                    const isSameCalendarDay = this.isSameCalendarDay(confirmedAt, new Date());
+
+                    const response = isSameCalendarDay
+                        ? await this.vivaTransactions.createFastRefund(paymentTransaction.provider_transaction_id, {
+                            amount: refund.amount,
+                            merchantTrns: refund.id,
+                        })
+                        : await this.vivaTransactions.createRebate(paymentTransaction.provider_transaction_id, {
+                            amount: refund.amount,
+                            merchantTrns: refund.id,
+                        });
+                    providerReference = response.transactionId;
+                    requiresManualReconciliation = alreadyPaidOut;
+                }
             } catch (error) {
                 const message = error instanceof Error ? error.message : 'Unknown error';
                 throw new BadGatewayException(`Unable to process this refund with the payment processor: ${message}`);
@@ -145,7 +169,7 @@ export class RefundsService {
                         ? {
                             provider_reference: providerReference,
                             provider_status: 'REQUESTED',
-                            requires_manual_reconciliation: alreadyPaidOut,
+                            requires_manual_reconciliation: requiresManualReconciliation,
                         }
                         : {}),
                 },

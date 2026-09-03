@@ -58,4 +58,23 @@ describe('PlatformFinanceConfig', () => {
 
         expect(config.getPayoutHoldWindowHours()).toBe(48);
     });
+
+    it('reports connected-account payouts disabled by default', () => {
+        configService.get.mockReturnValue(undefined);
+
+        expect(config.isConnectedAccountPayoutsEnabled()).toBe(false);
+        expect(configService.get).toHaveBeenCalledWith('CONNECTED_ACCOUNT_PAYOUTS_ENABLED');
+    });
+
+    it('reports connected-account payouts enabled when the flag is set to true', () => {
+        configService.get.mockReturnValue('true');
+
+        expect(config.isConnectedAccountPayoutsEnabled()).toBe(true);
+    });
+
+    it('reports connected-account payouts disabled for any non-"true" value', () => {
+        configService.get.mockReturnValue('false');
+
+        expect(config.isConnectedAccountPayoutsEnabled()).toBe(false);
+    });
 });

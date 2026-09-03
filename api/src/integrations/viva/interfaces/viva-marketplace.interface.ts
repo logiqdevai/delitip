@@ -6,19 +6,45 @@ export interface VivaAddress {
 }
 
 export interface VivaMarketplaceBranding {
-  name?: string;
-  logo?: string;
+  /** The name of the marketplace, shown as the header/title during onboarding. Required by Viva. */
+  partnerName: string;
+  /** The URL of the brand logo shown during onboarding. Required by Viva. */
+  logoUrl: string;
   primaryColor?: string;
 }
 
-export interface VivaPayoutsConfig {
+export interface VivaConnectedAccountBankAccount {
   iban?: string;
-  bankAccountId?: string;
+  friendlyName?: string;
+  beneficiaryName: string;
+  branchCode?: string;
+  accountNumber?: string;
+  countryCode?: string;
+}
+
+// To be used for sellers that wish to automatically receive their payouts to
+// a 3rd-party bank account outside Viva on a defined schedule — leave empty
+// for manual handling of payouts. Matches Viva's actual nested
+// `mp_createaccount_request.payouts` shape (confirmed against
+// api/docs/viva/viva-payment-api.yaml), not a bare {iban} pair.
+export interface VivaPayoutsConfig {
+  statementDescriptor?: string;
+  /** Required when interval is weekly (2). 1=Sunday..7=Saturday. */
+  dayOfWeek?: number;
+  /** Required when interval is monthly (3). */
+  dayOfMonth?: number;
+  /** 1=daily, 2=weekly, 3=monthly. */
+  interval?: number;
+  amountThreshold?: number;
+  disable?: boolean;
+  bankAccount?: VivaConnectedAccountBankAccount;
 }
 
 export interface VivaConnectedAccountInvitation {
-  url?: string;
-  expirationDate?: string;
+  email?: string;
+  /** The invitation URL to send the seller so they can start onboarding. */
+  redirectUrl?: string;
+  created?: string;
 }
 
 export interface CreateConnectedAccountRequest {

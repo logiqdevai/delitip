@@ -22,6 +22,11 @@ export type VivaAuthMode = (typeof VivaAuthMode)[keyof typeof VivaAuthMode];
 export const VivaOAuthScope = {
   CHECKOUT: 'checkout',
   ACCOUNT_TRANSACTIONS: 'account_transactions',
+  // Marketplace/connected-accounts endpoints (`/platforms/v1/*`) require the
+  // `urn:viva:payments:core:api:platform` OAuth2 scope per Viva's spec —
+  // issued as its own client id/secret pair, same per-permission-group model
+  // as ACCOUNT_TRANSACTIONS.
+  PLATFORM: 'platform',
 } as const;
 
 export type VivaOAuthScope =

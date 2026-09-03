@@ -73,6 +73,12 @@ export class VivaConfig {
         this.configService.get<string>('VIVA_CLIENT_ID')
       );
     }
+    if (scope === VivaOAuthScope.PLATFORM) {
+      return (
+        this.configService.get<string>('VIVA_PLATFORM_CLIENT_ID') ??
+        this.configService.get<string>('VIVA_CLIENT_ID')
+      );
+    }
     return this.configService.get<string>('VIVA_CLIENT_ID');
   }
 
@@ -80,6 +86,12 @@ export class VivaConfig {
     if (scope === VivaOAuthScope.ACCOUNT_TRANSACTIONS) {
       return (
         this.configService.get<string>('VIVA_ACCOUNT_TRANSACTIONS_CLIENT_SECRET') ??
+        this.configService.get<string>('VIVA_CLIENT_SECRET')
+      );
+    }
+    if (scope === VivaOAuthScope.PLATFORM) {
+      return (
+        this.configService.get<string>('VIVA_PLATFORM_CLIENT_SECRET') ??
         this.configService.get<string>('VIVA_CLIENT_SECRET')
       );
     }
@@ -100,6 +112,21 @@ export class VivaConfig {
 
   getWalletId(): number | undefined {
     return this.configService.get<number>('VIVA_WALLET_ID');
+  }
+
+  // Shown on Viva's own hosted onboarding page for connected accounts
+  // (Marketplace) — both are required by Viva's create-account call.
+  // Defaults derive from APP_URL so the platform boots with something
+  // usable even before these are set explicitly.
+  getMarketplacePartnerName(): string {
+    return this.configService.get<string>('VIVA_MARKETPLACE_PARTNER_NAME') ?? 'Delitip';
+  }
+
+  getMarketplaceLogoUrl(): string {
+    const configured = this.configService.get<string>('VIVA_MARKETPLACE_LOGO_URL');
+    if (configured) return configured;
+    const appUrl = this.configService.get<string>('APP_URL') ?? 'https://delitip.com';
+    return `${appUrl.replace(/\/$/, '')}/logo.png`;
   }
 
   // Comma-separated CIDR/IP list — Viva has no webhook HMAC, so this

@@ -10,6 +10,8 @@ describe('PayoutAccountsService', () => {
     let prisma: any;
     let accessControl: any;
     let vivaBankTransfers: any;
+    let platformFinanceConfig: any;
+    let connectedAccountsProvider: any;
 
     const user = { id: 'u1', role: AuthRole.USER };
     const createDto = (overrides: Partial<any> = {}) => ({
@@ -22,6 +24,8 @@ describe('PayoutAccountsService', () => {
         prisma = {
             payoutAccount: { findUnique: jest.fn(), findMany: jest.fn(), create: jest.fn(), update: jest.fn() },
             employee: { findUnique: jest.fn() },
+            store: { findUniqueOrThrow: jest.fn().mockResolvedValue({ name: 'Store 1' }) },
+            user: { findUniqueOrThrow: jest.fn().mockResolvedValue({ email: 'owner@store1.com' }) },
         };
         accessControl = { assertStoreAccess: jest.fn() };
         vivaBankTransfers = {
@@ -29,7 +33,18 @@ describe('PayoutAccountsService', () => {
             updateBankAccount: jest.fn().mockResolvedValue({}),
             getBankAccount: jest.fn(),
         };
-        service = new PayoutAccountsService(prisma, accessControl, vivaBankTransfers);
+        platformFinanceConfig = { isConnectedAccountPayoutsEnabled: jest.fn().mockReturnValue(false) };
+        connectedAccountsProvider = {
+            createConnectedAccount: jest.fn(),
+            getConnectedAccountStatus: jest.fn(),
+        };
+        service = new PayoutAccountsService(
+            prisma,
+            accessControl,
+            vivaBankTransfers,
+            platformFinanceConfig,
+            connectedAccountsProvider,
+        );
     });
 
     describe('createForStore', () => {
@@ -99,6 +114,61 @@ describe('PayoutAccountsService', () => {
                 expect(prisma.payoutAccount.create).not.toHaveBeenCalled();
             },
         );
+
+        describe('payout_method: CONNECTED_ACCOUNT', () => {
+            it('throws BadRequestException when the rollout flag is disabled', async () => {
+                prisma.payoutAccount.findUnique.mockResolvedValue(null);
+                platformFinanceConfig.isConnectedAccountPayoutsEnabled.mockReturnValue(false);
+
+                await expect(
+                    service.createForStore(user, 'store1', createDto({ payout_method: PayoutMethod.CONNECTED_ACCOUNT })),
+                ).rejects.toThrow(BadRequestException);
+                expect(connectedAccountsProvider.createConnectedAccount).not.toHaveBeenCalled();
+                expect(prisma.payoutAccount.create).not.toHaveBeenCalled();
+            });
+
+            it('creates a connected account and persists it as PENDING when the rollout flag is enabled', async () => {
+                prisma.payoutAccount.findUnique.mockResolvedValue(null);
+                platformFinanceConfig.isConnectedAccountPayoutsEnabled.mockReturnValue(true);
+                connectedAccountsProvider.createConnectedAccount.mockResolvedValue({
+                    accountId: 'acc_1',
+                    onboardingUrl: 'https://onboard',
+                });
+                const created = { id: 'pa1' };
+                prisma.payoutAccount.create.mockResolvedValue(created);
+
+                const result = await service.createForStore(user, 'store1', createDto({ payout_method: PayoutMethod.CONNECTED_ACCOUNT }));
+
+                expect(connectedAccountsProvider.createConnectedAccount).toHaveBeenCalledWith(
+                    expect.objectContaining({ email: 'owner@store1.com', legalName: 'Store 1' }),
+                );
+                expect(result).toBe(created);
+                expect(prisma.payoutAccount.create).toHaveBeenCalledWith({
+                    data: expect.objectContaining({
+                        owner_type: PayoutAccountOwnerType.STORE,
+                        store_id: 'store1',
+                        provider: PaymentProvider.VIVA,
+                        provider_account_id: 'acc_1',
+                        connected_account_id: 'acc_1',
+                        onboarding_url: 'https://onboard',
+                        payout_method: PayoutMethod.CONNECTED_ACCOUNT,
+                        status: PayoutAccountStatus.PENDING,
+                    }),
+                });
+                expect(vivaBankTransfers.linkBankAccount).not.toHaveBeenCalled();
+            });
+
+            it('wraps a provider failure in BadGatewayException', async () => {
+                prisma.payoutAccount.findUnique.mockResolvedValue(null);
+                platformFinanceConfig.isConnectedAccountPayoutsEnabled.mockReturnValue(true);
+                connectedAccountsProvider.createConnectedAccount.mockRejectedValue(new Error('Viva rejected this account'));
+
+                await expect(
+                    service.createForStore(user, 'store1', createDto({ payout_method: PayoutMethod.CONNECTED_ACCOUNT })),
+                ).rejects.toThrow(BadGatewayException);
+                expect(prisma.payoutAccount.create).not.toHaveBeenCalled();
+            });
+        });
     });
 
     describe('findForStore', () => {
@@ -169,6 +239,13 @@ describe('PayoutAccountsService', () => {
     });
 
     describe('createForUser', () => {
+        it('throws BadRequestException for payout_method CONNECTED_ACCOUNT — employees stay IBAN-only', async () => {
+            await expect(
+                service.createForUser(user, createDto({ payout_method: PayoutMethod.CONNECTED_ACCOUNT })),
+            ).rejects.toThrow(BadRequestException);
+            expect(prisma.payoutAccount.findUnique).not.toHaveBeenCalled();
+        });
+
         it('throws ConflictException when the user already has a payout account', async () => {
             prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'existing' });
 
@@ -374,6 +451,71 @@ describe('PayoutAccountsService', () => {
 
             expect(result).toBe(account);
         });
+
+        describe('payout_method: CONNECTED_ACCOUNT', () => {
+            it('leaves a PENDING account with no connected_account_id untouched', async () => {
+                const account = {
+                    id: 'pa1',
+                    status: PayoutAccountStatus.PENDING,
+                    payout_method: PayoutMethod.CONNECTED_ACCOUNT,
+                    connected_account_id: null,
+                };
+
+                const result = await service.promoteIfVerified(account as any);
+
+                expect(result).toBe(account);
+                expect(connectedAccountsProvider.getConnectedAccountStatus).not.toHaveBeenCalled();
+            });
+
+            it('promotes to ACTIVE when the provider reports verified and payouts enabled', async () => {
+                const account = {
+                    id: 'pa1',
+                    status: PayoutAccountStatus.PENDING,
+                    payout_method: PayoutMethod.CONNECTED_ACCOUNT,
+                    connected_account_id: 'acc_1',
+                };
+                connectedAccountsProvider.getConnectedAccountStatus.mockResolvedValue({ verified: true, payoutsEnabled: true });
+                prisma.payoutAccount.update.mockResolvedValue({ ...account, status: PayoutAccountStatus.ACTIVE });
+
+                const result = await service.promoteIfVerified(account as any);
+
+                expect(connectedAccountsProvider.getConnectedAccountStatus).toHaveBeenCalledWith('acc_1');
+                expect(prisma.payoutAccount.update).toHaveBeenCalledWith({
+                    where: { id: 'pa1' },
+                    data: { status: PayoutAccountStatus.ACTIVE },
+                });
+                expect(result.status).toBe(PayoutAccountStatus.ACTIVE);
+            });
+
+            it('leaves the account PENDING when the provider reports not-yet-verified', async () => {
+                const account = {
+                    id: 'pa1',
+                    status: PayoutAccountStatus.PENDING,
+                    payout_method: PayoutMethod.CONNECTED_ACCOUNT,
+                    connected_account_id: 'acc_1',
+                };
+                connectedAccountsProvider.getConnectedAccountStatus.mockResolvedValue({ verified: false, payoutsEnabled: false });
+
+                const result = await service.promoteIfVerified(account as any);
+
+                expect(result).toBe(account);
+                expect(prisma.payoutAccount.update).not.toHaveBeenCalled();
+            });
+
+            it('leaves the account PENDING when the provider lookup fails', async () => {
+                const account = {
+                    id: 'pa1',
+                    status: PayoutAccountStatus.PENDING,
+                    payout_method: PayoutMethod.CONNECTED_ACCOUNT,
+                    connected_account_id: 'acc_1',
+                };
+                connectedAccountsProvider.getConnectedAccountStatus.mockRejectedValue(new Error('network error'));
+
+                const result = await service.promoteIfVerified(account as any);
+
+                expect(result).toBe(account);
+            });
+        });
     });
 
     describe('refreshStatusForStore', () => {
@@ -411,13 +553,16 @@ describe('PayoutAccountsService', () => {
     });
 
     describe('sweepPendingAccounts', () => {
-        it('only queries PENDING accounts that have a linked bank account', async () => {
+        it('only queries PENDING accounts that have a linked bank account or connected account', async () => {
             prisma.payoutAccount.findMany.mockResolvedValue([]);
 
             await service.sweepPendingAccounts();
 
             expect(prisma.payoutAccount.findMany).toHaveBeenCalledWith({
-                where: { status: PayoutAccountStatus.PENDING, bank_account_id: { not: null } },
+                where: {
+                    status: PayoutAccountStatus.PENDING,
+                    OR: [{ bank_account_id: { not: null } }, { connected_account_id: { not: null } }],
+                },
             });
         });
 

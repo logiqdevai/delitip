@@ -1,5 +1,5 @@
 import { VivaMarketplaceService } from './viva-marketplace.service';
-import { VivaAuthMode, VivaHost } from '../interfaces/viva-common.interface';
+import { VivaAuthMode, VivaHost, VivaOAuthScope } from '../interfaces/viva-common.interface';
 
 describe('VivaMarketplaceService', () => {
   let service: VivaMarketplaceService;
@@ -11,35 +11,36 @@ describe('VivaMarketplaceService', () => {
   });
 
   describe('createConnectedAccount', () => {
-    it('creates a connected account over OAuth2 on the api host', async () => {
+    it('creates a connected account over the platform OAuth2 scope on the api host', async () => {
       vivaHttpClient.request.mockResolvedValue({
         accountId: 'acc_1',
-        invitation: { url: 'https://x' },
+        invitation: { email: 'a@b.com', redirectUrl: 'https://x', created: '2026-01-01' },
       });
 
       const payload = {
         email: 'a@b.com',
         returnUrl: 'https://return',
-        branding: { name: 'Store' },
+        branding: { partnerName: 'Store', logoUrl: 'https://logo' },
       };
       const result = await service.createConnectedAccount(payload);
 
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.PLATFORM,
         method: 'POST',
         path: '/platforms/v1/accounts',
         data: payload,
       });
       expect(result).toEqual({
         accountId: 'acc_1',
-        invitation: { url: 'https://x' },
+        invitation: { email: 'a@b.com', redirectUrl: 'https://x', created: '2026-01-01' },
       });
     });
   });
 
   describe('getConnectedAccount', () => {
-    it('retrieves a connected account by id', async () => {
+    it('retrieves a connected account by id over the platform OAuth2 scope', async () => {
       vivaHttpClient.request.mockResolvedValue({
         accountId: 'acc_1',
         verified: true,
@@ -50,6 +51,7 @@ describe('VivaMarketplaceService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.PLATFORM,
         method: 'GET',
         path: '/platforms/v1/accounts/acc_1',
       });
@@ -58,25 +60,26 @@ describe('VivaMarketplaceService', () => {
   });
 
   describe('updateConnectedAccount', () => {
-    it('patches connected account payout attributes', async () => {
+    it('patches connected account payout attributes over the platform OAuth2 scope', async () => {
       vivaHttpClient.request.mockResolvedValue(undefined);
 
       await service.updateConnectedAccount('acc_1', {
-        payouts: { iban: 'GR1234' },
+        payouts: { interval: 2, dayOfWeek: 1, bankAccount: { iban: 'GR1234', beneficiaryName: 'Store' } },
       });
 
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.PLATFORM,
         method: 'PATCH',
         path: '/platforms/v1/accounts/acc_1',
-        data: { payouts: { iban: 'GR1234' } },
+        data: { payouts: { interval: 2, dayOfWeek: 1, bankAccount: { iban: 'GR1234', beneficiaryName: 'Store' } } },
       });
     });
   });
 
   describe('createTransfer', () => {
-    it('sends funds to a connected account', async () => {
+    it('sends funds to a connected account over the platform OAuth2 scope', async () => {
       vivaHttpClient.request.mockResolvedValue({
         transferId: 'tr_1',
         executed: '2026-01-01',
@@ -88,6 +91,7 @@ describe('VivaMarketplaceService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.PLATFORM,
         method: 'POST',
         path: '/platforms/v1/transfers',
         data: payload,
@@ -97,7 +101,7 @@ describe('VivaMarketplaceService', () => {
   });
 
   describe('reverseTransfer', () => {
-    it('posts to the :reverse path for the given transfer', async () => {
+    it('posts to the :reverse path for the given transfer over the platform OAuth2 scope', async () => {
       vivaHttpClient.request.mockResolvedValue({
         transferId: 'tr_1',
         executed: '2026-01-01',
@@ -108,6 +112,7 @@ describe('VivaMarketplaceService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.PLATFORM,
         method: 'POST',
         path: '/platforms/v1/transfers/tr_1:reverse',
         data: { amount: 500 },
@@ -117,7 +122,7 @@ describe('VivaMarketplaceService', () => {
   });
 
   describe('createMarketplaceOrder', () => {
-    it('creates a marketplace-aware payment order', async () => {
+    it('creates a marketplace-aware payment order over the platform OAuth2 scope', async () => {
       vivaHttpClient.request.mockResolvedValue({ orderCode: 123 });
 
       const payload = {
@@ -129,6 +134,7 @@ describe('VivaMarketplaceService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.PLATFORM,
         method: 'POST',
         path: '/checkout/v2/orders',
         data: payload,
@@ -138,7 +144,7 @@ describe('VivaMarketplaceService', () => {
   });
 
   describe('cancelTransaction', () => {
-    it('cancels a marketplace transaction with reverseTransfers/refundPlatformFee query params', async () => {
+    it('cancels a marketplace transaction with reverseTransfers/refundPlatformFee query params over the platform OAuth2 scope', async () => {
       vivaHttpClient.request.mockResolvedValue({ transactionId: 'txn_1' });
 
       const query = {
@@ -151,6 +157,7 @@ describe('VivaMarketplaceService', () => {
       expect(vivaHttpClient.request).toHaveBeenCalledWith({
         host: VivaHost.API,
         auth: VivaAuthMode.OAUTH2,
+        oauthScope: VivaOAuthScope.PLATFORM,
         method: 'DELETE',
         path: '/acquiring/v1/transactions/txn_1',
         query,

@@ -310,6 +310,8 @@ exports.Prisma.PayoutAccountScalarFieldEnum = {
   bank_account_id: 'bank_account_id',
   iban_last4: 'iban_last4',
   beneficiary_name: 'beneficiary_name',
+  connected_account_id: 'connected_account_id',
+  onboarding_url: 'onboarding_url',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

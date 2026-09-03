@@ -49,4 +49,11 @@ export class PlatformFinanceConfig {
       DEFAULT_PAYOUT_HOLD_WINDOW_HOURS
     );
   }
+
+  // Central rollout switch for connected-account (Marketplace) Store
+  // payouts, gated off by default — flip on only once real platform
+  // credentials exist and a sandbox onboarding has been verified end-to-end.
+  isConnectedAccountPayoutsEnabled(): boolean {
+    return this.configService.get<string>('CONNECTED_ACCOUNT_PAYOUTS_ENABLED') === 'true';
+  }
 }

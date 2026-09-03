@@ -612,19 +612,21 @@ model DistributionRuleRecipient {
 // of store_id/user_id is set, matching owner_type; the unique constraint
 // on each caps it at one payout account per owner.
 model PayoutAccount {
-  id                  String                 @id @default(uuid())
-  owner_type          PayoutAccountOwnerType
-  store_id            String?                @unique // set when owner_type is STORE
-  user_id             String?                @unique // set when owner_type is USER
-  provider            PaymentProvider        @default(VIVA)
-  provider_account_id String // the connected account id with that processor
-  status              PayoutAccountStatus    @default(PENDING)
-  payout_method       PayoutMethod           @default(IBAN)
-  bank_account_id     String? // Viva's linked-bank-account id from the Bank Transfer API
-  iban_last4          String? // last 4 digits only — the raw IBAN is never persisted, see §16 of the payment plan
-  beneficiary_name    String?
-  created_at          DateTime               @default(now())
-  updated_at          DateTime               @updatedAt
+  id                   String                 @id @default(uuid())
+  owner_type           PayoutAccountOwnerType
+  store_id             String?                @unique // set when owner_type is STORE
+  user_id              String?                @unique // set when owner_type is USER
+  provider             PaymentProvider        @default(VIVA)
+  provider_account_id  String // the connected account id with that processor
+  status               PayoutAccountStatus    @default(PENDING)
+  payout_method        PayoutMethod           @default(IBAN)
+  bank_account_id      String? // Viva's linked-bank-account id from the Bank Transfer API
+  iban_last4           String? // last 4 digits only — the raw IBAN is never persisted, see §16 of the payment plan
+  beneficiary_name     String?
+  connected_account_id String? // the provider's connected/seller account id (Viva Marketplace today; a future Stripe Connect account reuses this same generic column)
+  onboarding_url       String? // hosted-onboarding link shown to the owner until the connected account finishes verification
+  created_at           DateTime               @default(now())
+  updated_at           DateTime               @updatedAt
 
   store   Store?   @relation(fields: [store_id], references: [id], onDelete: Cascade)
   user    User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
