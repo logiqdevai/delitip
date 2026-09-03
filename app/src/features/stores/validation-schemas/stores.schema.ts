@@ -46,6 +46,7 @@ export const businessSetupSchema = z.object({
   country: z.string().trim().optional(),
   postal_code: z.string().trim().optional(),
   full_address: parsedAddressSchema.optional(),
+  doy: z.string().trim().optional(),
 });
 
 export type BusinessSetupFormData = z.infer<typeof businessSetupSchema>;

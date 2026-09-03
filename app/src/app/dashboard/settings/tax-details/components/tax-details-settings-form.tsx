@@ -19,6 +19,7 @@ import {
   type TaxDetailsFormData,
 } from "@/features/organizations/validation-schemas/organizations.schema";
 import {
+  GREECE_COUNTRY_CODE,
   getCountryCodeByName,
   getCountryLabel,
 } from "@/config/constants/dropdowns/shared/country.options";
@@ -68,7 +69,7 @@ export const TaxDetailsSettingsForm: FC = () => {
 
   useUnsavedChangesWarning(isDirty);
 
-  const isGreece = getCountryCodeByName(watch("country")) === "GR";
+  const isGreece = getCountryCodeByName(watch("country")) === GREECE_COUNTRY_CODE;
 
   const onSubmit = handleSubmit((values) => {
     if (!organization) return;

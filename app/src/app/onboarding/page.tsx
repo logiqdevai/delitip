@@ -11,6 +11,7 @@ import {
   StoreIndustries,
   type Store,
 } from "@/features/stores/interfaces/stores.interfaces";
+import type { Organization } from "@/features/organizations/interfaces/organizations.interfaces";
 import type { BusinessSetupFormData } from "@/features/stores/validation-schemas/stores.schema";
 import { TeamSizes } from "@/config/constants/dropdowns/businesses/team-size-form.options";
 import { useAuthHydrated } from "@/hooks/use-auth-hydrated";
@@ -19,7 +20,10 @@ import { useAuthStore } from "@/stores/auth.store";
 
 const DEFAULT_TIMEZONE = "Europe/Athens";
 
-const buildDefaults = (store?: Store | null): BusinessSetupFormData => {
+const buildDefaults = (
+  store?: Store | null,
+  organization?: Organization | null,
+): BusinessSetupFormData => {
   return {
     name: store?.name ?? "",
     industry: store?.industry ?? StoreIndustries.RESTAURANT,
@@ -33,6 +37,7 @@ const buildDefaults = (store?: Store | null): BusinessSetupFormData => {
     city: store?.city ?? "",
     country: store?.country ?? "",
     postal_code: store?.postal_code ?? "",
+    doy: organization?.doy ?? "",
   };
 };
 
@@ -47,8 +52,8 @@ const OnboardingPage: FC = () => {
   const existingStore = organization?.stores?.[0] ?? null;
 
   const defaults = useMemo(
-    () => buildDefaults(existingStore),
-    [existingStore],
+    () => buildDefaults(existingStore, organization),
+    [existingStore, organization],
   );
 
   const context = {
