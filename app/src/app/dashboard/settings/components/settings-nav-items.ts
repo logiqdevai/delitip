@@ -84,7 +84,7 @@ export const settingsNavItems: SettingsNavItem[] = [
   {
     href: Routes.dashboard.settings.taxDetails,
     label: "Tax Details",
-    description: "VAT number and legal name used for invoicing.",
+    description: "Billing identity and address used to issue invoices.",
     icon: FileText,
   },
 ];

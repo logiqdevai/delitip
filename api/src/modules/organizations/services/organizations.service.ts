@@ -110,7 +110,13 @@ export class OrganizationsService {
     async update(user: AuthUser, id: string, dto: UpdateOrganizationDto) {
         await this.accessControl.assertOrgAccess(user, id, [OrganizationRole.OWNER]);
 
-        return this.prisma.organization.update({ where: { id }, data: dto });
+        const { full_address, ...rest } = dto;
+        const data: Record<string, unknown> = { ...rest };
+        if (full_address !== undefined) {
+            data.full_address = { ...full_address };
+        }
+
+        return this.prisma.organization.update({ where: { id }, data });
     }
 
     async remove(user: AuthUser, id: string) {

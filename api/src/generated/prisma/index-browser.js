@@ -165,6 +165,13 @@ exports.Prisma.OrganizationScalarFieldEnum = {
   logo_document_id: 'logo_document_id',
   vat_number: 'vat_number',
   legal_name: 'legal_name',
+  profession: 'profession',
+  doy: 'doy',
+  address_line: 'address_line',
+  city: 'city',
+  country: 'country',
+  postal_code: 'postal_code',
+  full_address: 'full_address',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

@@ -20,7 +20,7 @@ const teamSizeValues = Object.values(TeamSizes) as [
   ...(typeof TeamSizes)[keyof typeof TeamSizes][],
 ];
 
-const parsedAddressSchema = z.object({
+export const parsedAddressSchema = z.object({
   placeId: z.string(),
   formattedAddress: z.string(),
   streetAddress: z.string().optional(),

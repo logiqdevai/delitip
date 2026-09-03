@@ -277,8 +277,19 @@ model Organization {
   logo_document_id String?
   vat_number       String? // billing identity for invoicing — set via org settings, never inferred
   legal_name       String? // registered legal entity name, may differ from the customer-facing `name`
-  created_at       DateTime @default(now())
-  updated_at       DateTime @updatedAt
+  profession       String? // declared business activity, shown on invoices (e.g. "Restaurant", "Καφετέρια")
+  doy              String? // Greek tax office (Δ.Ο.Υ.) — only relevant for Greek-registered organizations
+
+  // Registered billing address — the invoice-recipient address, independent
+  // of any Store's own (possibly different/multiple) physical address(es).
+  address_line String?
+  city         String?
+  country      String?
+  postal_code  String?
+  full_address Json?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   logo_document Document? @relation("OrganizationLogoDocument", fields: [logo_document_id], references: [id], onDelete: SetNull)
 

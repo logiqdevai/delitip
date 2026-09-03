@@ -8457,6 +8457,12 @@ export namespace Prisma {
     logo_document_id: string | null
     vat_number: string | null
     legal_name: string | null
+    profession: string | null
+    doy: string | null
+    address_line: string | null
+    city: string | null
+    country: string | null
+    postal_code: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -8469,6 +8475,12 @@ export namespace Prisma {
     logo_document_id: string | null
     vat_number: string | null
     legal_name: string | null
+    profession: string | null
+    doy: string | null
+    address_line: string | null
+    city: string | null
+    country: string | null
+    postal_code: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -8481,6 +8493,13 @@ export namespace Prisma {
     logo_document_id: number
     vat_number: number
     legal_name: number
+    profession: number
+    doy: number
+    address_line: number
+    city: number
+    country: number
+    postal_code: number
+    full_address: number
     created_at: number
     updated_at: number
     _all: number
@@ -8495,6 +8514,12 @@ export namespace Prisma {
     logo_document_id?: true
     vat_number?: true
     legal_name?: true
+    profession?: true
+    doy?: true
+    address_line?: true
+    city?: true
+    country?: true
+    postal_code?: true
     created_at?: true
     updated_at?: true
   }
@@ -8507,6 +8532,12 @@ export namespace Prisma {
     logo_document_id?: true
     vat_number?: true
     legal_name?: true
+    profession?: true
+    doy?: true
+    address_line?: true
+    city?: true
+    country?: true
+    postal_code?: true
     created_at?: true
     updated_at?: true
   }
@@ -8519,6 +8550,13 @@ export namespace Prisma {
     logo_document_id?: true
     vat_number?: true
     legal_name?: true
+    profession?: true
+    doy?: true
+    address_line?: true
+    city?: true
+    country?: true
+    postal_code?: true
+    full_address?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -8604,6 +8642,13 @@ export namespace Prisma {
     logo_document_id: string | null
     vat_number: string | null
     legal_name: string | null
+    profession: string | null
+    doy: string | null
+    address_line: string | null
+    city: string | null
+    country: string | null
+    postal_code: string | null
+    full_address: JsonValue | null
     created_at: Date
     updated_at: Date
     _count: OrganizationCountAggregateOutputType | null
@@ -8633,6 +8678,13 @@ export namespace Prisma {
     logo_document_id?: boolean
     vat_number?: boolean
     legal_name?: boolean
+    profession?: boolean
+    doy?: boolean
+    address_line?: boolean
+    city?: boolean
+    country?: boolean
+    postal_code?: boolean
+    full_address?: boolean
     created_at?: boolean
     updated_at?: boolean
     logo_document?: boolean | Organization$logo_documentArgs<ExtArgs>
@@ -8650,6 +8702,13 @@ export namespace Prisma {
     logo_document_id?: boolean
     vat_number?: boolean
     legal_name?: boolean
+    profession?: boolean
+    doy?: boolean
+    address_line?: boolean
+    city?: boolean
+    country?: boolean
+    postal_code?: boolean
+    full_address?: boolean
     created_at?: boolean
     updated_at?: boolean
     logo_document?: boolean | Organization$logo_documentArgs<ExtArgs>
@@ -8663,6 +8722,13 @@ export namespace Prisma {
     logo_document_id?: boolean
     vat_number?: boolean
     legal_name?: boolean
+    profession?: boolean
+    doy?: boolean
+    address_line?: boolean
+    city?: boolean
+    country?: boolean
+    postal_code?: boolean
+    full_address?: boolean
     created_at?: boolean
     updated_at?: boolean
     logo_document?: boolean | Organization$logo_documentArgs<ExtArgs>
@@ -8676,11 +8742,18 @@ export namespace Prisma {
     logo_document_id?: boolean
     vat_number?: boolean
     legal_name?: boolean
+    profession?: boolean
+    doy?: boolean
+    address_line?: boolean
+    city?: boolean
+    country?: boolean
+    postal_code?: boolean
+    full_address?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "is_active" | "logo_document_id" | "vat_number" | "legal_name" | "created_at" | "updated_at", ExtArgs["result"]["organization"]>
+  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "is_active" | "logo_document_id" | "vat_number" | "legal_name" | "profession" | "doy" | "address_line" | "city" | "country" | "postal_code" | "full_address" | "created_at" | "updated_at", ExtArgs["result"]["organization"]>
   export type OrganizationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     logo_document?: boolean | Organization$logo_documentArgs<ExtArgs>
     members?: boolean | Organization$membersArgs<ExtArgs>
@@ -8711,6 +8784,13 @@ export namespace Prisma {
       logo_document_id: string | null
       vat_number: string | null
       legal_name: string | null
+      profession: string | null
+      doy: string | null
+      address_line: string | null
+      city: string | null
+      country: string | null
+      postal_code: string | null
+      full_address: Prisma.JsonValue | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["organization"]>
@@ -9147,6 +9227,13 @@ export namespace Prisma {
     readonly logo_document_id: FieldRef<"Organization", 'String'>
     readonly vat_number: FieldRef<"Organization", 'String'>
     readonly legal_name: FieldRef<"Organization", 'String'>
+    readonly profession: FieldRef<"Organization", 'String'>
+    readonly doy: FieldRef<"Organization", 'String'>
+    readonly address_line: FieldRef<"Organization", 'String'>
+    readonly city: FieldRef<"Organization", 'String'>
+    readonly country: FieldRef<"Organization", 'String'>
+    readonly postal_code: FieldRef<"Organization", 'String'>
+    readonly full_address: FieldRef<"Organization", 'Json'>
     readonly created_at: FieldRef<"Organization", 'DateTime'>
     readonly updated_at: FieldRef<"Organization", 'DateTime'>
   }
@@ -42306,6 +42393,13 @@ export namespace Prisma {
     logo_document_id: 'logo_document_id',
     vat_number: 'vat_number',
     legal_name: 'legal_name',
+    profession: 'profession',
+    doy: 'doy',
+    address_line: 'address_line',
+    city: 'city',
+    country: 'country',
+    postal_code: 'postal_code',
+    full_address: 'full_address',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -42874,6 +42968,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
    * Reference to a field of type 'OrganizationRole'
    */
   export type EnumOrganizationRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrganizationRole'>
@@ -42926,20 +43034,6 @@ export namespace Prisma {
    * Reference to a field of type 'StoreIndustry[]'
    */
   export type ListEnumStoreIndustryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StoreIndustry[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -43477,6 +43571,13 @@ export namespace Prisma {
     logo_document_id?: StringNullableFilter<"Organization"> | string | null
     vat_number?: StringNullableFilter<"Organization"> | string | null
     legal_name?: StringNullableFilter<"Organization"> | string | null
+    profession?: StringNullableFilter<"Organization"> | string | null
+    doy?: StringNullableFilter<"Organization"> | string | null
+    address_line?: StringNullableFilter<"Organization"> | string | null
+    city?: StringNullableFilter<"Organization"> | string | null
+    country?: StringNullableFilter<"Organization"> | string | null
+    postal_code?: StringNullableFilter<"Organization"> | string | null
+    full_address?: JsonNullableFilter<"Organization">
     created_at?: DateTimeFilter<"Organization"> | Date | string
     updated_at?: DateTimeFilter<"Organization"> | Date | string
     logo_document?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
@@ -43493,6 +43594,13 @@ export namespace Prisma {
     logo_document_id?: SortOrderInput | SortOrder
     vat_number?: SortOrderInput | SortOrder
     legal_name?: SortOrderInput | SortOrder
+    profession?: SortOrderInput | SortOrder
+    doy?: SortOrderInput | SortOrder
+    address_line?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    postal_code?: SortOrderInput | SortOrder
+    full_address?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     logo_document?: DocumentOrderByWithRelationInput
@@ -43512,6 +43620,13 @@ export namespace Prisma {
     logo_document_id?: StringNullableFilter<"Organization"> | string | null
     vat_number?: StringNullableFilter<"Organization"> | string | null
     legal_name?: StringNullableFilter<"Organization"> | string | null
+    profession?: StringNullableFilter<"Organization"> | string | null
+    doy?: StringNullableFilter<"Organization"> | string | null
+    address_line?: StringNullableFilter<"Organization"> | string | null
+    city?: StringNullableFilter<"Organization"> | string | null
+    country?: StringNullableFilter<"Organization"> | string | null
+    postal_code?: StringNullableFilter<"Organization"> | string | null
+    full_address?: JsonNullableFilter<"Organization">
     created_at?: DateTimeFilter<"Organization"> | Date | string
     updated_at?: DateTimeFilter<"Organization"> | Date | string
     logo_document?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
@@ -43528,6 +43643,13 @@ export namespace Prisma {
     logo_document_id?: SortOrderInput | SortOrder
     vat_number?: SortOrderInput | SortOrder
     legal_name?: SortOrderInput | SortOrder
+    profession?: SortOrderInput | SortOrder
+    doy?: SortOrderInput | SortOrder
+    address_line?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    postal_code?: SortOrderInput | SortOrder
+    full_address?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: OrganizationCountOrderByAggregateInput
@@ -43546,6 +43668,13 @@ export namespace Prisma {
     logo_document_id?: StringNullableWithAggregatesFilter<"Organization"> | string | null
     vat_number?: StringNullableWithAggregatesFilter<"Organization"> | string | null
     legal_name?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    profession?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    doy?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    address_line?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    city?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    country?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    postal_code?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    full_address?: JsonNullableWithAggregatesFilter<"Organization">
     created_at?: DateTimeWithAggregatesFilter<"Organization"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Organization"> | Date | string
   }
@@ -46262,6 +46391,13 @@ export namespace Prisma {
     is_active?: boolean
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     logo_document?: DocumentCreateNestedOneWithoutOrganizations_logoInput
@@ -46278,6 +46414,13 @@ export namespace Prisma {
     logo_document_id?: string | null
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
@@ -46292,6 +46435,13 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     logo_document?: DocumentUpdateOneWithoutOrganizations_logoNestedInput
@@ -46308,6 +46458,13 @@ export namespace Prisma {
     logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -46323,6 +46480,13 @@ export namespace Prisma {
     logo_document_id?: string | null
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -46334,6 +46498,13 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46346,6 +46517,13 @@ export namespace Prisma {
     logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -49319,6 +49497,29 @@ export namespace Prisma {
     _min?: NestedEnumDocumentTypeFilter<$PrismaModel>
     _max?: NestedEnumDocumentTypeFilter<$PrismaModel>
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type DocumentNullableScalarRelationFilter = {
     is?: DocumentWhereInput | null
@@ -49338,6 +49539,13 @@ export namespace Prisma {
     logo_document_id?: SortOrder
     vat_number?: SortOrder
     legal_name?: SortOrder
+    profession?: SortOrder
+    doy?: SortOrder
+    address_line?: SortOrder
+    city?: SortOrder
+    country?: SortOrder
+    postal_code?: SortOrder
+    full_address?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -49350,6 +49558,12 @@ export namespace Prisma {
     logo_document_id?: SortOrder
     vat_number?: SortOrder
     legal_name?: SortOrder
+    profession?: SortOrder
+    doy?: SortOrder
+    address_line?: SortOrder
+    city?: SortOrder
+    country?: SortOrder
+    postal_code?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -49362,8 +49576,40 @@ export namespace Prisma {
     logo_document_id?: SortOrder
     vat_number?: SortOrder
     legal_name?: SortOrder
+    profession?: SortOrder
+    doy?: SortOrder
+    address_line?: SortOrder
+    city?: SortOrder
+    country?: SortOrder
+    postal_code?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type EnumOrganizationRoleFilter<$PrismaModel = never> = {
@@ -49508,29 +49754,6 @@ export namespace Prisma {
     in?: $Enums.StoreIndustry[] | ListEnumStoreIndustryFieldRefInput<$PrismaModel>
     notIn?: $Enums.StoreIndustry[] | ListEnumStoreIndustryFieldRefInput<$PrismaModel>
     not?: NestedEnumStoreIndustryFilter<$PrismaModel> | $Enums.StoreIndustry
-  }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type EnumLanguageFilter<$PrismaModel = never> = {
@@ -49796,32 +50019,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumStoreIndustryFilter<$PrismaModel>
     _max?: NestedEnumStoreIndustryFilter<$PrismaModel>
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type EnumLanguageWithAggregatesFilter<$PrismaModel = never> = {
@@ -55010,6 +55207,29 @@ export namespace Prisma {
     _min?: NestedEnumDocumentTypeFilter<$PrismaModel>
     _max?: NestedEnumDocumentTypeFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedEnumOrganizationRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.OrganizationRole | EnumOrganizationRoleFieldRefInput<$PrismaModel>
@@ -55102,29 +55322,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumStoreIndustryFilter<$PrismaModel>
     _max?: NestedEnumStoreIndustryFilter<$PrismaModel>
-  }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedEnumLanguageWithAggregatesFilter<$PrismaModel = never> = {
@@ -56518,6 +56715,13 @@ export namespace Prisma {
     is_active?: boolean
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     members?: OrganizationMemberCreateNestedManyWithoutOrganizationInput
@@ -56532,6 +56736,13 @@ export namespace Prisma {
     is_active?: boolean
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
@@ -56752,6 +56963,13 @@ export namespace Prisma {
     logo_document_id?: StringNullableFilter<"Organization"> | string | null
     vat_number?: StringNullableFilter<"Organization"> | string | null
     legal_name?: StringNullableFilter<"Organization"> | string | null
+    profession?: StringNullableFilter<"Organization"> | string | null
+    doy?: StringNullableFilter<"Organization"> | string | null
+    address_line?: StringNullableFilter<"Organization"> | string | null
+    city?: StringNullableFilter<"Organization"> | string | null
+    country?: StringNullableFilter<"Organization"> | string | null
+    postal_code?: StringNullableFilter<"Organization"> | string | null
+    full_address?: JsonNullableFilter<"Organization">
     created_at?: DateTimeFilter<"Organization"> | Date | string
     updated_at?: DateTimeFilter<"Organization"> | Date | string
   }
@@ -57081,6 +57299,13 @@ export namespace Prisma {
     is_active?: boolean
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     logo_document?: DocumentCreateNestedOneWithoutOrganizations_logoInput
@@ -57096,6 +57321,13 @@ export namespace Prisma {
     logo_document_id?: string | null
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     stores?: StoreUncheckedCreateNestedManyWithoutOrganizationInput
@@ -57275,6 +57507,13 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     logo_document?: DocumentUpdateOneWithoutOrganizations_logoNestedInput
@@ -57290,6 +57529,13 @@ export namespace Prisma {
     logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     stores?: StoreUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -57465,6 +57711,13 @@ export namespace Prisma {
     is_active?: boolean
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     logo_document?: DocumentCreateNestedOneWithoutOrganizations_logoInput
@@ -57480,6 +57733,13 @@ export namespace Prisma {
     logo_document_id?: string | null
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
@@ -57509,6 +57769,13 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     logo_document?: DocumentUpdateOneWithoutOrganizations_logoNestedInput
@@ -57524,6 +57791,13 @@ export namespace Prisma {
     logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -57537,6 +57811,13 @@ export namespace Prisma {
     is_active?: boolean
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     logo_document?: DocumentCreateNestedOneWithoutOrganizations_logoInput
@@ -57552,6 +57833,13 @@ export namespace Prisma {
     logo_document_id?: string | null
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
@@ -58217,6 +58505,13 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     logo_document?: DocumentUpdateOneWithoutOrganizations_logoNestedInput
@@ -58232,6 +58527,13 @@ export namespace Prisma {
     logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -66668,6 +66970,13 @@ export namespace Prisma {
     is_active?: boolean
     vat_number?: string | null
     legal_name?: string | null
+    profession?: string | null
+    doy?: string | null
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -66938,6 +67247,13 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: OrganizationMemberUpdateManyWithoutOrganizationNestedInput
@@ -66952,6 +67268,13 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -66966,6 +67289,13 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    doy?: NullableStringFieldUpdateOperationsInput | string | null
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    full_address?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

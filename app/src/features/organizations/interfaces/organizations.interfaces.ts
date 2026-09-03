@@ -1,3 +1,4 @@
+import type { ParsedAddress } from "@/components/ui/address-autocomplete";
 import type {
   Store,
   StoreIndustry,
@@ -19,6 +20,13 @@ export interface Organization {
   logo_document_id?: string | null;
   vat_number?: string | null;
   legal_name?: string | null;
+  profession?: string | null;
+  doy?: string | null;
+  address_line?: string | null;
+  city?: string | null;
+  country?: string | null;
+  postal_code?: string | null;
+  full_address?: ParsedAddress | null;
   created_at: string;
   updated_at: string;
 }
@@ -29,6 +37,13 @@ export interface UpdateOrganizationPayload {
   logo_document_id?: string;
   vat_number?: string;
   legal_name?: string;
+  profession?: string;
+  doy?: string;
+  address_line?: string;
+  city?: string;
+  country?: string;
+  postal_code?: string;
+  full_address?: ParsedAddress;
 }
 
 export interface OrganizationMember {
