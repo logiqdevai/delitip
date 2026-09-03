@@ -51,6 +51,7 @@ export const Routes = {
         `/dashboard/admin/payments/${id}` as const,
       payoutDetail: (id: string) => `/dashboard/admin/payouts/${id}` as const,
       analytics: "/dashboard/admin/analytics",
+      vatSimulator: "/dashboard/admin/vat-simulator",
     },
     settings: {
       root: "/dashboard/settings",
