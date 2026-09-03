@@ -63,7 +63,7 @@ export const LandingEcosystem: FC = () => {
                 For business owners & managers
               </h3>
               <p className="text-xs leading-relaxed text-zinc-600 sm:text-sm">
-                Run tipping and feedback without POS hardware — and see how your
+                Run tipping and feedback without POS hardware, and see how your
                 customer support team is doing.
               </p>
               <ul className="space-y-2.5 pt-2 text-xs font-medium text-zinc-700">
@@ -101,7 +101,7 @@ export const LandingEcosystem: FC = () => {
               </h3>
               <p className="text-xs leading-relaxed text-zinc-600 sm:text-sm">
                 When someone goes out of their way to help, customers can tip and
-                say thank you — tied to you, not a tip jar.
+                say thank you, tied to you, not a tip jar.
               </p>
               <ul className="space-y-2.5 pt-2 text-xs font-medium text-zinc-700">
                 {staffPoints.map((point) => (

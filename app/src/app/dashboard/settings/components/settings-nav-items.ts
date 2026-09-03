@@ -19,6 +19,7 @@ export interface SettingsNavItem {
   description: string;
   icon: LucideIcon;
   requiresPlatformAdmin?: boolean;
+  hidden?: boolean;
 }
 
 export const settingsNavItems: SettingsNavItem[] = [
@@ -67,6 +68,7 @@ export const settingsNavItems: SettingsNavItem[] = [
     description:
       "Choose which automatic alerts your team receives in the Alerts inbox.",
     icon: Bell,
+    hidden: true,
   },
   {
     href: Routes.dashboard.settings.members,
@@ -74,12 +76,14 @@ export const settingsNavItems: SettingsNavItem[] = [
     description: "Invite teammates and manage their role-based access.",
     icon: Users2,
     requiresPlatformAdmin: true,
+    hidden: true,
   },
   {
     href: Routes.dashboard.settings.billing,
     label: "Billing",
     description: "Manage your subscription plan.",
     icon: CreditCard,
+    hidden: true,
   },
   {
     href: Routes.dashboard.settings.taxDetails,

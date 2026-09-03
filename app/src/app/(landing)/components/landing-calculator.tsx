@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Info } from "lucide-react";
 import { Routes } from "@/routes/routes";
 
-function formatUsd(value: number): string {
+function formatEur(value: number): string {
   return value.toLocaleString("en-US");
 }
 
@@ -28,8 +28,8 @@ export const LandingCalculator: FC = () => {
             Rough tip potential for your team
           </h2>
           <p className="mx-auto max-w-xl text-xs text-zinc-500 sm:text-sm">
-            A simple estimate based on how many customers you help each day —
-            not a guarantee.
+            A simple estimate based on how many customers you help each day.
+            Not a guarantee.
           </p>
         </div>
 
@@ -95,12 +95,12 @@ export const LandingCalculator: FC = () => {
               Estimated annual tips
             </span>
             <div className="text-3xl font-extrabold text-electric-lime sm:text-4xl">
-              ~${formatUsd(annualBoost)}
+              ~€{formatEur(annualBoost)}
             </div>
             <div className="text-xs text-zinc-300">
               About{" "}
               <strong className="text-paper-offwhite">
-                ${formatUsd(monthlyPerStaff)}/mo
+                €{formatEur(monthlyPerStaff)}/mo
               </strong>{" "}
               per team member in this estimate
             </div>

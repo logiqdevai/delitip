@@ -12,7 +12,7 @@ const steps = [
   {
     number: "02",
     title: "Tip",
-    body: "They choose an amount and pay with Apple Pay or Google Pay. The tip goes to that team member — or the whole team, if you set it that way.",
+    body: "They choose an amount and pay online. The tip goes to that team member or the whole team, if you set it that way.",
     note: "No app. No account for customers.",
     accent: true,
   },

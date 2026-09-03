@@ -47,7 +47,7 @@ export class OrganizationsService {
             await tx.subscription.create({
                 data: {
                     organization_id: organization.id,
-                    plan: SubscriptionPlan.STARTER,
+                    plan: SubscriptionPlan.ENTERPRISE,
                     status: SubscriptionStatus.TRIALING,
                     current_period_start: now,
                     current_period_end: periodEnd,

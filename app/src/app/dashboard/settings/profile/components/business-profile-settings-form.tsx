@@ -86,9 +86,6 @@ export const BusinessProfileSettingsForm: FC = () => {
         country: values.country || undefined,
         postal_code: values.postal_code || undefined,
         full_address: values.full_address,
-        vat_rate_percentage: Number.isNaN(values.vat_rate_percentage)
-          ? undefined
-          : values.vat_rate_percentage,
       },
     });
   });
@@ -229,6 +226,7 @@ export const BusinessProfileSettingsForm: FC = () => {
           placeholder="e.g. 24 for Greece — leave blank if this store doesn't charge VAT on tips"
           aria-invalid={!!errors.vat_rate_percentage}
           {...register("vat_rate_percentage", { valueAsNumber: true })}
+          disabled
         />
         <p className="text-xs text-zinc-500">
           Added on top of the tip amount at checkout. Leave blank or 0 if
