@@ -58,6 +58,9 @@ export const storeProfileFormSchema = z.object({
   country: z.string().trim().optional(),
   postal_code: z.string().trim().optional(),
   full_address: parsedAddressSchema.optional(),
+  vat_rate_percentage: z
+    .union([z.number().min(0).max(100), z.nan()])
+    .optional(),
 });
 
 export type StoreProfileFormData = z.infer<typeof storeProfileFormSchema>;

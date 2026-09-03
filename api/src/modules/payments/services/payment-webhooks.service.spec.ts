@@ -104,7 +104,7 @@ describe('PaymentWebhooksService', () => {
             prisma.tip.findUnique.mockResolvedValue({
                 id: 'tip1',
                 status: TipStatus.COMPLETED,
-                payment_transaction: { gross_amount: 1000 },
+                payment_transaction: { tip_amount: 1000, gross_amount: 1000 },
             });
 
             await service.applyVerifiedTransaction(transaction as any);
@@ -116,7 +116,7 @@ describe('PaymentWebhooksService', () => {
             prisma.tip.findUnique.mockResolvedValue({
                 id: 'tip1',
                 status: TipStatus.CREATED,
-                payment_transaction: { id: 'pt1', gross_amount: 1000 },
+                payment_transaction: { id: 'pt1', tip_amount: 1000, gross_amount: 1000 },
             });
 
             await service.applyVerifiedTransaction({ ...transaction, statusId: 'A' } as any);
@@ -128,7 +128,7 @@ describe('PaymentWebhooksService', () => {
             prisma.tip.findUnique.mockResolvedValue({
                 id: 'tip1',
                 status: TipStatus.CREATED,
-                payment_transaction: { id: 'pt1', gross_amount: 2000 },
+                payment_transaction: { id: 'pt1', tip_amount: 2000, gross_amount: 2000 },
             });
 
             await service.applyVerifiedTransaction(transaction as any);
@@ -143,7 +143,7 @@ describe('PaymentWebhooksService', () => {
                 distribution_rule_id: null,
                 selected_employee_ids: null,
                 employee_id: null,
-                payment_transaction: { id: 'pt1', gross_amount: 1000, commission_amount: 50 },
+                payment_transaction: { id: 'pt1', tip_amount: 1000, gross_amount: 1000, commission_amount: 50 },
             });
 
             await service.applyVerifiedTransaction(transaction as any);
@@ -171,7 +171,7 @@ describe('PaymentWebhooksService', () => {
                 distribution_rule_id: null,
                 selected_employee_ids: null,
                 employee_id: null,
-                payment_transaction: { id: 'pt1', gross_amount: 2000, commission_amount: 100 },
+                payment_transaction: { id: 'pt1', tip_amount: 2000, gross_amount: 2000, commission_amount: 100 },
             });
 
             await service.applyVerifiedTransaction({ ...transaction, amount: 20 } as any);
@@ -179,6 +179,31 @@ describe('PaymentWebhooksService', () => {
             expect(prisma.tip.update).toHaveBeenCalledWith(
                 expect.objectContaining({ where: { id: 'tip1' }, data: expect.objectContaining({ status: TipStatus.COMPLETED }) }),
             );
+        });
+
+        it('excludes VAT from net_distributable_amount — VAT is retained by the platform, never split with store/employee', async () => {
+            prisma.tip.findUnique.mockResolvedValue({
+                id: 'tip1',
+                status: TipStatus.CREATED,
+                distribution_rule_id: null,
+                selected_employee_ids: null,
+                employee_id: null,
+                // tip_amount 1000 + 24% VAT (240) = gross_amount 1240, matching the charged transaction.
+                payment_transaction: { id: 'pt1', tip_amount: 1000, gross_amount: 1240, commission_amount: 50 },
+            });
+
+            // processorFeeEstimated = round(1240 * 1.5 / 100) + 24 = 43
+            // netDistributableAmount = tip_amount(1000) - (commission(50) + processorFee(43)) = 907
+            await service.applyVerifiedTransaction({ ...transaction, amount: 12.4 } as any);
+
+            expect(prisma.paymentTransaction.update).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({ processor_fee_estimated: 43, net_distributable_amount: 907 }),
+                }),
+            );
+            expect(prisma.tipDistribution.createMany).toHaveBeenCalledWith({
+                data: [expect.objectContaining({ recipient_type: 'STORE', amount: 907 })],
+            });
         });
     });
 
@@ -205,6 +230,7 @@ describe('PaymentWebhooksService', () => {
         it('records the confirmed processor fee and net amount', async () => {
             prisma.paymentTransaction.findFirst.mockResolvedValue({
                 id: 'pt1',
+                tip_amount: 1000,
                 gross_amount: 1000,
                 commission_amount: 50,
                 platform_fee_percentage: 5,
@@ -231,7 +257,7 @@ describe('PaymentWebhooksService', () => {
         });
 
         it('leaves processor_fee_confirmed unset when no fee field can be extracted', async () => {
-            prisma.paymentTransaction.findFirst.mockResolvedValue({ id: 'pt1', gross_amount: 1000, commission_amount: 50 });
+            prisma.paymentTransaction.findFirst.mockResolvedValue({ id: 'pt1', tip_amount: 1000, gross_amount: 1000, commission_amount: 50 });
 
             await service.process({
                 EventTypeId: VivaWebhookEventTypeId.TRANSACTION_PRICE_CALCULATED,
@@ -240,6 +266,31 @@ describe('PaymentWebhooksService', () => {
             } as any);
 
             expect(prisma.paymentTransaction.update).not.toHaveBeenCalled();
+        });
+
+        it('excludes VAT from net_distributable_amount when confirming the processor fee', async () => {
+            prisma.paymentTransaction.findFirst.mockResolvedValue({
+                id: 'pt1',
+                tip_amount: 1000,
+                gross_amount: 1240, // 1000 tip + 240 VAT (24%)
+                commission_amount: 50,
+                platform_fee_percentage: 5,
+            });
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.TRANSACTION_PRICE_CALCULATED,
+                MessageId: 'm11',
+                EventData: { TransactionId: 't1', CommissionAmount: 43 },
+            } as any);
+
+            // totalFeeAmount = commission(50) + confirmedFee(43) = 93
+            // netDistributableAmount = tip_amount(1000) - 93 = 907, never grossAmount(1240) - 93
+            expect(prisma.paymentTransaction.update).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    where: { id: 'pt1' },
+                    data: expect.objectContaining({ net_distributable_amount: 907 }),
+                }),
+            );
         });
     });
 

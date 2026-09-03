@@ -170,9 +170,12 @@ export class PaymentWebhooksService {
       : [];
 
     const grossAmount = tip.payment_transaction.gross_amount;
+    const tipAmount = tip.payment_transaction.tip_amount;
     const commissionAmount = tip.payment_transaction.commission_amount;
     const processorFeePercentageUsed = this.platformFinanceConfig.getProcessorFeeEstimatePercentage();
     const processorFeeFixedAmount = this.platformFinanceConfig.getProcessorFeeEstimateFixedAmount();
+    // Estimated against grossAmount (VAT-inclusive) since that's the actual
+    // amount Viva processes on the card — VAT is charged its own cut too.
     const processorFeeEstimated =
       Math.round((grossAmount * processorFeePercentageUsed) / 100) + processorFeeFixedAmount;
     const paymentFeePercentage = Math.round(((processorFeeEstimated / grossAmount) * 100) * 100) / 100;
@@ -180,7 +183,9 @@ export class PaymentWebhooksService {
     const totalFeePercentage = Math.round(((totalFeeAmount / grossAmount) * 100) * 100) / 100;
     const totalFeePercentageSum =
       Math.round((Number(tip.payment_transaction.platform_fee_percentage) + paymentFeePercentage) * 100) / 100;
-    const netDistributableAmount = Math.max(grossAmount - totalFeeAmount, 0);
+    // Based on tipAmount, not grossAmount — vat_amount is retained by the
+    // platform in full and must never leak into the store/employee split.
+    const netDistributableAmount = Math.max(tipAmount - totalFeeAmount, 0);
 
     const distributionLines = calculateTipDistribution(recipients, selectedEmployeeIds, netDistributableAmount);
 
@@ -333,12 +338,15 @@ export class PaymentWebhooksService {
     }
 
     const grossAmount = paymentTransaction.gross_amount;
+    const tipAmount = paymentTransaction.tip_amount;
     const paymentFeePercentage = Math.round(((confirmedFee / grossAmount) * 100) * 100) / 100;
     const totalFeeAmount = paymentTransaction.commission_amount + confirmedFee;
     const totalFeePercentage = Math.round(((totalFeeAmount / grossAmount) * 100) * 100) / 100;
     const totalFeePercentageSum =
       Math.round((Number(paymentTransaction.platform_fee_percentage) + paymentFeePercentage) * 100) / 100;
-    const netDistributableAmount = Math.max(grossAmount - totalFeeAmount, 0);
+    // Based on tipAmount, not grossAmount — see the same fix/comment in
+    // applyVerifiedTransaction above.
+    const netDistributableAmount = Math.max(tipAmount - totalFeeAmount, 0);
 
     await this.prisma.paymentTransaction.update({
       where: { id: paymentTransaction.id },

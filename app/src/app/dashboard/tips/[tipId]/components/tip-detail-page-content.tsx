@@ -146,7 +146,17 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
             Financial breakdown
           </h2>
           <SummaryRow
-            label="Gross amount"
+            label="Tip amount"
+            value={formatMoney(tip.payment_transaction.tip_amount, tip.currency)}
+          />
+          {tip.payment_transaction.vat_amount ? (
+            <SummaryRow
+              label="VAT"
+              value={`${formatMoney(tip.payment_transaction.vat_amount, tip.currency)} (${tip.payment_transaction.vat_rate_percentage}%)`}
+            />
+          ) : null}
+          <SummaryRow
+            label="Gross amount (charged)"
             value={formatMoney(tip.payment_transaction.gross_amount, tip.currency)}
           />
           <SummaryRow

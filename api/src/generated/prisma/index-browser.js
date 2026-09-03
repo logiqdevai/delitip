@@ -163,6 +163,8 @@ exports.Prisma.OrganizationScalarFieldEnum = {
   slug: 'slug',
   is_active: 'is_active',
   logo_document_id: 'logo_document_id',
+  vat_number: 'vat_number',
+  legal_name: 'legal_name',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -214,6 +216,7 @@ exports.Prisma.StoreScalarFieldEnum = {
   currency: 'currency',
   suggested_tip_amounts: 'suggested_tip_amounts',
   allow_custom_tip_amount: 'allow_custom_tip_amount',
+  vat_rate_percentage: 'vat_rate_percentage',
   public_review_redirect_url: 'public_review_redirect_url',
   public_review_rating_threshold: 'public_review_rating_threshold',
   default_distribution_rule_id: 'default_distribution_rule_id',
@@ -331,6 +334,9 @@ exports.Prisma.PaymentTransactionScalarFieldEnum = {
   client_request_id: 'client_request_id',
   provider_order_code: 'provider_order_code',
   provider_transaction_id: 'provider_transaction_id',
+  tip_amount: 'tip_amount',
+  vat_rate_percentage: 'vat_rate_percentage',
+  vat_amount: 'vat_amount',
   gross_amount: 'gross_amount',
   currency: 'currency',
   commission_percentage_used: 'commission_percentage_used',

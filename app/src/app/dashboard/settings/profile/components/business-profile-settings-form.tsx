@@ -54,6 +54,7 @@ export const BusinessProfileSettingsForm: FC = () => {
       country: "",
       postal_code: "",
       full_address: undefined,
+      vat_rate_percentage: undefined,
     },
   });
 
@@ -67,6 +68,7 @@ export const BusinessProfileSettingsForm: FC = () => {
       country: store.country ?? "",
       postal_code: store.postal_code ?? "",
       full_address: store.full_address ?? undefined,
+      vat_rate_percentage: store.vat_rate_percentage ?? undefined,
     });
   }, [store, reset]);
 
@@ -84,6 +86,9 @@ export const BusinessProfileSettingsForm: FC = () => {
         country: values.country || undefined,
         postal_code: values.postal_code || undefined,
         full_address: values.full_address,
+        vat_rate_percentage: Number.isNaN(values.vat_rate_percentage)
+          ? undefined
+          : values.vat_rate_percentage,
       },
     });
   });
@@ -211,6 +216,29 @@ export const BusinessProfileSettingsForm: FC = () => {
             {...register("postal_code")}
           />
         </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="store-vat-rate">VAT rate (%)</Label>
+        <Input
+          id="store-vat-rate"
+          type="number"
+          min={0}
+          max={100}
+          step="0.01"
+          placeholder="e.g. 24 for Greece — leave blank if this store doesn't charge VAT on tips"
+          aria-invalid={!!errors.vat_rate_percentage}
+          {...register("vat_rate_percentage", { valueAsNumber: true })}
+        />
+        <p className="text-xs text-zinc-500">
+          Added on top of the tip amount at checkout. Leave blank or 0 if
+          this store doesn&apos;t charge VAT on tips.
+        </p>
+        {errors.vat_rate_percentage ? (
+          <p className="text-xs text-red-600">
+            {errors.vat_rate_percentage.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="pt-2">

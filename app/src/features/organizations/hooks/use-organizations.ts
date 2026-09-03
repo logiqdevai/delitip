@@ -3,8 +3,12 @@ import {
   createOrganization,
   getOrganization,
   listMyOrganizations,
+  updateOrganization,
 } from "@/features/organizations/services/organizations.services";
-import type { CreateOrganizationPayload } from "@/features/organizations/interfaces/organizations.interfaces";
+import type {
+  CreateOrganizationPayload,
+  UpdateOrganizationPayload,
+} from "@/features/organizations/interfaces/organizations.interfaces";
 import {
   createStore,
   updateStore,
@@ -52,6 +56,41 @@ export const useCreateOrganization = () => {
         queryKey: organizationsQueryKeys.root,
       });
       void queryClient.invalidateQueries({ queryKey: usersQueryKeys.accounts });
+    },
+  });
+};
+
+export const useUpdateOrganization = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: UpdateOrganizationPayload;
+    }) => updateOrganization(id, payload),
+    onSuccess: (_data, variables) => {
+      void queryClient.invalidateQueries({
+        queryKey: organizationsQueryKeys.root,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: organizationsQueryKeys.detail(variables.id),
+      });
+      void queryClient.invalidateQueries({ queryKey: usersQueryKeys.accounts });
+      toast.add({
+        title: "Billing details saved",
+        description: "Your organization's billing details were updated.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not save billing details",
+        description: error.message,
+        type: "error",
+      });
     },
   });
 };

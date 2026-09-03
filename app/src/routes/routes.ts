@@ -63,6 +63,7 @@ export const Routes = {
       alerts: "/dashboard/settings/alerts",
       members: "/dashboard/settings/members",
       billing: "/dashboard/settings/billing",
+      taxDetails: "/dashboard/settings/tax-details",
     },
   },
   employee: {

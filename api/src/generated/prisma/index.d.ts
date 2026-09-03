@@ -8455,6 +8455,8 @@ export namespace Prisma {
     slug: string | null
     is_active: boolean | null
     logo_document_id: string | null
+    vat_number: string | null
+    legal_name: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -8465,6 +8467,8 @@ export namespace Prisma {
     slug: string | null
     is_active: boolean | null
     logo_document_id: string | null
+    vat_number: string | null
+    legal_name: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -8475,6 +8479,8 @@ export namespace Prisma {
     slug: number
     is_active: number
     logo_document_id: number
+    vat_number: number
+    legal_name: number
     created_at: number
     updated_at: number
     _all: number
@@ -8487,6 +8493,8 @@ export namespace Prisma {
     slug?: true
     is_active?: true
     logo_document_id?: true
+    vat_number?: true
+    legal_name?: true
     created_at?: true
     updated_at?: true
   }
@@ -8497,6 +8505,8 @@ export namespace Prisma {
     slug?: true
     is_active?: true
     logo_document_id?: true
+    vat_number?: true
+    legal_name?: true
     created_at?: true
     updated_at?: true
   }
@@ -8507,6 +8517,8 @@ export namespace Prisma {
     slug?: true
     is_active?: true
     logo_document_id?: true
+    vat_number?: true
+    legal_name?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -8590,6 +8602,8 @@ export namespace Prisma {
     slug: string
     is_active: boolean
     logo_document_id: string | null
+    vat_number: string | null
+    legal_name: string | null
     created_at: Date
     updated_at: Date
     _count: OrganizationCountAggregateOutputType | null
@@ -8617,6 +8631,8 @@ export namespace Prisma {
     slug?: boolean
     is_active?: boolean
     logo_document_id?: boolean
+    vat_number?: boolean
+    legal_name?: boolean
     created_at?: boolean
     updated_at?: boolean
     logo_document?: boolean | Organization$logo_documentArgs<ExtArgs>
@@ -8632,6 +8648,8 @@ export namespace Prisma {
     slug?: boolean
     is_active?: boolean
     logo_document_id?: boolean
+    vat_number?: boolean
+    legal_name?: boolean
     created_at?: boolean
     updated_at?: boolean
     logo_document?: boolean | Organization$logo_documentArgs<ExtArgs>
@@ -8643,6 +8661,8 @@ export namespace Prisma {
     slug?: boolean
     is_active?: boolean
     logo_document_id?: boolean
+    vat_number?: boolean
+    legal_name?: boolean
     created_at?: boolean
     updated_at?: boolean
     logo_document?: boolean | Organization$logo_documentArgs<ExtArgs>
@@ -8654,11 +8674,13 @@ export namespace Prisma {
     slug?: boolean
     is_active?: boolean
     logo_document_id?: boolean
+    vat_number?: boolean
+    legal_name?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "is_active" | "logo_document_id" | "created_at" | "updated_at", ExtArgs["result"]["organization"]>
+  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "is_active" | "logo_document_id" | "vat_number" | "legal_name" | "created_at" | "updated_at", ExtArgs["result"]["organization"]>
   export type OrganizationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     logo_document?: boolean | Organization$logo_documentArgs<ExtArgs>
     members?: boolean | Organization$membersArgs<ExtArgs>
@@ -8687,6 +8709,8 @@ export namespace Prisma {
       slug: string
       is_active: boolean
       logo_document_id: string | null
+      vat_number: string | null
+      legal_name: string | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["organization"]>
@@ -9121,6 +9145,8 @@ export namespace Prisma {
     readonly slug: FieldRef<"Organization", 'String'>
     readonly is_active: FieldRef<"Organization", 'Boolean'>
     readonly logo_document_id: FieldRef<"Organization", 'String'>
+    readonly vat_number: FieldRef<"Organization", 'String'>
+    readonly legal_name: FieldRef<"Organization", 'String'>
     readonly created_at: FieldRef<"Organization", 'DateTime'>
     readonly updated_at: FieldRef<"Organization", 'DateTime'>
   }
@@ -11879,11 +11905,13 @@ export namespace Prisma {
 
   export type StoreAvgAggregateOutputType = {
     suggested_tip_amounts: number | null
+    vat_rate_percentage: Decimal | null
     public_review_rating_threshold: number | null
   }
 
   export type StoreSumAggregateOutputType = {
     suggested_tip_amounts: number[]
+    vat_rate_percentage: Decimal | null
     public_review_rating_threshold: number | null
   }
 
@@ -11906,6 +11934,7 @@ export namespace Prisma {
     primary_language: $Enums.Language | null
     currency: $Enums.Currency | null
     allow_custom_tip_amount: boolean | null
+    vat_rate_percentage: Decimal | null
     public_review_redirect_url: string | null
     public_review_rating_threshold: number | null
     default_distribution_rule_id: string | null
@@ -11932,6 +11961,7 @@ export namespace Prisma {
     primary_language: $Enums.Language | null
     currency: $Enums.Currency | null
     allow_custom_tip_amount: boolean | null
+    vat_rate_percentage: Decimal | null
     public_review_redirect_url: string | null
     public_review_rating_threshold: number | null
     default_distribution_rule_id: string | null
@@ -11963,6 +11993,7 @@ export namespace Prisma {
     currency: number
     suggested_tip_amounts: number
     allow_custom_tip_amount: number
+    vat_rate_percentage: number
     public_review_redirect_url: number
     public_review_rating_threshold: number
     default_distribution_rule_id: number
@@ -11974,11 +12005,13 @@ export namespace Prisma {
 
   export type StoreAvgAggregateInputType = {
     suggested_tip_amounts?: true
+    vat_rate_percentage?: true
     public_review_rating_threshold?: true
   }
 
   export type StoreSumAggregateInputType = {
     suggested_tip_amounts?: true
+    vat_rate_percentage?: true
     public_review_rating_threshold?: true
   }
 
@@ -12001,6 +12034,7 @@ export namespace Prisma {
     primary_language?: true
     currency?: true
     allow_custom_tip_amount?: true
+    vat_rate_percentage?: true
     public_review_redirect_url?: true
     public_review_rating_threshold?: true
     default_distribution_rule_id?: true
@@ -12027,6 +12061,7 @@ export namespace Prisma {
     primary_language?: true
     currency?: true
     allow_custom_tip_amount?: true
+    vat_rate_percentage?: true
     public_review_redirect_url?: true
     public_review_rating_threshold?: true
     default_distribution_rule_id?: true
@@ -12058,6 +12093,7 @@ export namespace Prisma {
     currency?: true
     suggested_tip_amounts?: true
     allow_custom_tip_amount?: true
+    vat_rate_percentage?: true
     public_review_redirect_url?: true
     public_review_rating_threshold?: true
     default_distribution_rule_id?: true
@@ -12176,6 +12212,7 @@ export namespace Prisma {
     currency: $Enums.Currency
     suggested_tip_amounts: number[]
     allow_custom_tip_amount: boolean
+    vat_rate_percentage: Decimal | null
     public_review_redirect_url: string | null
     public_review_rating_threshold: number | null
     default_distribution_rule_id: string | null
@@ -12226,6 +12263,7 @@ export namespace Prisma {
     currency?: boolean
     suggested_tip_amounts?: boolean
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: boolean
     public_review_redirect_url?: boolean
     public_review_rating_threshold?: boolean
     default_distribution_rule_id?: boolean
@@ -12277,6 +12315,7 @@ export namespace Prisma {
     currency?: boolean
     suggested_tip_amounts?: boolean
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: boolean
     public_review_redirect_url?: boolean
     public_review_rating_threshold?: boolean
     default_distribution_rule_id?: boolean
@@ -12312,6 +12351,7 @@ export namespace Prisma {
     currency?: boolean
     suggested_tip_amounts?: boolean
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: boolean
     public_review_redirect_url?: boolean
     public_review_rating_threshold?: boolean
     default_distribution_rule_id?: boolean
@@ -12347,6 +12387,7 @@ export namespace Prisma {
     currency?: boolean
     suggested_tip_amounts?: boolean
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: boolean
     public_review_redirect_url?: boolean
     public_review_rating_threshold?: boolean
     default_distribution_rule_id?: boolean
@@ -12354,7 +12395,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type StoreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organization_id" | "name" | "slug" | "industry" | "is_active" | "logo_document_id" | "cover_document_id" | "primary_color" | "secondary_color" | "welcome_message" | "thank_you_message" | "full_address" | "address_line" | "city" | "country" | "postal_code" | "timezone" | "primary_language" | "supported_languages" | "currency" | "suggested_tip_amounts" | "allow_custom_tip_amount" | "public_review_redirect_url" | "public_review_rating_threshold" | "default_distribution_rule_id" | "created_at" | "updated_at", ExtArgs["result"]["store"]>
+  export type StoreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organization_id" | "name" | "slug" | "industry" | "is_active" | "logo_document_id" | "cover_document_id" | "primary_color" | "secondary_color" | "welcome_message" | "thank_you_message" | "full_address" | "address_line" | "city" | "country" | "postal_code" | "timezone" | "primary_language" | "supported_languages" | "currency" | "suggested_tip_amounts" | "allow_custom_tip_amount" | "vat_rate_percentage" | "public_review_redirect_url" | "public_review_rating_threshold" | "default_distribution_rule_id" | "created_at" | "updated_at", ExtArgs["result"]["store"]>
   export type StoreInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     logo_document?: boolean | Store$logo_documentArgs<ExtArgs>
@@ -12437,6 +12478,7 @@ export namespace Prisma {
       currency: $Enums.Currency
       suggested_tip_amounts: number[]
       allow_custom_tip_amount: boolean
+      vat_rate_percentage: Prisma.Decimal | null
       public_review_redirect_url: string | null
       public_review_rating_threshold: number | null
       default_distribution_rule_id: string | null
@@ -12907,6 +12949,7 @@ export namespace Prisma {
     readonly currency: FieldRef<"Store", 'Currency'>
     readonly suggested_tip_amounts: FieldRef<"Store", 'Int[]'>
     readonly allow_custom_tip_amount: FieldRef<"Store", 'Boolean'>
+    readonly vat_rate_percentage: FieldRef<"Store", 'Decimal'>
     readonly public_review_redirect_url: FieldRef<"Store", 'String'>
     readonly public_review_rating_threshold: FieldRef<"Store", 'Int'>
     readonly default_distribution_rule_id: FieldRef<"Store", 'String'>
@@ -24556,6 +24599,9 @@ export namespace Prisma {
   }
 
   export type PaymentTransactionAvgAggregateOutputType = {
+    tip_amount: number | null
+    vat_rate_percentage: Decimal | null
+    vat_amount: number | null
     gross_amount: number | null
     commission_percentage_used: Decimal | null
     commission_amount: number | null
@@ -24571,6 +24617,9 @@ export namespace Prisma {
   }
 
   export type PaymentTransactionSumAggregateOutputType = {
+    tip_amount: number | null
+    vat_rate_percentage: Decimal | null
+    vat_amount: number | null
     gross_amount: number | null
     commission_percentage_used: Decimal | null
     commission_amount: number | null
@@ -24592,6 +24641,9 @@ export namespace Prisma {
     client_request_id: string | null
     provider_order_code: string | null
     provider_transaction_id: string | null
+    tip_amount: number | null
+    vat_rate_percentage: Decimal | null
+    vat_amount: number | null
     gross_amount: number | null
     currency: $Enums.Currency | null
     commission_percentage_used: Decimal | null
@@ -24621,6 +24673,9 @@ export namespace Prisma {
     client_request_id: string | null
     provider_order_code: string | null
     provider_transaction_id: string | null
+    tip_amount: number | null
+    vat_rate_percentage: Decimal | null
+    vat_amount: number | null
     gross_amount: number | null
     currency: $Enums.Currency | null
     commission_percentage_used: Decimal | null
@@ -24650,6 +24705,9 @@ export namespace Prisma {
     client_request_id: number
     provider_order_code: number
     provider_transaction_id: number
+    tip_amount: number
+    vat_rate_percentage: number
+    vat_amount: number
     gross_amount: number
     currency: number
     commission_percentage_used: number
@@ -24675,6 +24733,9 @@ export namespace Prisma {
 
 
   export type PaymentTransactionAvgAggregateInputType = {
+    tip_amount?: true
+    vat_rate_percentage?: true
+    vat_amount?: true
     gross_amount?: true
     commission_percentage_used?: true
     commission_amount?: true
@@ -24690,6 +24751,9 @@ export namespace Prisma {
   }
 
   export type PaymentTransactionSumAggregateInputType = {
+    tip_amount?: true
+    vat_rate_percentage?: true
+    vat_amount?: true
     gross_amount?: true
     commission_percentage_used?: true
     commission_amount?: true
@@ -24711,6 +24775,9 @@ export namespace Prisma {
     client_request_id?: true
     provider_order_code?: true
     provider_transaction_id?: true
+    tip_amount?: true
+    vat_rate_percentage?: true
+    vat_amount?: true
     gross_amount?: true
     currency?: true
     commission_percentage_used?: true
@@ -24740,6 +24807,9 @@ export namespace Prisma {
     client_request_id?: true
     provider_order_code?: true
     provider_transaction_id?: true
+    tip_amount?: true
+    vat_rate_percentage?: true
+    vat_amount?: true
     gross_amount?: true
     currency?: true
     commission_percentage_used?: true
@@ -24769,6 +24839,9 @@ export namespace Prisma {
     client_request_id?: true
     provider_order_code?: true
     provider_transaction_id?: true
+    tip_amount?: true
+    vat_rate_percentage?: true
+    vat_amount?: true
     gross_amount?: true
     currency?: true
     commission_percentage_used?: true
@@ -24885,6 +24958,9 @@ export namespace Prisma {
     client_request_id: string | null
     provider_order_code: string | null
     provider_transaction_id: string | null
+    tip_amount: number
+    vat_rate_percentage: Decimal | null
+    vat_amount: number | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal
@@ -24933,6 +25009,9 @@ export namespace Prisma {
     client_request_id?: boolean
     provider_order_code?: boolean
     provider_transaction_id?: boolean
+    tip_amount?: boolean
+    vat_rate_percentage?: boolean
+    vat_amount?: boolean
     gross_amount?: boolean
     currency?: boolean
     commission_percentage_used?: boolean
@@ -24963,6 +25042,9 @@ export namespace Prisma {
     client_request_id?: boolean
     provider_order_code?: boolean
     provider_transaction_id?: boolean
+    tip_amount?: boolean
+    vat_rate_percentage?: boolean
+    vat_amount?: boolean
     gross_amount?: boolean
     currency?: boolean
     commission_percentage_used?: boolean
@@ -24993,6 +25075,9 @@ export namespace Prisma {
     client_request_id?: boolean
     provider_order_code?: boolean
     provider_transaction_id?: boolean
+    tip_amount?: boolean
+    vat_rate_percentage?: boolean
+    vat_amount?: boolean
     gross_amount?: boolean
     currency?: boolean
     commission_percentage_used?: boolean
@@ -25023,6 +25108,9 @@ export namespace Prisma {
     client_request_id?: boolean
     provider_order_code?: boolean
     provider_transaction_id?: boolean
+    tip_amount?: boolean
+    vat_rate_percentage?: boolean
+    vat_amount?: boolean
     gross_amount?: boolean
     currency?: boolean
     commission_percentage_used?: boolean
@@ -25045,7 +25133,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type PaymentTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "provider" | "client_request_id" | "provider_order_code" | "provider_transaction_id" | "gross_amount" | "currency" | "commission_percentage_used" | "commission_amount" | "platform_fee_percentage" | "processor_fee_percentage_used" | "processor_fee_estimated" | "processor_fee_confirmed_amount" | "processor_fee_confirmed" | "payment_fee_percentage" | "total_fee_amount" | "total_fee_percentage" | "total_fee_percentage_sum" | "net_distributable_amount" | "payment_method" | "status" | "failure_reason" | "confirmed_at" | "created_at" | "updated_at", ExtArgs["result"]["paymentTransaction"]>
+  export type PaymentTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "provider" | "client_request_id" | "provider_order_code" | "provider_transaction_id" | "tip_amount" | "vat_rate_percentage" | "vat_amount" | "gross_amount" | "currency" | "commission_percentage_used" | "commission_amount" | "platform_fee_percentage" | "processor_fee_percentage_used" | "processor_fee_estimated" | "processor_fee_confirmed_amount" | "processor_fee_confirmed" | "payment_fee_percentage" | "total_fee_amount" | "total_fee_percentage" | "total_fee_percentage_sum" | "net_distributable_amount" | "payment_method" | "status" | "failure_reason" | "confirmed_at" | "created_at" | "updated_at", ExtArgs["result"]["paymentTransaction"]>
   export type PaymentTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
   }
@@ -25068,6 +25156,9 @@ export namespace Prisma {
       client_request_id: string | null
       provider_order_code: string | null
       provider_transaction_id: string | null
+      tip_amount: number
+      vat_rate_percentage: Prisma.Decimal | null
+      vat_amount: number | null
       gross_amount: number
       currency: $Enums.Currency
       commission_percentage_used: Prisma.Decimal
@@ -25518,6 +25609,9 @@ export namespace Prisma {
     readonly client_request_id: FieldRef<"PaymentTransaction", 'String'>
     readonly provider_order_code: FieldRef<"PaymentTransaction", 'String'>
     readonly provider_transaction_id: FieldRef<"PaymentTransaction", 'String'>
+    readonly tip_amount: FieldRef<"PaymentTransaction", 'Int'>
+    readonly vat_rate_percentage: FieldRef<"PaymentTransaction", 'Decimal'>
+    readonly vat_amount: FieldRef<"PaymentTransaction", 'Int'>
     readonly gross_amount: FieldRef<"PaymentTransaction", 'Int'>
     readonly currency: FieldRef<"PaymentTransaction", 'Currency'>
     readonly commission_percentage_used: FieldRef<"PaymentTransaction", 'Decimal'>
@@ -42210,6 +42304,8 @@ export namespace Prisma {
     slug: 'slug',
     is_active: 'is_active',
     logo_document_id: 'logo_document_id',
+    vat_number: 'vat_number',
+    legal_name: 'legal_name',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -42270,6 +42366,7 @@ export namespace Prisma {
     currency: 'currency',
     suggested_tip_amounts: 'suggested_tip_amounts',
     allow_custom_tip_amount: 'allow_custom_tip_amount',
+    vat_rate_percentage: 'vat_rate_percentage',
     public_review_redirect_url: 'public_review_redirect_url',
     public_review_rating_threshold: 'public_review_rating_threshold',
     default_distribution_rule_id: 'default_distribution_rule_id',
@@ -42417,6 +42514,9 @@ export namespace Prisma {
     client_request_id: 'client_request_id',
     provider_order_code: 'provider_order_code',
     provider_transaction_id: 'provider_transaction_id',
+    tip_amount: 'tip_amount',
+    vat_rate_percentage: 'vat_rate_percentage',
+    vat_amount: 'vat_amount',
     gross_amount: 'gross_amount',
     currency: 'currency',
     commission_percentage_used: 'commission_percentage_used',
@@ -42872,6 +42972,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
    * Reference to a field of type 'QrCodeSelectionMode'
    */
   export type EnumQrCodeSelectionModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QrCodeSelectionMode'>
@@ -42896,20 +43010,6 @@ export namespace Prisma {
    * Reference to a field of type 'DistributionRecipientType[]'
    */
   export type ListEnumDistributionRecipientTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DistributionRecipientType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Decimal'
-   */
-  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-  /**
-   * Reference to a field of type 'Decimal[]'
-   */
-  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -43375,6 +43475,8 @@ export namespace Prisma {
     slug?: StringFilter<"Organization"> | string
     is_active?: BoolFilter<"Organization"> | boolean
     logo_document_id?: StringNullableFilter<"Organization"> | string | null
+    vat_number?: StringNullableFilter<"Organization"> | string | null
+    legal_name?: StringNullableFilter<"Organization"> | string | null
     created_at?: DateTimeFilter<"Organization"> | Date | string
     updated_at?: DateTimeFilter<"Organization"> | Date | string
     logo_document?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
@@ -43389,6 +43491,8 @@ export namespace Prisma {
     slug?: SortOrder
     is_active?: SortOrder
     logo_document_id?: SortOrderInput | SortOrder
+    vat_number?: SortOrderInput | SortOrder
+    legal_name?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     logo_document?: DocumentOrderByWithRelationInput
@@ -43406,6 +43510,8 @@ export namespace Prisma {
     name?: StringFilter<"Organization"> | string
     is_active?: BoolFilter<"Organization"> | boolean
     logo_document_id?: StringNullableFilter<"Organization"> | string | null
+    vat_number?: StringNullableFilter<"Organization"> | string | null
+    legal_name?: StringNullableFilter<"Organization"> | string | null
     created_at?: DateTimeFilter<"Organization"> | Date | string
     updated_at?: DateTimeFilter<"Organization"> | Date | string
     logo_document?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
@@ -43420,6 +43526,8 @@ export namespace Prisma {
     slug?: SortOrder
     is_active?: SortOrder
     logo_document_id?: SortOrderInput | SortOrder
+    vat_number?: SortOrderInput | SortOrder
+    legal_name?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: OrganizationCountOrderByAggregateInput
@@ -43436,6 +43544,8 @@ export namespace Prisma {
     slug?: StringWithAggregatesFilter<"Organization"> | string
     is_active?: BoolWithAggregatesFilter<"Organization"> | boolean
     logo_document_id?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    vat_number?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    legal_name?: StringNullableWithAggregatesFilter<"Organization"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"Organization"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Organization"> | Date | string
   }
@@ -43619,6 +43729,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFilter<"Store"> | $Enums.Currency
     suggested_tip_amounts?: IntNullableListFilter<"Store">
     allow_custom_tip_amount?: BoolFilter<"Store"> | boolean
+    vat_rate_percentage?: DecimalNullableFilter<"Store"> | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: StringNullableFilter<"Store"> | string | null
     public_review_rating_threshold?: IntNullableFilter<"Store"> | number | null
     default_distribution_rule_id?: StringNullableFilter<"Store"> | string | null
@@ -43669,6 +43780,7 @@ export namespace Prisma {
     currency?: SortOrder
     suggested_tip_amounts?: SortOrder
     allow_custom_tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrderInput | SortOrder
     public_review_redirect_url?: SortOrderInput | SortOrder
     public_review_rating_threshold?: SortOrderInput | SortOrder
     default_distribution_rule_id?: SortOrderInput | SortOrder
@@ -43723,6 +43835,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFilter<"Store"> | $Enums.Currency
     suggested_tip_amounts?: IntNullableListFilter<"Store">
     allow_custom_tip_amount?: BoolFilter<"Store"> | boolean
+    vat_rate_percentage?: DecimalNullableFilter<"Store"> | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: StringNullableFilter<"Store"> | string | null
     public_review_rating_threshold?: IntNullableFilter<"Store"> | number | null
     created_at?: DateTimeFilter<"Store"> | Date | string
@@ -43772,6 +43885,7 @@ export namespace Prisma {
     currency?: SortOrder
     suggested_tip_amounts?: SortOrder
     allow_custom_tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrderInput | SortOrder
     public_review_redirect_url?: SortOrderInput | SortOrder
     public_review_rating_threshold?: SortOrderInput | SortOrder
     default_distribution_rule_id?: SortOrderInput | SortOrder
@@ -43811,6 +43925,7 @@ export namespace Prisma {
     currency?: EnumCurrencyWithAggregatesFilter<"Store"> | $Enums.Currency
     suggested_tip_amounts?: IntNullableListFilter<"Store">
     allow_custom_tip_amount?: BoolWithAggregatesFilter<"Store"> | boolean
+    vat_rate_percentage?: DecimalNullableWithAggregatesFilter<"Store"> | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: StringNullableWithAggregatesFilter<"Store"> | string | null
     public_review_rating_threshold?: IntNullableWithAggregatesFilter<"Store"> | number | null
     default_distribution_rule_id?: StringNullableWithAggregatesFilter<"Store"> | string | null
@@ -44578,6 +44693,9 @@ export namespace Prisma {
     client_request_id?: StringNullableFilter<"PaymentTransaction"> | string | null
     provider_order_code?: StringNullableFilter<"PaymentTransaction"> | string | null
     provider_transaction_id?: StringNullableFilter<"PaymentTransaction"> | string | null
+    tip_amount?: IntFilter<"PaymentTransaction"> | number
+    vat_rate_percentage?: DecimalNullableFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
+    vat_amount?: IntNullableFilter<"PaymentTransaction"> | number | null
     gross_amount?: IntFilter<"PaymentTransaction"> | number
     currency?: EnumCurrencyFilter<"PaymentTransaction"> | $Enums.Currency
     commission_percentage_used?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
@@ -44608,6 +44726,9 @@ export namespace Prisma {
     client_request_id?: SortOrderInput | SortOrder
     provider_order_code?: SortOrderInput | SortOrder
     provider_transaction_id?: SortOrderInput | SortOrder
+    tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrderInput | SortOrder
+    vat_amount?: SortOrderInput | SortOrder
     gross_amount?: SortOrder
     currency?: SortOrder
     commission_percentage_used?: SortOrder
@@ -44641,6 +44762,9 @@ export namespace Prisma {
     OR?: PaymentTransactionWhereInput[]
     NOT?: PaymentTransactionWhereInput | PaymentTransactionWhereInput[]
     provider?: EnumPaymentProviderFilter<"PaymentTransaction"> | $Enums.PaymentProvider
+    tip_amount?: IntFilter<"PaymentTransaction"> | number
+    vat_rate_percentage?: DecimalNullableFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
+    vat_amount?: IntNullableFilter<"PaymentTransaction"> | number | null
     gross_amount?: IntFilter<"PaymentTransaction"> | number
     currency?: EnumCurrencyFilter<"PaymentTransaction"> | $Enums.Currency
     commission_percentage_used?: DecimalFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
@@ -44671,6 +44795,9 @@ export namespace Prisma {
     client_request_id?: SortOrderInput | SortOrder
     provider_order_code?: SortOrderInput | SortOrder
     provider_transaction_id?: SortOrderInput | SortOrder
+    tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrderInput | SortOrder
+    vat_amount?: SortOrderInput | SortOrder
     gross_amount?: SortOrder
     currency?: SortOrder
     commission_percentage_used?: SortOrder
@@ -44708,6 +44835,9 @@ export namespace Prisma {
     client_request_id?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
     provider_order_code?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
     provider_transaction_id?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
+    tip_amount?: IntWithAggregatesFilter<"PaymentTransaction"> | number
+    vat_rate_percentage?: DecimalNullableWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string | null
+    vat_amount?: IntNullableWithAggregatesFilter<"PaymentTransaction"> | number | null
     gross_amount?: IntWithAggregatesFilter<"PaymentTransaction"> | number
     currency?: EnumCurrencyWithAggregatesFilter<"PaymentTransaction"> | $Enums.Currency
     commission_percentage_used?: DecimalWithAggregatesFilter<"PaymentTransaction"> | Decimal | DecimalJsLike | number | string
@@ -46130,6 +46260,8 @@ export namespace Prisma {
     name: string
     slug: string
     is_active?: boolean
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     logo_document?: DocumentCreateNestedOneWithoutOrganizations_logoInput
@@ -46144,6 +46276,8 @@ export namespace Prisma {
     slug: string
     is_active?: boolean
     logo_document_id?: string | null
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
@@ -46156,6 +46290,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     logo_document?: DocumentUpdateOneWithoutOrganizations_logoNestedInput
@@ -46170,6 +46306,8 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
     logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -46183,6 +46321,8 @@ export namespace Prisma {
     slug: string
     is_active?: boolean
     logo_document_id?: string | null
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -46192,6 +46332,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46202,6 +46344,8 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
     logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46384,6 +46528,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -46433,6 +46578,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -46476,6 +46622,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46525,6 +46672,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46571,6 +46719,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -46599,6 +46748,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46629,6 +46779,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47423,6 +47574,9 @@ export namespace Prisma {
     client_request_id?: string | null
     provider_order_code?: string | null
     provider_transaction_id?: string | null
+    tip_amount: number
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    vat_amount?: number | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
@@ -47453,6 +47607,9 @@ export namespace Prisma {
     client_request_id?: string | null
     provider_order_code?: string | null
     provider_transaction_id?: string | null
+    tip_amount: number
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    vat_amount?: number | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
@@ -47481,6 +47638,9 @@ export namespace Prisma {
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
     provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    tip_amount?: IntFieldUpdateOperationsInput | number
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    vat_amount?: NullableIntFieldUpdateOperationsInput | number | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -47511,6 +47671,9 @@ export namespace Prisma {
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
     provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    tip_amount?: IntFieldUpdateOperationsInput | number
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    vat_amount?: NullableIntFieldUpdateOperationsInput | number | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -47540,6 +47703,9 @@ export namespace Prisma {
     client_request_id?: string | null
     provider_order_code?: string | null
     provider_transaction_id?: string | null
+    tip_amount: number
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    vat_amount?: number | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
@@ -47568,6 +47734,9 @@ export namespace Prisma {
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
     provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    tip_amount?: IntFieldUpdateOperationsInput | number
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    vat_amount?: NullableIntFieldUpdateOperationsInput | number | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -47597,6 +47766,9 @@ export namespace Prisma {
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
     provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    tip_amount?: IntFieldUpdateOperationsInput | number
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    vat_amount?: NullableIntFieldUpdateOperationsInput | number | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -49164,6 +49336,8 @@ export namespace Prisma {
     slug?: SortOrder
     is_active?: SortOrder
     logo_document_id?: SortOrder
+    vat_number?: SortOrder
+    legal_name?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -49174,6 +49348,8 @@ export namespace Prisma {
     slug?: SortOrder
     is_active?: SortOrder
     logo_document_id?: SortOrder
+    vat_number?: SortOrder
+    legal_name?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -49184,6 +49360,8 @@ export namespace Prisma {
     slug?: SortOrder
     is_active?: SortOrder
     logo_document_id?: SortOrder
+    vat_number?: SortOrder
+    legal_name?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -49385,6 +49563,17 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -49525,6 +49714,7 @@ export namespace Prisma {
     currency?: SortOrder
     suggested_tip_amounts?: SortOrder
     allow_custom_tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrder
     public_review_redirect_url?: SortOrder
     public_review_rating_threshold?: SortOrder
     default_distribution_rule_id?: SortOrder
@@ -49534,6 +49724,7 @@ export namespace Prisma {
 
   export type StoreAvgOrderByAggregateInput = {
     suggested_tip_amounts?: SortOrder
+    vat_rate_percentage?: SortOrder
     public_review_rating_threshold?: SortOrder
   }
 
@@ -49556,6 +49747,7 @@ export namespace Prisma {
     primary_language?: SortOrder
     currency?: SortOrder
     allow_custom_tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrder
     public_review_redirect_url?: SortOrder
     public_review_rating_threshold?: SortOrder
     default_distribution_rule_id?: SortOrder
@@ -49582,6 +49774,7 @@ export namespace Prisma {
     primary_language?: SortOrder
     currency?: SortOrder
     allow_custom_tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrder
     public_review_redirect_url?: SortOrder
     public_review_rating_threshold?: SortOrder
     default_distribution_rule_id?: SortOrder
@@ -49591,6 +49784,7 @@ export namespace Prisma {
 
   export type StoreSumOrderByAggregateInput = {
     suggested_tip_amounts?: SortOrder
+    vat_rate_percentage?: SortOrder
     public_review_rating_threshold?: SortOrder
   }
 
@@ -49648,6 +49842,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCurrencyFilter<$PrismaModel>
     _max?: NestedEnumCurrencyFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -50301,17 +50511,6 @@ export namespace Prisma {
     _max?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
   }
 
-  export type DecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type EnumPaymentTransactionStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentTransactionStatus | EnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentTransactionStatus[] | ListEnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
@@ -50331,6 +50530,9 @@ export namespace Prisma {
     client_request_id?: SortOrder
     provider_order_code?: SortOrder
     provider_transaction_id?: SortOrder
+    tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrder
+    vat_amount?: SortOrder
     gross_amount?: SortOrder
     currency?: SortOrder
     commission_percentage_used?: SortOrder
@@ -50354,6 +50556,9 @@ export namespace Prisma {
   }
 
   export type PaymentTransactionAvgOrderByAggregateInput = {
+    tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrder
+    vat_amount?: SortOrder
     gross_amount?: SortOrder
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
@@ -50375,6 +50580,9 @@ export namespace Prisma {
     client_request_id?: SortOrder
     provider_order_code?: SortOrder
     provider_transaction_id?: SortOrder
+    tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrder
+    vat_amount?: SortOrder
     gross_amount?: SortOrder
     currency?: SortOrder
     commission_percentage_used?: SortOrder
@@ -50404,6 +50612,9 @@ export namespace Prisma {
     client_request_id?: SortOrder
     provider_order_code?: SortOrder
     provider_transaction_id?: SortOrder
+    tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrder
+    vat_amount?: SortOrder
     gross_amount?: SortOrder
     currency?: SortOrder
     commission_percentage_used?: SortOrder
@@ -50427,6 +50638,9 @@ export namespace Prisma {
   }
 
   export type PaymentTransactionSumOrderByAggregateInput = {
+    tip_amount?: SortOrder
+    vat_rate_percentage?: SortOrder
+    vat_amount?: SortOrder
     gross_amount?: SortOrder
     commission_percentage_used?: SortOrder
     commission_amount?: SortOrder
@@ -50439,22 +50653,6 @@ export namespace Prisma {
     total_fee_percentage?: SortOrder
     total_fee_percentage_sum?: SortOrder
     net_distributable_amount?: SortOrder
-  }
-
-  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type EnumPaymentTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -52271,6 +52469,14 @@ export namespace Prisma {
     push?: number | number[]
   }
 
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -53883,14 +54089,6 @@ export namespace Prisma {
     connect?: TipWhereUniqueInput
   }
 
-  export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string | null
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
-  }
-
   export type EnumPaymentTransactionStatusFieldUpdateOperationsInput = {
     set?: $Enums.PaymentTransactionStatus
   }
@@ -54885,6 +55083,17 @@ export namespace Prisma {
     not?: NestedEnumCurrencyFilter<$PrismaModel> | $Enums.Currency
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type NestedEnumStoreIndustryWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.StoreIndustry | EnumStoreIndustryFieldRefInput<$PrismaModel>
     in?: $Enums.StoreIndustry[] | ListEnumStoreIndustryFieldRefInput<$PrismaModel>
@@ -54936,6 +55145,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCurrencyFilter<$PrismaModel>
     _max?: NestedEnumCurrencyFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -55151,38 +55376,11 @@ export namespace Prisma {
     _max?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
   }
 
-  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type NestedEnumPaymentTransactionStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentTransactionStatus | EnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentTransactionStatus[] | ListEnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.PaymentTransactionStatus[] | ListEnumPaymentTransactionStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumPaymentTransactionStatusFilter<$PrismaModel> | $Enums.PaymentTransactionStatus
-  }
-
-  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumPaymentTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -56130,6 +56328,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -56177,6 +56376,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -56230,6 +56430,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -56277,6 +56478,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -56314,6 +56516,8 @@ export namespace Prisma {
     name: string
     slug: string
     is_active?: boolean
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     members?: OrganizationMemberCreateNestedManyWithoutOrganizationInput
@@ -56326,6 +56530,8 @@ export namespace Prisma {
     name: string
     slug: string
     is_active?: boolean
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
@@ -56495,6 +56701,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFilter<"Store"> | $Enums.Currency
     suggested_tip_amounts?: IntNullableListFilter<"Store">
     allow_custom_tip_amount?: BoolFilter<"Store"> | boolean
+    vat_rate_percentage?: DecimalNullableFilter<"Store"> | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: StringNullableFilter<"Store"> | string | null
     public_review_rating_threshold?: IntNullableFilter<"Store"> | number | null
     default_distribution_rule_id?: StringNullableFilter<"Store"> | string | null
@@ -56543,6 +56750,8 @@ export namespace Prisma {
     slug?: StringFilter<"Organization"> | string
     is_active?: BoolFilter<"Organization"> | boolean
     logo_document_id?: StringNullableFilter<"Organization"> | string | null
+    vat_number?: StringNullableFilter<"Organization"> | string | null
+    legal_name?: StringNullableFilter<"Organization"> | string | null
     created_at?: DateTimeFilter<"Organization"> | Date | string
     updated_at?: DateTimeFilter<"Organization"> | Date | string
   }
@@ -56647,6 +56856,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -56694,6 +56904,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -56868,6 +57079,8 @@ export namespace Prisma {
     name: string
     slug: string
     is_active?: boolean
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     logo_document?: DocumentCreateNestedOneWithoutOrganizations_logoInput
@@ -56881,6 +57094,8 @@ export namespace Prisma {
     slug: string
     is_active?: boolean
     logo_document_id?: string | null
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     stores?: StoreUncheckedCreateNestedManyWithoutOrganizationInput
@@ -56966,6 +57181,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -57014,6 +57230,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -57056,6 +57273,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     logo_document?: DocumentUpdateOneWithoutOrganizations_logoNestedInput
@@ -57069,6 +57288,8 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
     logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     stores?: StoreUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -57166,6 +57387,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -57214,6 +57436,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57240,6 +57463,8 @@ export namespace Prisma {
     name: string
     slug: string
     is_active?: boolean
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     logo_document?: DocumentCreateNestedOneWithoutOrganizations_logoInput
@@ -57253,6 +57478,8 @@ export namespace Prisma {
     slug: string
     is_active?: boolean
     logo_document_id?: string | null
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
@@ -57280,6 +57507,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     logo_document?: DocumentUpdateOneWithoutOrganizations_logoNestedInput
@@ -57293,6 +57522,8 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
     logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -57304,6 +57535,8 @@ export namespace Prisma {
     name: string
     slug: string
     is_active?: boolean
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     logo_document?: DocumentCreateNestedOneWithoutOrganizations_logoInput
@@ -57317,6 +57550,8 @@ export namespace Prisma {
     slug: string
     is_active?: boolean
     logo_document_id?: string | null
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
@@ -57980,6 +58215,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     logo_document?: DocumentUpdateOneWithoutOrganizations_logoNestedInput
@@ -57993,6 +58230,8 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
     logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -58541,6 +58780,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -58589,6 +58829,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -58995,6 +59236,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59043,6 +59285,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59336,6 +59579,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -59384,6 +59628,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -59464,6 +59709,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59512,6 +59758,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59580,6 +59827,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -59628,6 +59876,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -59813,6 +60062,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59861,6 +60111,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60276,6 +60527,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -60324,6 +60576,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -60399,6 +60652,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -60447,6 +60701,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -60599,6 +60854,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60647,6 +60903,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60716,6 +60973,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60764,6 +61022,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60994,6 +61253,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -61042,6 +61302,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -61197,6 +61458,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61245,6 +61507,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61362,6 +61625,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -61410,6 +61674,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -61713,6 +61978,9 @@ export namespace Prisma {
     client_request_id?: string | null
     provider_order_code?: string | null
     provider_transaction_id?: string | null
+    tip_amount: number
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    vat_amount?: number | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
@@ -61741,6 +62009,9 @@ export namespace Prisma {
     client_request_id?: string | null
     provider_order_code?: string | null
     provider_transaction_id?: string | null
+    tip_amount: number
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    vat_amount?: number | null
     gross_amount: number
     currency: $Enums.Currency
     commission_percentage_used: Decimal | DecimalJsLike | number | string
@@ -61800,6 +62071,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61848,6 +62120,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62147,6 +62420,9 @@ export namespace Prisma {
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
     provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    tip_amount?: IntFieldUpdateOperationsInput | number
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    vat_amount?: NullableIntFieldUpdateOperationsInput | number | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -62175,6 +62451,9 @@ export namespace Prisma {
     client_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     provider_order_code?: NullableStringFieldUpdateOperationsInput | string | null
     provider_transaction_id?: NullableStringFieldUpdateOperationsInput | string | null
+    tip_amount?: IntFieldUpdateOperationsInput | number
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    vat_amount?: NullableIntFieldUpdateOperationsInput | number | null
     gross_amount?: IntFieldUpdateOperationsInput | number
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     commission_percentage_used?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -62614,6 +62893,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -62662,6 +62942,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -62836,6 +63117,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -62884,6 +63166,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63368,6 +63651,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -63416,6 +63700,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -63695,6 +63980,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -63743,6 +64029,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64033,6 +64320,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -64081,6 +64369,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -64163,6 +64452,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64211,6 +64501,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64413,6 +64704,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -64461,6 +64753,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -64541,6 +64834,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64589,6 +64883,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64791,6 +65086,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -64839,6 +65135,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -64923,6 +65220,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64971,6 +65269,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65177,6 +65476,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -65225,6 +65525,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -65283,6 +65584,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65331,6 +65633,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65373,6 +65676,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -65421,6 +65725,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -65524,6 +65829,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65572,6 +65878,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65665,6 +65972,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     created_at?: Date | string
@@ -65713,6 +66021,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -65771,6 +66080,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65819,6 +66129,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66311,6 +66622,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -66341,6 +66653,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -66353,6 +66666,8 @@ export namespace Prisma {
     name: string
     slug: string
     is_active?: boolean
+    vat_number?: string | null
+    legal_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -66391,6 +66706,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66438,6 +66754,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66483,6 +66800,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66511,6 +66829,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66558,6 +66877,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66603,6 +66923,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66615,6 +66936,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: OrganizationMemberUpdateManyWithoutOrganizationNestedInput
@@ -66627,6 +66950,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -66639,6 +66964,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     is_active?: BoolFieldUpdateOperationsInput | boolean
+    vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -66728,6 +67055,7 @@ export namespace Prisma {
     currency?: $Enums.Currency
     suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: string | null
     public_review_rating_threshold?: number | null
     default_distribution_rule_id?: string | null
@@ -66783,6 +67111,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66830,6 +67159,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66875,6 +67205,7 @@ export namespace Prisma {
     currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
     allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
     public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
     default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null

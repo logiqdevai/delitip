@@ -343,6 +343,9 @@ describe('TipsService', () => {
             expect(prisma.paymentTransaction.create).toHaveBeenCalledWith(
                 expect.objectContaining({
                     data: expect.objectContaining({
+                        tip_amount: 1000,
+                        vat_rate_percentage: 0,
+                        vat_amount: 0,
                         gross_amount: 1000,
                         commission_percentage_used: 5,
                         commission_amount: 50,
@@ -354,6 +357,28 @@ describe('TipsService', () => {
             );
             expect(prisma.tipDistribution.createMany).not.toHaveBeenCalled();
             expect(result).toEqual({ tip_id: 'tip1', checkout_url: expect.stringContaining('123456789') });
+        });
+
+        it('adds VAT on top of the tip amount when the store has a vat_rate_percentage set, without changing the commission base', async () => {
+            prisma.qrCode.findUnique.mockResolvedValue(qrCode({ store: store({ vat_rate_percentage: 24 }) }));
+
+            await service.createPublicTip(baseDto({ amount: 1000 }));
+
+            expect(prisma.paymentTransaction.create).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        tip_amount: 1000,
+                        vat_rate_percentage: 24,
+                        vat_amount: 240,
+                        gross_amount: 1240,
+                        commission_amount: 50, // still 5% of the net tip_amount, unaffected by VAT
+                    }),
+                }),
+            );
+            // Viva charges the VAT-inclusive total; tipAmount stays the net gratuity marker.
+            expect(vivaCheckout.createOrder).toHaveBeenCalledWith(
+                expect.objectContaining({ amount: 1240, tipAmount: 1000 }),
+            );
         });
 
         it('reuses an in-flight order for the same client_request_id instead of creating a new one', async () => {
@@ -649,19 +674,19 @@ describe('TipsService', () => {
         });
 
         it('asserts store access using the tip\'s store_id and returns the tip with financials for an OWNER', async () => {
-            const tip = { id: 'tip1', store_id: 'store1', payment_transaction: { gross_amount: 1000 } };
+            const tip = { id: 'tip1', store_id: 'store1', payment_transaction: { tip_amount: 1000, gross_amount: 1000 } };
             prisma.tip.findUnique.mockResolvedValue(tip);
             prisma.store.findUnique.mockResolvedValue(store());
 
             const result = await service.findOne(user, 'tip1');
 
             expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1');
-            expect(result.payment_transaction).toEqual({ gross_amount: 1000 });
+            expect(result.payment_transaction).toEqual({ tip_amount: 1000, gross_amount: 1000 });
         });
 
         it('strips the financial breakdown for a non-OWNER/ACCOUNTANT store member', async () => {
             accessControl.assertStoreAccess.mockResolvedValue({ membership: { role: OrganizationRole.STORE_MANAGER }, organizationId: 'org1' });
-            const tip = { id: 'tip1', store_id: 'store1', payment_transaction: { gross_amount: 1000 } };
+            const tip = { id: 'tip1', store_id: 'store1', payment_transaction: { tip_amount: 1000, gross_amount: 1000 } };
             prisma.tip.findUnique.mockResolvedValue(tip);
             prisma.store.findUnique.mockResolvedValue(store());
 

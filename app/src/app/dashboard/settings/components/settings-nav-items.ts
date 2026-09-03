@@ -2,6 +2,7 @@ import {
   Bell,
   Building2,
   CreditCard,
+  FileText,
   Globe,
   Link2,
   MessageSquare,
@@ -79,5 +80,11 @@ export const settingsNavItems: SettingsNavItem[] = [
     label: "Billing",
     description: "Manage your subscription plan.",
     icon: CreditCard,
+  },
+  {
+    href: Routes.dashboard.settings.taxDetails,
+    label: "Tax Details",
+    description: "VAT number and legal name used for invoicing.",
+    icon: FileText,
   },
 ];

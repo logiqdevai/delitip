@@ -118,6 +118,9 @@ export interface PaymentTransaction {
   provider: PaymentProvider;
   provider_order_code?: string | null;
   provider_transaction_id?: string | null;
+  tip_amount: number;
+  vat_rate_percentage?: number | null;
+  vat_amount?: number | null;
   gross_amount: number;
   currency: Currency;
   commission_percentage_used: number;

@@ -17,8 +17,18 @@ export interface Organization {
   slug: string;
   is_active: boolean;
   logo_document_id?: string | null;
+  vat_number?: string | null;
+  legal_name?: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface UpdateOrganizationPayload {
+  name?: string;
+  is_active?: boolean;
+  logo_document_id?: string;
+  vat_number?: string;
+  legal_name?: string;
 }
 
 export interface OrganizationMember {

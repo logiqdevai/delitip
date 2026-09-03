@@ -17,4 +17,14 @@ export class UpdateOrganizationDto {
     @IsOptional()
     @IsString()
     logo_document_id?: string;
+
+    @ApiProperty({ required: false, description: 'VAT registration number, for invoicing' })
+    @IsOptional()
+    @IsString()
+    vat_number?: string;
+
+    @ApiProperty({ required: false, description: 'Registered legal entity name, may differ from the customer-facing name' })
+    @IsOptional()
+    @IsString()
+    legal_name?: string;
 }

@@ -8,6 +8,7 @@ import type {
   OrganizationMembership,
   OrganizationMemberWithRefs,
   UpdateMemberPayload,
+  UpdateOrganizationPayload,
 } from "@/features/organizations/interfaces/organizations.interfaces";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 
@@ -79,6 +80,26 @@ export const getOrganization = async (id: string): Promise<Organization> => {
       getApiErrorMessage(
         error,
         "Failed to load organization. Please try again.",
+      ),
+    );
+  }
+};
+
+export const updateOrganization = async (
+  id: string,
+  payload: UpdateOrganizationPayload,
+): Promise<Organization> => {
+  try {
+    const response = await axiosInstance.patch<Organization>(
+      ApiRoutes.organizations.byId(id),
+      payload,
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(
+        error,
+        "Failed to update organization. Please try again.",
       ),
     );
   }
