@@ -18,7 +18,7 @@ export class AnalyticsController {
     @Get('overview')
     @ApiOperation({ summary: 'Dashboard overview: tips, transactions, reviews, rating, employees recognized (§14)' })
     @ApiQuery({ name: 'store_id', required: false })
-    @ApiQuery({ name: 'period', required: false, enum: ['today', '7d', '30d'] })
+    @ApiQuery({ name: 'period', required: false, enum: ['today', '7d', '30d', 'all'] })
     overview(
         @CurrentUser() user: AuthUser,
         @Param('organizationId') organizationId: string,
@@ -44,7 +44,7 @@ export class AnalyticsController {
     @Get('employees-performance')
     @ApiOperation({ summary: 'Per-employee informational stats — not a ranking (§16)' })
     @ApiQuery({ name: 'store_id', required: false })
-    @ApiQuery({ name: 'period', required: false, enum: ['today', '7d', '30d'] })
+    @ApiQuery({ name: 'period', required: false, enum: ['today', '7d', '30d', 'all'] })
     employeesPerformance(
         @CurrentUser() user: AuthUser,
         @Param('organizationId') organizationId: string,
@@ -55,7 +55,7 @@ export class AnalyticsController {
 
     @Get('stores-performance')
     @ApiOperation({ summary: 'Per-store rollup across every accessible store (§17)' })
-    @ApiQuery({ name: 'period', required: false, enum: ['today', '7d', '30d'] })
+    @ApiQuery({ name: 'period', required: false, enum: ['today', '7d', '30d', 'all'] })
     storesPerformance(
         @CurrentUser() user: AuthUser,
         @Param('organizationId') organizationId: string,
@@ -67,7 +67,7 @@ export class AnalyticsController {
     @Get('experience-score')
     @ApiOperation({ summary: 'Composite 0-100 experience score with a breakdown and explanation (§18)' })
     @ApiQuery({ name: 'store_id', required: false })
-    @ApiQuery({ name: 'period', required: false, enum: ['today', '7d', '30d'] })
+    @ApiQuery({ name: 'period', required: false, enum: ['today', '7d', '30d', 'all'] })
     experienceScore(
         @CurrentUser() user: AuthUser,
         @Param('organizationId') organizationId: string,

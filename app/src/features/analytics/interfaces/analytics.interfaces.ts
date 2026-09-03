@@ -1,4 +1,4 @@
-export type DashboardPeriod = "today" | "7d" | "30d";
+export type DashboardPeriod = "today" | "7d" | "30d" | "all";
 export type TrendsPeriod = "7d" | "30d" | "90d";
 export type TrendsMetric = "tips" | "reviews" | "rating";
 export type TrendsGroupBy = "day" | "week" | "month";

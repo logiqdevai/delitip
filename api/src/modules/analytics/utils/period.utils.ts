@@ -1,9 +1,10 @@
-export type DashboardPeriod = 'today' | '7d' | '30d' | '90d';
+export type DashboardPeriod = 'today' | '7d' | '30d' | '90d' | 'all';
 export type BucketGroupBy = 'day' | 'week' | 'month';
 
 /**
  * Resolves a `?period=` query value into a concrete date range ending now.
- * `today` = start of today (local) through now; `7d`/`30d`/`90d` = N days back through now.
+ * `today` = start of today (local) through now; `7d`/`30d`/`90d` = N days back through now;
+ * `all` = epoch through now (lifetime totals).
  */
 export function resolvePeriod(period: DashboardPeriod = '7d'): { gte: Date; lte: Date } {
     const now = new Date();
@@ -11,6 +12,10 @@ export function resolvePeriod(period: DashboardPeriod = '7d'): { gte: Date; lte:
     if (period === 'today') {
         const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         return { gte: startOfToday, lte: now };
+    }
+
+    if (period === 'all') {
+        return { gte: new Date(0), lte: now };
     }
 
     const daysBack = period === '30d' ? 30 : period === '90d' ? 90 : 7;
