@@ -59,6 +59,8 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
     return [];
   }, [employees, mode]);
 
+  const needsRecipientStep = employees.length > 0;
+
   const [step, setStep] = useState<FlowStep>(
     recoveredTipId ? "done" : "amount",
   );
@@ -146,7 +148,7 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
               recipientLabel={recipientLabel}
               onContinue={(value) => {
                 setAmount(value);
-                setStep("select");
+                setStep(needsRecipientStep ? "select" : "review");
               }}
             />
           </motion.div>
@@ -194,7 +196,7 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
               config={reviewConfig}
               draft={reviewDraft}
               onChange={setReviewDraft}
-              onBack={() => setStep("select")}
+              onBack={() => setStep(needsRecipientStep ? "select" : "amount")}
             />
           </motion.div>
         ) : step === "done" && recoveredTipId ? (

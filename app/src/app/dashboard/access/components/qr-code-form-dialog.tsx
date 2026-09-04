@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Copy, User, Users, UsersRound } from "lucide-react";
 import { SpotFormDialog } from "@/app/dashboard/access/components/spot-form-dialog";
@@ -65,6 +65,11 @@ const selectionModeIcons: Record<QrCodeSelectionMode, typeof User> = {
   [QrCodeSelectionModes.TEAM]: UsersRound,
 };
 
+const MULTI_EMPLOYEE_SELECTION_MODES = new Set<QrCodeSelectionMode>([
+  QrCodeSelectionModes.CHOOSE_MANY,
+  QrCodeSelectionModes.TEAM,
+]);
+
 type QrEmployeeOption = Pick<
   Employee,
   "id" | "full_name" | "position" | "photo_document"
@@ -107,6 +112,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
     control,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<QrCodeFormData>({
     resolver: zodResolver(qrCodeFormSchema),
@@ -119,6 +125,11 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
       is_active: true,
     },
   });
+
+  const selectedEmployeeIds = useWatch({ control, name: "employee_ids" }) ?? [];
+  const selectionMode = useWatch({ control, name: "selection_mode" });
+  const selectedEmployeeCount = selectedEmployeeIds.length;
+  const multiEmployeeModesEnabled = selectedEmployeeCount >= 2;
 
   useEffect(() => {
     if (!open) return;
@@ -142,6 +153,18 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
       is_active: true,
     });
   }, [open, qr, defaultEmployeeIdsKey, reset]);
+
+  useEffect(() => {
+    if (!open) return;
+    if (multiEmployeeModesEnabled) return;
+    if (
+      !selectionMode ||
+      !MULTI_EMPLOYEE_SELECTION_MODES.has(selectionMode)
+    ) {
+      return;
+    }
+    setValue("selection_mode", QrCodeSelectionModes.CHOOSE_ONE);
+  }, [open, multiEmployeeModesEnabled, selectionMode, setValue]);
 
   const onSubmit = handleSubmit(async (values) => {
     const payload = {
@@ -228,8 +251,8 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit QR code" : "Create QR code"}</DialogTitle>
           <DialogDescription>
-            Assign staff and a selection mode. Customers never see the
-            distribution rule.
+            Select employees first, then choose how customers pick who to tip.
+            Customers never see the distribution rule.
           </DialogDescription>
         </DialogHeader>
 
@@ -245,57 +268,6 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
             {errors.label ? (
               <p className="text-xs text-red-600">{errors.label.message}</p>
             ) : null}
-          </div>
-
-          <div className="space-y-2">
-            <Label id="qr-mode-label">Selection mode</Label>
-            <Controller
-              name="selection_mode"
-              control={control}
-              render={({ field }) => (
-                <RadioGroup
-                  aria-labelledby="qr-mode-label"
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  className="gap-2"
-                >
-                  {QrCodeSelectionModeFormOptions.map((option) => {
-                    const selected = field.value === option.id;
-                    const Icon = selectionModeIcons[option.id];
-                    return (
-                      <label
-                        key={option.id}
-                        className={cn(
-                          "flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-3 transition-colors",
-                          selected
-                            ? "border-brand-200 bg-brand-50 ring-1 ring-brand-100"
-                            : "border-zinc-200 hover:bg-zinc-50",
-                        )}
-                      >
-                        <RadioGroupItem
-                          value={option.id}
-                          className="mt-0.5"
-                        />
-                        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-ink-charcoal shadow-xs ring-1 ring-zinc-200/80">
-                          <Icon className="size-4" strokeWidth={2} />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-sm font-semibold text-ink-charcoal">
-                            {option.label}
-                          </span>
-                          <span className="mt-0.5 block text-xs leading-relaxed text-zinc-500">
-                            {getQrCodeSelectionModeDescription(option.id)}
-                          </span>
-                        </span>
-                      </label>
-                    );
-                  })}
-                </RadioGroup>
-              )}
-            />
-            <p className="text-[11px] text-zinc-400">
-              Only applies when 2+ employees are assigned to this QR.
-            </p>
           </div>
 
           <div className="space-y-2">
@@ -372,6 +344,76 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
             >
               Create employee
             </Button>
+          </div>
+
+          <div className="space-y-2">
+            <Label id="qr-mode-label">Selection mode</Label>
+            <Controller
+              name="selection_mode"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  aria-labelledby="qr-mode-label"
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  className="gap-2"
+                >
+                  {QrCodeSelectionModeFormOptions.map((option) => {
+                    const selected = field.value === option.id;
+                    const Icon = selectionModeIcons[option.id];
+                    const requiresMultiple =
+                      MULTI_EMPLOYEE_SELECTION_MODES.has(option.id);
+                    const disabled =
+                      requiresMultiple && !multiEmployeeModesEnabled;
+                    return (
+                      <label
+                        key={option.id}
+                        className={cn(
+                          "flex items-start gap-3 rounded-xl border px-3 py-3 transition-colors",
+                          disabled
+                            ? "cursor-not-allowed border-zinc-100 bg-zinc-50/80 opacity-60"
+                            : "cursor-pointer",
+                          !disabled && selected
+                            ? "border-brand-200 bg-brand-50 ring-1 ring-brand-100"
+                            : null,
+                          !disabled && !selected
+                            ? "border-zinc-200 hover:bg-zinc-50"
+                            : null,
+                        )}
+                      >
+                        <RadioGroupItem
+                          value={option.id}
+                          disabled={disabled}
+                          className="mt-0.5"
+                        />
+                        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-ink-charcoal shadow-xs ring-1 ring-zinc-200/80">
+                          <Icon className="size-4" strokeWidth={2} />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-sm font-semibold text-ink-charcoal">
+                            {option.label}
+                          </span>
+                          <span className="mt-0.5 block text-xs leading-relaxed text-zinc-500">
+                            {disabled
+                              ? selectedEmployeeCount === 1
+                                ? "Needs 2+ employees. With one person assigned, tips go to them directly."
+                                : "Select 2 or more employees above to enable this mode."
+                              : getQrCodeSelectionModeDescription(option.id)}
+                          </span>
+                        </span>
+                      </label>
+                    );
+                  })}
+                </RadioGroup>
+              )}
+            />
+            <p className="text-[11px] text-zinc-400">
+              {multiEmployeeModesEnabled
+                ? "Customers follow this mode when scanning the QR."
+                : selectedEmployeeCount === 1
+                  ? "With one employee selected, only Choose one is available."
+                  : "Select 2 or more employees to unlock Choose many and Entire team."}
+            </p>
           </div>
 
           <div className="space-y-2">
