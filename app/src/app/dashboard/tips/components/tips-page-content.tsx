@@ -32,7 +32,10 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
-import { useStoreTips } from "@/features/tips/hooks/use-tips";
+import {
+  useExportStoreTipsCsv,
+  useStoreTips,
+} from "@/features/tips/hooks/use-tips";
 import type {
   TipStatus,
   TipsQuery,
@@ -77,6 +80,7 @@ export const TipsPageContent: FC = () => {
   };
 
   const tipsQuery = useStoreTips(storeId ?? "", query);
+  const exportCsv = useExportStoreTipsCsv();
 
   if (workspacePending) {
     return <TableSkeleton columns={5} />;
@@ -99,6 +103,11 @@ export const TipsPageContent: FC = () => {
   }
 
   const tips = tipsQuery.data?.data ?? [];
+  const exportQuery = {
+    ...(status !== "all" ? { status } : {}),
+    ...(dateFrom ? { date_from: dateFrom } : {}),
+    ...(dateTo ? { date_to: dateTo } : {}),
+  };
 
   return (
     <>
@@ -109,11 +118,15 @@ export const TipsPageContent: FC = () => {
           <Button
             type="button"
             variant="outline"
-            disabled
-            title="Export will be available once the API supports it"
+            disabled={
+              exportCsv.isPending || tipsQuery.isPending || tips.length === 0
+            }
+            onClick={() =>
+              exportCsv.mutate({ storeId, query: exportQuery })
+            }
             className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-chip font-semibold"
           >
-            Export CSV
+            {exportCsv.isPending ? "Exporting…" : "Export CSV"}
           </Button>
         }
       />

@@ -10,10 +10,13 @@ import { VivaConfig } from '@/integrations/viva/viva.config';
 import { VivaCheckoutService } from '@/integrations/viva/services/viva-checkout.service';
 import { CreatePublicTipDto } from '../dto/create-public-tip.dto';
 import { TipsQueryType } from '../dto/tips-query.schema';
+import { TipsExportQueryType } from '../dto/tips-export-query.schema';
 import { AdminTipsQueryType } from '../dto/admin-tips-query.schema';
+import { buildTipsCsv, tipsExportFilename } from '../utils/tips-csv.utils';
 import { Currency, Language, PaymentTransactionStatus, Tip, TipStatus } from 'generated/prisma';
 
 const PERFORMANCE_CHANGE_THRESHOLD_PERCENT = 20;
+const TIPS_EXPORT_MAX_ROWS = 10_000;
 
 @Injectable()
 export class TipsService {
@@ -338,9 +341,7 @@ export class TipsService {
         });
     }
 
-    async findAll(user: AuthUser, storeId: string, query: TipsQueryType) {
-        await this.accessControl.assertStoreAccess(user, storeId);
-
+    private buildStoreTipsWhere(storeId: string, query: Pick<TipsQueryType, 'employee_id' | 'qr_code_id' | 'status' | 'date_from' | 'date_to'>) {
         const where: any = { store_id: storeId };
         if (query.employee_id) where.employee_id = query.employee_id;
         if (query.qr_code_id) where.qr_code_id = query.qr_code_id;
@@ -350,6 +351,13 @@ export class TipsService {
             if (query.date_from) where.created_at.gte = new Date(query.date_from);
             if (query.date_to) where.created_at.lte = new Date(query.date_to);
         }
+        return where;
+    }
+
+    async findAll(user: AuthUser, storeId: string, query: TipsQueryType) {
+        await this.accessControl.assertStoreAccess(user, storeId);
+
+        const where = this.buildStoreTipsWhere(storeId, query);
 
         const [items, total, store] = await Promise.all([
             this.prisma.tip.findMany({
@@ -369,6 +377,39 @@ export class TipsService {
             total,
             query,
         );
+    }
+
+    async exportCsv(user: AuthUser, storeId: string, query: TipsExportQueryType) {
+        await this.accessControl.assertStoreAccess(user, storeId);
+
+        const where = this.buildStoreTipsWhere(storeId, query);
+        const total = await this.prisma.tip.count({ where });
+        if (total > TIPS_EXPORT_MAX_ROWS) {
+            throw new BadRequestException(
+                `Too many tips to export (${total}). Narrow the date range or status filter and try again.`,
+            );
+        }
+
+        const [items, store] = await Promise.all([
+            this.prisma.tip.findMany({
+                where,
+                include: {
+                    employee: true,
+                    qr_code: true,
+                    payment_transaction: { select: { payment_method: true } },
+                },
+                orderBy: { created_at: 'desc' },
+                take: TIPS_EXPORT_MAX_ROWS,
+            }),
+            this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } }),
+        ]);
+        const primaryLanguage = store?.primary_language ?? Language.EN;
+        const resolved = items.map((item) => this.resolveTipEmployeeNames(item, primaryLanguage));
+
+        return {
+            csv: buildTipsCsv(resolved),
+            filename: tipsExportFilename(),
+        };
     }
 
     async findAllAdmin(query: AdminTipsQueryType) {

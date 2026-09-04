@@ -189,6 +189,8 @@ export interface TipsQuery {
   date_to?: string;
 }
 
+export type TipsExportQuery = Omit<TipsQuery, "page" | "limit">;
+
 export interface AdminTipsQuery {
   page?: number;
   limit?: number;

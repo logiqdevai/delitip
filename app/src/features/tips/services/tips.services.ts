@@ -10,6 +10,7 @@ import type {
   PublicTipOrderCodeLookup,
   PublicTipStatus,
   Tip,
+  TipsExportQuery,
   TipsQuery,
 } from "@/features/tips/interfaces/tips.interfaces";
 
@@ -38,6 +39,62 @@ export const listStoreTips = async (
     return response.data;
   } catch {
     throw new Error("Failed to load tips. Please try again.");
+  }
+};
+
+export const exportStoreTipsCsv = async (
+  storeId: string,
+  query?: TipsExportQuery,
+): Promise<void> => {
+  try {
+    const response = await axiosInstance.get(ApiRoutes.stores.tipsExport(storeId), {
+      params: query,
+      responseType: "blob",
+    });
+
+    const disposition = response.headers["content-disposition"] as
+      | string
+      | undefined;
+    const filenameMatch = disposition?.match(/filename="?([^"]+)"?/i);
+    const filename =
+      filenameMatch?.[1] ??
+      `tips-${new Date().toISOString().slice(0, 10)}.csv`;
+
+    const blob =
+      response.data instanceof Blob
+        ? response.data
+        : new Blob([response.data], { type: "text/csv;charset=utf-8" });
+
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = objectUrl;
+    anchor.download = filename.endsWith(".csv") ? filename : `${filename}.csv`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(objectUrl);
+  } catch (error) {
+    let message = getApiErrorMessage(
+      error,
+      "Failed to export tips. Please try again.",
+    );
+    if (isAxiosError(error) && error.response?.data instanceof Blob) {
+      try {
+        const text = await error.response.data.text();
+        const parsed = JSON.parse(text) as { message?: string | string[] };
+        if (typeof parsed.message === "string" && parsed.message.length > 0) {
+          message = parsed.message;
+        } else if (
+          Array.isArray(parsed.message) &&
+          typeof parsed.message[0] === "string"
+        ) {
+          message = parsed.message[0];
+        }
+      } catch {
+        // keep fallback message
+      }
+    }
+    throw new Error(message);
   }
 };
 

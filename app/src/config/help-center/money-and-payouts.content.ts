@@ -17,7 +17,7 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "Dashboard → Tips shows every tip your store has received, with the time, employee, QR code used, amount, payment provider, and status (Pending, Completed, Failed, or Refunded).",
-            "Filter by status or date range to narrow the list. CSV export is planned but not available yet.",
+            "Filter by status or date range to narrow the list. Use Export CSV to download the filtered ledger.",
           ],
           links: [{ label: "Dashboard → Tips", href: Routes.dashboard.tips }],
         },

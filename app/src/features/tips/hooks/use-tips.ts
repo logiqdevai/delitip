@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createPublicTip,
+  exportStoreTipsCsv,
   getPublicTipStatus,
   getTip,
   listAdminTips,
@@ -12,6 +13,7 @@ import {
   TipStatuses,
   type AdminTipsQuery,
   type CreatePublicTipPayload,
+  type TipsExportQuery,
   type TipsQuery,
 } from "@/features/tips/interfaces/tips.interfaces";
 import { toast } from "@/components/ui/toast";
@@ -39,6 +41,32 @@ export const useStoreTips = (storeId: string, query?: TipsQuery) => {
     queryKey: tipsQueryKeys.storeList(storeId, query),
     queryFn: () => listStoreTips(storeId, query),
     enabled: !!storeId,
+  });
+};
+
+export const useExportStoreTipsCsv = () => {
+  return useMutation({
+    mutationFn: ({
+      storeId,
+      query,
+    }: {
+      storeId: string;
+      query?: TipsExportQuery;
+    }) => exportStoreTipsCsv(storeId, query),
+    onSuccess: () => {
+      toast.add({
+        title: "Tips exported",
+        description: "Your CSV download has started.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not export tips",
+        description: error.message,
+        type: "error",
+      });
+    },
   });
 };
 

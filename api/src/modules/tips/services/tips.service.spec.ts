@@ -647,6 +647,59 @@ describe('TipsService', () => {
         });
     });
 
+    describe('exportCsv', () => {
+        const user = { id: 'u1', role: AuthRole.USER };
+
+        beforeEach(() => {
+            prisma.tip.count.mockResolvedValue(1);
+            prisma.tip.findMany.mockResolvedValue([
+                {
+                    id: 'tip1',
+                    amount: 1500,
+                    currency: Currency.EUR,
+                    status: TipStatus.COMPLETED,
+                    paid_at: new Date('2026-09-04T10:00:00.000Z'),
+                    created_at: new Date('2026-09-04T09:00:00.000Z'),
+                    employee: { full_name: { en: 'Maria' } },
+                    qr_code: { label: 'Table 08' },
+                    payment_transaction: { payment_method: 'CARD' },
+                },
+            ]);
+            prisma.store.findUnique.mockResolvedValue(store());
+        });
+
+        it('asserts store access before exporting', async () => {
+            await service.exportCsv(user, 'store1', {});
+
+            expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1');
+        });
+
+        it('returns csv content and a dated filename', async () => {
+            const result = await service.exportCsv(user, 'store1', { status: TipStatus.COMPLETED });
+
+            expect(result.filename).toMatch(/^tips-\d{4}-\d{2}-\d{2}\.csv$/);
+            expect(result.csv).toContain('Transaction ID');
+            expect(result.csv).toContain('tip1');
+            expect(result.csv).toContain('15.00');
+            expect(result.csv).toContain('Maria');
+            expect(prisma.tip.findMany).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    where: { store_id: 'store1', status: TipStatus.COMPLETED },
+                    include: expect.objectContaining({
+                        payment_transaction: { select: { payment_method: true } },
+                    }),
+                }),
+            );
+        });
+
+        it('rejects exports larger than the row cap', async () => {
+            prisma.tip.count.mockResolvedValue(10_001);
+
+            await expect(service.exportCsv(user, 'store1', {})).rejects.toThrow(BadRequestException);
+            expect(prisma.tip.findMany).not.toHaveBeenCalled();
+        });
+    });
+
     describe('findAllAdmin', () => {
         beforeEach(() => {
             prisma.tip.findMany.mockResolvedValue([]);
