@@ -222,7 +222,7 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
           href={Routes.home}
           className="font-semibold text-zinc-700 transition hover:text-ink-charcoal"
         >
-          delitip.com
+          delitip
         </Link>{" "}
         • Transparent & Secure
       </footer>

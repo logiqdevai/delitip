@@ -34,7 +34,7 @@ export const EmployeePayoutHistoryCard: FC<{ employeeId: string }> = ({
       {payoutsQuery.isPending ? (
         <Skeleton className="h-24 w-full rounded-xl" />
       ) : payouts.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 py-6 text-center text-xs text-zinc-500">
+        <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500 sm:px-6">
           No payouts yet — your pending balance is paid out on your Store
           owner&apos;s schedule.
         </p>
@@ -43,7 +43,7 @@ export const EmployeePayoutHistoryCard: FC<{ employeeId: string }> = ({
           {payouts.map((payout) => (
             <div
               key={payout.id}
-              className="flex items-center justify-between gap-3 py-2.5 text-xs"
+              className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 py-2.5 text-xs sm:flex-nowrap"
             >
               <span className="text-zinc-500">
                 {format(
@@ -51,7 +51,7 @@ export const EmployeePayoutHistoryCard: FC<{ employeeId: string }> = ({
                   "MMM d, yyyy",
                 )}
               </span>
-              <span className="font-bold text-ink-charcoal">
+              <span className="font-bold text-ink-charcoal tabular-nums">
                 {formatMoney(payout.amount, payout.currency)}
               </span>
               <span

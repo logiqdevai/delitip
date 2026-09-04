@@ -29,7 +29,7 @@ const QrPage: FC = () => {
         </p>
       </div>
 
-      <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50 px-4 py-2.5 text-left text-[11px] text-amber-800">
+      <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50 px-4 py-3 text-left text-sm leading-relaxed text-amber-800">
         Preview only — there is no API yet for an employee to look up their own
         QR code (employee sessions can&apos;t list a Store&apos;s QR codes).
         Ask your manager to create a QR with just you assigned in{" "}
@@ -43,7 +43,6 @@ const QrPage: FC = () => {
             <BrandMark size="sm" className="size-6 rounded-lg text-xs" />
             <span className="text-xs font-bold text-ink-charcoal">
               delitip
-              <span className="text-electric-lime">.com</span>
             </span>
           </div>
           <span className="text-[10px] font-semibold text-zinc-400">

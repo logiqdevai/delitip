@@ -16,9 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "delitip.com — Reward great service. Digital Tipping & Employee Feedback",
+  title: "delitip — Reward great service. Digital Tipping & Employee Feedback",
   description:
-    "delitip.com is the modern digital tipping and employee feedback platform for restaurants, cafés, bars, hotels, and salons.",
+    "delitip is the modern digital tipping and employee feedback platform for restaurants, cafés, bars, hotels, and salons.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

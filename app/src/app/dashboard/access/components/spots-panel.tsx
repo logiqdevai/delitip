@@ -82,15 +82,22 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
         to hide it from new QR assignments without deleting it.
       </p>
 
-      <form onSubmit={handleCreate} className="flex gap-2">
+      <form
+        onSubmit={handleCreate}
+        className="flex flex-col gap-2 sm:flex-row sm:items-center"
+      >
         <Input
           value={name}
           onChange={(event) => setName(event.target.value)}
           placeholder="e.g. Table 12"
           aria-label="New spot name"
-          className="flex-1"
+          className="min-w-0 flex-1"
         />
-        <Button type="submit" disabled={createSpot.isPending || !name.trim()}>
+        <Button
+          type="submit"
+          disabled={createSpot.isPending || !name.trim()}
+          className="w-full shrink-0 sm:w-auto"
+        >
           <Plus data-icon="inline-start" />
           Add spot
         </Button>
@@ -117,7 +124,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
               <li
                 key={spot.id}
                 className={cn(
-                  "flex flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between",
+                  "flex items-center gap-3 px-3 py-2.5",
                   !spot.is_active && "bg-zinc-50/80",
                 )}
               >
@@ -142,6 +149,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
                       variant="secondary"
                       disabled={isUpdating || !editName.trim()}
                       aria-label="Save name"
+                      className="size-8 shrink-0 px-0"
                     >
                       <Check className="size-3.5" strokeWidth={2} />
                     </Button>
@@ -152,71 +160,69 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
                       onClick={cancelEdit}
                       disabled={isUpdating}
                       aria-label="Cancel rename"
+                      className="size-8 shrink-0 px-0"
                     >
                       <X className="size-3.5" strokeWidth={2} />
                     </Button>
                   </form>
                 ) : (
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-xs font-bold text-ink-charcoal">
-                      {spot.name}
-                    </p>
-                    <span
-                      className={cn(
-                        "mt-1 inline-block rounded-full px-2 py-0.5 text-caption font-bold",
-                        spot.is_active
-                          ? "bg-brand-50 text-brand-700"
-                          : "bg-neutral-fill font-medium text-zinc-500",
-                      )}
-                    >
-                      {spot.is_active ? "Active" : "Inactive"}
-                    </span>
-                  </div>
-                )}
+                  <>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                        <p className="truncate text-xs font-bold text-ink-charcoal">
+                          {spot.name}
+                        </p>
+                        <span
+                          className={cn(
+                            "inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-caption font-bold",
+                            spot.is_active
+                              ? "bg-brand-50 text-brand-700"
+                              : "bg-neutral-fill font-medium text-zinc-500",
+                          )}
+                        >
+                          {spot.is_active ? "Active" : "Inactive"}
+                        </span>
+                      </div>
+                    </div>
 
-                <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-                  <label className="flex cursor-pointer items-center gap-2 pr-1 text-xs text-zinc-600">
-                    <Switch
-                      size="sm"
-                      checked={spot.is_active}
-                      disabled={isUpdating || isEditing}
-                      onCheckedChange={() => toggleActive(spot)}
-                      aria-label={
-                        spot.is_active
-                          ? `Deactivate ${spot.name}`
-                          : `Activate ${spot.name}`
-                      }
-                    />
-                    <span className="hidden sm:inline">
-                      {spot.is_active ? "On" : "Off"}
-                    </span>
-                  </label>
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="ghost"
-                    className="size-8 px-0"
-                    disabled={isEditing}
-                    onClick={() => startEdit(spot)}
-                    aria-label={`Rename ${spot.name}`}
-                  >
-                    <Pencil className="size-3.5" strokeWidth={2} />
-                  </Button>
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="ghost"
-                    className="size-8 px-0 text-zinc-500 hover:text-red-700"
-                    disabled={isEditing}
-                    onClick={() => {
-                      setPendingDelete(spot);
-                      deleteConfirm.openDialog();
-                    }}
-                    aria-label={`Delete ${spot.name}`}
-                  >
-                    <Trash2 className="size-3.5" strokeWidth={2} />
-                  </Button>
-                </div>
+                    <div className="flex shrink-0 items-center gap-0.5">
+                      <Switch
+                        size="sm"
+                        checked={spot.is_active}
+                        disabled={isUpdating}
+                        onCheckedChange={() => toggleActive(spot)}
+                        aria-label={
+                          spot.is_active
+                            ? `Deactivate ${spot.name}`
+                            : `Activate ${spot.name}`
+                        }
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        className="size-8 px-0"
+                        onClick={() => startEdit(spot)}
+                        aria-label={`Rename ${spot.name}`}
+                      >
+                        <Pencil className="size-3.5" strokeWidth={2} />
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        className="size-8 px-0 text-zinc-500 hover:text-red-700"
+                        onClick={() => {
+                          setPendingDelete(spot);
+                          deleteConfirm.openDialog();
+                        }}
+                        aria-label={`Delete ${spot.name}`}
+                      >
+                        <Trash2 className="size-3.5" strokeWidth={2} />
+                      </Button>
+                    </div>
+                  </>
+                )}
               </li>
             );
           })}

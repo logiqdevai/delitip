@@ -19,23 +19,22 @@ export const EmployeeCardsSkeleton: FC<EmployeeCardsSkeletonProps> = ({
       {Array.from({ length: count }).map((_, index) => (
         <li
           key={`employee-skeleton-${index}`}
-          className="flex items-center justify-between gap-4 px-4 py-3.5"
+          className="flex items-start gap-2 px-4 py-3 sm:items-center sm:gap-4 sm:py-3.5"
         >
-          <div className="flex min-w-0 flex-1 items-center gap-3">
+          <div className="flex min-w-0 flex-1 items-start gap-3 sm:items-center">
             <Skeleton className="size-10 shrink-0 rounded-full" />
-            <div className="min-w-0 flex-1 space-y-2">
-              <div className="flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
                 <Skeleton className="h-4 w-28" />
-                <Skeleton className="h-5 w-14 rounded-full" />
+                <div className="flex items-center gap-1.5">
+                  <Skeleton className="h-5 w-14 rounded-full" />
+                  <Skeleton className="h-5 w-20 rounded-full" />
+                </div>
               </div>
-              <Skeleton className="h-3 w-48 max-w-full" />
+              <Skeleton className="mt-0.5 h-3 w-48 max-w-full" />
             </div>
           </div>
-          <div className="flex shrink-0 gap-1">
-            <Skeleton className="size-8 rounded-lg" />
-            <Skeleton className="size-8 rounded-lg" />
-            <Skeleton className="size-8 rounded-lg" />
-          </div>
+          <Skeleton className="size-8 shrink-0 rounded-lg" />
         </li>
       ))}
     </ul>

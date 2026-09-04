@@ -37,7 +37,6 @@ export const LandingFooter: FC = () => {
             <BrandMark size="sm" />
             <span className="text-base font-extrabold tracking-tight text-paper-offwhite">
               delitip
-              <span className="font-semibold text-electric-lime">.com</span>
             </span>
           </div>
           <p className="max-w-sm text-xs leading-relaxed text-zinc-500">
@@ -102,7 +101,7 @@ export const LandingFooter: FC = () => {
       </div>
 
       <div className="mx-auto mt-8 max-w-7xl border-t border-zinc-900 px-4 pt-8 text-center text-xs text-zinc-600 sm:px-6 lg:px-8">
-        © 2026 delitip.com. Tip. Feedback. Recognize.
+        © 2026 delitip. Tip. Feedback. Recognize.
       </div>
     </footer>
   );

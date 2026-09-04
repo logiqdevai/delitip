@@ -4,16 +4,16 @@ import { LegalDocument } from "../components/legal-document";
 import { Routes } from "@/routes/routes";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — delitip.com",
+  title: "Privacy Policy — delitip",
   description:
-    "Privacy Policy for delitip.com — how we collect, use, and protect information.",
+    "Privacy Policy for delitip — how we collect, use, and protect information.",
 };
 
 const PrivacyPage: FC = () => {
   return (
     <LegalDocument
       title="Privacy Policy"
-      description="This policy explains how Delitip collects, uses, shares, and protects information when businesses, staff, and guests use delitip.com and the Delitip platform."
+      description="This policy explains how Delitip collects, uses, shares, and protects information when businesses, staff, and guests use delitip and the Delitip platform."
       lastUpdated="August 30, 2026"
       alternateHref={Routes.legal.terms}
       alternateLabel="Terms of Service"
@@ -36,7 +36,7 @@ const PrivacyPage: FC = () => {
                 within a business's account; and the QR-code tipping and
                 review flow used by customers at the point of service. It
                 does not cover third-party sites we link to, or a business's
-                own website or systems outside delitip.com.
+                own website or systems outside delitip.
               </p>
             </>
           ),
@@ -98,7 +98,7 @@ const PrivacyPage: FC = () => {
                 infrastructure generate standard technical logs (such as
                 timestamps and request status) needed to operate and secure
                 the service. We do not currently use analytics, advertising,
-                or tracking cookies on delitip.com.
+                or tracking cookies on delitip.
               </p>
             </>
           ),
@@ -410,7 +410,7 @@ const PrivacyPage: FC = () => {
           body: (
             <>
               <p>
-                delitip.com uses a single functional cookie to remember
+                delitip uses a single functional cookie to remember
                 whether the dashboard sidebar is expanded or collapsed. It
                 does not identify you or track you across sites. The
                 dashboard also stores your session sign-in token in your

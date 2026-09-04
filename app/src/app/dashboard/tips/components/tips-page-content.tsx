@@ -111,7 +111,7 @@ export const TipsPageContent: FC = () => {
             variant="outline"
             disabled
             title="Export will be available once the API supports it"
-            className="h-9 rounded-xl px-3.5 text-chip font-semibold"
+            className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-chip font-semibold"
           >
             Export CSV
           </Button>

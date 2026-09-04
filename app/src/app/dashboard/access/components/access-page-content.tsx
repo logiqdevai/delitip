@@ -73,7 +73,7 @@ export const AccessPageContent: FC = () => {
         actions={
           <Button
             type="button"
-            className="h-9 rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal shadow-sm hover:bg-brand-700"
+            className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal shadow-sm hover:bg-brand-700"
             onClick={openCreate}
           >
             <Plus data-icon="inline-start" className="size-3.5" />

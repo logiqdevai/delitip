@@ -324,6 +324,73 @@ describe('EmployeesService', () => {
                 include: { photo_document: true, user: { select: { registered_at: true } } },
             });
         });
+
+        it('updates email and re-links the user account when email changes', async () => {
+            accessControl.assertEmployeeSelfOrStoreAccess.mockResolvedValue({
+                employee: {
+                    id: 'emp1',
+                    store_id: 'store1',
+                    email: 'old@example.com',
+                    full_name: { en: 'Alice Smith' },
+                },
+                isSelf: false,
+            });
+            usersService.findOrCreateByEmail.mockResolvedValue({
+                id: 'linked-user-2',
+                email: 'new@example.com',
+                registered_at: null,
+            });
+            prisma.employee.update.mockResolvedValue({
+                id: 'emp1',
+                email: 'new@example.com',
+                full_name: { en: 'Alice Smith' },
+            });
+
+            await service.update(user, 'emp1', { email: 'new@example.com' } as any);
+
+            expect(usersService.findOrCreateByEmail).toHaveBeenCalledWith('new@example.com', {
+                first_name: 'Alice',
+            });
+            expect(prisma.employee.update).toHaveBeenCalledWith({
+                where: { id: 'emp1' },
+                data: {
+                    email: 'new@example.com',
+                    user_id: 'linked-user-2',
+                    invited_at: expect.any(Date),
+                },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
+            });
+            await new Promise((resolve) => setImmediate(resolve));
+            expect(mailService.sendEmail).toHaveBeenCalledWith(
+                expect.objectContaining({ to: 'new@example.com' }),
+            );
+        });
+
+        it('does not re-link the user when email is unchanged', async () => {
+            accessControl.assertEmployeeSelfOrStoreAccess.mockResolvedValue({
+                employee: {
+                    id: 'emp1',
+                    store_id: 'store1',
+                    email: 'same@example.com',
+                    full_name: { en: 'Alice' },
+                },
+                isSelf: false,
+            });
+            prisma.employee.update.mockResolvedValue({
+                id: 'emp1',
+                email: 'same@example.com',
+                full_name: { en: 'Alice' },
+            });
+
+            await service.update(user, 'emp1', { position: 'Host', email: 'same@example.com' } as any);
+
+            expect(usersService.findOrCreateByEmail).not.toHaveBeenCalled();
+            expect(prisma.employee.update).toHaveBeenCalledWith({
+                where: { id: 'emp1' },
+                data: { position: 'Host' },
+                include: { photo_document: true, user: { select: { registered_at: true } } },
+            });
+        });
     });
 
     describe('remove', () => {

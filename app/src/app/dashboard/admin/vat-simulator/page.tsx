@@ -4,7 +4,7 @@ import { PlatformAdminGuard } from "@/components/auth/platform-admin-guard";
 import { AdminVatSimulatorPageContent } from "./components/admin-vat-simulator-page-content";
 
 export const metadata: Metadata = {
-  title: "VAT Simulator — delitip.com",
+  title: "VAT Simulator — delitip",
   description:
     "Simulate the tip → platform → store/employee accounting and VAT flow.",
 };

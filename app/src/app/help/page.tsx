@@ -9,9 +9,9 @@ import { environments } from "@/config/environments";
 import { Routes } from "@/routes/routes";
 
 export const metadata: Metadata = {
-  title: "Help Center — delitip.com",
+  title: "Help Center — delitip",
   description:
-    "Browse guides for every delitip.com feature — QR codes, tip distribution, payouts, reviews, analytics, and more.",
+    "Browse guides for every delitip feature — QR codes, tip distribution, payouts, reviews, analytics, and more.",
   alternates: {
     canonical: `${environments.siteUrl}${Routes.help.root}`,
   },

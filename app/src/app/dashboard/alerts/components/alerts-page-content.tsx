@@ -81,7 +81,7 @@ export const AlertsPageContent: FC = () => {
             variant="outline"
             disabled={!hasUnread || markAllRead.isPending}
             onClick={() => markAllRead.mutate()}
-            className="h-9 rounded-xl px-3.5 text-chip font-semibold"
+            className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-chip font-semibold"
           >
             <CheckCheck data-icon="inline-start" className="size-3.5" />
             Mark all read

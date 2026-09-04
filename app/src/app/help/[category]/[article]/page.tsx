@@ -31,7 +31,7 @@ export async function generateMetadata({
   if (!found) return {};
 
   return {
-    title: `${found.article.title} — Help Center — delitip.com`,
+    title: `${found.article.title} — Help Center — delitip`,
     description: found.article.summary,
     alternates: {
       canonical: `${environments.siteUrl}${Routes.help.article(categorySlug, articleSlug)}`,

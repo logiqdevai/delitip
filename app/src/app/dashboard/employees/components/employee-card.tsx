@@ -45,13 +45,13 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
   return (
     <li
       className={cn(
-        "flex flex-col gap-3 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4",
+        "flex items-start gap-2 px-4 py-3 sm:items-center sm:gap-4 sm:py-3.5",
         !employee.is_active && "bg-zinc-50/80",
       )}
     >
       <Link
         href={Routes.dashboard.employeeDetail(employee.id)}
-        className="group flex min-w-0 flex-1 items-center gap-3"
+        className="group flex min-w-0 flex-1 items-start gap-3 sm:items-center"
       >
         <EmployeeAvatar
           name={employee.full_name}
@@ -59,25 +59,27 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
           size="lg"
         />
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-2 sm:gap-y-1">
             <h3 className="truncate text-sm font-bold text-ink-charcoal group-hover:underline">
               {employee.full_name}
             </h3>
-            <span
-              className={cn(
-                "inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-caption font-bold",
-                employee.is_active
-                  ? "bg-brand-50 text-brand-700"
-                  : "bg-neutral-fill font-medium text-zinc-500",
-              )}
-            >
-              {getEmployeeStatusLabel(employee.is_active)}
-            </span>
-            {!isSignedUp ? (
-              <span className="inline-flex shrink-0 items-center rounded-full bg-amber-50 px-2 py-0.5 text-caption font-bold text-amber-700">
-                {getEmployeeAccountStatusLabel(employee.user?.registered_at)}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span
+                className={cn(
+                  "inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-caption font-bold",
+                  employee.is_active
+                    ? "bg-brand-50 text-brand-700"
+                    : "bg-neutral-fill font-medium text-zinc-500",
+                )}
+              >
+                {getEmployeeStatusLabel(employee.is_active)}
               </span>
-            ) : null}
+              {!isSignedUp ? (
+                <span className="inline-flex shrink-0 items-center rounded-full bg-amber-50 px-2 py-0.5 text-caption font-bold text-amber-700">
+                  {getEmployeeAccountStatusLabel(employee.user?.registered_at)}
+                </span>
+              ) : null}
+            </div>
           </div>
           <p className="mt-0.5 truncate text-xs text-zinc-500">
             {position}
@@ -90,8 +92,8 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
       <DropdownMenu>
         <DropdownMenuTrigger
           className={cn(
-            buttonVariants({ variant: "ghost", size: "sm" }),
-            "size-8 shrink-0 self-end px-0 text-zinc-500 hover:text-ink-charcoal sm:self-auto",
+            buttonVariants({ variant: "ghost", size: "icon-sm" }),
+            "-mr-1.5 shrink-0 text-zinc-500 hover:text-ink-charcoal",
           )}
           aria-label={`Actions for ${employee.full_name}`}
         >

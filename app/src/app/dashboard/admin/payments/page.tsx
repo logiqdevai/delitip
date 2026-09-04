@@ -4,7 +4,7 @@ import { PlatformAdminGuard } from "@/components/auth/platform-admin-guard";
 import { AdminFinancePageContent } from "./components/admin-finance-page-content";
 
 export const metadata: Metadata = {
-  title: "Payments & Payouts — delitip.com",
+  title: "Payments & Payouts — delitip",
   description: "Every payment and payout across all delitip businesses.",
 };
 

@@ -218,7 +218,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
       }}
     >
       <DialogContent
-        className="flex max-h-[90vh] flex-col gap-4 overflow-hidden sm:max-w-lg"
+        className="flex max-h-[90vh] min-w-0 flex-col gap-4 overflow-x-hidden sm:max-w-lg"
         showCloseButton={!isPending}
       >
         <DialogHeader className="shrink-0">
@@ -258,7 +258,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                   aria-labelledby="qr-mode-label"
                   value={field.value}
                   onValueChange={field.onChange}
-                  className="gap-2"
+                  className="grid grid-cols-1 gap-2"
                 >
                   {QrCodeSelectionModeFormOptions.map((option) => {
                     const selected = field.value === option.id;
@@ -267,24 +267,23 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                       <label
                         key={option.id}
                         className={cn(
-                          "flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-3 transition-colors",
+                          "flex cursor-pointer gap-2.5 rounded-xl border p-3.5 transition-colors",
                           selected
                             ? "border-brand-200 bg-brand-50 ring-1 ring-brand-100"
                             : "border-zinc-200 hover:bg-zinc-50",
                         )}
                       >
-                        <RadioGroupItem
-                          value={option.id}
-                          className="mt-0.5"
-                        />
-                        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-ink-charcoal shadow-xs ring-1 ring-zinc-200/80">
-                          <Icon className="size-4" strokeWidth={2} />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-sm font-semibold text-ink-charcoal">
-                            {option.label}
+                        <RadioGroupItem value={option.id} className="mt-1.5" />
+                        <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+                          <span className="flex items-center gap-2">
+                            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-ink-charcoal shadow-xs ring-1 ring-zinc-200/80">
+                              <Icon className="size-4" strokeWidth={2} />
+                            </span>
+                            <span className="text-sm font-semibold text-ink-charcoal">
+                              {option.label}
+                            </span>
                           </span>
-                          <span className="mt-0.5 block text-xs leading-relaxed text-zinc-500">
+                          <span className="text-xs leading-relaxed text-zinc-500">
                             {getQrCodeSelectionModeDescription(option.id)}
                           </span>
                         </span>
@@ -301,15 +300,15 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
 
           <div className="space-y-2">
             <Label>Employees</Label>
-            <div className="max-h-40 space-y-2 overflow-y-auto rounded-xl border border-zinc-200 p-3">
+            <div className="flex max-h-44 min-w-0 flex-col gap-1 overflow-y-auto overflow-x-hidden rounded-xl border border-zinc-200 p-2">
               {employeesQuery.isPending ? (
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2 p-1">
                   {Array.from({ length: 3 }).map((_, index) => (
-                    <Skeleton key={index} className="h-4 w-40" />
+                    <Skeleton key={index} className="h-9 w-full" />
                   ))}
                 </div>
               ) : employees.length === 0 ? (
-                <p className="text-xs text-zinc-500">
+                <p className="px-1.5 py-2 text-xs text-zinc-500">
                   No active employees yet. Add staff first, or leave empty for
                   store-only tips.
                 </p>
@@ -318,13 +317,16 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                   control={control}
                   name="employee_ids"
                   render={({ field }) => (
-                    <>
+                    <div className="flex min-w-0 flex-col">
                       {employees.map((employee) => {
                         const checked = field.value.includes(employee.id);
                         return (
                           <label
                             key={employee.id}
-                            className="flex cursor-pointer items-center gap-2 text-sm"
+                            className={cn(
+                              "flex min-w-0 cursor-pointer items-center gap-2.5 rounded-lg px-2 py-2 text-sm transition-colors",
+                              checked ? "bg-brand-50/80" : "hover:bg-zinc-50",
+                            )}
                           >
                             <Checkbox
                               checked={checked}
@@ -344,19 +346,20 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                               photoUrl={employee.photo_document?.url}
                               size="xs"
                             />
-                            <span className="min-w-0 truncate">
-                              {employee.full_name}
+                            <span className="flex min-w-0 flex-1 flex-col leading-tight">
+                              <span className="truncate font-medium text-ink-charcoal">
+                                {employee.full_name}
+                              </span>
                               {employee.position ? (
-                                <span className="text-zinc-400">
-                                  {" "}
-                                  · {employee.position}
+                                <span className="truncate text-xs text-zinc-400">
+                                  {employee.position}
                                 </span>
                               ) : null}
                             </span>
                           </label>
                         );
                       })}
-                    </>
+                    </div>
                   )}
                 />
               )}
@@ -379,15 +382,15 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
             <Label>
               Spots <span className="font-normal text-zinc-400">(optional)</span>
             </Label>
-            <div className="max-h-32 space-y-2 overflow-y-auto rounded-xl border border-zinc-200 p-3">
+            <div className="flex max-h-36 min-w-0 flex-col gap-1 overflow-y-auto overflow-x-hidden rounded-xl border border-zinc-200 p-2">
               {spotsQuery.isPending ? (
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2 p-1">
                   {Array.from({ length: 2 }).map((_, index) => (
-                    <Skeleton key={index} className="h-4 w-32" />
+                    <Skeleton key={index} className="h-9 w-full" />
                   ))}
                 </div>
               ) : spots.length === 0 ? (
-                <p className="text-xs text-zinc-500">
+                <p className="px-1.5 py-2 text-xs text-zinc-500">
                   No spots yet. Create one below, or leave empty.
                 </p>
               ) : (
@@ -395,13 +398,16 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                   control={control}
                   name="spot_ids"
                   render={({ field }) => (
-                    <>
+                    <div className="flex min-w-0 flex-col">
                       {spots.map((spot) => {
                         const checked = field.value.includes(spot.id);
                         return (
                           <label
                             key={spot.id}
-                            className="flex cursor-pointer items-center gap-2 text-sm"
+                            className={cn(
+                              "flex min-w-0 cursor-pointer items-center gap-2.5 rounded-lg px-2 py-2 text-sm transition-colors",
+                              checked ? "bg-brand-50/80" : "hover:bg-zinc-50",
+                            )}
                           >
                             <Checkbox
                               checked={checked}
@@ -414,11 +420,13 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
                                 );
                               }}
                             />
-                            <span className="min-w-0 truncate">{spot.name}</span>
+                            <span className="min-w-0 flex-1 truncate font-medium text-ink-charcoal">
+                              {spot.name}
+                            </span>
                           </label>
                         );
                       })}
-                    </>
+                    </div>
                   )}
                 />
               )}

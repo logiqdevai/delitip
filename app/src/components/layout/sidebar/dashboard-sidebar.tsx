@@ -220,7 +220,6 @@ export const DashboardSidebar: FC = () => {
           <div>
             <div className="text-sm leading-none font-bold tracking-tight text-ink-charcoal">
               delitip
-              <span className="text-electric-lime">.com</span>
             </div>
             <span className="text-[10px] font-medium tracking-wider text-zinc-400 uppercase">
               Business Portal
@@ -248,7 +247,6 @@ export const DashboardSidebar: FC = () => {
               <div className="min-w-0 group-data-[collapsible=icon]:hidden">
                 <div className="truncate text-sm leading-none font-bold tracking-tight text-ink-charcoal">
                   delitip
-                  <span className="text-electric-lime">.com</span>
                 </div>
                 <span className="text-[10px] font-medium tracking-wider text-zinc-400 uppercase">
                   Business Portal

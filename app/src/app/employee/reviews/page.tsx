@@ -66,7 +66,7 @@ const ReviewsPage: FC = () => {
           Customer Compliments & Reviews
         </h1>
         <p className="mt-0.5 text-xs text-zinc-500">
-          Real feedback left by guests after tipping you on delitip.com.
+          Real feedback left by guests after tipping you on delitip.
         </p>
       </div>
 

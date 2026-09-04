@@ -5,16 +5,16 @@ import { LegalDocument } from "../components/legal-document";
 import { Routes } from "@/routes/routes";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — delitip.com",
+  title: "Terms of Service — delitip",
   description:
-    "Terms of Service for delitip.com — digital tipping and customer feedback for businesses.",
+    "Terms of Service for delitip — digital tipping and customer feedback for businesses.",
 };
 
 const TermsPage: FC = () => {
   return (
     <LegalDocument
       title="Terms of Service"
-      description="These terms describe how businesses, staff, and guests may use delitip.com and the Delitip platform."
+      description="These terms describe how businesses, staff, and guests may use delitip and the Delitip platform."
       lastUpdated="August 30, 2026"
       alternateHref={Routes.legal.privacy}
       alternateLabel="Privacy Policy"
@@ -27,7 +27,7 @@ const TermsPage: FC = () => {
                 These Terms of Service ("Terms") are a contract between you
                 and Delitip, of Pelasgon 32, Heraklion, Greece ("Delitip,"
                 "we," "us," or "our"), governing your access to and use of
-                delitip.com and the Delitip platform (the "Service"). By
+                delitip and the Delitip platform (the "Service"). By
                 creating an account, or by using the Service in any other
                 way, you agree to these Terms and our{" "}
                 <Link className="underline underline-offset-2" href={Routes.legal.privacy}>

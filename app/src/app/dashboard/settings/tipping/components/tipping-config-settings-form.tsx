@@ -4,7 +4,7 @@ import { type FC, useState } from "react";
 import Link from "next/link";
 import { Plus, Split, Trash2, Wallet } from "lucide-react";
 import { DistributionRuleFormDialog } from "@/app/dashboard/distribution/components/distribution-rule-form-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -26,6 +26,7 @@ import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { Routes } from "@/routes/routes";
+import { cn } from "@/lib/utils";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 const MAX_PRESETS = 6;
@@ -230,7 +231,10 @@ export const TippingConfigSettingsForm: FC = () => {
           </div>
           <Link
             href={Routes.dashboard.distribution}
-            className="flex w-full items-center justify-center rounded-full bg-neutral-fill px-3 py-2 text-caption font-bold text-brand-700 transition hover:bg-zinc-200 md:w-auto md:shrink-0 md:bg-transparent md:px-0 md:py-0 md:text-[11px] md:font-semibold md:hover:bg-transparent md:hover:underline"
+            className={cn(
+              buttonVariants({ variant: "secondary", size: "default" }),
+              "w-full justify-center text-brand-700 md:h-auto md:w-auto md:bg-transparent md:px-0 md:py-0 md:text-[11px] md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
+            )}
           >
             Manage all →
           </Link>

@@ -7,6 +7,7 @@ import { Download, ListChecks, Plus, Star } from "lucide-react";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 import { formatMoney } from "@/lib/money";
+import { buttonVariants } from "@/components/ui/button";
 import { DashboardOverviewHeader } from "@/app/dashboard/components/dashboard-overview-header";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -115,14 +116,20 @@ export const OverviewPageContent: FC = () => {
           <>
             <Link
               href={Routes.dashboard.employees}
-              className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-chip font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-50"
+              className={cn(
+                buttonVariants({ variant: "outline", size: "default" }),
+                "w-full justify-center gap-2 sm:w-auto",
+              )}
             >
               <Plus className="size-3.5" strokeWidth={2} />
               Add Employee
             </Link>
             <Link
               href={Routes.dashboard.distribution}
-              className="flex items-center gap-2 rounded-xl bg-electric-lime px-3.5 py-2 text-chip font-semibold text-ink-charcoal shadow-sm transition hover:bg-brand-700"
+              className={cn(
+                buttonVariants({ variant: "default", size: "default" }),
+                "w-full justify-center gap-2 sm:w-auto",
+              )}
             >
               <Download className="size-3.5" strokeWidth={2} />
               Manage Tip Distribution
@@ -150,7 +157,12 @@ export const OverviewPageContent: FC = () => {
               setup steps done
             </p>
           </div>
-          <span className="flex w-full items-center justify-center rounded-full bg-white px-3 py-2 text-caption font-bold text-brand-700 md:w-auto md:shrink-0 md:bg-transparent md:px-0 md:py-0 md:text-xs md:font-semibold">
+          <span
+            className={cn(
+              buttonVariants({ variant: "outline", size: "default" }),
+              "w-full justify-center border-white bg-white text-brand-700 hover:bg-white/90 md:h-auto md:w-auto md:border-transparent md:bg-transparent md:px-0 md:py-0 md:text-xs md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
+            )}
+          >
             View checklist →
           </span>
         </Link>
@@ -330,7 +342,10 @@ export const OverviewPageContent: FC = () => {
 
           <Link
             href={Routes.dashboard.reviews}
-            className="block w-full rounded-xl bg-neutral-fill py-2 text-center text-chip font-semibold text-zinc-700 transition hover:bg-zinc-200"
+            className={cn(
+              buttonVariants({ variant: "secondary", size: "default" }),
+              "w-full justify-center",
+            )}
           >
             See All Reviews
           </Link>

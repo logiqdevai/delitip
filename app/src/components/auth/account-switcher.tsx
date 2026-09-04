@@ -13,11 +13,16 @@ import {
 import { useMyAccounts } from "@/features/users/hooks/use-users";
 import { useAuthHydrated } from "@/hooks/use-auth-hydrated";
 import { Routes } from "@/routes/routes";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth.store";
 import { useEmployeeWorkspaceStore } from "@/stores/employee-workspace.store";
 import { useWorkspaceStore } from "@/stores/workspace.store";
 
-export const AccountSwitcher: FC = () => {
+interface AccountSwitcherProps {
+  className?: string;
+}
+
+export const AccountSwitcher: FC<AccountSwitcherProps> = ({ className }) => {
   const router = useRouter();
   const pathname = usePathname();
   const hydrated = useAuthHydrated();
@@ -83,7 +88,11 @@ export const AccountSwitcher: FC = () => {
         if (value) handleChange(value);
       }}
     >
-      <SelectTrigger size="sm" aria-label="Switch account">
+      <SelectTrigger
+        size="sm"
+        aria-label="Switch account"
+        className={cn("max-w-[9.5rem] sm:max-w-[14rem]", className)}
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

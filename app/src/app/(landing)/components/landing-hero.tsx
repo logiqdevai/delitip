@@ -70,7 +70,6 @@ export const LandingHero: FC = () => {
                   />
                   <span className="text-xs font-bold text-ink-charcoal">
                     delitip
-                    <span className="text-electric-lime">.com</span>
                   </span>
                 </div>
                 <span className="rounded-full bg-neutral-fill px-2 py-0.5 text-xs font-bold text-zinc-400">

@@ -170,94 +170,116 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         Back to Employees
       </Link>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
-        <div className="flex items-center gap-4">
-          <EmployeeAvatar
-            name={employee.full_name}
-            photoUrl={employee.photo_document?.url}
-            className="size-14 text-lg"
-          />
-          <div>
-            <h1 className="text-xl font-bold text-ink-charcoal">
-              {employee.full_name}
-            </h1>
-            <p className="text-xs text-zinc-500">
-              {employee.position?.trim() || "Team member"} · {employee.email}
-            </p>
-            <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-              <span
-                className={
-                  employee.is_active
-                    ? "inline-block rounded-full bg-brand-50 px-2 py-0.5 text-caption font-bold text-brand-700"
-                    : "inline-block rounded-full bg-neutral-fill px-2 py-0.5 text-caption font-medium text-zinc-500"
-                }
-              >
-                {getEmployeeStatusLabel(employee.is_active)}
+      <section className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
+        <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6">
+          <div className="min-w-0 flex-1 space-y-3">
+            <div className="flex min-w-0 items-center gap-3.5">
+              <span className="inline-flex shrink-0 rounded-full ring-2 ring-electric-lime/30 ring-offset-2 ring-offset-white">
+                <EmployeeAvatar
+                  name={employee.full_name}
+                  photoUrl={employee.photo_document?.url}
+                  className="size-14 text-lg"
+                />
               </span>
-              {!isSignedUp ? (
-                <span className="inline-block rounded-full bg-amber-50 px-2 py-0.5 text-caption font-bold text-amber-700">
-                  {getEmployeeAccountStatusLabel(employee.user?.registered_at)}
+              <div className="min-w-0 flex-1">
+                <h1 className="truncate text-lg font-extrabold tracking-tight text-ink-charcoal sm:text-xl">
+                  {employee.full_name}
+                </h1>
+                <p className="truncate text-sm font-medium text-zinc-500">
+                  {employee.position?.trim() || "Team member"}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <p className="flex min-w-0 items-center gap-1.5 text-xs text-zinc-500">
+                <Mail
+                  className="size-3.5 shrink-0 text-zinc-400"
+                  strokeWidth={2}
+                  aria-hidden
+                />
+                <span className="min-w-0 truncate">{employee.email}</span>
+              </p>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span
+                  className={
+                    employee.is_active
+                      ? "inline-flex items-center rounded-full bg-brand-50 px-2.5 py-1 text-caption font-bold text-brand-700"
+                      : "inline-flex items-center rounded-full bg-neutral-fill px-2.5 py-1 text-caption font-medium text-zinc-500"
+                  }
+                >
+                  {getEmployeeStatusLabel(employee.is_active)}
                 </span>
-              ) : null}
+                {!isSignedUp ? (
+                  <span className="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-caption font-bold text-amber-700">
+                    {getEmployeeAccountStatusLabel(employee.user?.registered_at)}
+                  </span>
+                ) : null}
+              </div>
             </div>
           </div>
-        </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className={cn(
-              buttonVariants({ variant: "outline", size: "sm" }),
-              "gap-1.5",
-            )}
-            aria-label="Employee actions"
-          >
-            Actions
-            <ChevronDown className="size-3.5 opacity-60" strokeWidth={2} />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-44">
-            <DropdownMenuItem onClick={() => setFormOpen(true)}>
-              <Pencil />
-              Edit
-            </DropdownMenuItem>
-            {!isSignedUp ? (
-              <DropdownMenuItem
-                onClick={() => resendInvite.mutate(employee.id)}
-                disabled={resendInvite.isPending}
+          <div className="border-t border-zinc-100 pt-4 sm:shrink-0 sm:border-0 sm:pt-0">
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "default" }),
+                  "w-full justify-between gap-2 px-4 font-semibold sm:w-auto sm:justify-center sm:px-3 sm:text-xs sm:font-medium",
+                )}
+                aria-label="Employee actions"
               >
-                <Mail />
-                Resend invite
-              </DropdownMenuItem>
-            ) : null}
-            <DropdownMenuItem
-              onClick={() => {
-                if (employee.is_active) {
-                  deactivateConfirm.openDialog();
-                  return;
-                }
-                void updateEmployee.mutateAsync({
-                  id: employee.id,
-                  payload: { is_active: true },
-                });
-              }}
-            >
-              {employee.is_active ? <UserRoundX /> : <UserCheck />}
-              {employee.is_active ? "Deactivate" : "Activate"}
-            </DropdownMenuItem>
-            {canDeleteEmployee ? (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => deleteConfirm.openDialog()}
-                >
-                  <Trash2 />
-                  Delete
+                Actions
+                <ChevronDown className="size-4 opacity-50 sm:size-3.5" strokeWidth={2} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="min-w-[min(100vw-2.5rem,16rem)] sm:min-w-44"
+              >
+                <DropdownMenuItem onClick={() => setFormOpen(true)}>
+                  <Pencil />
+                  Edit
                 </DropdownMenuItem>
-              </>
-            ) : null}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+                {!isSignedUp ? (
+                  <DropdownMenuItem
+                    onClick={() => resendInvite.mutate(employee.id)}
+                    disabled={resendInvite.isPending}
+                  >
+                    <Mail />
+                    Resend invite
+                  </DropdownMenuItem>
+                ) : null}
+                <DropdownMenuItem
+                  onClick={() => {
+                    if (employee.is_active) {
+                      deactivateConfirm.openDialog();
+                      return;
+                    }
+                    void updateEmployee.mutateAsync({
+                      id: employee.id,
+                      payload: { is_active: true },
+                    });
+                  }}
+                >
+                  {employee.is_active ? <UserRoundX /> : <UserCheck />}
+                  {employee.is_active ? "Deactivate" : "Activate"}
+                </DropdownMenuItem>
+                {canDeleteEmployee ? (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onClick={() => deleteConfirm.openDialog()}
+                    >
+                      <Trash2 />
+                      Delete
+                    </DropdownMenuItem>
+                  </>
+                ) : null}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </section>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
@@ -335,7 +357,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
             </EmptyHeader>
             {storeId && store ? (
               <EmptyContent>
-                <Button type="button" variant="outline" size="sm" onClick={openCreateQr}>
+                <Button type="button" variant="outline" size="default" onClick={openCreateQr}>
                   <Plus data-icon="inline-start" className="size-3.5" />
                   Create QR code
                 </Button>
@@ -358,7 +380,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
               <Button
                 type="button"
                 variant="outline"
-                size="sm"
+                size="default"
                 className="w-full"
                 onClick={openCreateQr}
               >

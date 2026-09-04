@@ -343,9 +343,9 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                       scale: { duration: 0.28, ease: RECIPIENT_MOTION_EASE },
                       boxShadow: { duration: 0.45, ease: RECIPIENT_MOTION_EASE },
                     }}
-                    className="space-y-2.5 rounded-2xl border border-zinc-200/80 bg-white p-3 shadow-xs"
+                    className="space-y-3 rounded-2xl border border-zinc-200/80 bg-white p-3.5 shadow-xs"
                   >
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2">
                       <motion.div
                         animate={{
                           backgroundColor: isStore
@@ -366,7 +366,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                       </motion.div>
 
                       <div
-                        className="relative inline-flex w-fit shrink-0 rounded-lg bg-zinc-100 p-1"
+                        className="relative flex min-w-0 flex-1 rounded-lg bg-zinc-100 p-1"
                         role="group"
                         aria-label={`Recipient ${index + 1} type`}
                       >
@@ -385,7 +385,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                                 setRecipientType(index, option.id)
                               }
                               className={cn(
-                                "relative inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors",
+                                "relative flex min-w-0 flex-1 items-center justify-center gap-1 rounded-md px-1.5 py-1.5 text-xs font-semibold transition-colors",
                                 selected
                                   ? "text-ink-charcoal"
                                   : "text-zinc-500 hover:text-ink-charcoal",
@@ -403,7 +403,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                                   }}
                                 />
                               ) : null}
-                              <span className="relative z-10 inline-flex items-center gap-1.5">
+                              <span className="relative z-10 inline-flex min-w-0 items-center justify-center gap-1">
                                 <motion.span
                                   animate={{
                                     scale: selected ? 1.05 : 1,
@@ -413,13 +413,15 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                                     duration: 0.2,
                                     ease: RECIPIENT_MOTION_EASE,
                                   }}
-                                  className="inline-flex"
+                                  className="inline-flex shrink-0"
                                 >
                                   <Icon className="size-3.5" strokeWidth={2} />
                                 </motion.span>
-                                {option.id === DistributionRecipientTypes.STORE
-                                  ? "Business"
-                                  : "Employee"}
+                                <span className="truncate">
+                                  {option.id === DistributionRecipientTypes.STORE
+                                    ? "Business"
+                                    : "Employee"}
+                                </span>
                               </span>
                             </button>
                           );
@@ -427,7 +429,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-2 pl-[2.375rem] sm:flex-row sm:items-center">
+                    <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3">
                       <div className="min-w-0 flex-1 overflow-hidden">
                         <AnimatePresence mode="wait" initial={false}>
                           {isStore ? (
@@ -440,7 +442,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                                 duration: 0.22,
                                 ease: RECIPIENT_MOTION_EASE,
                               }}
-                              className="text-[11px] leading-5 text-zinc-500 sm:py-2"
+                              className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50/80 px-3 py-2.5 text-[11px] leading-5 text-zinc-500"
                             >
                               {pct}% stays with the business house account.
                             </motion.p>
@@ -479,7 +481,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                         </AnimatePresence>
                       </div>
 
-                      <div className="flex shrink-0 items-center gap-1 self-end sm:self-auto">
+                      <div className="flex items-center justify-between gap-2 sm:justify-start">
                         <Controller
                           name={`recipients.${index}.percentage`}
                           control={control}
@@ -505,7 +507,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                           disabled={fields.length <= 1 || isPending}
                           onClick={() => remove(index)}
                           aria-label={`Remove ${label}`}
-                          className="size-(--control-height-default) shrink-0 text-zinc-400 hover:bg-signal-red/10 hover:text-signal-red"
+                          className="size-8 shrink-0 text-zinc-500 hover:bg-signal-red/10 hover:text-signal-red"
                         >
                           <Trash2 className="size-3.5" />
                         </Button>
@@ -513,12 +515,12 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                     </div>
 
                     {recipientError?.employee_id ? (
-                      <p className="pl-[2.375rem] text-xs text-red-600">
+                      <p className="text-xs text-red-600">
                         {recipientError.employee_id.message}
                       </p>
                     ) : null}
                     {recipientError?.percentage ? (
-                      <p className="pl-[2.375rem] text-xs text-red-600">
+                      <p className="text-xs text-red-600">
                         {recipientError.percentage.message}
                       </p>
                     ) : null}

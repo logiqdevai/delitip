@@ -18,7 +18,7 @@ export const HelpHero: FC<HelpHeroProps> = ({ searchIndex }) => {
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-zinc-600 sm:text-base">
           Everything you need to know about running your store, your team,
-          and your tip page on delitip.com.
+          and your tip page on delitip.
         </p>
         <div className="mt-8">
           <HelpSearch searchIndex={searchIndex} />

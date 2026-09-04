@@ -4,7 +4,7 @@ export const demoEmployee = {
   business: "Artisan Café & Bar",
   photo:
     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=140&auto=format&fit=crop&q=80",
-  tipLink: "delitip.com/maria-s",
+  tipLink: "delitip/maria-s",
   depositLast4: "4092",
 } as const;
 

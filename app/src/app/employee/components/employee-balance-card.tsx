@@ -46,12 +46,12 @@ export const EmployeeBalanceCard: FC = () => {
 
 export const EmployeeDepositNotice: FC = () => {
   return (
-    <div className="space-y-1 rounded-2xl border border-brand-200/60 bg-brand-50/70 p-3 text-[11px] text-brand-900">
-      <div className="flex items-center gap-1 font-bold">
-        <CheckCircle2 className="size-3.5 text-brand-700" strokeWidth={2} />
+    <div className="space-y-1.5 rounded-2xl border border-brand-200/60 bg-brand-50/70 p-3.5 text-sm text-brand-900">
+      <div className="flex items-center gap-1.5 font-bold leading-snug">
+        <CheckCircle2 className="size-4 shrink-0 text-brand-700" strokeWidth={2} />
         <span>Payouts follow your Store&apos;s schedule</span>
       </div>
-      <p className="text-brand-800/80">
+      <p className="leading-relaxed text-brand-800/80">
         Cash-out isn&apos;t instant — your Store&apos;s owner releases
         payouts via bank transfer on their own schedule.
       </p>
