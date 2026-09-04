@@ -2,9 +2,10 @@
 
 import { type FC, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Banknote, SlidersHorizontal } from "lucide-react";
+import { Banknote, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
+import { Input } from "@/components/ui/input";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
   Table,
@@ -36,6 +37,7 @@ import { getPayoutExecutionStatusLabel } from "@/config/constants/dropdowns/paym
 import { useAdminPayouts } from "@/features/payouts/hooks/use-payouts";
 import type { PayoutExecutionStatus } from "@/features/payouts/interfaces/payouts.interfaces";
 import type { DistributionRecipientType } from "@/features/tips/interfaces/tips.interfaces";
+import { AdminStoreFilter } from "@/app/dashboard/admin/payments/components/admin-store-filter";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
@@ -59,10 +61,12 @@ const PAGE_LIMIT = 20;
 
 export const AdminPayoutsTable: FC = () => {
   const router = useRouter();
+  const [search, setSearch] = useState("");
   const [status, setStatus] = useState<PayoutExecutionStatus | "all">("all");
   const [recipientType, setRecipientType] = useState<
     DistributionRecipientType | "all"
   >("all");
+  const [storeId, setStoreId] = useState<string | null>(null);
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(1);
@@ -70,8 +74,10 @@ export const AdminPayoutsTable: FC = () => {
   const query = {
     page,
     limit: PAGE_LIMIT,
+    ...(search ? { search } : {}),
     ...(status !== "all" ? { status } : {}),
     ...(recipientType !== "all" ? { recipient_type: recipientType } : {}),
+    ...(storeId ? { store_id: storeId } : {}),
     ...(dateFrom ? { date_from: dateFrom } : {}),
     ...(dateTo ? { date_to: dateTo } : {}),
   };
@@ -88,6 +94,19 @@ export const AdminPayoutsTable: FC = () => {
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
           Filters
+        </div>
+        <div className="relative">
+          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-zinc-400" />
+          <Input
+            value={search}
+            onChange={(event) => {
+              setSearch(event.target.value);
+              resetPage();
+            }}
+            placeholder="Store, employee, or payout ID"
+            aria-label="Search payouts"
+            className="w-48 rounded-xl border-zinc-200 bg-white pl-8 font-medium text-ink-charcoal shadow-xs"
+          />
         </div>
         <Select
           items={PayoutExecutionStatusFilterOptions.map((option) => ({
@@ -141,6 +160,13 @@ export const AdminPayoutsTable: FC = () => {
             </SelectGroup>
           </SelectContent>
         </Select>
+        <AdminStoreFilter
+          value={storeId}
+          onValueChange={(value) => {
+            setStoreId(value);
+            resetPage();
+          }}
+        />
         <DatePicker
           value={dateFrom}
           onChange={(value) => {
@@ -190,7 +216,12 @@ export const AdminPayoutsTable: FC = () => {
             </EmptyMedia>
             <EmptyTitle>No payouts found</EmptyTitle>
             <EmptyDescription>
-              {status !== "all" || recipientType !== "all" || dateFrom || dateTo
+              {search ||
+              status !== "all" ||
+              recipientType !== "all" ||
+              storeId ||
+              dateFrom ||
+              dateTo
                 ? "No payouts match your filters."
                 : "No payouts have run yet."}
             </EmptyDescription>

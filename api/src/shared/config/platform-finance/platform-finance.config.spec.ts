@@ -31,7 +31,20 @@ describe('PlatformFinanceConfig', () => {
     it('falls back to the default processor fee estimate percentage when unset', () => {
         configService.get.mockReturnValue(undefined);
 
-        expect(config.getProcessorFeeEstimatePercentage()).toBe(1.5);
+        expect(config.getProcessorFeeEstimatePercentage()).toBe(2.4);
+    });
+
+    it('reads the processor fee estimate fixed amount from env when set', () => {
+        configService.get.mockReturnValue(30);
+
+        expect(config.getProcessorFeeEstimateFixedAmount()).toBe(30);
+        expect(configService.get).toHaveBeenCalledWith('TIP_PROCESSOR_FEE_ESTIMATE_FIXED_AMOUNT');
+    });
+
+    it('falls back to the default processor fee estimate fixed amount when unset', () => {
+        configService.get.mockReturnValue(undefined);
+
+        expect(config.getProcessorFeeEstimateFixedAmount()).toBe(24);
     });
 
     it('reads the payout hold window from env when set', () => {
@@ -44,5 +57,24 @@ describe('PlatformFinanceConfig', () => {
         configService.get.mockReturnValue(undefined);
 
         expect(config.getPayoutHoldWindowHours()).toBe(48);
+    });
+
+    it('reports connected-account payouts disabled by default', () => {
+        configService.get.mockReturnValue(undefined);
+
+        expect(config.isConnectedAccountPayoutsEnabled()).toBe(false);
+        expect(configService.get).toHaveBeenCalledWith('CONNECTED_ACCOUNT_PAYOUTS_ENABLED');
+    });
+
+    it('reports connected-account payouts enabled when the flag is set to true', () => {
+        configService.get.mockReturnValue('true');
+
+        expect(config.isConnectedAccountPayoutsEnabled()).toBe(true);
+    });
+
+    it('reports connected-account payouts disabled for any non-"true" value', () => {
+        configService.get.mockReturnValue('false');
+
+        expect(config.isConnectedAccountPayoutsEnabled()).toBe(false);
     });
 });

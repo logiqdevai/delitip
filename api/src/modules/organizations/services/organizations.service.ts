@@ -47,7 +47,7 @@ export class OrganizationsService {
             await tx.subscription.create({
                 data: {
                     organization_id: organization.id,
-                    plan: SubscriptionPlan.STARTER,
+                    plan: SubscriptionPlan.ENTERPRISE,
                     status: SubscriptionStatus.TRIALING,
                     current_period_start: now,
                     current_period_end: periodEnd,
@@ -110,7 +110,13 @@ export class OrganizationsService {
     async update(user: AuthUser, id: string, dto: UpdateOrganizationDto) {
         await this.accessControl.assertOrgAccess(user, id, [OrganizationRole.OWNER]);
 
-        return this.prisma.organization.update({ where: { id }, data: dto });
+        const { full_address, ...rest } = dto;
+        const data: Record<string, unknown> = { ...rest };
+        if (full_address !== undefined) {
+            data.full_address = { ...full_address };
+        }
+
+        return this.prisma.organization.update({ where: { id }, data });
     }
 
     async remove(user: AuthUser, id: string) {

@@ -71,7 +71,7 @@ export const RefundsTable: FC<{
   currency: Currency;
 }> = ({ storeId, currency }) => {
   const [page, setPage] = useState(1);
-  const [status, setStatus] = useState<RefundStatus | "all">("PENDING");
+  const [status, setStatus] = useState<RefundStatus | "all">("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
 

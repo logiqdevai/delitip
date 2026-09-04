@@ -3,8 +3,12 @@ import {
   createOrganization,
   getOrganization,
   listMyOrganizations,
+  updateOrganization,
 } from "@/features/organizations/services/organizations.services";
-import type { CreateOrganizationPayload } from "@/features/organizations/interfaces/organizations.interfaces";
+import type {
+  CreateOrganizationPayload,
+  UpdateOrganizationPayload,
+} from "@/features/organizations/interfaces/organizations.interfaces";
 import {
   createStore,
   updateStore,
@@ -56,6 +60,41 @@ export const useCreateOrganization = () => {
   });
 };
 
+export const useUpdateOrganization = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: UpdateOrganizationPayload;
+    }) => updateOrganization(id, payload),
+    onSuccess: (_data, variables) => {
+      void queryClient.invalidateQueries({
+        queryKey: organizationsQueryKeys.root,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: organizationsQueryKeys.detail(variables.id),
+      });
+      void queryClient.invalidateQueries({ queryKey: usersQueryKeys.accounts });
+      toast.add({
+        title: "Billing details saved",
+        description: "Your organization's billing details were updated.",
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not save billing details",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
+};
+
 export const useCompleteBusinessSetup = () => {
   const queryClient = useQueryClient();
 
@@ -67,11 +106,7 @@ export const useCompleteBusinessSetup = () => {
       values: BusinessSetupFormData;
       context: BusinessSetupContext;
     }) => {
-      const storeFields = {
-        name: values.name,
-        industry: values.industry,
-        timezone: values.timezone,
-        currency: values.currency,
+      const addressFields = {
         address_line: values.address_line || undefined,
         city: values.city || undefined,
         country: values.country || undefined,
@@ -79,12 +114,37 @@ export const useCompleteBusinessSetup = () => {
         full_address: values.full_address,
       };
 
+      const storeFields = {
+        name: values.name,
+        industry: values.industry,
+        timezone: values.timezone,
+        currency: values.currency,
+        ...addressFields,
+      };
+
+      // The Organization is the billing entity for invoices — mirror the
+      // same address (plus DOY, when given) there too, not just on the Store.
+      const orgFields = { ...addressFields, doy: values.doy || undefined };
+      const hasOrgFields = Object.values(orgFields).some((v) => v !== undefined);
+      const syncOrganization = (organizationId: string) =>
+        hasOrgFields ? updateOrganization(organizationId, orgFields) : Promise.resolve(undefined);
+
       if (context.storeId) {
-        return updateStore(context.storeId, storeFields);
+        const [store] = await Promise.all([
+          updateStore(context.storeId, storeFields),
+          context.organizationId
+            ? syncOrganization(context.organizationId)
+            : Promise.resolve(undefined),
+        ]);
+        return store;
       }
 
       if (context.organizationId) {
-        return createStore(context.organizationId, storeFields);
+        const [store] = await Promise.all([
+          createStore(context.organizationId, storeFields),
+          syncOrganization(context.organizationId),
+        ]);
+        return store;
       }
 
       const organization = await createOrganization({
@@ -96,15 +156,15 @@ export const useCompleteBusinessSetup = () => {
       });
 
       if (organization.store?.id) {
-        return updateStore(organization.store.id, {
-          timezone: values.timezone,
-          currency: values.currency,
-          address_line: values.address_line || undefined,
-          city: values.city || undefined,
-          country: values.country || undefined,
-          postal_code: values.postal_code || undefined,
-          full_address: values.full_address,
-        });
+        const [store] = await Promise.all([
+          updateStore(organization.store.id, {
+            timezone: values.timezone,
+            currency: values.currency,
+            ...addressFields,
+          }),
+          syncOrganization(organization.id),
+        ]);
+        return store;
       }
 
       return organization;

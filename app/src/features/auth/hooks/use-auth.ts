@@ -217,7 +217,7 @@ export const useAcceptInvite = () => {
         description: "You can now sign in with your new password.",
         type: "success",
       });
-      router.push(Routes.auth.sign_in);
+      router.push(`${Routes.auth.sign_in}?role=employee`);
     },
     onError: (error: Error) => {
       toast.add({

@@ -6,6 +6,7 @@ import {
   getEmployeePayoutAccount,
   getMyPayoutAccount,
   getStorePayoutAccount,
+  reconcilePayoutAccounts,
   refreshEmployeePayoutAccountStatus,
   refreshMyPayoutAccountStatus,
   refreshStorePayoutAccountStatus,
@@ -30,6 +31,34 @@ export const payoutAccountsQueryKeys = {
   store: (storeId: string) => ["payout-account", "store", storeId] as const,
   employee: (employeeId: string) =>
     ["payout-account", "employee", employeeId] as const,
+};
+
+export const useReconcilePayoutAccounts = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: reconcilePayoutAccounts,
+    onSuccess: ({ checked, promoted }) => {
+      void queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === "payout-account",
+      });
+      toast.add({
+        title: "IBANs reconciled",
+        description:
+          promoted > 0
+            ? `${promoted} of ${checked} pending account${checked === 1 ? "" : "s"} promoted to active.`
+            : `Checked ${checked} pending account${checked === 1 ? "" : "s"} — none newly verified.`,
+        type: "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not reconcile IBANs",
+        description: error.message,
+        type: "error",
+      });
+    },
+  });
 };
 
 export const useMyPayoutAccount = (enabled = true) => {

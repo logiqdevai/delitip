@@ -7,14 +7,14 @@ const plans = [
   {
     name: "Starter",
     blurb: "For small teams getting started",
-    price: "$0",
+    price: "€0",
     priceSuffix: "/ month",
     description:
       "Free for your business. A small processing fee is paid by the customer with each tip.",
     features: [
       "Up to 10 team members",
       "Unlimited QR codes",
-      "Apple Pay & Google Pay",
+      "Online payments",
       "Direct tips to staff",
     ],
     cta: "Create free account",
@@ -23,7 +23,7 @@ const plans = [
   {
     name: "Business",
     blurb: "For growing support and service teams",
-    price: "$29",
+    price: "€29",
     priceSuffix: "/ month",
     description:
       "Everything in Starter, plus tip pooling controls, feedback feed, and exports.",

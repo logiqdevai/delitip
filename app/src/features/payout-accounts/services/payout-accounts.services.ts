@@ -110,6 +110,21 @@ export const refreshStorePayoutAccountStatus = async (
   }
 };
 
+export const reconcilePayoutAccounts = async (): Promise<{
+  checked: number;
+  promoted: number;
+}> => {
+  try {
+    const response = await axiosInstance.post<{
+      checked: number;
+      promoted: number;
+    }>(ApiRoutes.admin.payoutAccounts.reconcile);
+    return response.data;
+  } catch {
+    throw new Error("Failed to reconcile payout accounts. Please try again.");
+  }
+};
+
 export const getEmployeePayoutAccount = async (
   employeeId: string,
 ): Promise<PayoutAccount | null> => {

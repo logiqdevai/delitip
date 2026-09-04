@@ -20,7 +20,7 @@ const teamSizeValues = Object.values(TeamSizes) as [
   ...(typeof TeamSizes)[keyof typeof TeamSizes][],
 ];
 
-const parsedAddressSchema = z.object({
+export const parsedAddressSchema = z.object({
   placeId: z.string(),
   formattedAddress: z.string(),
   streetAddress: z.string().optional(),
@@ -46,6 +46,7 @@ export const businessSetupSchema = z.object({
   country: z.string().trim().optional(),
   postal_code: z.string().trim().optional(),
   full_address: parsedAddressSchema.optional(),
+  doy: z.string().trim().optional(),
 });
 
 export type BusinessSetupFormData = z.infer<typeof businessSetupSchema>;
@@ -58,6 +59,9 @@ export const storeProfileFormSchema = z.object({
   country: z.string().trim().optional(),
   postal_code: z.string().trim().optional(),
   full_address: parsedAddressSchema.optional(),
+  vat_rate_percentage: z
+    .union([z.number().min(0).max(100), z.nan()])
+    .optional(),
 });
 
 export type StoreProfileFormData = z.infer<typeof storeProfileFormSchema>;

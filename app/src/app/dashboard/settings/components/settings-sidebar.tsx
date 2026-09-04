@@ -16,7 +16,8 @@ export const SettingsSidebar: FC = () => {
     platformRole === PlatformAuthRoles.SUPER_ADMIN;
 
   const items = settingsNavItems.filter(
-    (item) => !item.requiresPlatformAdmin || isPlatformAdmin,
+    (item) =>
+      !item.hidden && (!item.requiresPlatformAdmin || isPlatformAdmin),
   );
 
   return <SectionSidebar items={items} />;

@@ -24,13 +24,19 @@ const TREND_DAYS = 7;
 const MetricCard: FC<{
   label: string;
   value: string;
+  total?: string;
   hint?: string;
-}> = ({ label, value, hint }) => (
+}> = ({ label, value, total, hint }) => (
   <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
     <span className="text-xs font-semibold text-zinc-500">{label}</span>
     <div className="mt-2 text-2xl font-extrabold text-ink-charcoal">
       {value}
     </div>
+    {total ? (
+      <div className="mt-1 text-[11px] text-zinc-500">
+        Total <span className="font-semibold text-zinc-700">{total}</span>
+      </div>
+    ) : null}
     {hint ? (
       <div className="mt-1 text-[11px] text-zinc-400">{hint}</div>
     ) : null}
@@ -49,6 +55,10 @@ export const OverviewPageContent: FC = () => {
   const overviewQuery = useDashboardOverview(organizationId ?? "", {
     store_id: storeId ?? undefined,
     period: "today",
+  });
+  const totalsQuery = useDashboardOverview(organizationId ?? "", {
+    store_id: storeId ?? undefined,
+    period: "all",
   });
   const trendsQuery = useDashboardTrends(organizationId ?? "", {
     store_id: storeId ?? undefined,
@@ -83,6 +93,7 @@ export const OverviewPageContent: FC = () => {
   const reviews = recentReviewsQuery.data?.data ?? [];
   const employees = employeesQuery.data?.data ?? [];
   const overview = overviewQuery.data;
+  const totals = totalsQuery.data;
 
   const trendByBucket = new Map(
     (trendsQuery.data ?? []).map((point) => [point.bucket, point.value]),
@@ -160,21 +171,37 @@ export const OverviewPageContent: FC = () => {
           <MetricCard
             label="Tips Today"
             value={formatMoney(overview?.tips_total_amount ?? 0, store.currency)}
+            total={
+              totals
+                ? formatMoney(totals.tips_total_amount, store.currency)
+                : undefined
+            }
             hint={`${overview?.employees_recognized ?? 0} employee${overview?.employees_recognized === 1 ? "" : "s"} recognized today`}
           />
           <MetricCard
             label="Transactions Today"
             value={String(overview?.transactions_count ?? 0)}
+            total={
+              totals ? String(totals.transactions_count) : undefined
+            }
             hint="Customer tips processed"
           />
           <MetricCard
             label="Reviews Today"
             value={String(overview?.reviews_count ?? 0)}
+            total={totals ? String(totals.reviews_count) : undefined}
             hint="Feedback submitted today"
           />
           <MetricCard
             label="Avg Rating Today"
             value={overview?.average_rating ? `★ ${overview.average_rating.toFixed(2)}` : "—"}
+            total={
+              totals?.average_rating
+                ? `★ ${totals.average_rating.toFixed(2)}`
+                : totals
+                  ? "—"
+                  : undefined
+            }
             hint={overview?.average_rating ? "Based on today's reviews" : "No reviews yet today"}
           />
         </div>

@@ -8,6 +8,7 @@ import type {
   DistributionsResponse,
   Payout,
   PayoutDetail,
+  PayoutPreview,
   PayoutsQuery,
   RunPayoutPayload,
   RunPayoutResponse,
@@ -93,6 +94,21 @@ export const getAdminPayout = async (id: string): Promise<PayoutDetail> => {
     return response.data;
   } catch {
     throw new Error("Failed to load payout. Please try again.");
+  }
+};
+
+export const previewStorePayouts = async (
+  storeId: string,
+): Promise<PayoutPreview> => {
+  try {
+    const response = await axiosInstance.get<PayoutPreview>(
+      ApiRoutes.stores.payoutsPreview(storeId),
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to load payout preview. Please try again."),
+    );
   }
 };
 

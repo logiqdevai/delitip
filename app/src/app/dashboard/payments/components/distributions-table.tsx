@@ -4,6 +4,7 @@ import { type FC, useState } from "react";
 import { SlidersHorizontal, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
+import { EmployeeSelect } from "@/components/ui/employee-select";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
   Table,
@@ -29,16 +30,14 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import {
-  ConfirmationDialog,
-  useConfirmationDialog,
-} from "@/components/ui/confirmation-dialog";
 import { TablePagination } from "@/app/dashboard/payments/components/table-pagination";
-import {
-  useRunStorePayouts,
-  useStoreDistributions,
-} from "@/features/payouts/hooks/use-payouts";
-import type { DistributionsQuery } from "@/features/payouts/interfaces/payouts.interfaces";
+import { PayOutNowDialog } from "@/app/dashboard/payments/components/pay-out-now-dialog";
+import { useEmployees } from "@/features/employees/hooks/use-employees";
+import { useStoreDistributions } from "@/features/payouts/hooks/use-payouts";
+import type {
+  Distribution,
+  DistributionsQuery,
+} from "@/features/payouts/interfaces/payouts.interfaces";
 import type {
   DistributionRecipientType,
   PayoutStatus,
@@ -66,6 +65,20 @@ const formatDateTime = (value?: string | null) => {
   });
 };
 
+// Distinguishes a knowable ETA (still inside the hold window — clears at a
+// fixed, predictable time) from an unpredictable one (waiting on Viva's own
+// fee-confirmation webhook, which has no schedule we can promise).
+const eligibilityLabel = (distribution: Distribution) => {
+  if (distribution.eligible_now) return "Eligible now";
+  if (distribution.hold_reason === "HOLD_WINDOW" && distribution.eligible_at) {
+    return `Eligible ${formatDateTime(distribution.eligible_at)}`;
+  }
+  if (distribution.hold_reason === "FEE_NOT_CONFIRMED") {
+    return "Awaiting payment confirmation";
+  }
+  return "Held";
+};
+
 export const DistributionsTable: FC<{
   storeId: string;
   currency: Currency;
@@ -75,43 +88,66 @@ export const DistributionsTable: FC<{
   const [recipientType, setRecipientType] = useState<
     DistributionRecipientType | "all"
   >("all");
+  const [employeeId, setEmployeeId] = useState("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+
+  const employeesQuery = useEmployees(storeId, { limit: 100 });
 
   const query: DistributionsQuery = {
     page,
     limit: 20,
     ...(status !== "all" ? { payout_status: status } : {}),
     ...(recipientType !== "all" ? { recipient_type: recipientType } : {}),
+    ...(employeeId !== "all" ? { employee_id: employeeId } : {}),
     ...(dateFrom ? { date_from: dateFrom } : {}),
     ...(dateTo ? { date_to: dateTo } : {}),
   };
 
   const distributionsQuery = useStoreDistributions(storeId, query);
-  const runPayouts = useRunStorePayouts(storeId);
-  const confirmDialog = useConfirmationDialog();
+  const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
 
+  const employees = employeesQuery.data?.data ?? [];
   const distributions = distributionsQuery.data?.data ?? [];
   const pagination = distributionsQuery.data?.pagination;
   const summary = distributionsQuery.data?.summary;
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
-        <div>
-          <p className="text-xs text-zinc-400">Pending total</p>
-          <p className="text-lg font-bold text-ink-charcoal">
-            {formatMoney(summary?.pending_total_amount ?? 0, currency)}
-          </p>
+      <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-6">
+            <div>
+              <p className="text-xs text-zinc-400">Pending total</p>
+              <p className="text-lg font-bold text-ink-charcoal">
+                {formatMoney(summary?.pending_total_amount ?? 0, currency)}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-zinc-400">Eligible now</p>
+              <p className="text-lg font-bold text-brand-700">
+                {formatMoney(summary?.eligible_total_amount ?? 0, currency)}
+              </p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            onClick={() => setPayoutDialogOpen(true)}
+            disabled={!summary || summary.eligible_total_amount === 0}
+            className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+          >
+            Pay out now
+          </Button>
         </div>
-        <Button
-          type="button"
-          onClick={confirmDialog.openDialog}
-          disabled={!summary || summary.eligible_total_amount === 0}
-          className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
-        >
-          Pay out now
-        </Button>
+        {summary ? (
+          <p className="text-caption text-zinc-500">
+            Payouts are held for {summary.hold_window_hours}h after a tip is
+            paid, then released once Viva confirms the processing fee.
+            {summary.next_eligible_at
+              ? ` Next batch eligible ${formatDateTime(summary.next_eligible_at)}.`
+              : ""}
+          </p>
+        ) : null}
       </div>
 
       <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5">
@@ -171,6 +207,18 @@ export const DistributionsTable: FC<{
             </SelectGroup>
           </SelectContent>
         </Select>
+        <EmployeeSelect
+          employees={employees}
+          value={employeeId}
+          onValueChange={(value) => {
+            setEmployeeId(value);
+            setPage(1);
+          }}
+          includeAll
+          triggerClassName="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs"
+          contentClassName="min-w-44"
+          aria-label="Filter by employee"
+        />
         <DatePicker
           value={dateFrom}
           onChange={(value) => {
@@ -267,9 +315,7 @@ export const DistributionsTable: FC<{
                               : "text-zinc-400",
                           )}
                         >
-                          {distribution.eligible_now
-                            ? "Eligible now"
-                            : "Held"}
+                          {eligibilityLabel(distribution)}
                         </span>
                       ) : null}
                     </TableCell>
@@ -289,16 +335,11 @@ export const DistributionsTable: FC<{
         </>
       )}
 
-      <ConfirmationDialog
-        state={confirmDialog}
-        variant="default"
-        title="Pay out eligible distributions?"
-        description={`This sends ${formatMoney(summary?.eligible_total_amount ?? 0, currency)} to your Store and any employees with a linked, active payout account. Held distributions and recipients without an active account are skipped.`}
-        confirmLabel="Pay out now"
-        isPending={runPayouts.isPending}
-        onConfirm={async () => {
-          await runPayouts.mutateAsync({});
-        }}
+      <PayOutNowDialog
+        open={payoutDialogOpen}
+        onOpenChange={setPayoutDialogOpen}
+        storeId={storeId}
+        currency={currency}
       />
     </div>
   );

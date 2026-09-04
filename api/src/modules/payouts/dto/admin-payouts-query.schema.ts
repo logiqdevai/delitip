@@ -5,6 +5,7 @@ export const AdminPayoutsQuerySchema = PaginationQuerySchema.extend({
     store_id: z.string().optional(),
     recipient_type: z.enum(['STORE', 'EMPLOYEE']).optional(),
     status: z.enum(['PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED']).optional(),
+    search: z.string().optional(),
     date_from: z.string().optional(),
     date_to: z.string().optional(),
 });

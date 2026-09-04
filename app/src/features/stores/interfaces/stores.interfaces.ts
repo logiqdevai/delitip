@@ -48,6 +48,13 @@ export interface StoreDocumentRef {
   url: string;
 }
 
+// GET /admin/stores — minimal shape for admin-wide store filters.
+export interface AdminStoreOption {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export interface Store {
   id: string;
   organization_id: string;
@@ -77,6 +84,7 @@ export interface Store {
   public_review_redirect_url?: string | null;
   public_review_rating_threshold?: number | null;
   default_distribution_rule_id?: string | null;
+  vat_rate_percentage?: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -108,6 +116,7 @@ export interface UpdateStorePayload {
   public_review_redirect_url?: string;
   public_review_rating_threshold?: number;
   default_distribution_rule_id?: string;
+  vat_rate_percentage?: number;
   /** Map of lowercase language code -> welcome message text. Merged into the existing translations. */
   welcome_message_translations?: Record<string, string>;
   /** Map of lowercase language code -> thank-you message text. Merged into the existing translations. */

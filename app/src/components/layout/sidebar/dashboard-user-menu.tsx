@@ -157,7 +157,7 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="gap-2 rounded-lg px-2 py-1.5 text-chip font-medium text-zinc-700 focus:bg-neutral-fill focus:text-ink-charcoal"
+                className="hidden gap-2 rounded-lg px-2 py-1.5 text-chip font-medium text-zinc-700 focus:bg-neutral-fill focus:text-ink-charcoal"
                 render={
                   <Link
                     href={Routes.dashboard.settings.billing}

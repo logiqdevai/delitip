@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -101,7 +102,16 @@ export const getPublicQrCode = async (code: string): Promise<PublicQrCode> => {
       ApiRoutes.public.qr(code),
     );
     return response.data;
-  } catch {
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      if (typeof message === "string" && message.length > 0) {
+        throw new Error(message);
+      }
+      if (Array.isArray(message) && typeof message[0] === "string") {
+        throw new Error(message[0]);
+      }
+    }
     throw new Error("Failed to resolve QR code. Please try again.");
   }
 };

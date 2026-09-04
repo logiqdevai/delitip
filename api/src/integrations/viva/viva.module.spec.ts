@@ -13,6 +13,8 @@ import { VivaMarketplaceService } from './services/viva-marketplace.service';
 import { VivaResellersService } from './services/viva-resellers.service';
 import { VivaDataServicesService } from './services/viva-data-services.service';
 import { VivaWebhooksService } from './services/viva-webhooks.service';
+import { VivaConnectedAccountsAdapter } from './services/viva-connected-accounts.adapter';
+import { CONNECTED_ACCOUNTS_PROVIDER } from '@/shared/services/connected-accounts/connected-accounts-provider.interface';
 
 describe('VivaIntegrationModule', () => {
   let module: TestingModule;
@@ -45,7 +47,12 @@ describe('VivaIntegrationModule', () => {
     ['VivaResellersService', VivaResellersService],
     ['VivaDataServicesService', VivaDataServicesService],
     ['VivaWebhooksService', VivaWebhooksService],
+    ['VivaConnectedAccountsAdapter', VivaConnectedAccountsAdapter],
   ])('should resolve %s', (_name, token) => {
     expect(module.get(token as any)).toBeInstanceOf(token as any);
+  });
+
+  it('binds CONNECTED_ACCOUNTS_PROVIDER to the Viva adapter', () => {
+    expect(module.get(CONNECTED_ACCOUNTS_PROVIDER)).toBeInstanceOf(VivaConnectedAccountsAdapter);
   });
 });

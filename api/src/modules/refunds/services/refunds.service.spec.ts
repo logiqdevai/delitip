@@ -1,5 +1,5 @@
 import { BadGatewayException, BadRequestException, NotFoundException } from '@nestjs/common';
-import { AuthRole, OrganizationRole, PayoutStatus, RefundStatus, TipStatus } from 'generated/prisma';
+import { AuthRole, OrganizationRole, PayoutMethod, PayoutStatus, RefundStatus, TipStatus } from 'generated/prisma';
 import { RefundsService } from './refunds.service';
 
 describe('RefundsService', () => {
@@ -8,6 +8,7 @@ describe('RefundsService', () => {
     let accessControl: any;
     let usersService: any;
     let vivaTransactions: any;
+    let connectedAccountsProvider: any;
 
     const user = { id: 'u1', role: AuthRole.USER };
 
@@ -32,7 +33,10 @@ describe('RefundsService', () => {
             createFastRefund: jest.fn().mockResolvedValue({ transactionId: 'refund-tx-1' }),
             createRebate: jest.fn().mockResolvedValue({ transactionId: 'refund-tx-1' }),
         };
-        service = new RefundsService(prisma, accessControl, usersService, vivaTransactions);
+        connectedAccountsProvider = {
+            cancelWithReversal: jest.fn().mockResolvedValue({ transactionId: 'refund-tx-1' }),
+        };
+        service = new RefundsService(prisma, accessControl, usersService, vivaTransactions, connectedAccountsProvider);
     });
 
     describe('createPublicRequest', () => {
@@ -307,6 +311,72 @@ describe('RefundsService', () => {
             expect(prisma.refund.update).toHaveBeenCalledWith(
                 expect.objectContaining({ data: expect.objectContaining({ requires_manual_reconciliation: true }) }),
             );
+        });
+
+        it('calls cancelWithReversal instead of createFastRefund/createRebate when the store uses connected-account payouts', async () => {
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                amount: 500,
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: paidTip({ store: { payout_account: { payout_method: PayoutMethod.CONNECTED_ACCOUNT } } }),
+            });
+            prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
+
+            await service.update(user, 'refund1', { status: RefundStatus.COMPLETED });
+
+            expect(connectedAccountsProvider.cancelWithReversal).toHaveBeenCalledWith({
+                transactionId: 'vt1',
+                amount: 500,
+                reverseTransfers: true,
+                refundPlatformFee: true,
+            });
+            expect(vivaTransactions.createFastRefund).not.toHaveBeenCalled();
+            expect(vivaTransactions.createRebate).not.toHaveBeenCalled();
+            expect(prisma.refund.update).toHaveBeenCalledWith({
+                where: { id: 'refund1' },
+                data: {
+                    status: RefundStatus.COMPLETED,
+                    processed_by_user_id: 'u1',
+                    provider_reference: 'refund-tx-1',
+                    provider_status: 'REQUESTED',
+                    requires_manual_reconciliation: false,
+                },
+            });
+        });
+
+        it('never requires manual reconciliation for connected-account refunds, even if a distribution was already paid out', async () => {
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                amount: 500,
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: paidTip({
+                    distributions: [{ payout_status: PayoutStatus.PAID }],
+                    store: { payout_account: { payout_method: PayoutMethod.CONNECTED_ACCOUNT } },
+                }),
+            });
+            prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
+
+            await service.update(user, 'refund1', { status: RefundStatus.COMPLETED });
+
+            expect(prisma.refund.update).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ requires_manual_reconciliation: false }) }),
+            );
+        });
+
+        it('wraps a connected-account provider failure in BadGatewayException and never finalizes locally', async () => {
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                amount: 500,
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: paidTip({ store: { payout_account: { payout_method: PayoutMethod.CONNECTED_ACCOUNT } } }),
+            });
+            connectedAccountsProvider.cancelWithReversal.mockRejectedValue(new Error('provider rejected the cancellation'));
+
+            await expect(service.update(user, 'refund1', { status: RefundStatus.COMPLETED })).rejects.toThrow(BadGatewayException);
+            expect(prisma.refund.update).not.toHaveBeenCalled();
         });
 
         it('cancels the tip\'s still-pending distributions when the refund becomes COMPLETED', async () => {

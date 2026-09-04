@@ -270,13 +270,26 @@ model Document {
 // ==================================================================
 
 model Organization {
-  id               String   @id @default(uuid())
+  id               String  @id @default(uuid())
   name             String
-  slug             String   @unique
-  is_active        Boolean  @default(true)
+  slug             String  @unique
+  is_active        Boolean @default(true)
   logo_document_id String?
-  created_at       DateTime @default(now())
-  updated_at       DateTime @updatedAt
+  vat_number       String? // billing identity for invoicing — set via org settings, never inferred
+  legal_name       String? // registered legal entity name, may differ from the customer-facing `name`
+  profession       String? // declared business activity, shown on invoices (e.g. "Restaurant", "Καφετέρια")
+  doy              String? // Greek tax office (Δ.Ο.Υ.) — only relevant for Greek-registered organizations
+
+  // Registered billing address — the invoice-recipient address, independent
+  // of any Store's own (possibly different/multiple) physical address(es).
+  address_line String?
+  city         String?
+  country      String?
+  postal_code  String?
+  full_address Json?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   logo_document Document? @relation("OrganizationLogoDocument", fields: [logo_document_id], references: [id], onDelete: SetNull)
 
@@ -314,7 +327,7 @@ model OrganizationMember {
 model Subscription {
   id                               String             @id @default(uuid())
   organization_id                  String             @unique
-  plan                             SubscriptionPlan   @default(STARTER)
+  plan                             SubscriptionPlan   @default(ENTERPRISE)
   status                           SubscriptionStatus @default(TRIALING)
   billing_provider_customer_id     String?
   billing_provider_subscription_id String?
@@ -368,6 +381,11 @@ model Store {
   suggested_tip_amounts   Int[]    @default([200, 1000, 2000, 5000])
   allow_custom_tip_amount Boolean  @default(true)
 
+  // % of VAT added on top of the tip amount at checkout time. No default —
+  // must be set explicitly per store; null/0 means no VAT is charged on tips
+  // at this store (never auto-applies Greece's 24% or any other rate).
+  vat_rate_percentage Decimal? @db.Decimal(5, 2)
+
   // Review flow routing: above the threshold, prompt the customer to post
   // a public review; below it, collect private feedback instead.
   public_review_redirect_url     String?
@@ -411,7 +429,7 @@ model Store {
 // ==================================================================
 
 model Employee {
-  id                String   @id @default(uuid())
+  id                String    @id @default(uuid())
   store_id          String
   user_id           String?
   // Multilingual: Json map of lowercase Language code -> text, e.g.
@@ -422,10 +440,10 @@ model Employee {
   email             String
   photo_document_id String?
   position          String?
-  is_active         Boolean  @default(true)
+  is_active         Boolean   @default(true)
   invited_at        DateTime? // last time an account-setup invite email was sent to this Employee's User
-  created_at        DateTime @default(now())
-  updated_at        DateTime @updatedAt
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
 
   store          Store     @relation(fields: [store_id], references: [id], onDelete: Cascade)
   user           User?     @relation(fields: [user_id], references: [id], onDelete: SetNull)
@@ -594,19 +612,21 @@ model DistributionRuleRecipient {
 // of store_id/user_id is set, matching owner_type; the unique constraint
 // on each caps it at one payout account per owner.
 model PayoutAccount {
-  id                  String                 @id @default(uuid())
-  owner_type          PayoutAccountOwnerType
-  store_id            String?                @unique // set when owner_type is STORE
-  user_id             String?                @unique // set when owner_type is USER
-  provider            PaymentProvider        @default(VIVA)
-  provider_account_id String // the connected account id with that processor
-  status              PayoutAccountStatus    @default(PENDING)
-  payout_method       PayoutMethod           @default(IBAN)
-  bank_account_id     String? // Viva's linked-bank-account id from the Bank Transfer API
-  iban_last4          String? // last 4 digits only — the raw IBAN is never persisted, see §16 of the payment plan
-  beneficiary_name    String?
-  created_at          DateTime               @default(now())
-  updated_at          DateTime               @updatedAt
+  id                   String                 @id @default(uuid())
+  owner_type           PayoutAccountOwnerType
+  store_id             String?                @unique // set when owner_type is STORE
+  user_id              String?                @unique // set when owner_type is USER
+  provider             PaymentProvider        @default(VIVA)
+  provider_account_id  String // the connected account id with that processor
+  status               PayoutAccountStatus    @default(PENDING)
+  payout_method        PayoutMethod           @default(IBAN)
+  bank_account_id      String? // Viva's linked-bank-account id from the Bank Transfer API
+  iban_last4           String? // last 4 digits only — the raw IBAN is never persisted, see §16 of the payment plan
+  beneficiary_name     String?
+  connected_account_id String? // the provider's connected/seller account id (Viva Marketplace today; a future Stripe Connect account reuses this same generic column)
+  onboarding_url       String? // hosted-onboarding link shown to the owner until the connected account finishes verification
+  created_at           DateTime               @default(now())
+  updated_at           DateTime               @updatedAt
 
   store   Store?   @relation(fields: [store_id], references: [id], onDelete: Cascade)
   user    User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -666,14 +686,23 @@ model PaymentTransaction {
   client_request_id              String?                  @unique // idempotency key supplied by the frontend on POST /public/tips
   provider_order_code            String?                  @unique // string, never numeric — Viva's 16-digit orderCode exceeds Number.MAX_SAFE_INTEGER
   provider_transaction_id        String?                  @unique
-  gross_amount                   Int
+  tip_amount                     Int // the net, VAT-exclusive amount the customer selected — base for commission_amount and net_distributable_amount
+  vat_rate_percentage            Decimal?                 @db.Decimal(5, 2) // snapshotted from Store.vat_rate_percentage at creation time — never recomputed from live store config later
+  vat_amount                     Int? // round(tip_amount * vat_rate_percentage / 100) — retained by the platform in full, never distributed to store/employee
+  gross_amount                   Int // tip_amount + vat_amount — the VAT-inclusive total actually charged via Viva
   currency                       Currency
   commission_percentage_used     Decimal                  @db.Decimal(5, 2) // snapshotted from PlatformFinanceConfig at creation time — never recomputed from live config later
   commission_amount              Int
+  platform_fee_percentage        Decimal                  @db.Decimal(5, 2) // commission_amount / tip_amount — the actual realized rate, distinct from the configured commission_percentage_used above (rounding can make them differ)
+  processor_fee_percentage_used  Decimal?                 @db.Decimal(5, 2) // snapshotted from PlatformFinanceConfig when processor_fee_estimated was computed — the processor-fee mirror of commission_percentage_used above; never recomputed from live config later, and stays unset for tips that never reached that step
   processor_fee_estimated        Int?
   processor_fee_confirmed_amount Int?
   processor_fee_confirmed        Boolean                  @default(false) // gates payout eligibility — a payout can never be computed from an estimate
-  net_distributable_amount       Int?
+  payment_fee_percentage         Decimal?                 @db.Decimal(5, 2) // processor fee / gross_amount (VAT-inclusive — Viva's fee is charged on the full amount it processes), using whichever of the two fields above is current
+  total_fee_amount               Int? // commission_amount + processor fee (estimated until processor_fee_confirmed, then confirmed) — does NOT include vat_amount, which is tracked and retained separately
+  total_fee_percentage           Decimal?                 @db.Decimal(5, 2) // total_fee_amount / gross_amount
+  total_fee_percentage_sum       Decimal?                 @db.Decimal(5, 2) // platform_fee_percentage + payment_fee_percentage — the two rates added directly, kept alongside total_fee_percentage as a cross-check since per-fee rounding can make them differ slightly
+  net_distributable_amount       Int? // tip_amount - total_fee_amount — what's actually split via distribution rules to store/employee; vat_amount never enters this pool
   payment_method                 String?
   status                         PaymentTransactionStatus @default(CREATED)
   failure_reason                 String?

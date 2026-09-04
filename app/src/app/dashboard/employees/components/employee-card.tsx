@@ -2,8 +2,21 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
-import { Mail, Pencil, QrCode, UserRoundX, UserCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  Mail,
+  MoreHorizontal,
+  Pencil,
+  QrCode,
+  UserRoundX,
+  UserCheck,
+} from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { EmployeeQrCodesDialog } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
 import { getEmployeeStatusLabel } from "@/config/constants/dropdowns/employees/employee-status-form.options";
@@ -74,64 +87,40 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
         </div>
       </Link>
 
-      <div className="flex shrink-0 items-center gap-1 self-end sm:self-auto">
-        {!isSignedUp ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="size-8 px-0 text-zinc-500 hover:text-ink-charcoal"
-            onClick={() => resendInvite.mutate(employee.id)}
-            disabled={resendInvite.isPending}
-            aria-label={`Resend invite to ${employee.full_name}`}
-          >
-            <Mail className="size-3.5" strokeWidth={2} />
-          </Button>
-        ) : null}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="size-8 px-0 text-zinc-500 hover:text-ink-charcoal"
-          onClick={() => setQrDialogOpen(true)}
-          aria-label={`View QR codes for ${employee.full_name}`}
-        >
-          <QrCode className="size-3.5" strokeWidth={2} />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="size-8 px-0 text-zinc-500 hover:text-ink-charcoal"
-          onClick={() => onEdit(employee)}
-          aria-label={`Edit ${employee.full_name}`}
-        >
-          <Pencil className="size-3.5" strokeWidth={2} />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
+      <DropdownMenu>
+        <DropdownMenuTrigger
           className={cn(
-            "size-8 px-0",
-            employee.is_active
-              ? "text-zinc-500 hover:text-red-700"
-              : "text-zinc-500 hover:text-brand-700",
+            buttonVariants({ variant: "ghost", size: "sm" }),
+            "size-8 shrink-0 self-end px-0 text-zinc-500 hover:text-ink-charcoal sm:self-auto",
           )}
-          onClick={() => onToggleActive(employee)}
-          aria-label={
-            employee.is_active
-              ? `Deactivate ${employee.full_name}`
-              : `Activate ${employee.full_name}`
-          }
+          aria-label={`Actions for ${employee.full_name}`}
         >
-          {employee.is_active ? (
-            <UserRoundX className="size-3.5" strokeWidth={2} />
-          ) : (
-            <UserCheck className="size-3.5" strokeWidth={2} />
-          )}
-        </Button>
-      </div>
+          <MoreHorizontal className="size-4" strokeWidth={2} />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="min-w-44">
+          <DropdownMenuItem onClick={() => onEdit(employee)}>
+            <Pencil />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setQrDialogOpen(true)}>
+            <QrCode />
+            QR codes
+          </DropdownMenuItem>
+          {!isSignedUp ? (
+            <DropdownMenuItem
+              onClick={() => resendInvite.mutate(employee.id)}
+              disabled={resendInvite.isPending}
+            >
+              <Mail />
+              Resend invite
+            </DropdownMenuItem>
+          ) : null}
+          <DropdownMenuItem onClick={() => onToggleActive(employee)}>
+            {employee.is_active ? <UserRoundX /> : <UserCheck />}
+            {employee.is_active ? "Deactivate" : "Activate"}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <EmployeeQrCodesDialog
         open={qrDialogOpen}

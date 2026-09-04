@@ -77,6 +77,8 @@ export const ApiRoutes = {
     payouts: (storeId: string) => `/stores/${storeId}/payouts` as const,
     payoutsRun: (storeId: string) =>
       `/stores/${storeId}/payouts/run` as const,
+    payoutsPreview: (storeId: string) =>
+      `/stores/${storeId}/payouts/preview` as const,
     distributions: (storeId: string) =>
       `/stores/${storeId}/distributions` as const,
     alerts: (storeId: string) => `/stores/${storeId}/alerts` as const,
@@ -148,8 +150,13 @@ export const ApiRoutes = {
     timezone: "/google-maps/timezone",
   },
   admin: {
+    stores: "/admin/stores",
     payments: {
       prefix: "/admin/payments",
+      reconcile: "/admin/payments/reconcile",
+    },
+    payoutAccounts: {
+      reconcile: "/admin/payout-accounts/reconcile",
     },
     payouts: {
       prefix: "/admin/payouts",

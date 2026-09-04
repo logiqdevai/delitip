@@ -1,6 +1,6 @@
 import { EmailTemplates } from '@/integrations/notifications/resend/interfaces/mail.interfaces';
 
-const EmailAddress = "info@appointmy.com"
+const EmailAddress = "no-reply@delitip.com"
 
 export const EmailConfig = {
     email_addresses: {

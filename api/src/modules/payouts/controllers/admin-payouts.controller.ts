@@ -22,6 +22,7 @@ export class AdminPayoutsController {
   @ApiQuery({ name: 'store_id', required: false })
   @ApiQuery({ name: 'recipient_type', required: false })
   @ApiQuery({ name: 'status', required: false })
+  @ApiQuery({ name: 'search', required: false })
   @ApiQuery({ name: 'date_from', required: false })
   @ApiQuery({ name: 'date_to', required: false })
   findAll(@Query(new ZodValidationPipe(AdminPayoutsQuerySchema)) query: AdminPayoutsQueryType) {

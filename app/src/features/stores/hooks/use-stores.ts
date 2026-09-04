@@ -4,6 +4,7 @@ import {
   deleteStore,
   getPublicStore,
   getStore,
+  listAdminStores,
   listStores,
   updateStore,
 } from "@/features/stores/services/stores.services";
@@ -24,6 +25,14 @@ export const storesQueryKeys = {
   // several settings forms (e.g. Branding) read logo/cover refs from here.
   detail: (id: string) => ["stores", "detail", id] as const,
   public: (slug: string) => ["public-store", slug] as const,
+  adminList: ["stores", "admin"] as const,
+};
+
+export const useAdminStores = () => {
+  return useQuery({
+    queryKey: storesQueryKeys.adminList,
+    queryFn: listAdminStores,
+  });
 };
 
 export const useStores = (organizationId: string) => {

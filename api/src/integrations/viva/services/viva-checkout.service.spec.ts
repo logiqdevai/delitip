@@ -26,7 +26,7 @@ describe('VivaCheckoutService', () => {
   });
 
   it('retrieves an order over Basic auth on the native host', async () => {
-    vivaHttpClient.request.mockResolvedValue({ OrderCode: 123, StateId: '3' });
+    vivaHttpClient.request.mockResolvedValue({ OrderCode: 123, StateId: 3 });
 
     const result = await service.getOrder(123);
 
@@ -36,7 +36,7 @@ describe('VivaCheckoutService', () => {
       method: 'GET',
       path: '/api/orders/123',
     });
-    expect(result).toEqual({ OrderCode: 123, StateId: '3' });
+    expect(result).toEqual({ OrderCode: 123, StateId: 3 });
   });
 
   it('cancels an order', async () => {

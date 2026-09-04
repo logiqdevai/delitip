@@ -30,7 +30,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
   const createReview = useCreatePublicReview();
   const reviewSubmitted = useRef(false);
   const [pending] = useState(() => readPendingTip(tipId));
-  const [pollStartedAt] = useState(() => Date.now());
+  const [pollStartedAt, setPollStartedAt] = useState(() => Date.now());
   const [timedOut, setTimedOut] = useState(false);
 
   const status = statusQuery.data?.status;
@@ -131,7 +131,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
         <button
           type="button"
           onClick={onRestart}
-          className="mt-4 rounded-2xl bg-ink-charcoal px-6 py-3 text-sm font-semibold text-paper-offwhite shadow transition hover:bg-zinc-800"
+          className="mt-4 rounded-2xl bg-(--tip-primary) px-6 py-3 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary)"
         >
           Try again
         </button>
@@ -157,10 +157,15 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
         <button
           type="button"
           onClick={() => {
+            // Also reset the poll window's start time — otherwise the
+            // 12s-timeout effect below immediately fires again from the
+            // original (already-elapsed) baseline, making Refresh look
+            // like it does nothing.
+            setPollStartedAt(Date.now());
             setTimedOut(false);
             void statusQuery.refetch();
           }}
-          className="mt-4 flex items-center gap-2 rounded-2xl bg-ink-charcoal px-6 py-3 text-sm font-semibold text-paper-offwhite shadow transition hover:bg-zinc-800"
+          className="mt-4 flex items-center gap-2 rounded-2xl bg-(--tip-primary) px-6 py-3 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary)"
         >
           <RefreshCw className="size-4" strokeWidth={2} />
           <span>Refresh</span>

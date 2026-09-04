@@ -5,6 +5,7 @@ import {
   listEmployeePayouts,
   listStoreDistributions,
   listStorePayouts,
+  previewStorePayouts,
   runStorePayouts,
 } from "@/features/payouts/services/payouts.services";
 import type {
@@ -25,6 +26,7 @@ export const payoutsQueryKeys = {
   adminList: (query?: AdminPayoutsQuery) =>
     ["payouts", "admin", query] as const,
   adminDetail: (id: string) => ["payout", "admin", id] as const,
+  storePreview: (storeId: string) => ["payouts", "preview", storeId] as const,
 };
 
 export const distributionsQueryKeys = {
@@ -75,6 +77,16 @@ export const useAdminPayout = (id: string) => {
     queryKey: payoutsQueryKeys.adminDetail(id),
     queryFn: () => getAdminPayout(id),
     enabled: !!id,
+  });
+};
+
+// Enabled only while the "Pay out now" dialog is open (`enabled`) — refetches
+// fresh every time it opens rather than serving a stale cached breakdown.
+export const useStorePayoutsPreview = (storeId: string, enabled: boolean) => {
+  return useQuery({
+    queryKey: payoutsQueryKeys.storePreview(storeId),
+    queryFn: () => previewStorePayouts(storeId),
+    enabled: !!storeId && enabled,
   });
 };
 

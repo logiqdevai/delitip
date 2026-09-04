@@ -117,8 +117,7 @@ export const AuthEmployeeForm: FC = () => {
             strokeWidth={2}
           />
           <span>
-            Use the email and password from your staff invite. Ask your manager
-            if you need access reset.
+            Use the email and password from your invitation email.
           </span>
         </div>
 

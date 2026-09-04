@@ -74,6 +74,21 @@ export interface RunPayoutResponse {
   skipped_recipients: SkippedPayoutRecipient[];
 }
 
+export interface PayoutPreviewRecipient {
+  recipient_type: DistributionRecipientType;
+  employee_id?: string;
+  name: string;
+  amount: number;
+  currency: Currency;
+  will_be_paid: boolean;
+  skip_reason?: PayoutSkipReason;
+}
+
+export interface PayoutPreview {
+  total_amount: number;
+  recipients: PayoutPreviewRecipient[];
+}
+
 export interface PayoutsQuery {
   page?: number;
   limit?: number;
@@ -85,6 +100,13 @@ export interface DistributionTipRef {
   paid_at?: string | null;
   currency: Currency;
 }
+
+export const DistributionHoldReasons = {
+  HOLD_WINDOW: "HOLD_WINDOW",
+  FEE_NOT_CONFIRMED: "FEE_NOT_CONFIRMED",
+} as const;
+export type DistributionHoldReason =
+  (typeof DistributionHoldReasons)[keyof typeof DistributionHoldReasons];
 
 export interface Distribution {
   id: string;
@@ -99,12 +121,19 @@ export interface Distribution {
   paid_out_at?: string | null;
   created_at: string;
   eligible_now: boolean;
+  // Why it isn't payable yet: HOLD_WINDOW has a knowable ETA (eligible_at);
+  // FEE_NOT_CONFIRMED depends on Viva's own settlement webhook, which has
+  // no predictable timing, so eligible_at stays null for that reason.
+  hold_reason: DistributionHoldReason | null;
+  eligible_at?: string | null;
   tip: DistributionTipRef;
 }
 
 export interface DistributionsSummary {
   pending_total_amount: number;
   eligible_total_amount: number;
+  hold_window_hours: number;
+  next_eligible_at: string | null;
 }
 
 export interface DistributionsQuery {
@@ -123,6 +152,7 @@ export interface AdminPayoutsQuery {
   store_id?: string;
   recipient_type?: DistributionRecipientType;
   status?: PayoutExecutionStatus;
+  search?: string;
   date_from?: string;
   date_to?: string;
 }

@@ -49,6 +49,14 @@ describe('resolvePeriod', () => {
         expect(result.lte).toEqual(now);
     });
 
+    it('resolves "all" to epoch through now', () => {
+        const now = new Date();
+        const result = resolvePeriod('all');
+
+        expect(result.gte).toEqual(new Date(0));
+        expect(result.lte).toEqual(now);
+    });
+
     it('falls back to the 7-day window for any unrecognized period value', () => {
         const now = new Date();
         const result = resolvePeriod('bogus' as any);

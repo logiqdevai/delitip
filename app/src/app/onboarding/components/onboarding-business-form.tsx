@@ -23,6 +23,7 @@ import { CountryPicker } from "@/components/ui/country-picker";
 import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
 import { TeamSizeFormOptions } from "@/config/constants/dropdowns/businesses/team-size-form.options";
 import {
+  GREECE_COUNTRY_CODE,
   getCountryCodeByName,
   getCountryLabel,
 } from "@/config/constants/dropdowns/shared/country.options";
@@ -52,6 +53,7 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
     control,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<BusinessSetupFormData>({
     resolver: zodResolver(businessSetupSchema),
@@ -60,6 +62,8 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
       currency: defaultValues.currency || Currencies.EUR,
     },
   });
+
+  const isGreece = getCountryCodeByName(watch("country")) === GREECE_COUNTRY_CODE;
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -244,6 +248,21 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
             />
           </div>
         </div>
+
+        {isGreece ? (
+          <div className="space-y-1.5">
+            <Label htmlFor="onboarding-doy">Tax office (Δ.Ο.Υ.)</Label>
+            <Input
+              id="onboarding-doy"
+              placeholder="e.g. Δ.Ο.Υ. Αθηνών"
+              aria-invalid={!!errors.doy}
+              {...register("doy")}
+            />
+            {errors.doy ? (
+              <p className="text-xs text-red-600">{errors.doy.message}</p>
+            ) : null}
+          </div>
+        ) : null}
 
         <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
           <ActionButtonWithPending

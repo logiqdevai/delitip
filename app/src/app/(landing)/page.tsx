@@ -19,7 +19,9 @@ const LandingPage: FC = () => {
         <LandingHowItWorks />
         <LandingEcosystem />
         <LandingCalculator />
-        <LandingPricing />
+        <div className="hidden" hidden>
+          <LandingPricing />
+        </div>
         <LandingCta />
       </main>
       <LandingFooter />

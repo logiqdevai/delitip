@@ -5,6 +5,7 @@ import { TipsService } from '@/modules/tips/services/tips.service';
 import { VivaTransactionsService } from '@/integrations/viva/services/viva-transactions.service';
 import { VivaTransaction } from '@/integrations/viva/interfaces/viva-transactions.interface';
 import { PlatformFinanceConfig } from '@/shared/config/platform-finance/platform-finance.config';
+import { PayoutAccountsService } from '@/modules/payout-accounts/payout-accounts.service';
 import {
   calculateTipDistribution,
   RuleRecipientInput,
@@ -24,6 +25,7 @@ export class PaymentWebhooksService {
     private readonly vivaTransactions: VivaTransactionsService,
     private readonly platformFinanceConfig: PlatformFinanceConfig,
     private readonly tipsService: TipsService,
+    private readonly payoutAccountsService: PayoutAccountsService,
   ) {}
 
   async process(payload: VivaWebhookPayloadDto): Promise<void> {
@@ -80,6 +82,11 @@ export class PaymentWebhooksService {
         return;
       case VivaWebhookEventTypeId.ORDER_UPDATED:
         return this.handleOrderUpdated(payload.EventData);
+      case VivaWebhookEventTypeId.ACCOUNT_CONNECTED:
+      case VivaWebhookEventTypeId.ACCOUNT_VERIFICATION_STATUS_CHANGED:
+        return this.handleConnectedAccountStatusChanged(payload.EventData);
+      case VivaWebhookEventTypeId.TRANSFER_CREATED:
+        return this.handleConnectedAccountTransferCreated(payload.EventData);
       default:
         this.logger.log(`Unhandled Viva webhook EventTypeId ${payload.EventTypeId}`);
         return;
@@ -134,9 +141,18 @@ export class PaymentWebhooksService {
       return;
     }
 
-    if (transaction.amount !== tip.payment_transaction.gross_amount) {
+    // `GET /checkout/v2/transactions/{id}` reports amount in major currency
+    // units (e.g. 20.00 for a €20.00 tip), unlike the minor-unit amount we
+    // send when creating the order — confirmed against Viva's real response,
+    // not just its docs. Every other VivaTransaction producer (the
+    // reconciliation sweep's order-derived fallback included) must supply
+    // major units here too, since this is the one place the conversion happens.
+    const amountMinorUnits =
+      transaction.amount !== undefined ? Math.round(transaction.amount * 100) : undefined;
+
+    if (amountMinorUnits !== tip.payment_transaction.gross_amount) {
       this.logger.error(
-        `Amount mismatch for tip ${tip.id}: expected ${tip.payment_transaction.gross_amount}, Viva reports ${transaction.amount}`,
+        `Amount mismatch for tip ${tip.id}: expected ${tip.payment_transaction.gross_amount}, Viva reports ${transaction.amount} (${amountMinorUnits} minor units)`,
       );
       return;
     }
@@ -161,14 +177,22 @@ export class PaymentWebhooksService {
       : [];
 
     const grossAmount = tip.payment_transaction.gross_amount;
+    const tipAmount = tip.payment_transaction.tip_amount;
     const commissionAmount = tip.payment_transaction.commission_amount;
-    const processorFeeEstimated = Math.round(
-      (grossAmount * this.platformFinanceConfig.getProcessorFeeEstimatePercentage()) / 100,
-    );
-    const netDistributableAmount = Math.max(
-      grossAmount - commissionAmount - processorFeeEstimated,
-      0,
-    );
+    const processorFeePercentageUsed = this.platformFinanceConfig.getProcessorFeeEstimatePercentage();
+    const processorFeeFixedAmount = this.platformFinanceConfig.getProcessorFeeEstimateFixedAmount();
+    // Estimated against grossAmount (VAT-inclusive) since that's the actual
+    // amount Viva processes on the card — VAT is charged its own cut too.
+    const processorFeeEstimated =
+      Math.round((grossAmount * processorFeePercentageUsed) / 100) + processorFeeFixedAmount;
+    const paymentFeePercentage = Math.round(((processorFeeEstimated / grossAmount) * 100) * 100) / 100;
+    const totalFeeAmount = commissionAmount + processorFeeEstimated;
+    const totalFeePercentage = Math.round(((totalFeeAmount / grossAmount) * 100) * 100) / 100;
+    const totalFeePercentageSum =
+      Math.round((Number(tip.payment_transaction.platform_fee_percentage) + paymentFeePercentage) * 100) / 100;
+    // Based on tipAmount, not grossAmount — vat_amount is retained by the
+    // platform in full and must never leak into the store/employee split.
+    const netDistributableAmount = Math.max(tipAmount - totalFeeAmount, 0);
 
     const distributionLines = calculateTipDistribution(recipients, selectedEmployeeIds, netDistributableAmount);
 
@@ -188,7 +212,12 @@ export class PaymentWebhooksService {
           provider_transaction_id: this.transactionIdOf(transaction),
           status: 'SUCCEEDED',
           confirmed_at: new Date(),
+          processor_fee_percentage_used: processorFeePercentageUsed,
           processor_fee_estimated: processorFeeEstimated,
+          payment_fee_percentage: paymentFeePercentage,
+          total_fee_amount: totalFeeAmount,
+          total_fee_percentage: totalFeePercentage,
+          total_fee_percentage_sum: totalFeePercentageSum,
           net_distributable_amount: netDistributableAmount,
           payment_method: transaction.cardTypeId ? String(transaction.cardTypeId) : undefined,
         },
@@ -315,16 +344,26 @@ export class PaymentWebhooksService {
       return;
     }
 
-    const netDistributableAmount = Math.max(
-      paymentTransaction.gross_amount - paymentTransaction.commission_amount - confirmedFee,
-      0,
-    );
+    const grossAmount = paymentTransaction.gross_amount;
+    const tipAmount = paymentTransaction.tip_amount;
+    const paymentFeePercentage = Math.round(((confirmedFee / grossAmount) * 100) * 100) / 100;
+    const totalFeeAmount = paymentTransaction.commission_amount + confirmedFee;
+    const totalFeePercentage = Math.round(((totalFeeAmount / grossAmount) * 100) * 100) / 100;
+    const totalFeePercentageSum =
+      Math.round((Number(paymentTransaction.platform_fee_percentage) + paymentFeePercentage) * 100) / 100;
+    // Based on tipAmount, not grossAmount — see the same fix/comment in
+    // applyVerifiedTransaction above.
+    const netDistributableAmount = Math.max(tipAmount - totalFeeAmount, 0);
 
     await this.prisma.paymentTransaction.update({
       where: { id: paymentTransaction.id },
       data: {
         processor_fee_confirmed_amount: confirmedFee,
         processor_fee_confirmed: true,
+        payment_fee_percentage: paymentFeePercentage,
+        total_fee_amount: totalFeeAmount,
+        total_fee_percentage: totalFeePercentage,
+        total_fee_percentage_sum: totalFeePercentageSum,
         net_distributable_amount: netDistributableAmount,
       },
     });
@@ -385,6 +424,59 @@ export class PaymentWebhooksService {
           data: { payout_status: PayoutStatus.PENDING, payout_id: null },
         });
       }
+    });
+  }
+
+  // The exact EventData field name is unverified (see VivaWebhookEventTypeId
+  // comment) — try the plausible candidates. Never trust the payload's
+  // claimed status directly: PayoutAccountsService.promoteIfVerified always
+  // re-fetches the connected account from Viva before promoting, same "go
+  // check, don't trust" pattern as every other handler in this file.
+  private async handleConnectedAccountStatusChanged(eventData?: Record<string, unknown>): Promise<void> {
+    const accountId = this.extractConnectedAccountId(eventData);
+    if (!accountId) {
+      this.logger.warn('Account-status webhook missing a connected account id in EventData');
+      return;
+    }
+
+    const account = await this.prisma.payoutAccount.findFirst({ where: { connected_account_id: accountId } });
+    if (!account) {
+      this.logger.warn(`No PayoutAccount found for connected_account_id=${accountId}`);
+      return;
+    }
+
+    await this.payoutAccountsService.promoteIfVerified(account);
+  }
+
+  private extractConnectedAccountId(eventData?: Record<string, unknown>): string | undefined {
+    if (!eventData) return undefined;
+    const candidate = eventData.AccountId ?? eventData.accountId ?? eventData.Id ?? eventData.id;
+    return typeof candidate === 'string' ? candidate : undefined;
+  }
+
+  private async handleConnectedAccountTransferCreated(eventData?: Record<string, unknown>): Promise<void> {
+    const transferId = eventData?.TransferId ?? eventData?.transferId ?? eventData?.Id;
+    if (typeof transferId !== 'string') {
+      this.logger.warn('Transfer-created webhook missing a transfer id to match a Payout');
+      return;
+    }
+
+    const payout = await this.prisma.payout.findFirst({ where: { provider_transfer_id: transferId } });
+    if (!payout) {
+      this.logger.warn(`No Payout found for provider_transfer_id=${transferId}`);
+      return;
+    }
+    if (payout.status !== PayoutExecutionStatus.PROCESSING) return;
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.payout.update({
+        where: { id: payout.id },
+        data: { status: PayoutExecutionStatus.COMPLETED, executed_at: new Date() },
+      });
+      await tx.tipDistribution.updateMany({
+        where: { payout_id: payout.id },
+        data: { payout_status: PayoutStatus.PAID, paid_out_at: new Date() },
+      });
     });
   }
 }

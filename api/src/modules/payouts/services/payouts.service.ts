@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { PlatformFinanceConfig } from '@/shared/config/platform-finance/platform-finance.config';
@@ -6,7 +6,11 @@ import { VivaConfig } from '@/integrations/viva/viva.config';
 import { VivaBankTransfersService } from '@/integrations/viva/services/viva-bank-transfers.service';
 import { PayoutAccountsService } from '@/modules/payout-accounts/payout-accounts.service';
 import { paginate } from '@/shared/utils/pagination/pagination-query.schema';
-import { resolveTranslatedText } from '@/shared/utils/translation/translation.utils';
+import { resolveTranslatedText, TranslatedText } from '@/shared/utils/translation/translation.utils';
+import {
+  CONNECTED_ACCOUNTS_PROVIDER,
+  ConnectedAccountsProvider,
+} from '@/shared/services/connected-accounts/connected-accounts-provider.interface';
 import { RunPayoutDto } from '../dto/run-payout.dto';
 import { PayoutsQueryType } from '../dto/payouts-query.schema';
 import { DistributionsQueryType } from '../dto/distributions-query.schema';
@@ -17,6 +21,7 @@ import {
   OrganizationRole,
   PayoutAccountStatus,
   PayoutExecutionStatus,
+  PayoutMethod,
   PayoutStatus,
   TipStatus,
 } from 'generated/prisma';
@@ -48,7 +53,50 @@ export class PayoutsService {
     private readonly vivaConfig: VivaConfig,
     private readonly vivaBankTransfers: VivaBankTransfersService,
     private readonly payoutAccountsService: PayoutAccountsService,
+    @Inject(CONNECTED_ACCOUNTS_PROVIDER) private readonly connectedAccountsProvider: ConnectedAccountsProvider,
   ) {}
+
+  // Read-only breakdown of what a "Pay out now" run would actually do —
+  // same grouping/account-resolution logic as run(), without claiming or
+  // transferring anything, so the confirmation UI can show real per-recipient
+  // amounts and who'll be skipped (and why) before the owner commits.
+  async previewEligiblePayouts(user: AuthUser, storeId: string) {
+    await this.accessControl.assertStoreAccess(user, storeId, [OrganizationRole.OWNER]);
+
+    const [groups, store] = await Promise.all([
+      this.loadEligibleGroups(storeId),
+      this.prisma.store.findUnique({ where: { id: storeId }, select: { name: true, primary_language: true } }),
+    ]);
+
+    const recipients = await Promise.all(
+      groups.map(async (group) => {
+        const account = await this.resolvePayoutAccount(group);
+        const name =
+          group.recipientType === DistributionRecipientType.STORE
+            ? (store?.name ?? 'Store')
+            : await this.resolveEmployeeName(group.employeeId!, store?.primary_language ?? Language.EN);
+
+        return {
+          recipient_type: group.recipientType,
+          employee_id: group.employeeId,
+          name,
+          amount: group.amount,
+          currency: group.currency,
+          will_be_paid: !!account.payoutAccount,
+          skip_reason: account.reason,
+        };
+      }),
+    );
+
+    const total_amount = recipients.filter((r) => r.will_be_paid).reduce((sum, r) => sum + r.amount, 0);
+
+    return { total_amount, recipients };
+  }
+
+  private async resolveEmployeeName(employeeId: string, primaryLanguage: Language): Promise<string> {
+    const employee = await this.prisma.employee.findUnique({ where: { id: employeeId } });
+    return (employee && resolveTranslatedText(employee.full_name as TranslatedText, undefined, primaryLanguage)) || 'Employee';
+  }
 
   async run(user: AuthUser, storeId: string, dto: RunPayoutDto) {
     await this.accessControl.assertStoreAccess(user, storeId, [OrganizationRole.OWNER]);
@@ -72,7 +120,7 @@ export class PayoutsService {
       const claimed = await this.claimGroup(group, account.payoutAccount.id, walletId);
       if (!claimed) continue;
 
-      const executed = await this.executeTransfer(claimed, account.payoutAccount.bank_account_id!, walletId);
+      const executed = await this.executeTransfer(claimed, account.payoutAccount, walletId);
       payouts.push(executed);
       if (executed.status === PayoutExecutionStatus.FAILED) {
         skipped.push({ recipient_type: group.recipientType, employee_id: group.employeeId, reason: 'TRANSFER_FAILED' });
@@ -124,9 +172,15 @@ export class PayoutsService {
     return Array.from(groups.values());
   }
 
-  private async resolvePayoutAccount(
-    group: RecipientGroup,
-  ): Promise<{ payoutAccount: { id: string; bank_account_id: string | null } | null; reason?: SkippedRecipient['reason'] }> {
+  private async resolvePayoutAccount(group: RecipientGroup): Promise<{
+    payoutAccount: {
+      id: string;
+      payout_method: PayoutMethod;
+      bank_account_id: string | null;
+      connected_account_id: string | null;
+    } | null;
+    reason?: SkippedRecipient['reason'];
+  }> {
     let payoutAccount;
 
     if (group.recipientType === DistributionRecipientType.STORE) {
@@ -149,11 +203,23 @@ export class PayoutsService {
     // ForUser, so a freshly-linked account isn't stuck waiting for this.
     payoutAccount = await this.payoutAccountsService.promoteIfVerified(payoutAccount);
 
-    if (payoutAccount.status !== PayoutAccountStatus.ACTIVE || !payoutAccount.bank_account_id) {
+    const usable =
+      payoutAccount.payout_method === PayoutMethod.CONNECTED_ACCOUNT
+        ? !!payoutAccount.connected_account_id
+        : !!payoutAccount.bank_account_id;
+
+    if (payoutAccount.status !== PayoutAccountStatus.ACTIVE || !usable) {
       return { payoutAccount: null, reason: 'ACCOUNT_NOT_ACTIVE' };
     }
 
-    return { payoutAccount: { id: payoutAccount.id, bank_account_id: payoutAccount.bank_account_id } };
+    return {
+      payoutAccount: {
+        id: payoutAccount.id,
+        payout_method: payoutAccount.payout_method,
+        bank_account_id: payoutAccount.bank_account_id,
+        connected_account_id: payoutAccount.connected_account_id,
+      },
+    };
   }
 
   private async claimGroup(group: RecipientGroup, payoutAccountId: string, _walletId: number) {
@@ -192,34 +258,24 @@ export class PayoutsService {
     });
   }
 
-  private async executeTransfer(payout: any, bankAccountId: string, walletId: number) {
+  private async executeTransfer(
+    payout: any,
+    account: { payout_method: PayoutMethod; bank_account_id: string | null; connected_account_id: string | null },
+    walletId: number,
+  ) {
     try {
-      const instructionTypesResponse = await this.vivaBankTransfers.getInstructionTypes(bankAccountId, payout.amount);
-      const instructionTypes = instructionTypesResponse.instructionTypes ?? [];
-      if (instructionTypes.length === 0) {
-        throw new Error('No supported bank transfer instruction types for this account');
-      }
-
-      const fee = await this.vivaBankTransfers.createBankTransferFee(bankAccountId, {
-        amount: payout.amount,
-        walletId,
-        instructionType: instructionTypes,
-      });
-
-      const execution = await this.vivaBankTransfers.executeBankTransfer(bankAccountId, {
-        amount: payout.amount,
-        walletId,
-        bankCommandId: fee.bankCommandId,
-        description: 'Delitip tip payout',
-      });
+      const providerTransferId =
+        account.payout_method === PayoutMethod.CONNECTED_ACCOUNT
+          ? await this.executeConnectedAccountTransfer(payout, account.connected_account_id!)
+          : await this.executeBankTransfer(payout, account.bank_account_id!, walletId);
 
       return this.prisma.payout.update({
         where: { id: payout.id },
-        data: { provider_transfer_id: execution.commandId ?? fee.bankCommandId },
+        data: { provider_transfer_id: providerTransferId },
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Bank transfer failed for payout ${payout.id}: ${message}`);
+      this.logger.error(`Transfer failed for payout ${payout.id}: ${message}`);
 
       return this.prisma.$transaction(async (tx) => {
         const failed = await tx.payout.update({
@@ -235,6 +291,50 @@ export class PayoutsService {
     }
   }
 
+  private async executeBankTransfer(payout: any, bankAccountId: string, walletId: number): Promise<string> {
+    const instructionTypesResponse = await this.vivaBankTransfers.getInstructionTypes(bankAccountId, payout.amount);
+    const instructionTypes = instructionTypesResponse.instructionTypes ?? [];
+    if (instructionTypes.length === 0) {
+      throw new Error('No supported bank transfer instruction types for this account');
+    }
+    // 1 (Shared) is Viva's own default when unspecified — prefer it when
+    // supported, otherwise fall back to whatever this account does support.
+    const instructionType = instructionTypes.includes(1) ? 1 : instructionTypes[0];
+
+    const fee = await this.vivaBankTransfers.createBankTransferFee(bankAccountId, {
+      amount: payout.amount,
+      walletId,
+      instructionType,
+    });
+
+    const execution = await this.vivaBankTransfers.executeBankTransfer(bankAccountId, {
+      amount: payout.amount,
+      walletId,
+      bankCommandId: fee.bankCommandId,
+      description: 'Delitip tip payout',
+    });
+
+    return execution.commandId ?? fee.bankCommandId;
+  }
+
+  // No fee-quote step here (unlike executeBankTransfer) — Marketplace
+  // transfers don't have Viva's Bank Transfer fee-quote concept. `transactionId`
+  // is deliberately omitted: a Payout here bundles distributions across
+  // possibly many settled Tips (accumulated since the hold window), not one
+  // specific customer payment, so there's no single transaction to anchor
+  // to — Viva's own docs say an empty/already-settled transactionId makes
+  // this an instant balance transfer, which is exactly the batched-payout
+  // model this method is called from.
+  private async executeConnectedAccountTransfer(payout: any, connectedAccountId: string): Promise<string> {
+    const transfer = await this.connectedAccountsProvider.createTransfer({
+      connectedAccountId,
+      amount: payout.amount,
+      description: 'Delitip tip payout',
+    });
+
+    return transfer.transferId;
+  }
+
   async findForStore(user: AuthUser, storeId: string, query: PayoutsQueryType) {
     await this.accessControl.assertStoreAccess(user, storeId, [OrganizationRole.OWNER, OrganizationRole.ACCOUNTANT]);
 
@@ -242,7 +342,12 @@ export class PayoutsService {
     const [items, total] = await Promise.all([
       this.prisma.payout.findMany({
         where,
-        include: { employee: true, payout_account: true },
+        include: {
+          employee: {
+            include: { store: { select: { primary_language: true } } },
+          },
+          payout_account: true,
+        },
         skip: (query.page - 1) * query.limit,
         take: query.limit,
         orderBy: { created_at: 'desc' },
@@ -250,7 +355,7 @@ export class PayoutsService {
       this.prisma.payout.count({ where }),
     ]);
 
-    return paginate(items, total, query);
+    return paginate(items.map((item) => this.resolvePayoutRefs(item)), total, query);
   }
 
   async findForEmployee(user: AuthUser, employeeId: string, query: PayoutsQueryType) {
@@ -282,7 +387,7 @@ export class PayoutsService {
   // via the recipient Employee's own store for EMPLOYEE recipients — this
   // normalizes both into a single `store` ref and resolves the employee's
   // translated display name (raw Json otherwise).
-  private resolvePayoutRefs<T extends { store: any; employee: any }>(payout: T) {
+  private resolvePayoutRefs<T extends { store?: any; employee: any }>(payout: T) {
     const store = payout.store ?? payout.employee?.store ?? null;
     return {
       ...payout,
@@ -299,7 +404,8 @@ export class PayoutsService {
 
   async findAllAdmin(query: AdminPayoutsQueryType) {
     const where: any = {};
-    if (query.store_id) where.OR = [{ store_id: query.store_id }, { employee: { store_id: query.store_id } }];
+    const and: any[] = [];
+    if (query.store_id) and.push({ OR: [{ store_id: query.store_id }, { employee: { store_id: query.store_id } }] });
     if (query.recipient_type) where.recipient_type = query.recipient_type;
     if (query.status) where.status = query.status;
     if (query.date_from || query.date_to) {
@@ -307,6 +413,16 @@ export class PayoutsService {
       if (query.date_from) where.created_at.gte = new Date(query.date_from);
       if (query.date_to) where.created_at.lte = new Date(query.date_to);
     }
+    if (query.search) {
+      and.push({
+        OR: [
+          { id: { contains: query.search, mode: 'insensitive' } },
+          { store: { name: { contains: query.search, mode: 'insensitive' } } },
+          { employee: { full_name: { contains: query.search, mode: 'insensitive' } } },
+        ],
+      });
+    }
+    if (and.length) where.AND = and;
 
     const [items, total] = await Promise.all([
       this.prisma.payout.findMany({
@@ -353,7 +469,7 @@ export class PayoutsService {
       if (query.date_to) where.created_at.lte = new Date(query.date_to);
     }
 
-    const [items, total] = await Promise.all([
+    const [items, total, store] = await Promise.all([
       this.prisma.tipDistribution.findMany({
         where,
         include: { tip: { include: { payment_transaction: true } }, employee: true },
@@ -362,41 +478,71 @@ export class PayoutsService {
         orderBy: { created_at: 'desc' },
       }),
       this.prisma.tipDistribution.count({ where }),
+      this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } }),
     ]);
 
-    const holdCutoff = this.holdCutoff();
+    const holdWindowHours = this.platformFinanceConfig.getPayoutHoldWindowHours();
+    const holdCutoff = this.holdCutoff(holdWindowHours);
+    const primaryLanguage = store?.primary_language ?? Language.EN;
     const data = items.map((distribution) => ({
       ...distribution,
-      eligible_now: this.isEligibleNow(distribution, holdCutoff),
+      employee: distribution.employee
+        ? {
+            id: distribution.employee.id,
+            full_name:
+              resolveTranslatedText(
+                distribution.employee.full_name as TranslatedText,
+                undefined,
+                primaryLanguage,
+              ) ?? '',
+          }
+        : null,
+      ...this.resolveEligibility(distribution, holdCutoff, holdWindowHours),
     }));
 
-    const summary = await this.summarizePendingDistributions(storeId, holdCutoff);
+    const summary = await this.summarizePendingDistributions(storeId, holdCutoff, holdWindowHours);
 
     return { ...paginate(data, total, query), summary };
   }
 
-  private holdCutoff(): Date {
-    const holdWindowHours = this.platformFinanceConfig.getPayoutHoldWindowHours();
+  private holdCutoff(holdWindowHours: number): Date {
     return new Date(Date.now() - holdWindowHours * 60 * 60 * 1000);
   }
 
-  private isEligibleNow(
+  // Distinguishes *why* a distribution isn't payable yet, and gives an ETA
+  // when one is knowable — the hold window is a fixed, predictable clock
+  // (paid_at + holdWindowHours), but fee confirmation depends entirely on
+  // Viva sending the 1799 webhook, which has no schedule we can promise.
+  private resolveEligibility(
     distribution: {
       payout_status: PayoutStatus;
       tip: { status: TipStatus; paid_at: Date | null; payment_transaction: { processor_fee_confirmed: boolean } | null };
     },
     holdCutoff: Date,
-  ): boolean {
-    return (
-      distribution.payout_status === PayoutStatus.PENDING &&
-      distribution.tip.status === TipStatus.COMPLETED &&
-      !!distribution.tip.paid_at &&
-      distribution.tip.paid_at <= holdCutoff &&
-      !!distribution.tip.payment_transaction?.processor_fee_confirmed
-    );
+    holdWindowHours: number,
+  ): { eligible_now: boolean; hold_reason: 'HOLD_WINDOW' | 'FEE_NOT_CONFIRMED' | null; eligible_at: Date | null } {
+    if (
+      distribution.payout_status !== PayoutStatus.PENDING ||
+      distribution.tip.status !== TipStatus.COMPLETED ||
+      !distribution.tip.paid_at
+    ) {
+      return { eligible_now: false, hold_reason: null, eligible_at: null };
+    }
+
+    const holdWindowEligibleAt = new Date(distribution.tip.paid_at.getTime() + holdWindowHours * 60 * 60 * 1000);
+
+    if (distribution.tip.paid_at > holdCutoff) {
+      return { eligible_now: false, hold_reason: 'HOLD_WINDOW', eligible_at: holdWindowEligibleAt };
+    }
+
+    if (!distribution.tip.payment_transaction?.processor_fee_confirmed) {
+      return { eligible_now: false, hold_reason: 'FEE_NOT_CONFIRMED', eligible_at: null };
+    }
+
+    return { eligible_now: true, hold_reason: null, eligible_at: null };
   }
 
-  private async summarizePendingDistributions(storeId: string, holdCutoff: Date) {
+  private async summarizePendingDistributions(storeId: string, holdCutoff: Date, holdWindowHours: number) {
     const pendingWhere = { tip: { store_id: storeId }, payout_status: PayoutStatus.PENDING };
     const eligibleWhere = {
       payout_status: PayoutStatus.PENDING,
@@ -408,14 +554,31 @@ export class PayoutsService {
       },
     };
 
-    const [pendingTotal, eligibleTotal] = await Promise.all([
+    const [pendingTotal, eligibleTotal, earliestHeld] = await Promise.all([
       this.prisma.tipDistribution.aggregate({ where: pendingWhere, _sum: { amount: true } }),
       this.prisma.tipDistribution.aggregate({ where: eligibleWhere, _sum: { amount: true } }),
+      // The next distribution to clear the hold window — an ETA is only
+      // knowable for that reason, not for fee-confirmation holds, so this
+      // deliberately only looks at still-within-the-window distributions.
+      this.prisma.tipDistribution.findFirst({
+        where: {
+          payout_status: PayoutStatus.PENDING,
+          tip: { store_id: storeId, status: TipStatus.COMPLETED, paid_at: { gt: holdCutoff } },
+        },
+        orderBy: { tip: { paid_at: 'asc' } },
+        select: { tip: { select: { paid_at: true } } },
+      }),
     ]);
+
+    const nextEligibleAt = earliestHeld?.tip.paid_at
+      ? new Date(earliestHeld.tip.paid_at.getTime() + holdWindowHours * 60 * 60 * 1000)
+      : null;
 
     return {
       pending_total_amount: pendingTotal._sum.amount ?? 0,
       eligible_total_amount: eligibleTotal._sum.amount ?? 0,
+      hold_window_hours: holdWindowHours,
+      next_eligible_at: nextEligibleAt,
     };
   }
 }

@@ -12,12 +12,20 @@ describe('PayoutsService', () => {
     let vivaConfig: any;
     let vivaBankTransfers: any;
     let payoutAccountsService: any;
+    let connectedAccountsProvider: any;
 
     beforeEach(() => {
         prisma = {
-            tipDistribution: { findMany: jest.fn().mockResolvedValue([]), updateMany: jest.fn(), aggregate: jest.fn() },
+            tipDistribution: {
+                findMany: jest.fn().mockResolvedValue([]),
+                findFirst: jest.fn().mockResolvedValue(null),
+                updateMany: jest.fn(),
+                aggregate: jest.fn(),
+                count: jest.fn().mockResolvedValue(0),
+            },
             payoutAccount: { findUnique: jest.fn(), update: jest.fn(), findUniqueOrThrow: jest.fn() },
             employee: { findUnique: jest.fn() },
+            store: { findUnique: jest.fn().mockResolvedValue({ primary_language: 'EN' }) },
             payout: { create: jest.fn(), delete: jest.fn(), update: jest.fn(), findUniqueOrThrow: jest.fn(), findMany: jest.fn(), count: jest.fn() },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
@@ -36,6 +44,9 @@ describe('PayoutsService', () => {
             // the account isn't PENDING.
             promoteIfVerified: jest.fn((account: any) => Promise.resolve(account)),
         };
+        connectedAccountsProvider = {
+            createTransfer: jest.fn(),
+        };
 
         service = new PayoutsService(
             prisma,
@@ -44,6 +55,7 @@ describe('PayoutsService', () => {
             vivaConfig,
             vivaBankTransfers,
             payoutAccountsService,
+            connectedAccountsProvider,
         );
     });
 
@@ -118,11 +130,100 @@ describe('PayoutsService', () => {
             where: { id: { in: ['dist1'] }, payout_id: null, payout_status: PayoutStatus.PENDING },
             data: { payout_id: 'payout1', payout_status: PayoutStatus.PROCESSING },
         });
-        expect(vivaBankTransfers.createBankTransferFee).toHaveBeenCalledWith('bank1', expect.objectContaining({ amount: 500, walletId: 999 }));
+        expect(vivaBankTransfers.createBankTransferFee).toHaveBeenCalledWith(
+            'bank1',
+            // Regression: Viva rejects an array here with 400 "Null options" —
+            // it wants a single instruction type, not the whole supported list.
+            expect.objectContaining({ amount: 500, walletId: 999, instructionType: 1 }),
+        );
         expect(vivaBankTransfers.executeBankTransfer).toHaveBeenCalledWith('bank1', expect.objectContaining({ bankCommandId: 'fee-cmd-1' }));
         expect(result.payouts).toHaveLength(1);
         expect(result.payouts[0]).toEqual(expect.objectContaining({ provider_transfer_id: 'exec-cmd-1' }));
         expect(result.skipped_recipients).toEqual([]);
+    });
+
+    it('falls back to the first supported instruction type when the account does not support Shared (1)', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([storeDistribution()]);
+        prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', status: PayoutAccountStatus.ACTIVE, bank_account_id: 'bank1' });
+        prisma.payout.create.mockResolvedValue({ id: 'payout1', amount: 500, currency: 'EUR' });
+        prisma.tipDistribution.updateMany.mockResolvedValue({ count: 1 });
+        prisma.payout.findUniqueOrThrow.mockResolvedValue({ id: 'payout1', amount: 500 });
+        prisma.payout.update.mockImplementation(async ({ data }: any) => ({ id: 'payout1', ...data }));
+        vivaBankTransfers.getInstructionTypes.mockResolvedValue({ instructionTypes: [2] });
+
+        await service.run(user, 'store1', {});
+
+        expect(vivaBankTransfers.createBankTransferFee).toHaveBeenCalledWith(
+            'bank1',
+            expect.objectContaining({ instructionType: 2 }),
+        );
+    });
+
+    it('executes a connected-account transfer (no fee quote) when the payout account is CONNECTED_ACCOUNT', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([storeDistribution()]);
+        prisma.payoutAccount.findUnique.mockResolvedValue({
+            id: 'pa1',
+            status: PayoutAccountStatus.ACTIVE,
+            payout_method: 'CONNECTED_ACCOUNT',
+            bank_account_id: null,
+            connected_account_id: 'acc_1',
+        });
+        prisma.payout.create.mockResolvedValue({ id: 'payout1', amount: 500, currency: 'EUR' });
+        prisma.tipDistribution.updateMany.mockResolvedValue({ count: 1 });
+        prisma.payout.findUniqueOrThrow.mockResolvedValue({ id: 'payout1', amount: 500 });
+        prisma.payout.update.mockImplementation(async ({ data }: any) => ({ id: 'payout1', ...data }));
+        connectedAccountsProvider.createTransfer.mockResolvedValue({ transferId: 'tr_1' });
+
+        const result = await service.run(user, 'store1', {});
+
+        expect(connectedAccountsProvider.createTransfer).toHaveBeenCalledWith({
+            connectedAccountId: 'acc_1',
+            amount: 500,
+            description: 'Delitip tip payout',
+        });
+        expect(vivaBankTransfers.getInstructionTypes).not.toHaveBeenCalled();
+        expect(vivaBankTransfers.createBankTransferFee).not.toHaveBeenCalled();
+        expect(result.payouts[0]).toEqual(expect.objectContaining({ provider_transfer_id: 'tr_1' }));
+        expect(result.skipped_recipients).toEqual([]);
+    });
+
+    it('skips with ACCOUNT_NOT_ACTIVE when a CONNECTED_ACCOUNT payout account has no connected_account_id yet', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([storeDistribution()]);
+        prisma.payoutAccount.findUnique.mockResolvedValue({
+            id: 'pa1',
+            status: PayoutAccountStatus.ACTIVE,
+            payout_method: 'CONNECTED_ACCOUNT',
+            bank_account_id: null,
+            connected_account_id: null,
+        });
+
+        const result = await service.run(user, 'store1', {});
+
+        expect(result.skipped_recipients[0].reason).toBe('ACCOUNT_NOT_ACTIVE');
+        expect(prisma.payout.create).not.toHaveBeenCalled();
+    });
+
+    it('marks the Payout FAILED and releases the claim when the connected-account transfer fails', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([storeDistribution()]);
+        prisma.payoutAccount.findUnique.mockResolvedValue({
+            id: 'pa1',
+            status: PayoutAccountStatus.ACTIVE,
+            payout_method: 'CONNECTED_ACCOUNT',
+            bank_account_id: null,
+            connected_account_id: 'acc_1',
+        });
+        prisma.payout.create.mockResolvedValue({ id: 'payout1', amount: 500, currency: 'EUR' });
+        prisma.tipDistribution.updateMany.mockResolvedValue({ count: 1 });
+        prisma.payout.findUniqueOrThrow.mockResolvedValue({ id: 'payout1', amount: 500 });
+        prisma.payout.update.mockImplementation(async ({ data }: any) => ({ id: 'payout1', ...data }));
+        connectedAccountsProvider.createTransfer.mockRejectedValue(new Error('provider rejected transfer'));
+
+        const result = await service.run(user, 'store1', {});
+
+        expect(prisma.payout.update).toHaveBeenCalledWith(
+            expect.objectContaining({ data: expect.objectContaining({ status: PayoutExecutionStatus.FAILED }) }),
+        );
+        expect(result.skipped_recipients[0].reason).toBe('TRANSFER_FAILED');
     });
 
     it('deletes the just-created Payout and skips the group when the claim loses a race (count 0)', async () => {
@@ -176,6 +277,59 @@ describe('PayoutsService', () => {
         );
     });
 
+    describe('previewEligiblePayouts', () => {
+        it('requires OWNER-level store access', async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([]);
+
+            await service.previewEligiblePayouts(user, 'store1');
+
+            expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 'store1', [OrganizationRole.OWNER]);
+        });
+
+        it('reports the Store and each employee with their amount and whether they will actually be paid', async () => {
+            prisma.store.findUnique.mockResolvedValue({ name: 'Artisan Cafe', primary_language: 'EN' });
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                storeDistribution({ id: 'dist1', amount: 500 }),
+                storeDistribution({
+                    id: 'dist2',
+                    recipient_type: DistributionRecipientType.EMPLOYEE,
+                    employee_id: 'emp1',
+                    amount: 300,
+                }),
+            ]);
+            prisma.payoutAccount.findUnique.mockImplementation(async ({ where }: any) =>
+                where.store_id
+                    ? { id: 'pa-store', status: PayoutAccountStatus.ACTIVE, bank_account_id: 'bank-store' }
+                    : null,
+            );
+            prisma.employee.findUnique.mockResolvedValue({ id: 'emp1', user_id: 'user1', full_name: { en: 'Anna Zoi' } });
+
+            const result = await service.previewEligiblePayouts(user, 'store1');
+
+            expect(result.recipients).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        recipient_type: DistributionRecipientType.STORE,
+                        name: 'Artisan Cafe',
+                        amount: 500,
+                        will_be_paid: true,
+                        skip_reason: undefined,
+                    }),
+                    expect.objectContaining({
+                        recipient_type: DistributionRecipientType.EMPLOYEE,
+                        employee_id: 'emp1',
+                        name: 'Anna Zoi',
+                        amount: 300,
+                        will_be_paid: false,
+                        skip_reason: 'NO_PAYOUT_ACCOUNT',
+                    }),
+                ]),
+            );
+            // Only the Store will actually be paid -> total excludes the skipped employee.
+            expect(result.total_amount).toBe(500);
+        });
+    });
+
     describe('findForStore / findForEmployee', () => {
         it('scopes a store\'s payout history to its own and its employees\' payouts', async () => {
             prisma.payout.findMany.mockResolvedValue([]);
@@ -189,6 +343,28 @@ describe('PayoutsService', () => {
             );
         });
 
+        it('resolves employee full_name from the translation map before returning', async () => {
+            prisma.payout.findMany.mockResolvedValue([
+                {
+                    id: 'payout1',
+                    recipient_type: DistributionRecipientType.EMPLOYEE,
+                    employee: {
+                        id: 'emp1',
+                        full_name: { en: 'Maria Papadopoulou' },
+                        store: { primary_language: 'EN' },
+                    },
+                },
+            ]);
+            prisma.payout.count.mockResolvedValue(1);
+
+            const result = await service.findForStore(user, 'store1', { page: 1, limit: 20 } as any);
+
+            expect(result.data[0].employee).toEqual({
+                id: 'emp1',
+                full_name: 'Maria Papadopoulou',
+            });
+        });
+
         it('checks self-or-store access for an employee\'s payout history', async () => {
             accessControl.assertEmployeeSelfOrStoreAccess = jest.fn().mockResolvedValue({ isSelf: true });
             prisma.payout.findMany.mockResolvedValue([]);
@@ -198,6 +374,107 @@ describe('PayoutsService', () => {
 
             expect(accessControl.assertEmployeeSelfOrStoreAccess).toHaveBeenCalledWith(user, 'emp1');
             expect(prisma.payout.findMany).toHaveBeenCalledWith(expect.objectContaining({ where: { employee_id: 'emp1' } }));
+        });
+    });
+
+    describe('findDistributionsForStore', () => {
+        const baseDistribution = (overrides: Partial<any> = {}) => ({
+            id: 'dist1',
+            recipient_type: DistributionRecipientType.EMPLOYEE,
+            payout_status: PayoutStatus.PENDING,
+            employee: { id: 'emp1', full_name: { en: 'Maria Papadopoulou' } },
+            tip: {
+                status: TipStatus.COMPLETED,
+                paid_at: new Date('2020-01-01'),
+                payment_transaction: { processor_fee_confirmed: true },
+            },
+            ...overrides,
+        });
+
+        beforeEach(() => {
+            prisma.tipDistribution.count.mockResolvedValue(1);
+            prisma.tipDistribution.aggregate
+                .mockResolvedValueOnce({ _sum: { amount: 10 } })
+                .mockResolvedValueOnce({ _sum: { amount: 10 } });
+            prisma.store.findUnique.mockResolvedValue({ primary_language: 'EN' });
+        });
+
+        it('resolves employee full_name from the translation map before returning', async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([baseDistribution()]);
+
+            const result = await service.findDistributionsForStore(user, 'store1', {
+                page: 1,
+                limit: 20,
+            } as any);
+
+            expect(result.data[0].employee).toEqual({
+                id: 'emp1',
+                full_name: 'Maria Papadopoulou',
+            });
+        });
+
+        it('marks a fully-cleared distribution eligible now, with no hold reason or ETA', async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([baseDistribution()]);
+
+            const result = await service.findDistributionsForStore(user, 'store1', {
+                page: 1,
+                limit: 20,
+            } as any);
+
+            expect(result.data[0]).toEqual(
+                expect.objectContaining({ eligible_now: true, hold_reason: null, eligible_at: null }),
+            );
+        });
+
+        it('reports HOLD_WINDOW with an ETA (paid_at + hold window) while still within the hold window', async () => {
+            const paidAt = new Date(Date.now() - 10 * 60 * 60 * 1000); // 10h ago, well within the 48h default
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                baseDistribution({ tip: { status: TipStatus.COMPLETED, paid_at: paidAt, payment_transaction: { processor_fee_confirmed: true } } }),
+            ]);
+
+            const result = await service.findDistributionsForStore(user, 'store1', {
+                page: 1,
+                limit: 20,
+            } as any);
+
+            expect(result.data[0].eligible_now).toBe(false);
+            expect(result.data[0].hold_reason).toBe('HOLD_WINDOW');
+            expect(result.data[0].eligible_at).toEqual(new Date(paidAt.getTime() + 48 * 60 * 60 * 1000));
+        });
+
+        it('reports FEE_NOT_CONFIRMED with no ETA once past the hold window but the fee is still unconfirmed', async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                baseDistribution({
+                    tip: { status: TipStatus.COMPLETED, paid_at: new Date('2020-01-01'), payment_transaction: { processor_fee_confirmed: false } },
+                }),
+            ]);
+
+            const result = await service.findDistributionsForStore(user, 'store1', {
+                page: 1,
+                limit: 20,
+            } as any);
+
+            expect(result.data[0].eligible_now).toBe(false);
+            expect(result.data[0].hold_reason).toBe('FEE_NOT_CONFIRMED');
+            expect(result.data[0].eligible_at).toBeNull();
+        });
+
+        it("includes the store's hold window and the next held distribution's ETA in the summary", async () => {
+            prisma.tipDistribution.findMany.mockResolvedValue([baseDistribution()]);
+            const paidAt = new Date('2020-01-02T00:00:00.000Z');
+            prisma.tipDistribution.findFirst.mockResolvedValue({ tip: { paid_at: paidAt } });
+
+            const result = await service.findDistributionsForStore(user, 'store1', {
+                page: 1,
+                limit: 20,
+            } as any);
+
+            expect(result.summary).toEqual(
+                expect.objectContaining({
+                    hold_window_hours: 48,
+                    next_eligible_at: new Date(paidAt.getTime() + 48 * 60 * 60 * 1000),
+                }),
+            );
         });
     });
 });

@@ -16,6 +16,7 @@ export type VivaTransactionStatus =
 export interface VivaTransaction {
   email?: string;
   bankId?: string;
+  /** Major currency units (e.g. 20.00 for €20.00) — NOT the minor-unit amount used to create the order. */
   amount?: number;
   switching?: boolean;
   orderCode?: number;

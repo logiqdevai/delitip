@@ -1,5 +1,9 @@
 import { countries as flagCountryCodes } from "country-flag-icons";
 
+// ISO 3166-1 alpha-2 code — referenced wherever behavior is Greece-specific
+// (e.g. showing the Δ.Ο.Υ. tax office field), instead of a bare "GR" literal.
+export const GREECE_COUNTRY_CODE = "GR";
+
 // country-flag-icons also ships subdivisions (e.g. "GB-ENG") and a handful of
 // non-country pseudo-codes (e.g. "EU"). Keep only real ISO 3166-1 alpha-2 codes.
 const NON_COUNTRY_CODES = new Set(["AC", "EU", "IC", "TA", "XA", "XC", "XO"]);
@@ -15,7 +19,7 @@ const SUPPORTED_COUNTRY_CODES = new Set([
   "DE", // German
   "ES", // Spanish
   "FR", // French
-  "GR", // Greek
+  GREECE_COUNTRY_CODE, // Greek
   "IE", // English
   "IT", // Italian
   "LU", // French / German

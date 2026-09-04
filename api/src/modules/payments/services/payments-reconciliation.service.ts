@@ -2,12 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VivaCheckoutService } from '@/integrations/viva/services/viva-checkout.service';
-import { VivaDataServicesService } from '@/integrations/viva/services/viva-data-services.service';
-import { VivaOrderState } from '@/integrations/viva/interfaces/viva-checkout.interface';
+import { VivaOrder, VivaOrderState } from '@/integrations/viva/interfaces/viva-checkout.interface';
 import { VivaTransaction } from '@/integrations/viva/interfaces/viva-transactions.interface';
 import { VivaApiException } from '@/integrations/viva/http/viva-api.exception';
 import { TipStatus, PaymentTransactionStatus } from 'generated/prisma';
 import { PaymentWebhooksService } from './payment-webhooks.service';
+import { VIVA_TRANSACTION_STATUS_SUCCESS } from '../interfaces/viva-webhook-event-types.interface';
 
 // Viva fires no webhook for a cancelled checkout or an expired/abandoned
 // order — this sweep is the only way those ever get resolved.
@@ -20,7 +20,6 @@ export class PaymentsReconciliationService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly vivaCheckout: VivaCheckoutService,
-    private readonly vivaDataServices: VivaDataServicesService,
     private readonly paymentWebhooksService: PaymentWebhooksService,
   ) {}
 
@@ -67,12 +66,15 @@ export class PaymentsReconciliationService {
     }
 
     if (order.StateId === VivaOrderState.PAID) {
-      const transaction = await this.findTransactionForOrder(orderCode, tipId);
-      if (!transaction) {
-        this.logger.warn(`Order ${orderCode} is PAID at Viva but no matching transaction could be found for reconciliation`);
-        return false;
-      }
-      await this.paymentWebhooksService.applyVerifiedTransaction(transaction);
+      // Would ideally be the Data Services "Search Transactions" API, but
+      // that requires an OAuth2 scope this merchant's clients aren't
+      // provisioned for (confirmed 401 — neither the Checkout nor Account
+      // Transactions client carries a dataservices scope). The order GET
+      // above is itself an authoritative Viva-side re-fetch (native API,
+      // Basic auth, not a trusted webhook payload), so a PAID StateId from
+      // it is enough to apply — it just carries less detail (no
+      // authorizationId/cardTypeId) than a real transaction lookup would.
+      await this.paymentWebhooksService.applyVerifiedTransaction(this.buildTransactionFromOrder(order));
       return true;
     }
 
@@ -84,14 +86,19 @@ export class PaymentsReconciliationService {
     return false;
   }
 
-  private async findTransactionForOrder(orderCode: string, tipId: string): Promise<VivaTransaction | null> {
-    const result = await this.vivaDataServices.searchTransactions({
-      OrderCode: orderCode,
-      MerchantTrns: tipId,
-    });
-
-    const match = (result.data ?? [])[0] as VivaTransaction | undefined;
-    return match ?? null;
+  // Both the native v1 orders API and the checkout v2 transactions API
+  // report amounts in major currency units (e.g. 5.00) — confirmed against
+  // Viva's real responses. applyVerifiedTransaction is the single place
+  // that converts to minor units, so this passes the raw major-unit values
+  // through unchanged, same as a real getTransaction() response would.
+  private buildTransactionFromOrder(order: VivaOrder): VivaTransaction {
+    return {
+      merchantTrns: order.MerchantTrns,
+      orderCode: order.OrderCode,
+      statusId: VIVA_TRANSACTION_STATUS_SUCCESS,
+      amount: order.RequestAmount,
+      tipAmount: order.TipAmount,
+    };
   }
 
   private async markCancelled(tipId: string): Promise<void> {

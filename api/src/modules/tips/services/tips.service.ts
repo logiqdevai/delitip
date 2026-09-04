@@ -1,4 +1,4 @@
-import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { UsersService } from '@/modules/users/services/users.service';
@@ -17,6 +17,8 @@ const PERFORMANCE_CHANGE_THRESHOLD_PERCENT = 20;
 
 @Injectable()
 export class TipsService {
+    private readonly logger = new Logger(TipsService.name);
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
@@ -117,6 +119,13 @@ export class TipsService {
         const currency: Currency = dto.currency || store.currency;
         const commissionPercentage = this.platformFinanceConfig.getCommissionPercentage();
         const commissionAmount = Math.round((dto.amount * commissionPercentage) / 100);
+        const platformFeePercentage = Math.round(((commissionAmount / dto.amount) * 100) * 100) / 100;
+
+        // VAT is added on top of the net tip the customer selected — never
+        // hardcode a country default here, an unset store rate means no VAT.
+        const vatRatePercentage = store.vat_rate_percentage ?? 0;
+        const vatAmount = Math.round((dto.amount * Number(vatRatePercentage)) / 100);
+        const grossAmount = dto.amount + vatAmount;
 
         const { tip, paymentTransactionId } = await this.prisma.$transaction(async (tx) => {
             const created = await tx.tip.create({
@@ -139,10 +148,14 @@ export class TipsService {
                 data: {
                     tip_id: created.id,
                     client_request_id: dto.client_request_id,
-                    gross_amount: dto.amount,
+                    tip_amount: dto.amount,
+                    vat_rate_percentage: vatRatePercentage,
+                    vat_amount: vatAmount,
+                    gross_amount: grossAmount,
                     currency,
                     commission_percentage_used: commissionPercentage,
                     commission_amount: commissionAmount,
+                    platform_fee_percentage: platformFeePercentage,
                     status: PaymentTransactionStatus.CREATED,
                 },
             });
@@ -153,7 +166,7 @@ export class TipsService {
         let orderCode: number;
         try {
             const order = await this.vivaCheckout.createOrder({
-                amount: dto.amount,
+                amount: grossAmount,
                 tipAmount: dto.amount,
                 currencyCode: toIso4217NumericCode(currency),
                 merchantTrns: tip.id,
@@ -162,8 +175,18 @@ export class TipsService {
                 paymentTimeout: 600,
             });
             orderCode = order.orderCode;
+
+            // Viva's sandbox has occasionally returned a 200 with an orderCode
+            // for an order that then 404s on every subsequent lookup (both the
+            // native orders API and the hosted checkout page) — sending the
+            // customer to a checkout URL that immediately errors with no way
+            // to recover. Confirm the order is actually retrievable before we
+            // hand out that URL, so a bad create surfaces as a "try again" here
+            // instead of a dead end on Viva's page.
+            await this.vivaCheckout.getOrder(orderCode);
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Unknown error creating Viva order';
+            this.logger.warn(`Viva order creation/verification failed for tip ${tip.id}: ${message}`);
             await this.prisma.$transaction([
                 this.prisma.tip.update({ where: { id: tip.id }, data: { status: TipStatus.FAILED } }),
                 this.prisma.paymentTransaction.update({
@@ -359,6 +382,7 @@ export class TipsService {
         }
         if (query.search) {
             where.OR = [
+                { id: { contains: query.search, mode: 'insensitive' } },
                 { customer_email: { contains: query.search, mode: 'insensitive' } },
                 { customer_name: { contains: query.search, mode: 'insensitive' } },
                 { store: { name: { contains: query.search, mode: 'insensitive' } } },
@@ -371,6 +395,7 @@ export class TipsService {
                 include: {
                     store: { select: { id: true, name: true, slug: true, primary_language: true } },
                     employee: true,
+                    payment_transaction: true,
                 },
                 skip: (query.page - 1) * query.limit,
                 take: query.limit,
