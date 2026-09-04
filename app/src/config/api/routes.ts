@@ -57,6 +57,7 @@ export const ApiRoutes = {
     defaultDistributionRule: (storeId: string) =>
       `/stores/${storeId}/default-distribution-rule` as const,
     tips: (storeId: string) => `/stores/${storeId}/tips` as const,
+    tipsExport: (storeId: string) => `/stores/${storeId}/tips/export` as const,
     reviews: (storeId: string) => `/stores/${storeId}/reviews` as const,
     reviewCategories: (storeId: string) =>
       `/stores/${storeId}/review-categories` as const,
