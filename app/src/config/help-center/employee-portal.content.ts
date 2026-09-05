@@ -16,7 +16,7 @@ export const EmployeePortalHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "Signing in with staff access takes you to your own Earnings & Tips page — a personal dashboard showing your pending cash-out balance, this month's tips, today's tip count and list, your average customer rating, a 7-day earnings trend chart, and recent feedback left for you.",
+            "Signing in with staff access takes you to your own Earnings & Tips page - a personal dashboard showing your pending cash-out balance, this month's tips, today's tip count and list, your average customer rating, a 7-day earnings trend chart, and recent feedback left for you.",
           ],
           links: [{ label: "Employee Portal", href: Routes.employee.root }],
         },
@@ -31,7 +31,7 @@ export const EmployeePortalHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "From your Earnings & Tips page, open Cash Out to connect a personal payout account and see your pending balance. Instant transfer isn't available yet — payouts follow your store's regular payout schedule.",
+            "From your Earnings & Tips page, open Cash Out to connect a personal payout account and see your pending balance. Instant transfer isn't available yet - payouts follow your store's regular payout schedule.",
           ],
           links: [{ label: "Employee Portal", href: Routes.employee.root }],
         },
@@ -56,11 +56,11 @@ export const EmployeePortalHelpCategory: HelpCategory = {
       slug: "your-personal-qr-code-and-tip-link",
       title: "Your personal QR code and tip link",
       summary:
-        "Preview your personal tip link — a manager still needs to create your actual QR code in Access.",
+        "Preview your personal tip link - a manager still needs to create your actual QR code in Access.",
       sections: [
         {
           paragraphs: [
-            "My QR & Link previews a personal tip QR code and lets you copy your tip link. This page is a preview only — your actual, live personal QR code has to be created by a manager from Dashboard → Access before it's usable at the point of service.",
+            "My QR & Link previews a personal tip QR code and lets you copy your tip link. This page is a preview only - your actual, live personal QR code has to be created by a manager from Dashboard → Access before it's usable at the point of service.",
           ],
           links: [
             { label: "Employee Portal → My QR & Link", href: Routes.employee.qr },

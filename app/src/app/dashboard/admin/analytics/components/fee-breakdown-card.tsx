@@ -115,7 +115,7 @@ export const FeeBreakdownCard: FC<FeeBreakdownCardProps> = ({
           />
           <Row
             label="Total fee"
-            explanation="Platform fee + payment fee combined — everything taken out of tips before stores and employees get paid."
+            explanation="Platform fee + payment fee combined - everything taken out of tips before stores and employees get paid."
             value={money(totalFee)}
           />
           <Row
@@ -125,7 +125,7 @@ export const FeeBreakdownCard: FC<FeeBreakdownCardProps> = ({
           />
           <Row
             label="Store amount net"
-            explanation="What's left after platform and payment fees are deducted — the pool each store then splits with its employees per its distribution rule."
+            explanation="What's left after platform and payment fees are deducted - the pool each store then splits with its employees per its distribution rule."
             value={money(netDistributable)}
             emphasis
           />

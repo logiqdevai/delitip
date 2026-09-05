@@ -4,7 +4,7 @@ import { PlatformAdminGuard } from "@/components/auth/platform-admin-guard";
 import { AdminAnalyticsPageContent } from "./components/admin-analytics-page-content";
 
 export const metadata: Metadata = {
-  title: "Analytics — delitip",
+  title: "Analytics - delitip",
   description: "Platform-wide usage and revenue overview for delitip staff.",
 };
 

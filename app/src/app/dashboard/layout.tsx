@@ -3,7 +3,7 @@ import { type Metadata } from "next";
 import { DashboardAuthShell } from "./components/dashboard-auth-shell";
 
 export const metadata: Metadata = {
-  title: "Dashboard — delitip",
+  title: "Dashboard - delitip",
   description:
     "Manage tips, employees, reviews, and QR access for your business.",
 };

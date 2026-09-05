@@ -256,7 +256,7 @@ export const TippingConfigSettingsForm: FC = () => {
               <SelectValue
                 placeholder={
                   rules.length === 0
-                    ? "No rules yet — create one"
+                    ? "No rules yet - create one"
                     : "Select a default rule"
                 }
               />

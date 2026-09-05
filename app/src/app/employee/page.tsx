@@ -128,7 +128,7 @@ const EarningsPage: FC = () => {
             <div className="mt-3 flex flex-wrap items-center gap-1.5 text-3xl font-extrabold text-rating-amber">
               {dashboard?.average_rating
                 ? `★ ${dashboard.average_rating.toFixed(2)}`
-                : "—"}{" "}
+                : "-"}{" "}
               <span className="text-xs font-normal text-zinc-400">/ 5.0</span>
             </div>
             <p className="mt-1 text-[11px] text-zinc-400">
@@ -214,7 +214,7 @@ const EarningsPage: FC = () => {
                       isPeak && "font-bold text-brand-700",
                     )}
                   >
-                    {entry.total > 0 ? formatMoney(entry.total, currency) : "—"}
+                    {entry.total > 0 ? formatMoney(entry.total, currency) : "-"}
                   </span>
                   <div
                     className={cn(

@@ -151,7 +151,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
           </h1>
           <p className="mt-2 text-sm text-zinc-500">
             Your payment is taking longer than expected to confirm. It may
-            still complete — check back shortly.
+            still complete - check back shortly.
           </p>
         </div>
         <button

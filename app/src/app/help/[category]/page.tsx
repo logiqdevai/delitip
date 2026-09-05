@@ -25,7 +25,7 @@ export async function generateMetadata({
   if (!category) return {};
 
   return {
-    title: `${category.title} — Help Center — delitip`,
+    title: `${category.title} - Help Center - delitip`,
     description: category.description,
     alternates: {
       canonical: `${environments.siteUrl}${Routes.help.category(category.slug)}`,

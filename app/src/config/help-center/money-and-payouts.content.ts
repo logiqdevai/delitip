@@ -63,7 +63,7 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "The Pending Distributions panel on Dashboard → Payments shows amounts from completed tips that have been split according to a distribution rule but not yet paid out — for the store, for individual employees, or both.",
+            "The Pending Distributions panel on Dashboard → Payments shows amounts from completed tips that have been split according to a distribution rule but not yet paid out - for the store, for individual employees, or both.",
           ],
           links: [{ label: "Dashboard → Payments", href: Routes.dashboard.payments }],
         },
@@ -94,7 +94,7 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "From the Employee Portal, an employee can open Cash Out to connect a personal payout account and see their pending balance. Instant transfer isn't live yet — payouts follow the store's regular payout schedule.",
+            "From the Employee Portal, an employee can open Cash Out to connect a personal payout account and see their pending balance. Instant transfer isn't live yet - payouts follow the store's regular payout schedule.",
           ],
           links: [{ label: "Employee Portal", href: Routes.employee.root }],
         },
@@ -110,7 +110,7 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "Settings → Billing shows your current plan and lets an Owner change plans or cancel the subscription. No real payment provider is connected yet, so plan changes take effect immediately at no charge.",
-            "Billing is Owner-only — managers and staff without the Owner role won't see this page's controls.",
+            "Billing is Owner-only - managers and staff without the Owner role won't see this page's controls.",
           ],
           links: [{ label: "Settings → Billing", href: Routes.dashboard.settings.billing }],
         },

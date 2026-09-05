@@ -82,7 +82,7 @@ const payoutStatusChipClass: Record<PayoutStatus, string> = {
 };
 
 const formatDateTime = (value?: string | null) => {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleString(undefined, {
     dateStyle: "medium",
     timeStyle: "short",
@@ -304,7 +304,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
             ) : dashboard?.average_rating ? (
               `★ ${dashboard.average_rating.toFixed(2)}`
             ) : (
-              "—"
+              "-"
             )}
           </div>
         </div>

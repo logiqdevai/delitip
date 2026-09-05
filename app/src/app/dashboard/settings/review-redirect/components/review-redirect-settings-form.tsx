@@ -129,7 +129,7 @@ export const ReviewRedirectSettingsForm: FC = () => {
           onChange={(event) => updateRedirectUrl(event.target.value)}
         />
         <p className="mt-1 text-[11px] text-zinc-400">
-          Leave blank to skip the public redirect — high-rated customers still
+          Leave blank to skip the public redirect - high-rated customers still
           see a thank-you, just without an outbound link.
         </p>
       </div>

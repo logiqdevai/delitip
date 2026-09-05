@@ -35,7 +35,7 @@ export const EmployeePayoutHistoryCard: FC<{ employeeId: string }> = ({
         <Skeleton className="h-24 w-full rounded-xl" />
       ) : payouts.length === 0 ? (
         <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500 sm:px-6">
-          No payouts yet — your pending balance is paid out on your Store
+          No payouts yet - your pending balance is paid out on your Store
           owner&apos;s schedule.
         </p>
       ) : (

@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 
 const formatDateTime = (value?: string | null) => {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleString(undefined, {
     dateStyle: "medium",
     timeStyle: "short",
@@ -90,7 +90,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
             {formatMoney(tip.amount, tip.currency)}
           </h1>
           <p className="mt-0.5 text-xs text-zinc-500">
-            {tip.employee?.full_name ?? "Store"} · {tip.qr_code?.label ?? "—"}
+            {tip.employee?.full_name ?? "Store"} · {tip.qr_code?.label ?? "-"}
           </p>
         </div>
         <span
@@ -120,7 +120,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
         <SummaryRow label="Created at" value={formatDateTime(tip.created_at)} />
         <SummaryRow
           label="QR code"
-          value={tip.qr_code?.label ?? "—"}
+          value={tip.qr_code?.label ?? "-"}
         />
         <SummaryRow
           label="Distribution rule"
@@ -128,15 +128,15 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
         />
         <SummaryRow
           label="Payment provider"
-          value={tip.payment_provider ?? "—"}
+          value={tip.payment_provider ?? "-"}
         />
         <SummaryRow
           label="Payment reference"
-          value={tip.payment_reference ?? "—"}
+          value={tip.payment_reference ?? "-"}
         />
         <SummaryRow
           label="Customer"
-          value={tip.customer_name ?? tip.customer_email ?? "—"}
+          value={tip.customer_name ?? tip.customer_email ?? "-"}
         />
       </div>
 
@@ -181,7 +181,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
             value={
               tip.payment_transaction.net_distributable_amount != null
                 ? formatMoney(tip.payment_transaction.net_distributable_amount, tip.currency)
-                : "—"
+                : "-"
             }
           />
         </div>
@@ -226,7 +226,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
         <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
           <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Review</h2>
           <p className="text-sm text-zinc-600">
-            ★ {tip.review.rating} — {tip.review.comment || "No comment left"}
+            ★ {tip.review.rating} - {tip.review.comment || "No comment left"}
           </p>
         </div>
       ) : null}

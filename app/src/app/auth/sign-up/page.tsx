@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { AuthSignUpPanel } from "../components/auth-sign-up-panel";
 
 export const metadata: Metadata = {
-  title: "Create Account — delitip",
+  title: "Create Account - delitip",
   description:
     "Register your business on delitip and start collecting tips and employee feedback in under 2 minutes.",
 };

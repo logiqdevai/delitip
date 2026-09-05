@@ -21,7 +21,7 @@ export const AdminPaymentFeesCell: FC<AdminPaymentFeesCellProps> = ({
   currency,
 }) => {
   if (!paymentTransaction) {
-    return <span className="text-zinc-300">—</span>;
+    return <span className="text-zinc-300">-</span>;
   }
 
   const platformFee = paymentTransaction.commission_amount;

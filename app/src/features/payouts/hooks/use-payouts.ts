@@ -116,7 +116,7 @@ export const useRunStorePayouts = (storeId: string) => {
         title: `${paidCount} payout${paidCount === 1 ? "" : "s"} started`,
         description:
           skippedCount > 0
-            ? `${skippedCount} recipient${skippedCount === 1 ? "" : "s"} skipped — see details below.`
+            ? `${skippedCount} recipient${skippedCount === 1 ? "" : "s"} skipped - see details below.`
             : undefined,
         type: "success",
       });

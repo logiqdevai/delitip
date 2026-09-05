@@ -22,7 +22,7 @@ const describeRefreshResult = (account: PayoutAccount) =>
     ? { title: "Payout account active", description: "It's ready to receive payouts.", type: "success" as const }
     : {
         title: "Still pending",
-        description: "Viva hasn't confirmed this account yet — check back shortly.",
+        description: "Viva hasn't confirmed this account yet - check back shortly.",
         type: "success" as const,
       };
 
@@ -47,7 +47,7 @@ export const useReconcilePayoutAccounts = () => {
         description:
           promoted > 0
             ? `${promoted} of ${checked} pending account${checked === 1 ? "" : "s"} promoted to active.`
-            : `Checked ${checked} pending account${checked === 1 ? "" : "s"} — none newly verified.`,
+            : `Checked ${checked} pending account${checked === 1 ? "" : "s"} - none newly verified.`,
         type: "success",
       });
     },

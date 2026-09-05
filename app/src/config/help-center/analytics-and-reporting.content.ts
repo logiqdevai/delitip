@@ -43,7 +43,7 @@ export const AnalyticsAndReportingHelpCategory: HelpCategory = {
       slug: "employee-performance-stats",
       title: "Employee performance stats",
       summary:
-        "Informational per-employee stats — explicitly not a ranking or leaderboard.",
+        "Informational per-employee stats - explicitly not a ranking or leaderboard.",
       sections: [
         {
           paragraphs: [
@@ -72,7 +72,7 @@ export const AnalyticsAndReportingHelpCategory: HelpCategory = {
       slug: "generating-insights",
       title: "Generating insights",
       summary:
-        "Rule-based text summaries of recent customer feedback — satisfaction change, top praise, and top complaints.",
+        "Rule-based text summaries of recent customer feedback - satisfaction change, top praise, and top complaints.",
       sections: [
         {
           paragraphs: [

@@ -19,3 +19,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## Local development
 
 For local API work, use `.env.staging` (`npm run start:staging` in `api/`), not `.env.local` — `.env.local` has empty/placeholder integration keys (e.g. `RESEND_API_KEY`), so flows like email sending fail locally with it. `.env.staging` has working keys.
+
+## Writing style
+
+Use a hyphen (`-`), never an em dash (`—`), in any text rendered on the site (page titles, metadata, UI copy, labels, placeholders). This does not apply to code comments.

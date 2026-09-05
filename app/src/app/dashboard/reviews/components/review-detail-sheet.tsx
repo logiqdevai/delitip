@@ -27,7 +27,7 @@ interface ReviewDetailSheetProps {
 }
 
 const formatDateTime = (value?: string | null) => {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleString(undefined, {
     dateStyle: "medium",
     timeStyle: "short",
@@ -80,7 +80,7 @@ const TipDetails: FC<{ tip: Tip }> = ({ tip }) => {
             {formatMoney(tip.amount, tip.currency)}
           </div>
           <div className="mt-0.5 text-[11px] text-zinc-500">
-            {tip.employee?.full_name ?? "Store"} · {tip.qr_code?.label ?? "—"}
+            {tip.employee?.full_name ?? "Store"} · {tip.qr_code?.label ?? "-"}
           </div>
         </div>
         <span
@@ -107,22 +107,22 @@ const TipDetails: FC<{ tip: Tip }> = ({ tip }) => {
         <SummaryRow label="Status" value={getTipStatusLabel(tip.status)} />
         <SummaryRow label="Paid at" value={formatDateTime(tip.paid_at)} />
         <SummaryRow label="Created at" value={formatDateTime(tip.created_at)} />
-        <SummaryRow label="QR code" value={tip.qr_code?.label ?? "—"} />
+        <SummaryRow label="QR code" value={tip.qr_code?.label ?? "-"} />
         <SummaryRow
           label="Distribution rule"
           value={tip.distribution_rule?.name ?? "Store default"}
         />
         <SummaryRow
           label="Payment provider"
-          value={tip.payment_provider ?? "—"}
+          value={tip.payment_provider ?? "-"}
         />
         <SummaryRow
           label="Payment reference"
-          value={tip.payment_reference ?? "—"}
+          value={tip.payment_reference ?? "-"}
         />
         <SummaryRow
           label="Customer"
-          value={tip.customer_name ?? tip.customer_email ?? "—"}
+          value={tip.customer_name ?? tip.customer_email ?? "-"}
         />
       </div>
 
@@ -299,7 +299,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
                           const answer =
                             response.rating_value != null
                               ? `★ ${response.rating_value}`
-                              : (response.text_value?.trim() || "—");
+                              : (response.text_value?.trim() || "-");
 
                           return (
                             <div

@@ -5,7 +5,7 @@ import { LandingFooter } from "../(landing)/components/landing-footer";
 import { ContactHero } from "./components/contact-hero";
 
 export const metadata: Metadata = {
-  title: "Contact — delitip",
+  title: "Contact - delitip",
   description:
     "Contact delitip about tipping and feedback for customer support teams. We reply within one business day.",
 };

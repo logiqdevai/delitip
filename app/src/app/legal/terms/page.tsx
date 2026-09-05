@@ -5,9 +5,9 @@ import { LegalDocument } from "../components/legal-document";
 import { Routes } from "@/routes/routes";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — delitip",
+  title: "Terms of Service - delitip",
   description:
-    "Terms of Service for delitip — digital tipping and customer feedback for businesses.",
+    "Terms of Service for delitip - digital tipping and customer feedback for businesses.",
 };
 
 const TermsPage: FC = () => {
@@ -157,8 +157,8 @@ const TermsPage: FC = () => {
           title: "6. Refunds",
           body: (
             <p>
-              A refund of a tip can be requested — typically by the
-              customer or by a store manager acting on their behalf — and
+              A refund of a tip can be requested - typically by the
+              customer or by a store manager acting on their behalf - and
               must be reviewed and approved by an authorized user, such as
               a Manager or Accountant, before it is processed. We may set
               reasonable eligibility windows or limits on refunds to
@@ -170,7 +170,7 @@ const TermsPage: FC = () => {
           ),
         },
         {
-          title: "7. Guest use — scanning, tipping, and reviewing",
+          title: "7. Guest use - scanning, tipping, and reviewing",
           body: (
             <>
               <p>
@@ -181,7 +181,7 @@ const TermsPage: FC = () => {
                 lawfully: tips are a voluntary gesture and are non-
                 refundable except as described in Section 6 or required by
                 law, and reviews and feedback must be your genuine
-                experience — not fabricated, purchased, posted on behalf of
+                experience - not fabricated, purchased, posted on behalf of
                 someone else without their knowledge, defamatory, or
                 otherwise unlawful.
               </p>
@@ -233,7 +233,7 @@ const TermsPage: FC = () => {
               <p>
                 As between you and Delitip, a business remains responsible
                 for how it handles tips, employee data, and feedback under
-                the employment and consumer laws that apply to it — Delitip
+                the employment and consumer laws that apply to it - Delitip
                 provides the software, not legal or tax advice.
               </p>
             </>
@@ -243,9 +243,9 @@ const TermsPage: FC = () => {
           title: "9. Business content and employee data",
           body: (
             <p>
-              When you add content to your account — such as a business
+              When you add content to your account - such as a business
               profile, logo, cover image, employee names and photos,
-              custom feedback questions, or branded messages — you
+              custom feedback questions, or branded messages - you
               represent that you have the right to use it and, where the
               content relates to another person (for example, an
               employee's name or photo), that you have the necessary
@@ -320,17 +320,17 @@ const TermsPage: FC = () => {
                 any time. We may suspend or terminate your access if you
                 materially breach these Terms, if we reasonably believe
                 your account poses a fraud, security, or legal risk, or if
-                required by a payment provider or applicable law — where
+                required by a payment provider or applicable law - where
                 practical, we will give you notice and an opportunity to
                 resolve the issue first.
               </p>
               <p>
                 On termination, your right to use the Service ends, but
-                obligations that by their nature should survive — including
+                obligations that by their nature should survive - including
                 payment obligations, outstanding refund handling, the
                 license you granted us over previously submitted Your
                 Content as needed to wind down the account, and Sections
-                10, 15–17, and this Section — continue to apply. We handle
+                10, 15–17, and this Section - continue to apply. We handle
                 information after termination as described in our{" "}
                 <Link className="underline underline-offset-2" href={Routes.legal.privacy}>
                   Privacy Policy

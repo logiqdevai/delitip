@@ -96,7 +96,7 @@ export const EmployeeCashOutProvider: FC<EmployeeCashOutProviderProps> = ({
         title={isPayoutActive ? "Cash-out balance" : "Payout account status"}
         description={
           isPayoutActive
-            ? `You have ${formattedBalance} pending from unpaid tip distributions. Your Store's owner releases payouts — you'll see them appear here once paid.`
+            ? `You have ${formattedBalance} pending from unpaid tip distributions. Your Store's owner releases payouts - you'll see them appear here once paid.`
             : `Your personal IBAN is linked but ${account ? getPayoutAccountStatusLabel(account.status).toLowerCase() : "pending"}. You'll be able to receive payouts once it's active.`
         }
         confirmLabel={isPayoutPending ? "Check status" : "Got it"}
@@ -113,7 +113,7 @@ export const EmployeeCashOutProvider: FC<EmployeeCashOutProviderProps> = ({
         open={formOpen}
         onOpenChange={setFormOpen}
         title="Link your personal payout account"
-        description="This is your own personal IBAN, separate from the Store's business account — used to send you your share of tips."
+        description="This is your own personal IBAN, separate from the Store's business account - used to send you your share of tips."
         mutation={createPayoutAccount}
       />
     </EmployeeCashOutContext.Provider>

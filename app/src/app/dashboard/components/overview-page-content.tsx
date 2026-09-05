@@ -206,12 +206,12 @@ export const OverviewPageContent: FC = () => {
           />
           <MetricCard
             label="Avg Rating Today"
-            value={overview?.average_rating ? `★ ${overview.average_rating.toFixed(2)}` : "—"}
+            value={overview?.average_rating ? `★ ${overview.average_rating.toFixed(2)}` : "-"}
             total={
               totals?.average_rating
                 ? `★ ${totals.average_rating.toFixed(2)}`
                 : totals
-                  ? "—"
+                  ? "-"
                   : undefined
             }
             hint={overview?.average_rating ? "Based on today's reviews" : "No reviews yet today"}
@@ -264,7 +264,7 @@ export const OverviewPageContent: FC = () => {
                     >
                       {point.value > 0
                         ? formatMoney(point.value, store.currency)
-                        : "—"}
+                        : "-"}
                     </span>
                     <div
                       className={cn(

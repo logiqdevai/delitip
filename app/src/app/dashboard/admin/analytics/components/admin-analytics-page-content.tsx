@@ -162,7 +162,7 @@ export const AdminAnalyticsPageContent: FC = () => {
           {otherCurrencies.length > 0 ? (
             <p className="text-[11px] text-zinc-400">
               Also active in {otherCurrencies.map((entry) => entry.currency).join(", ")}
-              {" — "}figures above show {currency} only, the platform&apos;s
+              {" - "}figures above show {currency} only, the platform&apos;s
               largest currency by tip volume in this range.
             </p>
           ) : null}

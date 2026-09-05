@@ -73,7 +73,7 @@ const ReviewsPage: FC = () => {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatCard
           icon={Star}
-          value={dashboard?.average_rating ? dashboard.average_rating.toFixed(2) : "—"}
+          value={dashboard?.average_rating ? dashboard.average_rating.toFixed(2) : "-"}
           label="Average Rating"
         />
         <StatCard
@@ -94,7 +94,7 @@ const ReviewsPage: FC = () => {
         </h2>
         {reviews.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 py-8 text-center text-xs text-zinc-500">
-            No reviews yet — they&apos;ll show up here once customers rate you
+            No reviews yet - they&apos;ll show up here once customers rate you
             after tipping.
           </p>
         ) : (

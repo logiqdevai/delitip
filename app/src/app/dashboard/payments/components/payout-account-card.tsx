@@ -39,7 +39,7 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
         <div className="mt-3 space-y-3">
           <p className="text-xs text-zinc-500">
             Connect a payout account so your Store can receive its share of
-            tips — link a business IBAN directly, or connect with Viva for
+            tips - link a business IBAN directly, or connect with Viva for
             hosted onboarding.
           </p>
           <div className="flex flex-wrap gap-2">
@@ -128,7 +128,7 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
         open={ibanDialogOpen}
         onOpenChange={setIbanDialogOpen}
         title="Link store payout account"
-        description="Your Store's business IBAN — used to send your share of tips via bank transfer."
+        description="Your Store's business IBAN - used to send your share of tips via bank transfer."
         mutation={createAccount}
       />
 

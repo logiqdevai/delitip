@@ -58,7 +58,7 @@ const statusChipClass: Record<TipStatus, string> = {
 };
 
 const formatDateTime = (value?: string | null) => {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleString(undefined, {
     dateStyle: "medium",
     timeStyle: "short",
@@ -244,7 +244,7 @@ export const TipsPageContent: FC = () => {
                     {tip.employee?.full_name ?? "Store"}
                   </TableCell>
                   <TableCell className="px-4 py-3.5 text-zinc-500">
-                    {tip.qr_code?.label ?? "—"}
+                    {tip.qr_code?.label ?? "-"}
                   </TableCell>
                   <TableCell className="px-4 py-3.5 font-bold text-brand-700">
                     {formatMoney(tip.amount, tip.currency)}

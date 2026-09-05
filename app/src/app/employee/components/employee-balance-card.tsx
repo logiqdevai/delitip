@@ -52,7 +52,7 @@ export const EmployeeDepositNotice: FC = () => {
         <span>Payouts follow your Store&apos;s schedule</span>
       </div>
       <p className="leading-relaxed text-brand-800/80">
-        Cash-out isn&apos;t instant — your Store&apos;s owner releases
+        Cash-out isn&apos;t instant - your Store&apos;s owner releases
         payouts via bank transfer on their own schedule.
       </p>
     </div>

@@ -33,7 +33,7 @@ export const analyticsNavItems: AnalyticsNavItem[] = [
   {
     href: Routes.dashboard.analytics.employees,
     label: "Employees",
-    description: "Informational performance stats for your team — not a ranking.",
+    description: "Informational performance stats for your team - not a ranking.",
     icon: Users,
   },
   {

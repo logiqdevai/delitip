@@ -34,7 +34,7 @@ export const EmployeesTab: FC<{
   return (
     <div className="flex flex-col gap-4">
       <p className="text-xs text-zinc-500">
-        Informational stats for your team — not a ranking.
+        Informational stats for your team - not a ranking.
       </p>
 
       {performanceQuery.isPending ? (
@@ -81,7 +81,7 @@ export const EmployeesTab: FC<{
                     <td className="px-4 py-2.5 text-rating-amber">
                       {row.average_rating
                         ? `★ ${row.average_rating.toFixed(2)}`
-                        : "—"}
+                        : "-"}
                     </td>
                     <td className="px-4 py-2.5 text-zinc-500">
                       {row.reviews_count}

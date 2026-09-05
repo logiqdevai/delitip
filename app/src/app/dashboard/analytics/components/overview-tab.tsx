@@ -67,7 +67,7 @@ export const OverviewTab: FC<{
             <div className="mt-1 text-xl font-extrabold text-rating-amber">
               {overview?.average_rating
                 ? `★ ${overview.average_rating.toFixed(2)}`
-                : "—"}
+                : "-"}
             </div>
           </div>
           <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">

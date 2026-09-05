@@ -223,7 +223,7 @@ export const BusinessProfileSettingsForm: FC = () => {
           min={0}
           max={100}
           step="0.01"
-          placeholder="e.g. 24 for Greece — leave blank if this store doesn't charge VAT on tips"
+          placeholder="e.g. 24 for Greece - leave blank if this store doesn't charge VAT on tips"
           aria-invalid={!!errors.vat_rate_percentage}
           {...register("vat_rate_percentage", { valueAsNumber: true })}
           disabled

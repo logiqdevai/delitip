@@ -57,7 +57,7 @@ export const BillingSettingsPanel: FC = () => {
         <h2 className="text-sm font-bold text-ink-charcoal">Billing</h2>
       </div>
       <p className="text-xs text-zinc-500">
-        No real billing provider is connected yet — plan changes take effect
+        No real billing provider is connected yet - plan changes take effect
         immediately and for free.
       </p>
 

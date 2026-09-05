@@ -3,7 +3,7 @@ import { type Metadata } from "next";
 import { EmployeeAuthShell } from "./components/employee-auth-shell";
 
 export const metadata: Metadata = {
-  title: "Employee Portal — delitip",
+  title: "Employee Portal - delitip",
   description:
     "View tips, customer reviews, and your personal QR code as a delitip employee.",
 };

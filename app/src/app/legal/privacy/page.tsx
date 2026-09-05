@@ -4,9 +4,9 @@ import { LegalDocument } from "../components/legal-document";
 import { Routes } from "@/routes/routes";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — delitip",
+  title: "Privacy Policy - delitip",
   description:
-    "Privacy Policy for delitip — how we collect, use, and protect information.",
+    "Privacy Policy for delitip - how we collect, use, and protect information.",
 };
 
 const PrivacyPage: FC = () => {
@@ -74,7 +74,7 @@ const PrivacyPage: FC = () => {
                 payment reference from our payment processor, and, if the
                 customer chooses to leave one, a star rating and written
                 feedback. Providing a name or email address at this step is
-                always optional — if left blank, the tip or review is
+                always optional - if left blank, the tip or review is
                 recorded without any identifying information about the
                 customer. We do not collect or store the customer's IP
                 address, device identifiers, or location as part of this
@@ -165,7 +165,7 @@ const PrivacyPage: FC = () => {
                   <strong>Legitimate interests:</strong> to keep the
                   platform secure, prevent fraud and abuse, generate
                   aggregate feedback analytics for a business, and improve
-                  the service — balanced against your interests and rights.
+                  the service - balanced against your interests and rights.
                 </li>
                 <li>
                   <strong>Consent:</strong> where a customer voluntarily
@@ -193,7 +193,7 @@ const PrivacyPage: FC = () => {
               data-processing agreement that restricts its use of that
               content. Composite metrics such as the Customer Experience
               Score are informational and always shown with an explanation
-              of the factors behind them — we do not use AI to make fully
+              of the factors behind them - we do not use AI to make fully
               automated decisions that produce legal or similarly
               significant effects about any individual, such as employment
               or disciplinary decisions.
@@ -211,27 +211,27 @@ const PrivacyPage: FC = () => {
               </p>
               <ul className="list-disc space-y-1 pl-5">
                 <li>
-                  <strong>Stripe</strong> — payment processing, payouts, and
+                  <strong>Stripe</strong> - payment processing, payouts, and
                   connected business accounts;
                 </li>
                 <li>
-                  <strong>OpenAI</strong> — feedback sentiment analysis and
+                  <strong>OpenAI</strong> - feedback sentiment analysis and
                   summarization (Section 5);
                 </li>
                 <li>
-                  <strong>Google Cloud Storage</strong> — storage of
+                  <strong>Google Cloud Storage</strong> - storage of
                   uploaded logos, cover images, and employee photos;
                 </li>
                 <li>
-                  <strong>Resend and our SMTP provider</strong> — delivery
+                  <strong>Resend and our SMTP provider</strong> - delivery
                   of transactional and, where opted in, marketing email;
                 </li>
                 <li>
-                  <strong>Twilio</strong> — delivery of one-time SMS
+                  <strong>Twilio</strong> - delivery of one-time SMS
                   verification codes;
                 </li>
                 <li>
-                  <strong>Google Maps</strong> — geocoding and time zone
+                  <strong>Google Maps</strong> - geocoding and time zone
                   lookup for a business's location, not for tracking any
                   individual's location; and
                 </li>
@@ -322,7 +322,7 @@ const PrivacyPage: FC = () => {
                 data in transit, hashed (never plain-text) passwords,
                 token-based authentication, and role-based access controls
                 so staff only see the locations, employees, and data their
-                role permits. We do not store full payment card details —
+                role permits. We do not store full payment card details -
                 that is handled entirely by Stripe.
               </p>
               <p>
@@ -391,7 +391,7 @@ const PrivacyPage: FC = () => {
                   you; and
                 </li>
                 <li>
-                  opt out of the sale or sharing of personal information —
+                  opt out of the sale or sharing of personal information -
                   we do not sell or share personal information as those
                   terms are defined under the CCPA/CPRA, so there is nothing
                   to opt out of.
@@ -448,7 +448,7 @@ const PrivacyPage: FC = () => {
           body: (
             <p>
               With your opt-in consent, we or a business may send marketing
-              communications by email or SMS — for example, product updates
+              communications by email or SMS - for example, product updates
               or promotional offers. These are separate from the
               transactional messages described in Section 3 (such as
               password-reset codes), which are necessary to operate your
