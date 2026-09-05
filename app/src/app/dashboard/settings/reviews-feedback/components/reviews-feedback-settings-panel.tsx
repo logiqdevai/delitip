@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { SettingsStepNav } from "../../components/settings-step-nav";
 import {
   SortableConfigList,
   SortableConfigRow,
@@ -586,6 +587,10 @@ export const ReviewsFeedbackSettingsPanel: FC = () => {
       <CategoriesSection storeId={storeId} primaryLanguage={primaryLanguage} />
       <QuestionsSection storeId={storeId} primaryLanguage={primaryLanguage} />
       {canManageTags ? <TagsSection storeId={storeId} /> : null}
+
+      <div className="flex border-t border-zinc-100 pt-4">
+        <SettingsStepNav />
+      </div>
     </div>
   );
 };

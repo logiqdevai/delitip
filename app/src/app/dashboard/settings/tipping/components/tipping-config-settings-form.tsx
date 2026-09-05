@@ -4,6 +4,7 @@ import { type FC, useState } from "react";
 import Link from "next/link";
 import { Plus, Split, Trash2, Wallet } from "lucide-react";
 import { DistributionRuleFormDialog } from "@/app/dashboard/distribution/components/distribution-rule-form-dialog";
+import { SettingsStepNav } from "../../components/settings-step-nav";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -290,20 +291,23 @@ export const TippingConfigSettingsForm: FC = () => {
         </Button>
       </div>
 
-      <div className="flex items-center gap-3 border-t border-zinc-100 pt-4">
-        <Button
-          type="button"
-          onClick={handleSave}
-          disabled={updateStore.isPending || !hasChanges}
-          className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal shadow-lg shadow-lime/30 hover:bg-brand-700 disabled:opacity-40"
-        >
-          {updateStore.isPending ? "Saving…" : "Save Changes"}
-        </Button>
-        {hasChanges ? (
-          <span className="text-[11px] font-medium text-zinc-400">
-            Unsaved changes
-          </span>
-        ) : null}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 pt-4">
+        <SettingsStepNav />
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={updateStore.isPending || !hasChanges}
+            className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal shadow-lg shadow-lime/30 hover:bg-brand-700 disabled:opacity-40"
+          >
+            {updateStore.isPending ? "Saving…" : "Save Changes"}
+          </Button>
+          {hasChanges ? (
+            <span className="text-[11px] font-medium text-zinc-400">
+              Unsaved changes
+            </span>
+          ) : null}
+        </div>
       </div>
 
       <DistributionRuleFormDialog

@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SettingsStepNav } from "../../components/settings-step-nav";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
@@ -134,7 +135,8 @@ export const ReviewRedirectSettingsForm: FC = () => {
         </p>
       </div>
 
-      <div className="pt-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <SettingsStepNav />
         <Button
           type="submit"
           disabled={updateStore.isPending}

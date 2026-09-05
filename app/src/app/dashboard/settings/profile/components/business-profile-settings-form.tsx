@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CountryPicker } from "@/components/ui/country-picker";
+import { SettingsStepNav } from "../../components/settings-step-nav";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import {
@@ -239,7 +240,8 @@ export const BusinessProfileSettingsForm: FC = () => {
         ) : null}
       </div>
 
-      <div className="pt-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <SettingsStepNav />
         <ActionButtonWithPending type="submit" isPending={updateStore.isPending}>
           Save Changes
         </ActionButtonWithPending>

@@ -144,8 +144,8 @@ const EarningsPage: FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white p-5 shadow-xs sm:p-6 lg:col-span-2">
+      <div className="flex flex-col gap-6">
+        <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white p-5 shadow-xs sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-ink-charcoal">
@@ -196,7 +196,7 @@ const EarningsPage: FC = () => {
             <p className="text-xs text-zinc-400">Daily breakdown</p>
           </div>
 
-          <div className="grid h-40 grid-cols-7 items-end gap-1.5 border-b border-zinc-100 pt-2 pb-2 sm:h-44 sm:gap-3 sm:pt-4">
+          <div className="grid h-64 grid-cols-7 items-end gap-3 border-b border-zinc-100 pt-4 pb-2 sm:h-80 sm:gap-8 sm:pt-6">
             {trendDays.map((entry) => {
               const isPeak = entry.total === trendMax && entry.total > 0;
               const heightPct = Math.max(
@@ -206,11 +206,11 @@ const EarningsPage: FC = () => {
               return (
                 <div
                   key={entry.day.toISOString()}
-                  className="flex h-full min-w-0 flex-col items-center justify-end gap-1 sm:gap-1.5"
+                  className="flex h-full min-w-0 flex-col items-center justify-end gap-1.5 sm:gap-2"
                 >
                   <span
                     className={cn(
-                      "max-w-full truncate text-[9px] font-semibold text-zinc-400 sm:text-[10px]",
+                      "max-w-full truncate text-[10px] font-semibold text-zinc-400 sm:text-xs",
                       isPeak && "font-bold text-brand-700",
                     )}
                   >
@@ -229,7 +229,7 @@ const EarningsPage: FC = () => {
                   />
                   <span
                     className={cn(
-                      "text-[9px] font-bold text-zinc-400 sm:text-[10px] sm:font-medium sm:text-zinc-500",
+                      "text-[10px] font-bold text-zinc-400 sm:text-xs sm:font-medium sm:text-zinc-500",
                       isPeak && "text-brand-800 sm:font-bold",
                     )}
                   >

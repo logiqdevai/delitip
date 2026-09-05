@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, useState } from "react";
+import { type FC } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -11,7 +11,6 @@ import {
   Star,
   Wallet,
   X,
-  Zap,
 } from "lucide-react";
 import { AccountSwitcher } from "@/components/auth/account-switcher";
 import { BrandMark } from "@/components/brand/brand-mark";
@@ -30,7 +29,6 @@ import {
 } from "@/components/ui/sidebar";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
-import { useEmployeeCashOut } from "./employee-cash-out-provider";
 import { EmployeeUserMenu } from "./employee-user-menu";
 
 const navItems = [
@@ -58,8 +56,6 @@ export const EmployeeSidebar: FC = () => {
   const pathname = usePathname();
   const { state, isMobile, toggleSidebar, setOpenMobile } = useSidebar();
   const collapsed = !isMobile && state === "collapsed";
-  const { openCashOut } = useEmployeeCashOut();
-  const [onShift, setOnShift] = useState(true);
 
   const closeMobileNav = () => {
     if (isMobile) setOpenMobile(false);
@@ -135,31 +131,11 @@ export const EmployeeSidebar: FC = () => {
             </Button>
           </div>
 
-          <div className="space-y-3 group-data-[collapsible=icon]:hidden">
+          <div className="group-data-[collapsible=icon]:hidden">
             <AccountSwitcher
               size="default"
               className="w-full max-w-none sm:max-w-none"
             />
-
-            <button
-              type="button"
-              onClick={() => setOnShift((current) => !current)}
-              aria-label={onShift ? "On shift" : "Off shift"}
-              className={cn(
-                "flex w-full items-center gap-2 rounded-xl border px-3 py-2.5 text-chip font-bold transition",
-                onShift
-                  ? "border-brand-200 bg-brand-50 text-brand-800 hover:bg-brand-100"
-                  : "border-zinc-200 bg-neutral-fill font-medium text-zinc-500 hover:bg-zinc-200",
-              )}
-            >
-              <span
-                className={cn(
-                  "size-2 shrink-0 rounded-full",
-                  onShift ? "animate-pulse bg-electric-lime" : "bg-zinc-400",
-                )}
-              />
-              <span>{onShift ? "On Shift" : "Off Shift"}</span>
-            </button>
           </div>
         </SidebarHeader>
 
@@ -210,20 +186,6 @@ export const EmployeeSidebar: FC = () => {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-
-          <div className="mt-3 px-1 group-data-[collapsible=icon]:hidden">
-            <button
-              type="button"
-              onClick={() => {
-                closeMobileNav();
-                openCashOut();
-              }}
-              className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-electric-lime px-3.5 py-2.5 text-chip font-bold text-ink-charcoal shadow-sm transition hover:bg-brand-700"
-            >
-              <Zap className="size-3.5" strokeWidth={2} />
-              Instant Cash Out
-            </button>
-          </div>
         </SidebarContent>
 
         <SidebarFooter className="border-t border-zinc-100 p-2">

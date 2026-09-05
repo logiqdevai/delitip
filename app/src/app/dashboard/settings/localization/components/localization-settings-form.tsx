@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CountryFlag } from "@/components/ui/country-flag";
 import { LanguagePicker } from "@/components/ui/language-picker";
+import { SettingsStepNav } from "../../components/settings-step-nav";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import type { Language } from "@/features/stores/interfaces/stores.interfaces";
@@ -113,7 +114,8 @@ export const LocalizationSettingsForm: FC = () => {
         </div>
       </div>
 
-      <div className="pt-1">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+        <SettingsStepNav />
         <Button
           type="button"
           onClick={handleSave}

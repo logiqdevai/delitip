@@ -35,6 +35,23 @@ describe('calculateTipDistribution', () => {
                 { recipient_type: DistributionRecipientType.STORE, employee_id: null, percentage: 100, amount: 1000 },
             ]);
         });
+
+        it('sends 100% to the selected employee when recipients is empty but an employee was selected', () => {
+            const result = calculateTipDistribution([], ['anna'], 2000);
+
+            expect(result).toEqual([
+                { recipient_type: DistributionRecipientType.EMPLOYEE, employee_id: 'anna', percentage: 100, amount: 2000 },
+            ]);
+        });
+
+        it('splits evenly across multiple selected employees when recipients is empty', () => {
+            const result = calculateTipDistribution([], ['a', 'b', 'c'], 100);
+
+            const byId = Object.fromEntries(result.map((l) => [l.employee_id, l]));
+            expect(result.every((l) => l.recipient_type === DistributionRecipientType.EMPLOYEE)).toBe(true);
+            expect(sumAmounts(result)).toBe(100);
+            expect(byId['a'].amount + byId['b'].amount + byId['c'].amount).toBe(100);
+        });
     });
 
     describe('store-only recipients', () => {
