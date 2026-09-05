@@ -12,18 +12,25 @@ describe('QrCodesService', () => {
 
     beforeEach(() => {
         prisma = {
-            qrCode: { create: jest.fn(), findUnique: jest.fn(), findMany: jest.fn(), count: jest.fn(), update: jest.fn(), delete: jest.fn() },
+            qrCode: {
+                create: jest.fn(),
+                findUnique: jest.fn(),
+                findMany: jest.fn(),
+                count: jest.fn(),
+                update: jest.fn(),
+                delete: jest.fn(),
+            },
             qrCodeEmployee: { createMany: jest.fn(), deleteMany: jest.fn() },
             qrCodeSpot: { createMany: jest.fn(), deleteMany: jest.fn() },
             distributionRule: { findFirst: jest.fn() },
-            employee: { findMany: jest.fn() },
+            employee: { findMany: jest.fn(), findUnique: jest.fn() },
             spot: { findMany: jest.fn() },
             store: { findUnique: jest.fn().mockResolvedValue({ primary_language: 'EN' }) },
             tip: { count: jest.fn(), aggregate: jest.fn() },
             review: { count: jest.fn() },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
-        accessControl = { assertStoreAccess: jest.fn() };
+        accessControl = { assertStoreAccess: jest.fn(), assertEmployeeSelfOrStoreAccess: jest.fn() };
         service = new QrCodesService(prisma, accessControl);
     });
 
@@ -350,6 +357,74 @@ describe('QrCodesService', () => {
             expect(result.employees).toEqual([
                 { id: 'e1', full_name: 'Active One', position: 'Waiter', photo_url: null },
                 { id: 'e3', full_name: 'Has Photo', position: 'Chef', photo_url: 'https://example.com/e3.png' },
+            ]);
+        });
+    });
+
+    describe('findPersonalForEmployee', () => {
+        const employee = { id: 'e1', store_id: 'store1', full_name: { en: 'Maria S.' }, position: 'Head Server' };
+
+        beforeEach(() => {
+            accessControl.assertEmployeeSelfOrStoreAccess.mockResolvedValue({ employee, isSelf: true });
+            prisma.employee.findUnique.mockResolvedValue({
+                ...employee,
+                photo_document: null,
+                store: { name: 'Artisan Café & Bar', slug: 'artisan-cafe', primary_language: 'EN' },
+            });
+        });
+
+        it('asserts self-or-store access for the employee', async () => {
+            prisma.qrCode.findMany.mockResolvedValue([]);
+
+            await service.findPersonalForEmployee(user, 'e1');
+
+            expect(accessControl.assertEmployeeSelfOrStoreAccess).toHaveBeenCalledWith(user, 'e1');
+        });
+
+        it('looks up every active QR code assigned to the employee, regardless of spots', async () => {
+            prisma.qrCode.findMany.mockResolvedValue([]);
+
+            await service.findPersonalForEmployee(user, 'e1');
+
+            expect(prisma.qrCode.findMany).toHaveBeenCalledWith({
+                where: {
+                    store_id: 'store1',
+                    is_active: true,
+                    employees: { some: { employee_id: 'e1' } },
+                },
+                orderBy: { created_at: 'desc' },
+            });
+        });
+
+        it('returns qr_codes: [] when the employee has no QR code assigned yet', async () => {
+            prisma.qrCode.findMany.mockResolvedValue([]);
+
+            const result = await service.findPersonalForEmployee(user, 'e1');
+
+            expect(result).toEqual({
+                employee: { id: 'e1', full_name: 'Maria S.', position: 'Head Server', photo_url: null },
+                store: { name: 'Artisan Café & Bar', slug: 'artisan-cafe' },
+                qr_codes: [],
+            });
+        });
+
+        it('returns every assigned QR code and resolves the employee photo url', async () => {
+            prisma.qrCode.findMany.mockResolvedValue([
+                { id: 'qr1', code: 'ABC12345', label: 'Personal' },
+                { id: 'qr2', code: 'DEF67890', label: 'team' },
+            ]);
+            prisma.employee.findUnique.mockResolvedValue({
+                ...employee,
+                photo_document: { url: 'https://example.com/e1.png' },
+                store: { name: 'Artisan Café & Bar', slug: 'artisan-cafe', primary_language: 'EN' },
+            });
+
+            const result = await service.findPersonalForEmployee(user, 'e1');
+
+            expect(result.employee.photo_url).toBe('https://example.com/e1.png');
+            expect(result.qr_codes).toEqual([
+                { id: 'qr1', code: 'ABC12345', label: 'Personal' },
+                { id: 'qr2', code: 'DEF67890', label: 'team' },
             ]);
         });
     });

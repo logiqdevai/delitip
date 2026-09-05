@@ -1,109 +1,232 @@
 "use client";
 
-import { type FC, useState } from "react";
-import Image from "next/image";
+import { type CSSProperties, type FC, useState } from "react";
+import { QrCode } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
-import { demoEmployee, qrCells } from "../data/employee-demo";
+import { EmployeeAvatar } from "@/components/ui/employee-avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
+  useCurrentEmployee,
+  useEmployeeQrCode,
+} from "@/features/employees/hooks/use-employees";
+import type {
+  EmployeePersonalQrCode,
+  EmployeeQrCodeSummary,
+} from "@/features/employees/interfaces/employees.interfaces";
+import {
+  getAbsoluteTipUrl,
+  getQrCodeImageUrl,
+} from "@/features/qr-codes/utils/qr-tip-url.utils";
+import { cn } from "@/lib/utils";
+
+interface QrCodeTileProps {
+  qrCode: EmployeeQrCodeSummary;
+  employee: EmployeePersonalQrCode["employee"];
+  storeName: string;
+  storeSlug: string;
+  copied: boolean;
+  onCopy: () => void;
+  style?: CSSProperties;
+}
+
+const QrCodeTile: FC<QrCodeTileProps> = ({
+  qrCode,
+  employee,
+  storeName,
+  storeSlug,
+  copied,
+  onCopy,
+  style,
+}) => {
+  const tipUrl = getAbsoluteTipUrl(storeSlug, qrCode.code);
+
+  return (
+    <div
+      className="auth-fade-enter flex flex-col gap-4 rounded-3xl border border-zinc-200/80 bg-white p-6 text-center shadow-xs"
+      style={style}
+    >
+      <div className="flex items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <BrandMark size="sm" className="size-6 shrink-0 rounded-lg text-xs" />
+          <span className="truncate text-xs font-bold text-ink-charcoal">
+            {qrCode.label}
+          </span>
+        </div>
+        <span className="shrink-0 text-[14px] font-semibold text-zinc-400">
+          {storeName}
+        </span>
+      </div>
+
+      <div className="flex items-center justify-center gap-2.5">
+        <EmployeeAvatar
+          name={employee.full_name}
+          photoUrl={employee.photo_url}
+          size="sm"
+          className="ring-2 ring-brand-50"
+        />
+        <div className="min-w-0 text-left leading-tight">
+          <p className="truncate text-xs font-bold text-ink-charcoal">
+            {employee.full_name}
+          </p>
+          {employee.position ? (
+            <p className="truncate text-[10px] text-zinc-400">
+              {employee.position}
+            </p>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="mx-auto flex size-40 items-center justify-center rounded-2xl bg-ink-charcoal p-2.5 shadow-inner">
+        <img
+          src={getQrCodeImageUrl(tipUrl, 240)}
+          alt={`QR code for ${qrCode.label}`}
+          className="size-full rounded-xl bg-white object-contain p-1"
+        />
+      </div>
+
+      <div className="mx-auto max-w-full truncate rounded-full bg-brand-50 px-3 py-1.5 text-chip font-semibold text-brand-700">
+        {tipUrl}
+      </div>
+
+      <button
+        type="button"
+        onClick={onCopy}
+        className="w-full rounded-xl bg-neutral-fill py-2.5 text-chip font-semibold text-zinc-800 transition hover:bg-zinc-200"
+      >
+        {copied ? "Copied to Clipboard!" : "Copy Tip Link"}
+      </button>
+    </div>
+  );
+};
+
+const QrCodesSkeleton: FC = () => (
+  <div
+    className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3"
+    aria-busy="true"
+    aria-live="polite"
+  >
+    {Array.from({ length: 2 }).map((_, index) => (
+      <div
+        key={index}
+        className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-xs"
+      >
+        <Skeleton className="mx-auto h-4 w-28" />
+        <Skeleton className="mx-auto h-8 w-32 rounded-full" />
+        <Skeleton className="mx-auto size-40 rounded-2xl" />
+        <Skeleton className="mx-auto h-6 w-40 rounded-full" />
+        <Skeleton className="h-9 w-full rounded-xl" />
+      </div>
+    ))}
+  </div>
+);
 
 const QrPage: FC = () => {
-  const [copied, setCopied] = useState(false);
+  const { employeeId, isPending: identityPending } = useCurrentEmployee();
+  const qrCodeQuery = useEmployeeQrCode(employeeId ?? "");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const handleCopy = async () => {
+  const heading = (
+    <div>
+      <h1 className="text-xl font-bold text-ink-charcoal">
+        Your Personal Tip QR
+      </h1>
+      <p className="mt-0.5 text-xs text-zinc-500">
+        Show one of these to guests, or save it to your Apple / Google Wallet.
+      </p>
+    </div>
+  );
+
+  if (identityPending || qrCodeQuery.isPending) {
+    return (
+      <div className="space-y-6">
+        {heading}
+        <QrCodesSkeleton />
+      </div>
+    );
+  }
+
+  if (qrCodeQuery.isError) {
+    return (
+      <div className="space-y-6">
+        {heading}
+        <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+          <EmptyHeader>
+            <EmptyTitle>Could not load your QR codes</EmptyTitle>
+            <EmptyDescription>{qrCodeQuery.error.message}</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      </div>
+    );
+  }
+
+  const data = qrCodeQuery.data!;
+  const qrCodes = data.qr_codes;
+
+  const handleCopy = async (qrCode: EmployeeQrCodeSummary) => {
     try {
-      await navigator.clipboard.writeText(`https://${demoEmployee.tipLink}`);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
+      await navigator.clipboard.writeText(
+        getAbsoluteTipUrl(data.store.slug, qrCode.code),
+      );
+      setCopiedId(qrCode.id);
+      window.setTimeout(
+        () =>
+          setCopiedId((current) => (current === qrCode.id ? null : current)),
+        2000,
+      );
     } catch {
-      setCopied(false);
+      setCopiedId(null);
     }
   };
 
   return (
-    <div className="auth-fade-enter mx-auto max-w-md space-y-6 text-center">
-      <div>
-        <h1 className="text-xl font-bold text-ink-charcoal">
-          Your Personal Tip QR
-        </h1>
-        <p className="mt-1 text-xs text-zinc-500">
-          Show this QR code to guests or save it to your Apple / Google Wallet.
-        </p>
-      </div>
+    <div className="auth-fade-enter space-y-6">
+      {heading}
 
-      <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50 px-4 py-3 text-left text-sm leading-relaxed text-amber-800">
-        Preview only — there is no API yet for an employee to look up their own
-        QR code (employee sessions can&apos;t list a Store&apos;s QR codes).
-        Ask your manager to create a QR with just you assigned in{" "}
-        <span className="font-semibold">Customer Access &amp; QR Kits</span>{" "}
-        for a real, working link.
-      </div>
-
-      <div className="space-y-5 rounded-3xl border border-zinc-200 bg-white p-8 shadow-xl">
-        <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
-          <div className="flex items-center gap-2">
-            <BrandMark size="sm" className="size-6 rounded-lg text-xs" />
-            <span className="text-xs font-bold text-ink-charcoal">
-              delitip
-            </span>
-          </div>
-          <span className="text-[10px] font-semibold text-zinc-400">
-            {demoEmployee.business}
-          </span>
+      {qrCodes.length === 0 ? (
+        <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <QrCode />
+            </EmptyMedia>
+            <EmptyTitle>No personal QR code yet</EmptyTitle>
+            <EmptyDescription>
+              Ask your manager to create a QR with you assigned in Customer
+              Access &amp; QR Kits to get your own, working link.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      ) : (
+        <div
+          className={cn(
+            qrCodes.length > 1
+              ? "grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3"
+              : "mx-auto max-w-sm",
+          )}
+        >
+          {qrCodes.map((qrCode, index) => (
+            <QrCodeTile
+              key={qrCode.id}
+              qrCode={qrCode}
+              employee={data.employee}
+              storeName={data.store.name}
+              storeSlug={data.store.slug}
+              copied={copiedId === qrCode.id}
+              onCopy={() => void handleCopy(qrCode)}
+              style={{
+                animationDelay: `${index * 60}ms`,
+                animationFillMode: "both",
+              }}
+            />
+          ))}
         </div>
-
-        <div>
-          <Image
-            src={demoEmployee.photo}
-            alt={demoEmployee.name}
-            width={64}
-            height={64}
-            className="mx-auto size-16 rounded-full object-cover shadow-sm ring-4 ring-brand-50"
-          />
-          <h3 className="mt-2 text-base font-bold text-ink-charcoal">
-            {demoEmployee.name}
-          </h3>
-          <p className="text-xs text-zinc-400">{demoEmployee.role}</p>
-        </div>
-
-        <div className="mx-auto flex size-44 items-center justify-center rounded-2xl bg-ink-charcoal p-3 shadow-inner">
-          <div className="flex size-full flex-col items-center justify-center rounded-xl bg-white p-2">
-            <div className="grid size-full grid-cols-5 gap-1 opacity-85">
-              {qrCells.map((filled, index) => (
-                <div
-                  key={index}
-                  className={filled ? "rounded-xs bg-black" : "bg-transparent"}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="inline-block rounded-full bg-brand-50 px-3 py-1.5 text-chip font-semibold text-brand-700">
-          {demoEmployee.tipLink}
-        </div>
-
-        <div className="space-y-2 pt-2">
-          <button
-            type="button"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-ink-charcoal py-2.5 text-chip font-semibold text-paper-offwhite transition hover:bg-zinc-800"
-          >
-            <svg
-              className="size-4 fill-current"
-              viewBox="0 0 24 24"
-              aria-hidden
-            >
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.85c.65-.79 1.09-1.89.97-2.99-1 .04-2.15.65-2.82 1.44-.58.68-1.1 1.77-.96 2.86 1.11.09 2.19-.55 2.81-1.31z" />
-            </svg>
-            <span>Add to Apple Wallet</span>
-          </button>
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="w-full rounded-xl bg-neutral-fill py-2.5 text-chip font-semibold text-zinc-800 transition hover:bg-zinc-200"
-          >
-            {copied ? "Copied to Clipboard!" : "Copy Personal Tip Link"}
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

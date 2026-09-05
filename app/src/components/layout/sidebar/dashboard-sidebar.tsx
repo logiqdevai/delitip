@@ -277,7 +277,10 @@ export const DashboardSidebar: FC = () => {
           </div>
 
           <div className="space-y-3 group-data-[collapsible=icon]:hidden">
-            <AccountSwitcher />
+            <AccountSwitcher
+              size="default"
+              className="w-full max-w-none sm:max-w-none"
+            />
 
             <div className="flex items-center justify-between rounded-xl border border-zinc-200/80 bg-zinc-50 p-2.5">
               {isPending ? (

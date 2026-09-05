@@ -66,7 +66,7 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
             <div className="flex flex-wrap items-center gap-1.5">
               <span
                 className={cn(
-                  "inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-caption font-bold",
+                  "inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-caption font-bold text-[13px]",
                   employee.is_active
                     ? "bg-brand-50 text-brand-700"
                     : "bg-neutral-fill font-medium text-zinc-500",

@@ -136,7 +136,10 @@ export const EmployeeSidebar: FC = () => {
           </div>
 
           <div className="space-y-3 group-data-[collapsible=icon]:hidden">
-            <AccountSwitcher className="w-full max-w-none sm:max-w-none" />
+            <AccountSwitcher
+              size="default"
+              className="w-full max-w-none sm:max-w-none"
+            />
 
             <button
               type="button"

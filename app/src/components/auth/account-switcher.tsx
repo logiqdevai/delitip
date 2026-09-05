@@ -20,9 +20,13 @@ import { useWorkspaceStore } from "@/stores/workspace.store";
 
 interface AccountSwitcherProps {
   className?: string;
+  size?: "sm" | "default";
 }
 
-export const AccountSwitcher: FC<AccountSwitcherProps> = ({ className }) => {
+export const AccountSwitcher: FC<AccountSwitcherProps> = ({
+  className,
+  size = "sm",
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const hydrated = useAuthHydrated();
@@ -89,7 +93,7 @@ export const AccountSwitcher: FC<AccountSwitcherProps> = ({ className }) => {
       }}
     >
       <SelectTrigger
-        size="sm"
+        size={size}
         aria-label="Switch account"
         className={cn("max-w-[9.5rem] sm:max-w-[14rem]", className)}
       >
