@@ -1,16 +1,20 @@
 "use client";
 
 import { type FC, useId } from "react";
+import { UserPlus } from "lucide-react";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+
+const CREATE_NEW_VALUE = "__create_new_employee__";
 
 export type EmployeeSelectOption = {
   id: string;
@@ -37,6 +41,8 @@ export type EmployeeSelectProps = {
   contentClassName?: string;
   size?: "sm" | "default";
   showPosition?: boolean;
+  onCreateNew?: () => void;
+  createNewLabel?: string;
   "aria-label"?: string;
 };
 
@@ -58,6 +64,8 @@ export const EmployeeSelect: FC<EmployeeSelectProps> = ({
   contentClassName,
   size = "default",
   showPosition = false,
+  onCreateNew,
+  createNewLabel = "Add employee",
   "aria-label": ariaLabel,
 }) => {
   const generatedId = useId();
@@ -72,6 +80,7 @@ export const EmployeeSelect: FC<EmployeeSelectProps> = ({
       label: employee.full_name,
       value: employee.id,
     })),
+    ...(onCreateNew ? [{ label: createNewLabel, value: CREATE_NEW_VALUE }] : []),
   ];
 
   return (
@@ -79,6 +88,10 @@ export const EmployeeSelect: FC<EmployeeSelectProps> = ({
       items={items}
       value={value}
       onValueChange={(next) => {
+        if (next === CREATE_NEW_VALUE) {
+          onCreateNew?.();
+          return;
+        }
         if (next !== null) onValueChange(next);
       }}
       disabled={disabled}
@@ -92,7 +105,7 @@ export const EmployeeSelect: FC<EmployeeSelectProps> = ({
       >
         <SelectValue placeholder={placeholder}>
           {(selected: string | null) => {
-            if (selected === null) return null;
+            if (selected === null || selected === CREATE_NEW_VALUE) return null;
             if (includeAll && selected === allValue) return allLabel;
             if (emptyValue !== undefined && selected === emptyValue) {
               return emptyLabel;
@@ -138,6 +151,20 @@ export const EmployeeSelect: FC<EmployeeSelectProps> = ({
             </SelectItem>
           ))}
         </SelectGroup>
+        {onCreateNew ? (
+          <>
+            <SelectSeparator />
+            <SelectGroup>
+              <SelectItem
+                value={CREATE_NEW_VALUE}
+                className="text-brand-800 focus:text-brand-800"
+              >
+                <UserPlus className="size-4 shrink-0" strokeWidth={2} />
+                <span className="truncate font-semibold">{createNewLabel}</span>
+              </SelectItem>
+            </SelectGroup>
+          </>
+        ) : null}
       </SelectContent>
     </Select>
   );

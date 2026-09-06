@@ -206,7 +206,7 @@ export const TippingConfigSettingsForm: FC = () => {
           <Label htmlFor="allow-custom" className="text-xs font-semibold">
             Allow custom amount
           </Label>
-          <p className="mt-0.5 text-[11px] text-zinc-500">
+          <p className="mt-0.5 text-[14px] text-zinc-500">
             Guests can type any tip instead of only presets.
           </p>
         </div>
@@ -226,7 +226,7 @@ export const TippingConfigSettingsForm: FC = () => {
             <Label htmlFor="default-distribution-rule" className="text-xs font-semibold text-ink-charcoal">
               Default distribution rule
             </Label>
-            <p className="mt-0.5 text-[11px] text-zinc-500">
+            <p className="mt-0.5 text-[14px] text-zinc-500">
               Used when a QR code does not override the split.
             </p>
           </div>
@@ -234,7 +234,7 @@ export const TippingConfigSettingsForm: FC = () => {
             href={Routes.dashboard.distribution}
             className={cn(
               buttonVariants({ variant: "secondary", size: "default" }),
-              "w-full justify-center text-brand-700 md:h-auto md:w-auto md:bg-transparent md:px-0 md:py-0 md:text-[11px] md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
+              "w-full justify-center text-brand-700 md:h-auto md:w-auto md:bg-transparent md:px-0 md:py-0 md:text-[15px] md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
             )}
           >
             Manage all →

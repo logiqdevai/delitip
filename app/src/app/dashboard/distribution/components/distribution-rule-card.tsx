@@ -36,7 +36,7 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
           <h3 className="truncate text-sm font-bold text-ink-charcoal">
             {rule.name}
           </h3>
-          <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+          <p className="mt-1 text-[14px] leading-relaxed text-zinc-500">
             {formatRecipientSummary(rule.recipients)}
           </p>
         </div>

@@ -59,7 +59,7 @@ import { cn } from "@/lib/utils";
 const VisibilityBadge: FC<{ isActive: boolean }> = ({ isActive }) => (
   <span
     className={cn(
-      "inline-block rounded-full px-2 py-0.5 text-[10px] font-bold",
+      "ml-1.5 inline-block w-fit max-w-fit shrink-0 self-start align-middle rounded-full px-2 py-0.5 text-[14px] font-bold",
       isActive
         ? "bg-brand-50 text-brand-700"
         : "bg-neutral-fill font-medium text-zinc-500",
@@ -84,7 +84,7 @@ const TagSentimentIcon: FC<{
   return (
     <span
       className={cn(
-        "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md",
+        "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md sm:mt-0",
         isActive ? "bg-zinc-100 text-zinc-500" : "bg-zinc-50 text-zinc-300",
       )}
       title={label}
@@ -122,7 +122,7 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
         <Star className="size-3.5 text-zinc-400" />
         Rating categories
       </div>
-      <p className="text-[11px] text-zinc-400">
+      <p className="text-[14px] text-zinc-400">
         Drag to reorder. Switch off to hide from the review step without deleting.
       </p>
       <form onSubmit={handleAdd} className="flex gap-2">
@@ -156,47 +156,47 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
                 key={item.id}
                 id={item.id}
                 className={cn(
-                  "justify-between gap-3",
+                  "gap-3",
                   !item.is_active && "bg-zinc-50/80",
                 )}
               >
-                <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <p
                     className={cn(
-                      "truncate text-xs font-medium",
+                      "min-w-0 flex-1 text-xs font-medium sm:truncate",
                       item.is_active ? "text-ink-charcoal" : "text-zinc-400",
                     )}
                   >
                     {label}
+                    <VisibilityBadge isActive={item.is_active} />
                   </p>
-                  <VisibilityBadge isActive={item.is_active} />
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <Switch
-                    size="sm"
-                    checked={item.is_active}
-                    disabled={isUpdating}
-                    onCheckedChange={() =>
-                      update.mutate({
-                        id: item.id,
-                        payload: { is_active: !item.is_active },
-                      })
-                    }
-                    aria-label={
-                      item.is_active ? `Hide ${label}` : `Show ${label}`
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
-                    onClick={() => {
-                      setPendingDelete(item);
-                      deleteConfirm.openDialog();
-                    }}
-                    aria-label={`Delete ${label}`}
-                  >
-                    <Trash2 className="size-3" />
-                  </button>
+                  <div className="flex shrink-0 items-center justify-end gap-2">
+                    <Switch
+                      size="sm"
+                      checked={item.is_active}
+                      disabled={isUpdating}
+                      onCheckedChange={() =>
+                        update.mutate({
+                          id: item.id,
+                          payload: { is_active: !item.is_active },
+                        })
+                      }
+                      aria-label={
+                        item.is_active ? `Hide ${label}` : `Show ${label}`
+                      }
+                    />
+                    <button
+                      type="button"
+                      className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
+                      onClick={() => {
+                        setPendingDelete(item);
+                        deleteConfirm.openDialog();
+                      }}
+                      aria-label={`Delete ${label}`}
+                    >
+                      <Trash2 className="size-3" />
+                    </button>
+                  </div>
                 </div>
               </SortableConfigRow>
             );
@@ -258,40 +258,46 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
         <MessageSquareText className="size-3.5 text-zinc-400" />
         Feedback questions
       </div>
-      <p className="text-[11px] text-zinc-400">
+      <p className="text-[14px] text-zinc-400">
         Drag to reorder. Switch off to hide from the review step without deleting.
       </p>
-      <form onSubmit={handleAdd} className="flex gap-2">
+      <form onSubmit={handleAdd} className="flex flex-col gap-2 sm:flex-row">
         <Input
           value={question}
           onChange={(event) => setQuestion(event.target.value)}
           placeholder="e.g. How was the food?"
-          className="flex-1"
+          className="w-full sm:flex-1"
         />
-        <Select
-          items={[
-            { label: "Rating", value: FeedbackQuestionTypes.RATING },
-            { label: "Text", value: FeedbackQuestionTypes.TEXT },
-          ]}
-          value={type}
-          onValueChange={(value) => {
-            if (value) setType(value);
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value={FeedbackQuestionTypes.RATING}>Rating</SelectItem>
-              <SelectItem value={FeedbackQuestionTypes.TEXT}>Text</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Button type="submit" disabled={create.isPending || !question.trim()}>
-          <Plus data-icon="inline-start" />
-          Add
-        </Button>
+        <div className="flex items-center gap-2">
+          <Select
+            items={[
+              { label: "Rating", value: FeedbackQuestionTypes.RATING },
+              { label: "Text", value: FeedbackQuestionTypes.TEXT },
+            ]}
+            value={type}
+            onValueChange={(value) => {
+              if (value) setType(value);
+            }}
+          >
+            <SelectTrigger className="h-(--control-height-default) w-full sm:w-auto">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value={FeedbackQuestionTypes.RATING}>Rating</SelectItem>
+                <SelectItem value={FeedbackQuestionTypes.TEXT}>Text</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Button
+            type="submit"
+            disabled={create.isPending || !question.trim()}
+            className="shrink-0"
+          >
+            <Plus data-icon="inline-start" />
+            Add
+          </Button>
+        </div>
       </form>
       {query.isPending ? (
         <Skeleton className="h-10 w-full rounded-lg" />
@@ -312,73 +318,73 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
                 key={item.id}
                 id={item.id}
                 className={cn(
-                  "justify-between gap-3",
+                  "gap-3",
                   !item.is_active && "bg-zinc-50/80",
                 )}
               >
-                <div className="flex min-w-0 flex-1 items-start gap-2">
-                  <span
-                    className={cn(
-                      "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md",
-                      item.is_active
-                        ? "bg-zinc-100 text-zinc-500"
-                        : "bg-zinc-50 text-zinc-300",
-                    )}
-                    title={
-                      item.type === FeedbackQuestionTypes.RATING
-                        ? "Rating"
-                        : "Text"
-                    }
-                    aria-label={
-                      item.type === FeedbackQuestionTypes.RATING
-                        ? "Rating question"
-                        : "Text question"
-                    }
-                  >
-                    {item.type === FeedbackQuestionTypes.RATING ? (
-                      <Star className="size-3" />
-                    ) : (
-                      <Type className="size-3" />
-                    )}
-                  </span>
-                  <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex min-w-0 flex-1 items-start gap-2 sm:items-center">
+                    <span
+                      className={cn(
+                        "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md sm:mt-0",
+                        item.is_active
+                          ? "bg-zinc-100 text-zinc-500"
+                          : "bg-zinc-50 text-zinc-300",
+                      )}
+                      title={
+                        item.type === FeedbackQuestionTypes.RATING
+                          ? "Rating"
+                          : "Text"
+                      }
+                      aria-label={
+                        item.type === FeedbackQuestionTypes.RATING
+                          ? "Rating question"
+                          : "Text question"
+                      }
+                    >
+                      {item.type === FeedbackQuestionTypes.RATING ? (
+                        <Star className="size-3" />
+                      ) : (
+                        <Type className="size-3" />
+                      )}
+                    </span>
                     <p
                       className={cn(
-                        "truncate text-xs font-medium",
+                        "min-w-0 flex-1 text-xs font-medium sm:truncate",
                         item.is_active ? "text-ink-charcoal" : "text-zinc-400",
                       )}
                     >
                       {label}
+                      <VisibilityBadge isActive={item.is_active} />
                     </p>
-                    <VisibilityBadge isActive={item.is_active} />
                   </div>
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <Switch
-                    size="sm"
-                    checked={item.is_active}
-                    disabled={isUpdating}
-                    onCheckedChange={() =>
-                      update.mutate({
-                        id: item.id,
-                        payload: { is_active: !item.is_active },
-                      })
-                    }
-                    aria-label={
-                      item.is_active ? `Hide ${label}` : `Show ${label}`
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
-                    onClick={() => {
-                      setPendingDelete(item);
-                      deleteConfirm.openDialog();
-                    }}
-                    aria-label={`Delete ${label}`}
-                  >
-                    <Trash2 className="size-3" />
-                  </button>
+                  <div className="flex shrink-0 items-center justify-end gap-2">
+                    <Switch
+                      size="sm"
+                      checked={item.is_active}
+                      disabled={isUpdating}
+                      onCheckedChange={() =>
+                        update.mutate({
+                          id: item.id,
+                          payload: { is_active: !item.is_active },
+                        })
+                      }
+                      aria-label={
+                        item.is_active ? `Hide ${label}` : `Show ${label}`
+                      }
+                    />
+                    <button
+                      type="button"
+                      className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
+                      onClick={() => {
+                        setPendingDelete(item);
+                        deleteConfirm.openDialog();
+                      }}
+                      aria-label={`Delete ${label}`}
+                    >
+                      <Trash2 className="size-3" />
+                    </button>
+                  </div>
                 </div>
               </SortableConfigRow>
             );
@@ -436,39 +442,45 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
       <p className="text-[11px] text-zinc-400">
         Switch off to hide a tag from the review step without deleting it.
       </p>
-      <form onSubmit={handleAdd} className="flex gap-2">
+      <form onSubmit={handleAdd} className="flex flex-col gap-2 sm:flex-row">
         <Input
           value={name}
           onChange={(event) => setName(event.target.value)}
           placeholder="e.g. Friendly service"
-          className="flex-1"
+          className="w-full sm:flex-1"
         />
-        <Select
-          items={[
-            { label: "Positive", value: ReviewTagSentiments.POSITIVE },
-            { label: "Neutral", value: ReviewTagSentiments.NEUTRAL },
-            { label: "Negative", value: ReviewTagSentiments.NEGATIVE },
-          ]}
-          value={sentiment}
-          onValueChange={(value) => {
-            if (value) setSentiment(value);
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value={ReviewTagSentiments.POSITIVE}>Positive</SelectItem>
-              <SelectItem value={ReviewTagSentiments.NEUTRAL}>Neutral</SelectItem>
-              <SelectItem value={ReviewTagSentiments.NEGATIVE}>Negative</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Button type="submit" disabled={create.isPending || !name.trim()}>
-          <Plus data-icon="inline-start" />
-          Add
-        </Button>
+        <div className="flex items-center gap-2">
+          <Select
+            items={[
+              { label: "Positive", value: ReviewTagSentiments.POSITIVE },
+              { label: "Neutral", value: ReviewTagSentiments.NEUTRAL },
+              { label: "Negative", value: ReviewTagSentiments.NEGATIVE },
+            ]}
+            value={sentiment}
+            onValueChange={(value) => {
+              if (value) setSentiment(value);
+            }}
+          >
+            <SelectTrigger className="h-(--control-height-default) w-full sm:w-auto">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value={ReviewTagSentiments.POSITIVE}>Positive</SelectItem>
+                <SelectItem value={ReviewTagSentiments.NEUTRAL}>Neutral</SelectItem>
+                <SelectItem value={ReviewTagSentiments.NEGATIVE}>Negative</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Button
+            type="submit"
+            disabled={create.isPending || !name.trim()}
+            className="shrink-0"
+          >
+            <Plus data-icon="inline-start" />
+            Add
+          </Button>
+        </div>
       </form>
       {query.isPending ? (
         <Skeleton className="h-10 w-full rounded-lg" />
@@ -484,57 +496,57 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
               <li
                 key={item.id}
                 className={cn(
-                  "flex items-center justify-between gap-3 px-3 py-2.5",
+                  "flex items-start gap-3 px-3 py-2.5 sm:items-center",
                   !item.is_active && "bg-zinc-50/80",
                 )}
               >
-                <div className="flex min-w-0 flex-1 items-start gap-2">
-                  {item.sentiment ? (
-                    <TagSentimentIcon
-                      sentiment={item.sentiment}
-                      isActive={item.is_active}
-                    />
-                  ) : null}
-                  <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex min-w-0 flex-1 items-start gap-2 sm:items-center">
+                    {item.sentiment ? (
+                      <TagSentimentIcon
+                        sentiment={item.sentiment}
+                        isActive={item.is_active}
+                      />
+                    ) : null}
                     <p
                       className={cn(
-                        "truncate text-xs font-medium",
+                        "min-w-0 flex-1 text-xs font-medium sm:truncate",
                         item.is_active ? "text-ink-charcoal" : "text-zinc-400",
                       )}
                     >
                       {item.name}
+                      <VisibilityBadge isActive={item.is_active} />
                     </p>
-                    <VisibilityBadge isActive={item.is_active} />
                   </div>
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <Switch
-                    size="sm"
-                    checked={item.is_active}
-                    disabled={isUpdating}
-                    onCheckedChange={() =>
-                      update.mutate({
-                        id: item.id,
-                        payload: { is_active: !item.is_active },
-                      })
-                    }
-                    aria-label={
-                      item.is_active
-                        ? `Hide ${item.name}`
-                        : `Show ${item.name}`
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
-                    onClick={() => {
-                      setPendingDelete(item);
-                      deleteConfirm.openDialog();
-                    }}
-                    aria-label={`Delete ${item.name}`}
-                  >
-                    <Trash2 className="size-3" />
-                  </button>
+                  <div className="flex shrink-0 items-center justify-end gap-2">
+                    <Switch
+                      size="sm"
+                      checked={item.is_active}
+                      disabled={isUpdating}
+                      onCheckedChange={() =>
+                        update.mutate({
+                          id: item.id,
+                          payload: { is_active: !item.is_active },
+                        })
+                      }
+                      aria-label={
+                        item.is_active
+                          ? `Hide ${item.name}`
+                          : `Show ${item.name}`
+                      }
+                    />
+                    <button
+                      type="button"
+                      className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
+                      onClick={() => {
+                        setPendingDelete(item);
+                        deleteConfirm.openDialog();
+                      }}
+                      aria-label={`Delete ${item.name}`}
+                    >
+                      <Trash2 className="size-3" />
+                    </button>
+                  </div>
                 </div>
               </li>
             );
