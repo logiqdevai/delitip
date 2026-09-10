@@ -74,6 +74,11 @@ export type QrCodeSpot = $Result.DefaultSelection<Prisma.$QrCodeSpotPayload>
  */
 export type QrCodeEmployee = $Result.DefaultSelection<Prisma.$QrCodeEmployeePayload>
 /**
+ * Model QrTemplateCustomization
+ * 
+ */
+export type QrTemplateCustomization = $Result.DefaultSelection<Prisma.$QrTemplateCustomizationPayload>
+/**
  * Model DistributionRule
  * 
  */
@@ -735,6 +740,16 @@ export class PrismaClient<
   get qrCodeEmployee(): Prisma.QrCodeEmployeeDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.qrTemplateCustomization`: Exposes CRUD operations for the **QrTemplateCustomization** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more QrTemplateCustomizations
+    * const qrTemplateCustomizations = await prisma.qrTemplateCustomization.findMany()
+    * ```
+    */
+  get qrTemplateCustomization(): Prisma.QrTemplateCustomizationDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.distributionRule`: Exposes CRUD operations for the **DistributionRule** model.
     * Example usage:
     * ```ts
@@ -1369,6 +1384,7 @@ export namespace Prisma {
     QrCode: 'QrCode',
     QrCodeSpot: 'QrCodeSpot',
     QrCodeEmployee: 'QrCodeEmployee',
+    QrTemplateCustomization: 'QrTemplateCustomization',
     DistributionRule: 'DistributionRule',
     DistributionRuleRecipient: 'DistributionRuleRecipient',
     PayoutAccount: 'PayoutAccount',
@@ -1403,7 +1419,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "document" | "organization" | "organizationMember" | "subscription" | "store" | "employee" | "spot" | "qrCode" | "qrCodeSpot" | "qrCodeEmployee" | "distributionRule" | "distributionRuleRecipient" | "payoutAccount" | "tip" | "paymentTransaction" | "webhookEvent" | "tipDistribution" | "payout" | "refund" | "review" | "reviewCategory" | "reviewCategoryRating" | "reviewTag" | "reviewTagAssignment" | "feedbackQuestion" | "feedbackResponse" | "alertPreference" | "alert" | "insightSummary"
+      modelProps: "user" | "passwordResetToken" | "document" | "organization" | "organizationMember" | "subscription" | "store" | "employee" | "spot" | "qrCode" | "qrCodeSpot" | "qrCodeEmployee" | "qrTemplateCustomization" | "distributionRule" | "distributionRuleRecipient" | "payoutAccount" | "tip" | "paymentTransaction" | "webhookEvent" | "tipDistribution" | "payout" | "refund" | "review" | "reviewCategory" | "reviewCategoryRating" | "reviewTag" | "reviewTagAssignment" | "feedbackQuestion" | "feedbackResponse" | "alertPreference" | "alert" | "insightSummary"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2292,6 +2308,80 @@ export namespace Prisma {
           count: {
             args: Prisma.QrCodeEmployeeCountArgs<ExtArgs>
             result: $Utils.Optional<QrCodeEmployeeCountAggregateOutputType> | number
+          }
+        }
+      }
+      QrTemplateCustomization: {
+        payload: Prisma.$QrTemplateCustomizationPayload<ExtArgs>
+        fields: Prisma.QrTemplateCustomizationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.QrTemplateCustomizationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.QrTemplateCustomizationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload>
+          }
+          findFirst: {
+            args: Prisma.QrTemplateCustomizationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.QrTemplateCustomizationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload>
+          }
+          findMany: {
+            args: Prisma.QrTemplateCustomizationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload>[]
+          }
+          create: {
+            args: Prisma.QrTemplateCustomizationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload>
+          }
+          createMany: {
+            args: Prisma.QrTemplateCustomizationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.QrTemplateCustomizationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload>[]
+          }
+          delete: {
+            args: Prisma.QrTemplateCustomizationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload>
+          }
+          update: {
+            args: Prisma.QrTemplateCustomizationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload>
+          }
+          deleteMany: {
+            args: Prisma.QrTemplateCustomizationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.QrTemplateCustomizationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.QrTemplateCustomizationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload>[]
+          }
+          upsert: {
+            args: Prisma.QrTemplateCustomizationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QrTemplateCustomizationPayload>
+          }
+          aggregate: {
+            args: Prisma.QrTemplateCustomizationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateQrTemplateCustomization>
+          }
+          groupBy: {
+            args: Prisma.QrTemplateCustomizationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<QrTemplateCustomizationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.QrTemplateCustomizationCountArgs<ExtArgs>
+            result: $Utils.Optional<QrTemplateCustomizationCountAggregateOutputType> | number
           }
         }
       }
@@ -3821,6 +3911,7 @@ export namespace Prisma {
     qrCode?: QrCodeOmit
     qrCodeSpot?: QrCodeSpotOmit
     qrCodeEmployee?: QrCodeEmployeeOmit
+    qrTemplateCustomization?: QrTemplateCustomizationOmit
     distributionRule?: DistributionRuleOmit
     distributionRuleRecipient?: DistributionRuleRecipientOmit
     payoutAccount?: PayoutAccountOmit
@@ -4116,6 +4207,7 @@ export namespace Prisma {
     employees: number
     spots: number
     qr_codes: number
+    qr_template_customizations: number
     distribution_rules: number
     tips: number
     reviews: number
@@ -4133,6 +4225,7 @@ export namespace Prisma {
     employees?: boolean | StoreCountOutputTypeCountEmployeesArgs
     spots?: boolean | StoreCountOutputTypeCountSpotsArgs
     qr_codes?: boolean | StoreCountOutputTypeCountQr_codesArgs
+    qr_template_customizations?: boolean | StoreCountOutputTypeCountQr_template_customizationsArgs
     distribution_rules?: boolean | StoreCountOutputTypeCountDistribution_rulesArgs
     tips?: boolean | StoreCountOutputTypeCountTipsArgs
     reviews?: boolean | StoreCountOutputTypeCountReviewsArgs
@@ -4182,6 +4275,13 @@ export namespace Prisma {
    */
   export type StoreCountOutputTypeCountQr_codesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: QrCodeWhereInput
+  }
+
+  /**
+   * StoreCountOutputType without action
+   */
+  export type StoreCountOutputTypeCountQr_template_customizationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QrTemplateCustomizationWhereInput
   }
 
   /**
@@ -12364,6 +12464,7 @@ export namespace Prisma {
     employees?: boolean | Store$employeesArgs<ExtArgs>
     spots?: boolean | Store$spotsArgs<ExtArgs>
     qr_codes?: boolean | Store$qr_codesArgs<ExtArgs>
+    qr_template_customizations?: boolean | Store$qr_template_customizationsArgs<ExtArgs>
     distribution_rules?: boolean | Store$distribution_rulesArgs<ExtArgs>
     tips?: boolean | Store$tipsArgs<ExtArgs>
     reviews?: boolean | Store$reviewsArgs<ExtArgs>
@@ -12492,6 +12593,7 @@ export namespace Prisma {
     employees?: boolean | Store$employeesArgs<ExtArgs>
     spots?: boolean | Store$spotsArgs<ExtArgs>
     qr_codes?: boolean | Store$qr_codesArgs<ExtArgs>
+    qr_template_customizations?: boolean | Store$qr_template_customizationsArgs<ExtArgs>
     distribution_rules?: boolean | Store$distribution_rulesArgs<ExtArgs>
     tips?: boolean | Store$tipsArgs<ExtArgs>
     reviews?: boolean | Store$reviewsArgs<ExtArgs>
@@ -12529,6 +12631,7 @@ export namespace Prisma {
       employees: Prisma.$EmployeePayload<ExtArgs>[]
       spots: Prisma.$SpotPayload<ExtArgs>[]
       qr_codes: Prisma.$QrCodePayload<ExtArgs>[]
+      qr_template_customizations: Prisma.$QrTemplateCustomizationPayload<ExtArgs>[]
       distribution_rules: Prisma.$DistributionRulePayload<ExtArgs>[]
       tips: Prisma.$TipPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
@@ -12973,6 +13076,7 @@ export namespace Prisma {
     employees<T extends Store$employeesArgs<ExtArgs> = {}>(args?: Subset<T, Store$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     spots<T extends Store$spotsArgs<ExtArgs> = {}>(args?: Subset<T, Store$spotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     qr_codes<T extends Store$qr_codesArgs<ExtArgs> = {}>(args?: Subset<T, Store$qr_codesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    qr_template_customizations<T extends Store$qr_template_customizationsArgs<ExtArgs> = {}>(args?: Subset<T, Store$qr_template_customizationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     distribution_rules<T extends Store$distribution_rulesArgs<ExtArgs> = {}>(args?: Subset<T, Store$distribution_rulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DistributionRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tips<T extends Store$tipsArgs<ExtArgs> = {}>(args?: Subset<T, Store$tipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends Store$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Store$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13588,6 +13692,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: QrCodeScalarFieldEnum | QrCodeScalarFieldEnum[]
+  }
+
+  /**
+   * Store.qr_template_customizations
+   */
+  export type Store$qr_template_customizationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
+    where?: QrTemplateCustomizationWhereInput
+    orderBy?: QrTemplateCustomizationOrderByWithRelationInput | QrTemplateCustomizationOrderByWithRelationInput[]
+    cursor?: QrTemplateCustomizationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QrTemplateCustomizationScalarFieldEnum | QrTemplateCustomizationScalarFieldEnum[]
   }
 
   /**
@@ -19679,6 +19807,1082 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: QrCodeEmployeeInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model QrTemplateCustomization
+   */
+
+  export type AggregateQrTemplateCustomization = {
+    _count: QrTemplateCustomizationCountAggregateOutputType | null
+    _min: QrTemplateCustomizationMinAggregateOutputType | null
+    _max: QrTemplateCustomizationMaxAggregateOutputType | null
+  }
+
+  export type QrTemplateCustomizationMinAggregateOutputType = {
+    id: string | null
+    store_id: string | null
+    template_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type QrTemplateCustomizationMaxAggregateOutputType = {
+    id: string | null
+    store_id: string | null
+    template_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type QrTemplateCustomizationCountAggregateOutputType = {
+    id: number
+    store_id: number
+    template_id: number
+    canvas: number
+    elements: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type QrTemplateCustomizationMinAggregateInputType = {
+    id?: true
+    store_id?: true
+    template_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type QrTemplateCustomizationMaxAggregateInputType = {
+    id?: true
+    store_id?: true
+    template_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type QrTemplateCustomizationCountAggregateInputType = {
+    id?: true
+    store_id?: true
+    template_id?: true
+    canvas?: true
+    elements?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type QrTemplateCustomizationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which QrTemplateCustomization to aggregate.
+     */
+    where?: QrTemplateCustomizationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QrTemplateCustomizations to fetch.
+     */
+    orderBy?: QrTemplateCustomizationOrderByWithRelationInput | QrTemplateCustomizationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: QrTemplateCustomizationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QrTemplateCustomizations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QrTemplateCustomizations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned QrTemplateCustomizations
+    **/
+    _count?: true | QrTemplateCustomizationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: QrTemplateCustomizationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: QrTemplateCustomizationMaxAggregateInputType
+  }
+
+  export type GetQrTemplateCustomizationAggregateType<T extends QrTemplateCustomizationAggregateArgs> = {
+        [P in keyof T & keyof AggregateQrTemplateCustomization]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateQrTemplateCustomization[P]>
+      : GetScalarType<T[P], AggregateQrTemplateCustomization[P]>
+  }
+
+
+
+
+  export type QrTemplateCustomizationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QrTemplateCustomizationWhereInput
+    orderBy?: QrTemplateCustomizationOrderByWithAggregationInput | QrTemplateCustomizationOrderByWithAggregationInput[]
+    by: QrTemplateCustomizationScalarFieldEnum[] | QrTemplateCustomizationScalarFieldEnum
+    having?: QrTemplateCustomizationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: QrTemplateCustomizationCountAggregateInputType | true
+    _min?: QrTemplateCustomizationMinAggregateInputType
+    _max?: QrTemplateCustomizationMaxAggregateInputType
+  }
+
+  export type QrTemplateCustomizationGroupByOutputType = {
+    id: string
+    store_id: string
+    template_id: string
+    canvas: JsonValue
+    elements: JsonValue
+    created_at: Date
+    updated_at: Date
+    _count: QrTemplateCustomizationCountAggregateOutputType | null
+    _min: QrTemplateCustomizationMinAggregateOutputType | null
+    _max: QrTemplateCustomizationMaxAggregateOutputType | null
+  }
+
+  type GetQrTemplateCustomizationGroupByPayload<T extends QrTemplateCustomizationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<QrTemplateCustomizationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof QrTemplateCustomizationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], QrTemplateCustomizationGroupByOutputType[P]>
+            : GetScalarType<T[P], QrTemplateCustomizationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type QrTemplateCustomizationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    template_id?: boolean
+    canvas?: boolean
+    elements?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["qrTemplateCustomization"]>
+
+  export type QrTemplateCustomizationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    template_id?: boolean
+    canvas?: boolean
+    elements?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["qrTemplateCustomization"]>
+
+  export type QrTemplateCustomizationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    template_id?: boolean
+    canvas?: boolean
+    elements?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["qrTemplateCustomization"]>
+
+  export type QrTemplateCustomizationSelectScalar = {
+    id?: boolean
+    store_id?: boolean
+    template_id?: boolean
+    canvas?: boolean
+    elements?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type QrTemplateCustomizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "store_id" | "template_id" | "canvas" | "elements" | "created_at" | "updated_at", ExtArgs["result"]["qrTemplateCustomization"]>
+  export type QrTemplateCustomizationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }
+  export type QrTemplateCustomizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }
+  export type QrTemplateCustomizationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+  }
+
+  export type $QrTemplateCustomizationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "QrTemplateCustomization"
+    objects: {
+      store: Prisma.$StorePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      store_id: string
+      template_id: string
+      canvas: Prisma.JsonValue
+      elements: Prisma.JsonValue
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["qrTemplateCustomization"]>
+    composites: {}
+  }
+
+  type QrTemplateCustomizationGetPayload<S extends boolean | null | undefined | QrTemplateCustomizationDefaultArgs> = $Result.GetResult<Prisma.$QrTemplateCustomizationPayload, S>
+
+  type QrTemplateCustomizationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<QrTemplateCustomizationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: QrTemplateCustomizationCountAggregateInputType | true
+    }
+
+  export interface QrTemplateCustomizationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['QrTemplateCustomization'], meta: { name: 'QrTemplateCustomization' } }
+    /**
+     * Find zero or one QrTemplateCustomization that matches the filter.
+     * @param {QrTemplateCustomizationFindUniqueArgs} args - Arguments to find a QrTemplateCustomization
+     * @example
+     * // Get one QrTemplateCustomization
+     * const qrTemplateCustomization = await prisma.qrTemplateCustomization.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends QrTemplateCustomizationFindUniqueArgs>(args: SelectSubset<T, QrTemplateCustomizationFindUniqueArgs<ExtArgs>>): Prisma__QrTemplateCustomizationClient<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one QrTemplateCustomization that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {QrTemplateCustomizationFindUniqueOrThrowArgs} args - Arguments to find a QrTemplateCustomization
+     * @example
+     * // Get one QrTemplateCustomization
+     * const qrTemplateCustomization = await prisma.qrTemplateCustomization.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends QrTemplateCustomizationFindUniqueOrThrowArgs>(args: SelectSubset<T, QrTemplateCustomizationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__QrTemplateCustomizationClient<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first QrTemplateCustomization that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QrTemplateCustomizationFindFirstArgs} args - Arguments to find a QrTemplateCustomization
+     * @example
+     * // Get one QrTemplateCustomization
+     * const qrTemplateCustomization = await prisma.qrTemplateCustomization.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends QrTemplateCustomizationFindFirstArgs>(args?: SelectSubset<T, QrTemplateCustomizationFindFirstArgs<ExtArgs>>): Prisma__QrTemplateCustomizationClient<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first QrTemplateCustomization that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QrTemplateCustomizationFindFirstOrThrowArgs} args - Arguments to find a QrTemplateCustomization
+     * @example
+     * // Get one QrTemplateCustomization
+     * const qrTemplateCustomization = await prisma.qrTemplateCustomization.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends QrTemplateCustomizationFindFirstOrThrowArgs>(args?: SelectSubset<T, QrTemplateCustomizationFindFirstOrThrowArgs<ExtArgs>>): Prisma__QrTemplateCustomizationClient<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more QrTemplateCustomizations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QrTemplateCustomizationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all QrTemplateCustomizations
+     * const qrTemplateCustomizations = await prisma.qrTemplateCustomization.findMany()
+     * 
+     * // Get first 10 QrTemplateCustomizations
+     * const qrTemplateCustomizations = await prisma.qrTemplateCustomization.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const qrTemplateCustomizationWithIdOnly = await prisma.qrTemplateCustomization.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends QrTemplateCustomizationFindManyArgs>(args?: SelectSubset<T, QrTemplateCustomizationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a QrTemplateCustomization.
+     * @param {QrTemplateCustomizationCreateArgs} args - Arguments to create a QrTemplateCustomization.
+     * @example
+     * // Create one QrTemplateCustomization
+     * const QrTemplateCustomization = await prisma.qrTemplateCustomization.create({
+     *   data: {
+     *     // ... data to create a QrTemplateCustomization
+     *   }
+     * })
+     * 
+     */
+    create<T extends QrTemplateCustomizationCreateArgs>(args: SelectSubset<T, QrTemplateCustomizationCreateArgs<ExtArgs>>): Prisma__QrTemplateCustomizationClient<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many QrTemplateCustomizations.
+     * @param {QrTemplateCustomizationCreateManyArgs} args - Arguments to create many QrTemplateCustomizations.
+     * @example
+     * // Create many QrTemplateCustomizations
+     * const qrTemplateCustomization = await prisma.qrTemplateCustomization.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends QrTemplateCustomizationCreateManyArgs>(args?: SelectSubset<T, QrTemplateCustomizationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many QrTemplateCustomizations and returns the data saved in the database.
+     * @param {QrTemplateCustomizationCreateManyAndReturnArgs} args - Arguments to create many QrTemplateCustomizations.
+     * @example
+     * // Create many QrTemplateCustomizations
+     * const qrTemplateCustomization = await prisma.qrTemplateCustomization.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many QrTemplateCustomizations and only return the `id`
+     * const qrTemplateCustomizationWithIdOnly = await prisma.qrTemplateCustomization.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends QrTemplateCustomizationCreateManyAndReturnArgs>(args?: SelectSubset<T, QrTemplateCustomizationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a QrTemplateCustomization.
+     * @param {QrTemplateCustomizationDeleteArgs} args - Arguments to delete one QrTemplateCustomization.
+     * @example
+     * // Delete one QrTemplateCustomization
+     * const QrTemplateCustomization = await prisma.qrTemplateCustomization.delete({
+     *   where: {
+     *     // ... filter to delete one QrTemplateCustomization
+     *   }
+     * })
+     * 
+     */
+    delete<T extends QrTemplateCustomizationDeleteArgs>(args: SelectSubset<T, QrTemplateCustomizationDeleteArgs<ExtArgs>>): Prisma__QrTemplateCustomizationClient<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one QrTemplateCustomization.
+     * @param {QrTemplateCustomizationUpdateArgs} args - Arguments to update one QrTemplateCustomization.
+     * @example
+     * // Update one QrTemplateCustomization
+     * const qrTemplateCustomization = await prisma.qrTemplateCustomization.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends QrTemplateCustomizationUpdateArgs>(args: SelectSubset<T, QrTemplateCustomizationUpdateArgs<ExtArgs>>): Prisma__QrTemplateCustomizationClient<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more QrTemplateCustomizations.
+     * @param {QrTemplateCustomizationDeleteManyArgs} args - Arguments to filter QrTemplateCustomizations to delete.
+     * @example
+     * // Delete a few QrTemplateCustomizations
+     * const { count } = await prisma.qrTemplateCustomization.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends QrTemplateCustomizationDeleteManyArgs>(args?: SelectSubset<T, QrTemplateCustomizationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more QrTemplateCustomizations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QrTemplateCustomizationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many QrTemplateCustomizations
+     * const qrTemplateCustomization = await prisma.qrTemplateCustomization.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends QrTemplateCustomizationUpdateManyArgs>(args: SelectSubset<T, QrTemplateCustomizationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more QrTemplateCustomizations and returns the data updated in the database.
+     * @param {QrTemplateCustomizationUpdateManyAndReturnArgs} args - Arguments to update many QrTemplateCustomizations.
+     * @example
+     * // Update many QrTemplateCustomizations
+     * const qrTemplateCustomization = await prisma.qrTemplateCustomization.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more QrTemplateCustomizations and only return the `id`
+     * const qrTemplateCustomizationWithIdOnly = await prisma.qrTemplateCustomization.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends QrTemplateCustomizationUpdateManyAndReturnArgs>(args: SelectSubset<T, QrTemplateCustomizationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one QrTemplateCustomization.
+     * @param {QrTemplateCustomizationUpsertArgs} args - Arguments to update or create a QrTemplateCustomization.
+     * @example
+     * // Update or create a QrTemplateCustomization
+     * const qrTemplateCustomization = await prisma.qrTemplateCustomization.upsert({
+     *   create: {
+     *     // ... data to create a QrTemplateCustomization
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the QrTemplateCustomization we want to update
+     *   }
+     * })
+     */
+    upsert<T extends QrTemplateCustomizationUpsertArgs>(args: SelectSubset<T, QrTemplateCustomizationUpsertArgs<ExtArgs>>): Prisma__QrTemplateCustomizationClient<$Result.GetResult<Prisma.$QrTemplateCustomizationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of QrTemplateCustomizations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QrTemplateCustomizationCountArgs} args - Arguments to filter QrTemplateCustomizations to count.
+     * @example
+     * // Count the number of QrTemplateCustomizations
+     * const count = await prisma.qrTemplateCustomization.count({
+     *   where: {
+     *     // ... the filter for the QrTemplateCustomizations we want to count
+     *   }
+     * })
+    **/
+    count<T extends QrTemplateCustomizationCountArgs>(
+      args?: Subset<T, QrTemplateCustomizationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], QrTemplateCustomizationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a QrTemplateCustomization.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QrTemplateCustomizationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends QrTemplateCustomizationAggregateArgs>(args: Subset<T, QrTemplateCustomizationAggregateArgs>): Prisma.PrismaPromise<GetQrTemplateCustomizationAggregateType<T>>
+
+    /**
+     * Group by QrTemplateCustomization.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QrTemplateCustomizationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends QrTemplateCustomizationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: QrTemplateCustomizationGroupByArgs['orderBy'] }
+        : { orderBy?: QrTemplateCustomizationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, QrTemplateCustomizationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetQrTemplateCustomizationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the QrTemplateCustomization model
+   */
+  readonly fields: QrTemplateCustomizationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for QrTemplateCustomization.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__QrTemplateCustomizationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    store<T extends StoreDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StoreDefaultArgs<ExtArgs>>): Prisma__StoreClient<$Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the QrTemplateCustomization model
+   */
+  interface QrTemplateCustomizationFieldRefs {
+    readonly id: FieldRef<"QrTemplateCustomization", 'String'>
+    readonly store_id: FieldRef<"QrTemplateCustomization", 'String'>
+    readonly template_id: FieldRef<"QrTemplateCustomization", 'String'>
+    readonly canvas: FieldRef<"QrTemplateCustomization", 'Json'>
+    readonly elements: FieldRef<"QrTemplateCustomization", 'Json'>
+    readonly created_at: FieldRef<"QrTemplateCustomization", 'DateTime'>
+    readonly updated_at: FieldRef<"QrTemplateCustomization", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * QrTemplateCustomization findUnique
+   */
+  export type QrTemplateCustomizationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
+    /**
+     * Filter, which QrTemplateCustomization to fetch.
+     */
+    where: QrTemplateCustomizationWhereUniqueInput
+  }
+
+  /**
+   * QrTemplateCustomization findUniqueOrThrow
+   */
+  export type QrTemplateCustomizationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
+    /**
+     * Filter, which QrTemplateCustomization to fetch.
+     */
+    where: QrTemplateCustomizationWhereUniqueInput
+  }
+
+  /**
+   * QrTemplateCustomization findFirst
+   */
+  export type QrTemplateCustomizationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
+    /**
+     * Filter, which QrTemplateCustomization to fetch.
+     */
+    where?: QrTemplateCustomizationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QrTemplateCustomizations to fetch.
+     */
+    orderBy?: QrTemplateCustomizationOrderByWithRelationInput | QrTemplateCustomizationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for QrTemplateCustomizations.
+     */
+    cursor?: QrTemplateCustomizationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QrTemplateCustomizations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QrTemplateCustomizations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of QrTemplateCustomizations.
+     */
+    distinct?: QrTemplateCustomizationScalarFieldEnum | QrTemplateCustomizationScalarFieldEnum[]
+  }
+
+  /**
+   * QrTemplateCustomization findFirstOrThrow
+   */
+  export type QrTemplateCustomizationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
+    /**
+     * Filter, which QrTemplateCustomization to fetch.
+     */
+    where?: QrTemplateCustomizationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QrTemplateCustomizations to fetch.
+     */
+    orderBy?: QrTemplateCustomizationOrderByWithRelationInput | QrTemplateCustomizationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for QrTemplateCustomizations.
+     */
+    cursor?: QrTemplateCustomizationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QrTemplateCustomizations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QrTemplateCustomizations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of QrTemplateCustomizations.
+     */
+    distinct?: QrTemplateCustomizationScalarFieldEnum | QrTemplateCustomizationScalarFieldEnum[]
+  }
+
+  /**
+   * QrTemplateCustomization findMany
+   */
+  export type QrTemplateCustomizationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
+    /**
+     * Filter, which QrTemplateCustomizations to fetch.
+     */
+    where?: QrTemplateCustomizationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QrTemplateCustomizations to fetch.
+     */
+    orderBy?: QrTemplateCustomizationOrderByWithRelationInput | QrTemplateCustomizationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing QrTemplateCustomizations.
+     */
+    cursor?: QrTemplateCustomizationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QrTemplateCustomizations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QrTemplateCustomizations.
+     */
+    skip?: number
+    distinct?: QrTemplateCustomizationScalarFieldEnum | QrTemplateCustomizationScalarFieldEnum[]
+  }
+
+  /**
+   * QrTemplateCustomization create
+   */
+  export type QrTemplateCustomizationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a QrTemplateCustomization.
+     */
+    data: XOR<QrTemplateCustomizationCreateInput, QrTemplateCustomizationUncheckedCreateInput>
+  }
+
+  /**
+   * QrTemplateCustomization createMany
+   */
+  export type QrTemplateCustomizationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many QrTemplateCustomizations.
+     */
+    data: QrTemplateCustomizationCreateManyInput | QrTemplateCustomizationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * QrTemplateCustomization createManyAndReturn
+   */
+  export type QrTemplateCustomizationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * The data used to create many QrTemplateCustomizations.
+     */
+    data: QrTemplateCustomizationCreateManyInput | QrTemplateCustomizationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * QrTemplateCustomization update
+   */
+  export type QrTemplateCustomizationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a QrTemplateCustomization.
+     */
+    data: XOR<QrTemplateCustomizationUpdateInput, QrTemplateCustomizationUncheckedUpdateInput>
+    /**
+     * Choose, which QrTemplateCustomization to update.
+     */
+    where: QrTemplateCustomizationWhereUniqueInput
+  }
+
+  /**
+   * QrTemplateCustomization updateMany
+   */
+  export type QrTemplateCustomizationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update QrTemplateCustomizations.
+     */
+    data: XOR<QrTemplateCustomizationUpdateManyMutationInput, QrTemplateCustomizationUncheckedUpdateManyInput>
+    /**
+     * Filter which QrTemplateCustomizations to update
+     */
+    where?: QrTemplateCustomizationWhereInput
+    /**
+     * Limit how many QrTemplateCustomizations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * QrTemplateCustomization updateManyAndReturn
+   */
+  export type QrTemplateCustomizationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * The data used to update QrTemplateCustomizations.
+     */
+    data: XOR<QrTemplateCustomizationUpdateManyMutationInput, QrTemplateCustomizationUncheckedUpdateManyInput>
+    /**
+     * Filter which QrTemplateCustomizations to update
+     */
+    where?: QrTemplateCustomizationWhereInput
+    /**
+     * Limit how many QrTemplateCustomizations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * QrTemplateCustomization upsert
+   */
+  export type QrTemplateCustomizationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the QrTemplateCustomization to update in case it exists.
+     */
+    where: QrTemplateCustomizationWhereUniqueInput
+    /**
+     * In case the QrTemplateCustomization found by the `where` argument doesn't exist, create a new QrTemplateCustomization with this data.
+     */
+    create: XOR<QrTemplateCustomizationCreateInput, QrTemplateCustomizationUncheckedCreateInput>
+    /**
+     * In case the QrTemplateCustomization was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<QrTemplateCustomizationUpdateInput, QrTemplateCustomizationUncheckedUpdateInput>
+  }
+
+  /**
+   * QrTemplateCustomization delete
+   */
+  export type QrTemplateCustomizationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
+    /**
+     * Filter which QrTemplateCustomization to delete.
+     */
+    where: QrTemplateCustomizationWhereUniqueInput
+  }
+
+  /**
+   * QrTemplateCustomization deleteMany
+   */
+  export type QrTemplateCustomizationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which QrTemplateCustomizations to delete
+     */
+    where?: QrTemplateCustomizationWhereInput
+    /**
+     * Limit how many QrTemplateCustomizations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * QrTemplateCustomization without action
+   */
+  export type QrTemplateCustomizationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrTemplateCustomization
+     */
+    select?: QrTemplateCustomizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrTemplateCustomization
+     */
+    omit?: QrTemplateCustomizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrTemplateCustomizationInclude<ExtArgs> | null
   }
 
 
@@ -42561,6 +43765,19 @@ export namespace Prisma {
   export type QrCodeEmployeeScalarFieldEnum = (typeof QrCodeEmployeeScalarFieldEnum)[keyof typeof QrCodeEmployeeScalarFieldEnum]
 
 
+  export const QrTemplateCustomizationScalarFieldEnum: {
+    id: 'id',
+    store_id: 'store_id',
+    template_id: 'template_id',
+    canvas: 'canvas',
+    elements: 'elements',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type QrTemplateCustomizationScalarFieldEnum = (typeof QrTemplateCustomizationScalarFieldEnum)[keyof typeof QrTemplateCustomizationScalarFieldEnum]
+
+
   export const DistributionRuleScalarFieldEnum: {
     id: 'id',
     store_id: 'store_id',
@@ -43900,6 +45117,7 @@ export namespace Prisma {
     employees?: EmployeeListRelationFilter
     spots?: SpotListRelationFilter
     qr_codes?: QrCodeListRelationFilter
+    qr_template_customizations?: QrTemplateCustomizationListRelationFilter
     distribution_rules?: DistributionRuleListRelationFilter
     tips?: TipListRelationFilter
     reviews?: ReviewListRelationFilter
@@ -43951,6 +45169,7 @@ export namespace Prisma {
     employees?: EmployeeOrderByRelationAggregateInput
     spots?: SpotOrderByRelationAggregateInput
     qr_codes?: QrCodeOrderByRelationAggregateInput
+    qr_template_customizations?: QrTemplateCustomizationOrderByRelationAggregateInput
     distribution_rules?: DistributionRuleOrderByRelationAggregateInput
     tips?: TipOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
@@ -44005,6 +45224,7 @@ export namespace Prisma {
     employees?: EmployeeListRelationFilter
     spots?: SpotListRelationFilter
     qr_codes?: QrCodeListRelationFilter
+    qr_template_customizations?: QrTemplateCustomizationListRelationFilter
     distribution_rules?: DistributionRuleListRelationFilter
     tips?: TipListRelationFilter
     reviews?: ReviewListRelationFilter
@@ -44458,6 +45678,72 @@ export namespace Prisma {
     qr_code_id?: StringWithAggregatesFilter<"QrCodeEmployee"> | string
     employee_id?: StringWithAggregatesFilter<"QrCodeEmployee"> | string
     created_at?: DateTimeWithAggregatesFilter<"QrCodeEmployee"> | Date | string
+  }
+
+  export type QrTemplateCustomizationWhereInput = {
+    AND?: QrTemplateCustomizationWhereInput | QrTemplateCustomizationWhereInput[]
+    OR?: QrTemplateCustomizationWhereInput[]
+    NOT?: QrTemplateCustomizationWhereInput | QrTemplateCustomizationWhereInput[]
+    id?: StringFilter<"QrTemplateCustomization"> | string
+    store_id?: StringFilter<"QrTemplateCustomization"> | string
+    template_id?: StringFilter<"QrTemplateCustomization"> | string
+    canvas?: JsonFilter<"QrTemplateCustomization">
+    elements?: JsonFilter<"QrTemplateCustomization">
+    created_at?: DateTimeFilter<"QrTemplateCustomization"> | Date | string
+    updated_at?: DateTimeFilter<"QrTemplateCustomization"> | Date | string
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+  }
+
+  export type QrTemplateCustomizationOrderByWithRelationInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    template_id?: SortOrder
+    canvas?: SortOrder
+    elements?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    store?: StoreOrderByWithRelationInput
+  }
+
+  export type QrTemplateCustomizationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    store_id_template_id?: QrTemplateCustomizationStore_idTemplate_idCompoundUniqueInput
+    AND?: QrTemplateCustomizationWhereInput | QrTemplateCustomizationWhereInput[]
+    OR?: QrTemplateCustomizationWhereInput[]
+    NOT?: QrTemplateCustomizationWhereInput | QrTemplateCustomizationWhereInput[]
+    store_id?: StringFilter<"QrTemplateCustomization"> | string
+    template_id?: StringFilter<"QrTemplateCustomization"> | string
+    canvas?: JsonFilter<"QrTemplateCustomization">
+    elements?: JsonFilter<"QrTemplateCustomization">
+    created_at?: DateTimeFilter<"QrTemplateCustomization"> | Date | string
+    updated_at?: DateTimeFilter<"QrTemplateCustomization"> | Date | string
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+  }, "id" | "store_id_template_id">
+
+  export type QrTemplateCustomizationOrderByWithAggregationInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    template_id?: SortOrder
+    canvas?: SortOrder
+    elements?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: QrTemplateCustomizationCountOrderByAggregateInput
+    _max?: QrTemplateCustomizationMaxOrderByAggregateInput
+    _min?: QrTemplateCustomizationMinOrderByAggregateInput
+  }
+
+  export type QrTemplateCustomizationScalarWhereWithAggregatesInput = {
+    AND?: QrTemplateCustomizationScalarWhereWithAggregatesInput | QrTemplateCustomizationScalarWhereWithAggregatesInput[]
+    OR?: QrTemplateCustomizationScalarWhereWithAggregatesInput[]
+    NOT?: QrTemplateCustomizationScalarWhereWithAggregatesInput | QrTemplateCustomizationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"QrTemplateCustomization"> | string
+    store_id?: StringWithAggregatesFilter<"QrTemplateCustomization"> | string
+    template_id?: StringWithAggregatesFilter<"QrTemplateCustomization"> | string
+    canvas?: JsonWithAggregatesFilter<"QrTemplateCustomization">
+    elements?: JsonWithAggregatesFilter<"QrTemplateCustomization">
+    created_at?: DateTimeWithAggregatesFilter<"QrTemplateCustomization"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"QrTemplateCustomization"> | Date | string
   }
 
   export type DistributionRuleWhereInput = {
@@ -46757,6 +48043,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -46804,6 +48091,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -46851,6 +48139,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -46898,6 +48187,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -47378,6 +48668,75 @@ export namespace Prisma {
     qr_code_id?: StringFieldUpdateOperationsInput | string
     employee_id?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QrTemplateCustomizationCreateInput = {
+    id?: string
+    template_id: string
+    canvas: JsonNullValueInput | InputJsonValue
+    elements: JsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutQr_template_customizationsInput
+  }
+
+  export type QrTemplateCustomizationUncheckedCreateInput = {
+    id?: string
+    store_id: string
+    template_id: string
+    canvas: JsonNullValueInput | InputJsonValue
+    elements: JsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type QrTemplateCustomizationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    template_id?: StringFieldUpdateOperationsInput | string
+    canvas?: JsonNullValueInput | InputJsonValue
+    elements?: JsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutQr_template_customizationsNestedInput
+  }
+
+  export type QrTemplateCustomizationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    template_id?: StringFieldUpdateOperationsInput | string
+    canvas?: JsonNullValueInput | InputJsonValue
+    elements?: JsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QrTemplateCustomizationCreateManyInput = {
+    id?: string
+    store_id: string
+    template_id: string
+    canvas: JsonNullValueInput | InputJsonValue
+    elements: JsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type QrTemplateCustomizationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    template_id?: StringFieldUpdateOperationsInput | string
+    canvas?: JsonNullValueInput | InputJsonValue
+    elements?: JsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QrTemplateCustomizationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    template_id?: StringFieldUpdateOperationsInput | string
+    canvas?: JsonNullValueInput | InputJsonValue
+    elements?: JsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DistributionRuleCreateInput = {
@@ -49877,6 +51236,12 @@ export namespace Prisma {
     none?: QrCodeWhereInput
   }
 
+  export type QrTemplateCustomizationListRelationFilter = {
+    every?: QrTemplateCustomizationWhereInput
+    some?: QrTemplateCustomizationWhereInput
+    none?: QrTemplateCustomizationWhereInput
+  }
+
   export type DistributionRuleListRelationFilter = {
     every?: DistributionRuleWhereInput
     some?: DistributionRuleWhereInput
@@ -49930,6 +51295,10 @@ export namespace Prisma {
   }
 
   export type QrCodeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type QrTemplateCustomizationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -50409,6 +51778,37 @@ export namespace Prisma {
     qr_code_id?: SortOrder
     employee_id?: SortOrder
     created_at?: SortOrder
+  }
+
+  export type QrTemplateCustomizationStore_idTemplate_idCompoundUniqueInput = {
+    store_id: string
+    template_id: string
+  }
+
+  export type QrTemplateCustomizationCountOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    template_id?: SortOrder
+    canvas?: SortOrder
+    elements?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type QrTemplateCustomizationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    template_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type QrTemplateCustomizationMinOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    template_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type DistributionRuleStore_idNameCompoundUniqueInput = {
@@ -52522,6 +53922,13 @@ export namespace Prisma {
     connect?: QrCodeWhereUniqueInput | QrCodeWhereUniqueInput[]
   }
 
+  export type QrTemplateCustomizationCreateNestedManyWithoutStoreInput = {
+    create?: XOR<QrTemplateCustomizationCreateWithoutStoreInput, QrTemplateCustomizationUncheckedCreateWithoutStoreInput> | QrTemplateCustomizationCreateWithoutStoreInput[] | QrTemplateCustomizationUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: QrTemplateCustomizationCreateOrConnectWithoutStoreInput | QrTemplateCustomizationCreateOrConnectWithoutStoreInput[]
+    createMany?: QrTemplateCustomizationCreateManyStoreInputEnvelope
+    connect?: QrTemplateCustomizationWhereUniqueInput | QrTemplateCustomizationWhereUniqueInput[]
+  }
+
   export type DistributionRuleCreateNestedManyWithoutStoreInput = {
     create?: XOR<DistributionRuleCreateWithoutStoreInput, DistributionRuleUncheckedCreateWithoutStoreInput> | DistributionRuleCreateWithoutStoreInput[] | DistributionRuleUncheckedCreateWithoutStoreInput[]
     connectOrCreate?: DistributionRuleCreateOrConnectWithoutStoreInput | DistributionRuleCreateOrConnectWithoutStoreInput[]
@@ -52624,6 +54031,13 @@ export namespace Prisma {
     connectOrCreate?: QrCodeCreateOrConnectWithoutStoreInput | QrCodeCreateOrConnectWithoutStoreInput[]
     createMany?: QrCodeCreateManyStoreInputEnvelope
     connect?: QrCodeWhereUniqueInput | QrCodeWhereUniqueInput[]
+  }
+
+  export type QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput = {
+    create?: XOR<QrTemplateCustomizationCreateWithoutStoreInput, QrTemplateCustomizationUncheckedCreateWithoutStoreInput> | QrTemplateCustomizationCreateWithoutStoreInput[] | QrTemplateCustomizationUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: QrTemplateCustomizationCreateOrConnectWithoutStoreInput | QrTemplateCustomizationCreateOrConnectWithoutStoreInput[]
+    createMany?: QrTemplateCustomizationCreateManyStoreInputEnvelope
+    connect?: QrTemplateCustomizationWhereUniqueInput | QrTemplateCustomizationWhereUniqueInput[]
   }
 
   export type DistributionRuleUncheckedCreateNestedManyWithoutStoreInput = {
@@ -52834,6 +54248,20 @@ export namespace Prisma {
     deleteMany?: QrCodeScalarWhereInput | QrCodeScalarWhereInput[]
   }
 
+  export type QrTemplateCustomizationUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<QrTemplateCustomizationCreateWithoutStoreInput, QrTemplateCustomizationUncheckedCreateWithoutStoreInput> | QrTemplateCustomizationCreateWithoutStoreInput[] | QrTemplateCustomizationUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: QrTemplateCustomizationCreateOrConnectWithoutStoreInput | QrTemplateCustomizationCreateOrConnectWithoutStoreInput[]
+    upsert?: QrTemplateCustomizationUpsertWithWhereUniqueWithoutStoreInput | QrTemplateCustomizationUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: QrTemplateCustomizationCreateManyStoreInputEnvelope
+    set?: QrTemplateCustomizationWhereUniqueInput | QrTemplateCustomizationWhereUniqueInput[]
+    disconnect?: QrTemplateCustomizationWhereUniqueInput | QrTemplateCustomizationWhereUniqueInput[]
+    delete?: QrTemplateCustomizationWhereUniqueInput | QrTemplateCustomizationWhereUniqueInput[]
+    connect?: QrTemplateCustomizationWhereUniqueInput | QrTemplateCustomizationWhereUniqueInput[]
+    update?: QrTemplateCustomizationUpdateWithWhereUniqueWithoutStoreInput | QrTemplateCustomizationUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: QrTemplateCustomizationUpdateManyWithWhereWithoutStoreInput | QrTemplateCustomizationUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: QrTemplateCustomizationScalarWhereInput | QrTemplateCustomizationScalarWhereInput[]
+  }
+
   export type DistributionRuleUpdateManyWithoutStoreNestedInput = {
     create?: XOR<DistributionRuleCreateWithoutStoreInput, DistributionRuleUncheckedCreateWithoutStoreInput> | DistributionRuleCreateWithoutStoreInput[] | DistributionRuleUncheckedCreateWithoutStoreInput[]
     connectOrCreate?: DistributionRuleCreateOrConnectWithoutStoreInput | DistributionRuleCreateOrConnectWithoutStoreInput[]
@@ -53038,6 +54466,20 @@ export namespace Prisma {
     update?: QrCodeUpdateWithWhereUniqueWithoutStoreInput | QrCodeUpdateWithWhereUniqueWithoutStoreInput[]
     updateMany?: QrCodeUpdateManyWithWhereWithoutStoreInput | QrCodeUpdateManyWithWhereWithoutStoreInput[]
     deleteMany?: QrCodeScalarWhereInput | QrCodeScalarWhereInput[]
+  }
+
+  export type QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<QrTemplateCustomizationCreateWithoutStoreInput, QrTemplateCustomizationUncheckedCreateWithoutStoreInput> | QrTemplateCustomizationCreateWithoutStoreInput[] | QrTemplateCustomizationUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: QrTemplateCustomizationCreateOrConnectWithoutStoreInput | QrTemplateCustomizationCreateOrConnectWithoutStoreInput[]
+    upsert?: QrTemplateCustomizationUpsertWithWhereUniqueWithoutStoreInput | QrTemplateCustomizationUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: QrTemplateCustomizationCreateManyStoreInputEnvelope
+    set?: QrTemplateCustomizationWhereUniqueInput | QrTemplateCustomizationWhereUniqueInput[]
+    disconnect?: QrTemplateCustomizationWhereUniqueInput | QrTemplateCustomizationWhereUniqueInput[]
+    delete?: QrTemplateCustomizationWhereUniqueInput | QrTemplateCustomizationWhereUniqueInput[]
+    connect?: QrTemplateCustomizationWhereUniqueInput | QrTemplateCustomizationWhereUniqueInput[]
+    update?: QrTemplateCustomizationUpdateWithWhereUniqueWithoutStoreInput | QrTemplateCustomizationUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: QrTemplateCustomizationUpdateManyWithWhereWithoutStoreInput | QrTemplateCustomizationUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: QrTemplateCustomizationScalarWhereInput | QrTemplateCustomizationScalarWhereInput[]
   }
 
   export type DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput = {
@@ -53800,6 +55242,20 @@ export namespace Prisma {
     upsert?: EmployeeUpsertWithoutQr_codesInput
     connect?: EmployeeWhereUniqueInput
     update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutQr_codesInput, EmployeeUpdateWithoutQr_codesInput>, EmployeeUncheckedUpdateWithoutQr_codesInput>
+  }
+
+  export type StoreCreateNestedOneWithoutQr_template_customizationsInput = {
+    create?: XOR<StoreCreateWithoutQr_template_customizationsInput, StoreUncheckedCreateWithoutQr_template_customizationsInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutQr_template_customizationsInput
+    connect?: StoreWhereUniqueInput
+  }
+
+  export type StoreUpdateOneRequiredWithoutQr_template_customizationsNestedInput = {
+    create?: XOR<StoreCreateWithoutQr_template_customizationsInput, StoreUncheckedCreateWithoutQr_template_customizationsInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutQr_template_customizationsInput
+    upsert?: StoreUpsertWithoutQr_template_customizationsInput
+    connect?: StoreWhereUniqueInput
+    update?: XOR<XOR<StoreUpdateToOneWithWhereWithoutQr_template_customizationsInput, StoreUpdateWithoutQr_template_customizationsInput>, StoreUncheckedUpdateWithoutQr_template_customizationsInput>
   }
 
   export type StoreCreateNestedOneWithoutDistribution_rulesInput = {
@@ -56603,6 +58059,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -56649,6 +58106,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -56705,6 +58163,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -56751,6 +58210,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -57152,6 +58612,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -57198,6 +58659,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -57491,6 +58953,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -57537,6 +59000,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -57711,6 +59175,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -57757,6 +59222,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -58155,6 +59621,34 @@ export namespace Prisma {
 
   export type QrCodeCreateManyStoreInputEnvelope = {
     data: QrCodeCreateManyStoreInput | QrCodeCreateManyStoreInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type QrTemplateCustomizationCreateWithoutStoreInput = {
+    id?: string
+    template_id: string
+    canvas: JsonNullValueInput | InputJsonValue
+    elements: JsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type QrTemplateCustomizationUncheckedCreateWithoutStoreInput = {
+    id?: string
+    template_id: string
+    canvas: JsonNullValueInput | InputJsonValue
+    elements: JsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type QrTemplateCustomizationCreateOrConnectWithoutStoreInput = {
+    where: QrTemplateCustomizationWhereUniqueInput
+    create: XOR<QrTemplateCustomizationCreateWithoutStoreInput, QrTemplateCustomizationUncheckedCreateWithoutStoreInput>
+  }
+
+  export type QrTemplateCustomizationCreateManyStoreInputEnvelope = {
+    data: QrTemplateCustomizationCreateManyStoreInput | QrTemplateCustomizationCreateManyStoreInput[]
     skipDuplicates?: boolean
   }
 
@@ -58816,6 +60310,35 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"QrCode"> | Date | string
   }
 
+  export type QrTemplateCustomizationUpsertWithWhereUniqueWithoutStoreInput = {
+    where: QrTemplateCustomizationWhereUniqueInput
+    update: XOR<QrTemplateCustomizationUpdateWithoutStoreInput, QrTemplateCustomizationUncheckedUpdateWithoutStoreInput>
+    create: XOR<QrTemplateCustomizationCreateWithoutStoreInput, QrTemplateCustomizationUncheckedCreateWithoutStoreInput>
+  }
+
+  export type QrTemplateCustomizationUpdateWithWhereUniqueWithoutStoreInput = {
+    where: QrTemplateCustomizationWhereUniqueInput
+    data: XOR<QrTemplateCustomizationUpdateWithoutStoreInput, QrTemplateCustomizationUncheckedUpdateWithoutStoreInput>
+  }
+
+  export type QrTemplateCustomizationUpdateManyWithWhereWithoutStoreInput = {
+    where: QrTemplateCustomizationScalarWhereInput
+    data: XOR<QrTemplateCustomizationUpdateManyMutationInput, QrTemplateCustomizationUncheckedUpdateManyWithoutStoreInput>
+  }
+
+  export type QrTemplateCustomizationScalarWhereInput = {
+    AND?: QrTemplateCustomizationScalarWhereInput | QrTemplateCustomizationScalarWhereInput[]
+    OR?: QrTemplateCustomizationScalarWhereInput[]
+    NOT?: QrTemplateCustomizationScalarWhereInput | QrTemplateCustomizationScalarWhereInput[]
+    id?: StringFilter<"QrTemplateCustomization"> | string
+    store_id?: StringFilter<"QrTemplateCustomization"> | string
+    template_id?: StringFilter<"QrTemplateCustomization"> | string
+    canvas?: JsonFilter<"QrTemplateCustomization">
+    elements?: JsonFilter<"QrTemplateCustomization">
+    created_at?: DateTimeFilter<"QrTemplateCustomization"> | Date | string
+    updated_at?: DateTimeFilter<"QrTemplateCustomization"> | Date | string
+  }
+
   export type DistributionRuleUpsertWithWhereUniqueWithoutStoreInput = {
     where: DistributionRuleWhereUniqueInput
     update: XOR<DistributionRuleUpdateWithoutStoreInput, DistributionRuleUncheckedUpdateWithoutStoreInput>
@@ -59168,6 +60691,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -59214,6 +60738,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -59624,6 +61149,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -59670,6 +61196,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -59967,6 +61494,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberCreateNestedManyWithoutStoreInput
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -60013,6 +61541,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberUncheckedCreateNestedManyWithoutStoreInput
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -60097,6 +61626,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberUpdateManyWithoutStoreNestedInput
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -60143,6 +61673,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberUncheckedUpdateManyWithoutStoreNestedInput
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -60215,6 +61746,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberCreateNestedManyWithoutStoreInput
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -60261,6 +61793,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberUncheckedCreateNestedManyWithoutStoreInput
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -60450,6 +61983,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberUpdateManyWithoutStoreNestedInput
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -60496,6 +62030,7 @@ export namespace Prisma {
     organization_members?: OrganizationMemberUncheckedUpdateManyWithoutStoreNestedInput
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -60882,6 +62417,210 @@ export namespace Prisma {
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
+  export type StoreCreateWithoutQr_template_customizationsInput = {
+    id?: string
+    name: string
+    slug: string
+    industry?: $Enums.StoreIndustry
+    is_active?: boolean
+    primary_color?: string | null
+    secondary_color?: string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    timezone?: string
+    primary_language?: $Enums.Language
+    supported_languages?: StoreCreatesupported_languagesInput | $Enums.Language[]
+    currency?: $Enums.Currency
+    suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: string | null
+    public_review_rating_threshold?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    organization: OrganizationCreateNestedOneWithoutStoresInput
+    logo_document?: DocumentCreateNestedOneWithoutStores_logoInput
+    cover_document?: DocumentCreateNestedOneWithoutStores_coverInput
+    default_distribution_rule?: DistributionRuleCreateNestedOneWithoutDefault_for_storeInput
+    organization_members?: OrganizationMemberCreateNestedManyWithoutStoreInput
+    employees?: EmployeeCreateNestedManyWithoutStoreInput
+    spots?: SpotCreateNestedManyWithoutStoreInput
+    qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
+    tips?: TipCreateNestedManyWithoutStoreInput
+    reviews?: ReviewCreateNestedManyWithoutStoreInput
+    review_categories?: ReviewCategoryCreateNestedManyWithoutStoreInput
+    review_tags?: ReviewTagCreateNestedManyWithoutStoreInput
+    feedback_questions?: FeedbackQuestionCreateNestedManyWithoutStoreInput
+    alert_preferences?: AlertPreferenceCreateNestedManyWithoutStoreInput
+    alerts?: AlertCreateNestedManyWithoutStoreInput
+    insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
+    payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
+    payouts?: PayoutCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreUncheckedCreateWithoutQr_template_customizationsInput = {
+    id?: string
+    organization_id: string
+    name: string
+    slug: string
+    industry?: $Enums.StoreIndustry
+    is_active?: boolean
+    logo_document_id?: string | null
+    cover_document_id?: string | null
+    primary_color?: string | null
+    secondary_color?: string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    timezone?: string
+    primary_language?: $Enums.Language
+    supported_languages?: StoreCreatesupported_languagesInput | $Enums.Language[]
+    currency?: $Enums.Currency
+    suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: string | null
+    public_review_rating_threshold?: number | null
+    default_distribution_rule_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    organization_members?: OrganizationMemberUncheckedCreateNestedManyWithoutStoreInput
+    employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
+    spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
+    qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
+    tips?: TipUncheckedCreateNestedManyWithoutStoreInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
+    review_categories?: ReviewCategoryUncheckedCreateNestedManyWithoutStoreInput
+    review_tags?: ReviewTagUncheckedCreateNestedManyWithoutStoreInput
+    feedback_questions?: FeedbackQuestionUncheckedCreateNestedManyWithoutStoreInput
+    alert_preferences?: AlertPreferenceUncheckedCreateNestedManyWithoutStoreInput
+    alerts?: AlertUncheckedCreateNestedManyWithoutStoreInput
+    insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
+    payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreCreateOrConnectWithoutQr_template_customizationsInput = {
+    where: StoreWhereUniqueInput
+    create: XOR<StoreCreateWithoutQr_template_customizationsInput, StoreUncheckedCreateWithoutQr_template_customizationsInput>
+  }
+
+  export type StoreUpsertWithoutQr_template_customizationsInput = {
+    update: XOR<StoreUpdateWithoutQr_template_customizationsInput, StoreUncheckedUpdateWithoutQr_template_customizationsInput>
+    create: XOR<StoreCreateWithoutQr_template_customizationsInput, StoreUncheckedCreateWithoutQr_template_customizationsInput>
+    where?: StoreWhereInput
+  }
+
+  export type StoreUpdateToOneWithWhereWithoutQr_template_customizationsInput = {
+    where?: StoreWhereInput
+    data: XOR<StoreUpdateWithoutQr_template_customizationsInput, StoreUncheckedUpdateWithoutQr_template_customizationsInput>
+  }
+
+  export type StoreUpdateWithoutQr_template_customizationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    industry?: EnumStoreIndustryFieldUpdateOperationsInput | $Enums.StoreIndustry
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    primary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    secondary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    primary_language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    supported_languages?: StoreUpdatesupported_languagesInput | $Enums.Language[]
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
+    public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutStoresNestedInput
+    logo_document?: DocumentUpdateOneWithoutStores_logoNestedInput
+    cover_document?: DocumentUpdateOneWithoutStores_coverNestedInput
+    default_distribution_rule?: DistributionRuleUpdateOneWithoutDefault_for_storeNestedInput
+    organization_members?: OrganizationMemberUpdateManyWithoutStoreNestedInput
+    employees?: EmployeeUpdateManyWithoutStoreNestedInput
+    spots?: SpotUpdateManyWithoutStoreNestedInput
+    qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
+    tips?: TipUpdateManyWithoutStoreNestedInput
+    reviews?: ReviewUpdateManyWithoutStoreNestedInput
+    review_categories?: ReviewCategoryUpdateManyWithoutStoreNestedInput
+    review_tags?: ReviewTagUpdateManyWithoutStoreNestedInput
+    feedback_questions?: FeedbackQuestionUpdateManyWithoutStoreNestedInput
+    alert_preferences?: AlertPreferenceUpdateManyWithoutStoreNestedInput
+    alerts?: AlertUpdateManyWithoutStoreNestedInput
+    insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
+    payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
+    payouts?: PayoutUpdateManyWithoutStoreNestedInput
+  }
+
+  export type StoreUncheckedUpdateWithoutQr_template_customizationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organization_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    industry?: EnumStoreIndustryFieldUpdateOperationsInput | $Enums.StoreIndustry
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cover_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    primary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    secondary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    primary_language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    supported_languages?: StoreUpdatesupported_languagesInput | $Enums.Language[]
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
+    public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
+    default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization_members?: OrganizationMemberUncheckedUpdateManyWithoutStoreNestedInput
+    employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
+    spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
+    qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
+    tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
+    review_categories?: ReviewCategoryUncheckedUpdateManyWithoutStoreNestedInput
+    review_tags?: ReviewTagUncheckedUpdateManyWithoutStoreNestedInput
+    feedback_questions?: FeedbackQuestionUncheckedUpdateManyWithoutStoreNestedInput
+    alert_preferences?: AlertPreferenceUncheckedUpdateManyWithoutStoreNestedInput
+    alerts?: AlertUncheckedUpdateManyWithoutStoreNestedInput
+    insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
+    payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+  }
+
   export type StoreCreateWithoutDistribution_rulesInput = {
     id?: string
     name: string
@@ -60916,6 +62655,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
     review_categories?: ReviewCategoryCreateNestedManyWithoutStoreInput
@@ -60962,6 +62702,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
     review_categories?: ReviewCategoryUncheckedCreateNestedManyWithoutStoreInput
@@ -61040,6 +62781,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -61086,6 +62828,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -61243,6 +62986,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
     review_categories?: ReviewCategoryUpdateManyWithoutStoreNestedInput
@@ -61289,6 +63033,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
     review_categories?: ReviewCategoryUncheckedUpdateManyWithoutStoreNestedInput
@@ -61361,6 +63106,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -61407,6 +63153,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -61642,6 +63389,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -61688,6 +63436,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -61847,6 +63596,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -61893,6 +63643,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -62014,6 +63765,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
     review_categories?: ReviewCategoryCreateNestedManyWithoutStoreInput
@@ -62060,6 +63812,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
     review_categories?: ReviewCategoryUncheckedCreateNestedManyWithoutStoreInput
@@ -62460,6 +64213,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
     review_categories?: ReviewCategoryUpdateManyWithoutStoreNestedInput
@@ -62506,6 +64260,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
     review_categories?: ReviewCategoryUncheckedUpdateManyWithoutStoreNestedInput
@@ -63282,6 +65037,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -63328,6 +65084,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -63510,6 +65267,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -63556,6 +65314,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -64048,6 +65807,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     review_categories?: ReviewCategoryCreateNestedManyWithoutStoreInput
@@ -64094,6 +65854,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     review_categories?: ReviewCategoryUncheckedCreateNestedManyWithoutStoreInput
@@ -64377,6 +66138,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     review_categories?: ReviewCategoryUpdateManyWithoutStoreNestedInput
@@ -64423,6 +66185,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     review_categories?: ReviewCategoryUncheckedUpdateManyWithoutStoreNestedInput
@@ -64717,6 +66480,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -64763,6 +66527,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -64849,6 +66614,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -64895,6 +66661,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -65101,6 +66868,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -65147,6 +66915,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -65231,6 +67000,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -65277,6 +67047,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -65483,6 +67254,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -65529,6 +67301,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -65617,6 +67390,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -65663,6 +67437,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -65873,6 +67648,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -65919,6 +67695,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -65981,6 +67758,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -66027,6 +67805,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -66073,6 +67852,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -66119,6 +67899,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -66226,6 +68007,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -66272,6 +68054,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -66369,6 +68152,7 @@ export namespace Prisma {
     employees?: EmployeeCreateNestedManyWithoutStoreInput
     spots?: SpotCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
     tips?: TipCreateNestedManyWithoutStoreInput
     reviews?: ReviewCreateNestedManyWithoutStoreInput
@@ -66415,6 +68199,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
     spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
     qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
     distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
     tips?: TipUncheckedCreateNestedManyWithoutStoreInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
@@ -66477,6 +68262,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -66523,6 +68309,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -67109,6 +68896,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -67155,6 +68943,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -67232,6 +69021,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -67278,6 +69068,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -67535,6 +69326,7 @@ export namespace Prisma {
     employees?: EmployeeUpdateManyWithoutStoreNestedInput
     spots?: SpotUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
     tips?: TipUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUpdateManyWithoutStoreNestedInput
@@ -67581,6 +69373,7 @@ export namespace Prisma {
     employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
     spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
     qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
     distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
     tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
@@ -67662,6 +69455,15 @@ export namespace Prisma {
     selection_mode?: $Enums.QrCodeSelectionMode
     is_active?: boolean
     distribution_rule_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type QrTemplateCustomizationCreateManyStoreInput = {
+    id?: string
+    template_id: string
+    canvas: JsonNullValueInput | InputJsonValue
+    elements: JsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -67921,6 +69723,33 @@ export namespace Prisma {
     selection_mode?: EnumQrCodeSelectionModeFieldUpdateOperationsInput | $Enums.QrCodeSelectionMode
     is_active?: BoolFieldUpdateOperationsInput | boolean
     distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QrTemplateCustomizationUpdateWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    template_id?: StringFieldUpdateOperationsInput | string
+    canvas?: JsonNullValueInput | InputJsonValue
+    elements?: JsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QrTemplateCustomizationUncheckedUpdateWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    template_id?: StringFieldUpdateOperationsInput | string
+    canvas?: JsonNullValueInput | InputJsonValue
+    elements?: JsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QrTemplateCustomizationUncheckedUpdateManyWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    template_id?: StringFieldUpdateOperationsInput | string
+    canvas?: JsonNullValueInput | InputJsonValue
+    elements?: JsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

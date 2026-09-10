@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, useRef, useState } from "react";
-import { Download } from "lucide-react";
+import { Download, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,9 +13,16 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
-import { QR_TEMPLATE_COMPONENTS } from "@/app/dashboard/access/components/qr-templates/template-registry";
+import { TemplateCanvas } from "@/app/dashboard/access/components/qr-templates/template-canvas";
+import { TemplateEditorDialog } from "@/app/dashboard/access/components/qr-templates/template-editor/template-editor-dialog";
 import { QR_TEMPLATES } from "@/features/qr-templates/config/qr-templates.config";
+import {
+  TEMPLATE_STRUCTURAL_SHAPE,
+  buildDefaultCanvas,
+  buildDefaultElements,
+} from "@/features/qr-templates/config/qr-template-layouts.config";
 import { useQrTemplateAssets } from "@/features/qr-templates/hooks/use-qr-template-assets";
+import { useQrTemplateCustomization } from "@/features/qr-templates/hooks/use-qr-template-customization";
 import { downloadTemplatePdf } from "@/features/qr-templates/utils/qr-template-export.utils";
 import type { QrTemplateId } from "@/features/qr-templates/interfaces/qr-templates.interfaces";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
@@ -38,16 +45,24 @@ export const QrTemplateDialog: FC<QrTemplateDialogProps> = ({
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [downloading, setDownloading] = useState(false);
+  const [editorOpen, setEditorOpen] = useState(false);
   const [templateId, setTemplateId] = useState<QrTemplateId>(
     QR_TEMPLATES[0].id,
   );
   const template =
     QR_TEMPLATES.find((item) => item.id === templateId) ?? QR_TEMPLATES[0];
-  const TemplateComponent = QR_TEMPLATE_COMPONENTS[template.id];
   const { qrObjectUrl, logoObjectUrl, isLoading, error } = useQrTemplateAssets(
     open ? tipUrl : null,
     store.logo_document?.url,
   );
+  const customizationQuery = useQrTemplateCustomization(
+    store.id,
+    templateId,
+    open,
+  );
+  const saved = customizationQuery.data;
+  const elements = saved?.elements ?? buildDefaultElements(templateId, store);
+  const canvas = saved?.canvas ?? buildDefaultCanvas(store);
 
   const handleDownload = async () => {
     if (!cardRef.current) return;
@@ -69,6 +84,7 @@ export const QrTemplateDialog: FC<QrTemplateDialogProps> = ({
   };
 
   return (
+    <>
     <Dialog
       open={open}
       onOpenChange={(next) => {
@@ -110,8 +126,11 @@ export const QrTemplateDialog: FC<QrTemplateDialogProps> = ({
           {isLoading || !qrObjectUrl ? (
             <Skeleton className="h-[450px] w-[300px]" />
           ) : (
-            <TemplateComponent
+            <TemplateCanvas
               ref={cardRef}
+              elements={elements}
+              canvas={canvas}
+              structural={TEMPLATE_STRUCTURAL_SHAPE[template.id]}
               store={store}
               qrLabel={qrLabel}
               qrObjectUrl={qrObjectUrl}
@@ -135,6 +154,15 @@ export const QrTemplateDialog: FC<QrTemplateDialogProps> = ({
           </Button>
           <Button
             type="button"
+            variant="secondary"
+            disabled={downloading}
+            onClick={() => setEditorOpen(true)}
+          >
+            <Pencil data-icon="inline-start" className="size-3.5" />
+            Edit design
+          </Button>
+          <Button
+            type="button"
             disabled={downloading || isLoading || !qrObjectUrl}
             onClick={() => void handleDownload()}
           >
@@ -144,5 +172,15 @@ export const QrTemplateDialog: FC<QrTemplateDialogProps> = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <TemplateEditorDialog
+      open={editorOpen}
+      onOpenChange={setEditorOpen}
+      store={store}
+      qrLabel={qrLabel}
+      tipUrl={tipUrl}
+      initialTemplateId={templateId}
+    />
+    </>
   );
 };

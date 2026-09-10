@@ -403,21 +403,22 @@ model Store {
   cover_document            Document?         @relation("StoreCoverDocument", fields: [cover_document_id], references: [id], onDelete: SetNull)
   default_distribution_rule DistributionRule? @relation("StoreDefaultDistributionRule", fields: [default_distribution_rule_id], references: [id], onDelete: SetNull)
 
-  organization_members OrganizationMember[]
-  employees            Employee[]
-  spots                Spot[]
-  qr_codes             QrCode[]
-  distribution_rules   DistributionRule[]   @relation("StoreDistributionRules")
-  tips                 Tip[]
-  reviews              Review[]
-  review_categories    ReviewCategory[]
-  review_tags          ReviewTag[]
-  feedback_questions   FeedbackQuestion[]
-  alert_preferences    AlertPreference[]
-  alerts               Alert[]
-  insight_summaries    InsightSummary[]
-  payout_account       PayoutAccount?
-  payouts              Payout[]
+  organization_members       OrganizationMember[]
+  employees                  Employee[]
+  spots                      Spot[]
+  qr_codes                   QrCode[]
+  qr_template_customizations QrTemplateCustomization[]
+  distribution_rules         DistributionRule[]        @relation("StoreDistributionRules")
+  tips                       Tip[]
+  reviews                    Review[]
+  review_categories          ReviewCategory[]
+  review_tags                ReviewTag[]
+  feedback_questions         FeedbackQuestion[]
+  alert_preferences          AlertPreference[]
+  alerts                     Alert[]
+  insight_summaries          InsightSummary[]
+  payout_account             PayoutAccount?
+  payouts                    Payout[]
 
   @@index([organization_id])
   @@index([slug])
@@ -556,6 +557,28 @@ model QrCodeEmployee {
   @@index([qr_code_id])
   @@index([employee_id])
   @@map("qr_code_employees")
+}
+
+// A store's saved edits to a printable QR template design (see the
+// frontend's QR_TEMPLATES registry for template_id values — not a DB enum,
+// so a new template doesn't need a migration). Shared across every QR code
+// belonging to the store: one customization per store per template design,
+// not per QR code — branding/layout is store-level, only the QR pixels and
+// scan URL vary per QR code.
+model QrTemplateCustomization {
+  id          String   @id @default(uuid())
+  store_id    String
+  template_id String
+  canvas      Json // TemplateCanvasConfig
+  elements    Json // TemplateElement[]
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
+
+  @@unique([store_id, template_id])
+  @@index([store_id])
+  @@map("qr_template_customizations")
 }
 
 // ==================================================================

@@ -16,6 +16,7 @@ import { EmployeesModule } from './modules/employees/employees.module';
 import { SpotsModule } from './modules/spots/spots.module';
 import { DistributionRulesModule } from './modules/distribution-rules/distribution-rules.module';
 import { QrCodesModule } from './modules/qr-codes/qr-codes.module';
+import { QrTemplateCustomizationsModule } from './modules/qr-template-customizations/qr-template-customizations.module';
 import { PayoutAccountsModule } from './modules/payout-accounts/payout-accounts.module';
 import { ReviewCategoriesModule } from './modules/review-categories/review-categories.module';
 import { ReviewTagsModule } from './modules/review-tags/review-tags.module';
@@ -48,6 +49,7 @@ import { ContactModule } from './modules/contact/contact.module';
     SpotsModule,
     DistributionRulesModule,
     QrCodesModule,
+    QrTemplateCustomizationsModule,
     PayoutAccountsModule,
     ReviewCategoriesModule,
     ReviewTagsModule,

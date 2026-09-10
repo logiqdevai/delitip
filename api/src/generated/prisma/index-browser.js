@@ -280,6 +280,16 @@ exports.Prisma.QrCodeEmployeeScalarFieldEnum = {
   created_at: 'created_at'
 };
 
+exports.Prisma.QrTemplateCustomizationScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  template_id: 'template_id',
+  canvas: 'canvas',
+  elements: 'elements',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.DistributionRuleScalarFieldEnum = {
   id: 'id',
   store_id: 'store_id',
@@ -738,6 +748,7 @@ exports.Prisma.ModelName = {
   QrCode: 'QrCode',
   QrCodeSpot: 'QrCodeSpot',
   QrCodeEmployee: 'QrCodeEmployee',
+  QrTemplateCustomization: 'QrTemplateCustomization',
   DistributionRule: 'DistributionRule',
   DistributionRuleRecipient: 'DistributionRuleRecipient',
   PayoutAccount: 'PayoutAccount',

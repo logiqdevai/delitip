@@ -51,6 +51,8 @@ export const ApiRoutes = {
     byId: (id: string) => `/stores/${id}` as const,
     employees: (storeId: string) => `/stores/${storeId}/employees` as const,
     qrCodes: (storeId: string) => `/stores/${storeId}/qr-codes` as const,
+    qrTemplateCustomization: (storeId: string, templateId: string) =>
+      `/stores/${storeId}/qr-template-customizations/${templateId}` as const,
     spots: (storeId: string) => `/stores/${storeId}/spots` as const,
     distributionRules: (storeId: string) =>
       `/stores/${storeId}/distribution-rules` as const,

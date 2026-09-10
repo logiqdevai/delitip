@@ -1,6 +1,6 @@
 import type { QrTemplateMeta } from "@/features/qr-templates/interfaces/qr-templates.interfaces";
 
-// Add a new entry here (+ a matching component wired into QR_TEMPLATE_COMPONENTS)
+// Add a new entry here (+ a matching layout in qr-template-layouts.config.ts)
 // to make another template available in the picker.
 export const QR_TEMPLATES: QrTemplateMeta[] = [
   {

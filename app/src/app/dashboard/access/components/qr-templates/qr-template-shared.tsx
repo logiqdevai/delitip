@@ -15,11 +15,16 @@ import {
   UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react";
-import { getReadableTextColor } from "@/lib/color";
 import type {
   Store,
   StoreIndustry,
 } from "@/features/stores/interfaces/stores.interfaces";
+import {
+  getCardPalette,
+  resolveHeadline,
+  type CardPalette,
+} from "@/features/qr-templates/utils/qr-template-content.utils";
+import { cn } from "@/lib/utils";
 
 // Shared building blocks reused across template layouts (framed / banded / CTA).
 // Add a new industry icon here, not per-template, so every template stays in sync.
@@ -39,40 +44,15 @@ export const INDUSTRY_ICONS: Record<StoreIndustry, LucideIcon> = {
   OTHER: StoreIcon,
 };
 
-const DEFAULT_HEADLINE =
-  "Enjoying your experience? Thank our team with a tip or review.";
-
-export function resolveHeadline(store: Store): string {
-  const messages = store.welcome_message;
-  if (!messages) return DEFAULT_HEADLINE;
-  const primary = messages[store.primary_language.toLowerCase()]?.trim();
-  if (primary) return primary;
-  const first = Object.values(messages).find((value) => value?.trim());
-  return first?.trim() || DEFAULT_HEADLINE;
-}
-
-export interface CardPalette {
-  primary: string;
-  secondary: string;
-  onPrimary: string;
-  onSecondary: string;
-}
-
-export function getCardPalette(store: Store): CardPalette {
-  const primary = store.primary_color?.trim() || "#84cc16";
-  const secondary = store.secondary_color?.trim() || "#18181b";
-  return {
-    primary,
-    secondary,
-    onPrimary: getReadableTextColor(primary),
-    onSecondary: getReadableTextColor(secondary),
-  };
-}
+export { getCardPalette, resolveHeadline, type CardPalette };
 
 interface TemplateBrandMarkProps {
   store: Store;
   logoObjectUrl?: string | null;
   color: string;
+  shape?: "circle" | "square";
+  backdrop?: boolean;
+  size?: number;
 }
 
 /** A real logo gets a white backing plate (logos vary in shape/transparency); the industry-icon fallback is drawn plain, matching the reference cards' line-art marks. */
@@ -80,28 +60,51 @@ export function TemplateBrandMark({
   store,
   logoObjectUrl,
   color,
+  shape = "circle",
+  backdrop = true,
+  size = 44,
 }: TemplateBrandMarkProps) {
+  const roundedClass = shape === "circle" ? "rounded-full" : "rounded-lg";
   if (logoObjectUrl) {
     return (
-      <div className="flex size-11 items-center justify-center overflow-hidden rounded-full bg-white shadow-sm">
+      <div
+        style={{ width: size, height: size }}
+        className={cn(
+          "flex items-center justify-center overflow-hidden",
+          roundedClass,
+          backdrop && "bg-white shadow-sm",
+        )}
+      >
         <img src={logoObjectUrl} alt="" className="size-full object-cover" />
       </div>
     );
   }
   const Icon = INDUSTRY_ICONS[store.industry] ?? StoreIcon;
-  return <Icon className="size-7" strokeWidth={1.75} style={{ color }} />;
+  return (
+    <div
+      style={{ width: size, height: size }}
+      className="flex items-center justify-center"
+    >
+      <Icon
+        style={{ color, width: size * 0.64, height: size * 0.64 }}
+        strokeWidth={1.75}
+      />
+    </div>
+  );
 }
 
 interface TemplateQrBlockProps {
   qrObjectUrl: string;
   qrLabel: string;
   size?: number;
+  showBadge?: boolean;
 }
 
 export function TemplateQrBlock({
   qrObjectUrl,
   qrLabel,
   size = 132,
+  showBadge = true,
 }: TemplateQrBlockProps) {
   return (
     <div
@@ -113,17 +116,25 @@ export function TemplateQrBlock({
         alt={`QR code for ${qrLabel}`}
         className="size-full object-contain"
       />
-      <span
-        aria-hidden
-        className="absolute flex size-7 items-center justify-center rounded-full border border-black/15 bg-white text-[11px] font-bold text-ink-charcoal"
-      >
-        D
-      </span>
+      {showBadge ? (
+        <span
+          aria-hidden
+          className="absolute flex size-7 items-center justify-center rounded-full border border-black/15 bg-white text-[11px] font-bold text-ink-charcoal"
+        >
+          D
+        </span>
+      ) : null}
     </div>
   );
 }
 
-export function ScanTipReviewRow({ color }: { color: string }) {
+export function ScanTipReviewRow({
+  color,
+  labelFontSize = 9,
+}: {
+  color: string;
+  labelFontSize?: number;
+}) {
   const items = [
     { icon: ScanQrCode, label: "Scan" },
     { icon: HeartHandshake, label: "Tip" },
@@ -134,7 +145,8 @@ export function ScanTipReviewRow({ color }: { color: string }) {
       {items.map(({ icon: Icon, label }) => (
         <span
           key={label}
-          className="flex flex-col items-center gap-1 text-[9px] font-semibold tracking-wider uppercase"
+          style={{ fontSize: labelFontSize }}
+          className="flex flex-col items-center gap-1 font-semibold tracking-wider uppercase"
         >
           <Icon className="size-4" strokeWidth={1.75} />
           {label}
