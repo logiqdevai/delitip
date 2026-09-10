@@ -1,10 +1,18 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { Check, Copy, Download, Pencil, Printer } from "lucide-react";
+import {
+  Check,
+  Copy,
+  Download,
+  LayoutTemplate,
+  Pencil,
+  Printer,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { getQrCodeSelectionModeLabel } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
+import { QrTemplateDialog } from "@/app/dashboard/access/components/qr-templates/qr-template-dialog";
 import { useQrCodeStats } from "@/features/qr-codes/hooks/use-qr-codes";
 import type { QrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { getQrCodeEmployeeCount } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
@@ -14,27 +22,22 @@ import {
   getQrCodeImageUrl,
   printQrCode,
 } from "@/features/qr-codes/utils/qr-tip-url.utils";
-import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
+import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 
 interface QrCodeCardProps {
   qr: QrCode;
-  storeSlug: string;
-  currency: Currency;
+  store: Store;
   onEdit: (qr: QrCode) => void;
 }
 
-export const QrCodeCard: FC<QrCodeCardProps> = ({
-  qr,
-  storeSlug,
-  currency,
-  onEdit,
-}) => {
+export const QrCodeCard: FC<QrCodeCardProps> = ({ qr, store, onEdit }) => {
   const [busy, setBusy] = useState<"download" | "print" | null>(null);
   const [copied, setCopied] = useState(false);
+  const [templateOpen, setTemplateOpen] = useState(false);
   const statsQuery = useQrCodeStats(qr.id);
-  const tipUrl = getAbsoluteTipUrl(storeSlug, qr.code);
+  const tipUrl = getAbsoluteTipUrl(store.slug, qr.code);
   const employeeCount = getQrCodeEmployeeCount(qr);
   const imageUrl = getQrCodeImageUrl(tipUrl, 240);
 
@@ -171,7 +174,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
             ·
           </span>
           <span className="font-bold text-ink-charcoal">
-            {formatMoney(statsQuery.data.tips_total_amount, currency)}
+            {formatMoney(statsQuery.data.tips_total_amount, store.currency)}
           </span>
           <span aria-hidden className="text-zinc-300">
             ·
@@ -185,7 +188,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
         </div>
       ) : null}
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <Button
           type="button"
           variant="outline"
@@ -215,7 +218,24 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
           <Printer data-icon="inline-start" className="size-3.5" />
           Print
         </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => setTemplateOpen(true)}
+        >
+          <LayoutTemplate data-icon="inline-start" className="size-3.5" />
+          Get Template
+        </Button>
       </div>
+
+      <QrTemplateDialog
+        open={templateOpen}
+        onOpenChange={setTemplateOpen}
+        store={store}
+        qrLabel={qr.label}
+        tipUrl={tipUrl}
+      />
     </div>
   );
 };

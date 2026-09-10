@@ -11,20 +11,32 @@ export function getAbsoluteTipUrl(storeSlug: string, code: string): string {
   return `${base}${path}`;
 }
 
-export function getQrCodeImageUrl(tipUrl: string, size = 280): string {
-  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&margin=8&data=${encodeURIComponent(tipUrl)}`;
+export type QrCodeErrorCorrection = "L" | "M" | "Q" | "H";
+
+export function getQrCodeImageUrl(
+  tipUrl: string,
+  size = 280,
+  options?: { ecc?: QrCodeErrorCorrection },
+): string {
+  const eccParam = options?.ecc ? `&ecc=${options.ecc}` : "";
+  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&margin=8${eccParam}&data=${encodeURIComponent(tipUrl)}`;
+}
+
+/** Fetches an image as a `blob:` object URL so it can be safely composited (e.g. via canvas) without cross-origin taint. Caller must revoke the URL when done. */
+export async function fetchImageAsObjectUrl(url: string): Promise<string> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to load image.");
+  }
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
 }
 
 export async function downloadQrCodePng(
   tipUrl: string,
   filename: string,
 ): Promise<void> {
-  const response = await fetch(getQrCodeImageUrl(tipUrl, 512));
-  if (!response.ok) {
-    throw new Error("Failed to download QR image.");
-  }
-  const blob = await response.blob();
-  const objectUrl = URL.createObjectURL(blob);
+  const objectUrl = await fetchImageAsObjectUrl(getQrCodeImageUrl(tipUrl, 512));
   const anchor = document.createElement("a");
   anchor.href = objectUrl;
   anchor.download = filename.endsWith(".png") ? filename : `${filename}.png`;
