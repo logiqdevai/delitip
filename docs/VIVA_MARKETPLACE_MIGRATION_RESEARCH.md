@@ -2,6 +2,8 @@
 
 **Status of this document:** research + refactor proposal, dated 2026-09-01. Written in response to a direct question — should Delitip move from the currently-implemented IBAN Bank Transfer payout model (see `PAYMENT_SYSTEM_IMPLEMENTATION_PLAN.md`) to Viva's Marketplace API (connected accounts), for stronger PSD2 compliance. Sourced from Viva's current public developer docs (`developer.viva.com`) and, where full page fetches timed out, from Viva's own search-indexed doc excerpts (Google/Bing snippets) — flagged inline wherever a claim rests on a snippet rather than a full page read. **No code has been changed as part of this document** — this is research only, per the request.
 
+**Update (2026-09-10):** the §6 outreach email requesting Marketplace/Platform sandbox access has been sent to Viva Sales, covering all seven points below (platform-account credentials, business-model fit for tipping vs. goods-selling, individual/employee onboarding UX, IBAN-forwarding vs. full-wallet payout config, full API schema, webhook EventTypeId/field-name confirmation, and fee clarification). **Awaiting Viva's response** — `VIVA_PLATFORM_CLIENT_ID`/`VIVA_PLATFORM_CLIENT_SECRET` are still blank and `CONNECTED_ACCOUNT_PAYOUTS_ENABLED` stays `false` until credentials arrive and the single end-to-end sandbox test (§6) is run. Next action on this doc is to update §4 "Still open" once Viva replies, then proceed with the §6 sandbox test.
+
 ---
 
 ## 1. Executive summary
@@ -140,3 +142,5 @@ Because `PayoutAccount.payout_method` already exists as a discriminator, **this 
 ## 6. Recommended next step
 
 This is a business/legal decision more than an engineering one at this point: **contact Viva's sales team (or Live Chat) to request Marketplace/platform-account access for the sandbox**, explicitly mentioning (a) the tipping/gratuity business model (not goods-selling, per open question §4.4) and (b) the need to onboard individual employees, not just registered store businesses, and ask directly about the KYC UX/turnaround for that case. Once a platform account and test credentials exist, the very first useful engineering step is a **single manual end-to-end sandbox test** — invite one test store and one test individual through `createConnectedAccount`, walk the actual `invitation.url` flow, and see exactly what it asks for — before writing any application code. That one test resolves nearly every "still open" item in §4 at once, far more reliably than further doc research can.
+
+**Status (2026-09-10): done, awaiting reply.** The outreach email covering all of the above (plus API schema and webhook EventTypeId/field-name confirmation — see the update note at the top of this document) has been sent to Viva Sales. Nothing further to do here until Viva responds with platform-account credentials; the sandbox test remains the immediate next engineering step once `VIVA_PLATFORM_CLIENT_ID`/`SECRET` are populated in `.env.staging`.
