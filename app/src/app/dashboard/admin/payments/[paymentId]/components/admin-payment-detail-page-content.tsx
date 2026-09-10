@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 
 const formatDateTime = (value?: string | null) => {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleString(undefined, {
     dateStyle: "medium",
     timeStyle: "short",
@@ -107,7 +107,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
         <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Summary</h2>
-        <SummaryRow label="Store" value={tip.store?.name ?? "—"} />
+        <SummaryRow label="Store" value={tip.store?.name ?? "-"} />
         <SummaryRow
           label="Amount"
           value={formatMoney(tip.amount, tip.currency)}
@@ -115,18 +115,18 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
         <SummaryRow label="Status" value={getTipStatusLabel(tip.status)} />
         <SummaryRow label="Paid at" value={formatDateTime(tip.paid_at)} />
         <SummaryRow label="Created at" value={formatDateTime(tip.created_at)} />
-        <SummaryRow label="QR code" value={tip.qr_code?.label ?? "—"} />
+        <SummaryRow label="QR code" value={tip.qr_code?.label ?? "-"} />
         <SummaryRow
           label="Distribution rule"
           value={tip.distribution_rule?.name ?? "Store default"}
         />
         <SummaryRow
           label="Payment provider"
-          value={tip.payment_provider ?? "—"}
+          value={tip.payment_provider ?? "-"}
         />
         <SummaryRow
           label="Payment reference"
-          value={tip.payment_reference ?? "—"}
+          value={tip.payment_reference ?? "-"}
         />
         <SummaryRow
           label="Customer"
@@ -175,7 +175,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
             value={
               tip.payment_transaction.net_distributable_amount != null
                 ? formatMoney(tip.payment_transaction.net_distributable_amount, tip.currency)
-                : "—"
+                : "-"
             }
           />
         </div>
@@ -220,7 +220,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
         <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
           <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Review</h2>
           <p className="text-sm text-zinc-600">
-            ★ {tip.review.rating} — {tip.review.comment || "No comment left"}
+            ★ {tip.review.rating} - {tip.review.comment || "No comment left"}
           </p>
         </div>
       ) : null}

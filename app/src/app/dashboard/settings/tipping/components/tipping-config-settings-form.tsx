@@ -2,9 +2,10 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
-import { Plus, Trash2, Wallet } from "lucide-react";
+import { Plus, Split, Trash2, Wallet } from "lucide-react";
 import { DistributionRuleFormDialog } from "@/app/dashboard/distribution/components/distribution-rule-form-dialog";
-import { Button } from "@/components/ui/button";
+import { SettingsStepNav } from "../../components/settings-step-nav";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -26,6 +27,7 @@ import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { Routes } from "@/routes/routes";
+import { cn } from "@/lib/utils";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 const MAX_PRESETS = 6;
@@ -215,9 +217,12 @@ export const TippingConfigSettingsForm: FC = () => {
         />
       </div>
 
-      <div className="space-y-2 rounded-2xl border border-zinc-200/80 px-4 py-3.5">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
+      <div className="space-y-4 rounded-2xl border border-zinc-200/80 px-4 py-3.5 sm:space-y-2">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-3">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-neutral-fill text-zinc-400">
+            <Split className="size-4" strokeWidth={2} />
+          </span>
+          <div className="min-w-0 flex-1">
             <Label htmlFor="default-distribution-rule" className="text-xs font-semibold text-ink-charcoal">
               Default distribution rule
             </Label>
@@ -227,9 +232,12 @@ export const TippingConfigSettingsForm: FC = () => {
           </div>
           <Link
             href={Routes.dashboard.distribution}
-            className="shrink-0 text-[11px] font-semibold text-brand-700 hover:underline"
+            className={cn(
+              buttonVariants({ variant: "secondary", size: "default" }),
+              "w-full justify-center text-brand-700 md:h-auto md:w-auto md:bg-transparent md:px-0 md:py-0 md:text-[11px] md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
+            )}
           >
-            Manage all
+            Manage all →
           </Link>
         </div>
 
@@ -249,7 +257,7 @@ export const TippingConfigSettingsForm: FC = () => {
               <SelectValue
                 placeholder={
                   rules.length === 0
-                    ? "No rules yet — create one"
+                    ? "No rules yet - create one"
                     : "Select a default rule"
                 }
               />
@@ -283,20 +291,23 @@ export const TippingConfigSettingsForm: FC = () => {
         </Button>
       </div>
 
-      <div className="flex items-center gap-3 border-t border-zinc-100 pt-4">
-        <Button
-          type="button"
-          onClick={handleSave}
-          disabled={updateStore.isPending || !hasChanges}
-          className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal shadow-lg shadow-lime/30 hover:bg-brand-700 disabled:opacity-40"
-        >
-          {updateStore.isPending ? "Saving…" : "Save Changes"}
-        </Button>
-        {hasChanges ? (
-          <span className="text-[11px] font-medium text-zinc-400">
-            Unsaved changes
-          </span>
-        ) : null}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 pt-4">
+        <SettingsStepNav />
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={updateStore.isPending || !hasChanges}
+            className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal shadow-lg shadow-lime/30 hover:bg-brand-700 disabled:opacity-40"
+          >
+            {updateStore.isPending ? "Saving…" : "Save Changes"}
+          </Button>
+          {hasChanges ? (
+            <span className="text-[11px] font-medium text-zinc-400">
+              Unsaved changes
+            </span>
+          ) : null}
+        </div>
       </div>
 
       <DistributionRuleFormDialog

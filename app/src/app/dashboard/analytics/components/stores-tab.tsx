@@ -48,7 +48,7 @@ export const StoresTab: FC<{
                     )}
                   </td>
                   <td className="px-4 py-2.5 text-rating-amber">
-                    {row.average_rating ? `★ ${row.average_rating.toFixed(2)}` : "—"}
+                    {row.average_rating ? `★ ${row.average_rating.toFixed(2)}` : "-"}
                   </td>
                 </tr>
               ))}

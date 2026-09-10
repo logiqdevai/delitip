@@ -39,9 +39,9 @@ export const CollectingTipsHelpCategory: HelpCategory = {
             "Every QR code has a selection mode that controls the first step of the customer tip flow:",
           ],
           list: [
-            "Choose One — the customer picks a single employee to tip",
-            "Choose Many — the customer can select several employees to split a tip between",
-            "Team — the tip goes to the whole team assigned to that QR code, no individual selection needed",
+            "Choose One - the customer picks a single employee to tip",
+            "Choose Many - the customer can select several employees to split a tip between",
+            "Team - the tip goes to the whole team assigned to that QR code, no individual selection needed",
           ],
         },
         {
@@ -56,7 +56,7 @@ export const CollectingTipsHelpCategory: HelpCategory = {
       slug: "using-spots",
       title: "Using spots",
       summary:
-        "Spots represent physical locations — tables, rooms, or counters — that can be attached to QR codes.",
+        "Spots represent physical locations - tables, rooms, or counters - that can be attached to QR codes.",
       sections: [
         {
           paragraphs: [
@@ -72,13 +72,13 @@ export const CollectingTipsHelpCategory: HelpCategory = {
       slug: "setting-up-distribution-rules",
       title: "Setting up distribution rules",
       summary:
-        "Distribution rules define named percentage splits between employees and the business — they must always total 100%.",
+        "Distribution rules define named percentage splits between employees and the business - they must always total 100%.",
       sections: [
         {
           paragraphs: [
-            "From Dashboard → Distribution, create a named rule with one or more recipients — each recipient is either a specific employee or the business/house account — and a percentage for each. The percentages across a rule must add up to 100%.",
+            "From Dashboard → Distribution, create a named rule with one or more recipients - each recipient is either a specific employee or the business/house account - and a percentage for each. The percentages across a rule must add up to 100%.",
             "One rule can be marked as the store's default, used by any QR code that doesn't specify its own override. A rule that's currently the default, in use by a QR code, or already referenced by past tips can't be deleted.",
-            "Changing a distribution rule only affects future tips — it never retroactively changes how an already-completed tip was split.",
+            "Changing a distribution rule only affects future tips - it never retroactively changes how an already-completed tip was split.",
           ],
           links: [{ label: "Dashboard → Distribution", href: Routes.dashboard.distribution }],
         },
@@ -96,7 +96,7 @@ export const CollectingTipsHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "Settings → Tipping lets you define up to six preset amounts customers see as quick-tap buttons on the tip page, and a toggle for whether a custom amount field is also shown.",
-            "This same page is where you pick the store's default Distribution Rule — a shortcut into the Distribution feature rather than a separate setting.",
+            "This same page is where you pick the store's default Distribution Rule - a shortcut into the Distribution feature rather than a separate setting.",
           ],
           links: [{ label: "Settings → Tipping", href: Routes.dashboard.settings.tipping }],
         },
@@ -107,19 +107,19 @@ export const CollectingTipsHelpCategory: HelpCategory = {
       slug: "the-customer-tip-page-walkthrough",
       title: "The customer tip page, step by step",
       summary:
-        "What a guest sees after scanning a QR code — no login required, from choosing a recipient to leaving a review.",
+        "What a guest sees after scanning a QR code - no login required, from choosing a recipient to leaving a review.",
       sections: [
         {
           paragraphs: [
             "Scanning a QR code opens a public tip page at /{store-slug}/q/{code}. No customer account or login is required at any step.",
           ],
           list: [
-            "Select recipient — shown only when the QR's selection mode requires a choice; store branding (logo, colors, welcome message) is shown throughout",
-            "Amount — tap a preset or enter a custom amount, if allowed",
-            "Payment — confirm and pay, with an optional email for a receipt",
-            "Thank you — your store's custom thank-you message",
-            "Review — an optional 1–5 star rating with a comment",
-            "Done — final confirmation, with an option to leave a public review (if the rating met your review-redirect threshold), request a refund, or leave another tip",
+            "Select recipient - shown only when the QR's selection mode requires a choice; store branding (logo, colors, welcome message) is shown throughout",
+            "Amount - tap a preset or enter a custom amount, if allowed",
+            "Payment - confirm and pay, with an optional email for a receipt",
+            "Thank you - your store's custom thank-you message",
+            "Review - an optional 1–5 star rating with a comment",
+            "Done - final confirmation, with an option to leave a public review (if the rating met your review-redirect threshold), request a refund, or leave another tip",
           ],
         },
       ],

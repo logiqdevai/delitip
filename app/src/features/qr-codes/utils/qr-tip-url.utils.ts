@@ -43,7 +43,7 @@ export function printQrCode(tipUrl: string, label: string): void {
   popup.document.write(`<!doctype html>
 <html>
   <head>
-    <title>${label} — QR</title>
+    <title>${label} - QR</title>
     <style>
       body { font-family: system-ui, sans-serif; text-align: center; padding: 24px; color: #18181b; }
       img { width: 280px; height: 280px; }

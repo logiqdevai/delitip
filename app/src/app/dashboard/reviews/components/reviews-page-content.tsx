@@ -101,7 +101,7 @@ export const ReviewsPageContent: FC = () => {
         description="Direct customer sentiment, compliments, and ratings tied to employees."
       />
 
-      <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5">
+      <div className="flex flex-col gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
           Filters
@@ -121,10 +121,10 @@ export const ReviewsPageContent: FC = () => {
             }
           }}
         >
-          <SelectTrigger className="min-w-32 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs">
+          <SelectTrigger className="w-full rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto sm:min-w-32">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="w-auto min-w-36">
+          <SelectContent align="start">
             <SelectGroup>
               <SelectItem value="all">Any rating</SelectItem>
               {RATING_OPTIONS.map((rating) => (
@@ -141,8 +141,7 @@ export const ReviewsPageContent: FC = () => {
           value={employeeId}
           onValueChange={setEmployeeId}
           includeAll
-          triggerClassName="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs"
-          contentClassName="min-w-44"
+          triggerClassName="w-full rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto sm:min-w-36"
           aria-label="Filter by employee"
         />
       </div>

@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CountryPicker } from "@/components/ui/country-picker";
+import { SettingsStepNav } from "../../components/settings-step-nav";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import {
@@ -223,7 +224,7 @@ export const BusinessProfileSettingsForm: FC = () => {
           min={0}
           max={100}
           step="0.01"
-          placeholder="e.g. 24 for Greece — leave blank if this store doesn't charge VAT on tips"
+          placeholder="e.g. 24 for Greece - leave blank if this store doesn't charge VAT on tips"
           aria-invalid={!!errors.vat_rate_percentage}
           {...register("vat_rate_percentage", { valueAsNumber: true })}
           disabled
@@ -239,7 +240,8 @@ export const BusinessProfileSettingsForm: FC = () => {
         ) : null}
       </div>
 
-      <div className="pt-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <SettingsStepNav />
         <ActionButtonWithPending type="submit" isPending={updateStore.isPending}>
           Save Changes
         </ActionButtonWithPending>

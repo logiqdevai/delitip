@@ -17,7 +17,7 @@ export const TeamManagementHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "From Dashboard → Employees, use Add Employee to create a profile: full name (with translation support for multilingual stores), email, position, and an optional photo.",
-            "Editing an employee updates their profile everywhere it's shown — on their Dashboard detail page, in QR code assignment lists, and on the public tip page when customers choose who to tip.",
+            "Editing an employee updates their profile everywhere it's shown - on their Dashboard detail page, in QR code assignment lists, and on the public tip page when customers choose who to tip.",
           ],
           links: [{ label: "Dashboard → Employees", href: Routes.dashboard.employees }],
         },
@@ -34,7 +34,7 @@ export const TeamManagementHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "Deactivating an employee is the safer, reversible option — it hides them from active employee lists and new QR code assignments, but keeps their historical tips, reviews, and analytics intact.",
+            "Deactivating an employee is the safer, reversible option - it hides them from active employee lists and new QR code assignments, but keeps their historical tips, reviews, and analytics intact.",
             "Deleting an employee is permanent and is restricted to Admin or Super Admin roles. Use deactivation for anyone who might return, and reserve deletion for profiles created by mistake.",
           ],
           links: [{ label: "Dashboard → Employees", href: Routes.dashboard.employees }],
@@ -53,7 +53,7 @@ export const TeamManagementHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "Settings → Members & Access lets an Owner invite teammates by email, choose whether their access is organization-wide or limited to a specific store, and assign a role such as Owner.",
-            "Members can also be removed from this same screen. Inviting, editing, and removing members are Owner-only actions — someone without the Owner role won't see these controls.",
+            "Members can also be removed from this same screen. Inviting, editing, and removing members are Owner-only actions - someone without the Owner role won't see these controls.",
           ],
           list: [
             "Invite by email with organization-wide or store-scoped access",

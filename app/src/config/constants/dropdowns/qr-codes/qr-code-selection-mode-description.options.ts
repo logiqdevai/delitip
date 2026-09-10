@@ -20,7 +20,7 @@ export const QrCodeSelectionModeDescriptionOptions: {
   {
     id: QrCodeSelectionModes.TEAM,
     description:
-      "Everyone assigned is included automatically — the customer skips picking.",
+      "Everyone assigned is included automatically - the customer skips picking.",
   },
 ];
 

@@ -112,7 +112,7 @@ export const EmployeeSelect: FC<EmployeeSelectProps> = ({
           }}
         </SelectValue>
       </SelectTrigger>
-      <SelectContent className={cn("w-auto min-w-48", contentClassName)}>
+      <SelectContent className={cn(contentClassName)}>
         <SelectGroup>
           {includeAll ? (
             <SelectItem value={allValue}>{allLabel}</SelectItem>

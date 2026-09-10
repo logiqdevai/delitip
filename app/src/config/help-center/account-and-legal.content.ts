@@ -16,7 +16,7 @@ export const AccountAndLegalHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "Dashboard → Account holds your personal login profile: first name, last name, and phone number. Your email address is read-only here — contact support if you need it changed.",
+            "Dashboard → Account holds your personal login profile: first name, last name, and phone number. Your email address is read-only here - contact support if you need it changed.",
           ],
           links: [{ label: "Dashboard → Account", href: Routes.dashboard.account }],
         },

@@ -58,7 +58,7 @@ const statusChipClass: Record<PayoutStatus, string> = {
 };
 
 const formatDateTime = (value?: string | null) => {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleString(undefined, {
     dateStyle: "medium",
     timeStyle: "short",

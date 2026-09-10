@@ -3,6 +3,7 @@
 import { type FC } from "react";
 import Link from "next/link";
 import { CheckCircle2, Circle } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { GettingStartedStep } from "@/hooks/use-getting-started-steps";
 
@@ -14,7 +15,7 @@ export const GettingStartedStepCard: FC<{ step: GettingStartedStep }> = ({
   return (
     <Link
       href={step.href}
-      className="flex items-center gap-4 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs transition hover:border-zinc-300"
+      className="flex flex-col gap-4 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs transition hover:border-zinc-300 md:flex-row md:items-center"
     >
       <span
         className={cn(
@@ -32,10 +33,11 @@ export const GettingStartedStepCard: FC<{ step: GettingStartedStep }> = ({
       </div>
       <span
         className={cn(
-          "flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-caption font-bold",
+          buttonVariants({ variant: "secondary", size: "default" }),
+          "w-full justify-center gap-1.5 md:h-auto md:w-auto md:justify-start md:bg-transparent md:px-2.5 md:py-1 md:shadow-none",
           step.completed
-            ? "bg-brand-50 text-brand-700"
-            : "bg-neutral-fill text-zinc-500",
+            ? "bg-brand-50 text-brand-700 md:bg-brand-50"
+            : "text-zinc-500",
         )}
       >
         {step.completed ? (

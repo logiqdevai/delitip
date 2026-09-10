@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CountryPicker } from "@/components/ui/country-picker";
+import { SettingsStepNav } from "../../components/settings-step-nav";
 import { useUpdateOrganization } from "@/features/organizations/hooks/use-organizations";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import {
@@ -223,7 +224,8 @@ export const TaxDetailsSettingsForm: FC = () => {
         </div>
       ) : null}
 
-      <div className="pt-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <SettingsStepNav />
         <ActionButtonWithPending
           type="submit"
           isPending={updateOrganization.isPending}

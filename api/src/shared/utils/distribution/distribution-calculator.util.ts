@@ -22,6 +22,10 @@ interface WorkingLine {
 }
 
 // Splits a tip's amount across a Distribution Rule's recipients (§5).
+// - No rule at all (empty recipients) with one or more employees selected:
+//   the whole tip is split evenly across the selected employees, none of it
+//   goes to the Store — a customer who picked an employee to tip must reach
+//   them even when the store hasn't configured a distribution rule.
 // - Zero employees selected: the whole employee share folds into the Store.
 // - One or more employees selected: any rule recipient matching a selected
 //   employee keeps its named percentage; the percentage of rule recipients
@@ -36,6 +40,18 @@ export function calculateTipDistribution(
     tipAmount: number,
 ): DistributionLine[] {
     if (!recipients || recipients.length === 0) {
+        if (selectedEmployeeIds.length > 0) {
+            const uniqueIds = Array.from(new Set(selectedEmployeeIds));
+            const share = 100 / uniqueIds.length;
+            const lines: WorkingLine[] = uniqueIds.map((employeeId, index) => ({
+                recipient_type: 'EMPLOYEE',
+                employee_id: employeeId,
+                percentage: share,
+                sort_order: index,
+            }));
+            return finalizeAmounts(lines, tipAmount);
+        }
+
         return finalizeAmounts([{ recipient_type: 'STORE', employee_id: null, percentage: 100, sort_order: 0 }], tipAmount);
     }
 

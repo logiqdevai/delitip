@@ -257,6 +257,44 @@ export class QrCodesService {
         };
     }
 
+    async findPersonalForEmployee(user: AuthUser, employeeId: string) {
+        const { employee } = await this.accessControl.assertEmployeeSelfOrStoreAccess(user, employeeId);
+
+        const [fullEmployee, qrCodes] = await Promise.all([
+            this.prisma.employee.findUnique({
+                where: { id: employeeId },
+                include: {
+                    photo_document: true,
+                    store: { select: { name: true, slug: true, primary_language: true } },
+                },
+            }),
+            this.prisma.qrCode.findMany({
+                where: {
+                    store_id: employee.store_id,
+                    is_active: true,
+                    employees: { some: { employee_id: employeeId } },
+                },
+                orderBy: { created_at: 'desc' },
+            }),
+        ]);
+
+        const primaryLanguage: Language = fullEmployee?.store.primary_language ?? Language.EN;
+
+        return {
+            employee: {
+                id: employee.id,
+                full_name: resolveTranslatedText(fullEmployee!.full_name as TranslatedText, undefined, primaryLanguage),
+                position: fullEmployee!.position,
+                photo_url: fullEmployee!.photo_document?.url ?? null,
+            },
+            store: {
+                name: fullEmployee!.store.name,
+                slug: fullEmployee!.store.slug,
+            },
+            qr_codes: qrCodes.map((qrCode) => ({ id: qrCode.id, code: qrCode.code, label: qrCode.label })),
+        };
+    }
+
     async findPublicByCode(code: string, lang?: string) {
         const qrCode = await this.prisma.qrCode.findUnique({
             where: { code },

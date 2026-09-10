@@ -54,16 +54,16 @@ const statusChipClass: Record<RefundStatus, string> = {
 };
 
 const formatDate = (value?: string | null) => {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleDateString(undefined, { dateStyle: "medium" });
 };
 
 const userLabel = (
   user?: { first_name?: string | null; last_name?: string | null; email?: string | null } | null,
 ) => {
-  if (!user) return "—";
+  if (!user) return "-";
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
-  return name || user.email || "—";
+  return name || user.email || "-";
 };
 
 export const RefundsTable: FC<{
@@ -217,7 +217,7 @@ export const RefundsTable: FC<{
                         {refund.requires_manual_reconciliation ? (
                           <span
                             className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700"
-                            title="Some of this tip's distributions were already paid out — IBAN transfers can't be clawed back automatically."
+                            title="Some of this tip's distributions were already paid out - IBAN transfers can't be clawed back automatically."
                           >
                             Needs reconciliation
                           </span>

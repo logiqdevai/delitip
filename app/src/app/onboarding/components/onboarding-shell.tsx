@@ -43,7 +43,6 @@ export const OnboardingShell: FC<OnboardingShellProps> = ({ children }) => {
           <BrandMark />
           <span className="text-base font-bold tracking-tight text-ink-charcoal">
             delitip
-            <span className="font-semibold text-electric-lime">.com</span>
           </span>
         </Link>
         <Link
@@ -69,7 +68,7 @@ export const OnboardingShell: FC<OnboardingShellProps> = ({ children }) => {
       <footer className="w-full border-t border-zinc-200/60 bg-white py-4 text-center text-xs text-zinc-400">
         <p>
           © 2026{" "}
-          <strong className="font-semibold text-zinc-700">delitip.com</strong>.
+          <strong className="font-semibold text-zinc-700">delitip</strong>.
           Tip. Appreciate. Connect.
         </p>
       </footer>

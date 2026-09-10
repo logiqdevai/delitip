@@ -57,7 +57,7 @@ export const BillingSettingsPanel: FC = () => {
         <h2 className="text-sm font-bold text-ink-charcoal">Billing</h2>
       </div>
       <p className="text-xs text-zinc-500">
-        No real billing provider is connected yet — plan changes take effect
+        No real billing provider is connected yet - plan changes take effect
         immediately and for free.
       </p>
 
@@ -80,7 +80,7 @@ export const BillingSettingsPanel: FC = () => {
             </div>
             <span
               className={cn(
-                "rounded-full px-2.5 py-1 text-caption font-bold",
+                "rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide",
                 subscription.status === "ACTIVE"
                   ? "bg-brand-50 text-brand-700"
                   : subscription.status === "CANCELED"
@@ -92,7 +92,7 @@ export const BillingSettingsPanel: FC = () => {
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-stretch gap-2">
             <Select
               items={SubscriptionPlanFormOptions.map((option) => ({
                 label: option.label,
@@ -108,7 +108,10 @@ export const BillingSettingsPanel: FC = () => {
               }}
               disabled={changePlan.isPending}
             >
-              <SelectTrigger size="sm">
+              <SelectTrigger
+                size="sm"
+                className="h-11 min-h-11 flex-1 sm:h-(--control-height-sm) sm:min-h-(--control-height-sm) sm:flex-none sm:w-fit"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -126,6 +129,7 @@ export const BillingSettingsPanel: FC = () => {
                 type="button"
                 variant="outline"
                 size="sm"
+                className="h-11 min-h-11 flex-1 sm:h-(--control-height-sm) sm:min-h-(--control-height-sm) sm:flex-none"
                 onClick={() => cancelConfirm.openDialog()}
               >
                 Cancel subscription

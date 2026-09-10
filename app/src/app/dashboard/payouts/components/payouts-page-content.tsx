@@ -36,7 +36,7 @@ const statusChipClass: Record<PayoutExecutionStatus, string> = {
 };
 
 const formatDateTime = (value?: string | null) => {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleString(undefined, {
     dateStyle: "medium",
     timeStyle: "short",
@@ -134,7 +134,7 @@ export const PayoutsPageContent: FC = () => {
                     {formatMoney(payout.amount, payout.currency)}
                   </TableCell>
                   <TableCell className="px-4 py-3.5 font-mono text-xs text-zinc-500">
-                    {payout.provider_transfer_id ?? "—"}
+                    {payout.provider_transfer_id ?? "-"}
                   </TableCell>
                   <TableCell className="px-4 py-3.5 text-right">
                     <span

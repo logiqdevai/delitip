@@ -133,13 +133,7 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
             transition={{ duration: 0.28, ease: stepEase }}
             className="flex flex-1 flex-col"
           >
-            <StoreHero
-              store={store}
-              logoUrl={logoUrl}
-              primary={primary}
-              secondary={secondary}
-              welcome={welcome}
-            />
+            <StoreHero store={store} logoUrl={logoUrl} welcome={welcome} />
             <AmountStep
               currency={store.currency}
               suggestedAmounts={store.suggested_tip_amounts}
@@ -224,7 +218,7 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
           href={Routes.home}
           className="font-semibold text-zinc-700 transition hover:text-ink-charcoal"
         >
-          delitip.com
+          delitip
         </Link>{" "}
         • Transparent & Secure
       </footer>

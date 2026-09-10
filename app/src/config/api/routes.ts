@@ -99,6 +99,7 @@ export const ApiRoutes = {
     byId: (id: string) => `/employees/${id}` as const,
     resendInvite: (id: string) => `/employees/${id}/resend-invite` as const,
     dashboard: (id: string) => `/employees/${id}/dashboard` as const,
+    qrCode: (id: string) => `/employees/${id}/qr-code` as const,
     tips: (id: string) => `/employees/${id}/tips` as const,
     reviews: (id: string) => `/employees/${id}/reviews` as const,
     payouts: (id: string) => `/employees/${id}/payouts` as const,

@@ -4,6 +4,7 @@ import {
   deleteEmployee,
   getEmployee,
   getEmployeeDashboard,
+  getEmployeeQrCode,
   listEmployees,
   resendEmployeeInvite,
   updateEmployee,
@@ -25,6 +26,7 @@ export const employeesQueryKeys = {
     ["employees", storeId, query] as const,
   detail: (id: string) => ["employee", id] as const,
   dashboard: (id: string) => ["employee-dashboard", id] as const,
+  qrCode: (id: string) => ["employee-qr-code", id] as const,
 };
 
 export const useEmployees = (storeId: string, query?: EmployeesQuery) => {
@@ -47,6 +49,14 @@ export const useEmployeeDashboard = (id: string) => {
   return useQuery({
     queryKey: employeesQueryKeys.dashboard(id),
     queryFn: () => getEmployeeDashboard(id),
+    enabled: !!id,
+  });
+};
+
+export const useEmployeeQrCode = (id: string) => {
+  return useQuery({
+    queryKey: employeesQueryKeys.qrCode(id),
+    queryFn: () => getEmployeeQrCode(id),
     enabled: !!id,
   });
 };

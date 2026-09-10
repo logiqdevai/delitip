@@ -7,6 +7,7 @@ import { Download, ListChecks, Plus, Star } from "lucide-react";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 import { formatMoney } from "@/lib/money";
+import { buttonVariants } from "@/components/ui/button";
 import { DashboardOverviewHeader } from "@/app/dashboard/components/dashboard-overview-header";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -115,14 +116,20 @@ export const OverviewPageContent: FC = () => {
           <>
             <Link
               href={Routes.dashboard.employees}
-              className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-chip font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-50"
+              className={cn(
+                buttonVariants({ variant: "outline", size: "default" }),
+                "w-full justify-center gap-2 sm:w-auto",
+              )}
             >
               <Plus className="size-3.5" strokeWidth={2} />
               Add Employee
             </Link>
             <Link
               href={Routes.dashboard.distribution}
-              className="flex items-center gap-2 rounded-xl bg-electric-lime px-3.5 py-2 text-chip font-semibold text-ink-charcoal shadow-sm transition hover:bg-brand-700"
+              className={cn(
+                buttonVariants({ variant: "default", size: "default" }),
+                "w-full justify-center gap-2 sm:w-auto",
+              )}
             >
               <Download className="size-3.5" strokeWidth={2} />
               Manage Tip Distribution
@@ -136,21 +143,26 @@ export const OverviewPageContent: FC = () => {
       gettingStarted.completedCount < gettingStarted.total ? (
         <Link
           href={Routes.dashboard.gettingStarted}
-          className="flex items-center justify-between gap-3 rounded-2xl border border-brand-200/80 bg-brand-50 p-4 shadow-xs transition hover:border-brand-300"
+          className="flex flex-col gap-4 rounded-2xl border border-brand-200/80 bg-brand-50 p-5 shadow-xs transition hover:border-brand-300 md:flex-row md:items-center md:justify-between md:gap-3 md:p-4"
         >
-          <div className="flex items-center gap-3">
-            <ListChecks className="size-4 text-brand-700" strokeWidth={2} />
-            <div>
-              <p className="text-sm font-bold text-ink-charcoal">
-                Finish setting up your business
-              </p>
-              <p className="text-xs text-zinc-500">
-                {gettingStarted.completedCount} of {gettingStarted.total}{" "}
-                setup steps done
-              </p>
-            </div>
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-brand-700">
+            <ListChecks className="size-4" strokeWidth={2} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-ink-charcoal">
+              Finish setting up your business
+            </p>
+            <p className="mt-0.5 text-xs text-zinc-500">
+              {gettingStarted.completedCount} of {gettingStarted.total}{" "}
+              setup steps done
+            </p>
           </div>
-          <span className="text-xs font-semibold text-brand-700">
+          <span
+            className={cn(
+              buttonVariants({ variant: "outline", size: "default" }),
+              "w-full justify-center border-white bg-white text-brand-700 hover:bg-white/90 md:h-auto md:w-auto md:border-transparent md:bg-transparent md:px-0 md:py-0 md:text-xs md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
+            )}
+          >
             View checklist →
           </span>
         </Link>
@@ -194,12 +206,12 @@ export const OverviewPageContent: FC = () => {
           />
           <MetricCard
             label="Avg Rating Today"
-            value={overview?.average_rating ? `★ ${overview.average_rating.toFixed(2)}` : "—"}
+            value={overview?.average_rating ? `★ ${overview.average_rating.toFixed(2)}` : "-"}
             total={
               totals?.average_rating
                 ? `★ ${totals.average_rating.toFixed(2)}`
                 : totals
-                  ? "—"
+                  ? "-"
                   : undefined
             }
             hint={overview?.average_rating ? "Based on today's reviews" : "No reviews yet today"}
@@ -209,8 +221,8 @@ export const OverviewPageContent: FC = () => {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs lg:col-span-2">
-          <div className="flex items-center justify-between gap-3">
-            <div>
+          <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+            <div className="min-w-0">
               <h2 className="text-sm font-bold text-ink-charcoal">
                 Tips (Past {TREND_DAYS} Days)
               </h2>
@@ -220,9 +232,10 @@ export const OverviewPageContent: FC = () => {
             </div>
             <Link
               href={Routes.dashboard.analytics.overview}
-              className="text-xs font-semibold text-brand-700 hover:underline"
+              className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold whitespace-nowrap text-brand-700 hover:underline"
             >
-              View Analytics →
+              View Analytics
+              <span aria-hidden="true">→</span>
             </Link>
           </div>
 
@@ -251,7 +264,7 @@ export const OverviewPageContent: FC = () => {
                     >
                       {point.value > 0
                         ? formatMoney(point.value, store.currency)
-                        : "—"}
+                        : "-"}
                     </span>
                     <div
                       className={cn(
@@ -329,7 +342,10 @@ export const OverviewPageContent: FC = () => {
 
           <Link
             href={Routes.dashboard.reviews}
-            className="block w-full rounded-xl bg-neutral-fill py-2 text-center text-chip font-semibold text-zinc-700 transition hover:bg-zinc-200"
+            className={cn(
+              buttonVariants({ variant: "secondary", size: "default" }),
+              "w-full justify-center",
+            )}
           >
             See All Reviews
           </Link>
@@ -337,8 +353,8 @@ export const OverviewPageContent: FC = () => {
       </div>
 
       <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
-        <div className="flex items-center justify-between gap-3">
-          <div>
+        <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+          <div className="min-w-0">
             <h2 className="text-sm font-bold text-ink-charcoal">Team</h2>
             <p className="text-xs text-zinc-400">
               Active staff who can receive tips
@@ -346,9 +362,10 @@ export const OverviewPageContent: FC = () => {
           </div>
           <Link
             href={Routes.dashboard.employees}
-            className="text-xs font-semibold text-brand-700 hover:underline"
+            className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold whitespace-nowrap text-brand-700 hover:underline"
           >
-            View All Staff →
+            View All Staff
+            <span aria-hidden="true">→</span>
           </Link>
         </div>
 

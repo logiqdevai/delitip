@@ -125,7 +125,7 @@ export const AccountingSimulatorWidget: FC = () => {
               </InputGroupAddon>
             </InputGroup>
             <FieldDescription>
-              % of the tip, taken out of it — not added on top. ={" "}
+              % of the tip, taken out of it - not added on top. ={" "}
               {formatEuro(result.platformFeeNet)}
             </FieldDescription>
           </Field>
@@ -176,7 +176,7 @@ export const AccountingSimulatorWidget: FC = () => {
               </InputGroup>
             </div>
             <FieldDescription>
-              e.g. Viva Wallet&apos;s cut — % of the tip plus a fixed amount
+              e.g. Viva Wallet&apos;s cut - % of the tip plus a fixed amount
               per transaction. = {formatEuro(result.processorFeeNet)}
             </FieldDescription>
           </Field>
@@ -384,11 +384,11 @@ export const AccountingSimulatorWidget: FC = () => {
                   value={formatEuro(result.summary.outputVat)}
                 />
                 <SummaryRow
-                  label="Input VAT — from store"
+                  label="Input VAT - from store"
                   value={formatEuro(result.summary.inputVatFromStore)}
                 />
                 <SummaryRow
-                  label="Input VAT — from processor"
+                  label="Input VAT - from processor"
                   value={formatEuro(result.summary.inputVatFromProcessor)}
                 />
                 <SummaryRow

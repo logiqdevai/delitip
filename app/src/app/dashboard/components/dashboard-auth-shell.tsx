@@ -15,11 +15,11 @@ export const DashboardAuthShell: FC<DashboardAuthShellProps> = ({
   return (
     <AuthRouteGuard portal="dashboard">
       <SidebarProvider
-        className="flex-col bg-zinc-50 text-ink-charcoal antialiased md:h-screen md:flex-row md:overflow-hidden"
+        className="h-svh flex-col overflow-hidden bg-zinc-50 text-ink-charcoal antialiased md:flex-row"
         style={{ "--sidebar-width-icon": "4.5rem" } as CSSProperties}
       >
         <DashboardSidebar />
-        <main className="flex-1 space-y-6 overflow-y-auto p-4 sm:p-6 lg:p-8 md:h-screen">
+        <main className="min-h-0 flex-1 space-y-6 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {children}
         </main>
       </SidebarProvider>

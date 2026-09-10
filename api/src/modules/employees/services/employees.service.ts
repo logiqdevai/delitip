@@ -182,7 +182,7 @@ export class EmployeesService {
         if (!store) throw new NotFoundException('Store not found');
 
         // Employees updating their own record may only change their photo — other fields require a store role.
-        const { full_name_translations, ...rest } = dto;
+        const { full_name_translations, email, ...rest } = dto;
         const data: Record<string, unknown> = isSelf ? { photo_document_id: dto.photo_document_id } : { ...rest };
 
         if (!isSelf && full_name_translations !== undefined) {
@@ -196,11 +196,33 @@ export class EmployeesService {
             data.full_name = merged;
         }
 
+        let inviteUser: { id: string; email: string } | null = null;
+        if (!isSelf && email !== undefined && email !== employee.email) {
+            const displayName =
+                resolveTranslatedText(employee.full_name as TranslatedText, undefined, store.primary_language) ?? '';
+            const firstName = displayName.trim().split(/\s+/)[0];
+            const linkedUser = await this.usersService.findOrCreateByEmail(
+                email,
+                firstName ? { first_name: firstName } : undefined,
+            );
+            data.email = email;
+            data.user_id = linkedUser.id;
+            if (!linkedUser.registered_at) {
+                data.invited_at = new Date();
+                inviteUser = linkedUser;
+            }
+        }
+
         const updated = await this.prisma.employee.update({
             where: { id: employee.id },
             data,
             include: { photo_document: true, user: { select: { registered_at: true } } },
         });
+
+        if (inviteUser) {
+            await this.sendInviteEmail(updated, inviteUser, store);
+        }
+
         return this.toResponse(updated, store.primary_language);
     }
 

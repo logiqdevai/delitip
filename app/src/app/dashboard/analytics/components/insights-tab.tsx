@@ -22,7 +22,7 @@ export const InsightsTab: FC<{ storeId: string }> = ({ storeId }) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <p className="text-xs text-zinc-500">
-          Rule-based summaries of the last period&apos;s feedback — no AI/LLM
+          Rule-based summaries of the last period&apos;s feedback - no AI/LLM
           call, purely computed from your data.
         </p>
         <Button

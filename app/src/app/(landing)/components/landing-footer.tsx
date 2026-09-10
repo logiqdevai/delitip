@@ -31,13 +31,12 @@ const trustLinks = [
 export const LandingFooter: FC = () => {
   return (
     <footer className="border-t border-zinc-800 bg-ink-charcoal py-14 text-xs text-zinc-400">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 sm:px-6 md:grid-cols-5 lg:px-8">
-        <div className="col-span-2 space-y-3">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-5 lg:px-8">
+        <div className="space-y-3 md:col-span-2">
           <div className="flex items-center gap-2.5">
             <BrandMark size="sm" />
             <span className="text-base font-extrabold tracking-tight text-paper-offwhite">
               delitip
-              <span className="font-semibold text-electric-lime">.com</span>
             </span>
           </div>
           <p className="max-w-sm text-xs leading-relaxed text-zinc-500">
@@ -102,7 +101,7 @@ export const LandingFooter: FC = () => {
       </div>
 
       <div className="mx-auto mt-8 max-w-7xl border-t border-zinc-900 px-4 pt-8 text-center text-xs text-zinc-600 sm:px-6 lg:px-8">
-        © 2026 delitip.com. Tip. Feedback. Recognize.
+        © 2026 delitip. Tip. Feedback. Recognize.
       </div>
     </footer>
   );

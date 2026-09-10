@@ -35,10 +35,11 @@ function DatePicker({
   disabled,
   ...props
 }: DatePickerProps) {
+  const [open, setOpen] = React.useState(false)
   const selected = value ? parseISO(value) : undefined
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         render={
           <Button
@@ -59,13 +60,21 @@ function DatePicker({
         <CalendarIcon data-icon="inline-start" />
         {selected ? format(selected, "MMM d, yyyy") : placeholder}
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent
+        className="w-auto max-w-[calc(100vw-2rem)] p-0"
+        align="center"
+        sideOffset={8}
+        collisionPadding={16}
+      >
         <Calendar
           mode="single"
           selected={selected}
-          onSelect={(date) =>
+          defaultMonth={selected}
+          onSelect={(date) => {
             onChange(date ? format(date, "yyyy-MM-dd") : "")
-          }
+            setOpen(false)
+          }}
+          className="[--cell-size:--spacing(10)] sm:[--cell-size:--spacing(9)]"
         />
       </PopoverContent>
     </Popover>

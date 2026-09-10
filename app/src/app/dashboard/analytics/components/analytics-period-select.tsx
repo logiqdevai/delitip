@@ -31,7 +31,7 @@ export const AnalyticsPeriodSelect: FC<{
       if (next) onChange(next as DashboardPeriod);
     }}
   >
-    <SelectTrigger size="sm">
+    <SelectTrigger size="sm" className="w-full sm:w-fit">
       <SelectValue />
     </SelectTrigger>
     <SelectContent>

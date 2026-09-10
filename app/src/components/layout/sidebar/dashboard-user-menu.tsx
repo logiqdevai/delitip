@@ -116,7 +116,7 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
                 {displayName}
               </span>
               <span className="truncate text-[10px] font-medium text-zinc-400">
-                {email || "—"}
+                {email || "-"}
               </span>
             </div>
             <ChevronsUpDown className="ml-auto size-4 shrink-0 text-zinc-400 group-data-[collapsible=icon]:hidden" />
@@ -136,7 +136,7 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
                       {displayName}
                     </span>
                     <span className="truncate text-[10px] font-medium text-zinc-400">
-                      {email || "—"}
+                      {email || "-"}
                     </span>
                   </div>
                 </div>

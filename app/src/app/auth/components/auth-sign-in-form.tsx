@@ -121,14 +121,14 @@ export const AuthSignInForm: FC = () => {
           size="lg"
           className="mt-2 h-12 w-full rounded-full bg-electric-lime text-sm font-bold text-ink-charcoal shadow-[0_10px_28px_rgba(200,241,105,0.45)] hover:bg-brand-300 lg:mt-1 lg:h-11 lg:rounded-xl lg:text-sm lg:font-bold lg:shadow-[0_12px_28px_rgba(200,241,105,0.35)] lg:hover:bg-brand-300"
         >
-          Sign in to delitip.com
+          Sign in to delitip
           <ArrowRight data-icon="inline-end" className="size-4 lg:size-3.5" />
         </ActionButtonWithPending>
       </form>
 
       <div className="mt-auto pt-8 text-center lg:mt-0 lg:pt-2">
         <p className="text-sm text-zinc-500 lg:text-xs">
-          New to delitip.com?{" "}
+          New to delitip?{" "}
           <Link
             href={Routes.auth.sign_up}
             className="font-bold text-brand-800 hover:underline lg:text-brand-700"

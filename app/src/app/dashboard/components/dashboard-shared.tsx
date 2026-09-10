@@ -71,7 +71,9 @@ export const DashboardPageHeader: FC<DashboardPageHeaderProps> = ({
         <p className="mt-0.5 text-xs text-zinc-500">{description}</p>
       </div>
       {actions ? (
-        <div className="flex flex-wrap items-center gap-2.5">{actions}</div>
+        <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
+          {actions}
+        </div>
       ) : null}
     </div>
   );

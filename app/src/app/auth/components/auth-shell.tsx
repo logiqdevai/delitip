@@ -21,7 +21,6 @@ export const AuthShell: FC<AuthShellProps> = ({ children }) => {
           <BrandMark />
           <span className="text-base font-bold tracking-tight text-ink-charcoal">
             delitip
-            <span className="font-semibold text-electric-lime">.com</span>
           </span>
         </Link>
         <Link
@@ -43,7 +42,7 @@ export const AuthShell: FC<AuthShellProps> = ({ children }) => {
       </div>
 
       <footer className="relative z-10 mx-auto hidden w-full max-w-5xl pt-6 text-caption text-zinc-400 lg:block">
-        © 2026 delitip.com · Tip. Appreciate. Connect.
+        © 2026 delitip · Tip. Appreciate. Connect.
       </footer>
     </div>
   );

@@ -6,6 +6,7 @@ import type {
   CreateEmployeePayload,
   Employee,
   EmployeeDashboard,
+  EmployeePersonalQrCode,
   EmployeesQuery,
   UpdateEmployeePayload,
 } from "@/features/employees/interfaces/employees.interfaces";
@@ -98,5 +99,18 @@ export const getEmployeeDashboard = async (
     return response.data;
   } catch {
     throw new Error("Failed to load employee dashboard. Please try again.");
+  }
+};
+
+export const getEmployeeQrCode = async (
+  id: string,
+): Promise<EmployeePersonalQrCode> => {
+  try {
+    const response = await axiosInstance.get<EmployeePersonalQrCode>(
+      ApiRoutes.employees.qrCode(id),
+    );
+    return response.data;
+  } catch {
+    throw new Error("Failed to load your QR code. Please try again.");
   }
 };

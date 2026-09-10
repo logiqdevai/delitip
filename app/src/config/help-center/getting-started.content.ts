@@ -17,14 +17,14 @@ export const GettingStartedHelpCategory: HelpCategory = {
         {
           heading: "Business account vs. staff access",
           paragraphs: [
-            "Delitip's sign-up screen lets you choose between a Business Account and Staff/Employee Access. Choose Business Account if you are setting up a store for the first time — this is the account that owns billing, branding, and team management.",
+            "Delitip's sign-up screen lets you choose between a Business Account and Staff/Employee Access. Choose Business Account if you are setting up a store for the first time - this is the account that owns billing, branding, and team management.",
             "To create a business account you'll provide your venue name, business type, an estimate of your team size, your own name, email, and a password.",
           ],
         },
         {
           heading: "What happens next",
           paragraphs: [
-            "After signing up, you're taken directly into onboarding to create your first store. You don't need to verify anything else before continuing — onboarding is where you set up the details customers and staff will see.",
+            "After signing up, you're taken directly into onboarding to create your first store. You don't need to verify anything else before continuing - onboarding is where you set up the details customers and staff will see.",
           ],
         },
       ],
@@ -34,7 +34,7 @@ export const GettingStartedHelpCategory: HelpCategory = {
       slug: "completing-onboarding",
       title: "Completing onboarding: creating your first store",
       summary:
-        "A short wizard that creates your first store — name, industry, timezone, currency, and address.",
+        "A short wizard that creates your first store - name, industry, timezone, currency, and address.",
       sections: [
         {
           paragraphs: [
@@ -57,7 +57,7 @@ export const GettingStartedHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "Staff sign in through a dedicated employee sign-in form, separate from the business owner flow. This is the same role switcher shown on the sign-up and sign-in screens — pick Staff/Employee Access rather than Business Account.",
+            "Staff sign in through a dedicated employee sign-in form, separate from the business owner flow. This is the same role switcher shown on the sign-up and sign-in screens - pick Staff/Employee Access rather than Business Account.",
             "Staff members can only sign in once they've been invited or added as an employee/member by a business owner or admin. See Team Management for how invitations work.",
           ],
           links: [{ label: "Sign in", href: Routes.auth.sign_in }],
@@ -101,7 +101,7 @@ export const GettingStartedHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "Delitip has organization-level roles (like Owner) that gate access to Members & Access and Billing — only an Owner can invite/remove members or change the subscription plan.",
+            "Delitip has organization-level roles (like Owner) that gate access to Members & Access and Billing - only an Owner can invite/remove members or change the subscription plan.",
             "It also has platform-level admin roles (Admin/Super Admin) that gate destructive or sensitive actions, such as deleting an employee profile or managing feedback tags. Everyday managers and staff without these roles can still view and use most of the Dashboard, just without those specific controls.",
           ],
           links: [

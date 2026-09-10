@@ -72,7 +72,7 @@ const statusChipClass: Record<TipStatus, string> = {
 };
 
 const formatDateTime = (value?: string | null) => {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleString(undefined, {
     dateStyle: "medium",
     timeStyle: "short",
@@ -239,7 +239,7 @@ export const AdminPaymentsTable: FC = () => {
                   <TableHead className="px-4">
                     <ColumnHeaderWithTooltip
                       label="Net"
-                      explanation="What's left after platform and payment fees are deducted — the pool the store then splits with its employees."
+                      explanation="What's left after platform and payment fees are deducted - the pool the store then splits with its employees."
                     />
                   </TableHead>
                   <TableHead className="px-4 text-right">Status</TableHead>
@@ -258,7 +258,7 @@ export const AdminPaymentsTable: FC = () => {
                       {formatDateTime(tip.paid_at ?? tip.created_at)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 font-semibold text-ink-charcoal">
-                      {tip.store?.name ?? "—"}
+                      {tip.store?.name ?? "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
                       {tip.customer_name ?? tip.customer_email ?? "Anonymous"}
@@ -278,7 +278,7 @@ export const AdminPaymentsTable: FC = () => {
                     <TableCell className="px-4 py-3.5 font-semibold text-ink-charcoal">
                       {tip.payment_transaction?.net_distributable_amount != null
                         ? formatMoney(tip.payment_transaction.net_distributable_amount, tip.currency)
-                        : "—"}
+                        : "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-right">
                       <span
@@ -300,7 +300,7 @@ export const AdminPaymentsTable: FC = () => {
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-zinc-500">
                 {pagination.total} payment{pagination.total === 1 ? "" : "s"}{" "}
-                total — page {pagination.page} of{" "}
+                total - page {pagination.page} of{" "}
                 {Math.max(pagination.total_pages, 1)}
               </p>
               <div className="flex items-center gap-2">

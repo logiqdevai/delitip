@@ -59,7 +59,7 @@ export const BrandingAndCustomizationHelpCategory: HelpCategory = {
       slug: "business-profile-basics",
       title: "Business profile basics",
       summary:
-        "Core details about your business — name, industry, and address — shown to customers and your team.",
+        "Core details about your business - name, industry, and address - shown to customers and your team.",
       sections: [
         {
           paragraphs: [
@@ -78,7 +78,7 @@ export const BrandingAndCustomizationHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "Settings → Localization has two settings: your primary language (the language you type branding text in by default) and your supported guest-facing languages (the languages customers can choose to view the tip page in).",
-            "Any field marked as multilingual — like your welcome message or an employee's name — can hold a separate translation for each supported language.",
+            "Any field marked as multilingual - like your welcome message or an employee's name - can hold a separate translation for each supported language.",
           ],
           links: [{ label: "Settings → Localization", href: Routes.dashboard.settings.localization }],
         },

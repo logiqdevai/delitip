@@ -15,6 +15,7 @@ describe('QrCodesController', () => {
             update: jest.fn(),
             remove: jest.fn(),
             stats: jest.fn(),
+            findPersonalForEmployee: jest.fn(),
         };
         controller = new QrCodesController(service);
     });
@@ -62,5 +63,12 @@ describe('QrCodesController', () => {
 
         await expect(controller.stats(user, 'qr1')).resolves.toBe('stats-data');
         expect(service.stats).toHaveBeenCalledWith(user, 'qr1');
+    });
+
+    it('findPersonalForEmployee delegates to the service with the current user and employeeId param', async () => {
+        service.findPersonalForEmployee.mockResolvedValue('personal-qr');
+
+        await expect(controller.findPersonalForEmployee(user, 'e1')).resolves.toBe('personal-qr');
+        expect(service.findPersonalForEmployee).toHaveBeenCalledWith(user, 'e1');
     });
 });

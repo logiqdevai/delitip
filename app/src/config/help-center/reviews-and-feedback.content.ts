@@ -32,8 +32,8 @@ export const ReviewsAndFeedbackHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "Settings → Review Redirect lets you set a star-rating threshold — for example, 4 stars and up. Customers who rate at or above that threshold are prompted to share feedback via an external link (such as your Google Business Profile).",
-            "Ratings below the threshold stay in your Dashboard only — no external redirect is offered.",
+            "Settings → Review Redirect lets you set a star-rating threshold - for example, 4 stars and up. Customers who rate at or above that threshold are prompted to share feedback via an external link (such as your Google Business Profile).",
+            "Ratings below the threshold stay in your Dashboard only - no external redirect is offered.",
           ],
           links: [{ label: "Settings → Review Redirect", href: Routes.dashboard.settings.reviewRedirect }],
         },
@@ -51,9 +51,9 @@ export const ReviewsAndFeedbackHelpCategory: HelpCategory = {
             "Settings → Reviews & Feedback controls what customers see after they rate an employee:",
           ],
           list: [
-            "Rating categories — sub-ratings you can reorder by dragging, and show or hide",
-            "Feedback questions — Rating-type or Text-type questions, also reorderable and toggleable",
-            "Compliment/feedback tags — quick-select tags marked Positive, Neutral, or Negative sentiment, managed by Admin/Super Admin",
+            "Rating categories - sub-ratings you can reorder by dragging, and show or hide",
+            "Feedback questions - Rating-type or Text-type questions, also reorderable and toggleable",
+            "Compliment/feedback tags - quick-select tags marked Positive, Neutral, or Negative sentiment, managed by Admin/Super Admin",
           ],
           links: [{ label: "Settings → Reviews & Feedback", href: Routes.dashboard.settings.reviewsFeedback }],
         },
@@ -68,7 +68,7 @@ export const ReviewsAndFeedbackHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "Feedback tags are short, pre-written labels (like \"Friendly service\" or \"Slow to respond\") that a customer can tap instead of writing a full comment. Each tag carries a sentiment — Positive, Neutral, or Negative.",
+            "Feedback tags are short, pre-written labels (like \"Friendly service\" or \"Slow to respond\") that a customer can tap instead of writing a full comment. Each tag carries a sentiment - Positive, Neutral, or Negative.",
             "Managing the tag list itself is restricted to Admin or Super Admin roles, from Settings → Reviews & Feedback.",
           ],
           links: [{ label: "Settings → Reviews & Feedback", href: Routes.dashboard.settings.reviewsFeedback }],

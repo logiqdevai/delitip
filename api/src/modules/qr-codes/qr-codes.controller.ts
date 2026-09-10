@@ -61,4 +61,12 @@ export class QrCodesController {
     stats(@CurrentUser() user: AuthUser, @Param('id') id: string) {
         return this.qrCodesService.stats(user, id);
     }
+
+    @Get('employees/:employeeId/qr-code')
+    @ApiOperation({
+        summary: "An Employee's personal QR code (assigned, no spots) — self or a store role",
+    })
+    findPersonalForEmployee(@CurrentUser() user: AuthUser, @Param('employeeId') employeeId: string) {
+        return this.qrCodesService.findPersonalForEmployee(user, employeeId);
+    }
 }

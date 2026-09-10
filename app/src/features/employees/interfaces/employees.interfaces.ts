@@ -68,3 +68,23 @@ export interface EmployeeDashboard {
   customer_recognition_count: number;
   recent_feedback: EmployeeDashboardFeedbackItem[];
 }
+
+export interface EmployeeQrCodeSummary {
+  id: string;
+  code: string;
+  label: string;
+}
+
+export interface EmployeePersonalQrCode {
+  employee: {
+    id: string;
+    full_name: string;
+    position: string | null;
+    photo_url: string | null;
+  };
+  store: {
+    name: string;
+    slug: string;
+  };
+  qr_codes: EmployeeQrCodeSummary[];
+}

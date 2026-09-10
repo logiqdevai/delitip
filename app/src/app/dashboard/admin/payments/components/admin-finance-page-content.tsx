@@ -27,7 +27,7 @@ export const AdminFinancePageContent: FC = () => {
               size="sm"
               disabled={reconcilePayoutAccounts.isPending}
               onClick={() => reconcilePayoutAccounts.mutate()}
-              className="h-9 rounded-xl px-3.5 text-chip font-semibold"
+              className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-chip font-semibold"
             >
               <RefreshCw data-icon="inline-start" className="size-3.5" />
               {reconcilePayoutAccounts.isPending
@@ -40,7 +40,7 @@ export const AdminFinancePageContent: FC = () => {
               size="sm"
               disabled={reconcilePayments.isPending}
               onClick={() => reconcilePayments.mutate()}
-              className="h-9 rounded-xl px-3.5 text-chip font-semibold"
+              className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-chip font-semibold"
             >
               <RefreshCw data-icon="inline-start" className="size-3.5" />
               {reconcilePayments.isPending

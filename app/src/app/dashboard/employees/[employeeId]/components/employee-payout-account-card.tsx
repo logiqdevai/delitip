@@ -107,7 +107,7 @@ export const EmployeePayoutAccountCard: FC<{
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         title="Link employee payout account"
-        description="This employee's personal IBAN — used to send their share of tips via bank transfer."
+        description="This employee's personal IBAN - used to send their share of tips via bank transfer."
         mutation={createAccount}
       />
     </div>

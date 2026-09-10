@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SettingsStepNav } from "../../components/settings-step-nav";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
@@ -129,12 +130,13 @@ export const ReviewRedirectSettingsForm: FC = () => {
           onChange={(event) => updateRedirectUrl(event.target.value)}
         />
         <p className="mt-1 text-[11px] text-zinc-400">
-          Leave blank to skip the public redirect — high-rated customers still
+          Leave blank to skip the public redirect - high-rated customers still
           see a thank-you, just without an outbound link.
         </p>
       </div>
 
-      <div className="pt-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <SettingsStepNav />
         <Button
           type="submit"
           disabled={updateStore.isPending}

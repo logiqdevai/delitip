@@ -66,7 +66,7 @@ export const AuthBrandPanel: FC = () => {
             <span className="text-sm font-bold tracking-tight">delitip</span>
           </Link>
           <p className="hidden text-[0.65rem] font-semibold tracking-[0.2em] text-zinc-500 uppercase lg:block">
-            delitip.com
+            delitip
           </p>
         </motion.div>
 

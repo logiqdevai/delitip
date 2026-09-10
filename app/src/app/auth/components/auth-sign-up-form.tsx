@@ -117,7 +117,7 @@ export const AuthSignUpForm: FC = () => {
         </div>
 
         <p className="text-xs leading-relaxed text-zinc-400">
-          By registering, you agree to delitip.com’s{" "}
+          By registering, you agree to delitip’s{" "}
           <Link
             href={Routes.legal.terms}
             className="font-medium text-zinc-700 underline"

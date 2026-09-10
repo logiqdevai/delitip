@@ -15,7 +15,7 @@ const channels = [
     icon: BookOpen,
     title: "Help Center",
     detail:
-      "Browse guides for your store, team, and tip page on delitip.com.",
+      "Browse guides for your store, team, and tip page on delitip.",
     href: Routes.help.root,
   },
   {

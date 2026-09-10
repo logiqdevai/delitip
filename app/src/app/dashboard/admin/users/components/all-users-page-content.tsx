@@ -41,7 +41,7 @@ const formatDate = (value: string) =>
 
 const userDisplayName = (user: UserProfile) => {
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
-  return name || "—";
+  return name || "-";
 };
 
 const PAGE_LIMIT = 20;
@@ -132,10 +132,10 @@ export const AllUsersPageContent: FC = () => {
                       {userDisplayName(user)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
-                      {user.email ?? "—"}
+                      {user.email ?? "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
-                      {user.phone ?? "—"}
+                      {user.phone ?? "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3.5">
                       <span
@@ -161,7 +161,7 @@ export const AllUsersPageContent: FC = () => {
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-zinc-500">
                 {pagination.total} user{pagination.total === 1 ? "" : "s"}{" "}
-                total — page {pagination.page} of{" "}
+                total - page {pagination.page} of{" "}
                 {Math.max(pagination.total_pages, 1)}
               </p>
               <div className="flex items-center gap-2">

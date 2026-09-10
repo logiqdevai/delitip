@@ -105,7 +105,7 @@ export const useReconcilePayments = () => {
         description:
           corrected > 0
             ? `${corrected} stuck payment${corrected === 1 ? "" : "s"} corrected against Viva.`
-            : "No stuck payments found — everything's up to date.",
+            : "No stuck payments found - everything's up to date.",
         type: "success",
       });
     },

@@ -13,6 +13,7 @@ import {
 } from "@/features/documents/hooks/use-documents";
 import { DocumentTypes } from "@/features/documents/interfaces/documents.interfaces";
 import { deleteDocument as deleteDocumentRequest } from "@/features/documents/services/documents.services";
+import { SettingsStepNav } from "../../components/settings-step-nav";
 import { useStore, useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
@@ -238,7 +239,8 @@ export const BrandingSettingsForm: FC = () => {
         />
       </div>
 
-      <div className="pt-1">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+        <SettingsStepNav />
         <Button
           type="button"
           onClick={() => void handleSave()}

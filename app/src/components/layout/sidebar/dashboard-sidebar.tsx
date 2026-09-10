@@ -214,13 +214,12 @@ export const DashboardSidebar: FC = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between border-b border-zinc-200 bg-white px-4 py-3 md:hidden">
+      <div className="sticky top-0 z-40 flex shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-4 py-3 md:hidden">
         <Link href={Routes.dashboard.root} className="flex items-center gap-2.5">
           <BrandMark size="sm" className="size-7 rounded-lg text-xs" />
           <div>
             <div className="text-sm leading-none font-bold tracking-tight text-ink-charcoal">
               delitip
-              <span className="text-electric-lime">.com</span>
             </div>
             <span className="text-[10px] font-medium tracking-wider text-zinc-400 uppercase">
               Business Portal
@@ -248,7 +247,6 @@ export const DashboardSidebar: FC = () => {
               <div className="min-w-0 group-data-[collapsible=icon]:hidden">
                 <div className="truncate text-sm leading-none font-bold tracking-tight text-ink-charcoal">
                   delitip
-                  <span className="text-electric-lime">.com</span>
                 </div>
                 <span className="text-[10px] font-medium tracking-wider text-zinc-400 uppercase">
                   Business Portal
@@ -279,7 +277,10 @@ export const DashboardSidebar: FC = () => {
           </div>
 
           <div className="space-y-3 group-data-[collapsible=icon]:hidden">
-            <AccountSwitcher />
+            <AccountSwitcher
+              size="default"
+              className="w-full max-w-none sm:max-w-none"
+            />
 
             <div className="flex items-center justify-between rounded-xl border border-zinc-200/80 bg-zinc-50 p-2.5">
               {isPending ? (

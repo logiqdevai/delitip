@@ -50,7 +50,7 @@ const statusChipClass: Record<PayoutExecutionStatus, string> = {
 };
 
 const formatDateTime = (value?: string | null) => {
-  if (!value) return "—";
+  if (!value) return "-";
   return new Date(value).toLocaleString(undefined, {
     dateStyle: "medium",
     timeStyle: "short",
@@ -254,7 +254,7 @@ export const AdminPayoutsTable: FC = () => {
                       {formatDateTime(payout.executed_at ?? payout.created_at)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 font-semibold text-ink-charcoal">
-                      {payout.store?.name ?? "—"}
+                      {payout.store?.name ?? "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
                       {payout.recipient_type === "EMPLOYEE"
@@ -287,7 +287,7 @@ export const AdminPayoutsTable: FC = () => {
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-zinc-500">
                 {pagination.total} payout{pagination.total === 1 ? "" : "s"}{" "}
-                total — page {pagination.page} of{" "}
+                total - page {pagination.page} of{" "}
                 {Math.max(pagination.total_pages, 1)}
               </p>
               <div className="flex items-center gap-2">
