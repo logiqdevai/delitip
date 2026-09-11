@@ -23,7 +23,7 @@ export const EmployeePayoutHistoryCard: FC<{ employeeId: string }> = ({
   const payouts = payoutsQuery.data?.data ?? [];
 
   return (
-    <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white p-5 shadow-xs sm:p-6">
+    <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs sm:p-6">
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">Payout history</h2>
         <p className="text-xs text-zinc-400">

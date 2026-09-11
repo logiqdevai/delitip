@@ -78,7 +78,7 @@ export const LocalizationSettingsForm: FC = () => {
   };
 
   return (
-    <div className="@container max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
+    <div className="@container max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
       <div className="flex items-center gap-2">
         <Globe className="size-4 text-zinc-400" strokeWidth={2} />
         <h2 className="text-sm font-bold text-ink-charcoal">Localization</h2>

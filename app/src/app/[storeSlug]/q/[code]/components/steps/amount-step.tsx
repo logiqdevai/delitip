@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { ArrowRight, ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { NumberPicker } from "@/components/ui/number-picker";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney, getCurrencySymbol } from "@/lib/money";
@@ -11,7 +12,7 @@ interface AmountStepProps {
   currency: Currency;
   suggestedAmounts: number[];
   allowCustomAmount: boolean;
-  subtitle?: string;
+  showRecipientSubtitle?: boolean;
   recipientLabel: string;
   onContinue: (amountMinorUnits: number) => void;
 }
@@ -20,10 +21,11 @@ export const AmountStep: FC<AmountStepProps> = ({
   currency,
   suggestedAmounts,
   allowCustomAmount,
-  subtitle,
+  showRecipientSubtitle,
   recipientLabel,
   onContinue,
 }) => {
+  const t = useTranslations("amountStep");
   const [selectedPreset, setSelectedPreset] = useState<number | null>(
     suggestedAmounts[0] ?? null,
   );
@@ -35,14 +37,14 @@ export const AmountStep: FC<AmountStepProps> = ({
   const canContinue = amount > 0;
 
   return (
-    <div className="flex flex-1 flex-col gap-6 px-5 pt-4 pb-8">
+    <div className="flex flex-1 flex-col gap-6 px-4 pt-4 pb-8">
       <div className="text-center">
         <h1 className="text-lg font-bold text-muted-foreground uppercase">
-          Choose your tip
+          {t("heading")}
         </h1>
-        {subtitle ? (
+        {showRecipientSubtitle ? (
           <p className="mx-auto mt-1 max-w-[280px] truncate text-xs text-zinc-500">
-            {subtitle}
+            {t("subtitleFor", { recipient: recipientLabel })}
           </p>
         ) : null}
       </div>
@@ -76,7 +78,7 @@ export const AmountStep: FC<AmountStepProps> = ({
       {allowCustomAmount ? (
         <div className="space-y-2">
           <p className="text-center text-xs font-semibold tracking-wide text-zinc-500 uppercase">
-            Custom amount
+            {t("customAmountLabel")}
           </p>
           <NumberPicker
             value={customAmount}
@@ -85,21 +87,18 @@ export const AmountStep: FC<AmountStepProps> = ({
             max={1000}
             step={1}
             suffix={getCurrencySymbol(currency)}
-            aria-label="Custom tip amount"
+            aria-label={t("customAmountAriaLabel")}
             className="w-full"
           />
         </div>
       ) : null}
 
-      <div className="flex items-center gap-2.5 rounded-xl border border-zinc-100 bg-zinc-50 p-3 text-[11px] text-zinc-600">
+      <div className="flex items-center gap-2.5 rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-3 text-[11px] text-zinc-600">
         <ShieldCheck
           className="size-4 shrink-0 text-(--tip-primary)"
           strokeWidth={2}
         />
-        <span>
-          100% transparent. Tips are sent securely and directly to{" "}
-          {recipientLabel}.
-        </span>
+        <span>{t("trustNote", { recipient: recipientLabel })}</span>
       </div>
 
       <button
@@ -110,8 +109,8 @@ export const AmountStep: FC<AmountStepProps> = ({
       >
         <span>
           {canContinue
-            ? `Continue to pay ${formatMoney(amount, currency)}`
-            : "Choose an amount"}
+            ? t("continueCta", { amount: formatMoney(amount, currency) })
+            : t("chooseAmountCta")}
         </span>
         <ArrowRight className="size-4" strokeWidth={2} />
       </button>

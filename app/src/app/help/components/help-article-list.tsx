@@ -19,7 +19,7 @@ export const HelpArticleList: FC<HelpArticleListProps> = ({
         <li key={article.slug}>
           <Link
             href={Routes.help.article(categorySlug, article.slug)}
-            className="group flex items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-5 transition hover:border-zinc-300 hover:shadow-md"
+            className="group flex items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white px-4 py-5 transition hover:border-zinc-300 hover:shadow-md"
           >
             <span>
               <span className="block text-sm font-bold text-ink-charcoal">

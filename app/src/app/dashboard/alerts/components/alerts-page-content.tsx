@@ -53,7 +53,7 @@ export const AlertsPageContent: FC = () => {
 
   if (!isReady || !storeId) {
     return (
-      <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+      <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <Bell />
@@ -89,7 +89,7 @@ export const AlertsPageContent: FC = () => {
         }
       />
 
-      <div className="flex flex-col gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5 sm:flex-row sm:flex-wrap sm:items-center">
+      <div className="flex flex-col gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
           Filters
@@ -148,7 +148,7 @@ export const AlertsPageContent: FC = () => {
       {alertsQuery.isPending ? (
         <TableSkeleton columns={3} />
       ) : alertsQuery.isError ? (
-        <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+        <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load alerts</EmptyTitle>
             <EmptyDescription>{alertsQuery.error.message}</EmptyDescription>
@@ -164,7 +164,7 @@ export const AlertsPageContent: FC = () => {
           </EmptyContent>
         </Empty>
       ) : alerts.length === 0 ? (
-        <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+        <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyMedia variant="icon">
               <Bell />

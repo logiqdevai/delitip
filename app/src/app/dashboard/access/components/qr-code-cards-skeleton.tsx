@@ -19,7 +19,7 @@ export const QrCodeCardsSkeleton: FC<QrCodeCardsSkeletonProps> = ({
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={`qr-skeleton-${index}`}
-          className="space-y-4 rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm"
+          className="space-y-4 rounded-3xl border border-zinc-200 bg-white px-4 py-6 shadow-sm"
         >
           <Skeleton className="mx-auto h-4 w-28" />
           <Skeleton className="mx-auto size-36 rounded-2xl" />

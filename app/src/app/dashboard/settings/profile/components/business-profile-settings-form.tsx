@@ -100,7 +100,7 @@ export const BusinessProfileSettingsForm: FC = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="@container max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs"
+      className="@container max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs"
       noValidate
     >
       <div>

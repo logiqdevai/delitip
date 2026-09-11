@@ -26,6 +26,8 @@ interface LanguagePickerProps {
   compact?: boolean;
   /** Restricts the option list to these languages. Defaults to every store language. */
   languages?: Language[];
+  /** Which label to display: the English admin name (default) or the language's own native name. */
+  labelSource?: "admin" | "native";
   "aria-label"?: string;
 }
 
@@ -39,6 +41,7 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
   size = "default",
   compact = false,
   languages,
+  labelSource = "admin",
   "aria-label": ariaLabel,
 }) => {
   const generatedId = useId();
@@ -46,11 +49,13 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
   const options = languages
     ? StoreLanguageFormOptions.filter((option) => languages.includes(option.id))
     : StoreLanguageFormOptions;
+  const labelFor = (option: (typeof options)[number]) =>
+    labelSource === "native" ? option.nativeLabel : option.label;
 
   return (
     <Select
       items={options.map((option) => ({
-        label: option.label,
+        label: labelFor(option),
         value: option.id,
       }))}
       value={value}
@@ -73,7 +78,7 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
             return (
               <>
                 <CountryFlag countryCode={option.flagCountryCode} />
-                {compact ? null : option.label}
+                {compact ? null : labelFor(option)}
               </>
             );
           }}
@@ -84,7 +89,7 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
           {options.map((option) => (
             <SelectItem key={option.id} value={option.id}>
               <CountryFlag countryCode={option.flagCountryCode} />
-              {option.label}
+              {labelFor(option)}
             </SelectItem>
           ))}
         </SelectGroup>

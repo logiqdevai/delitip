@@ -48,7 +48,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
 
   if (tipQuery.isError || !tipQuery.data) {
     return (
-      <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+      <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
         <EmptyHeader>
           <EmptyTitle>Could not load this payment</EmptyTitle>
           <EmptyDescription>
@@ -105,7 +105,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
         </span>
       </div>
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Summary</h2>
         <SummaryRow label="Store" value={tip.store?.name ?? "-"} />
         <SummaryRow
@@ -135,7 +135,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
       </div>
 
       {tip.payment_transaction ? (
-        <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+        <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
           <h2 className="mb-2 text-sm font-bold text-ink-charcoal">
             Financial breakdown
           </h2>
@@ -181,12 +181,12 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
         </div>
       ) : null}
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-3 text-sm font-bold text-ink-charcoal">
           Distribution
         </h2>
         {!tip.distributions || tip.distributions.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 py-6 text-center text-xs text-zinc-500">
+          <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500">
             No distribution recorded for this payment.
           </p>
         ) : (
@@ -217,7 +217,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
       </div>
 
       {tip.review ? (
-        <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+        <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
           <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Review</h2>
           <p className="text-sm text-zinc-600">
             ★ {tip.review.rating} - {tip.review.comment || "No comment left"}
@@ -226,7 +226,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
       ) : null}
 
       {tip.refunds && tip.refunds.length > 0 ? (
-        <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+        <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
           <h2 className="mb-2 flex items-center gap-2 text-sm font-bold text-ink-charcoal">
             <Receipt className="size-4" strokeWidth={2} />
             Refunds

@@ -9,7 +9,7 @@ export const EmployeeBalanceCard: FC = () => {
   const { formattedBalance, isBalancePending } = useEmployeeCashOut();
 
   return (
-    <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-800 bg-gradient-to-br from-ink-charcoal to-ink-charcoal p-6 text-white shadow-lg">
+    <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-800 bg-gradient-to-br from-ink-charcoal to-ink-charcoal px-4 py-6 text-white shadow-lg">
       <div
         aria-hidden
         className="absolute -right-12 -bottom-12 size-36 rounded-full bg-electric-lime/20 blur-2xl"
@@ -35,7 +35,7 @@ export const EmployeeBalanceCard: FC = () => {
 
 export const EmployeeDepositNotice: FC = () => {
   return (
-    <div className="flex items-center gap-1.5 rounded-2xl border border-brand-200/60 bg-brand-50/70 p-3.5 text-sm font-bold leading-snug text-brand-900">
+    <div className="flex items-center gap-1.5 rounded-2xl border border-brand-200/60 bg-brand-50/70 px-4 py-3.5 text-sm font-bold leading-snug text-brand-900">
       <CheckCircle2 className="size-4 shrink-0 text-brand-700" strokeWidth={2} />
       <span>Payouts follow your Store&apos;s schedule</span>
     </div>

@@ -2,6 +2,7 @@
 
 import { type FC, useEffect, useRef, useState } from "react";
 import { AlertTriangle, Loader2, RefreshCw, XCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { usePublicTipStatus } from "@/features/tips/hooks/use-tips";
 import { useCreatePublicReview } from "@/features/reviews/hooks/use-reviews";
 import type { CreatePublicReviewResponse } from "@/features/reviews/interfaces/reviews.interfaces";
@@ -26,6 +27,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
   storeName,
   onRestart,
 }) => {
+  const t = useTranslations("checkoutStatusStep");
   const statusQuery = usePublicTipStatus(tipId);
   const createReview = useCreatePublicReview();
   const reviewSubmitted = useRef(false);
@@ -112,20 +114,20 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
 
   if (status === TipStatuses.FAILED || status === TipStatuses.CANCELLED) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-5 py-8 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-8 text-center">
         <div className="flex size-16 items-center justify-center rounded-full bg-red-50 text-red-500">
           <XCircle className="size-8" strokeWidth={2} />
         </div>
         <div>
           <h1 className="text-lg font-bold text-ink-charcoal">
             {status === TipStatuses.CANCELLED
-              ? "Payment cancelled"
-              : "Payment failed"}
+              ? t("cancelledTitle")
+              : t("failedTitle")}
           </h1>
           <p className="mt-2 text-sm text-zinc-500">
             {status === TipStatuses.CANCELLED
-              ? "You cancelled the checkout before it completed. No charge was made."
-              : "Your card wasn't charged. Please try again."}
+              ? t("cancelledDescription")
+              : t("failedDescription")}
           </p>
         </div>
         <button
@@ -133,7 +135,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
           onClick={onRestart}
           className="mt-4 rounded-2xl bg-(--tip-primary) px-6 py-3 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary)"
         >
-          Try again
+          {t("tryAgain")}
         </button>
       </div>
     );
@@ -141,17 +143,16 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
 
   if (timedOut) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-5 py-8 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-8 text-center">
         <div className="flex size-16 items-center justify-center rounded-full bg-amber-50 text-amber-500">
           <AlertTriangle className="size-8" strokeWidth={2} />
         </div>
         <div>
           <h1 className="text-lg font-bold text-ink-charcoal">
-            Still processing
+            {t("timeoutTitle")}
           </h1>
           <p className="mt-2 text-sm text-zinc-500">
-            Your payment is taking longer than expected to confirm. It may
-            still complete - check back shortly.
+            {t("timeoutDescription")}
           </p>
         </div>
         <button
@@ -168,20 +169,20 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
           className="mt-4 flex items-center gap-2 rounded-2xl bg-(--tip-primary) px-6 py-3 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary)"
         >
           <RefreshCw className="size-4" strokeWidth={2} />
-          <span>Refresh</span>
+          <span>{t("refresh")}</span>
         </button>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4 px-5 py-8 text-center">
+    <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-8 text-center">
       <Loader2 className="size-10 animate-spin text-zinc-400" strokeWidth={2} />
       <div>
         <h1 className="text-lg font-bold text-ink-charcoal">
-          Confirming your payment…
+          {t("confirmingTitle")}
         </h1>
-        <p className="mt-2 text-sm text-zinc-500">This only takes a moment.</p>
+        <p className="mt-2 text-sm text-zinc-500">{t("confirmingDescription")}</p>
       </div>
     </div>
   );

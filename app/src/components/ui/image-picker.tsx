@@ -175,7 +175,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          "group/dropzone relative flex flex-col gap-3 rounded-2xl border border-dashed p-3 transition-all",
+          "group/dropzone relative flex flex-col gap-3 rounded-2xl border border-dashed px-4 py-3 transition-all",
           "@sm:flex-row @sm:items-center @sm:gap-3.5 @sm:p-3.5",
           hasValue
             ? showSuccess

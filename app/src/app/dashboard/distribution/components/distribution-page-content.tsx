@@ -118,7 +118,7 @@ export const DistributionPageContent: FC = () => {
           <div className="flex h-5 items-center">
             <h2 className="text-sm font-bold text-ink-charcoal">Store default</h2>
           </div>
-          <div className="space-y-2 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+          <div className="space-y-2 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
             {rulesQuery.isPending ? (
               <div className="space-y-2">
                 <Skeleton className="h-4 w-32" />

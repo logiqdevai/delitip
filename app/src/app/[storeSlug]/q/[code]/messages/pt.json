@@ -1,0 +1,94 @@
+{
+  "tipEntry": {
+    "inactiveQr": {
+      "title": "Este código QR está inativo",
+      "description": "Este link de gorjeta foi desativado. Peça ao seu anfitrião um código ativo."
+    },
+    "inactiveStore": {
+      "title": "Este estabelecimento não está disponível",
+      "description": "Este estabelecimento não está aceitando gorjetas no momento. Peça ao seu anfitrião outra forma de deixar uma gorjeta."
+    },
+    "notFound": {
+      "title": "Este link de gorjeta não está disponível",
+      "description": "O link pode estar incorreto ou não ser mais válido. Peça ao seu anfitrião um novo código."
+    }
+  },
+  "tipFlow": {
+    "teamFallback": "a equipe",
+    "welcomeFallback": "Bem-vindo(a) ao {storeName}. Deixe uma gorjeta pelo ótimo atendimento.",
+    "footerPrefix": "Desenvolvido por",
+    "footerSuffix": "Transparente e seguro"
+  },
+  "amountStep": {
+    "heading": "Escolha sua gorjeta",
+    "subtitleFor": "para {recipient}",
+    "customAmountLabel": "Valor personalizado",
+    "customAmountAriaLabel": "Valor de gorjeta personalizado",
+    "trustNote": "100% transparente. As gorjetas são enviadas de forma segura, diretamente para {recipient}.",
+    "continueCta": "Continuar para pagar {amount}",
+    "chooseAmountCta": "Escolha um valor"
+  },
+  "recipientStep": {
+    "eyebrowTipStore": "Gorjeta para o estabelecimento",
+    "eyebrowYourHost": "Seu anfitrião",
+    "eyebrowSelectMany": "Escolha quem agradecer",
+    "eyebrowChooseOne": "Escolha quem agradecer",
+    "eyebrowTeam": "A equipe",
+    "tipGoesTo": "Sua gorjeta vai para {storeName}.",
+    "teamMemberFallback": "Membro da equipe",
+    "continue": "Continuar",
+    "back": "Voltar"
+  },
+  "reviewStep": {
+    "heading": "Como foi a sua experiência?",
+    "subtitle": "Avalie {recipient} (opcional)",
+    "starAriaLabel": "Avaliar com {count} estrelas",
+    "commentPlaceholder": "Escreva uma breve mensagem para {recipient} (opcional)...",
+    "genericError": "O pagamento falhou. Tente novamente.",
+    "payCta": "Pagar {amount}",
+    "retryCta": "Tentar pagamento novamente",
+    "back": "Voltar"
+  },
+  "checkoutStatusStep": {
+    "confirmingTitle": "Confirmando seu pagamento…",
+    "confirmingDescription": "Isso levará apenas um instante.",
+    "cancelledTitle": "Pagamento cancelado",
+    "cancelledDescription": "Você cancelou o pagamento antes de ser concluído. Nenhuma cobrança foi feita.",
+    "failedTitle": "O pagamento falhou",
+    "failedDescription": "Seu cartão não foi cobrado. Tente novamente.",
+    "timeoutTitle": "Ainda processando",
+    "timeoutDescription": "Seu pagamento está demorando mais do que o esperado para ser confirmado. Ele ainda pode ser concluído — verifique novamente em breve.",
+    "tryAgain": "Tentar novamente",
+    "refresh": "Atualizar"
+  },
+  "doneStep": {
+    "heading": "Obrigado!",
+    "descriptionWithReview": "Sua gorjeta de {amount} e seus elogios foram enviados para {recipient}.",
+    "descriptionWithoutReview": "Sua gorjeta de {amount} foi enviada para {recipient}.",
+    "descriptionNoDetails": "Sua gorjeta já foi enviada.",
+    "receiptIdLabel": "ID do recibo",
+    "businessLabel": "Estabelecimento",
+    "recipientLabel": "Destinatário",
+    "sharePublicly": "Compartilhar publicamente",
+    "makeAnotherTip": "Deixar outra gorjeta",
+    "refund": {
+      "prompt": "Algo errado com esta gorjeta? Solicite um reembolso",
+      "requestTitle": "Solicitar reembolso de {amount}",
+      "requestTitleNoAmount": "Solicitar reembolso",
+      "reasonPlaceholder": "O que deu errado? (opcional)",
+      "submitting": "Enviando…",
+      "submit": "Enviar solicitação",
+      "cancel": "Cancelar",
+      "successWithAmount": "Reembolso de {amount} solicitado. O estabelecimento irá analisá-lo.",
+      "successNoAmount": "Reembolso solicitado. O estabelecimento irá analisá-lo.",
+      "genericError": "Não foi possível enviar sua solicitação. Tente novamente."
+    }
+  },
+  "metadata": {
+    "title": "Deixe uma gorjeta - delitip",
+    "description": "Agradeça ao seu anfitrião com uma gorjeta digital."
+  },
+  "languageSelector": {
+    "label": "Idioma"
+  }
+}

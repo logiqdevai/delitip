@@ -1,0 +1,94 @@
+{
+  "tipEntry": {
+    "inactiveQr": {
+      "title": "This QR code is inactive",
+      "description": "This tip link has been turned off. Ask your host for an active code."
+    },
+    "inactiveStore": {
+      "title": "This store is unavailable",
+      "description": "This store is not accepting tips right now. Ask your host for another way to tip."
+    },
+    "notFound": {
+      "title": "This tip link is unavailable",
+      "description": "The link may be incorrect or no longer valid. Ask your host for a new code."
+    }
+  },
+  "tipFlow": {
+    "teamFallback": "the team",
+    "welcomeFallback": "Welcome to {storeName}. Leave a tip for great service.",
+    "footerPrefix": "Powered by",
+    "footerSuffix": "Transparent & Secure"
+  },
+  "amountStep": {
+    "heading": "Choose your tip",
+    "subtitleFor": "for {recipient}",
+    "customAmountLabel": "Custom amount",
+    "customAmountAriaLabel": "Custom tip amount",
+    "trustNote": "100% transparent. Tips are sent securely and directly to {recipient}.",
+    "continueCta": "Continue to pay {amount}",
+    "chooseAmountCta": "Choose an amount"
+  },
+  "recipientStep": {
+    "eyebrowTipStore": "Tip the store",
+    "eyebrowYourHost": "Your host",
+    "eyebrowSelectMany": "Select who to thank",
+    "eyebrowChooseOne": "Choose who to thank",
+    "eyebrowTeam": "The team",
+    "tipGoesTo": "Your tip goes to {storeName}.",
+    "teamMemberFallback": "Team member",
+    "continue": "Continue",
+    "back": "Back"
+  },
+  "reviewStep": {
+    "heading": "How was your experience?",
+    "subtitle": "Rate {recipient} (optional)",
+    "starAriaLabel": "Rate {count} stars",
+    "commentPlaceholder": "Write a short message for {recipient} (optional)...",
+    "genericError": "Payment failed. Please try again.",
+    "payCta": "Pay {amount}",
+    "retryCta": "Retry payment",
+    "back": "Back"
+  },
+  "checkoutStatusStep": {
+    "confirmingTitle": "Confirming your payment…",
+    "confirmingDescription": "This only takes a moment.",
+    "cancelledTitle": "Payment cancelled",
+    "cancelledDescription": "You cancelled the checkout before it completed. No charge was made.",
+    "failedTitle": "Payment failed",
+    "failedDescription": "Your card wasn't charged. Please try again.",
+    "timeoutTitle": "Still processing",
+    "timeoutDescription": "Your payment is taking longer than expected to confirm. It may still complete - check back shortly.",
+    "tryAgain": "Try again",
+    "refresh": "Refresh"
+  },
+  "doneStep": {
+    "heading": "Thank you!",
+    "descriptionWithReview": "Your {amount} tip and compliments were sent to {recipient}.",
+    "descriptionWithoutReview": "Your {amount} tip was sent to {recipient}.",
+    "descriptionNoDetails": "Your tip has already been sent.",
+    "receiptIdLabel": "Receipt ID",
+    "businessLabel": "Business",
+    "recipientLabel": "Recipient",
+    "sharePublicly": "Share it publicly",
+    "makeAnotherTip": "Make another tip",
+    "refund": {
+      "prompt": "Something wrong with this tip? Request a refund",
+      "requestTitle": "Request a refund of {amount}",
+      "requestTitleNoAmount": "Request a refund",
+      "reasonPlaceholder": "What went wrong? (optional)",
+      "submitting": "Submitting…",
+      "submit": "Submit request",
+      "cancel": "Cancel",
+      "successWithAmount": "Refund requested for {amount}. The business will review it.",
+      "successNoAmount": "Refund requested. The business will review it.",
+      "genericError": "Could not submit your request. Please try again."
+    }
+  },
+  "metadata": {
+    "title": "Leave a tip - delitip",
+    "description": "Thank your host with a digital tip."
+  },
+  "languageSelector": {
+    "label": "Language"
+  }
+}

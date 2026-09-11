@@ -4,7 +4,7 @@ import { Routes } from "@/routes/routes";
 
 export const HelpContactCta: FC = () => {
   return (
-    <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-6 text-sm text-zinc-600 sm:p-8">
+    <div className="mt-8 rounded-2xl border border-zinc-200 bg-white px-4 py-6 text-sm text-zinc-600 sm:p-8">
       <p className="font-bold text-ink-charcoal">Still need help?</p>
       <p className="mt-1">
         Can&apos;t find what you&apos;re looking for? Our team is happy to

@@ -28,7 +28,7 @@ const channels = [
 
 export const ContactAside: FC = () => {
   return (
-    <aside className="relative overflow-hidden rounded-[28px] border border-zinc-800 bg-ink-charcoal p-6 text-paper-offwhite shadow-2xl sm:p-8">
+    <aside className="relative overflow-hidden rounded-[28px] border border-zinc-800 bg-ink-charcoal px-4 py-6 text-paper-offwhite shadow-2xl sm:p-8">
       <div
         aria-hidden
         className="pointer-events-none absolute -top-16 -right-10 size-56 rounded-full bg-electric-lime/20 blur-3xl"
@@ -55,7 +55,7 @@ export const ContactAside: FC = () => {
           {channels.map((channel) => {
             const Icon = channel.icon;
             const body = (
-              <div className="flex gap-3 rounded-2xl border border-zinc-800 bg-ink-charcoal/80 p-3.5 transition hover:border-zinc-700">
+              <div className="flex gap-3 rounded-2xl border border-zinc-800 bg-ink-charcoal/80 px-4 py-3.5 transition hover:border-zinc-700">
                 <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand-900/50 text-electric-lime">
                   <Icon className="size-4" strokeWidth={2} />
                 </div>

@@ -1,0 +1,94 @@
+{
+  "tipEntry": {
+    "inactiveQr": {
+      "title": "Ce code QR est inactif",
+      "description": "Ce lien de pourboire a été désactivé. Demandez à votre hôte un code actif."
+    },
+    "inactiveStore": {
+      "title": "Cet établissement n'est pas disponible",
+      "description": "Cet établissement n'accepte pas de pourboires pour le moment. Demandez à votre hôte un autre moyen de laisser un pourboire."
+    },
+    "notFound": {
+      "title": "Ce lien de pourboire n'est pas disponible",
+      "description": "Le lien est peut-être incorrect ou n'est plus valide. Demandez à votre hôte un nouveau code."
+    }
+  },
+  "tipFlow": {
+    "teamFallback": "l'équipe",
+    "welcomeFallback": "Bienvenue chez {storeName}. Laissez un pourboire pour un excellent service.",
+    "footerPrefix": "Propulsé par",
+    "footerSuffix": "Transparent et sécurisé"
+  },
+  "amountStep": {
+    "heading": "Choisissez votre pourboire",
+    "subtitleFor": "pour {recipient}",
+    "customAmountLabel": "Montant personnalisé",
+    "customAmountAriaLabel": "Montant de pourboire personnalisé",
+    "trustNote": "100 % transparent. Les pourboires sont envoyés en toute sécurité, directement à {recipient}.",
+    "continueCta": "Continuer pour payer {amount}",
+    "chooseAmountCta": "Choisissez un montant"
+  },
+  "recipientStep": {
+    "eyebrowTipStore": "Pourboire pour l'établissement",
+    "eyebrowYourHost": "Votre hôte",
+    "eyebrowSelectMany": "Choisissez qui remercier",
+    "eyebrowChooseOne": "Choisissez qui remercier",
+    "eyebrowTeam": "L'équipe",
+    "tipGoesTo": "Votre pourboire est destiné à {storeName}.",
+    "teamMemberFallback": "Membre de l'équipe",
+    "continue": "Continuer",
+    "back": "Retour"
+  },
+  "reviewStep": {
+    "heading": "Comment s'est passée votre expérience ?",
+    "subtitle": "Notez {recipient} (facultatif)",
+    "starAriaLabel": "Noter {count} étoiles",
+    "commentPlaceholder": "Écrivez un court message pour {recipient} (facultatif)...",
+    "genericError": "Le paiement a échoué. Veuillez réessayer.",
+    "payCta": "Payer {amount}",
+    "retryCta": "Réessayer le paiement",
+    "back": "Retour"
+  },
+  "checkoutStatusStep": {
+    "confirmingTitle": "Confirmation de votre paiement…",
+    "confirmingDescription": "Cela ne prendra qu'un instant.",
+    "cancelledTitle": "Paiement annulé",
+    "cancelledDescription": "Vous avez annulé le paiement avant qu'il ne soit terminé. Aucun montant n'a été débité.",
+    "failedTitle": "Le paiement a échoué",
+    "failedDescription": "Votre carte n'a pas été débitée. Veuillez réessayer.",
+    "timeoutTitle": "Traitement en cours",
+    "timeoutDescription": "La confirmation de votre paiement prend plus de temps que prévu. Il pourrait tout de même aboutir : vérifiez à nouveau dans un instant.",
+    "tryAgain": "Réessayer",
+    "refresh": "Actualiser"
+  },
+  "doneStep": {
+    "heading": "Merci !",
+    "descriptionWithReview": "Votre pourboire de {amount} et vos compliments ont été envoyés à {recipient}.",
+    "descriptionWithoutReview": "Votre pourboire de {amount} a été envoyé à {recipient}.",
+    "descriptionNoDetails": "Votre pourboire a déjà été envoyé.",
+    "receiptIdLabel": "N° de reçu",
+    "businessLabel": "Établissement",
+    "recipientLabel": "Destinataire",
+    "sharePublicly": "Partager publiquement",
+    "makeAnotherTip": "Laisser un autre pourboire",
+    "refund": {
+      "prompt": "Un problème avec ce pourboire ? Demandez un remboursement",
+      "requestTitle": "Demander un remboursement de {amount}",
+      "requestTitleNoAmount": "Demander un remboursement",
+      "reasonPlaceholder": "Qu'est-ce qui n'a pas fonctionné ? (facultatif)",
+      "submitting": "Envoi en cours…",
+      "submit": "Envoyer la demande",
+      "cancel": "Annuler",
+      "successWithAmount": "Remboursement demandé pour {amount}. L'établissement va l'examiner.",
+      "successNoAmount": "Remboursement demandé. L'établissement va l'examiner.",
+      "genericError": "Impossible d'envoyer votre demande. Veuillez réessayer."
+    }
+  },
+  "metadata": {
+    "title": "Laisser un pourboire - delitip",
+    "description": "Remerciez votre hôte avec un pourboire numérique."
+  },
+  "languageSelector": {
+    "label": "Langue"
+  }
+}

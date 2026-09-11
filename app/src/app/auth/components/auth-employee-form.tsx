@@ -111,7 +111,7 @@ export const AuthEmployeeForm: FC = () => {
           ) : null}
         </div>
 
-        <div className="flex items-start gap-2 rounded-2xl border border-brand-200/60 bg-brand-50/60 p-3.5 text-caption text-brand-900 lg:rounded-xl lg:p-3 lg:text-xs">
+        <div className="flex items-start gap-2 rounded-2xl border border-brand-200/60 bg-brand-50/60 px-4 py-3.5 text-caption text-brand-900 lg:rounded-xl lg:p-3 lg:text-xs">
           <Info
             className="mt-0.5 size-4 shrink-0 text-electric-lime"
             strokeWidth={2}

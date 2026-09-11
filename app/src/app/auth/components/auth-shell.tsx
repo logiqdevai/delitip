@@ -35,7 +35,7 @@ export const AuthShell: FC<AuthShellProps> = ({ children }) => {
         <AuthBrandPanel />
 
         <section className="relative z-10 -mt-6 flex min-w-0 flex-1 flex-col rounded-t-[2rem] bg-white shadow-[0_-12px_40px_rgba(0,0,0,0.35)] lg:mt-0 lg:rounded-none lg:shadow-none">
-          <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-6 pb-10 pt-7 sm:px-8 sm:pt-8 lg:max-w-none lg:justify-center lg:px-10 lg:py-12 xl:px-12">
+          <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-10 pt-7 sm:px-8 sm:pt-8 lg:max-w-none lg:justify-center lg:px-10 lg:py-12 xl:px-12">
             {children}
           </div>
         </section>

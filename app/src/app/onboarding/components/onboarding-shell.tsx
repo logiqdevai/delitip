@@ -30,7 +30,7 @@ export const OnboardingShell: FC<OnboardingShellProps> = ({ children }) => {
 
   if (!hydrated || !accessToken) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper-offwhite p-6">
+      <div className="flex min-h-screen items-center justify-center bg-paper-offwhite p-4">
         <DetailSkeleton fieldCount={4} />
       </div>
     );
@@ -38,7 +38,7 @@ export const OnboardingShell: FC<OnboardingShellProps> = ({ children }) => {
 
   return (
     <div className="flex min-h-screen flex-col justify-between bg-paper-offwhite text-ink-charcoal antialiased">
-      <header className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-zinc-200/70 bg-white/80 px-6 py-4 backdrop-blur-md">
+      <header className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-zinc-200/70 bg-white/80 px-4 py-4 sm:px-6 backdrop-blur-md">
         <Link href={Routes.home} className="flex items-center gap-3">
           <BrandMark />
           <span className="text-base font-bold tracking-tight text-ink-charcoal">
@@ -54,7 +54,7 @@ export const OnboardingShell: FC<OnboardingShellProps> = ({ children }) => {
       </header>
 
       <main className="flex flex-1 items-center justify-center p-4 sm:p-6 lg:p-10">
-        <div className="w-full max-w-xl overflow-hidden rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-xl shadow-zinc-200/50 sm:p-10">
+        <div className="w-full max-w-xl overflow-hidden rounded-3xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xl shadow-zinc-200/50 sm:p-10">
           {children}
           <div className="mt-10 flex items-center justify-center border-t border-zinc-100 pt-6 text-xs text-zinc-400">
             <div className="flex items-center gap-1.5">

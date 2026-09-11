@@ -111,7 +111,7 @@ export const TippingConfigSettingsForm: FC = () => {
   };
 
   return (
-    <div className="max-w-2xl space-y-5 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs sm:p-6">
+    <div className="max-w-2xl space-y-5 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs sm:p-6">
       <div className="flex items-start gap-3">
         <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-800">
           <Wallet className="size-4" strokeWidth={2} />

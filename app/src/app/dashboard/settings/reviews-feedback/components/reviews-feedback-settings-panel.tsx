@@ -586,7 +586,7 @@ export const ReviewsFeedbackSettingsPanel: FC = () => {
     platformRole === PlatformAuthRoles.SUPER_ADMIN;
 
   return (
-    <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
+    <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">
           Reviews & feedback config

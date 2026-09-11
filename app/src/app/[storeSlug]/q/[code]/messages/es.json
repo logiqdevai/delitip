@@ -1,0 +1,94 @@
+{
+  "tipEntry": {
+    "inactiveQr": {
+      "title": "Este código QR está inactivo",
+      "description": "Este enlace de propina se ha desactivado. Pide a tu anfitrión un código activo."
+    },
+    "inactiveStore": {
+      "title": "Este comercio no está disponible",
+      "description": "Este comercio no está aceptando propinas en este momento. Pide a tu anfitrión otra forma de dejar propina."
+    },
+    "notFound": {
+      "title": "Este enlace de propina no está disponible",
+      "description": "El enlace puede ser incorrecto o ya no ser válido. Pide a tu anfitrión un nuevo código."
+    }
+  },
+  "tipFlow": {
+    "teamFallback": "el equipo",
+    "welcomeFallback": "Bienvenido a {storeName}. Deja una propina por el excelente servicio.",
+    "footerPrefix": "Con la tecnología de",
+    "footerSuffix": "Transparente y seguro"
+  },
+  "amountStep": {
+    "heading": "Elige tu propina",
+    "subtitleFor": "para {recipient}",
+    "customAmountLabel": "Importe personalizado",
+    "customAmountAriaLabel": "Importe de propina personalizado",
+    "trustNote": "100% transparente. Las propinas se envían de forma segura y directa a {recipient}.",
+    "continueCta": "Continuar para pagar {amount}",
+    "chooseAmountCta": "Elige un importe"
+  },
+  "recipientStep": {
+    "eyebrowTipStore": "Propina para el comercio",
+    "eyebrowYourHost": "Tu anfitrión",
+    "eyebrowSelectMany": "Elige a quién agradecer",
+    "eyebrowChooseOne": "Elige a quién agradecer",
+    "eyebrowTeam": "El equipo",
+    "tipGoesTo": "Tu propina va a {storeName}.",
+    "teamMemberFallback": "Miembro del equipo",
+    "continue": "Continuar",
+    "back": "Atrás"
+  },
+  "reviewStep": {
+    "heading": "¿Qué tal fue tu experiencia?",
+    "subtitle": "Valora a {recipient} (opcional)",
+    "starAriaLabel": "Valorar con {count} estrellas",
+    "commentPlaceholder": "Escribe un mensaje breve para {recipient} (opcional)...",
+    "genericError": "El pago falló. Inténtalo de nuevo.",
+    "payCta": "Pagar {amount}",
+    "retryCta": "Reintentar pago",
+    "back": "Atrás"
+  },
+  "checkoutStatusStep": {
+    "confirmingTitle": "Confirmando tu pago…",
+    "confirmingDescription": "Esto solo tomará un momento.",
+    "cancelledTitle": "Pago cancelado",
+    "cancelledDescription": "Cancelaste el pago antes de completarlo. No se realizó ningún cargo.",
+    "failedTitle": "El pago falló",
+    "failedDescription": "No se realizó el cargo a tu tarjeta. Inténtalo de nuevo.",
+    "timeoutTitle": "Aún procesando",
+    "timeoutDescription": "Tu pago está tardando más de lo esperado en confirmarse. Puede que aún se complete: vuelve a comprobarlo en breve.",
+    "tryAgain": "Intentar de nuevo",
+    "refresh": "Actualizar"
+  },
+  "doneStep": {
+    "heading": "¡Gracias!",
+    "descriptionWithReview": "Tu propina de {amount} y tus elogios se enviaron a {recipient}.",
+    "descriptionWithoutReview": "Tu propina de {amount} se envió a {recipient}.",
+    "descriptionNoDetails": "Tu propina ya ha sido enviada.",
+    "receiptIdLabel": "ID de recibo",
+    "businessLabel": "Comercio",
+    "recipientLabel": "Destinatario",
+    "sharePublicly": "Compartir públicamente",
+    "makeAnotherTip": "Dejar otra propina",
+    "refund": {
+      "prompt": "¿Algo salió mal con esta propina? Solicita un reembolso",
+      "requestTitle": "Solicitar un reembolso de {amount}",
+      "requestTitleNoAmount": "Solicitar un reembolso",
+      "reasonPlaceholder": "¿Qué salió mal? (opcional)",
+      "submitting": "Enviando…",
+      "submit": "Enviar solicitud",
+      "cancel": "Cancelar",
+      "successWithAmount": "Reembolso solicitado por {amount}. El comercio lo revisará.",
+      "successNoAmount": "Reembolso solicitado. El comercio lo revisará.",
+      "genericError": "No se pudo enviar tu solicitud. Inténtalo de nuevo."
+    }
+  },
+  "metadata": {
+    "title": "Deja una propina - delitip",
+    "description": "Agradece a tu anfitrión con una propina digital."
+  },
+  "languageSelector": {
+    "label": "Idioma"
+  }
+}

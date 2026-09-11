@@ -1,0 +1,94 @@
+{
+  "tipEntry": {
+    "inactiveQr": {
+      "title": "此二维码已失效",
+      "description": "此打赏链接已被关闭。请向商家索取有效的二维码。"
+    },
+    "inactiveStore": {
+      "title": "该商家暂不可用",
+      "description": "该商家目前暂不接受打赏。请向商家询问其他打赏方式。"
+    },
+    "notFound": {
+      "title": "此打赏链接不可用",
+      "description": "链接可能有误或已失效。请向商家索取新的链接。"
+    }
+  },
+  "tipFlow": {
+    "teamFallback": "团队",
+    "welcomeFallback": "欢迎光临{storeName}。感谢您的打赏，为优质服务点赞。",
+    "footerPrefix": "技术支持",
+    "footerSuffix": "透明 & 安全"
+  },
+  "amountStep": {
+    "heading": "选择打赏金额",
+    "subtitleFor": "给 {recipient}",
+    "customAmountLabel": "自定义金额",
+    "customAmountAriaLabel": "自定义打赏金额",
+    "trustNote": "100% 透明。打赏将安全直接地发送给 {recipient}。",
+    "continueCta": "继续支付 {amount}",
+    "chooseAmountCta": "请选择金额"
+  },
+  "recipientStep": {
+    "eyebrowTipStore": "打赏给商家",
+    "eyebrowYourHost": "您的服务员",
+    "eyebrowSelectMany": "选择要感谢的人",
+    "eyebrowChooseOne": "选择要感谢的人",
+    "eyebrowTeam": "团队",
+    "tipGoesTo": "您的打赏将发送给{storeName}。",
+    "teamMemberFallback": "团队成员",
+    "continue": "继续",
+    "back": "返回"
+  },
+  "reviewStep": {
+    "heading": "您的体验如何？",
+    "subtitle": "为{recipient}评分（可选）",
+    "starAriaLabel": "评{count}星",
+    "commentPlaceholder": "给{recipient}留下简短留言（可选）...",
+    "genericError": "支付失败，请重试。",
+    "payCta": "支付 {amount}",
+    "retryCta": "重新支付",
+    "back": "返回"
+  },
+  "checkoutStatusStep": {
+    "confirmingTitle": "正在确认您的付款…",
+    "confirmingDescription": "只需片刻。",
+    "cancelledTitle": "付款已取消",
+    "cancelledDescription": "您在完成之前取消了付款，未产生任何扣款。",
+    "failedTitle": "付款失败",
+    "failedDescription": "您的银行卡未被扣款，请重试。",
+    "timeoutTitle": "仍在处理中",
+    "timeoutDescription": "您的付款确认所需时间超出预期，可能仍会完成——请稍后再查看。",
+    "tryAgain": "重试",
+    "refresh": "刷新"
+  },
+  "doneStep": {
+    "heading": "谢谢！",
+    "descriptionWithReview": "您的 {amount} 打赏及评价已发送给{recipient}。",
+    "descriptionWithoutReview": "您的 {amount} 打赏已发送给{recipient}。",
+    "descriptionNoDetails": "您的打赏已经发送。",
+    "receiptIdLabel": "收据编号",
+    "businessLabel": "商家",
+    "recipientLabel": "收款人",
+    "sharePublicly": "公开分享",
+    "makeAnotherTip": "再次打赏",
+    "refund": {
+      "prompt": "这笔打赏有问题？申请退款",
+      "requestTitle": "申请退款 {amount}",
+      "requestTitleNoAmount": "申请退款",
+      "reasonPlaceholder": "出了什么问题？（可选）",
+      "submitting": "提交中…",
+      "submit": "提交申请",
+      "cancel": "取消",
+      "successWithAmount": "已申请退款 {amount}，商家将进行审核。",
+      "successNoAmount": "已申请退款，商家将进行审核。",
+      "genericError": "无法提交您的申请，请重试。"
+    }
+  },
+  "metadata": {
+    "title": "打赏 - delitip",
+    "description": "用数字打赏感谢您的服务员。"
+  },
+  "languageSelector": {
+    "label": "语言"
+  }
+}

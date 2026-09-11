@@ -27,7 +27,7 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
   return (
     <div
       className={cn(
-        "space-y-3 rounded-2xl border bg-white p-5 shadow-xs",
+        "space-y-3 rounded-2xl border bg-white px-4 py-5 shadow-xs",
         isDefault ? "border-brand-200 ring-1 ring-brand-100" : "border-zinc-200/80",
       )}
     >

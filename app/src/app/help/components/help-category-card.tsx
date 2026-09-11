@@ -40,7 +40,7 @@ export const HelpCategoryCard: FC<HelpCategoryCardProps> = ({ category }) => {
   return (
     <Link
       href={Routes.help.category(category.slug)}
-      className="group flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-6 transition hover:border-zinc-300 hover:shadow-md"
+      className="group flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-white px-4 py-6 transition hover:border-zinc-300 hover:shadow-md"
     >
       <span className="flex size-10 items-center justify-center rounded-xl bg-electric-lime/20 text-ink-charcoal">
         <Icon className="size-5" strokeWidth={2} />

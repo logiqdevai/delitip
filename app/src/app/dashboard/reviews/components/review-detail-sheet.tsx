@@ -99,7 +99,7 @@ const TipDetails: FC<{ tip: Tip }> = ({ tip }) => {
         </span>
       </div>
 
-      <div className="rounded-xl border border-zinc-100 bg-zinc-50/80 px-3">
+      <div className="rounded-xl border border-zinc-100 bg-zinc-50/80 px-4">
         <SummaryRow
           label="Amount"
           value={formatMoney(tip.amount, tip.currency)}
@@ -135,7 +135,7 @@ const TipDetails: FC<{ tip: Tip }> = ({ tip }) => {
             No distribution recorded for this tip.
           </p>
         ) : (
-          <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-100 bg-zinc-50/80 px-3">
+          <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-100 bg-zinc-50/80 px-4">
             {tip.distributions.map((distribution) => (
               <div
                 key={distribution.id}
@@ -166,7 +166,7 @@ const TipDetails: FC<{ tip: Tip }> = ({ tip }) => {
           <div className="mb-2 text-xs font-semibold text-zinc-500">
             Refunds
           </div>
-          <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-100 bg-zinc-50/80 px-3">
+          <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-100 bg-zinc-50/80 px-4">
             {tip.refunds.map((refund) => (
               <div
                 key={refund.id}
@@ -252,7 +252,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
                       <div className="text-xs font-semibold text-zinc-500">
                         Comment
                       </div>
-                      <p className="rounded-xl border border-zinc-100 bg-zinc-50 p-3 text-sm text-zinc-700">
+                      <p className="rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
                         &ldquo;{review.comment}&rdquo;
                       </p>
                     </div>

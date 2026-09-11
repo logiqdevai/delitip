@@ -171,7 +171,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
       </Link>
 
       <section className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
-        <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6">
+        <div className="flex flex-col gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6">
           <div className="min-w-0 flex-1 space-y-3">
             <div className="flex min-w-0 items-center gap-3.5">
               <span className="inline-flex shrink-0 rounded-full ring-2 ring-electric-lime/30 ring-offset-2 ring-offset-white">
@@ -327,7 +327,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         hasLinkedUser={!!employee.user_id}
       />
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-charcoal">
           <QrCodeIcon className="size-4" strokeWidth={2} />
           QR codes
@@ -392,7 +392,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         )}
       </div>
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-charcoal">
           <Receipt className="size-4" strokeWidth={2} />
           Tips

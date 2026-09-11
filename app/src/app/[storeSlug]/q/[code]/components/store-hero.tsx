@@ -22,7 +22,7 @@ export const StoreHero: FC<StoreHeroProps> = ({ store, logoUrl, welcome }) => {
 
       <div
         className={cn(
-          "flex w-full flex-col items-center px-6",
+          "flex w-full flex-col items-center px-4",
           hasBanner ? "-mt-10" : "pt-6",
         )}
       >

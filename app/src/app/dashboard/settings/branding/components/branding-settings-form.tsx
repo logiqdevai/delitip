@@ -93,7 +93,7 @@ export const BrandingSettingsForm: FC = () => {
   };
 
   return (
-    <div className="@container max-w-2xl space-y-5 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
+    <div className="@container max-w-2xl space-y-5 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">Branding</h2>
         <p className="mt-0.5 text-xs text-zinc-500">

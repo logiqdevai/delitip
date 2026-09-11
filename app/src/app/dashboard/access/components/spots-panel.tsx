@@ -72,7 +72,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
   };
 
   return (
-    <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+    <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
       <div className="flex items-center gap-2">
         <MapPin className="size-4 text-zinc-400" strokeWidth={2} />
         <h2 className="text-sm font-bold text-ink-charcoal">Spots</h2>
@@ -109,7 +109,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
           <Skeleton className="h-12 w-full rounded-xl" />
         </div>
       ) : spots.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 p-3 text-center text-xs text-zinc-500">
+        <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-3 text-center text-xs text-zinc-500">
           No spots yet. Add one above, then attach it when you create a QR
           code.
         </p>

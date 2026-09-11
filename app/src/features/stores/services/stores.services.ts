@@ -79,10 +79,14 @@ export const deleteStore = async (id: string): Promise<void> => {
   }
 };
 
-export const getPublicStore = async (slug: string): Promise<PublicStore> => {
+export const getPublicStore = async (
+  slug: string,
+  lang?: string,
+): Promise<PublicStore> => {
   try {
     const response = await axiosInstance.get<PublicStore>(
       ApiRoutes.public.store(slug),
+      { params: lang ? { lang } : undefined },
     );
     return response.data;
   } catch {

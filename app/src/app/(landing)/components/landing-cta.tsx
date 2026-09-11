@@ -15,7 +15,7 @@ export const LandingCta: FC = () => {
   return (
     <section id="get-started" className="bg-white py-20 lg:py-24">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div className="relative space-y-6 overflow-hidden rounded-[36px] border border-zinc-800 bg-ink-charcoal p-8 text-center text-white shadow-2xl sm:p-14">
+        <div className="relative space-y-6 overflow-hidden rounded-[36px] border border-zinc-800 bg-ink-charcoal px-4 py-8 text-center text-white shadow-2xl sm:p-14">
           <BrandMark
             size="lg"
             className="mx-auto shadow-lg shadow-electric-lime/30"

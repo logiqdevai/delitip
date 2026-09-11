@@ -14,7 +14,7 @@ export const TipDetailSkeleton: FC = () => {
         <Skeleton className="h-7 w-20 rounded-full" />
       </div>
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <Skeleton className="mb-3 h-4 w-20" />
         <div className="divide-y divide-zinc-100">
           {Array.from({ length: 8 }).map((_, index) => (
@@ -29,7 +29,7 @@ export const TipDetailSkeleton: FC = () => {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <Skeleton className="mb-4 h-4 w-24" />
         <div className="divide-y divide-zinc-100">
           {Array.from({ length: 3 }).map((_, index) => (

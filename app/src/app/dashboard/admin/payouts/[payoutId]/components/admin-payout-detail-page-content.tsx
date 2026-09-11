@@ -49,7 +49,7 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
 
   if (payoutQuery.isError || !payoutQuery.data) {
     return (
-      <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+      <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
         <EmptyHeader>
           <EmptyTitle>Could not load this payout</EmptyTitle>
           <EmptyDescription>
@@ -109,7 +109,7 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
         </span>
       </div>
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Summary</h2>
         <SummaryRow label="Store" value={payout.store?.name ?? "-"} />
         <SummaryRow
@@ -143,7 +143,7 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
         />
       </div>
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-2 text-sm font-bold text-ink-charcoal">
           Payout account
         </h2>
@@ -169,12 +169,12 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
         />
       </div>
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-3 text-sm font-bold text-ink-charcoal">
           Distributions included
         </h2>
         {payout.distributions.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 py-6 text-center text-xs text-zinc-500">
+          <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500">
             No distributions recorded for this payout.
           </p>
         ) : (

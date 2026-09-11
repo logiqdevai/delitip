@@ -83,7 +83,7 @@ export const AllUsersPageContent: FC = () => {
       {usersQuery.isPending ? (
         <TableSkeleton columns={5} />
       ) : usersQuery.isError ? (
-        <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+        <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load users</EmptyTitle>
             <EmptyDescription>{usersQuery.error.message}</EmptyDescription>
@@ -99,7 +99,7 @@ export const AllUsersPageContent: FC = () => {
           </EmptyContent>
         </Empty>
       ) : users.length === 0 ? (
-        <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+        <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyMedia variant="icon">
               <Users />

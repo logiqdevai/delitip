@@ -226,7 +226,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
         className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-xl"
         showCloseButton={!isPending}
       >
-        <DialogHeader className="shrink-0 border-b border-zinc-100 px-5 py-4 sm:px-6">
+        <DialogHeader className="shrink-0 border-b border-zinc-100 px-4 py-4 sm:px-6">
           <DialogTitle>
             {isEdit ? "Edit distribution rule" : "Create distribution rule"}
           </DialogTitle>
@@ -241,7 +241,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
           className="flex min-h-0 flex-1 flex-col"
           noValidate
         >
-          <div className="flex-1 space-y-5 overflow-y-auto px-5 py-5 sm:px-6">
+          <div className="flex-1 space-y-5 overflow-y-auto px-4 py-5 sm:px-6">
           <div className="space-y-1.5">
             <Label htmlFor="rule-name">Rule name</Label>
             <Input
@@ -562,7 +562,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
           </div>
           </div>
 
-          <DialogFooter className="mx-0 mb-0 shrink-0 gap-2 border-t border-zinc-100 px-5 py-4 sm:justify-between sm:px-6">
+          <DialogFooter className="mx-0 mb-0 shrink-0 gap-2 border-t border-zinc-100 px-4 py-4 sm:justify-between sm:px-6">
             <p className="hidden text-[11px] text-zinc-400 sm:block">
               Applies to future tips only.
             </p>

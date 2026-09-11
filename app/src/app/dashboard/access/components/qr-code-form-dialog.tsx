@@ -542,7 +542,7 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
           ) : null}
 
           {isEdit && qr && tipUrl ? (
-            <div className="rounded-xl bg-zinc-50 p-3 text-left text-xs text-zinc-500">
+            <div className="rounded-xl bg-zinc-50 px-4 py-3 text-left text-xs text-zinc-500">
               <div className="font-semibold text-ink-charcoal">Tip URL</div>
               <div className="mt-1 flex items-start gap-1">
                 <p className="min-w-0 flex-1 break-all">{tipUrl}</p>

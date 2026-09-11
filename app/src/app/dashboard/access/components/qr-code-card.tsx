@@ -92,7 +92,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
   return (
     <div
       className={cn(
-        "space-y-4 rounded-3xl border bg-white p-6 text-center shadow-sm",
+        "space-y-4 rounded-3xl border bg-white px-4 py-6 text-center shadow-sm",
         qr.is_active ? "border-zinc-200" : "border-zinc-200 opacity-75",
       )}
     >

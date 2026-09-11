@@ -28,7 +28,7 @@ export const RevenueSplitCard: FC<RevenueSplitCardProps> = ({
   const total = platform + employee + store;
 
   return (
-    <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+    <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
       <h2 className="text-sm font-bold text-ink-charcoal">Revenue split</h2>
       <p className="mt-0.5 text-xs text-zinc-500">
         Where completed tip revenue ends up, in this range.

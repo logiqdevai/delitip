@@ -1,0 +1,94 @@
+{
+  "tipEntry": {
+    "inactiveQr": {
+      "title": "Dieser QR-Code ist inaktiv",
+      "description": "Dieser Trinkgeld-Link wurde deaktiviert. Bitten Sie Ihren Gastgeber um einen aktiven Code."
+    },
+    "inactiveStore": {
+      "title": "Dieses Geschäft ist nicht verfügbar",
+      "description": "Dieses Geschäft nimmt derzeit keine Trinkgelder an. Bitten Sie Ihren Gastgeber um eine andere Möglichkeit, Trinkgeld zu geben."
+    },
+    "notFound": {
+      "title": "Dieser Trinkgeld-Link ist nicht verfügbar",
+      "description": "Der Link ist möglicherweise falsch oder nicht mehr gültig. Bitten Sie Ihren Gastgeber um einen neuen Code."
+    }
+  },
+  "tipFlow": {
+    "teamFallback": "das Team",
+    "welcomeFallback": "Willkommen bei {storeName}. Geben Sie ein Trinkgeld für den tollen Service.",
+    "footerPrefix": "Bereitgestellt von",
+    "footerSuffix": "Transparent & sicher"
+  },
+  "amountStep": {
+    "heading": "Wählen Sie Ihr Trinkgeld",
+    "subtitleFor": "für {recipient}",
+    "customAmountLabel": "Individueller Betrag",
+    "customAmountAriaLabel": "Individueller Trinkgeldbetrag",
+    "trustNote": "100 % transparent. Trinkgelder werden sicher und direkt an {recipient} gesendet.",
+    "continueCta": "Weiter zur Zahlung von {amount}",
+    "chooseAmountCta": "Wählen Sie einen Betrag"
+  },
+  "recipientStep": {
+    "eyebrowTipStore": "Trinkgeld für das Geschäft",
+    "eyebrowYourHost": "Ihr Gastgeber",
+    "eyebrowSelectMany": "Wählen Sie, wem Sie danken möchten",
+    "eyebrowChooseOne": "Wählen Sie, wem Sie danken möchten",
+    "eyebrowTeam": "Das Team",
+    "tipGoesTo": "Ihr Trinkgeld geht an {storeName}.",
+    "teamMemberFallback": "Teammitglied",
+    "continue": "Weiter",
+    "back": "Zurück"
+  },
+  "reviewStep": {
+    "heading": "Wie war Ihre Erfahrung?",
+    "subtitle": "Bewerten Sie {recipient} (optional)",
+    "starAriaLabel": "Mit {count} Sternen bewerten",
+    "commentPlaceholder": "Schreiben Sie eine kurze Nachricht für {recipient} (optional)...",
+    "genericError": "Die Zahlung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "payCta": "{amount} bezahlen",
+    "retryCta": "Zahlung erneut versuchen",
+    "back": "Zurück"
+  },
+  "checkoutStatusStep": {
+    "confirmingTitle": "Ihre Zahlung wird bestätigt…",
+    "confirmingDescription": "Dies dauert nur einen Moment.",
+    "cancelledTitle": "Zahlung abgebrochen",
+    "cancelledDescription": "Sie haben den Bezahlvorgang vor Abschluss abgebrochen. Es wurde nichts abgebucht.",
+    "failedTitle": "Zahlung fehlgeschlagen",
+    "failedDescription": "Ihre Karte wurde nicht belastet. Bitte versuchen Sie es erneut.",
+    "timeoutTitle": "Wird noch verarbeitet",
+    "timeoutDescription": "Die Bestätigung Ihrer Zahlung dauert länger als erwartet. Sie könnte trotzdem noch abgeschlossen werden – schauen Sie in Kürze noch einmal nach.",
+    "tryAgain": "Erneut versuchen",
+    "refresh": "Aktualisieren"
+  },
+  "doneStep": {
+    "heading": "Vielen Dank!",
+    "descriptionWithReview": "Ihr Trinkgeld über {amount} und Ihr Lob wurden an {recipient} gesendet.",
+    "descriptionWithoutReview": "Ihr Trinkgeld über {amount} wurde an {recipient} gesendet.",
+    "descriptionNoDetails": "Ihr Trinkgeld wurde bereits gesendet.",
+    "receiptIdLabel": "Beleg-ID",
+    "businessLabel": "Geschäft",
+    "recipientLabel": "Empfänger",
+    "sharePublicly": "Öffentlich teilen",
+    "makeAnotherTip": "Weiteres Trinkgeld geben",
+    "refund": {
+      "prompt": "Stimmt etwas mit diesem Trinkgeld nicht? Rückerstattung anfordern",
+      "requestTitle": "Rückerstattung von {amount} anfordern",
+      "requestTitleNoAmount": "Rückerstattung anfordern",
+      "reasonPlaceholder": "Was ist schiefgelaufen? (optional)",
+      "submitting": "Wird gesendet…",
+      "submit": "Anfrage senden",
+      "cancel": "Abbrechen",
+      "successWithAmount": "Rückerstattung über {amount} angefordert. Das Geschäft wird sie prüfen.",
+      "successNoAmount": "Rückerstattung angefordert. Das Geschäft wird sie prüfen.",
+      "genericError": "Ihre Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
+    }
+  },
+  "metadata": {
+    "title": "Trinkgeld geben - delitip",
+    "description": "Bedanken Sie sich bei Ihrem Gastgeber mit einem digitalen Trinkgeld."
+  },
+  "languageSelector": {
+    "label": "Sprache"
+  }
+}

@@ -15,7 +15,7 @@ export const GettingStartedStepCard: FC<{ step: GettingStartedStep }> = ({
   return (
     <Link
       href={step.href}
-      className="flex flex-col gap-4 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs transition hover:border-zinc-300 md:flex-row md:items-center"
+      className="flex flex-col gap-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs transition hover:border-zinc-300 md:flex-row md:items-center"
     >
       <span
         className={cn(

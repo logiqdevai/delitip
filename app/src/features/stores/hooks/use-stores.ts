@@ -24,7 +24,7 @@ export const storesQueryKeys = {
   // invalidating storesQueryKeys.root also refetches any open detail query —
   // several settings forms (e.g. Branding) read logo/cover refs from here.
   detail: (id: string) => ["stores", "detail", id] as const,
-  public: (slug: string) => ["public-store", slug] as const,
+  public: (slug: string, lang?: string) => ["public-store", slug, lang] as const,
   adminList: ["stores", "admin"] as const,
 };
 
@@ -51,10 +51,10 @@ export const useStore = (id: string) => {
   });
 };
 
-export const usePublicStore = (slug: string) => {
+export const usePublicStore = (slug: string, lang?: string) => {
   return useQuery({
-    queryKey: storesQueryKeys.public(slug),
-    queryFn: () => getPublicStore(slug),
+    queryKey: storesQueryKeys.public(slug, lang),
+    queryFn: () => getPublicStore(slug, lang),
     enabled: !!slug,
   });
 };
