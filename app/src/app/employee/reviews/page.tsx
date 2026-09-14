@@ -88,7 +88,7 @@ const ReviewsPage: FC = () => {
         />
       </div>
 
-      <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-xs">
+      <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
         <h2 className="text-sm font-bold text-ink-charcoal">
           Customer Love Notes
         </h2>

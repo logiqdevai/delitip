@@ -73,7 +73,7 @@ export const ReviewRedirectSettingsForm: FC = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs"
+      className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs"
     >
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">
@@ -129,7 +129,7 @@ export const ReviewRedirectSettingsForm: FC = () => {
           value={redirectUrl}
           onChange={(event) => updateRedirectUrl(event.target.value)}
         />
-        <p className="mt-1 text-[11px] text-zinc-400">
+        <p className="mt-1 text-[14px] text-zinc-400">
           Leave blank to skip the public redirect - high-rated customers still
           see a thank-you, just without an outbound link.
         </p>

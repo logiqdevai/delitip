@@ -54,7 +54,7 @@ export const LandingEcosystem: FC = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-          <div className="flex flex-col justify-between space-y-6 rounded-3xl border border-zinc-200/80 bg-white p-8 shadow-xs sm:p-10">
+          <div className="flex flex-col justify-between space-y-6 rounded-3xl border border-zinc-200/80 bg-white px-4 py-8 shadow-xs sm:p-10">
             <div className="space-y-4">
               <div className="flex size-10 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
                 <Building2 className="size-5" strokeWidth={2} />
@@ -91,7 +91,7 @@ export const LandingEcosystem: FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-col justify-between space-y-6 rounded-3xl border border-zinc-200/80 bg-white p-8 shadow-xs sm:p-10">
+          <div className="flex flex-col justify-between space-y-6 rounded-3xl border border-zinc-200/80 bg-white px-4 py-8 shadow-xs sm:p-10">
             <div className="space-y-4">
               <div className="flex size-10 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
                 <Users className="size-5" strokeWidth={2} />

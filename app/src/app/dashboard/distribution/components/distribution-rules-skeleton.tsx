@@ -15,7 +15,7 @@ export const DistributionRulesSkeleton: FC<DistributionRulesSkeletonProps> = ({
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={`rule-skeleton-${index}`}
-          className="space-y-3 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs"
+          className="space-y-3 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs"
         >
           <div className="flex items-center justify-between gap-3">
             <Skeleton className="h-4 w-40" />

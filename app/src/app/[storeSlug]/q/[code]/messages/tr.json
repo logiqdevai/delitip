@@ -1,0 +1,94 @@
+{
+  "tipEntry": {
+    "inactiveQr": {
+      "title": "Bu QR kod aktif değil",
+      "description": "Bu bahşiş bağlantısı devre dışı bırakıldı. Ev sahibinizden aktif bir kod isteyin."
+    },
+    "inactiveStore": {
+      "title": "Bu işletme kullanılamıyor",
+      "description": "Bu işletme şu anda bahşiş kabul etmiyor. Ev sahibinizden bahşiş bırakmak için başka bir yol isteyin."
+    },
+    "notFound": {
+      "title": "Bu bahşiş bağlantısı kullanılamıyor",
+      "description": "Bağlantı hatalı olabilir veya artık geçerli değil. Ev sahibinizden yeni bir kod isteyin."
+    }
+  },
+  "tipFlow": {
+    "teamFallback": "ekip",
+    "welcomeFallback": "{storeName} işletmesine hoş geldiniz. Harika hizmet için bir bahşiş bırakın.",
+    "footerPrefix": "Desteklenen",
+    "footerSuffix": "Şeffaf ve güvenli"
+  },
+  "amountStep": {
+    "heading": "Bahşişinizi seçin",
+    "subtitleFor": "{recipient} için",
+    "customAmountLabel": "Özel tutar",
+    "customAmountAriaLabel": "Özel bahşiş tutarı",
+    "trustNote": "%100 şeffaf. Bahşişler güvenli bir şekilde doğrudan {recipient} kişisine gönderilir.",
+    "continueCta": "{amount} ödemek için devam edin",
+    "chooseAmountCta": "Bir tutar seçin"
+  },
+  "recipientStep": {
+    "eyebrowTipStore": "İşletmeye bahşiş",
+    "eyebrowYourHost": "Ev sahibiniz",
+    "eyebrowSelectMany": "Kime teşekkür edeceğinizi seçin",
+    "eyebrowChooseOne": "Kime teşekkür edeceğinizi seçin",
+    "eyebrowTeam": "Ekip",
+    "tipGoesTo": "Bahşişiniz {storeName} işletmesine gidiyor.",
+    "teamMemberFallback": "Ekip üyesi",
+    "continue": "Devam et",
+    "back": "Geri"
+  },
+  "reviewStep": {
+    "heading": "Deneyiminiz nasıldı?",
+    "subtitle": "{recipient} kişisini değerlendirin (isteğe bağlı)",
+    "starAriaLabel": "{count} yıldız ile değerlendirin",
+    "commentPlaceholder": "{recipient} için kısa bir mesaj yazın (isteğe bağlı)...",
+    "genericError": "Ödeme başarısız oldu. Lütfen tekrar deneyin.",
+    "payCta": "{amount} öde",
+    "retryCta": "Ödemeyi tekrar dene",
+    "back": "Geri"
+  },
+  "checkoutStatusStep": {
+    "confirmingTitle": "Ödemeniz onaylanıyor…",
+    "confirmingDescription": "Bu yalnızca bir an sürecek.",
+    "cancelledTitle": "Ödeme iptal edildi",
+    "cancelledDescription": "Ödemeyi tamamlanmadan önce iptal ettiniz. Herhangi bir ücret alınmadı.",
+    "failedTitle": "Ödeme başarısız oldu",
+    "failedDescription": "Kartınızdan ücret alınmadı. Lütfen tekrar deneyin.",
+    "timeoutTitle": "Hâlâ işleniyor",
+    "timeoutDescription": "Ödemenizin onaylanması beklenenden uzun sürüyor. Yine de tamamlanabilir - kısa süre sonra tekrar kontrol edin.",
+    "tryAgain": "Tekrar dene",
+    "refresh": "Yenile"
+  },
+  "doneStep": {
+    "heading": "Teşekkürler!",
+    "descriptionWithReview": "{amount} tutarındaki bahşişiniz ve övgüleriniz {recipient} kişisine gönderildi.",
+    "descriptionWithoutReview": "{amount} tutarındaki bahşişiniz {recipient} kişisine gönderildi.",
+    "descriptionNoDetails": "Bahşişiniz zaten gönderildi.",
+    "receiptIdLabel": "Makbuz No",
+    "businessLabel": "İşletme",
+    "recipientLabel": "Alıcı",
+    "sharePublicly": "Herkese açık paylaş",
+    "makeAnotherTip": "Başka bir bahşiş bırak",
+    "refund": {
+      "prompt": "Bu bahşişle ilgili bir sorun mu var? İade talep edin",
+      "requestTitle": "{amount} tutarında iade talep edin",
+      "requestTitleNoAmount": "İade talep edin",
+      "reasonPlaceholder": "Ne yanlış gitti? (isteğe bağlı)",
+      "submitting": "Gönderiliyor…",
+      "submit": "Talebi gönder",
+      "cancel": "İptal",
+      "successWithAmount": "{amount} tutarında iade talep edildi. İşletme bunu inceleyecek.",
+      "successNoAmount": "İade talep edildi. İşletme bunu inceleyecek.",
+      "genericError": "Talebiniz gönderilemedi. Lütfen tekrar deneyin."
+    }
+  },
+  "metadata": {
+    "title": "Bahşiş bırakın - delitip",
+    "description": "Ev sahibinize dijital bir bahşişle teşekkür edin."
+  },
+  "languageSelector": {
+    "label": "Dil"
+  }
+}

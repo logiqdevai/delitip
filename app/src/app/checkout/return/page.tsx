@@ -62,7 +62,7 @@ function CheckoutReturnInner() {
 
   if (state === "not-found") {
     return (
-      <main className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-paper-offwhite p-6 text-center">
+      <main className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-paper-offwhite p-4 text-center">
         <div className="flex size-16 items-center justify-center rounded-full bg-zinc-100 text-zinc-400">
           <QrCode className="size-8" strokeWidth={2} />
         </div>
@@ -81,7 +81,7 @@ function CheckoutReturnInner() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-paper-offwhite p-6">
+    <main className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-paper-offwhite p-4">
       <Loader2 className="size-8 animate-spin text-zinc-400" strokeWidth={2} />
     </main>
   );
@@ -91,7 +91,7 @@ export default function CheckoutReturnPage() {
   return (
     <Suspense
       fallback={
-        <main className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-paper-offwhite p-6">
+        <main className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-paper-offwhite p-4">
           <Loader2 className="size-8 animate-spin text-zinc-400" strokeWidth={2} />
         </main>
       }

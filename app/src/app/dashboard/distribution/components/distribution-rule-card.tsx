@@ -27,7 +27,7 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
   return (
     <div
       className={cn(
-        "space-y-3 rounded-2xl border bg-white p-5 shadow-xs",
+        "space-y-3 rounded-2xl border bg-white px-4 py-5 shadow-xs",
         isDefault ? "border-brand-200 ring-1 ring-brand-100" : "border-zinc-200/80",
       )}
     >
@@ -36,7 +36,7 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
           <h3 className="truncate text-sm font-bold text-ink-charcoal">
             {rule.name}
           </h3>
-          <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+          <p className="mt-1 text-[14px] leading-relaxed text-zinc-500">
             {formatRecipientSummary(rule.recipients)}
           </p>
         </div>

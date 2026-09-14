@@ -85,7 +85,7 @@ export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => 
 
   return (
     <li className="min-w-0 overflow-hidden rounded-xl border border-zinc-200/80 bg-white">
-      <div className="flex items-start gap-3 p-3.5 sm:gap-4 sm:p-4">
+      <div className="flex items-start gap-3 px-4 py-3.5 sm:gap-4 sm:p-4">
         <div className="min-w-0 flex-1 space-y-2">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span className="text-sm font-bold text-ink-charcoal">
@@ -209,7 +209,7 @@ export const EmployeeQrCodesDialog: FC<EmployeeQrCodesDialogProps> = ({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="min-w-0 grid-cols-[minmax(0,1fr)] gap-5 overflow-x-hidden p-5 sm:max-w-xl sm:gap-6 sm:p-6">
+        <DialogContent className="min-w-0 grid-cols-[minmax(0,1fr)] gap-5 overflow-x-hidden px-4 py-5 sm:max-w-xl sm:gap-6 sm:p-6">
           <DialogHeader className="min-w-0">
             <DialogTitle className="pr-2 text-balance break-words">
               QR codes for {employee.full_name}

@@ -81,7 +81,7 @@ export const OverviewTab: FC<{
         </div>
       )}
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="text-sm font-bold text-ink-charcoal">
           Customer Experience Score
         </h2>

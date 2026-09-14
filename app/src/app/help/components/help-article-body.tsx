@@ -9,7 +9,7 @@ interface HelpArticleBodyProps {
 
 export const HelpArticleBody: FC<HelpArticleBodyProps> = ({ sections }) => {
   return (
-    <div className="space-y-8 rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8">
+    <div className="space-y-8 rounded-2xl border border-zinc-200 bg-white px-4 py-6 sm:p-8">
       {sections.map((section, index) => (
         <section key={section.heading ?? index} className="space-y-3">
           {section.heading && (

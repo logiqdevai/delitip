@@ -62,7 +62,7 @@ export const RevenueTrendChart: FC = () => {
   };
 
   return (
-    <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+    <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-bold text-ink-charcoal">Revenue</h2>

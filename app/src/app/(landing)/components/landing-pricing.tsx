@@ -79,7 +79,7 @@ export const LandingPricing: FC = () => {
             <div
               key={plan.name}
               className={cn(
-                "relative flex flex-col justify-between space-y-6 rounded-3xl p-8",
+                "relative flex flex-col justify-between space-y-6 rounded-3xl px-4 py-8",
                 plan.featured
                   ? "border-2 border-electric-lime bg-ink-charcoal text-paper-offwhite shadow-2xl"
                   : "border border-zinc-200 bg-white shadow-xs"

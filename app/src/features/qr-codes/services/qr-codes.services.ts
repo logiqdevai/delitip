@@ -96,10 +96,14 @@ export const getQrCodeStats = async (id: string): Promise<QrCodeStats> => {
   }
 };
 
-export const getPublicQrCode = async (code: string): Promise<PublicQrCode> => {
+export const getPublicQrCode = async (
+  code: string,
+  lang?: string,
+): Promise<PublicQrCode> => {
   try {
     const response = await axiosInstance.get<PublicQrCode>(
       ApiRoutes.public.qr(code),
+      { params: lang ? { lang } : undefined },
     );
     return response.data;
   } catch (error) {

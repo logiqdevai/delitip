@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import { ArrowLeft, ArrowRight, Check, Users } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import type {
   PublicQrCodeEmployee,
@@ -15,6 +16,7 @@ const EmployeeRow: FC<{
   selected: boolean;
   onToggle: () => void;
 }> = ({ employee, selectable, selected, onToggle }) => {
+  const t = useTranslations("recipientStep");
   const content = (
     <>
       <EmployeeAvatar
@@ -28,7 +30,7 @@ const EmployeeRow: FC<{
           {employee.full_name}
         </p>
         <p className="truncate text-xs text-zinc-500">
-          {employee.position?.trim() || "Team member"}
+          {employee.position?.trim() || t("teamMemberFallback")}
         </p>
       </div>
       {selectable ? (
@@ -87,28 +89,29 @@ export const RecipientStep: FC<RecipientStepProps> = ({
   onBack,
   onContinue,
 }) => {
+  const t = useTranslations("recipientStep");
   const canContinue = interactive ? selectedEmployeeIds.length > 0 : true;
 
   return (
-    <div className="flex flex-1 flex-col gap-6 px-5 py-8">
+    <div className="flex flex-1 flex-col gap-6 px-4 py-8">
       <div className="flex items-center gap-2 text-xs font-semibold tracking-wide text-zinc-400 uppercase">
         <Users className="size-3.5 shrink-0" />
         <span className="truncate">
           {employees.length === 0
-            ? "Tip the store"
+            ? t("eyebrowTipStore")
             : employees.length === 1
-              ? "Your host"
+              ? t("eyebrowYourHost")
               : mode === "CHOOSE_MANY"
-                ? "Select who to thank"
+                ? t("eyebrowSelectMany")
                 : mode === "CHOOSE_ONE"
-                  ? "Choose who to thank"
-                  : "The team"}
+                  ? t("eyebrowChooseOne")
+                  : t("eyebrowTeam")}
         </span>
       </div>
 
       {employees.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-zinc-200 bg-white px-4 py-6 text-center text-sm text-zinc-500">
-          Your tip goes to {storeName}.
+          {t("tipGoesTo", { storeName })}
         </div>
       ) : (
         <ul className="space-y-2">
@@ -132,7 +135,7 @@ export const RecipientStep: FC<RecipientStepProps> = ({
           onClick={onContinue}
           className="flex w-full items-center justify-center gap-2 rounded-2xl bg-(--tip-primary) py-3.5 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <span>Continue</span>
+          <span>{t("continue")}</span>
           <ArrowRight className="size-4" strokeWidth={2} />
         </button>
         <button
@@ -141,7 +144,7 @@ export const RecipientStep: FC<RecipientStepProps> = ({
           className="flex w-full items-center justify-center gap-1.5 rounded-2xl py-2 text-xs font-semibold text-zinc-500 transition hover:text-zinc-700"
         >
           <ArrowLeft className="size-3.5" strokeWidth={2} />
-          <span>Back</span>
+          <span>{t("back")}</span>
         </button>
       </div>
     </div>

@@ -18,7 +18,7 @@ const recentTips = [
 
 export const LandingHero: FC = () => {
   return (
-    <section className="hero-glow relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28">
+    <section className="hero-glow relative overflow-hidden pt-6 pb-0 md:pt-24 md:pb-28">
       <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <h1 className="mx-auto max-w-4xl text-3xl leading-[1.12] font-extrabold tracking-tight text-ink-charcoal sm:text-5xl lg:text-6xl">
           Tip and feedback for the people who{" "}
@@ -58,10 +58,10 @@ export const LandingHero: FC = () => {
 
         <div
           id="demo"
-          className="mx-auto mt-14 max-w-5xl rounded-3xl border border-zinc-800 bg-ink-charcoal p-3 shadow-2xl sm:rounded-[36px] sm:p-4"
+          className="mx-auto sm:mt-14 mt-8 max-w-5xl rounded-3xl border border-zinc-800 bg-ink-charcoal sm:shadow-2xl sm:rounded-[36px] sm:p-4 p-0 shadow-none "
         >
           <div className="grid grid-cols-1 items-center gap-6 rounded-2xl bg-ink-charcoal p-4 text-left sm:rounded-[28px] sm:p-8 lg:grid-cols-12">
-            <div className="space-y-4 rounded-3xl border border-zinc-200 bg-white p-5 shadow-xl lg:col-span-5">
+            <div className="space-y-4 rounded-3xl border border-zinc-200 bg-white px-4 py-5 shadow-xl lg:col-span-5">
               <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
                 <div className="flex items-center gap-2">
                   <BrandMark
@@ -154,7 +154,7 @@ export const LandingHero: FC = () => {
                   <span className="text-xs font-medium text-zinc-400">
                     Tips (7 days)
                   </span>
-                  <span className="mt-1 block text-base font-extrabold text-paper-offwhite sm:text-lg">
+                  <span className="text-base font-extrabold text-paper-offwhite sm:mt-1 sm:block sm:text-lg">
                     €1,240.00
                   </span>
                 </div>
@@ -181,21 +181,21 @@ export const LandingHero: FC = () => {
                   <span>Recent tips & feedback</span>
                   <span className="hidden sm:inline">Amount</span>
                 </div>
-                <div className="flex items-center justify-between border-t border-zinc-800/80 py-1.5 text-paper-offwhite">
-                  <span className="flex items-center gap-2 font-bold">
-                    <span className="size-2 rounded-full bg-electric-lime" />
-                    Eleni K. · Barista
+                <div className="flex flex-col gap-1 border-t border-zinc-800/80 py-1.5 text-paper-offwhite sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+                  <span className="flex min-w-0 items-center gap-2 font-bold">
+                    <span className="size-2 shrink-0 rounded-full bg-electric-lime" />
+                    <span className="truncate">Eleni K. · Barista</span>
                   </span>
-                  <span className="font-bold text-electric-lime">
+                  <span className="shrink-0 pl-4 font-bold text-electric-lime sm:pl-0">
                     +€8.00 · ★ 5.0
                   </span>
                 </div>
-                <div className="flex items-center justify-between border-t border-zinc-800/80 py-1.5 text-paper-offwhite">
-                  <span className="flex items-center gap-2 font-bold">
-                    <span className="size-2 rounded-full bg-electric-lime" />
-                    Nikos P. · Server
+                <div className="flex flex-col gap-1 border-t border-zinc-800/80 py-1.5 text-paper-offwhite sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+                  <span className="flex min-w-0 items-center gap-2 font-bold">
+                    <span className="size-2 shrink-0 rounded-full bg-electric-lime" />
+                    <span className="truncate">Nikos P. · Server</span>
                   </span>
-                  <span className="font-bold text-electric-lime">
+                  <span className="shrink-0 pl-4 font-bold text-electric-lime sm:pl-0">
                     +€5.00 · ★ 5.0
                   </span>
                 </div>

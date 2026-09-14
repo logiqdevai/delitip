@@ -131,7 +131,7 @@ export const TipsPageContent: FC = () => {
         }
       />
 
-      <div className="flex flex-col gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5 sm:flex-row sm:flex-wrap sm:items-center">
+      <div className="flex flex-col gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
           Filters

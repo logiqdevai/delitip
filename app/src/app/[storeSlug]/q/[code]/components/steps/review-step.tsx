@@ -2,6 +2,7 @@
 
 import { type FC, useMemo } from "react";
 import { AlertTriangle, Loader2, Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { FeedbackQuestionTypes } from "@/features/feedback-questions/interfaces/feedback-questions.interfaces";
 import type { PublicReviewConfig } from "@/features/reviews/interfaces/reviews.interfaces";
 import { useCreatePublicTip } from "@/features/tips/hooks/use-tips";
@@ -41,6 +42,7 @@ const StarPicker: FC<{
   size?: "sm" | "default";
   align?: "center" | "start";
 }> = ({ value, onChange, size = "default", align = "center" }) => {
+  const t = useTranslations("reviewStep");
   return (
     <div
       className={cn(
@@ -57,7 +59,7 @@ const StarPicker: FC<{
             type="button"
             onClick={() => onChange(starValue === value ? 0 : starValue)}
             className="transition hover:scale-110"
-            aria-label={`Rate ${starValue} stars`}
+            aria-label={t("starAriaLabel", { count: starValue })}
           >
             <Star
               className={cn(
@@ -90,6 +92,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
   onChange,
   onBack,
 }) => {
+  const t = useTranslations("reviewStep");
   const categories = [...(config?.review_categories ?? [])].sort(
     (a, b) => a.sort_order - b.sort_order,
   );
@@ -137,13 +140,13 @@ export const ReviewStep: FC<ReviewStepProps> = ({
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-6 px-5 py-8">
+    <div className="flex flex-1 flex-col gap-6 px-4 py-8">
       <div className="text-center">
         <h1 className="text-lg font-bold text-ink-charcoal">
-          How was your experience?
+          {t("heading")}
         </h1>
         <p className="mx-auto mt-1 max-w-[280px] truncate text-xs text-zinc-500">
-          Rate {recipientLabel} (optional)
+          {t("subtitle", { recipient: recipientLabel })}
         </p>
       </div>
 
@@ -159,7 +162,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
               {categories.map((category) => (
                 <div
                   key={category.id}
-                  className="space-y-1.5 rounded-xl border border-zinc-100 bg-zinc-50 px-3 py-2.5"
+                  className="space-y-1.5 rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-2.5"
                 >
                   <span className="block text-xs font-medium text-zinc-600">
                     {category.name}
@@ -229,19 +232,19 @@ export const ReviewStep: FC<ReviewStepProps> = ({
             onChange={(event) =>
               onChange({ ...draft, comment: event.target.value })
             }
-            placeholder={`Write a short message for ${recipientLabel} (optional)...`}
+            placeholder={t("commentPlaceholder", { recipient: recipientLabel })}
             className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs focus:ring-2 focus:ring-(--tip-primary) focus:outline-none"
           />
         </div>
       ) : null}
 
       {createTip.isError ? (
-        <div className="flex items-start gap-2.5 rounded-xl border border-red-100 bg-red-50 p-3 text-xs text-red-700">
+        <div className="flex items-start gap-2.5 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-700">
           <AlertTriangle className="mt-0.5 size-4 shrink-0" strokeWidth={2} />
           <span>
             {createTip.error instanceof Error
               ? createTip.error.message
-              : "Payment failed. Please try again."}
+              : t("genericError")}
           </span>
         </div>
       ) : null}
@@ -258,8 +261,8 @@ export const ReviewStep: FC<ReviewStepProps> = ({
           ) : null}
           <span>
             {createTip.isError
-              ? "Retry payment"
-              : `Pay ${formatMoney(amount, currency)}`}
+              ? t("retryCta")
+              : t("payCta", { amount: formatMoney(amount, currency) })}
           </span>
         </button>
         <button
@@ -268,7 +271,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
           disabled={submitting}
           className="w-full rounded-2xl py-2 text-xs font-semibold text-zinc-500 transition hover:text-zinc-700 disabled:opacity-60"
         >
-          Back
+          {t("back")}
         </button>
       </div>
     </div>

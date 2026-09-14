@@ -49,7 +49,7 @@ const QrCodeTile: FC<QrCodeTileProps> = ({
 
   return (
     <div
-      className="auth-fade-enter flex flex-col gap-4 rounded-3xl border border-zinc-200/80 bg-white p-6 text-center shadow-xs"
+      className="auth-fade-enter flex flex-col gap-4 rounded-3xl border border-zinc-200/80 bg-white px-4 py-6 text-center shadow-xs"
       style={style}
     >
       <div className="flex items-center justify-between gap-2 border-b border-zinc-100 pb-3">
@@ -115,7 +115,7 @@ const QrCodesSkeleton: FC = () => (
     {Array.from({ length: 2 }).map((_, index) => (
       <div
         key={index}
-        className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-xs"
+        className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs"
       >
         <Skeleton className="mx-auto h-4 w-28" />
         <Skeleton className="mx-auto h-8 w-32 rounded-full" />

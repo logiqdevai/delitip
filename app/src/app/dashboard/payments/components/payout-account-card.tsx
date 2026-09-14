@@ -25,7 +25,7 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
   const isConnectedAccount = account?.payout_method === "CONNECTED_ACCOUNT";
 
   return (
-    <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+    <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
       <div className="flex items-center gap-2">
         <Wallet className="size-4 text-zinc-400" strokeWidth={2} />
         <h2 className="text-sm font-bold text-ink-charcoal">

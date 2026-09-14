@@ -44,7 +44,7 @@ export const ContactForm: FC = () => {
 
   if (submitted) {
     return (
-      <div className="auth-fade-enter flex flex-col items-start gap-4 rounded-3xl border border-zinc-200/80 bg-white p-6 sm:p-8">
+      <div className="auth-fade-enter flex flex-col items-start gap-4 rounded-3xl border border-zinc-200/80 bg-white px-4 py-6 sm:p-8">
         <div className="flex size-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-800">
           <Check className="size-5" strokeWidth={2} />
         </div>
@@ -79,7 +79,7 @@ export const ContactForm: FC = () => {
     <form
       onSubmit={onSubmit}
       noValidate
-      className="auth-fade-enter space-y-5 rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-xs sm:p-8"
+      className="auth-fade-enter space-y-5 rounded-3xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs sm:p-8"
     >
       <div className="space-y-2">
         <span className="block text-xs font-semibold text-zinc-700">

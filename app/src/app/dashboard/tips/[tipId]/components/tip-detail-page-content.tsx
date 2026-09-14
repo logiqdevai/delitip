@@ -109,7 +109,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
         </span>
       </div>
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Summary</h2>
         <SummaryRow
           label="Amount"
@@ -141,7 +141,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
       </div>
 
       {tip.payment_transaction ? (
-        <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+        <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
           <h2 className="mb-2 text-sm font-bold text-ink-charcoal">
             Financial breakdown
           </h2>
@@ -187,7 +187,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
         </div>
       ) : null}
 
-      <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-3 text-sm font-bold text-ink-charcoal">
           Distribution
         </h2>
@@ -223,7 +223,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
       </div>
 
       {tip.review ? (
-        <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+        <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
           <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Review</h2>
           <p className="text-sm text-zinc-600">
             ★ {tip.review.rating} - {tip.review.comment || "No comment left"}
@@ -232,7 +232,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
       ) : null}
 
       {(tip.refunds && tip.refunds.length > 0) || canRequestRefund ? (
-        <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+        <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
           <div className="mb-2 flex items-center justify-between gap-3">
             <h2 className="flex items-center gap-2 text-sm font-bold text-ink-charcoal">
               <Receipt className="size-4" strokeWidth={2} />

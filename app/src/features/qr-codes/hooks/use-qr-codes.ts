@@ -21,7 +21,7 @@ export const qrCodesQueryKeys = {
     ["qr-codes", storeId, query] as const,
   detail: (id: string) => ["qr-code", id] as const,
   stats: (id: string) => ["qr-code-stats", id] as const,
-  public: (code: string) => ["public-qr", code] as const,
+  public: (code: string, lang?: string) => ["public-qr", code, lang] as const,
 };
 
 export const useQrCodes = (storeId: string, query?: QrCodesQuery) => {
@@ -48,10 +48,10 @@ export const useQrCodeStats = (id: string) => {
   });
 };
 
-export const usePublicQrCode = (code: string) => {
+export const usePublicQrCode = (code: string, lang?: string) => {
   return useQuery({
-    queryKey: qrCodesQueryKeys.public(code),
-    queryFn: () => getPublicQrCode(code),
+    queryKey: qrCodesQueryKeys.public(code, lang),
+    queryFn: () => getPublicQrCode(code, lang),
     enabled: !!code,
   });
 };

@@ -33,7 +33,7 @@ export const LandingCalculator: FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 items-center gap-8 rounded-3xl border border-zinc-800 bg-ink-charcoal p-6 text-paper-offwhite shadow-2xl sm:p-10 md:grid-cols-12">
+        <div className="grid grid-cols-1 items-center gap-8 rounded-3xl border border-zinc-800 bg-ink-charcoal px-4 py-6 text-paper-offwhite shadow-2xl sm:p-10 md:grid-cols-12">
           <div className="space-y-6 md:col-span-7">
             <div>
               <div className="mb-2 flex justify-between text-xs font-bold">
@@ -90,7 +90,7 @@ export const LandingCalculator: FC = () => {
             </div>
           </div>
 
-          <div className="space-y-4 rounded-2xl border border-zinc-800 bg-ink-charcoal/90 p-6 text-center md:col-span-5">
+          <div className="space-y-4 rounded-2xl border border-zinc-800 bg-ink-charcoal/90 px-4 py-6 text-center md:col-span-5">
             <span className="block text-xs font-bold tracking-widest text-zinc-400 uppercase">
               Estimated annual tips
             </span>

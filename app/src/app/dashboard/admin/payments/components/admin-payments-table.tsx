@@ -108,7 +108,7 @@ export const AdminPaymentsTable: FC = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-2.5">
+      <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
           Filters
@@ -185,7 +185,7 @@ export const AdminPaymentsTable: FC = () => {
       {tipsQuery.isPending ? (
         <TableSkeleton columns={8} />
       ) : tipsQuery.isError ? (
-        <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+        <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load payments</EmptyTitle>
             <EmptyDescription>{tipsQuery.error.message}</EmptyDescription>
@@ -201,7 +201,7 @@ export const AdminPaymentsTable: FC = () => {
           </EmptyContent>
         </Empty>
       ) : tips.length === 0 ? (
-        <Empty className="border border-dashed border-zinc-200 bg-white py-16">
+        <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyMedia variant="icon">
               <Receipt />

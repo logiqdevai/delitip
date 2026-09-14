@@ -4,12 +4,14 @@ import { type CSSProperties, type FC, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import type { PublicQrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import type { PublicStore } from "@/features/stores/interfaces/stores.interfaces";
 import { usePublicReviewConfig } from "@/features/reviews/hooks/use-reviews";
 import { getReadableTextColor } from "@/lib/color";
 import { Routes } from "@/routes/routes";
 import { StoreHero } from "@/app/[storeSlug]/q/[code]/components/store-hero";
+import { LanguageSelector } from "@/app/[storeSlug]/q/[code]/components/language-selector";
 import { AmountStep } from "@/app/[storeSlug]/q/[code]/components/steps/amount-step";
 import { RecipientStep } from "@/app/[storeSlug]/q/[code]/components/steps/recipient-step";
 import {
@@ -40,6 +42,7 @@ const stepVariants = {
 };
 
 export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
+  const t = useTranslations("tipFlow");
   const { data: reviewConfig } = usePublicReviewConfig(storeSlug);
   const router = useRouter();
   const pathname = usePathname();
@@ -84,7 +87,7 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
     employees.length === 0
       ? store.name
       : selectedEmployeeIds.length === 0
-        ? "the team"
+        ? t("teamFallback")
         : employees
             .filter((employee) => selectedEmployeeIds.includes(employee.id))
             .map((employee) => employee.full_name)
@@ -107,7 +110,7 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
   const logoUrl = store.logo_url ?? qr.store.logo_url;
   const welcome =
     store.welcome_message?.trim() ||
-    `Welcome to ${store.name}. Leave a tip for great service.`;
+    t("welcomeFallback", { storeName: store.name });
 
   const resetFlow = () => {
     setStep("amount");
@@ -119,9 +122,16 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
 
   return (
     <main
-      className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-paper-offwhite"
+      className="relative mx-auto flex min-h-dvh w-full max-w-md flex-col bg-paper-offwhite"
       style={themeStyle}
     >
+      <div className="absolute top-3 right-3 z-10">
+        <LanguageSelector
+          supportedLanguages={store.supported_languages}
+          primaryLanguage={store.primary_language}
+        />
+      </div>
+
       <AnimatePresence mode="wait" initial={false}>
         {step === "amount" ? (
           <motion.div
@@ -138,7 +148,7 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
               currency={store.currency}
               suggestedAmounts={store.suggested_tip_amounts}
               allowCustomAmount={store.allow_custom_tip_amount}
-              subtitle={interactive ? undefined : `for ${recipientLabel}`}
+              showRecipientSubtitle={!interactive}
               recipientLabel={recipientLabel}
               onContinue={(value) => {
                 setAmount(value);
@@ -212,15 +222,15 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
         ) : null}
       </AnimatePresence>
 
-      <footer className="border-t border-zinc-100 px-5 py-4 text-center text-[11px] font-medium text-zinc-400">
-        Powered by{" "}
+      <footer className="border-t border-zinc-100 px-4 py-4 text-center text-[11px] font-medium text-zinc-400">
+        {t("footerPrefix")}{" "}
         <Link
           href={Routes.home}
           className="font-semibold text-zinc-700 transition hover:text-ink-charcoal"
         >
           delitip
         </Link>{" "}
-        • Transparent & Secure
+        • {t("footerSuffix")}
       </footer>
     </main>
   );

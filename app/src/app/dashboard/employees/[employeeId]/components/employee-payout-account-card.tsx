@@ -31,7 +31,7 @@ export const EmployeePayoutAccountCard: FC<{
   if (!isOwner) return null;
 
   return (
-    <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+    <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
       <div className="flex items-center gap-2">
         <Wallet className="size-4 text-zinc-400" strokeWidth={2} />
         <h2 className="text-sm font-bold text-ink-charcoal">
@@ -40,7 +40,7 @@ export const EmployeePayoutAccountCard: FC<{
       </div>
 
       {!hasLinkedUser ? (
-        <div className="mt-3 flex items-start gap-2 rounded-xl border border-dashed border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-500">
+        <div className="mt-3 flex items-start gap-2 rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-3 text-xs text-zinc-500">
           <UserX className="mt-0.5 size-3.5 shrink-0" strokeWidth={2} />
           <span>
             This employee needs to sign in at least once before a payout

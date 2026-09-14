@@ -31,7 +31,7 @@ export const SettingsStepNav: FC<SettingsStepNavProps> = ({ className }) => {
       {previous ? (
         <Link
           href={previous.href}
-          className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-1.5")}
+          className={cn(buttonVariants({ variant: "outline", size: "default" }), "gap-1.5")}
         >
           <ArrowLeft className="size-3.5" strokeWidth={2} />
           Previous
@@ -40,7 +40,7 @@ export const SettingsStepNav: FC<SettingsStepNavProps> = ({ className }) => {
       {next ? (
         <Link
           href={next.href}
-          className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-1.5")}
+          className={cn(buttonVariants({ variant: "outline", size: "default" }), "gap-1.5")}
         >
           Next
           <ArrowRight className="size-3.5" strokeWidth={2} />

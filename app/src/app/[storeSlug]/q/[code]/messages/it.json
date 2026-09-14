@@ -1,0 +1,94 @@
+{
+  "tipEntry": {
+    "inactiveQr": {
+      "title": "Questo codice QR non è attivo",
+      "description": "Questo link per la mancia è stato disattivato. Chiedi al tuo host un codice attivo."
+    },
+    "inactiveStore": {
+      "title": "Questo locale non è disponibile",
+      "description": "Questo locale non sta accettando mance in questo momento. Chiedi al tuo host un altro modo per lasciare una mancia."
+    },
+    "notFound": {
+      "title": "Questo link per la mancia non è disponibile",
+      "description": "Il link potrebbe essere errato o non più valido. Chiedi al tuo host un nuovo codice."
+    }
+  },
+  "tipFlow": {
+    "teamFallback": "il team",
+    "welcomeFallback": "Benvenuto da {storeName}. Lascia una mancia per l'ottimo servizio.",
+    "footerPrefix": "Offerto da",
+    "footerSuffix": "Trasparente e sicuro"
+  },
+  "amountStep": {
+    "heading": "Scegli la tua mancia",
+    "subtitleFor": "per {recipient}",
+    "customAmountLabel": "Importo personalizzato",
+    "customAmountAriaLabel": "Importo mancia personalizzato",
+    "trustNote": "100% trasparente. Le mance vengono inviate in modo sicuro e diretto a {recipient}.",
+    "continueCta": "Continua per pagare {amount}",
+    "chooseAmountCta": "Scegli un importo"
+  },
+  "recipientStep": {
+    "eyebrowTipStore": "Mancia per il locale",
+    "eyebrowYourHost": "Il tuo host",
+    "eyebrowSelectMany": "Scegli chi ringraziare",
+    "eyebrowChooseOne": "Scegli chi ringraziare",
+    "eyebrowTeam": "Il team",
+    "tipGoesTo": "La tua mancia va a {storeName}.",
+    "teamMemberFallback": "Membro del team",
+    "continue": "Continua",
+    "back": "Indietro"
+  },
+  "reviewStep": {
+    "heading": "Com'è stata la tua esperienza?",
+    "subtitle": "Valuta {recipient} (facoltativo)",
+    "starAriaLabel": "Valuta con {count} stelle",
+    "commentPlaceholder": "Scrivi un breve messaggio per {recipient} (facoltativo)...",
+    "genericError": "Pagamento non riuscito. Riprova.",
+    "payCta": "Paga {amount}",
+    "retryCta": "Riprova pagamento",
+    "back": "Indietro"
+  },
+  "checkoutStatusStep": {
+    "confirmingTitle": "Conferma del pagamento in corso…",
+    "confirmingDescription": "Ci vorrà solo un momento.",
+    "cancelledTitle": "Pagamento annullato",
+    "cancelledDescription": "Hai annullato il pagamento prima del completamento. Non è stato addebitato alcun importo.",
+    "failedTitle": "Pagamento non riuscito",
+    "failedDescription": "La tua carta non è stata addebitata. Riprova.",
+    "timeoutTitle": "Ancora in elaborazione",
+    "timeoutDescription": "La conferma del pagamento richiede più tempo del previsto. Potrebbe comunque completarsi: ricontrolla tra poco.",
+    "tryAgain": "Riprova",
+    "refresh": "Aggiorna"
+  },
+  "doneStep": {
+    "heading": "Grazie!",
+    "descriptionWithReview": "La tua mancia di {amount} e i tuoi complimenti sono stati inviati a {recipient}.",
+    "descriptionWithoutReview": "La tua mancia di {amount} è stata inviata a {recipient}.",
+    "descriptionNoDetails": "La tua mancia è già stata inviata.",
+    "receiptIdLabel": "ID ricevuta",
+    "businessLabel": "Attività",
+    "recipientLabel": "Destinatario",
+    "sharePublicly": "Condividi pubblicamente",
+    "makeAnotherTip": "Lascia un'altra mancia",
+    "refund": {
+      "prompt": "Qualcosa non va con questa mancia? Richiedi un rimborso",
+      "requestTitle": "Richiedi un rimborso di {amount}",
+      "requestTitleNoAmount": "Richiedi un rimborso",
+      "reasonPlaceholder": "Cosa non ha funzionato? (facoltativo)",
+      "submitting": "Invio in corso…",
+      "submit": "Invia richiesta",
+      "cancel": "Annulla",
+      "successWithAmount": "Rimborso richiesto per {amount}. L'attività lo esaminerà.",
+      "successNoAmount": "Rimborso richiesto. L'attività lo esaminerà.",
+      "genericError": "Impossibile inviare la richiesta. Riprova."
+    }
+  },
+  "metadata": {
+    "title": "Lascia una mancia - delitip",
+    "description": "Ringrazia il tuo host con una mancia digitale."
+  },
+  "languageSelector": {
+    "label": "Lingua"
+  }
+}

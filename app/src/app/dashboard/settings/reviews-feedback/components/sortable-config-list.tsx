@@ -50,14 +50,14 @@ export const SortableConfigRow: FC<{
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center gap-2 px-3 py-2.5",
+        "flex items-start gap-2 px-3 py-2.5 sm:items-center",
         isDragging && "relative z-10 bg-white shadow-sm",
         className,
       )}
     >
       <button
         type="button"
-        className="flex size-5 shrink-0 cursor-grab items-center justify-center rounded text-zinc-400 hover:text-zinc-600 active:cursor-grabbing"
+        className="mt-0.5 flex size-5 shrink-0 cursor-grab items-center justify-center rounded text-zinc-400 hover:text-zinc-600 active:cursor-grabbing sm:mt-0"
         aria-label="Drag to reorder"
         {...attributes}
         {...listeners}

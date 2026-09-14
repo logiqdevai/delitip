@@ -27,7 +27,7 @@ const steps = [
 
 export const LandingHowItWorks: FC = () => {
   return (
-    <section id="how-it-works" className="bg-white py-20 lg:py-28">
+    <section id="how-it-works" className="bg-white py-10 lg:py-28">
       <div className="mx-auto max-w-7xl space-y-16 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl space-y-3 text-center">
           <span className="text-xs font-bold tracking-widest text-brand-700 uppercase">
@@ -45,11 +45,11 @@ export const LandingHowItWorks: FC = () => {
           {steps.map((step) => (
             <div
               key={step.number}
-              className="relative space-y-4 rounded-3xl border border-zinc-200/80 bg-paper-offwhite p-8"
+              className="relative space-y-4 rounded-3xl border border-zinc-200/80 bg-paper-offwhite px-4 py-8 text-center md:text-left"
             >
               <div
                 className={cn(
-                  "flex size-10 items-center justify-center rounded-2xl text-sm font-extrabold",
+                  "mx-auto flex size-10 items-center justify-center rounded-2xl text-sm font-extrabold md:mx-0",
                   step.accent
                     ? "bg-electric-lime text-ink-charcoal shadow-md shadow-electric-lime/30"
                     : "bg-ink-charcoal text-paper-offwhite"

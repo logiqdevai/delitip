@@ -1,0 +1,94 @@
+{
+  "tipEntry": {
+    "inactiveQr": {
+      "title": "Этот QR-код неактивен",
+      "description": "Эта ссылка для чаевых была отключена. Попросите у хозяина заведения активный код."
+    },
+    "inactiveStore": {
+      "title": "Это заведение недоступно",
+      "description": "Это заведение сейчас не принимает чаевые. Попросите хозяина заведения предложить другой способ оставить чаевые."
+    },
+    "notFound": {
+      "title": "Эта ссылка для чаевых недоступна",
+      "description": "Возможно, ссылка неверна или больше не действительна. Попросите у хозяина заведения новый код."
+    }
+  },
+  "tipFlow": {
+    "teamFallback": "команде",
+    "welcomeFallback": "Добро пожаловать в {storeName}. Оставьте чаевые за отличное обслуживание.",
+    "footerPrefix": "Работает на",
+    "footerSuffix": "Прозрачно и безопасно"
+  },
+  "amountStep": {
+    "heading": "Выберите сумму чаевых",
+    "subtitleFor": "для {recipient}",
+    "customAmountLabel": "Другая сумма",
+    "customAmountAriaLabel": "Своя сумма чаевых",
+    "trustNote": "100% прозрачно. Чаевые отправляются безопасно и напрямую получателю: {recipient}.",
+    "continueCta": "Продолжить и оплатить {amount}",
+    "chooseAmountCta": "Выберите сумму"
+  },
+  "recipientStep": {
+    "eyebrowTipStore": "Чаевые заведению",
+    "eyebrowYourHost": "Ваш хозяин",
+    "eyebrowSelectMany": "Выберите, кого поблагодарить",
+    "eyebrowChooseOne": "Выберите, кого поблагодарить",
+    "eyebrowTeam": "Команда",
+    "tipGoesTo": "Ваши чаевые получит {storeName}.",
+    "teamMemberFallback": "Сотрудник",
+    "continue": "Продолжить",
+    "back": "Назад"
+  },
+  "reviewStep": {
+    "heading": "Как вам понравилось обслуживание?",
+    "subtitle": "Оцените: {recipient} (необязательно)",
+    "starAriaLabel": "Оценить на {count} звезд",
+    "commentPlaceholder": "Напишите короткое сообщение для {recipient} (необязательно)...",
+    "genericError": "Платёж не прошёл. Попробуйте ещё раз.",
+    "payCta": "Оплатить {amount}",
+    "retryCta": "Повторить платёж",
+    "back": "Назад"
+  },
+  "checkoutStatusStep": {
+    "confirmingTitle": "Подтверждаем ваш платёж…",
+    "confirmingDescription": "Это займёт всего мгновение.",
+    "cancelledTitle": "Платёж отменён",
+    "cancelledDescription": "Вы отменили оплату до её завершения. Списания не произошло.",
+    "failedTitle": "Платёж не прошёл",
+    "failedDescription": "С вашей карты не было списано средств. Попробуйте ещё раз.",
+    "timeoutTitle": "Всё ещё обрабатывается",
+    "timeoutDescription": "Подтверждение платежа занимает больше времени, чем ожидалось. Он всё ещё может завершиться успешно — проверьте немного позже.",
+    "tryAgain": "Попробовать снова",
+    "refresh": "Обновить"
+  },
+  "doneStep": {
+    "heading": "Спасибо!",
+    "descriptionWithReview": "Ваши чаевые в размере {amount} и ваш отзыв отправлены: {recipient}.",
+    "descriptionWithoutReview": "Ваши чаевые в размере {amount} отправлены: {recipient}.",
+    "descriptionNoDetails": "Ваши чаевые уже отправлены.",
+    "receiptIdLabel": "Номер чека",
+    "businessLabel": "Заведение",
+    "recipientLabel": "Получатель",
+    "sharePublicly": "Поделиться публично",
+    "makeAnotherTip": "Оставить ещё чаевые",
+    "refund": {
+      "prompt": "Что-то не так с этими чаевыми? Запросите возврат",
+      "requestTitle": "Запросить возврат {amount}",
+      "requestTitleNoAmount": "Запросить возврат",
+      "reasonPlaceholder": "Что пошло не так? (необязательно)",
+      "submitting": "Отправка…",
+      "submit": "Отправить запрос",
+      "cancel": "Отмена",
+      "successWithAmount": "Запрошен возврат {amount}. Заведение рассмотрит запрос.",
+      "successNoAmount": "Запрос на возврат отправлен. Заведение его рассмотрит.",
+      "genericError": "Не удалось отправить ваш запрос. Попробуйте ещё раз."
+    }
+  },
+  "metadata": {
+    "title": "Оставить чаевые - delitip",
+    "description": "Поблагодарите хозяина заведения цифровыми чаевыми."
+  },
+  "languageSelector": {
+    "label": "Язык"
+  }
+}

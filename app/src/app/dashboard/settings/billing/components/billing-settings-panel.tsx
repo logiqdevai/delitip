@@ -36,7 +36,7 @@ export const BillingSettingsPanel: FC = () => {
 
   if (role !== "OWNER") {
     return (
-      <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
+      <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
         <div className="flex items-center gap-2">
           <CreditCard className="size-4 text-zinc-400" strokeWidth={2} />
           <h2 className="text-sm font-bold text-ink-charcoal">Billing</h2>
@@ -51,7 +51,7 @@ export const BillingSettingsPanel: FC = () => {
   const subscription = subscriptionQuery.data;
 
   return (
-    <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xs">
+    <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
       <div className="flex items-center gap-2">
         <CreditCard className="size-4 text-zinc-400" strokeWidth={2} />
         <h2 className="text-sm font-bold text-ink-charcoal">Billing</h2>

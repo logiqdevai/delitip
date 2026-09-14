@@ -77,7 +77,7 @@ export const FeeBreakdownCard: FC<FeeBreakdownCardProps> = ({
   const money = (value: number) => formatMoney(value, currency);
 
   return (
-    <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+    <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
       <h2 className="text-sm font-bold text-ink-charcoal">Fee breakdown</h2>
       <p className="mt-0.5 text-xs text-zinc-500">
         How each completed tip splits between the platform, the payment
