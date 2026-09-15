@@ -1,8 +1,12 @@
 import { ImageResponse } from "next/og";
-import { BrandMarkGlyph } from "@/components/brand/brand-mark-glyph";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
+
+const logoData = await readFile(join(process.cwd(), "public/delitip.png"), "base64");
+const logoSrc = `data:image/png;base64,${logoData}`;
 
 export default function Icon() {
   return new ImageResponse(
@@ -14,11 +18,9 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#C8F169",
-          borderRadius: 9,
         }}
       >
-        <BrandMarkGlyph size={20} />
+        <img src={logoSrc} width="100%" height="100%" />
       </div>
     ),
     { ...size }
