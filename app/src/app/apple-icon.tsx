@@ -1,11 +1,15 @@
 import { ImageResponse } from "next/og";
-import { BrandMarkGlyph } from "@/components/brand/brand-mark-glyph";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-// iOS applies its own rounded-squircle mask, so this ships full-bleed and
-// unrounded — baking in our own corner radius would show through as a ring.
+const logoData = await readFile(join(process.cwd(), "public/delitip.png"), "base64");
+const logoSrc = `data:image/png;base64,${logoData}`;
+
+// iOS flattens transparency to black, and applies its own rounded-squircle
+// mask — so this ships full-bleed on an opaque background, unrounded.
 export default function AppleIcon() {
   return new ImageResponse(
     (
@@ -19,7 +23,7 @@ export default function AppleIcon() {
           background: "#C8F169",
         }}
       >
-        <BrandMarkGlyph size={112} />
+        <img src={logoSrc} width="86%" height="86%" />
       </div>
     ),
     { ...size }

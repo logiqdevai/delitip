@@ -117,12 +117,12 @@ export function TemplateQrBlock({
         className="size-full object-contain"
       />
       {showBadge ? (
-        <span
+        <img
+          src="/delitip.png"
+          alt=""
           aria-hidden
-          className="absolute flex size-7 items-center justify-center rounded-full border border-black/15 bg-white text-[11px] font-bold text-ink-charcoal"
-        >
-          D
-        </span>
+          className="absolute size-7 rounded-full border border-black/15 bg-white object-cover"
+        />
       ) : null}
     </div>
   );

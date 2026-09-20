@@ -1,10 +1,14 @@
 import { ImageResponse } from "next/og";
-import { BrandMarkGlyph } from "@/components/brand/brand-mark-glyph";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 export const alt =
   "delitip - Reward great service. Digital Tipping & Employee Feedback";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+const logoData = await readFile(join(process.cwd(), "public/delitip.png"), "base64");
+const logoSrc = `data:image/png;base64,${logoData}`;
 
 export default function Image() {
   return new ImageResponse(
@@ -21,20 +25,12 @@ export default function Image() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 40 }}>
-          <div
-            style={{
-              width: 176,
-              height: 176,
-              flexShrink: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "#C8F169",
-              borderRadius: 48,
-            }}
-          >
-            <BrandMarkGlyph size={110} />
-          </div>
+          <img
+            src={logoSrc}
+            width={176}
+            height={176}
+            style={{ flexShrink: 0 }}
+          />
           <div
             style={{
               display: "flex",

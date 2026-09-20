@@ -24,17 +24,24 @@ const industries = [
 
 export const LandingIndustries: FC = () => {
   return (
-    <section className="border-y border-zinc-100 bg-paper-offwhite py-10">
-      <div className="mx-auto max-w-7xl space-y-4 px-4 text-center sm:px-6 lg:px-8">
+    <section className="border-y border-zinc-100 bg-paper-offwhite py-10 sm:py-14">
+      <div className="mx-auto max-w-7xl space-y-6 px-4 text-center sm:px-6 lg:px-8">
         <p className="text-xs font-bold tracking-widest text-zinc-400 uppercase">
           For teams that help customers every day
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-8 text-xs font-extrabold text-zinc-400 sm:gap-14 sm:text-sm">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-8">
           {industries.map(({ label, Icon }) => (
-            <span key={label} className="flex items-center gap-2">
-              <Icon className="size-4 shrink-0" strokeWidth={2} />
-              {label}
-            </span>
+            <div
+              key={label}
+              className="flex flex-col items-center gap-2.5 rounded-2xl border border-zinc-200 bg-white p-4 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"
+            >
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+                <Icon className="size-5" strokeWidth={2} />
+              </span>
+              <span className="text-xs leading-snug font-bold text-ink-charcoal">
+                {label}
+              </span>
+            </div>
           ))}
         </div>
       </div>

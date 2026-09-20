@@ -1,6 +1,5 @@
 import { type FC } from "react";
 import { cn } from "@/lib/utils";
-import { BrandMarkGlyph } from "./brand-mark-glyph";
 
 interface BrandMarkProps {
   size?: "sm" | "md" | "lg";
@@ -8,9 +7,9 @@ interface BrandMarkProps {
 }
 
 const sizeClass = {
-  sm: "size-7 rounded-xl",
-  md: "size-8 rounded-xl",
-  lg: "size-12 rounded-2xl",
+  sm: "size-7",
+  md: "size-8",
+  lg: "size-12",
 } as const;
 
 export const BrandMark: FC<BrandMarkProps> = ({
@@ -18,14 +17,14 @@ export const BrandMark: FC<BrandMarkProps> = ({
   className,
 }) => {
   return (
-    <div
+    <img
+      src="/delitip.png"
+      alt="delitip"
       className={cn(
-        "flex items-center justify-center bg-electric-lime shadow-inner shadow-electric-lime/40",
+        "shrink-0 rounded-full object-contain",
         sizeClass[size],
         className
       )}
-    >
-      <BrandMarkGlyph />
-    </div>
+    />
   );
 };

@@ -1,214 +1,181 @@
-import { type FC } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, Check, LayoutDashboard, MessageSquare, Zap } from "lucide-react";
-import { Routes } from "@/routes/routes";
-import { BrandMark } from "@/components/brand/brand-mark";
+import { type FC } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight, Check, LayoutDashboard, MessageSquare, Zap } from 'lucide-react';
+import { Routes } from '@/routes/routes';
+import { BrandMark } from '@/components/brand/brand-mark';
 
-const trustBadges = [
-  "No app for customers",
-  "Online payments",
-  "Tips go to your team",
-] as const;
+const trustBadges = ['No app to install', 'Online payments', 'Tips go to your team'] as const;
 
 const recentTips = [
-  { name: "Alex R. · Support", amount: "+$8.00", rating: "★ 5.0" },
-  { name: "Jordan M. · Support", amount: "+$5.00", rating: "★ 5.0" },
+	{ name: 'Alex R. · Support', amount: '+$8.00', rating: '★ 5.0' },
+	{ name: 'Jordan M. · Support', amount: '+$5.00', rating: '★ 5.0' },
 ] as const;
 
 export const LandingHero: FC = () => {
-  return (
-    <section className="hero-glow relative overflow-hidden pt-6 pb-0 md:pt-24 md:pb-28">
-      <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <h1 className="mx-auto max-w-4xl text-3xl leading-[1.12] font-extrabold tracking-tight text-ink-charcoal sm:text-5xl lg:text-6xl">
-          Tip and feedback for the people who{" "}
-          <span className="text-electric-lime">help your customers</span>
-        </h1>
+	return (
+		<section className="hero-glow relative overflow-hidden pt-6 pb-0 md:pt-24 md:pb-28">
+			<div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+				<h1 className="mx-auto max-w-4xl text-3xl leading-[1.12] font-extrabold tracking-tight text-ink-charcoal sm:text-5xl lg:text-6xl">
+					Tip and feedback for the people who <span className="text-electric-lime">help your customers</span>
+				</h1>
 
-        <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed font-normal text-zinc-600 sm:text-base">
-          Customers scan a QR code, tip the team member who helped them, and
-          leave feedback. No app required. You see who was recognized and what
-          customers said.
-        </p>
+				<p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed font-normal text-zinc-600 sm:text-base">
+					Customers scan a QR code, tip the team member who helped them, and leave feedback. No app required. You
+					see who was recognized and what customers said.
+				</p>
 
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link
-            href={Routes.landing.getStarted}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-ink-charcoal px-6 py-3.5 text-xs font-bold text-paper-offwhite shadow-xl transition hover:bg-zinc-800 sm:w-auto sm:text-sm"
-          >
-            <span>Create your business account</span>
-            <ArrowRight
-              className="size-4 text-electric-lime"
-              strokeWidth={2}
-            />
-          </Link>
-        </div>
+				<div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+					<Link
+						href={Routes.landing.getStarted}
+						className="flex w-full items-center justify-center gap-2 rounded-xl bg-ink-charcoal px-5 py-2.5 text-xs font-bold text-paper-offwhite shadow-md transition hover:bg-zinc-800 sm:w-auto sm:rounded-2xl sm:px-6 sm:py-3.5 sm:text-sm sm:shadow-xl"
+					>
+						<span>Create your business account</span>
+						<ArrowRight className="size-4 text-electric-lime" strokeWidth={2} />
+					</Link>
+				</div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-zinc-400">
-          {trustBadges.map((badge) => (
-            <span key={badge} className="flex items-center gap-1.5">
-              <Check
-                className="size-4 text-electric-lime"
-                strokeWidth={2}
-              />
-              {badge}
-            </span>
-          ))}
-        </div>
+				<div className="mt-6 flex flex-col items-center gap-2 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-6 sm:gap-y-2">
+					{trustBadges.map((badge) => (
+						<span
+							key={badge}
+							className="flex items-center gap-1.5 rounded-full bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-600 sm:bg-transparent sm:px-0 sm:py-0 sm:text-zinc-400"
+						>
+							<Check className="size-4 text-electric-lime" strokeWidth={2} />
+							{badge}
+						</span>
+					))}
+				</div>
 
-        <div
-          id="demo"
-          className="mx-auto sm:mt-14 mt-8 max-w-5xl rounded-3xl border border-zinc-800 bg-ink-charcoal sm:shadow-2xl sm:rounded-[36px] sm:p-4 p-0 shadow-none "
-        >
-          <div className="grid grid-cols-1 items-center gap-6 rounded-2xl bg-ink-charcoal p-4 text-left sm:rounded-[28px] sm:p-8 lg:grid-cols-12">
-            <div className="space-y-4 rounded-3xl border border-zinc-200 bg-white px-4 py-5 shadow-xl lg:col-span-5">
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
-                <div className="flex items-center gap-2">
-                  <BrandMark
-                    size="sm"
-                    className="size-6 rounded-lg text-xs"
-                  />
-                  <span className="text-xs font-bold text-ink-charcoal">
-                    delitip
-                  </span>
-                </div>
-                <span className="rounded-full bg-neutral-fill px-2 py-0.5 text-xs font-bold text-zinc-400">
-                  Cafe
-                </span>
-              </div>
+				<div
+					id="demo"
+					className="mx-auto mt-6 max-w-5xl rounded-3xl bg-ink-charcoal p-0 shadow-none sm:mt-14 sm:rounded-[36px] sm:border sm:border-zinc-800 sm:p-4 sm:shadow-2xl"
+				>
+					<div className="grid grid-cols-1 items-center gap-4 rounded-2xl bg-ink-charcoal p-3 text-left sm:gap-6 sm:rounded-[28px] sm:p-8 lg:grid-cols-12">
+						<div className="space-y-3 rounded-2xl bg-white p-4 sm:rounded-3xl sm:border sm:border-zinc-200 sm:shadow-xl lg:col-span-5">
+							<div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+								<div className="flex items-center gap-2">
+									<BrandMark size="sm" className="size-6 rounded-lg text-xs" />
+									<span className="text-xs font-bold text-ink-charcoal">delitip</span>
+								</div>
+								<span className="rounded-full bg-neutral-fill px-2 py-0.5 text-xs font-bold text-zinc-400">
+									Cafe
+								</span>
+							</div>
 
-              <div className="pt-1 text-center">
-                <Image
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80"
-                  alt="Eleni, barista at Aegli"
-                  width={56}
-                  height={56}
-                  className="mx-auto size-14 rounded-full object-cover ring-2 ring-brand-100"
-                />
-                <h3 className="mt-2 text-sm font-bold text-ink-charcoal">
-                  Eleni K.
-                </h3>
-                <p className="text-xs font-medium text-zinc-400">
-                  Aegli · Barista
-                </p>
-              </div>
+							<div className="pt-1 text-center">
+								<Image
+									src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80"
+									alt="Eleni, barista at Aegli"
+									width={56}
+									height={56}
+									className="mx-auto size-14 rounded-full object-cover ring-2 ring-brand-100"
+								/>
+								<h3 className="mt-2 text-sm font-bold text-ink-charcoal">Eleni K.</h3>
+								<p className="text-xs font-medium text-zinc-400">Aegli · Barista</p>
+							</div>
 
-              <div className="grid grid-cols-3 gap-2">
-                <div className="rounded-xl border border-zinc-200 p-2 text-center">
-                  <div className="text-xs font-bold text-ink-charcoal">
-                    €3.00
-                  </div>
-                </div>
-                <div className="rounded-xl border-2 border-electric-lime bg-brand-50/70 p-2 text-center">
-                  <div className="text-xs font-bold text-brand-700">€5.00</div>
-                  <div className="text-xs font-bold text-electric-lime">
-                    Popular
-                  </div>
-                </div>
-                <div className="rounded-xl border border-zinc-200 p-2 text-center">
-                  <div className="text-xs font-bold text-ink-charcoal">
-                    €8.00
-                  </div>
-                </div>
-              </div>
+							<div className="grid sm:grid-cols-3 grid-col-1 gap-2">
+								<div className="rounded-xl border border-zinc-200 p-2 text-center">
+									<div className="text-xs font-bold text-ink-charcoal">€3.00</div>
+								</div>
+								<div className="rounded-xl border-2 border-electric-lime bg-brand-50/70 p-2 text-center">
+									<div className="text-xs font-bold text-brand-700">€5.00</div>
+									<div className="text-xs font-bold text-electric-lime">Popular</div>
+								</div>
+								<div className="rounded-xl border border-zinc-200 p-2 text-center">
+									<div className="text-xs font-bold text-ink-charcoal">€8.00</div>
+								</div>
+							</div>
 
-              <div className="space-y-2">
-                <div className="flex justify-center gap-1.5">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-xs font-bold text-brand-800">
-                    <Zap className="size-3" strokeWidth={2} />
-                    Clear help
-                  </span>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-xs font-bold text-brand-800">
-                    <MessageSquare className="size-3" strokeWidth={2} />
-                    Patient
-                  </span>
-                </div>
-                <div className="flex items-center justify-center gap-1.5 rounded-xl bg-ink-charcoal py-2.5 text-center text-xs font-bold text-paper-offwhite shadow">
-                  <span>Pay online</span>
-                </div>
-              </div>
-            </div>
+							<div className="space-y-2">
+								<div className="flex justify-center gap-1.5">
+									<span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-xs font-bold text-brand-800">
+										<Zap className="size-3" strokeWidth={2} />
+										Clear help
+									</span>
+									<span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-xs font-bold text-brand-800">
+										<MessageSquare className="size-3" strokeWidth={2} />
+										Patient
+									</span>
+								</div>
+								<div className="flex items-center justify-center gap-1.5 rounded-xl bg-ink-charcoal py-2.5 text-center text-xs font-bold text-paper-offwhite shadow">
+									<span>Pay online</span>
+								</div>
+							</div>
+						</div>
 
-            <div className="space-y-4 rounded-2xl border border-zinc-800/80 bg-ink-charcoal/40 p-4 sm:border-transparent sm:bg-transparent sm:p-0 lg:col-span-7">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-bold tracking-widest text-electric-lime uppercase">
-                      Business dashboard
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-800/60 bg-brand-900/30 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-electric-lime uppercase sm:hidden">
-                      Live
-                    </span>
-                  </div>
-                  <h3 className="max-w-xs text-xl leading-snug font-bold text-paper-offwhite sm:max-w-none sm:text-xl">
-                    Tips and feedback in one place
-                  </h3>
-                </div>
-                <span className="hidden shrink-0 rounded-lg border border-brand-800/60 bg-ink-charcoal/80 px-2.5 py-1 text-xs font-bold text-electric-lime sm:inline-flex">
-                  Live
-                </span>
-              </div>
+						<div className="space-y-3 border-t border-zinc-800/80 pt-4 sm:space-y-4 sm:border-t-0 sm:pt-0 lg:col-span-7">
+							<div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+								<div className="flex flex-col gap-3">
+									<div className="flex flex-wrap items-center gap-2">
+										<span className="text-xs font-bold tracking-widest text-electric-lime uppercase">
+											Business dashboard
+										</span>
+										<span className="inline-flex items-center gap-1.5 rounded-full border border-brand-800/60 bg-brand-900/30 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-electric-lime uppercase sm:hidden">
+											Live
+										</span>
+									</div>
+									<h3 className="max-w-xs text-xl leading-snug font-bold text-paper-offwhite sm:max-w-none sm:text-xl">
+										Tips and feedback in one place
+									</h3>
+								</div>
+								<span className="hidden shrink-0 rounded-lg border border-brand-800/60 bg-ink-charcoal/80 px-2.5 py-1 text-xs font-bold text-electric-lime sm:inline-flex">
+									Live
+								</span>
+							</div>
 
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
-                <div className="flex items-center justify-between rounded-2xl border border-zinc-800 bg-ink-charcoal/80 px-4 py-3 sm:block sm:p-3">
-                  <span className="text-xs font-medium text-zinc-400">
-                    Tips (7 days)
-                  </span>
-                  <span className="text-base font-extrabold text-paper-offwhite sm:mt-1 sm:block sm:text-lg">
-                    €1,240.00
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-2xl border border-zinc-800 bg-ink-charcoal/80 px-4 py-3 sm:block sm:p-3">
-                  <span className="text-xs font-medium text-zinc-400">
-                    Feedback score
-                  </span>
-                  <span className="text-base font-extrabold text-rating-amber sm:mt-1 sm:block sm:text-lg">
-                    ★ 4.9 / 5
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-2xl border border-zinc-800 bg-ink-charcoal/80 px-4 py-3 sm:block sm:p-3">
-                  <span className="text-xs font-medium text-zinc-400">
-                    To your team
-                  </span>
-                  <span className="text-base font-extrabold text-electric-lime sm:mt-1 sm:block sm:text-lg">
-                    100% direct
-                  </span>
-                </div>
-              </div>
+							<div className="grid sm:grid-cols-3 grid-col-1 gap-2 sm:gap-3">
+								<div className="rounded-2xl border border-zinc-800 bg-ink-charcoal/80 p-2.5 text-center sm:p-3">
+									<span className="block text-[11px] font-medium text-zinc-400 sm:text-xs">Tips (7 days)</span>
+									<span className="mt-1 block truncate text-sm font-extrabold text-paper-offwhite sm:text-lg">
+										€1,240.00
+									</span>
+								</div>
+								<div className="rounded-2xl border border-zinc-800 bg-ink-charcoal/80 p-2.5 text-center sm:p-3">
+									<span className="block text-[11px] font-medium text-zinc-400 sm:text-xs">
+										Feedback score
+									</span>
+									<span className="mt-1 block truncate text-sm font-extrabold text-rating-amber sm:text-lg">
+										★ 4.9 / 5
+									</span>
+								</div>
+								<div className="rounded-2xl border border-zinc-800 bg-ink-charcoal/80 p-2.5 text-center sm:p-3">
+									<span className="block text-[11px] font-medium text-zinc-400 sm:text-xs">To your team</span>
+									<span className="mt-1 block truncate text-sm font-extrabold text-electric-lime sm:text-lg">
+										100% direct
+									</span>
+								</div>
+							</div>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between px-0.5 text-xs font-bold tracking-wider text-zinc-400 uppercase sm:px-0">
-                  <span>Recent tips & feedback</span>
-                  <span className="hidden sm:inline">Amount</span>
-                </div>
-                <div className="flex flex-col gap-1 border-t border-zinc-800/80 py-1.5 text-paper-offwhite sm:flex-row sm:items-center sm:justify-between sm:gap-2">
-                  <span className="flex min-w-0 items-center gap-2 font-bold">
-                    <span className="size-2 shrink-0 rounded-full bg-electric-lime" />
-                    <span className="truncate">Eleni K. · Barista</span>
-                  </span>
-                  <span className="shrink-0 pl-4 font-bold text-electric-lime sm:pl-0">
-                    +€8.00 · ★ 5.0
-                  </span>
-                </div>
-                <div className="flex flex-col gap-1 border-t border-zinc-800/80 py-1.5 text-paper-offwhite sm:flex-row sm:items-center sm:justify-between sm:gap-2">
-                  <span className="flex min-w-0 items-center gap-2 font-bold">
-                    <span className="size-2 shrink-0 rounded-full bg-electric-lime" />
-                    <span className="truncate">Nikos P. · Server</span>
-                  </span>
-                  <span className="shrink-0 pl-4 font-bold text-electric-lime sm:pl-0">
-                    +€5.00 · ★ 5.0
-                  </span>
-                </div>
-              </div>
+							<div className="space-y-2">
+								<div className="flex items-center justify-between px-0.5 text-xs font-bold tracking-wider text-zinc-400 uppercase sm:px-0">
+									<span>Recent tips & feedback</span>
+									<span className="hidden sm:inline">Amount</span>
+								</div>
+								<div className="flex items-center justify-between gap-2 border-t border-zinc-800/80 py-2 text-paper-offwhite">
+									<span className="flex min-w-0 items-center gap-2 font-bold">
+										<span className="size-2 shrink-0 rounded-full bg-electric-lime" />
+										<span className="truncate">Eleni K. · Barista</span>
+									</span>
+									<span className="shrink-0 font-bold text-electric-lime">+€8.00 · ★ 5.0</span>
+								</div>
+								<div className="flex items-center justify-between gap-2 border-t border-zinc-800/80 py-2 text-paper-offwhite">
+									<span className="flex min-w-0 items-center gap-2 font-bold">
+										<span className="size-2 shrink-0 rounded-full bg-electric-lime" />
+										<span className="truncate">Nikos P. · Server</span>
+									</span>
+									<span className="shrink-0 font-bold text-electric-lime">+€5.00 · ★ 5.0</span>
+								</div>
+							</div>
 
-              <p className="text-xs font-medium text-zinc-400">
-                See who customers thank and what they said, without chasing
-                reviews elsewhere.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+							<p className="hidden text-xs font-medium text-zinc-400 sm:block">
+								See who customers thank and what they said, without chasing reviews elsewhere.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
 };
