@@ -117,7 +117,7 @@ export const useGettingStartedSteps = (): GettingStartedState => {
       title: "Connect payout account",
       description:
         "Link your business IBAN so your share of tips can be paid out.",
-      href: Routes.dashboard.payments,
+      href: Routes.dashboard.tipsPayments,
       icon: Banknote,
       completed: account?.status === "ACTIVE",
       statusLabel:

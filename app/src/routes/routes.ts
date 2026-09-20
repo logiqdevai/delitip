@@ -1,4 +1,4 @@
-export const ACCESS_TAB_PARAM = "tab";
+export const DASHBOARD_TAB_PARAM = "tab";
 
 export const AccessTabs = {
   qrCodes: "qr-codes",
@@ -6,6 +6,13 @@ export const AccessTabs = {
 } as const;
 
 export type AccessTab = (typeof AccessTabs)[keyof typeof AccessTabs];
+
+export const TipsTabs = {
+  ledger: "ledger",
+  payments: "payments",
+} as const;
+
+export type TipsTab = (typeof TipsTabs)[keyof typeof TipsTabs];
 
 export const Routes = {
   home: "/",
@@ -36,6 +43,8 @@ export const Routes = {
     employeeDetail: (employeeId: string) =>
       `/dashboard/employees/${employeeId}` as const,
     tips: "/dashboard/tips",
+    tipsPayments:
+      `/dashboard/tips?${DASHBOARD_TAB_PARAM}=${TipsTabs.payments}` as const,
     tipDetail: (tipId: string) => `/dashboard/tips/${tipId}` as const,
     reviews: "/dashboard/reviews",
     analytics: {
@@ -48,9 +57,8 @@ export const Routes = {
     },
     access: "/dashboard/access",
     accessDistribution:
-      `/dashboard/access?${ACCESS_TAB_PARAM}=${AccessTabs.distribution}` as const,
+      `/dashboard/access?${DASHBOARD_TAB_PARAM}=${AccessTabs.distribution}` as const,
     alerts: "/dashboard/alerts",
-    payments: "/dashboard/payments",
     payouts: "/dashboard/payouts",
     account: "/dashboard/account",
     admin: {

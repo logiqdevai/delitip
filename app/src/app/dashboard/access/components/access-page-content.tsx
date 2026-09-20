@@ -17,7 +17,7 @@ import { QrCodeCardsSkeleton } from "@/app/dashboard/access/components/qr-code-c
 import { QrCodesPanel } from "@/app/dashboard/access/components/qr-codes-panel";
 import { DistributionRulesPanel } from "@/app/dashboard/distribution/components/distribution-rules-panel";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
-import { ACCESS_TAB_PARAM, AccessTabs, type AccessTab } from "@/routes/routes";
+import { DASHBOARD_TAB_PARAM, AccessTabs, type AccessTab } from "@/routes/routes";
 
 const isAccessTab = (value: unknown): value is AccessTab =>
   value === AccessTabs.qrCodes || value === AccessTabs.distribution;
@@ -29,16 +29,16 @@ const AccessPageInner: FC = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const tabParam = searchParams.get(ACCESS_TAB_PARAM);
+  const tabParam = searchParams.get(DASHBOARD_TAB_PARAM);
   const activeTab = isAccessTab(tabParam) ? tabParam : AccessTabs.qrCodes;
 
   const handleTabChange = (value: unknown) => {
     if (!isAccessTab(value)) return;
     const params = new URLSearchParams(searchParams);
     if (value === AccessTabs.qrCodes) {
-      params.delete(ACCESS_TAB_PARAM);
+      params.delete(DASHBOARD_TAB_PARAM);
     } else {
-      params.set(ACCESS_TAB_PARAM, value);
+      params.set(DASHBOARD_TAB_PARAM, value);
     }
     const query = params.toString();
     router.replace(query ? `${pathname}?${query}` : pathname, {

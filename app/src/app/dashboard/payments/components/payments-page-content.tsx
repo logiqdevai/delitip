@@ -1,51 +1,30 @@
 "use client";
 
 import { type FC } from "react";
-import { Wallet } from "lucide-react";
-import { DetailSkeleton } from "@/components/ui/detail-skeleton";
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { PayoutAccountCard } from "@/app/dashboard/payments/components/payout-account-card";
 import { DistributionsTable } from "@/app/dashboard/payments/components/distributions-table";
 import { RefundsTable } from "@/app/dashboard/payments/components/refunds-table";
 import { StaffBalancesTable } from "@/app/dashboard/payments/components/staff-balances-table";
-import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 
-export const PaymentsPageContent: FC = () => {
-  const { store, storeId, isPending, isReady } = useWorkspace();
+interface PaymentsPageContentProps {
+  storeId: string;
+  store: Store;
+}
 
-  if (isPending) {
-    return <DetailSkeleton fieldCount={4} />;
-  }
-
-  if (!isReady || !storeId || !store) {
-    return (
-      <Empty className="border border-dashed border-zinc-200 bg-white py-16">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <Wallet />
-          </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
-          <EmptyDescription>
-            Finish business setup before managing payments.
-          </EmptyDescription>
-        </EmptyHeader>
-      </Empty>
-    );
-  }
-
+// Rendered as the Payments tab of the Tips page, which owns the page header
+// and the "no store selected" guard.
+export const PaymentsPageContent: FC<PaymentsPageContentProps> = ({
+  storeId,
+  store,
+}) => {
   return (
-    <>
-      <DashboardPageHeader
-        title="Payments"
-        description={`Payout account, pending distributions, staff balances, and refunds for ${store.name}.`}
-      />
-
+    <div className="space-y-6">
       <PayoutAccountCard storeId={storeId} />
 
       <Tabs defaultValue="distributions">
-        <TabsList variant="line">
+        <TabsList>
           <TabsTrigger value="distributions">Pending distributions</TabsTrigger>
           <TabsTrigger value="staff-balances">Staff balances</TabsTrigger>
           <TabsTrigger value="refunds">Refunds</TabsTrigger>
@@ -64,6 +43,6 @@ export const PaymentsPageContent: FC = () => {
           <RefundsTable storeId={storeId} currency={store.currency} />
         </TabsContent>
       </Tabs>
-    </>
+    </div>
   );
 };

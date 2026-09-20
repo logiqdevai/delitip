@@ -1,8 +1,11 @@
 import { type FC } from "react";
-import { PaymentsPageContent } from "@/app/dashboard/payments/components/payments-page-content";
+import { redirect } from "next/navigation";
+import { Routes } from "@/routes/routes";
 
+// Payments now lives as a tab on the Tips page — this route stays only so
+// older links and bookmarks keep working.
 const PaymentsPage: FC = () => {
-  return <PaymentsPageContent />;
+  redirect(Routes.dashboard.tipsPayments);
 };
 
 export default PaymentsPage;

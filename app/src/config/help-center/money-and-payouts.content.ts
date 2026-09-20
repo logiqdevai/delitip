@@ -48,9 +48,14 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "Dashboard → Payments shows your store's payout account card and its connection status. Connecting an account is required before your store's share of distributed tips can be paid out.",
+            "Dashboard → Tips → Payments shows your store's payout account card and its connection status. Connecting an account is required before your store's share of distributed tips can be paid out.",
           ],
-          links: [{ label: "Dashboard → Payments", href: Routes.dashboard.payments }],
+          links: [
+            {
+              label: "Dashboard → Tips → Payments",
+              href: Routes.dashboard.tipsPayments,
+            },
+          ],
         },
       ],
       related: [{ category: "money-and-payouts", article: "pending-distributions-explained" }],
@@ -59,13 +64,18 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
       slug: "pending-distributions-explained",
       title: "Pending distributions explained",
       summary:
-        "Distributed tip amounts that haven't been paid out yet, listed on Dashboard → Payments.",
+        "Distributed tip amounts that haven't been paid out yet, listed on Dashboard → Tips → Payments.",
       sections: [
         {
           paragraphs: [
-            "The Pending Distributions panel on Dashboard → Payments shows amounts from completed tips that have been split according to a distribution rule but not yet paid out - for the store, for individual employees, or both.",
+            "The Pending Distributions panel on Dashboard → Tips → Payments shows amounts from completed tips that have been split according to a distribution rule but not yet paid out - for the store, for individual employees, or both.",
           ],
-          links: [{ label: "Dashboard → Payments", href: Routes.dashboard.payments }],
+          links: [
+            {
+              label: "Dashboard → Tips → Payments",
+              href: Routes.dashboard.tipsPayments,
+            },
+          ],
         },
       ],
       related: [{ category: "money-and-payouts", article: "connecting-your-store-payout-account" }],
@@ -79,9 +89,14 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "A customer can request a refund directly from the Done step of the tip flow, with an optional reason. From a Dashboard tip's detail page, a manager can also request a refund on a completed tip that doesn't already have an active refund in progress.",
-            "The Refunds on Dashboard → Payments lists every request, filterable by status: Pending, Approved, Rejected, or Completed. Refund history for a specific tip is always visible on that tip's detail page.",
+            "The Refunds on Dashboard → Tips → Payments lists every request, filterable by status: Pending, Approved, Rejected, or Completed. Refund history for a specific tip is always visible on that tip's detail page.",
           ],
-          links: [{ label: "Dashboard → Payments", href: Routes.dashboard.payments }],
+          links: [
+            {
+              label: "Dashboard → Tips → Payments",
+              href: Routes.dashboard.tipsPayments,
+            },
+          ],
         },
       ],
       related: [{ category: "money-and-payouts", article: "reading-the-tips-ledger" }],
