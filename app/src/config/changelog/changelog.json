@@ -595,10 +595,10 @@
     "date": "2026-09-20",
     "type": "FEATURE",
     "title": "Let a distribution rule pool tips to the business and track what it owes staff",
-    "description": "A distribution rule can now send the whole tip to the business instead of paying each employee's share to their own bank, for businesses that hand their staff the money themselves. The split percentages still decide what each employee earned, so the Payments page shows a running balance of what is owed to whom; a business records a payment against specific tips and the employee confirms they received it from their own portal. Because the setting lives on the rule, one business can pool the tips from some QR codes and pay directly from others.",
+    "description": "A distribution rule can now send the whole tip to the business instead of paying each employee's share to their own bank, for businesses that hand their staff the money themselves. The split percentages still decide what each employee earned, so a Staff balances tab shows a running balance of what is owed to whom; a business records a payment against specific tips, exports it for an accountant, and the employee confirms they received it from their own portal. Because the setting lives on the rule, one business can pool the tips from some QR codes and pay directly from others. The Terms, Privacy Policy and help center explain the arrangement, including that a business collecting tips itself remains responsible for paying its staff.",
     "author": "Petros Rodinos",
     "agent": "Claude Opus 5 (1M context)",
-    "sessionMood": "FRUSTRATED",
-    "sessionNote": "A sharp mid-session correction moved the setting off the store and onto the distribution rule after it was planned in the wrong place, and two later messages cut a field and reset a misread requirement."
+    "sessionMood": "BLUNT",
+    "sessionNote": "Terse, low-context messages throughout, including one sharp correction that moved the setting onto the distribution rule; a challenge to a proposed acknowledgement screen ended with it being dropped."
   }
 ]
