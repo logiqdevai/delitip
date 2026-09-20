@@ -22,6 +22,8 @@ export class ReviewsController {
     @ApiQuery({ name: 'employee_id', required: false })
     @ApiQuery({ name: 'min_rating', required: false })
     @ApiQuery({ name: 'search', required: false })
+    @ApiQuery({ name: 'date_from', required: false })
+    @ApiQuery({ name: 'date_to', required: false })
     findAllForStore(
         @CurrentUser() user: AuthUser,
         @Param('storeId') storeId: string,

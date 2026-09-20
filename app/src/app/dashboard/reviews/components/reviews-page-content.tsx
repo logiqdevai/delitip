@@ -3,6 +3,7 @@
 import { type FC, useState } from "react";
 import { MessageSquareText, SlidersHorizontal, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { EmployeeSelect } from "@/components/ui/employee-select";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
@@ -57,6 +58,8 @@ export const ReviewsPageContent: FC = () => {
   const { storeId, isPending: workspacePending, isReady } = useWorkspace();
   const [minRating, setMinRating] = useState<number | "all">("all");
   const [employeeId, setEmployeeId] = useState<string>("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(
     null,
   );
@@ -67,6 +70,8 @@ export const ReviewsPageContent: FC = () => {
     limit: 50,
     ...(minRating !== "all" ? { min_rating: minRating } : {}),
     ...(employeeId !== "all" ? { employee_id: employeeId } : {}),
+    ...(dateFrom ? { date_from: dateFrom } : {}),
+    ...(dateTo ? { date_to: dateTo } : {}),
   };
 
   const reviewsQuery = useStoreReviews(storeId ?? "", query);
@@ -144,6 +149,24 @@ export const ReviewsPageContent: FC = () => {
           triggerClassName="w-full rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto sm:min-w-36"
           aria-label="Filter by employee"
         />
+
+        <div className="flex items-center gap-2.5">
+          <DatePicker
+            value={dateFrom}
+            onChange={setDateFrom}
+            placeholder="From date"
+            aria-label="From date"
+            className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
+          />
+          <span className="text-xs text-zinc-400">to</span>
+          <DatePicker
+            value={dateTo}
+            onChange={setDateTo}
+            placeholder="To date"
+            aria-label="To date"
+            className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
+          />
+        </div>
       </div>
 
       {reviewsQuery.isPending ? (

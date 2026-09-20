@@ -11,6 +11,15 @@ import { AlertType, Employee, Language, OrganizationRole, Prisma, Review, Review
 
 const MANAGE_ROLES: OrganizationRole[] = [OrganizationRole.OWNER, OrganizationRole.STORE_MANAGER];
 
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+
+// A bare YYYY-MM-DD parses as midnight, which would drop the day the filter ends on.
+const endOfDay = (value: string) => {
+    const date = new Date(value);
+    if (DATE_ONLY.test(value)) date.setUTCHours(23, 59, 59, 999);
+    return date;
+};
+
 @Injectable()
 export class ReviewsService {
     private readonly logger = new Logger(ReviewsService.name);
@@ -28,11 +37,17 @@ export class ReviewsService {
     async findAllForStore(user: AuthUser, storeId: string, query: ReviewsQueryType) {
         await this.accessControl.assertStoreAccess(user, storeId);
 
+        const createdAt: Prisma.DateTimeFilter = {
+            ...(query.date_from && { gte: new Date(query.date_from) }),
+            ...(query.date_to && { lte: endOfDay(query.date_to) }),
+        };
+
         const where: Prisma.ReviewWhereInput = {
             store_id: storeId,
             ...(query.employee_id && { employee_id: query.employee_id }),
             ...(query.min_rating !== undefined && { rating: { gte: query.min_rating } }),
             ...(query.search && { comment: { contains: query.search, mode: 'insensitive' as const } }),
+            ...((query.date_from || query.date_to) && { created_at: createdAt }),
         };
 
         const [items, total, store] = await Promise.all([

@@ -63,6 +63,8 @@ export interface ReviewsQuery {
   employee_id?: string;
   min_rating?: number;
   search?: string;
+  date_from?: string;
+  date_to?: string;
 }
 
 export interface UpdateReviewPayload {

@@ -62,6 +62,8 @@ describe('ReviewsService', () => {
                 employee_id: 'emp1',
                 min_rating: 4,
                 search: 'great',
+                date_from: '2026-01-01',
+                date_to: '2026-01-31',
             } as any);
 
             expect(prisma.review.findMany).toHaveBeenCalledWith(
@@ -71,9 +73,26 @@ describe('ReviewsService', () => {
                         employee_id: 'emp1',
                         rating: { gte: 4 },
                         comment: { contains: 'great', mode: 'insensitive' },
+                        created_at: {
+                            gte: new Date('2026-01-01'),
+                            lte: new Date('2026-01-31T23:59:59.999Z'),
+                        },
                     },
                     skip: 10,
                     take: 10,
+                }),
+            );
+        });
+
+        it('filters on one open-ended date bound at a time', async () => {
+            prisma.review.findMany.mockResolvedValue([]);
+            prisma.review.count.mockResolvedValue(0);
+
+            await service.findAllForStore(user, 'store1', { page: 1, limit: 20, date_from: '2026-02-01' } as any);
+
+            expect(prisma.review.findMany).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    where: { store_id: 'store1', created_at: { gte: new Date('2026-02-01') } },
                 }),
             );
         });

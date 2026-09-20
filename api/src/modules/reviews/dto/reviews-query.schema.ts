@@ -8,6 +8,8 @@ export const ReviewsQuerySchema = PaginationQuerySchema.extend({
         .optional()
         .transform((v) => (v ? parseInt(v, 10) : undefined)),
     search: z.string().optional(),
+    date_from: z.string().optional(),
+    date_to: z.string().optional(),
 });
 
 export type ReviewsQueryType = z.infer<typeof ReviewsQuerySchema>;
