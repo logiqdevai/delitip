@@ -572,12 +572,12 @@
     "commit": "1190f56",
     "date": "2026-09-20",
     "type": "IMPROVEMENT",
-    "title": "Merge tip distribution into the QR codes page as a tab",
-    "description": "QR codes and tip distribution were two separate sidebar entries for what is really one setup flow. They are now two tabs on a single QR Codes page, with QR codes shown by default and the distribution tab deep-linkable at ?tab=distribution. The old /dashboard/distribution address redirects to that tab, so existing links and bookmarks keep working.",
+    "title": "Consolidate dashboard pages into tabs and tidy settings",
+    "description": "Four sidebar entries became two tabbed pages: tip distribution now sits beside QR codes on the QR Codes page, and payments beside the tip ledger on the Tips page, each opening on the primary view with the second reachable at ?tab=. The old /dashboard/distribution and /dashboard/payments addresses redirect to those tabs, so existing links and bookmarks keep working. In settings, the Review Redirect step folded into the Reviews page and the read-only VAT rate moved from Business Profile to Tax Details, and the sidebar now runs Payouts, QR Codes, Analytics, Reviews, Alerts, Settings.",
     "author": "Petros Rodinos",
     "agent": "Claude Opus 5 (1M context)",
     "sessionMood": "FOCUSED",
-    "sessionNote": "One short, specific ask that named the target layout and default tab up front, then a commit request; no corrections or back-and-forth."
+    "sessionNote": "A run of short, specific asks, each naming the page to merge and which view should open first; one layout question answered mid-session, no corrections."
   },
   {
     "commit": "caadb81",
