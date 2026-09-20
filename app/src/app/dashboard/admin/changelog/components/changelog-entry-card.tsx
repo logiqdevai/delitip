@@ -1,12 +1,25 @@
 "use client";
 
 import { type FC } from "react";
-import { Bot, GitCommitHorizontal } from "lucide-react";
+import {
+  Annoyed,
+  BookOpen,
+  Bot,
+  Compass,
+  GitCommitHorizontal,
+  Smile,
+  Swords,
+  Target,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 import { getChangelogCommitUrl } from "@/config/changelog";
 import { getChangelogTypeLabel } from "@/config/constants/dropdowns/shared/changelog-type-form.options";
+import { getSessionMoodLabel } from "@/config/constants/dropdowns/shared/session-mood-form.options";
 import type {
   ChangelogEntry,
   ChangelogType,
+  SessionMood,
 } from "@/interfaces/changelog.interfaces";
 import { cn } from "@/lib/utils";
 
@@ -24,11 +37,33 @@ const typeDotClass: Record<ChangelogType, string> = {
   CHORE: "bg-zinc-300",
 };
 
+const moodIcon: Record<SessionMood, LucideIcon> = {
+  HAPPY: Smile,
+  FOCUSED: Target,
+  RUSHED: Zap,
+  EXPLANATORY: BookOpen,
+  EXPLORATORY: Compass,
+  FRUSTRATED: Annoyed,
+  BLUNT: Swords,
+};
+
+const moodIconClass: Record<SessionMood, string> = {
+  HAPPY: "text-brand-700",
+  FOCUSED: "text-sky-600",
+  RUSHED: "text-violet-600",
+  EXPLANATORY: "text-indigo-600",
+  EXPLORATORY: "text-teal-600",
+  FRUSTRATED: "text-orange-600",
+  BLUNT: "text-rose-600",
+};
+
 interface ChangelogEntryCardProps {
   entry: ChangelogEntry;
 }
 
 export const ChangelogEntryCard: FC<ChangelogEntryCardProps> = ({ entry }) => {
+  const MoodIcon = entry.sessionMood ? moodIcon[entry.sessionMood] : null;
+
   return (
     <li className="flex gap-4">
       <div className="flex flex-col items-center pt-5">
@@ -63,13 +98,36 @@ export const ChangelogEntryCard: FC<ChangelogEntryCardProps> = ({ entry }) => {
             </p>
           ) : null}
 
+          {entry.sessionMood && MoodIcon ? (
+            <p className="mt-2 flex items-start gap-1.5 text-caption text-zinc-500">
+              <MoodIcon
+                className={cn(
+                  "mt-px size-3.5 shrink-0",
+                  moodIconClass[entry.sessionMood],
+                )}
+                strokeWidth={2}
+              />
+              <span>
+                <span className="font-semibold text-zinc-600">
+                  {getSessionMoodLabel(entry.sessionMood)}
+                </span>
+                {entry.sessionNote ? (
+                  <>
+                    {" — "}
+                    <span className="italic">{entry.sessionNote}</span>
+                  </>
+                ) : null}
+              </span>
+            </p>
+          ) : null}
+
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-caption text-zinc-500">
             <span className="font-medium text-zinc-600">{entry.author}</span>
 
             {entry.agent ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-neutral-fill px-2 py-0.5 font-semibold text-zinc-600">
                 <Bot className="size-3" strokeWidth={2} />
-                {entry.agent}
+                AI
               </span>
             ) : null}
 

@@ -50,32 +50,55 @@ goes in a second, tiny commit.
    - `IMPROVEMENT` — existing behaviour made better (UX, copy, performance)
    - `FIX` — a bug fix
    - `CHORE` — deps, tooling, docs, internal refactor with no user-visible effect
-8. Read the commit you just made: `git log -1 --format='%h|%ad|%an' --date=short`.
-9. Append **one** object to the end of the array in
-   `app/src/config/changelog/changelog.json`. Never reorder, reformat, or rewrite
-   existing entries:
+8. Read how the session ran and pick one `sessionMood`:
+   - `HAPPY` — upbeat, quick approvals
+   - `FOCUSED` — knew exactly what they wanted
+   - `RUSHED` — short messages, wanted it fast
+   - `EXPLANATORY` — gave lots of context up front
+   - `EXPLORATORY` — figured it out as we went
+   - `FRUSTRATED` — repeated corrections, or things kept going wrong
+   - `BLUNT` — curt or harsh tone, little context
 
-   ```json
-   {
-     "commit": "<%h>",
-     "date": "<%ad>",
-     "type": "FEATURE",
-     "title": "<the commit subject, verbatim>",
-     "description": "One to three plain sentences an admin can read: what changed and why it matters. Not the raw commit body.",
-     "author": "<%an>",
-     "agent": "Claude Opus 5 (1M context)"
-   }
-   ```
+   Then write `sessionNote`: **one** sentence on how the session went. Rules:
 
-   `agent` is your own model name, matching the `Co-Authored-By` trailer on the
-   commit (`null` when there is none). Keep the file's 2-space indent and its
-   trailing newline.
-10. Commit only that file: `git add app/src/config/changelog/changelog.json`, then
+   - Judge only from what is observable in the session — message length and
+     pace, how much context was given, re-dos and corrections, stated approval
+     or annoyance. Not inferred feelings, not traits, not psychoanalysis.
+   - Keep it factual and specific ("short, direct asks, no back-and-forth"),
+     never an insult and never a verdict on the person.
+   - Describe the session, not the human: "the session ran hot after the third
+     failed attempt", not "he was angry".
+   - Do not quote anything sensitive the user pasted.
+   - **Omit both fields** when the session was too short or too mixed to call.
+     They are optional, and a wrong label is worse than none.
+9. Read the commit you just made: `git log -1 --format='%h|%ad|%an' --date=short`.
+10. Append **one** object to the end of the array in
+    `app/src/config/changelog/changelog.json`. Never reorder, reformat, or rewrite
+    existing entries:
+
+    ```json
+    {
+      "commit": "<%h>",
+      "date": "<%ad>",
+      "type": "FEATURE",
+      "title": "<the commit subject, verbatim>",
+      "description": "One to three plain sentences an admin can read: what changed and why it matters. Not the raw commit body.",
+      "author": "<%an>",
+      "agent": "Claude Opus 5 (1M context)",
+      "sessionMood": "FOCUSED",
+      "sessionNote": "One factual sentence about how the session ran. Omit this field and sessionMood together when you cannot call it."
+    }
+    ```
+
+    `agent` is your own model name, matching the `Co-Authored-By` trailer on the
+    commit (`null` when there is none). Keep the file's 2-space indent and its
+    trailing newline.
+11. Commit only that file: `git add app/src/config/changelog/changelog.json`, then
     commit with the message `Log <short title> in the changelog` plus a
     `Changelog: skip` trailer and **no** `Co-Authored-By` trailer. Entries are
     selected by that co-author trailer, so leaving it off keeps this bookkeeping
     commit out of the changelog it just wrote.
-11. Show the user both commits (`git log -2 --oneline`) and confirm every other
+12. Show the user both commits (`git log -2 --oneline`) and confirm every other
     change in the tree is still untouched.
 
 ## Rules
@@ -90,5 +113,5 @@ goes in a second, tiny commit.
 - If `changelog.json` already has uncommitted edits you did not make, stop and
   flag it instead of appending on top of someone else's work.
 - Never use `app/scripts/backfill-changelog.mjs` to add an entry. It rebuilds the
-  whole file from git history and drops hand-written descriptions; it is a one-off
-  repair tool.
+  whole file from git history and drops hand-written descriptions and every
+  session mood/note; it is a one-off repair tool.

@@ -134,5 +134,5 @@ console.log(
     .join("\n"),
 );
 console.log(
-  "\nNote: this rebuilds the file from git. Descriptions edited by hand after a\ncommit was logged are not preserved.",
+  "\nNote: this rebuilds the file from git. Hand-edited descriptions, and every\nsession mood/note written by the skill, are not preserved.",
 );
