@@ -600,5 +600,16 @@
     "agent": "Claude Opus 5 (1M context)",
     "sessionMood": "BLUNT",
     "sessionNote": "Terse, low-context messages throughout, including one sharp correction that moved the setting onto the distribution rule; a challenge to a proposed acknowledgement screen ended with it being dropped."
+  },
+  {
+    "commit": "1ba292b",
+    "date": "2026-09-20",
+    "type": "FEATURE",
+    "title": "Add a date range filter to the reviews dashboard",
+    "description": "The Reviews page now has From and To date pickers beside the rating and employee filters, so customer feedback can be narrowed to a specific window. The To date covers the whole day it names, rather than stopping at midnight and leaving that day out.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Opus 5 (1M context)",
+    "sessionMood": "FOCUSED",
+    "sessionNote": "One short ask naming the page and the filter, then a commit request; the only back-and-forth was a question about repairing a commit message I had mangled."
   }
 ]
