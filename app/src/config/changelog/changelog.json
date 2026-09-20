@@ -565,5 +565,16 @@
     "description": "Admins and super admins can now open a Changelog page listing everything that shipped, newest first, with a feature/improvement/fix tag, the description, the author and AI agent, and a link to the commit. The /scoped-commit skill writes each entry as it commits, so the page stays current without a database.",
     "author": "Petros Rodinos",
     "agent": "Claude Opus 5 (1M context)"
+  },
+  {
+    "commit": "1190f56",
+    "date": "2026-09-20",
+    "type": "IMPROVEMENT",
+    "title": "Merge tip distribution into the QR codes page as a tab",
+    "description": "QR codes and tip distribution were two separate sidebar entries for what is really one setup flow. They are now two tabs on a single QR Codes page, with QR codes shown by default and the distribution tab deep-linkable at ?tab=distribution. The old /dashboard/distribution address redirects to that tab, so existing links and bookmarks keep working.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Opus 5 (1M context)",
+    "sessionMood": "FOCUSED",
+    "sessionNote": "One short, specific ask that named the target layout and default tab up front, then a commit request; no corrections or back-and-forth."
   }
 ]
