@@ -1,6 +1,7 @@
 import {
   BarChart3,
   Calculator,
+  History,
   ShieldCheck,
   WalletCards,
   type LucideIcon,
@@ -40,5 +41,11 @@ export const adminNavItems: AdminNavItem[] = [
     label: "VAT Simulator",
     icon: Calculator,
     match: (path) => path.startsWith(Routes.dashboard.admin.vatSimulator),
+  },
+  {
+    href: Routes.dashboard.admin.changelog,
+    label: "Changelog",
+    icon: History,
+    match: (path) => path.startsWith(Routes.dashboard.admin.changelog),
   },
 ];

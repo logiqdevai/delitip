@@ -62,6 +62,7 @@ export const Routes = {
       payoutDetail: (id: string) => `/dashboard/admin/payouts/${id}` as const,
       analytics: "/dashboard/admin/analytics",
       vatSimulator: "/dashboard/admin/vat-simulator",
+      changelog: "/dashboard/admin/changelog",
     },
     settings: {
       root: "/dashboard/settings",

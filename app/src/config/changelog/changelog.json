@@ -1,0 +1,560 @@
+[
+  {
+    "commit": "7c463a6",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Standardize form control heights via a shared CSS variable",
+    "description": "Input, Select, NativeSelect, Button, InputGroup, Combobox and the command palette input all read new --control-height-* variables in globals. css instead of hardcoded h-8/h-9 classes, so resizing controls app-wide is a one-line change.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "4001251",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Make spot activate, rename, and delete actions explicit on Access.",
+    "description": "",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "94ad98d",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Split dashboard settings into per-section routes with a shadcn sidebar nav",
+    "description": "Each settings section (profile, branding, tipping, localization, review redirect, reviews & feedback, alerts, members, billing) now lives at its own /dashboard/settings/<section> route with its own page. tsx and components/ folder, replacing the single page that stacked every form.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "a4c476c",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Show full tip URLs from SITE_URL with clipboard copy on Access cards.",
+    "description": "",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "c08bb70",
+    "date": "2026-08-30",
+    "type": "FEATURE",
+    "title": "Add spot create dialog and QR selection-mode descriptions.",
+    "description": "Supports clearer QR setup with inline spot creation and documented selection-mode copy.",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "afc003f",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Align store default and rules library section headers on distribution.",
+    "description": "",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "1361c8b",
+    "date": "2026-08-30",
+    "type": "FEATURE",
+    "title": "Add shared language and country picker components with flag icons",
+    "description": "Introduces reusable LanguagePicker and CountryPicker UI components backed by country-flag-icons, plus a generated ISO 3166-1 country options list.  Replaces the plain language Select in localization settings and the free-text country inputs in the business profile and onboarding forms.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "fd71fb5",
+    "date": "2026-08-30",
+    "type": "FEATURE",
+    "title": "Add employee-scoped QR codes dialog to the Employees page",
+    "description": "Employee cards and the employee detail page can now open a shared dialog listing every QR code an employee is assigned to, instead of navigating to the general Access page.  Frontend query params support comma-separated employee/spot/distribution-rule filters for a future backend list endpoint.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "1fabdfb",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Seed default reviews & feedback config from store industry, add delete confirmations",
+    "description": "New stores now get 3 example review categories, feedback questions, and tags pre-populated per their industry (translated into all supported languages), so the Reviews & feedback config panel isn't empty by default.  Also fixes category/question names showing the wrong language in the dashboard (Postgres jsonb doesn...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "6e5cfd0",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Make Employee.full_name a multilingual JSON field",
+    "description": "Employee. full_name is now a Json map keyed by lowercase Language code, mirroring the Store.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "35b28b1",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Clarify reviews feedback config UX with show/hide switches and drag reorder.",
+    "description": "Replace ambiguous click-to-grey toggles with explicit Shown/Hidden badges and switches, use type/sentiment icons, gate tags to platform admins, and add @dnd-kit reordering for categories and questions.",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "3c2c2fe",
+    "date": "2026-08-30",
+    "type": "FEATURE",
+    "title": "Add inline multilingual editing to full name and store messages",
+    "description": "Replace per-language \"translation row\" UIs with a single input/textarea whose language switcher lets you edit any supported language in place, add new supported languages inline (no navigating to Localization settings), and save everything through the form's normal Save button.  Also guards against sending empty tra...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "20d9330",
+    "date": "2026-08-30",
+    "type": "FIX",
+    "title": "Fix QR codes list endpoint ignoring employee/spot/distribution_rule filters",
+    "description": "The query schema never declared employee_ids, spot_ids, or distribution_rule_ids, so Zod stripped them before the service ran and GET /stores/:storeId/qr-codes returned every QR code regardless of the filter params the frontend was already sending.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "6a61396",
+    "date": "2026-08-30",
+    "type": "FIX",
+    "title": "Consolidate translation updates into the main employee/store PATCH, fix stale workspace cache",
+    "description": "Replace the separate PATCH .../translations sub-resource (employees and stores) with full_name_translations / welcome_message_translations / thank_you_message_translations fields on the existing update endpoints, merged and sanitized server-side. Removes the now-dead DTOs, routes, service methods, frontend hooks/ser...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "8c75b32",
+    "date": "2026-08-30",
+    "type": "FEATURE",
+    "title": "Write production-ready Privacy Policy and Terms of Service",
+    "description": "Replace the placeholder legal pages with detailed policies grounded in the actual codebase: Stripe payments/payouts, OpenAI feedback analysis, GCS file storage, Resend/Twilio notifications, the anonymous-by-default QR tip/review flow, localStorage-based session auth, and GDPR/CCPA rights sections for the Heraklion,...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "32feecc",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Show all QR codes assigned to an employee on their detail page",
+    "description": "The detail page's QR widget only surfaced a QR code scoped to exactly one employee, hiding shared/team QR codes the employee is actually assigned to.  Reuse the same QrRow list UI as the employees page's QR modal so all assigned QR codes are visible inline.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "6cccd08",
+    "date": "2026-08-30",
+    "type": "FEATURE",
+    "title": "Add SEO-friendly Help Center with searchable, cross-linked articles",
+    "description": "Adds a statically-rendered /help section covering every dashboard, employee portal, and customer tip-flow feature, with generateStaticParams metadata, a sitemap/robots pair, cmdk-based search, and menu-reference links that navigate straight to the real Routes. * destination.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "1e85678",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Improve employee photo upload and show avatars across staff lists.",
+    "description": "Persist photos immediately, clean up replaced GCS documents on replace/delete, redesign ImagePicker, and add shared EmployeeAvatar/EmployeeSelect so filters and lists show photos.",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "e6fab64",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Show tips received on employee detail page",
+    "description": "Adds a Tips card to /dashboard/employees/[id] listing every tip the employee has received, reusing the existing GET /employees/:id/tips endpoint (TipDistribution-based) so split/team tips are included.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "6846a5c",
+    "date": "2026-08-30",
+    "type": "IMPROVEMENT",
+    "title": "Redesign the public tip page: store hero, tip-first flow, and real review support",
+    "description": "Reorders the flow to amount -> recipient -> review -> payment, replaces the naive star+comment box with the store's actual configured review categories and feedback questions, and persists the tip id in the URL so a refresh doesn't lose access to the refund action.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "d26eee8",
+    "date": "2026-08-30",
+    "type": "CHORE",
+    "title": "Remove unused public/private review visibility across schema, API, and app.",
+    "description": "",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "7bb1cf1",
+    "date": "2026-08-30",
+    "type": "FIX",
+    "title": "Fix Next.js Image aspect-ratio warning on auth brand panel avatar",
+    "description": "Flex row was shrinking the avatar's width by half a pixel without shrink-0, causing a width/height mismatch.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "f08ce4c",
+    "date": "2026-09-01",
+    "type": "CHORE",
+    "title": "Rename PaymentTransaction viva_order_code/viva_transaction_id to provider-generic names",
+    "description": "viva_order_code and viva_transaction_id were the only PaymentTransaction columns still hardcoding the Viva provider name, breaking the provider_* convention already used elsewhere (PayoutAccount. provider_account_id, Payout.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "2b9bdc7",
+    "date": "2026-09-01",
+    "type": "FEATURE",
+    "title": "Add Getting Started onboarding checklist to dashboard",
+    "description": "Adds a client-side checklist page under /dashboard/getting-started that derives completion status for 7 setup steps (profile, branding, tipping, employees, QR codes, payout account, reviews) from data already fetched via existing feature hooks, with a sidebar nav entry and an Overview page banner linking to it when...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "a6589b6",
+    "date": "2026-09-01",
+    "type": "CHORE",
+    "title": "Add official Viva Payment API spec and reference it from the implementation plan",
+    "description": "Downloads the official Viva Wallet OpenAPI/Swagger spec (developer. viva.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "9d8ffee",
+    "date": "2026-09-01",
+    "type": "FEATURE",
+    "title": "Add admin-only All Users page with reusable platform-admin guard",
+    "description": "Extracts the ADMIN/SUPER_ADMIN role check (previously duplicated across settings-sidebar, members page, employee detail, and reviews-feedback panel) into usePlatformRole() and a PlatformAdminGuard component, then uses them to gate a new /dashboard/admin/users page listing every registered user via the existing GET /...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "24b2410",
+    "date": "2026-09-01",
+    "type": "FEATURE",
+    "title": "Add tabbed Pending distributions / Refunds queue tables to Payments dashboard",
+    "description": "Adds a real GET stores/:storeId/distributions endpoint (server-side pagination + status/recipient/employee/date filters, plus an eligible/pending summary) to back a proper paginated table, replacing the old client-side derivation from a capped 200-tip fetch.  Refunds queue gains a date range filter alongside status,...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "3e49933",
+    "date": "2026-09-01",
+    "type": "FEATURE",
+    "title": "Add admin Payments & Payouts page with tabs, filters, and detail views",
+    "description": "Adds platform-wide admin endpoints (GET /admin/payments, GET /admin/payouts, GET /admin/payouts/:id) alongside GET /tips/:id (already admin-accessible) so ADMIN/SUPER_ADMIN can browse every payment and payout across all stores from one tabbed page, filter each table, and open a dedicated detail page per row.  Also r...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "32b6256",
+    "date": "2026-09-01",
+    "type": "FEATURE",
+    "title": "Add admin Analytics page with platform-wide stats and revenue charts",
+    "description": "Adds GET /admin/analytics/overview and GET /admin/analytics/trends (ADMIN/SUPER_ADMIN only) covering users, tips revenue, platform/employee/ store net revenue, processing fees, and average tip amount, grouped per currency since summing raw amounts across currencies would be meaningless.  Promotes the bucketing helpe...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "48d2f10",
+    "date": "2026-09-01",
+    "type": "IMPROVEMENT",
+    "title": "Redirect to employee detail page after creating an employee",
+    "description": "Store owners land on the new employee's detail page right after creation, where they can immediately set up QR assignment and IBAN payout info, instead of staying on the list.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "99fd292",
+    "date": "2026-09-01",
+    "type": "IMPROVEMENT",
+    "title": "Turn the Admin sidebar link into a dropdown for its subpages",
+    "description": "Replaces the two separate \"All Users\" / \"Payments & Payouts\" sidebar entries with a single \"Admin\" item whose click target opens a dropdown menu listing the admin subpages (reusing the shared adminNavItems list), instead of navigating to an in-page switcher.  Also reorders the top of the nav to Admin, Getting Starte...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "f541eb3",
+    "date": "2026-09-01",
+    "type": "IMPROVEMENT",
+    "title": "Increase sidebar icon and touch target sizes when collapsed.",
+    "description": "Makes nav icons, buttons, and avatars easier to read and tap in icon-only mode.",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "de1dfb6",
+    "date": "2026-09-01",
+    "type": "FEATURE",
+    "title": "Seed sample distribution rule, spots, and QR codes on store creation",
+    "description": "Gives a new store a working default distribution rule, a couple of sample spots, and matching QR codes to scan and test immediately, mirroring the existing industry-review-examples seeding pattern.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "f53fbe4",
+    "date": "2026-09-01",
+    "type": "FEATURE",
+    "title": "Add change password functionality to account settings",
+    "description": "Lets a signed-in user update their own password from /dashboard/account, verifying their current password server-side before applying the change.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "1448b9b",
+    "date": "2026-09-01",
+    "type": "IMPROVEMENT",
+    "title": "Use industry-specific default spot names on store creation.",
+    "description": "New stores now seed spots like Table 01 for restaurants and Room 01 for hotels instead of generic names.",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "92ef4d5",
+    "date": "2026-09-01",
+    "type": "FEATURE",
+    "title": "Add employee invite email flow",
+    "description": "Employees created by a store previously got a passwordless account with no way to discover or activate it.  Now creation sends an invite email (reusing the password-reset token mechanism with a longer expiry), the store can resend it and see signup status on the employee list/detail, and a new /auth/accept-invite pa...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "cda7f2c",
+    "date": "2026-09-01",
+    "type": "FEATURE",
+    "title": "Add employee change password and role-aware reset redirect",
+    "description": "Lets a signed-in employee update their own password from the portal header, mirroring the business account settings page.  Also carries the employee/business tab through the forgot-password flow so a completed reset lands back on the right sign-in tab instead of always defaulting to business.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "eef6879",
+    "date": "2026-09-02",
+    "type": "FIX",
+    "title": "Fix Viva order-state comparison and payment reconciliation",
+    "description": "Reconciliation never matched paid/expired/canceled orders because VivaOrderState was string-valued while Viva returns StateId as a JSON number.  Also drop the reconciliation sweep's dependency on the Data Services search API (this merchant's OAuth clients aren't provisioned for that scope, causing a silent 401) in f...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "ef7a0b7",
+    "date": "2026-09-02",
+    "type": "FEATURE",
+    "title": "Add store and payment/payout ID filters to admin payments & payouts",
+    "description": "Adds a store filter (searchable combobox) to both the Payments and Payouts admin tables, backed by a new GET /admin/stores endpoint, and extends free-text search to match payment/payout IDs directly.  Payouts gains a search box it didn't have before, and its store_id filter is restructured so it composes correctly a...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "7de4f50",
+    "date": "2026-09-02",
+    "type": "FIX",
+    "title": "Fix distributions API returning unresolved employee name translations.",
+    "description": "",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "40f6266",
+    "date": "2026-09-02",
+    "type": "FEATURE",
+    "title": "Add branded global error and not-found pages with retry and back actions.",
+    "description": "",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "5fb13ec",
+    "date": "2026-09-02",
+    "type": "FIX",
+    "title": "Fix Viva transaction amount unit mismatch blocking webhook-confirmed payments",
+    "description": "GET /checkout/v2/transactions/{id} reports amount in major currency units (20. 00), not the minor units (2000) PaymentTransaction.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "faa122f",
+    "date": "2026-09-02",
+    "type": "FEATURE",
+    "title": "Add fee percentage breakdown fields and surface them on admin overview",
+    "description": "Persists platform/payment/total fee percentages and totals on PaymentTransaction (instead of computing them at read time), and adds a grouped fee-breakdown card with tooltips to the admin analytics overview.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "6467032",
+    "date": "2026-09-02",
+    "type": "IMPROVEMENT",
+    "title": "Show per-payment fee breakdown on the admin payments table",
+    "description": "Includes payment_transaction on the admin payments list so each row can show platform/payment/total fees and the net distributable amount, grouped into two columns (Fees, Net) with tooltip-explained headers instead of one column per figure.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "6d168b3",
+    "date": "2026-09-02",
+    "type": "IMPROVEMENT",
+    "title": "Persist the processor fee's configured percentage alongside its platform fee counterpart",
+    "description": "Adds processor_fee_percentage_used, snapshotted from PlatformFinanceConfig when the processor fee estimate is computed — the missing payment-fee mirror of the existing commission_percentage_used field for the platform fee.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "2c46ba6",
+    "date": "2026-09-02",
+    "type": "IMPROVEMENT",
+    "title": "Update default processor fee estimate to 4.8%",
+    "description": "Replaces the 1. 5% placeholder with a figure observed directly from a real settled demo transaction in Viva's dashboard (€10.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "7227660",
+    "date": "2026-09-02",
+    "type": "FIX",
+    "title": "Fix Viva bank transfer fee request rejecting with \"Null options\"",
+    "description": "Viva's docs say instructionType is an array, but every one of their own code samples sends a single integer — confirmed against the live demo API: an array gets rejected with 400 \"Null options\", a single value succeeds.  Pick one instruction type (preferring 1/Shared, Viva's own documented default) instead of forwar...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "001e375",
+    "date": "2026-09-02",
+    "type": "FEATURE",
+    "title": "Add employee filter to payments distributions table.",
+    "description": "",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "393b82d",
+    "date": "2026-09-02",
+    "type": "IMPROVEMENT",
+    "title": "Show store owners exactly when held distributions become eligible for payout",
+    "description": "Distributions now report why they're held: HOLD_WINDOW (a fixed, predictable ETA — paid_at + the hold window) vs FEE_NOT_CONFIRMED (unpredictable, since it depends entirely on Viva's settlement webhook arriving).  The distributions summary and table surface this plainly instead of a bare \"Held\" label with no explana...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "517a690",
+    "date": "2026-09-03",
+    "type": "FEATURE",
+    "title": "Add VAT support for Viva tip payments and org tax details",
+    "description": "Adds a configurable per-store VAT rate applied on top of tips at checkout (charged as part of the Viva order amount, since Viva has no native VAT/tax handling), while platform commission and payout distribution stay based on the net tip amount.  Also adds full-stack support for an Organization's VAT number and legal...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "1dd23f5",
+    "date": "2026-09-03",
+    "type": "IMPROVEMENT",
+    "title": "Show a clear inactive message on the public tip page when a QR code is turned off.",
+    "description": "",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "689a957",
+    "date": "2026-09-03",
+    "type": "FEATURE",
+    "title": "Add invoice billing fields to Organization tax details",
+    "description": "Adds profession, Greek tax office (ΔΟΥ), and a registered billing address to Organization, and surfaces them on the Tax Details settings page — the fields required to issue a compliant invoice per Greek Law 4308/2014 and EU VAT Directive Art.  226 (full name, address, VAT ID), beyond the VAT number and legal name al...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "44c4096",
+    "date": "2026-09-03",
+    "type": "IMPROVEMENT",
+    "title": "Sync business address to Organization during onboarding, add DOY field",
+    "description": "The onboarding flow now also stamps the address (and, for Greek businesses, the tax office/ΔΟΥ) onto the Organization when creating or updating the initial Store, since the Organization is the actual invoice-recipient entity, not the Store.  Adds a Δ.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "7365226",
+    "date": "2026-09-03",
+    "type": "IMPROVEMENT",
+    "title": "Show lifetime tip, transaction, review, and rating totals on dashboard cards.",
+    "description": "",
+    "author": "Petros Rodinos",
+    "agent": "Cursor"
+  },
+  {
+    "commit": "577bfc5",
+    "date": "2026-09-03",
+    "type": "FEATURE",
+    "title": "Add Viva Marketplace connected-account payouts for stores",
+    "description": "Store-level payout accounts can now onboard via Viva Marketplace (connected accounts) as an alternative to IBAN Bank Transfer, gated off by default behind CONNECTED_ACCOUNT_PAYOUTS_ENABLED.  Fixes several real schema mismatches in the previously-unused Viva marketplace SDK wrapper (wrong invitation URL field, wrong...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "4d28c09",
+    "date": "2026-09-03",
+    "type": "FEATURE",
+    "title": "Add admin VAT/accounting simulator widget",
+    "description": "Lets platform staff simulate the tip -> platform -> store/employee VAT flow: enter a net tip, platform fee %, and processor fee (% + fixed), and see the resulting invoices, VAT lines, platform profit, and VAT payable/credit.  Registered at /dashboard/admin/vat-simulator with a sidebar nav entry.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "c84c590",
+    "date": "2026-09-10",
+    "type": "CHORE",
+    "title": "Update Viva Marketplace research doc with sandbox-access outreach status",
+    "description": "Records that the platform-account/sandbox access request has been sent to Viva Sales, and marks the credentials as pending.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "27f5a4c",
+    "date": "2026-09-10",
+    "type": "FEATURE",
+    "title": "Add printable QR stand template downloads",
+    "description": "Store owners can now download a branded, print-ready 4x6in PDF card for each QR code/spot from the Customer Access & QR Kits page - combining the store's real name, logo, colors, and a scannable QR code.  Ships with three template designs (Classic Card, Arched Band, Bold CTA) via a small registry so more can be adde...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "c655552",
+    "date": "2026-09-10",
+    "type": "FEATURE",
+    "title": "Add a visual editor for printable QR templates",
+    "description": "Store owners can now open an \"Edit design\" editor from the QR template dialog: drag to reposition, resize, and restyle (text/font/color/ alignment) each element of a template, then save a per-store customization that's reused across every QR code downloaded with that design.  Editing is scoped to the existing elemen...",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "8539b70",
+    "date": "2026-09-10",
+    "type": "FEATURE",
+    "title": "Add Scan & Drop brand mark and wire it into icons, manifest, and OG image",
+    "description": "Replaces the placeholder \"d•\" text mark with a real vector logo (QR finder-pattern coin dropping into a tip cup) and generates favicon, apple-touch-icon, web manifest, and Open Graph image from it.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5"
+  },
+  {
+    "commit": "a7f5b9e",
+    "date": "2026-09-20",
+    "type": "IMPROVEMENT",
+    "title": "Require address at onboarding, tidy settings nav, link store default to tipping",
+    "description": "Make the business address required in the onboarding setup form; Hide the settings Previous/Next links from lg up, where the sidebar already covers navigation, and keep Save buttons right-aligned there; Add a \"Change default\" link on the distribution store-default card that points at the tipping settings page",
+    "author": "Petros Rodinos",
+    "agent": "Claude Opus 5 (1M context)"
+  },
+  {
+    "commit": "5cfe6ed",
+    "date": "2026-09-20",
+    "type": "FIX",
+    "title": "Show confirmation failures inside the dialog instead of a hidden toast",
+    "description": "A failed confirm left the dialog open with no explanation while the error toast rendered behind the dialog overlay — deleting a distribution rule assigned to a QR code gave no visible reason.  ConfirmationDialog now keeps the thrown message and renders it as an inline destructive alert, cleared on retry and on close.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Opus 5 (1M context)"
+  }
+]
