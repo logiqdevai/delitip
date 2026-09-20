@@ -98,7 +98,12 @@ export const useUpdateDistributionRule = () => {
   });
 };
 
-export const useDeleteDistributionRule = () => {
+// `showErrorToast: false` for callers that render the failure themselves, such
+// as a confirmation dialog whose overlay would cover the toast.
+export const useDeleteDistributionRule = (options?: {
+  showErrorToast?: boolean;
+}) => {
+  const showErrorToast = options?.showErrorToast ?? true;
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -113,6 +118,7 @@ export const useDeleteDistributionRule = () => {
       });
     },
     onError: (error: Error) => {
+      if (!showErrorToast) return;
       toast.add({
         title: "Could not delete rule",
         description: error.message,

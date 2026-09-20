@@ -38,7 +38,7 @@ export const DistributionPageContent: FC = () => {
     useWorkspace();
   const rulesQuery = useDistributionRules(storeId ?? "");
   const setDefault = useSetDefaultDistributionRule(storeId ?? "");
-  const deleteRule = useDeleteDistributionRule();
+  const deleteRule = useDeleteDistributionRule({ showErrorToast: false });
   const deleteConfirm = useConfirmationDialog();
 
   const [formOpen, setFormOpen] = useState(false);

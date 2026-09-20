@@ -1,6 +1,8 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { TriangleAlert } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,12 +56,21 @@ export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
   isPending = false,
   variant = "destructive",
 }) => {
+  const [error, setError] = useState<string | null>(null);
+
+  // A failed confirm keeps the dialog open and reports the reason inline: a
+  // toast would render behind the dialog overlay where nobody can read it.
   const handleConfirm = async () => {
+    setError(null);
     try {
       await onConfirm();
       state.closeDialog();
-    } catch {
-      return;
+    } catch (cause) {
+      setError(
+        cause instanceof Error && cause.message
+          ? cause.message
+          : "Something went wrong. Please try again.",
+      );
     }
   };
 
@@ -68,6 +79,7 @@ export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
       open={state.open}
       onOpenChange={(next) => {
         if (isPending) return;
+        if (!next) setError(null);
         state.onOpenChange(next);
       }}
     >
@@ -78,6 +90,12 @@ export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
             <AlertDialogDescription>{description}</AlertDialogDescription>
           ) : null}
         </AlertDialogHeader>
+        {error ? (
+          <Alert variant="destructive">
+            <TriangleAlert />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        ) : null}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>{cancelLabel}</AlertDialogCancel>
           <AlertDialogAction
