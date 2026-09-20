@@ -576,5 +576,16 @@
     "agent": "Claude Opus 5 (1M context)",
     "sessionMood": "FOCUSED",
     "sessionNote": "One short, specific ask that named the target layout and default tab up front, then a commit request; no corrections or back-and-forth."
+  },
+  {
+    "commit": "caadb81",
+    "date": "2026-09-20",
+    "type": "FEATURE",
+    "title": "Record session tone on changelog entries, add date filters and an AI tag",
+    "description": "Changelog entries can now show how the session ran - a tag like Focused, Rushed or Blunt plus a one-line note written by the agent at commit time - and admins can filter the page by that tag or by a date range. The agent badge now reads a plain \"AI\" instead of naming the model.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Opus 5 (1M context)",
+    "sessionMood": "EXPLANATORY",
+    "sessionNote": "Opened each feature with a written spec and answered the clarifying questions with custom instructions that redirected the approach; the closing asks were a terse two-item todo list."
   }
 ]
