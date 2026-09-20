@@ -561,10 +561,12 @@
     "commit": "b3fd53e",
     "date": "2026-09-20",
     "type": "FEATURE",
-    "title": "Add an admin-only changelog page fed by the scoped-commit skill",
-    "description": "Admins and super admins can now open a Changelog page listing everything that shipped, newest first, with a feature/improvement/fix tag, the description, the author and AI agent, and a link to the commit. The /scoped-commit skill writes each entry as it commits, so the page stays current without a database.",
+    "title": "Add an admin-only changelog page written on every commit",
+    "description": "Admins and super admins get a Changelog page listing everything that shipped, newest first, with a feature/improvement/fix tag, a plain-English description, the author, and a link to the commit. A repo-wide rule loaded on every prompt has the agent write each entry right after it commits, so the page stays current without a database - and a request plus its follow-up refinements stays one entry rather than several.",
     "author": "Petros Rodinos",
-    "agent": "Claude Opus 5 (1M context)"
+    "agent": "Claude Opus 5 (1M context)",
+    "sessionMood": "EXPLANATORY",
+    "sessionNote": "Each feature opened with a written spec and clarifying answers that redirected the approach, followed by short directive refinements; no corrections to undo."
   },
   {
     "commit": "1190f56",
