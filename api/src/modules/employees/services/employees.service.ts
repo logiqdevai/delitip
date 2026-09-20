@@ -13,7 +13,7 @@ import { CreateEmployeeDto } from '../dto/create-employee.dto';
 import { UpdateEmployeeDto } from '../dto/update-employee.dto';
 import { EmployeesQueryType } from '../dto/employees-query.schema';
 import { EMPLOYEE_INVITE_TOKEN_EXPIRY_MS } from '../employees.constants';
-import { Language, OrganizationRole, PayoutStatus } from 'generated/prisma';
+import { Language, OrganizationRole, PayoutStatus, SettlementStatus } from 'generated/prisma';
 
 @Injectable()
 export class EmployeesService {
@@ -257,6 +257,10 @@ export class EmployeesService {
                     employee_id: employee.id,
                     created_at: { gte: startOfMonth },
                     payout_status: { not: PayoutStatus.CANCELLED },
+                    // A pooled share can survive its tip being refunded on the
+                    // payout axis (the money already reached the Store), so the
+                    // settlement axis has to be excluded on its own.
+                    settlement_status: { not: SettlementStatus.CANCELLED },
                 },
                 include: { tip: { include: { distribution_rule: true } } },
             }),
@@ -300,7 +304,11 @@ export class EmployeesService {
     async tips(user: AuthUser, id: string, query: PaginationQueryType) {
         const { employee } = await this.accessControl.assertEmployeeSelfOrStoreAccess(user, id);
 
-        const where = { employee_id: employee.id, payout_status: { not: PayoutStatus.CANCELLED } };
+        const where = {
+            employee_id: employee.id,
+            payout_status: { not: PayoutStatus.CANCELLED },
+            settlement_status: { not: SettlementStatus.CANCELLED },
+        };
 
         const [items, total] = await Promise.all([
             this.prisma.tipDistribution.findMany({

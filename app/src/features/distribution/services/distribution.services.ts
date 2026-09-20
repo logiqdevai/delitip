@@ -4,6 +4,7 @@ import { ApiRoutes } from "@/config/api/routes";
 import type {
   CreateDistributionRulePayload,
   DistributionRule,
+  DistributionRulePayoutModeImpact,
   SetDefaultDistributionRulePayload,
   UpdateDistributionRulePayload,
 } from "@/features/distribution/interfaces/distribution.interfaces";
@@ -40,6 +41,19 @@ export const getDistributionRule = async (
     return response.data;
   } catch {
     throw new Error("Failed to load distribution rule. Please try again.");
+  }
+};
+
+export const getDistributionRulePayoutModeImpact = async (
+  id: string,
+): Promise<DistributionRulePayoutModeImpact> => {
+  try {
+    const response = await axiosInstance.get<DistributionRulePayoutModeImpact>(
+      ApiRoutes.distributionRules.payoutModeImpact(id),
+    );
+    return response.data;
+  } catch {
+    throw new Error("Failed to check what this change affects. Please try again.");
   }
 };
 

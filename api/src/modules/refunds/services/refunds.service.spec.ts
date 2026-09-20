@@ -1,5 +1,13 @@
 import { BadGatewayException, BadRequestException, NotFoundException } from '@nestjs/common';
-import { AuthRole, OrganizationRole, PayoutMethod, PayoutStatus, RefundStatus, TipStatus } from 'generated/prisma';
+import {
+    AuthRole,
+    OrganizationRole,
+    PayoutMethod,
+    PayoutStatus,
+    RefundStatus,
+    SettlementStatus,
+    TipStatus,
+} from 'generated/prisma';
 import { RefundsService } from './refunds.service';
 
 describe('RefundsService', () => {
@@ -25,6 +33,7 @@ describe('RefundsService', () => {
             tip: { findUnique: jest.fn(), update: jest.fn() },
             refund: { create: jest.fn(), findMany: jest.fn(), count: jest.fn(), findUnique: jest.fn(), update: jest.fn() },
             tipDistribution: { updateMany: jest.fn() },
+            settlementAdjustment: { createMany: jest.fn() },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
         accessControl = { assertStoreAccess: jest.fn() };
@@ -303,6 +312,82 @@ describe('RefundsService', () => {
                 status: RefundStatus.APPROVED,
                 tip_id: 'tip1',
                 tip: paidTip({ distributions: [{ payout_status: PayoutStatus.PAID }] }),
+            });
+            prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
+
+            await service.update(user, 'refund1', { status: RefundStatus.COMPLETED });
+
+            expect(prisma.refund.update).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ requires_manual_reconciliation: true }) }),
+            );
+        });
+
+        it('cancels a share the business was still holding for an employee', async () => {
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                amount: 500,
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: paidTip({
+                    distributions: [
+                        { employee_id: 'emp1', amount: 350, payout_status: PayoutStatus.PAID, settlement_status: SettlementStatus.OWED },
+                    ],
+                }),
+            });
+            prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
+
+            await service.update(user, 'refund1', { status: RefundStatus.COMPLETED });
+
+            expect(prisma.tipDistribution.updateMany).toHaveBeenCalledWith({
+                where: { tip_id: 'tip1', settlement_status: SettlementStatus.OWED },
+                data: { settlement_status: SettlementStatus.CANCELLED },
+            });
+            // Nothing was handed over, so there is nothing to claw back.
+            expect(prisma.settlementAdjustment.createMany).not.toHaveBeenCalled();
+        });
+
+        it('proposes a deduction when the share was already handed over in cash', async () => {
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                amount: 500,
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: paidTip({
+                    distributions: [
+                        { employee_id: 'emp1', amount: 350, payout_status: PayoutStatus.PAID, settlement_status: SettlementStatus.SETTLED },
+                    ],
+                }),
+            });
+            prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
+
+            await service.update(user, 'refund1', { status: RefundStatus.COMPLETED });
+
+            expect(prisma.settlementAdjustment.createMany).toHaveBeenCalledWith({
+                data: [
+                    expect.objectContaining({
+                        store_id: 'store1',
+                        employee_id: 'emp1',
+                        amount: -350,
+                        refund_id: 'refund1',
+                        created_by_user_id: 'u1',
+                    }),
+                ],
+            });
+        });
+
+        it('flags manual reconciliation for a share handed over in cash, which has no clawback either', async () => {
+            prisma.refund.findUnique.mockResolvedValue({
+                id: 'refund1',
+                amount: 500,
+                status: RefundStatus.APPROVED,
+                tip_id: 'tip1',
+                tip: paidTip({
+                    distributions: [
+                        // Never wired out by us — the business was holding it — but
+                        // already in the employee's pocket.
+                        { employee_id: 'emp1', amount: 350, payout_status: PayoutStatus.PENDING, settlement_status: SettlementStatus.SETTLED },
+                    ],
+                }),
             });
             prisma.refund.update.mockResolvedValue({ id: 'refund1', status: RefundStatus.COMPLETED });
 

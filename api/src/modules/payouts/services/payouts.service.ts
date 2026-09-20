@@ -16,6 +16,7 @@ import { PayoutsQueryType } from '../dto/payouts-query.schema';
 import { DistributionsQueryType } from '../dto/distributions-query.schema';
 import { AdminPayoutsQueryType } from '../dto/admin-payouts-query.schema';
 import {
+  DistributionPayoutMode,
   DistributionRecipientType,
   Language,
   OrganizationRole,
@@ -33,6 +34,11 @@ interface RecipientGroup {
   employeeId?: string;
   distributionIds: string[];
   amount: number;
+  // Under a VIA_STORE rule a Store's transfer carries its own share plus the
+  // shares it collected for its staff. Split out so the Store (and its
+  // accountant) can see which part of the deposit isn't theirs to keep.
+  ownShare: number;
+  heldForStaff: number;
   currency: string;
 }
 
@@ -81,6 +87,8 @@ export class PayoutsService {
           employee_id: group.employeeId,
           name,
           amount: group.amount,
+          own_share_amount: group.ownShare,
+          held_for_staff_amount: group.heldForStaff,
           currency: group.currency,
           will_be_paid: !!account.payoutAccount,
           skip_reason: account.reason,
@@ -88,9 +96,11 @@ export class PayoutsService {
       }),
     );
 
-    const total_amount = recipients.filter((r) => r.will_be_paid).reduce((sum, r) => sum + r.amount, 0);
+    const payable = recipients.filter((r) => r.will_be_paid);
+    const total_amount = payable.reduce((sum, r) => sum + r.amount, 0);
+    const total_held_for_staff_amount = payable.reduce((sum, r) => sum + r.held_for_staff_amount, 0);
 
-    return { total_amount, recipients };
+    return { total_amount, total_held_for_staff_amount, recipients };
   }
 
   private async resolveEmployeeName(employeeId: string, primaryLanguage: Language): Promise<string> {
@@ -151,19 +161,32 @@ export class PayoutsService {
 
     const groups = new Map<string, RecipientGroup>();
     for (const distribution of distributions) {
-      const key = distribution.recipient_type === DistributionRecipientType.STORE ? 'STORE' : `EMPLOYEE:${distribution.employee_id}`;
+      // The one routing decision in the payout path: a share earned under a
+      // VIA_STORE rule is transferred to the Store, not to the employee, even
+      // though the row still records who earned it. The Store hands it over
+      // off-platform and records that as a Settlement.
+      const pooled =
+        distribution.recipient_type === DistributionRecipientType.EMPLOYEE &&
+        distribution.payout_mode === DistributionPayoutMode.VIA_STORE;
+      const paidToStore = distribution.recipient_type === DistributionRecipientType.STORE || pooled;
+
+      const key = paidToStore ? 'STORE' : `EMPLOYEE:${distribution.employee_id}`;
       const existing = groups.get(key);
       if (existing) {
         existing.distributionIds.push(distribution.id);
         existing.amount += distribution.amount;
+        if (pooled) existing.heldForStaff += distribution.amount;
+        else existing.ownShare += distribution.amount;
       } else {
         groups.set(key, {
           key,
-          recipientType: distribution.recipient_type,
-          storeId: distribution.recipient_type === DistributionRecipientType.STORE ? storeId : undefined,
-          employeeId: distribution.employee_id ?? undefined,
+          recipientType: paidToStore ? DistributionRecipientType.STORE : DistributionRecipientType.EMPLOYEE,
+          storeId: paidToStore ? storeId : undefined,
+          employeeId: paidToStore ? undefined : distribution.employee_id ?? undefined,
           distributionIds: [distribution.id],
           amount: distribution.amount,
+          ownShare: pooled ? 0 : distribution.amount,
+          heldForStaff: pooled ? distribution.amount : 0,
           currency: distribution.tip.currency,
         });
       }
@@ -355,7 +378,7 @@ export class PayoutsService {
       this.prisma.payout.count({ where }),
     ]);
 
-    return paginate(items.map((item) => this.resolvePayoutRefs(item)), total, query);
+    return paginate(await this.attachBreakdowns(items.map((item) => this.resolvePayoutRefs(item))), total, query);
   }
 
   async findForEmployee(user: AuthUser, employeeId: string, query: PayoutsQueryType) {
@@ -373,6 +396,36 @@ export class PayoutsService {
     ]);
 
     return paginate(items, total, query);
+  }
+
+  // A payout's own-share/held-for-staff split, derived from the distributions
+  // it covers rather than stored on the row: a STORE payout's EMPLOYEE-type
+  // distributions are exactly the shares pooled under a VIA_STORE rule.
+  private async attachBreakdowns<T extends { id: string; recipient_type: DistributionRecipientType }>(
+    payouts: T[],
+  ): Promise<(T & { own_share_amount: number; held_for_staff_amount: number })[]> {
+    if (payouts.length === 0) return [];
+
+    const sums = await this.prisma.tipDistribution.groupBy({
+      by: ['payout_id', 'recipient_type'],
+      where: { payout_id: { in: payouts.map((payout) => payout.id) } },
+      _sum: { amount: true },
+    });
+
+    return payouts.map((payout) => {
+      const rows = sums.filter((row) => row.payout_id === payout.id);
+      const sumOf = (type: DistributionRecipientType) =>
+        rows.filter((row) => row.recipient_type === type).reduce((total, row) => total + (row._sum.amount ?? 0), 0);
+
+      return {
+        ...payout,
+        own_share_amount: sumOf(payout.recipient_type),
+        held_for_staff_amount:
+          payout.recipient_type === DistributionRecipientType.STORE
+            ? sumOf(DistributionRecipientType.EMPLOYEE)
+            : 0,
+      };
+    });
   }
 
   private readonly payoutRefsInclude = {
@@ -435,7 +488,7 @@ export class PayoutsService {
       this.prisma.payout.count({ where }),
     ]);
 
-    return paginate(items.map((item) => this.resolvePayoutRefs(item)), total, query);
+    return paginate(await this.attachBreakdowns(items.map((item) => this.resolvePayoutRefs(item))), total, query);
   }
 
   async findOneAdmin(id: string) {
@@ -447,7 +500,7 @@ export class PayoutsService {
       },
     });
     if (!payout) throw new NotFoundException('Payout not found');
-    return this.resolvePayoutRefs(payout);
+    return (await this.attachBreakdowns([this.resolvePayoutRefs(payout)]))[0];
   }
 
   async findDistributionsForStore(user: AuthUser, storeId: string, query: DistributionsQueryType) {

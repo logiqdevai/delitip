@@ -3,6 +3,7 @@ import {
   createDistributionRule,
   deleteDistributionRule,
   getDistributionRule,
+  getDistributionRulePayoutModeImpact,
   listDistributionRules,
   setDefaultDistributionRule,
   updateDistributionRule,
@@ -20,6 +21,8 @@ export const distributionQueryKeys = {
   root: ["distribution-rules"] as const,
   list: (storeId: string) => ["distribution-rules", storeId] as const,
   detail: (id: string) => ["distribution-rule", id] as const,
+  payoutModeImpact: (id: string) =>
+    ["distribution-rule", id, "payout-mode-impact"] as const,
 };
 
 export const useDistributionRules = (storeId: string) => {
@@ -35,6 +38,19 @@ export const useDistributionRule = (id: string) => {
     queryKey: distributionQueryKeys.detail(id),
     queryFn: () => getDistributionRule(id),
     enabled: !!id,
+  });
+};
+
+// How many pending shares a payout-mode switch would move, so the rule editor
+// can say what it's about to do before the owner commits to it.
+export const useDistributionRulePayoutModeImpact = (
+  id: string,
+  options?: { enabled?: boolean },
+) => {
+  return useQuery({
+    queryKey: distributionQueryKeys.payoutModeImpact(id),
+    queryFn: () => getDistributionRulePayoutModeImpact(id),
+    enabled: !!id && (options?.enabled ?? true),
   });
 };
 
@@ -75,16 +91,22 @@ export const useUpdateDistributionRule = () => {
       id: string;
       payload: UpdateDistributionRulePayload;
     }) => updateDistributionRule(id, payload),
-    onSuccess: (_data, variables) => {
+    onSuccess: (data, variables) => {
       void queryClient.invalidateQueries({
         queryKey: distributionQueryKeys.root,
       });
       void queryClient.invalidateQueries({
         queryKey: distributionQueryKeys.detail(variables.id),
       });
+      // A mode switch takes pending shares with it, so say so rather than
+      // leaving the owner to discover it on the next payout run.
+      const rerouted = data?.rerouted_distributions_count ?? 0;
       toast.add({
         title: "Distribution rule updated",
-        description: "Future tips will use the new split.",
+        description:
+          rerouted > 0
+            ? `Future tips will use the new split. ${rerouted} pending share${rerouted === 1 ? "" : "s"} moved to the new payout route.`
+            : "Future tips will use the new split.",
         type: "success",
       });
     },

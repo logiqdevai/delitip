@@ -22,6 +22,7 @@ import {
   EmployeeDepositNotice,
 } from "./components/employee-balance-card";
 import { EmployeePayoutHistoryCard } from "./components/employee-payout-history-card";
+import { EmployeeStoreBalanceCard } from "./components/employee-store-balance-card";
 
 const TREND_DAYS = 7;
 const TIPS_QUERY = { limit: 200 };
@@ -175,8 +176,17 @@ const EarningsPage: FC = () => {
                     <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-caption font-bold text-brand-700">
                       +
                     </div>
-                    <div className="text-xs font-bold text-ink-charcoal">
-                      {format(new Date(distribution.created_at), "HH:mm")}
+                    <div className="min-w-0">
+                      <div className="text-xs font-bold text-ink-charcoal">
+                        {format(new Date(distribution.created_at), "HH:mm")}
+                      </div>
+                      {/* Which promise this tip is under: a transfer coming to
+                          the employee's own bank, or their Store handing it over. */}
+                      <div className="text-[11px] text-zinc-400">
+                        {distribution.payout_mode === "VIA_STORE"
+                          ? "Paid by your Store"
+                          : "Paid to your bank"}
+                      </div>
                     </div>
                   </div>
                   <div className="shrink-0 text-right text-xs font-extrabold text-ink-charcoal">
@@ -244,6 +254,10 @@ const EarningsPage: FC = () => {
           <EmployeeDepositNotice />
         </div>
       </div>
+
+      {employeeId ? (
+        <EmployeeStoreBalanceCard employeeId={employeeId} currency={currency} />
+      ) : null}
 
       {employeeId ? <EmployeePayoutHistoryCard employeeId={employeeId} /> : null}
 

@@ -60,6 +60,15 @@ export const ApiRoutes = {
       `/stores/${storeId}/default-distribution-rule` as const,
     tips: (storeId: string) => `/stores/${storeId}/tips` as const,
     tipsExport: (storeId: string) => `/stores/${storeId}/tips/export` as const,
+    settlements: (storeId: string) => `/stores/${storeId}/settlements` as const,
+    settlementBalances: (storeId: string) =>
+      `/stores/${storeId}/settlements/balances` as const,
+    settlementOwedDistributions: (storeId: string) =>
+      `/stores/${storeId}/settlements/owed-distributions` as const,
+    settlementAdjustments: (storeId: string) =>
+      `/stores/${storeId}/settlements/adjustments` as const,
+    settlementsExport: (storeId: string) =>
+      `/stores/${storeId}/settlements/export` as const,
     reviews: (storeId: string) => `/stores/${storeId}/reviews` as const,
     reviewCategories: (storeId: string) =>
       `/stores/${storeId}/review-categories` as const,
@@ -101,6 +110,9 @@ export const ApiRoutes = {
     byId: (id: string) => `/employees/${id}` as const,
     resendInvite: (id: string) => `/employees/${id}/resend-invite` as const,
     dashboard: (id: string) => `/employees/${id}/dashboard` as const,
+    settlements: (id: string) => `/employees/${id}/settlements` as const,
+    settlementBalance: (id: string) =>
+      `/employees/${id}/settlement-balance` as const,
     qrCode: (id: string) => `/employees/${id}/qr-code` as const,
     tips: (id: string) => `/employees/${id}/tips` as const,
     reviews: (id: string) => `/employees/${id}/reviews` as const,
@@ -116,8 +128,14 @@ export const ApiRoutes = {
   spots: {
     byId: (id: string) => `/spots/${id}` as const,
   },
+  settlements: {
+    reverse: (id: string) => `/settlements/${id}/reverse` as const,
+    confirm: (id: string) => `/settlements/${id}/confirm` as const,
+  },
   distributionRules: {
     byId: (id: string) => `/distribution-rules/${id}` as const,
+    payoutModeImpact: (id: string) =>
+      `/distribution-rules/${id}/payout-mode-impact` as const,
   },
   tips: {
     byId: (id: string) => `/tips/${id}` as const,

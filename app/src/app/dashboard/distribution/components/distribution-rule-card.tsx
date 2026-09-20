@@ -1,9 +1,13 @@
 "use client";
 
 import { type FC } from "react";
-import { Pencil, Star, Trash2 } from "lucide-react";
+import { Landmark, Pencil, Star, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { DistributionRule } from "@/features/distribution/interfaces/distribution.interfaces";
+import {
+  DistributionPayoutModes,
+  type DistributionRule,
+} from "@/features/distribution/interfaces/distribution.interfaces";
+import { getDistributionPayoutModeShortLabel } from "@/config/constants/dropdowns/distribution/distribution-payout-mode-form.options";
 import { formatRecipientSummary } from "@/features/distribution/utils/distribution-summary.utils";
 import { cn } from "@/lib/utils";
 
@@ -40,11 +44,19 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
             {formatRecipientSummary(rule.recipients)}
           </p>
         </div>
-        {isDefault ? (
-          <span className="shrink-0 rounded-full bg-brand-50 px-2 py-0.5 text-caption font-bold text-brand-700">
-            Store default
-          </span>
-        ) : null}
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          {isDefault ? (
+            <span className="rounded-full bg-brand-50 px-2 py-0.5 text-caption font-bold text-brand-700">
+              Store default
+            </span>
+          ) : null}
+          {rule.payout_mode === DistributionPayoutModes.VIA_STORE ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-caption font-bold text-amber-800">
+              <Landmark className="size-3" strokeWidth={2.5} />
+              {getDistributionPayoutModeShortLabel(rule.payout_mode)}
+            </span>
+          ) : null}
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2 pt-1">

@@ -294,6 +294,7 @@ exports.Prisma.DistributionRuleScalarFieldEnum = {
   id: 'id',
   store_id: 'store_id',
   name: 'name',
+  payout_mode: 'payout_mode',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -396,9 +397,13 @@ exports.Prisma.TipDistributionScalarFieldEnum = {
   employee_id: 'employee_id',
   amount: 'amount',
   percentage: 'percentage',
+  payout_mode: 'payout_mode',
   payout_status: 'payout_status',
   payout_id: 'payout_id',
   paid_out_at: 'paid_out_at',
+  settlement_status: 'settlement_status',
+  settlement_id: 'settlement_id',
+  settled_at: 'settled_at',
   created_at: 'created_at'
 };
 
@@ -415,6 +420,38 @@ exports.Prisma.PayoutScalarFieldEnum = {
   status: 'status',
   failure_reason: 'failure_reason',
   executed_at: 'executed_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.SettlementScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  employee_id: 'employee_id',
+  employee_name_snapshot: 'employee_name_snapshot',
+  amount: 'amount',
+  currency: 'currency',
+  settled_at: 'settled_at',
+  note: 'note',
+  reference: 'reference',
+  recorded_by_user_id: 'recorded_by_user_id',
+  confirmed_by_employee_at: 'confirmed_by_employee_at',
+  reversed_at: 'reversed_at',
+  reversed_by_user_id: 'reversed_by_user_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.SettlementAdjustmentScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  employee_id: 'employee_id',
+  amount: 'amount',
+  reason: 'reason',
+  refund_id: 'refund_id',
+  status: 'status',
+  settlement_id: 'settlement_id',
+  created_by_user_id: 'created_by_user_id',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -648,6 +685,11 @@ exports.QrCodeSelectionMode = exports.$Enums.QrCodeSelectionMode = {
   TEAM: 'TEAM'
 };
 
+exports.DistributionPayoutMode = exports.$Enums.DistributionPayoutMode = {
+  DIRECT: 'DIRECT',
+  VIA_STORE: 'VIA_STORE'
+};
+
 exports.DistributionRecipientType = exports.$Enums.DistributionRecipientType = {
   STORE: 'STORE',
   EMPLOYEE: 'EMPLOYEE'
@@ -703,11 +745,24 @@ exports.PayoutStatus = exports.$Enums.PayoutStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.SettlementStatus = exports.$Enums.SettlementStatus = {
+  NOT_REQUIRED: 'NOT_REQUIRED',
+  OWED: 'OWED',
+  SETTLED: 'SETTLED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.PayoutExecutionStatus = exports.$Enums.PayoutExecutionStatus = {
   PROCESSING: 'PROCESSING',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
   CANCELLED: 'CANCELLED'
+};
+
+exports.SettlementAdjustmentStatus = exports.$Enums.SettlementAdjustmentStatus = {
+  PROPOSED: 'PROPOSED',
+  APPLIED: 'APPLIED',
+  DISMISSED: 'DISMISSED'
 };
 
 exports.RefundStatus = exports.$Enums.RefundStatus = {
@@ -757,6 +812,8 @@ exports.Prisma.ModelName = {
   WebhookEvent: 'WebhookEvent',
   TipDistribution: 'TipDistribution',
   Payout: 'Payout',
+  Settlement: 'Settlement',
+  SettlementAdjustment: 'SettlementAdjustment',
   Refund: 'Refund',
   Review: 'Review',
   ReviewCategory: 'ReviewCategory',

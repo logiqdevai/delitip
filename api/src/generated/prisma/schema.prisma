@@ -153,6 +153,39 @@ enum PaymentProvider {
   PAYPAL
 }
 
+// Where a Distribution Rule's money is actually sent. DIRECT pays every
+// recipient their own share to their own payout account. VIA_STORE sends
+// the whole tip to the Store's account instead, and the Store hands each
+// employee their share itself (cash, bank transfer, payroll — the method
+// is recorded but the money never moves through us). The rule's
+// percentages are unchanged either way: they still decide what each
+// employee earned, which under VIA_STORE is what the Store owes them.
+enum DistributionPayoutMode {
+  DIRECT
+  VIA_STORE
+}
+
+// Whether an employee has actually received a share the Store collected on
+// their behalf. Orthogonal to PayoutStatus above, which only tracks whether
+// the money left the platform: under VIA_STORE both axes move separately,
+// and the gap between them is the Store's debt to the employee.
+enum SettlementStatus {
+  NOT_REQUIRED // Store's own share, or an employee share paid directly to them
+  OWED
+  SETTLED
+  CANCELLED // the parent Tip was refunded before the Store handed the money over
+}
+
+// A correction against what a Store owes an employee — today only raised
+// when a Tip is refunded after its share was already handed over, since an
+// off-platform handover has no clawback. PROPOSED until the Store chooses
+// to apply it to a settlement.
+enum SettlementAdjustmentStatus {
+  PROPOSED
+  APPLIED
+  DISMISSED
+}
+
 enum ReviewSentiment {
   POSITIVE
   NEUTRAL
@@ -217,11 +250,14 @@ model User {
   documents                Document[]
   organization_memberships OrganizationMember[]
   employee_accounts        Employee[]
-  customer_tips            Tip[]                @relation("TipCustomer")
-  customer_reviews         Review[]             @relation("ReviewCustomer")
-  refunds_requested        Refund[]             @relation("RefundRequestedBy")
-  refunds_processed        Refund[]             @relation("RefundProcessedBy")
+  customer_tips            Tip[]                  @relation("TipCustomer")
+  customer_reviews         Review[]               @relation("ReviewCustomer")
+  refunds_requested        Refund[]               @relation("RefundRequestedBy")
+  refunds_processed        Refund[]               @relation("RefundProcessedBy")
   payout_account           PayoutAccount?
+  settlements_recorded     Settlement[]           @relation("SettlementRecordedBy")
+  settlements_reversed     Settlement[]           @relation("SettlementReversedBy")
+  settlement_adjustments   SettlementAdjustment[] @relation("SettlementAdjustmentCreatedBy")
 
   @@index([email])
   @@index([phone])
@@ -419,6 +455,8 @@ model Store {
   insight_summaries          InsightSummary[]
   payout_account             PayoutAccount?
   payouts                    Payout[]
+  settlements                Settlement[]
+  settlement_adjustments     SettlementAdjustment[]
 
   @@index([organization_id])
   @@index([slug])
@@ -457,6 +495,8 @@ model Employee {
   reviews                      Review[]
   alerts                       Alert[]
   payouts                      Payout[]
+  settlements                  Settlement[]
+  settlement_adjustments       SettlementAdjustment[]
 
   @@index([store_id])
   @@index([user_id])
@@ -586,11 +626,16 @@ model QrTemplateCustomization {
 // ==================================================================
 
 model DistributionRule {
-  id         String   @id @default(uuid())
-  store_id   String
-  name       String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id          String                 @id @default(uuid())
+  store_id    String
+  name        String
+  // Whether this rule's shares are paid out to each recipient directly or
+  // collected into the Store's account for the Store to hand over itself.
+  // Absolute per rule — there is no per-employee override — but a Store can
+  // run rules of both modes side by side, since a QR code picks its own rule.
+  payout_mode DistributionPayoutMode @default(DIRECT)
+  created_at  DateTime               @default(now())
+  updated_at  DateTime               @updatedAt
 
   store Store @relation("StoreDistributionRules", fields: [store_id], references: [id], onDelete: Cascade)
 
@@ -761,25 +806,37 @@ model WebhookEvent {
 // so later changes to a Distribution Rule never affect past tips, and
 // each recipient's payout can be tracked independently.
 model TipDistribution {
-  id             String                    @id @default(uuid())
-  tip_id         String
-  recipient_type DistributionRecipientType
-  employee_id    String? // required when recipient_type is EMPLOYEE, null when recipient_type is STORE
-  amount         Int // this recipient's frozen share of the tip, in the smallest currency unit (rounding remainder goes to the first-listed recipient)
-  percentage     Decimal                   @db.Decimal(5, 2) // the rule's percentage at the time this tip was made
-  payout_status  PayoutStatus              @default(PENDING) // whether this recipient's share has actually been paid out — independent of the Tip's own status
-  payout_id      String? // set only inside the atomic claim of a Payout run; null while PENDING/unclaimed
-  paid_out_at    DateTime?
-  created_at     DateTime                  @default(now())
+  id                String                    @id @default(uuid())
+  tip_id            String
+  recipient_type    DistributionRecipientType
+  employee_id       String? // required when recipient_type is EMPLOYEE, null when recipient_type is STORE
+  amount            Int // this recipient's frozen share of the tip, in the smallest currency unit (rounding remainder goes to the first-listed recipient)
+  percentage        Decimal                   @db.Decimal(5, 2) // the rule's percentage at the time this tip was made
+  // Frozen copy of the rule's payout_mode, for the same reason `percentage`
+  // is frozen: the rule can be edited later, but only rows that haven't been
+  // claimed or settled yet are ever re-routed (see DistributionRulesService).
+  payout_mode       DistributionPayoutMode    @default(DIRECT)
+  payout_status     PayoutStatus              @default(PENDING) // whether this recipient's share has actually been paid out — independent of the Tip's own status
+  payout_id         String? // set only inside the atomic claim of a Payout run; null while PENDING/unclaimed
+  paid_out_at       DateTime?
+  // Second, independent axis: under VIA_STORE the money reaching the Store's
+  // bank (payout_status) is not the employee receiving it (settlement_status).
+  settlement_status SettlementStatus          @default(NOT_REQUIRED)
+  settlement_id     String? // set only inside the atomic claim of a Settlement; null while OWED/unsettled
+  settled_at        DateTime?
+  created_at        DateTime                  @default(now())
 
-  tip      Tip       @relation(fields: [tip_id], references: [id], onDelete: Cascade)
-  employee Employee? @relation(fields: [employee_id], references: [id], onDelete: SetNull)
-  payout   Payout?   @relation(fields: [payout_id], references: [id], onDelete: SetNull)
+  tip        Tip         @relation(fields: [tip_id], references: [id], onDelete: Cascade)
+  employee   Employee?   @relation(fields: [employee_id], references: [id], onDelete: SetNull)
+  payout     Payout?     @relation(fields: [payout_id], references: [id], onDelete: SetNull)
+  settlement Settlement? @relation(fields: [settlement_id], references: [id], onDelete: SetNull)
 
   @@index([tip_id])
   @@index([employee_id])
   @@index([payout_status])
   @@index([payout_id])
+  @@index([settlement_id])
+  @@index([employee_id, settlement_status])
   @@map("tip_distributions")
 }
 
@@ -814,6 +871,72 @@ model Payout {
   @@map("payouts")
 }
 
+// One recorded handover from a Store to an employee, covering the shares the
+// Store collected on that employee's behalf under a VIA_STORE rule. The money
+// itself never moves through us — this is the record that it moved, so the
+// Store knows what it still owes and the employee can verify what they got.
+// Never deleted, only reversed.
+model Settlement {
+  id                       String    @id @default(uuid())
+  store_id                 String
+  employee_id              String?
+  employee_name_snapshot   String // an employee row can be detached (TipDistribution.employee_id is SetNull) but the debt record must outlive it
+  amount                   Int // derived server-side from the settled distributions minus applied adjustments, never supplied by the client
+  currency                 Currency
+  settled_at               DateTime // when the Store says the handover happened, which may predate the bank transfer reaching them
+  note                     String?
+  reference                String? // the Store's own reference, e.g. a payroll run or bank transfer id
+  recorded_by_user_id      String?
+  confirmed_by_employee_at DateTime? // the employee's own acknowledgement that they received it
+  reversed_at              DateTime?
+  reversed_by_user_id      String?
+  created_at               DateTime  @default(now())
+  updated_at               DateTime  @updatedAt
+
+  store       Store     @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  employee    Employee? @relation(fields: [employee_id], references: [id], onDelete: SetNull)
+  recorded_by User?     @relation("SettlementRecordedBy", fields: [recorded_by_user_id], references: [id], onDelete: SetNull)
+  reversed_by User?     @relation("SettlementReversedBy", fields: [reversed_by_user_id], references: [id], onDelete: SetNull)
+
+  distributions TipDistribution[]
+  adjustments   SettlementAdjustment[]
+
+  @@index([store_id])
+  @@index([employee_id])
+  @@index([settled_at])
+  @@map("settlements")
+}
+
+// A correction against what a Store owes an employee, held as a negative
+// amount. Raised automatically when a Tip is refunded after its share was
+// already settled — an off-platform handover has no clawback, so the only
+// remedy is to deduct it from what the Store hands over next.
+model SettlementAdjustment {
+  id                 String                     @id @default(uuid())
+  store_id           String
+  employee_id        String?
+  amount             Int // negative minor units
+  reason             String
+  refund_id          String?
+  status             SettlementAdjustmentStatus @default(PROPOSED)
+  settlement_id      String? // set when the Store applies it to a settlement
+  created_by_user_id String?
+  created_at         DateTime                   @default(now())
+  updated_at         DateTime                   @updatedAt
+
+  store      Store       @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  employee   Employee?   @relation(fields: [employee_id], references: [id], onDelete: SetNull)
+  refund     Refund?     @relation(fields: [refund_id], references: [id], onDelete: SetNull)
+  settlement Settlement? @relation(fields: [settlement_id], references: [id], onDelete: SetNull)
+  created_by User?       @relation("SettlementAdjustmentCreatedBy", fields: [created_by_user_id], references: [id], onDelete: SetNull)
+
+  @@index([store_id])
+  @@index([employee_id])
+  @@index([status])
+  @@index([settlement_id])
+  @@map("settlement_adjustments")
+}
+
 model Refund {
   id                             String       @id @default(uuid())
   tip_id                         String
@@ -831,6 +954,8 @@ model Refund {
   tip          Tip   @relation(fields: [tip_id], references: [id], onDelete: Cascade)
   requested_by User? @relation("RefundRequestedBy", fields: [requested_by_user_id], references: [id], onDelete: SetNull)
   processed_by User? @relation("RefundProcessedBy", fields: [processed_by_user_id], references: [id], onDelete: SetNull)
+
+  settlement_adjustments SettlementAdjustment[]
 
   @@index([tip_id])
   @@index([status])

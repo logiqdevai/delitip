@@ -45,6 +45,12 @@ export interface Payout {
   created_at: string;
   updated_at: string;
   employee?: PayoutEmployeeRef | null;
+  // A transfer to a business carries its own share plus any shares it collected
+  // for staff under a "paid by the business" rule. Derived from the tips the
+  // transfer covers, so the business knows which part of the deposit is not
+  // its own money to keep.
+  own_share_amount?: number;
+  held_for_staff_amount?: number;
   // Only present on admin-wide listings/detail (GET /admin/payouts) — store-
   // scoped listings already imply the store.
   store?: PayoutStoreRef | null;
@@ -79,6 +85,8 @@ export interface PayoutPreviewRecipient {
   employee_id?: string;
   name: string;
   amount: number;
+  own_share_amount: number;
+  held_for_staff_amount: number;
   currency: Currency;
   will_be_paid: boolean;
   skip_reason?: PayoutSkipReason;
@@ -86,6 +94,7 @@ export interface PayoutPreviewRecipient {
 
 export interface PayoutPreview {
   total_amount: number;
+  total_held_for_staff_amount: number;
   recipients: PayoutPreviewRecipient[];
 }
 

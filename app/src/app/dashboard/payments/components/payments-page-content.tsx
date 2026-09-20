@@ -9,6 +9,7 @@ import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared
 import { PayoutAccountCard } from "@/app/dashboard/payments/components/payout-account-card";
 import { DistributionsTable } from "@/app/dashboard/payments/components/distributions-table";
 import { RefundsTable } from "@/app/dashboard/payments/components/refunds-table";
+import { StaffBalancesTable } from "@/app/dashboard/payments/components/staff-balances-table";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 
 export const PaymentsPageContent: FC = () => {
@@ -38,7 +39,7 @@ export const PaymentsPageContent: FC = () => {
     <>
       <DashboardPageHeader
         title="Payments"
-        description={`Payout account, pending distributions, and refunds for ${store.name}.`}
+        description={`Payout account, pending distributions, staff balances, and refunds for ${store.name}.`}
       />
 
       <PayoutAccountCard storeId={storeId} />
@@ -46,10 +47,18 @@ export const PaymentsPageContent: FC = () => {
       <Tabs defaultValue="distributions">
         <TabsList variant="line">
           <TabsTrigger value="distributions">Pending distributions</TabsTrigger>
+          <TabsTrigger value="staff-balances">Staff balances</TabsTrigger>
           <TabsTrigger value="refunds">Refunds</TabsTrigger>
         </TabsList>
         <TabsContent value="distributions" className="mt-4">
           <DistributionsTable storeId={storeId} currency={store.currency} />
+        </TabsContent>
+        <TabsContent value="staff-balances" className="mt-4">
+          <StaffBalancesTable
+            storeId={storeId}
+            storeName={store.name}
+            currency={store.currency}
+          />
         </TabsContent>
         <TabsContent value="refunds" className="mt-4">
           <RefundsTable storeId={storeId} currency={store.currency} />

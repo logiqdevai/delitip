@@ -6,7 +6,15 @@ import { CreateDistributionRuleDto } from './dto/create-distribution-rule.dto';
 import { UpdateDistributionRuleDto } from './dto/update-distribution-rule.dto';
 import { RecipientInputDto } from './dto/recipient-input.dto';
 import { SetDefaultDistributionRuleDto } from './dto/set-default-distribution-rule.dto';
-import { DistributionRecipientType, Language, OrganizationRole } from 'generated/prisma';
+import {
+    DistributionPayoutMode,
+    DistributionRecipientType,
+    Language,
+    OrganizationRole,
+    PayoutStatus,
+    Prisma,
+    SettlementStatus,
+} from 'generated/prisma';
 
 const MANAGE_ROLES: OrganizationRole[] = [OrganizationRole.OWNER, OrganizationRole.STORE_MANAGER];
 
@@ -85,6 +93,81 @@ export class DistributionRulesService {
         }
     }
 
+    // Distributions that haven't been claimed by a payout run and haven't been
+    // handed over yet — the only ones a rule edit is allowed to re-route. Money
+    // already in flight, already paid, or already settled with an employee is
+    // frozen: re-routing it would rewrite a record of something that happened.
+    private pendingDistributionsFilter(ruleId: string): Prisma.TipDistributionWhereInput {
+        return {
+            tip: { distribution_rule_id: ruleId },
+            payout_id: null,
+            payout_status: PayoutStatus.PENDING,
+            settlement_status: { notIn: [SettlementStatus.SETTLED, SettlementStatus.CANCELLED] },
+        };
+    }
+
+    private async countReroutableDistributions(ruleId: string) {
+        return this.prisma.tipDistribution.count({ where: this.pendingDistributionsFilter(ruleId) });
+    }
+
+    // Applies a rule's new payout_mode to everything still pending under it, so
+    // the Store isn't left running two modes side by side after a switch.
+    private async reroutePendingDistributions(
+        tx: Prisma.TransactionClient,
+        ruleId: string,
+        mode: DistributionPayoutMode,
+    ): Promise<number> {
+        const pending = await tx.tipDistribution.findMany({
+            where: this.pendingDistributionsFilter(ruleId),
+            select: { id: true, recipient_type: true },
+        });
+
+        if (pending.length === 0) return 0;
+
+        // Only an employee's share can be owed — the Store can't owe itself.
+        const employeeIds = pending
+            .filter((d) => d.recipient_type === DistributionRecipientType.EMPLOYEE)
+            .map((d) => d.id);
+        const storeIds = pending
+            .filter((d) => d.recipient_type === DistributionRecipientType.STORE)
+            .map((d) => d.id);
+
+        if (employeeIds.length > 0) {
+            await tx.tipDistribution.updateMany({
+                where: { id: { in: employeeIds } },
+                data: {
+                    payout_mode: mode,
+                    settlement_status:
+                        mode === DistributionPayoutMode.VIA_STORE
+                            ? SettlementStatus.OWED
+                            : SettlementStatus.NOT_REQUIRED,
+                },
+            });
+        }
+
+        if (storeIds.length > 0) {
+            await tx.tipDistribution.updateMany({
+                where: { id: { in: storeIds } },
+                data: { payout_mode: mode, settlement_status: SettlementStatus.NOT_REQUIRED },
+            });
+        }
+
+        return pending.length;
+    }
+
+    // What a mode switch would move, so the UI can warn before saving.
+    async previewPayoutModeChange(user: AuthUser, id: string) {
+        const rule = await this.prisma.distributionRule.findUnique({ where: { id } });
+        if (!rule) throw new NotFoundException('Distribution rule not found');
+
+        await this.accessControl.assertStoreAccess(user, rule.store_id, MANAGE_ROLES);
+
+        return {
+            current_payout_mode: rule.payout_mode,
+            affected_distributions_count: await this.countReroutableDistributions(id),
+        };
+    }
+
     async create(user: AuthUser, storeId: string, dto: CreateDistributionRuleDto) {
         await this.accessControl.assertStoreAccess(user, storeId, MANAGE_ROLES);
 
@@ -92,7 +175,7 @@ export class DistributionRulesService {
 
         const rule = await this.prisma.$transaction(async (tx) => {
             const created = await tx.distributionRule.create({
-                data: { store_id: storeId, name: dto.name },
+                data: { store_id: storeId, name: dto.name, payout_mode: dto.payout_mode ?? DistributionPayoutMode.DIRECT },
             });
 
             await tx.distributionRuleRecipient.createMany({
@@ -160,12 +243,22 @@ export class DistributionRulesService {
 
         if (dto.recipients) {
             await this.validateRecipients(rule.store_id, dto.recipients);
+        }
 
-            const updated = await this.prisma.$transaction(async (tx) => {
-                if (dto.name !== undefined) {
-                    await tx.distributionRule.update({ where: { id }, data: { name: dto.name } });
-                }
+        const payoutModeChanged = dto.payout_mode !== undefined && dto.payout_mode !== rule.payout_mode;
 
+        const { updated, reroutedCount } = await this.prisma.$transaction(async (tx) => {
+            if (dto.name !== undefined || dto.payout_mode !== undefined) {
+                await tx.distributionRule.update({
+                    where: { id },
+                    data: {
+                        ...(dto.name !== undefined ? { name: dto.name } : {}),
+                        ...(dto.payout_mode !== undefined ? { payout_mode: dto.payout_mode } : {}),
+                    },
+                });
+            }
+
+            if (dto.recipients) {
                 await tx.distributionRuleRecipient.deleteMany({ where: { distribution_rule_id: id } });
 
                 await tx.distributionRuleRecipient.createMany({
@@ -180,19 +273,24 @@ export class DistributionRulesService {
                         sort_order: recipient.sort_order ?? index,
                     })),
                 });
+            }
 
-                return tx.distributionRule.findUnique({ where: { id }, include: RECIPIENTS_INCLUDE });
-            });
+            // A mode switch takes everything still pending under this rule with
+            // it, so a Store never has to chase the same money down two routes.
+            const rerouted = payoutModeChanged
+                ? await this.reroutePendingDistributions(tx, id, dto.payout_mode!)
+                : 0;
 
-            return this.resolveRecipientNames(updated, rule.store_id);
-        }
+            return {
+                updated: await tx.distributionRule.findUnique({ where: { id }, include: RECIPIENTS_INCLUDE }),
+                reroutedCount: rerouted,
+            };
+        });
 
-        if (dto.name !== undefined) {
-            await this.prisma.distributionRule.update({ where: { id }, data: { name: dto.name } });
-        }
+        const resolved = await this.resolveRecipientNames(updated, rule.store_id);
+        if (!resolved) throw new NotFoundException('Distribution rule not found');
 
-        const full = await this.prisma.distributionRule.findUnique({ where: { id }, include: RECIPIENTS_INCLUDE });
-        return this.resolveRecipientNames(full, rule.store_id);
+        return { ...resolved, rerouted_distributions_count: reroutedCount };
     }
 
     async remove(user: AuthUser, id: string) {

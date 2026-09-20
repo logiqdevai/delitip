@@ -28,6 +28,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { VivaIntegrationModule } from './integrations/viva/viva.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { PayoutsModule } from './modules/payouts/payouts.module';
+import { SettlementsModule } from './modules/settlements/settlements.module';
 import { ContactModule } from './modules/contact/contact.module';
 
 @Module({
@@ -60,6 +61,7 @@ import { ContactModule } from './modules/contact/contact.module';
     AnalyticsModule,
     PaymentsModule,
     PayoutsModule,
+    SettlementsModule,
     ContactModule,
   ],
   controllers: [AppController],

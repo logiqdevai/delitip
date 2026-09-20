@@ -1,5 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma, PayoutExecutionStatus, PayoutStatus, TipStatus } from 'generated/prisma';
+import {
+  DistributionPayoutMode,
+  DistributionRecipientType,
+  Prisma,
+  PayoutExecutionStatus,
+  PayoutStatus,
+  SettlementStatus,
+  TipStatus,
+} from 'generated/prisma';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { TipsService } from '@/modules/tips/services/tips.service';
 import { VivaTransactionsService } from '@/integrations/viva/services/viva-transactions.service';
@@ -163,18 +171,24 @@ export class PaymentWebhooksService {
         ? [tip.employee_id]
         : [];
 
-    const recipients: RuleRecipientInput[] = tip.distribution_rule_id
-      ? (
-          await this.prisma.distributionRuleRecipient.findMany({
-            where: { distribution_rule_id: tip.distribution_rule_id },
-          })
-        ).map((r) => ({
-          recipient_type: r.recipient_type,
-          employee_id: r.employee_id,
-          percentage: Number(r.percentage),
-          sort_order: r.sort_order,
-        }))
-      : [];
+    const rule = tip.distribution_rule_id
+      ? await this.prisma.distributionRule.findUnique({
+          where: { id: tip.distribution_rule_id },
+          include: { recipients: true },
+        })
+      : null;
+
+    const recipients: RuleRecipientInput[] = (rule?.recipients ?? []).map((r) => ({
+      recipient_type: r.recipient_type,
+      employee_id: r.employee_id,
+      percentage: Number(r.percentage),
+      sort_order: r.sort_order,
+    }));
+
+    // Frozen onto every distribution below, for the same reason the percentage
+    // is: the rule can be edited later, and only rows still pending are ever
+    // re-routed. No rule at all means nothing was configured to pool, so DIRECT.
+    const payoutMode = rule?.payout_mode ?? DistributionPayoutMode.DIRECT;
 
     const grossAmount = tip.payment_transaction.gross_amount;
     const tipAmount = tip.payment_transaction.tip_amount;
@@ -230,6 +244,14 @@ export class PaymentWebhooksService {
           employee_id: line.employee_id,
           amount: line.amount,
           percentage: line.percentage,
+          payout_mode: payoutMode,
+          // Only an employee's share can be owed, and only when the Store is
+          // collecting it on their behalf — the Store never owes itself.
+          settlement_status:
+            payoutMode === DistributionPayoutMode.VIA_STORE &&
+            line.recipient_type === DistributionRecipientType.EMPLOYEE
+              ? SettlementStatus.OWED
+              : SettlementStatus.NOT_REQUIRED,
         })),
       });
     });

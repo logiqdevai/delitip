@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { DistributionRecipientType, OrganizationRole, PayoutAccountStatus, PayoutExecutionStatus, PayoutStatus, TipStatus } from 'generated/prisma';
+import { DistributionPayoutMode, DistributionRecipientType, OrganizationRole, PayoutAccountStatus, PayoutExecutionStatus, PayoutStatus, TipStatus } from 'generated/prisma';
 import { PayoutsService } from './payouts.service';
 
 const user = { id: 'owner1', role: 'USER' };
@@ -21,6 +21,7 @@ describe('PayoutsService', () => {
                 findFirst: jest.fn().mockResolvedValue(null),
                 updateMany: jest.fn(),
                 aggregate: jest.fn(),
+                groupBy: jest.fn().mockResolvedValue([]),
                 count: jest.fn().mockResolvedValue(0),
             },
             payoutAccount: { findUnique: jest.fn(), update: jest.fn(), findUniqueOrThrow: jest.fn() },
@@ -92,6 +93,88 @@ describe('PayoutsService', () => {
             { recipient_type: DistributionRecipientType.STORE, employee_id: undefined, reason: 'NO_PAYOUT_ACCOUNT' },
         ]);
         expect(prisma.payout.create).not.toHaveBeenCalled();
+    });
+
+    it('routes an employee share earned under a VIA_STORE rule to the Store, not the employee', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([
+            storeDistribution({ id: 'own', amount: 200 }),
+            storeDistribution({
+                id: 'pooled',
+                recipient_type: DistributionRecipientType.EMPLOYEE,
+                employee_id: 'emp1',
+                payout_mode: DistributionPayoutMode.VIA_STORE,
+                amount: 800,
+            }),
+        ]);
+        prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', status: PayoutAccountStatus.ACTIVE, bank_account_id: 'bank1' });
+        prisma.payout.create.mockResolvedValue({ id: 'payout1', amount: 1000, currency: 'EUR' });
+        prisma.tipDistribution.updateMany.mockResolvedValue({ count: 2 });
+        prisma.payout.findUniqueOrThrow.mockResolvedValue({ id: 'payout1', amount: 1000 });
+        prisma.payout.update.mockImplementation(async ({ data }: any) => ({ id: 'payout1', ...data }));
+
+        const result = await service.run(user, 'store1', {});
+
+        // One transfer, to the Store's own account, covering both shares.
+        expect(prisma.employee.findUnique).not.toHaveBeenCalled();
+        expect(prisma.payoutAccount.findUnique).toHaveBeenCalledWith({ where: { store_id: 'store1' } });
+        expect(prisma.payout.create).toHaveBeenCalledWith(
+            expect.objectContaining({
+                data: expect.objectContaining({ recipient_type: DistributionRecipientType.STORE, amount: 1000 }),
+            }),
+        );
+        expect(prisma.tipDistribution.updateMany).toHaveBeenCalledWith(
+            expect.objectContaining({ where: expect.objectContaining({ id: { in: ['own', 'pooled'] } }) }),
+        );
+        expect(result.payouts).toHaveLength(1);
+        expect(result.skipped_recipients).toEqual([]);
+    });
+
+    it('still pays an employee share earned under a DIRECT rule to the employee', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([
+            storeDistribution({
+                id: 'direct',
+                recipient_type: DistributionRecipientType.EMPLOYEE,
+                employee_id: 'emp1',
+                payout_mode: DistributionPayoutMode.DIRECT,
+            }),
+        ]);
+        prisma.employee.findUnique.mockResolvedValue({ id: 'emp1', user_id: 'u9' });
+        prisma.payoutAccount.findUnique.mockResolvedValue(null);
+
+        const result = await service.run(user, 'store1', {});
+
+        expect(prisma.payoutAccount.findUnique).toHaveBeenCalledWith({ where: { user_id: 'u9' } });
+        expect(result.skipped_recipients).toEqual([
+            { recipient_type: DistributionRecipientType.EMPLOYEE, employee_id: 'emp1', reason: 'NO_PAYOUT_ACCOUNT' },
+        ]);
+    });
+
+    it('reports the pooled portion of a Store transfer separately in the preview', async () => {
+        prisma.tipDistribution.findMany.mockResolvedValue([
+            storeDistribution({ id: 'own', amount: 200 }),
+            storeDistribution({
+                id: 'pooled',
+                recipient_type: DistributionRecipientType.EMPLOYEE,
+                employee_id: 'emp1',
+                payout_mode: DistributionPayoutMode.VIA_STORE,
+                amount: 800,
+            }),
+        ]);
+        prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', status: PayoutAccountStatus.ACTIVE, bank_account_id: 'bank1' });
+        prisma.store.findUnique.mockResolvedValue({ name: 'Kafeneio', primary_language: 'EN' });
+
+        const result = await service.previewEligiblePayouts(user, 'store1');
+
+        expect(result.total_amount).toBe(1000);
+        expect(result.total_held_for_staff_amount).toBe(800);
+        expect(result.recipients).toEqual([
+            expect.objectContaining({
+                recipient_type: DistributionRecipientType.STORE,
+                amount: 1000,
+                own_share_amount: 200,
+                held_for_staff_amount: 800,
+            }),
+        ]);
     });
 
     it('skips an employee recipient with NO_LINKED_USER when the Employee has no user_id', async () => {

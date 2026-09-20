@@ -1,5 +1,13 @@
 import { z } from "zod";
-import { DistributionRecipientTypes } from "@/features/distribution/interfaces/distribution.interfaces";
+import {
+  DistributionPayoutModes,
+  DistributionRecipientTypes,
+} from "@/features/distribution/interfaces/distribution.interfaces";
+
+const payoutModeValues = Object.values(DistributionPayoutModes) as [
+  (typeof DistributionPayoutModes)[keyof typeof DistributionPayoutModes],
+  ...(typeof DistributionPayoutModes)[keyof typeof DistributionPayoutModes][],
+];
 
 const recipientTypeValues = Object.values(DistributionRecipientTypes) as [
   (typeof DistributionRecipientTypes)[keyof typeof DistributionRecipientTypes],
@@ -28,6 +36,7 @@ const recipientSchema = z
 export const distributionRuleFormSchema = z
   .object({
     name: z.string().trim().min(1, "Rule name is required"),
+    payout_mode: z.enum(payoutModeValues),
     recipients: z
       .array(recipientSchema)
       .min(1, "Add at least one recipient"),

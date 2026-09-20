@@ -1,4 +1,11 @@
-import { Prisma, PayoutExecutionStatus, PayoutStatus, TipStatus } from 'generated/prisma';
+import {
+  DistributionPayoutMode,
+  Prisma,
+  PayoutExecutionStatus,
+  PayoutStatus,
+  SettlementStatus,
+  TipStatus,
+} from 'generated/prisma';
 import { PaymentWebhooksService } from './payment-webhooks.service';
 import { VivaWebhookEventTypeId } from '../interfaces/viva-webhook-event-types.interface';
 
@@ -24,6 +31,7 @@ describe('PaymentWebhooksService', () => {
             tip: { findUnique: jest.fn(), findFirst: jest.fn(), update: jest.fn() },
             paymentTransaction: { update: jest.fn(), findFirst: jest.fn() },
             distributionRuleRecipient: { findMany: jest.fn().mockResolvedValue([]) },
+            distributionRule: { findUnique: jest.fn().mockResolvedValue(null) },
             tipDistribution: { createMany: jest.fn(), updateMany: jest.fn() },
             refund: { findUnique: jest.fn(), update: jest.fn() },
             payout: { findFirst: jest.fn(), update: jest.fn() },
@@ -165,6 +173,71 @@ describe('PaymentWebhooksService', () => {
                 data: [expect.objectContaining({ recipient_type: 'STORE', amount: 911 })],
             });
             expect(tipsService.triggerPerformanceChangeAlert).toHaveBeenCalled();
+        });
+
+        it('freezes the payout_mode of the rule onto each distribution and marks pooled employee shares as owed', async () => {
+            prisma.tip.findUnique.mockResolvedValue({
+                id: 'tip1',
+                status: TipStatus.CREATED,
+                distribution_rule_id: 'rule1',
+                selected_employee_ids: ['emp1'],
+                employee_id: 'emp1',
+                payment_transaction: { id: 'pt1', tip_amount: 1000, gross_amount: 1000, commission_amount: 50 },
+            });
+            prisma.distributionRule.findUnique.mockResolvedValue({
+                id: 'rule1',
+                payout_mode: DistributionPayoutMode.VIA_STORE,
+                recipients: [
+                    { recipient_type: 'EMPLOYEE', employee_id: 'emp1', percentage: 70, sort_order: 0 },
+                    { recipient_type: 'STORE', employee_id: null, percentage: 30, sort_order: 1 },
+                ],
+            });
+
+            await service.applyVerifiedTransaction(transaction as any);
+
+            expect(prisma.tipDistribution.createMany).toHaveBeenCalledWith({
+                data: [
+                    expect.objectContaining({
+                        recipient_type: 'EMPLOYEE',
+                        employee_id: 'emp1',
+                        payout_mode: DistributionPayoutMode.VIA_STORE,
+                        settlement_status: SettlementStatus.OWED,
+                    }),
+                    // The Store's own share is never owed to anyone.
+                    expect.objectContaining({
+                        recipient_type: 'STORE',
+                        payout_mode: DistributionPayoutMode.VIA_STORE,
+                        settlement_status: SettlementStatus.NOT_REQUIRED,
+                    }),
+                ],
+            });
+        });
+
+        it('leaves distributions under a DIRECT rule unowed', async () => {
+            prisma.tip.findUnique.mockResolvedValue({
+                id: 'tip1',
+                status: TipStatus.CREATED,
+                distribution_rule_id: 'rule1',
+                selected_employee_ids: ['emp1'],
+                employee_id: 'emp1',
+                payment_transaction: { id: 'pt1', tip_amount: 1000, gross_amount: 1000, commission_amount: 50 },
+            });
+            prisma.distributionRule.findUnique.mockResolvedValue({
+                id: 'rule1',
+                payout_mode: DistributionPayoutMode.DIRECT,
+                recipients: [{ recipient_type: 'EMPLOYEE', employee_id: 'emp1', percentage: 100, sort_order: 0 }],
+            });
+
+            await service.applyVerifiedTransaction(transaction as any);
+
+            expect(prisma.tipDistribution.createMany).toHaveBeenCalledWith({
+                data: [
+                    expect.objectContaining({
+                        payout_mode: DistributionPayoutMode.DIRECT,
+                        settlement_status: SettlementStatus.NOT_REQUIRED,
+                    }),
+                ],
+            });
         });
 
         it('converts major-unit transaction.amount to minor units before comparing (regression: was never matching any real payment)', async () => {

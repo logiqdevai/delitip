@@ -1,5 +1,12 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { AuthRole, DistributionRecipientType, OrganizationRole } from 'generated/prisma';
+import {
+    AuthRole,
+    DistributionPayoutMode,
+    DistributionRecipientType,
+    OrganizationRole,
+    PayoutStatus,
+    SettlementStatus,
+} from 'generated/prisma';
 import { DistributionRulesService } from './distribution-rules.service';
 
 describe('DistributionRulesService', () => {
@@ -41,6 +48,11 @@ describe('DistributionRulesService', () => {
                 findUnique: jest.fn().mockResolvedValue({ primary_language: 'EN' }),
             },
             tip: { findFirst: jest.fn().mockResolvedValue(null) },
+            tipDistribution: {
+                findMany: jest.fn().mockResolvedValue([]),
+                updateMany: jest.fn().mockResolvedValue({ count: 0 }),
+                count: jest.fn().mockResolvedValue(0),
+            },
             qrCode: { findFirst: jest.fn().mockResolvedValue(null) },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
@@ -117,7 +129,9 @@ describe('DistributionRulesService', () => {
             await service.create(user, 'store1', dto);
 
             expect(prisma.$transaction).toHaveBeenCalledTimes(1);
-            expect(prisma.distributionRule.create).toHaveBeenCalledWith({ data: { store_id: 'store1', name: 'Split' } });
+            expect(prisma.distributionRule.create).toHaveBeenCalledWith({
+                data: { store_id: 'store1', name: 'Split', payout_mode: DistributionPayoutMode.DIRECT },
+            });
             expect(prisma.distributionRuleRecipient.createMany).toHaveBeenCalledWith({
                 data: [
                     { distribution_rule_id: 'rule1', recipient_type: DistributionRecipientType.EMPLOYEE, employee_id: 'e1', percentage: 60, sort_order: 0 },
@@ -195,8 +209,80 @@ describe('DistributionRulesService', () => {
             await service.update(user, 'rule1', { name: 'New name' } as any);
 
             expect(prisma.distributionRule.update).toHaveBeenCalledWith({ where: { id: 'rule1' }, data: { name: 'New name' } });
-            expect(prisma.$transaction).not.toHaveBeenCalled();
             expect(prisma.distributionRuleRecipient.deleteMany).not.toHaveBeenCalled();
+            expect(prisma.tipDistribution.findMany).not.toHaveBeenCalled();
+        });
+
+        it('switching a rule to VIA_STORE marks its pending employee shares as owed by the Store', async () => {
+            prisma.distributionRule.findUnique
+                .mockResolvedValueOnce({ id: 'rule1', store_id: 'store1', payout_mode: DistributionPayoutMode.DIRECT })
+                .mockResolvedValueOnce({ id: 'rule1', recipients: [] });
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                { id: 'd1', recipient_type: DistributionRecipientType.EMPLOYEE },
+                { id: 'd2', recipient_type: DistributionRecipientType.STORE },
+            ]);
+
+            const result = await service.update(user, 'rule1', {
+                payout_mode: DistributionPayoutMode.VIA_STORE,
+            } as any);
+
+            expect(prisma.tipDistribution.updateMany).toHaveBeenCalledWith({
+                where: { id: { in: ['d1'] } },
+                data: { payout_mode: DistributionPayoutMode.VIA_STORE, settlement_status: SettlementStatus.OWED },
+            });
+            // The Store can never owe itself, so its own share only changes route.
+            expect(prisma.tipDistribution.updateMany).toHaveBeenCalledWith({
+                where: { id: { in: ['d2'] } },
+                data: { payout_mode: DistributionPayoutMode.VIA_STORE, settlement_status: SettlementStatus.NOT_REQUIRED },
+            });
+            expect(result.rerouted_distributions_count).toBe(2);
+        });
+
+        it('switching a rule back to DIRECT clears the owed flag on its pending shares', async () => {
+            prisma.distributionRule.findUnique
+                .mockResolvedValueOnce({ id: 'rule1', store_id: 'store1', payout_mode: DistributionPayoutMode.VIA_STORE })
+                .mockResolvedValueOnce({ id: 'rule1', recipients: [] });
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                { id: 'd1', recipient_type: DistributionRecipientType.EMPLOYEE },
+            ]);
+
+            await service.update(user, 'rule1', { payout_mode: DistributionPayoutMode.DIRECT } as any);
+
+            expect(prisma.tipDistribution.updateMany).toHaveBeenCalledWith({
+                where: { id: { in: ['d1'] } },
+                data: { payout_mode: DistributionPayoutMode.DIRECT, settlement_status: SettlementStatus.NOT_REQUIRED },
+            });
+        });
+
+        it('leaves claimed, paid and already-settled shares alone when re-routing', async () => {
+            prisma.distributionRule.findUnique
+                .mockResolvedValueOnce({ id: 'rule1', store_id: 'store1', payout_mode: DistributionPayoutMode.DIRECT })
+                .mockResolvedValueOnce({ id: 'rule1', recipients: [] });
+
+            await service.update(user, 'rule1', { payout_mode: DistributionPayoutMode.VIA_STORE } as any);
+
+            expect(prisma.tipDistribution.findMany).toHaveBeenCalledWith({
+                where: {
+                    tip: { distribution_rule_id: 'rule1' },
+                    payout_id: null,
+                    payout_status: PayoutStatus.PENDING,
+                    settlement_status: { notIn: [SettlementStatus.SETTLED, SettlementStatus.CANCELLED] },
+                },
+                select: { id: true, recipient_type: true },
+            });
+        });
+
+        it('does not re-route anything when payout_mode is unchanged', async () => {
+            prisma.distributionRule.findUnique
+                .mockResolvedValueOnce({ id: 'rule1', store_id: 'store1', payout_mode: DistributionPayoutMode.VIA_STORE })
+                .mockResolvedValueOnce({ id: 'rule1', recipients: [] });
+
+            const result = await service.update(user, 'rule1', {
+                payout_mode: DistributionPayoutMode.VIA_STORE,
+            } as any);
+
+            expect(prisma.tipDistribution.findMany).not.toHaveBeenCalled();
+            expect(result.rerouted_distributions_count).toBe(0);
         });
 
         it('does nothing when neither name nor recipients are provided', async () => {

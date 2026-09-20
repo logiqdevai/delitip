@@ -3,7 +3,7 @@
 import { type FC, useEffect, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Building2, Plus, Trash2, User } from "lucide-react";
+import { Building2, Landmark, Plus, Trash2, User, Wallet } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
@@ -21,13 +21,18 @@ import { NumberPicker } from "@/components/ui/number-picker";
 import { EmployeeSelect } from "@/components/ui/employee-select";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
 import { DistributionRecipientTypeFormOptions } from "@/config/constants/dropdowns/distribution/distribution-recipient-type-form.options";
+import { DistributionPayoutModeFormOptions } from "@/config/constants/dropdowns/distribution/distribution-payout-mode-form.options";
+import { getDistributionPayoutModeDescription } from "@/config/constants/dropdowns/distribution/distribution-payout-mode-description.options";
 import {
   useCreateDistributionRule,
+  useDistributionRulePayoutModeImpact,
   useUpdateDistributionRule,
 } from "@/features/distribution/hooks/use-distribution";
 import {
+  DistributionPayoutModes,
   DistributionRecipientTypes,
   recipientPercentage,
+  type DistributionPayoutMode,
   type DistributionRecipientType,
   type DistributionRule,
 } from "@/features/distribution/interfaces/distribution.interfaces";
@@ -85,6 +90,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
     resolver: zodResolver(distributionRuleFormSchema),
     defaultValues: {
       name: "",
+      payout_mode: DistributionPayoutModes.DIRECT,
       recipients: [emptyRecipient()],
     },
   });
@@ -101,6 +107,16 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
   const [createEmployeeForIndex, setCreateEmployeeForIndex] = useState<
     number | null
   >(null);
+
+  const payoutMode = useWatch({ control, name: "payout_mode" });
+  const payoutModeChanged = !!rule && payoutMode !== rule.payout_mode;
+  // Only asked for once the owner actually moves the switch — there's nothing
+  // to warn about until then.
+  const payoutModeImpact = useDistributionRulePayoutModeImpact(rule?.id ?? "", {
+    enabled: payoutModeChanged,
+  });
+  const affectedShares =
+    payoutModeImpact.data?.affected_distributions_count ?? 0;
 
   const recipients = useWatch({ control, name: "recipients" }) ?? [];
   const percentageSum = recipients.reduce(
@@ -123,6 +139,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
     if (rule) {
       reset({
         name: rule.name,
+        payout_mode: rule.payout_mode,
         recipients: rule.recipients
           .toSorted((a, b) => a.sort_order - b.sort_order)
           .map((recipient) => ({
@@ -136,6 +153,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
 
     reset({
       name: "",
+      payout_mode: DistributionPayoutModes.DIRECT,
       recipients: [emptyRecipient()],
     });
   }, [open, reset, rule]);
@@ -176,6 +194,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
   const onSubmit = handleSubmit(async (values) => {
     const payload = {
       name: values.name,
+      payout_mode: values.payout_mode,
       recipients: values.recipients.map((recipient, index) => ({
         recipient_type: recipient.recipient_type,
         employee_id:
@@ -252,6 +271,64 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
             />
             {errors.name ? (
               <p className="text-xs text-red-600">{errors.name.message}</p>
+            ) : null}
+          </div>
+
+          <div className="space-y-2">
+            <Label>Who pays the employees</Label>
+            <Controller
+              control={control}
+              name="payout_mode"
+              render={({ field }) => (
+                <div
+                  className="grid gap-2 sm:grid-cols-2"
+                  role="radiogroup"
+                  aria-label="Who pays the employees"
+                >
+                  {DistributionPayoutModeFormOptions.map((option) => {
+                    const selected = field.value === option.id;
+                    const Icon =
+                      option.id === DistributionPayoutModes.VIA_STORE
+                        ? Landmark
+                        : Wallet;
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        disabled={isPending}
+                        onClick={() =>
+                          field.onChange(option.id as DistributionPayoutMode)
+                        }
+                        className={cn(
+                          "rounded-xl border p-3 text-left transition-colors",
+                          selected
+                            ? "border-brand-700 bg-brand-50"
+                            : "border-zinc-200 bg-white hover:border-zinc-300",
+                        )}
+                      >
+                        <span className="flex items-center gap-1.5 text-xs font-bold text-ink-charcoal">
+                          <Icon className="size-3.5 shrink-0" strokeWidth={2} />
+                          {option.label}
+                        </span>
+                        <span className="mt-1 block text-[11px] leading-snug text-zinc-500">
+                          {getDistributionPayoutModeDescription(option.id)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            />
+            {payoutModeChanged ? (
+              <p className="rounded-lg bg-amber-50 px-3 py-2 text-[11px] leading-snug text-amber-900">
+                {payoutModeImpact.isPending
+                  ? "Checking what this affects…"
+                  : affectedShares > 0
+                    ? `Saving moves ${affectedShares} pending share${affectedShares === 1 ? "" : "s"} onto the new route. Shares already paid out or already handed over stay as they are.`
+                    : "Nothing is pending under this rule, so only future tips are affected."}
+              </p>
             ) : null}
           </div>
 

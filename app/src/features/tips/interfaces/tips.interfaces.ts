@@ -1,4 +1,6 @@
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
+import type { DistributionPayoutMode } from "@/features/distribution/interfaces/distribution.interfaces";
+import type { SettlementStatus } from "@/features/settlements/interfaces/settlements.interfaces";
 
 export const TipStatuses = {
   PENDING: "PENDING",
@@ -50,6 +52,11 @@ export interface TipDistribution {
   percentage: number;
   payout_status: PayoutStatus;
   paid_out_at?: string | null;
+  // Set when this share was earned under a "paid by the business" rule, i.e.
+  // the business collected it and hands it over itself.
+  payout_mode?: DistributionPayoutMode;
+  settlement_status?: SettlementStatus;
+  settled_at?: string | null;
   created_at: string;
 }
 

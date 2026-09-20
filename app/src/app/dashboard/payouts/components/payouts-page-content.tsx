@@ -132,6 +132,20 @@ export const PayoutsPageContent: FC = () => {
                   </TableCell>
                   <TableCell className="px-4 py-3.5 font-bold text-brand-700">
                     {formatMoney(payout.amount, payout.currency)}
+                    {payout.held_for_staff_amount ? (
+                      <span className="mt-0.5 block text-[11px] font-medium text-zinc-500">
+                        {formatMoney(
+                          payout.own_share_amount ?? 0,
+                          payout.currency,
+                        )}{" "}
+                        yours ·{" "}
+                        {formatMoney(
+                          payout.held_for_staff_amount,
+                          payout.currency,
+                        )}{" "}
+                        held for staff
+                      </span>
+                    ) : null}
                   </TableCell>
                   <TableCell className="px-4 py-3.5 font-mono text-xs text-zinc-500">
                     {payout.provider_transfer_id ?? "-"}

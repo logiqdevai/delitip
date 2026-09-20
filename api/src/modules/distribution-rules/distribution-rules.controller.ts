@@ -37,6 +37,14 @@ export class DistributionRulesController {
         return this.distributionRulesService.findOne(user, id);
     }
 
+    @Get('distribution-rules/:id/payout-mode-impact')
+    @ApiOperation({
+        summary: 'How many pending distributions a payout-mode switch on this rule would re-route',
+    })
+    previewPayoutModeChange(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+        return this.distributionRulesService.previewPayoutModeChange(user, id);
+    }
+
     @Patch('distribution-rules/:id')
     @ApiOperation({ summary: 'Update a Distribution Rule (§5 — Owner/Store Manager only)' })
     update(@CurrentUser() user: AuthUser, @Param('id') id: string, @Body() dto: UpdateDistributionRuleDto) {

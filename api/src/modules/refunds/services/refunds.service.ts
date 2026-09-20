@@ -11,7 +11,7 @@ import {
 import { CreatePublicRefundRequestDto, CreateRefundDto } from '../dto/create-refund.dto';
 import { UpdateRefundDto } from '../dto/update-refund.dto';
 import { RefundsQueryType } from '../dto/refunds-query.schema';
-import { PayoutMethod, PayoutStatus, RefundStatus, TipStatus } from 'generated/prisma';
+import { PayoutMethod, PayoutStatus, RefundStatus, SettlementStatus, TipStatus } from 'generated/prisma';
 
 @Injectable()
 export class RefundsService {
@@ -124,7 +124,11 @@ export class RefundsService {
                 throw new BadRequestException('This tip has no confirmed payment to refund');
             }
 
-            alreadyPaidOut = refund.tip.distributions.some((d) => d.payout_status === PayoutStatus.PAID);
+            // A share handed over to an employee off-platform is exactly as
+            // unreclaimable as one already wired out — neither has a clawback.
+            alreadyPaidOut = refund.tip.distributions.some(
+                (d) => d.payout_status === PayoutStatus.PAID || d.settlement_status === SettlementStatus.SETTLED,
+            );
             const usesConnectedAccount = refund.tip.store?.payout_account?.payout_method === PayoutMethod.CONNECTED_ACCOUNT;
 
             try {
@@ -185,6 +189,34 @@ export class RefundsService {
                     where: { tip_id: refund.tip_id, payout_status: PayoutStatus.PENDING },
                     data: { payout_status: PayoutStatus.CANCELLED },
                 });
+
+                // Same reasoning on the settlement axis: a share the Store was
+                // holding for an employee is no longer owed once the customer
+                // has their money back.
+                await tx.tipDistribution.updateMany({
+                    where: { tip_id: refund.tip_id, settlement_status: SettlementStatus.OWED },
+                    data: { settlement_status: SettlementStatus.CANCELLED },
+                });
+
+                // But if the Store already handed it over there is nothing to
+                // cancel, so raise a deduction it can choose to apply against
+                // what it owes that employee next.
+                const settledShares = refund.tip.distributions.filter(
+                    (d) => d.settlement_status === SettlementStatus.SETTLED && d.employee_id,
+                );
+
+                if (settledShares.length > 0) {
+                    await tx.settlementAdjustment.createMany({
+                        data: settledShares.map((share) => ({
+                            store_id: refund.tip.store_id,
+                            employee_id: share.employee_id,
+                            amount: -share.amount,
+                            reason: `Tip refunded after this share was handed over (refund ${refund.id})`,
+                            refund_id: refund.id,
+                            created_by_user_id: user.id,
+                        })),
+                    });
+                }
             }
 
             return updated;

@@ -90,6 +90,12 @@ const RecipientRow: FC<{
             <p className="text-caption text-red-600">
               {outcome.reason ?? "Transfer failed"}
             </p>
+          ) : recipient.held_for_staff_amount > 0 ? (
+            <p className="text-caption text-zinc-400">
+              includes{" "}
+              {formatMoney(recipient.held_for_staff_amount, recipient.currency)}{" "}
+              you owe staff
+            </p>
           ) : null}
         </div>
       </div>
@@ -226,6 +232,13 @@ export const PayOutNowDialog: FC<{
                 )}
               </span>
             </div>
+            {!result && preview.total_held_for_staff_amount > 0 ? (
+              <p className="border-t border-zinc-100 bg-amber-50/60 px-4 py-2.5 text-caption leading-snug text-amber-900">
+                {formatMoney(preview.total_held_for_staff_amount, currency)} of
+                this is staff money you&apos;ll be holding, not yours to keep.
+                Track it under Staff balances.
+              </p>
+            ) : null}
           </div>
         ) : (
           <p className="text-caption text-zinc-500">

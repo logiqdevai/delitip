@@ -119,6 +119,16 @@ export type TipDistribution = $Result.DefaultSelection<Prisma.$TipDistributionPa
  */
 export type Payout = $Result.DefaultSelection<Prisma.$PayoutPayload>
 /**
+ * Model Settlement
+ * 
+ */
+export type Settlement = $Result.DefaultSelection<Prisma.$SettlementPayload>
+/**
+ * Model SettlementAdjustment
+ * 
+ */
+export type SettlementAdjustment = $Result.DefaultSelection<Prisma.$SettlementAdjustmentPayload>
+/**
  * Model Refund
  * 
  */
@@ -357,6 +367,33 @@ export const PaymentProvider: {
 export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
 
 
+export const DistributionPayoutMode: {
+  DIRECT: 'DIRECT',
+  VIA_STORE: 'VIA_STORE'
+};
+
+export type DistributionPayoutMode = (typeof DistributionPayoutMode)[keyof typeof DistributionPayoutMode]
+
+
+export const SettlementStatus: {
+  NOT_REQUIRED: 'NOT_REQUIRED',
+  OWED: 'OWED',
+  SETTLED: 'SETTLED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type SettlementStatus = (typeof SettlementStatus)[keyof typeof SettlementStatus]
+
+
+export const SettlementAdjustmentStatus: {
+  PROPOSED: 'PROPOSED',
+  APPLIED: 'APPLIED',
+  DISMISSED: 'DISMISSED'
+};
+
+export type SettlementAdjustmentStatus = (typeof SettlementAdjustmentStatus)[keyof typeof SettlementAdjustmentStatus]
+
+
 export const ReviewSentiment: {
   POSITIVE: 'POSITIVE',
   NEUTRAL: 'NEUTRAL',
@@ -477,6 +514,18 @@ export const PayoutMethod: typeof $Enums.PayoutMethod
 export type PaymentProvider = $Enums.PaymentProvider
 
 export const PaymentProvider: typeof $Enums.PaymentProvider
+
+export type DistributionPayoutMode = $Enums.DistributionPayoutMode
+
+export const DistributionPayoutMode: typeof $Enums.DistributionPayoutMode
+
+export type SettlementStatus = $Enums.SettlementStatus
+
+export const SettlementStatus: typeof $Enums.SettlementStatus
+
+export type SettlementAdjustmentStatus = $Enums.SettlementAdjustmentStatus
+
+export const SettlementAdjustmentStatus: typeof $Enums.SettlementAdjustmentStatus
 
 export type ReviewSentiment = $Enums.ReviewSentiment
 
@@ -828,6 +877,26 @@ export class PrismaClient<
     * ```
     */
   get payout(): Prisma.PayoutDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.settlement`: Exposes CRUD operations for the **Settlement** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Settlements
+    * const settlements = await prisma.settlement.findMany()
+    * ```
+    */
+  get settlement(): Prisma.SettlementDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.settlementAdjustment`: Exposes CRUD operations for the **SettlementAdjustment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SettlementAdjustments
+    * const settlementAdjustments = await prisma.settlementAdjustment.findMany()
+    * ```
+    */
+  get settlementAdjustment(): Prisma.SettlementAdjustmentDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.refund`: Exposes CRUD operations for the **Refund** model.
@@ -1393,6 +1462,8 @@ export namespace Prisma {
     WebhookEvent: 'WebhookEvent',
     TipDistribution: 'TipDistribution',
     Payout: 'Payout',
+    Settlement: 'Settlement',
+    SettlementAdjustment: 'SettlementAdjustment',
     Refund: 'Refund',
     Review: 'Review',
     ReviewCategory: 'ReviewCategory',
@@ -1419,7 +1490,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "document" | "organization" | "organizationMember" | "subscription" | "store" | "employee" | "spot" | "qrCode" | "qrCodeSpot" | "qrCodeEmployee" | "qrTemplateCustomization" | "distributionRule" | "distributionRuleRecipient" | "payoutAccount" | "tip" | "paymentTransaction" | "webhookEvent" | "tipDistribution" | "payout" | "refund" | "review" | "reviewCategory" | "reviewCategoryRating" | "reviewTag" | "reviewTagAssignment" | "feedbackQuestion" | "feedbackResponse" | "alertPreference" | "alert" | "insightSummary"
+      modelProps: "user" | "passwordResetToken" | "document" | "organization" | "organizationMember" | "subscription" | "store" | "employee" | "spot" | "qrCode" | "qrCodeSpot" | "qrCodeEmployee" | "qrTemplateCustomization" | "distributionRule" | "distributionRuleRecipient" | "payoutAccount" | "tip" | "paymentTransaction" | "webhookEvent" | "tipDistribution" | "payout" | "settlement" | "settlementAdjustment" | "refund" | "review" | "reviewCategory" | "reviewCategoryRating" | "reviewTag" | "reviewTagAssignment" | "feedbackQuestion" | "feedbackResponse" | "alertPreference" | "alert" | "insightSummary"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2977,6 +3048,154 @@ export namespace Prisma {
           }
         }
       }
+      Settlement: {
+        payload: Prisma.$SettlementPayload<ExtArgs>
+        fields: Prisma.SettlementFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SettlementFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SettlementFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload>
+          }
+          findFirst: {
+            args: Prisma.SettlementFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SettlementFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload>
+          }
+          findMany: {
+            args: Prisma.SettlementFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload>[]
+          }
+          create: {
+            args: Prisma.SettlementCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload>
+          }
+          createMany: {
+            args: Prisma.SettlementCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SettlementCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload>[]
+          }
+          delete: {
+            args: Prisma.SettlementDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload>
+          }
+          update: {
+            args: Prisma.SettlementUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload>
+          }
+          deleteMany: {
+            args: Prisma.SettlementDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SettlementUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SettlementUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload>[]
+          }
+          upsert: {
+            args: Prisma.SettlementUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementPayload>
+          }
+          aggregate: {
+            args: Prisma.SettlementAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSettlement>
+          }
+          groupBy: {
+            args: Prisma.SettlementGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SettlementGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SettlementCountArgs<ExtArgs>
+            result: $Utils.Optional<SettlementCountAggregateOutputType> | number
+          }
+        }
+      }
+      SettlementAdjustment: {
+        payload: Prisma.$SettlementAdjustmentPayload<ExtArgs>
+        fields: Prisma.SettlementAdjustmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SettlementAdjustmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SettlementAdjustmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload>
+          }
+          findFirst: {
+            args: Prisma.SettlementAdjustmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SettlementAdjustmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload>
+          }
+          findMany: {
+            args: Prisma.SettlementAdjustmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload>[]
+          }
+          create: {
+            args: Prisma.SettlementAdjustmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload>
+          }
+          createMany: {
+            args: Prisma.SettlementAdjustmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SettlementAdjustmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload>[]
+          }
+          delete: {
+            args: Prisma.SettlementAdjustmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload>
+          }
+          update: {
+            args: Prisma.SettlementAdjustmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.SettlementAdjustmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SettlementAdjustmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SettlementAdjustmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.SettlementAdjustmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettlementAdjustmentPayload>
+          }
+          aggregate: {
+            args: Prisma.SettlementAdjustmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSettlementAdjustment>
+          }
+          groupBy: {
+            args: Prisma.SettlementAdjustmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SettlementAdjustmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SettlementAdjustmentCountArgs<ExtArgs>
+            result: $Utils.Optional<SettlementAdjustmentCountAggregateOutputType> | number
+          }
+        }
+      }
       Refund: {
         payload: Prisma.$RefundPayload<ExtArgs>
         fields: Prisma.RefundFieldRefs
@@ -3920,6 +4139,8 @@ export namespace Prisma {
     webhookEvent?: WebhookEventOmit
     tipDistribution?: TipDistributionOmit
     payout?: PayoutOmit
+    settlement?: SettlementOmit
+    settlementAdjustment?: SettlementAdjustmentOmit
     refund?: RefundOmit
     review?: ReviewOmit
     reviewCategory?: ReviewCategoryOmit
@@ -4019,6 +4240,9 @@ export namespace Prisma {
     customer_reviews: number
     refunds_requested: number
     refunds_processed: number
+    settlements_recorded: number
+    settlements_reversed: number
+    settlement_adjustments: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4030,6 +4254,9 @@ export namespace Prisma {
     customer_reviews?: boolean | UserCountOutputTypeCountCustomer_reviewsArgs
     refunds_requested?: boolean | UserCountOutputTypeCountRefunds_requestedArgs
     refunds_processed?: boolean | UserCountOutputTypeCountRefunds_processedArgs
+    settlements_recorded?: boolean | UserCountOutputTypeCountSettlements_recordedArgs
+    settlements_reversed?: boolean | UserCountOutputTypeCountSettlements_reversedArgs
+    settlement_adjustments?: boolean | UserCountOutputTypeCountSettlement_adjustmentsArgs
   }
 
   // Custom InputTypes
@@ -4097,6 +4324,27 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountRefunds_processedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RefundWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSettlements_recordedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSettlements_reversedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSettlement_adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementAdjustmentWhereInput
   }
 
 
@@ -4218,6 +4466,8 @@ export namespace Prisma {
     alerts: number
     insight_summaries: number
     payouts: number
+    settlements: number
+    settlement_adjustments: number
   }
 
   export type StoreCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4236,6 +4486,8 @@ export namespace Prisma {
     alerts?: boolean | StoreCountOutputTypeCountAlertsArgs
     insight_summaries?: boolean | StoreCountOutputTypeCountInsight_summariesArgs
     payouts?: boolean | StoreCountOutputTypeCountPayoutsArgs
+    settlements?: boolean | StoreCountOutputTypeCountSettlementsArgs
+    settlement_adjustments?: boolean | StoreCountOutputTypeCountSettlement_adjustmentsArgs
   }
 
   // Custom InputTypes
@@ -4354,6 +4606,20 @@ export namespace Prisma {
     where?: PayoutWhereInput
   }
 
+  /**
+   * StoreCountOutputType without action
+   */
+  export type StoreCountOutputTypeCountSettlementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementWhereInput
+  }
+
+  /**
+   * StoreCountOutputType without action
+   */
+  export type StoreCountOutputTypeCountSettlement_adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementAdjustmentWhereInput
+  }
+
 
   /**
    * Count Type EmployeeCountOutputType
@@ -4367,6 +4633,8 @@ export namespace Prisma {
     reviews: number
     alerts: number
     payouts: number
+    settlements: number
+    settlement_adjustments: number
   }
 
   export type EmployeeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4377,6 +4645,8 @@ export namespace Prisma {
     reviews?: boolean | EmployeeCountOutputTypeCountReviewsArgs
     alerts?: boolean | EmployeeCountOutputTypeCountAlertsArgs
     payouts?: boolean | EmployeeCountOutputTypeCountPayoutsArgs
+    settlements?: boolean | EmployeeCountOutputTypeCountSettlementsArgs
+    settlement_adjustments?: boolean | EmployeeCountOutputTypeCountSettlement_adjustmentsArgs
   }
 
   // Custom InputTypes
@@ -4437,6 +4707,20 @@ export namespace Prisma {
    */
   export type EmployeeCountOutputTypeCountPayoutsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PayoutWhereInput
+  }
+
+  /**
+   * EmployeeCountOutputType without action
+   */
+  export type EmployeeCountOutputTypeCountSettlementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementWhereInput
+  }
+
+  /**
+   * EmployeeCountOutputType without action
+   */
+  export type EmployeeCountOutputTypeCountSettlement_adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementAdjustmentWhereInput
   }
 
 
@@ -4668,6 +4952,77 @@ export namespace Prisma {
    */
   export type PayoutCountOutputTypeCountDistributionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TipDistributionWhereInput
+  }
+
+
+  /**
+   * Count Type SettlementCountOutputType
+   */
+
+  export type SettlementCountOutputType = {
+    distributions: number
+    adjustments: number
+  }
+
+  export type SettlementCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    distributions?: boolean | SettlementCountOutputTypeCountDistributionsArgs
+    adjustments?: boolean | SettlementCountOutputTypeCountAdjustmentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SettlementCountOutputType without action
+   */
+  export type SettlementCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementCountOutputType
+     */
+    select?: SettlementCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SettlementCountOutputType without action
+   */
+  export type SettlementCountOutputTypeCountDistributionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TipDistributionWhereInput
+  }
+
+  /**
+   * SettlementCountOutputType without action
+   */
+  export type SettlementCountOutputTypeCountAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementAdjustmentWhereInput
+  }
+
+
+  /**
+   * Count Type RefundCountOutputType
+   */
+
+  export type RefundCountOutputType = {
+    settlement_adjustments: number
+  }
+
+  export type RefundCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    settlement_adjustments?: boolean | RefundCountOutputTypeCountSettlement_adjustmentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * RefundCountOutputType without action
+   */
+  export type RefundCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RefundCountOutputType
+     */
+    select?: RefundCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * RefundCountOutputType without action
+   */
+  export type RefundCountOutputTypeCountSettlement_adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementAdjustmentWhereInput
   }
 
 
@@ -5054,6 +5409,9 @@ export namespace Prisma {
     refunds_requested?: boolean | User$refunds_requestedArgs<ExtArgs>
     refunds_processed?: boolean | User$refunds_processedArgs<ExtArgs>
     payout_account?: boolean | User$payout_accountArgs<ExtArgs>
+    settlements_recorded?: boolean | User$settlements_recordedArgs<ExtArgs>
+    settlements_reversed?: boolean | User$settlements_reversedArgs<ExtArgs>
+    settlement_adjustments?: boolean | User$settlement_adjustmentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5116,6 +5474,9 @@ export namespace Prisma {
     refunds_requested?: boolean | User$refunds_requestedArgs<ExtArgs>
     refunds_processed?: boolean | User$refunds_processedArgs<ExtArgs>
     payout_account?: boolean | User$payout_accountArgs<ExtArgs>
+    settlements_recorded?: boolean | User$settlements_recordedArgs<ExtArgs>
+    settlements_reversed?: boolean | User$settlements_reversedArgs<ExtArgs>
+    settlement_adjustments?: boolean | User$settlement_adjustmentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5133,6 +5494,9 @@ export namespace Prisma {
       refunds_requested: Prisma.$RefundPayload<ExtArgs>[]
       refunds_processed: Prisma.$RefundPayload<ExtArgs>[]
       payout_account: Prisma.$PayoutAccountPayload<ExtArgs> | null
+      settlements_recorded: Prisma.$SettlementPayload<ExtArgs>[]
+      settlements_reversed: Prisma.$SettlementPayload<ExtArgs>[]
+      settlement_adjustments: Prisma.$SettlementAdjustmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5551,6 +5915,9 @@ export namespace Prisma {
     refunds_requested<T extends User$refunds_requestedArgs<ExtArgs> = {}>(args?: Subset<T, User$refunds_requestedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     refunds_processed<T extends User$refunds_processedArgs<ExtArgs> = {}>(args?: Subset<T, User$refunds_processedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     payout_account<T extends User$payout_accountArgs<ExtArgs> = {}>(args?: Subset<T, User$payout_accountArgs<ExtArgs>>): Prisma__PayoutAccountClient<$Result.GetResult<Prisma.$PayoutAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    settlements_recorded<T extends User$settlements_recordedArgs<ExtArgs> = {}>(args?: Subset<T, User$settlements_recordedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    settlements_reversed<T extends User$settlements_reversedArgs<ExtArgs> = {}>(args?: Subset<T, User$settlements_reversedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    settlement_adjustments<T extends User$settlement_adjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$settlement_adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6189,6 +6556,78 @@ export namespace Prisma {
      */
     include?: PayoutAccountInclude<ExtArgs> | null
     where?: PayoutAccountWhereInput
+  }
+
+  /**
+   * User.settlements_recorded
+   */
+  export type User$settlements_recordedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    where?: SettlementWhereInput
+    orderBy?: SettlementOrderByWithRelationInput | SettlementOrderByWithRelationInput[]
+    cursor?: SettlementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SettlementScalarFieldEnum | SettlementScalarFieldEnum[]
+  }
+
+  /**
+   * User.settlements_reversed
+   */
+  export type User$settlements_reversedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    where?: SettlementWhereInput
+    orderBy?: SettlementOrderByWithRelationInput | SettlementOrderByWithRelationInput[]
+    cursor?: SettlementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SettlementScalarFieldEnum | SettlementScalarFieldEnum[]
+  }
+
+  /**
+   * User.settlement_adjustments
+   */
+  export type User$settlement_adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    where?: SettlementAdjustmentWhereInput
+    orderBy?: SettlementAdjustmentOrderByWithRelationInput | SettlementAdjustmentOrderByWithRelationInput[]
+    cursor?: SettlementAdjustmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SettlementAdjustmentScalarFieldEnum | SettlementAdjustmentScalarFieldEnum[]
   }
 
   /**
@@ -12476,6 +12915,8 @@ export namespace Prisma {
     insight_summaries?: boolean | Store$insight_summariesArgs<ExtArgs>
     payout_account?: boolean | Store$payout_accountArgs<ExtArgs>
     payouts?: boolean | Store$payoutsArgs<ExtArgs>
+    settlements?: boolean | Store$settlementsArgs<ExtArgs>
+    settlement_adjustments?: boolean | Store$settlement_adjustmentsArgs<ExtArgs>
     _count?: boolean | StoreCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["store"]>
 
@@ -12605,6 +13046,8 @@ export namespace Prisma {
     insight_summaries?: boolean | Store$insight_summariesArgs<ExtArgs>
     payout_account?: boolean | Store$payout_accountArgs<ExtArgs>
     payouts?: boolean | Store$payoutsArgs<ExtArgs>
+    settlements?: boolean | Store$settlementsArgs<ExtArgs>
+    settlement_adjustments?: boolean | Store$settlement_adjustmentsArgs<ExtArgs>
     _count?: boolean | StoreCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type StoreIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12643,6 +13086,8 @@ export namespace Prisma {
       insight_summaries: Prisma.$InsightSummaryPayload<ExtArgs>[]
       payout_account: Prisma.$PayoutAccountPayload<ExtArgs> | null
       payouts: Prisma.$PayoutPayload<ExtArgs>[]
+      settlements: Prisma.$SettlementPayload<ExtArgs>[]
+      settlement_adjustments: Prisma.$SettlementAdjustmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13088,6 +13533,8 @@ export namespace Prisma {
     insight_summaries<T extends Store$insight_summariesArgs<ExtArgs> = {}>(args?: Subset<T, Store$insight_summariesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InsightSummaryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     payout_account<T extends Store$payout_accountArgs<ExtArgs> = {}>(args?: Subset<T, Store$payout_accountArgs<ExtArgs>>): Prisma__PayoutAccountClient<$Result.GetResult<Prisma.$PayoutAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     payouts<T extends Store$payoutsArgs<ExtArgs> = {}>(args?: Subset<T, Store$payoutsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    settlements<T extends Store$settlementsArgs<ExtArgs> = {}>(args?: Subset<T, Store$settlementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    settlement_adjustments<T extends Store$settlement_adjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, Store$settlement_adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13978,6 +14425,54 @@ export namespace Prisma {
   }
 
   /**
+   * Store.settlements
+   */
+  export type Store$settlementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    where?: SettlementWhereInput
+    orderBy?: SettlementOrderByWithRelationInput | SettlementOrderByWithRelationInput[]
+    cursor?: SettlementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SettlementScalarFieldEnum | SettlementScalarFieldEnum[]
+  }
+
+  /**
+   * Store.settlement_adjustments
+   */
+  export type Store$settlement_adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    where?: SettlementAdjustmentWhereInput
+    orderBy?: SettlementAdjustmentOrderByWithRelationInput | SettlementAdjustmentOrderByWithRelationInput[]
+    cursor?: SettlementAdjustmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SettlementAdjustmentScalarFieldEnum | SettlementAdjustmentScalarFieldEnum[]
+  }
+
+  /**
    * Store without action
    */
   export type StoreDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14214,6 +14709,8 @@ export namespace Prisma {
     reviews?: boolean | Employee$reviewsArgs<ExtArgs>
     alerts?: boolean | Employee$alertsArgs<ExtArgs>
     payouts?: boolean | Employee$payoutsArgs<ExtArgs>
+    settlements?: boolean | Employee$settlementsArgs<ExtArgs>
+    settlement_adjustments?: boolean | Employee$settlement_adjustmentsArgs<ExtArgs>
     _count?: boolean | EmployeeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["employee"]>
 
@@ -14277,6 +14774,8 @@ export namespace Prisma {
     reviews?: boolean | Employee$reviewsArgs<ExtArgs>
     alerts?: boolean | Employee$alertsArgs<ExtArgs>
     payouts?: boolean | Employee$payoutsArgs<ExtArgs>
+    settlements?: boolean | Employee$settlementsArgs<ExtArgs>
+    settlement_adjustments?: boolean | Employee$settlement_adjustmentsArgs<ExtArgs>
     _count?: boolean | EmployeeCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type EmployeeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14303,6 +14802,8 @@ export namespace Prisma {
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
       alerts: Prisma.$AlertPayload<ExtArgs>[]
       payouts: Prisma.$PayoutPayload<ExtArgs>[]
+      settlements: Prisma.$SettlementPayload<ExtArgs>[]
+      settlement_adjustments: Prisma.$SettlementAdjustmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14720,6 +15221,8 @@ export namespace Prisma {
     reviews<T extends Employee$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     alerts<T extends Employee$alertsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$alertsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     payouts<T extends Employee$payoutsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$payoutsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    settlements<T extends Employee$settlementsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$settlementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    settlement_adjustments<T extends Employee$settlement_adjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$settlement_adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15359,6 +15862,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PayoutScalarFieldEnum | PayoutScalarFieldEnum[]
+  }
+
+  /**
+   * Employee.settlements
+   */
+  export type Employee$settlementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    where?: SettlementWhereInput
+    orderBy?: SettlementOrderByWithRelationInput | SettlementOrderByWithRelationInput[]
+    cursor?: SettlementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SettlementScalarFieldEnum | SettlementScalarFieldEnum[]
+  }
+
+  /**
+   * Employee.settlement_adjustments
+   */
+  export type Employee$settlement_adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    where?: SettlementAdjustmentWhereInput
+    orderBy?: SettlementAdjustmentOrderByWithRelationInput | SettlementAdjustmentOrderByWithRelationInput[]
+    cursor?: SettlementAdjustmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SettlementAdjustmentScalarFieldEnum | SettlementAdjustmentScalarFieldEnum[]
   }
 
   /**
@@ -20900,6 +21451,7 @@ export namespace Prisma {
     id: string | null
     store_id: string | null
     name: string | null
+    payout_mode: $Enums.DistributionPayoutMode | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -20908,6 +21460,7 @@ export namespace Prisma {
     id: string | null
     store_id: string | null
     name: string | null
+    payout_mode: $Enums.DistributionPayoutMode | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -20916,6 +21469,7 @@ export namespace Prisma {
     id: number
     store_id: number
     name: number
+    payout_mode: number
     created_at: number
     updated_at: number
     _all: number
@@ -20926,6 +21480,7 @@ export namespace Prisma {
     id?: true
     store_id?: true
     name?: true
+    payout_mode?: true
     created_at?: true
     updated_at?: true
   }
@@ -20934,6 +21489,7 @@ export namespace Prisma {
     id?: true
     store_id?: true
     name?: true
+    payout_mode?: true
     created_at?: true
     updated_at?: true
   }
@@ -20942,6 +21498,7 @@ export namespace Prisma {
     id?: true
     store_id?: true
     name?: true
+    payout_mode?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -21023,6 +21580,7 @@ export namespace Prisma {
     id: string
     store_id: string
     name: string
+    payout_mode: $Enums.DistributionPayoutMode
     created_at: Date
     updated_at: Date
     _count: DistributionRuleCountAggregateOutputType | null
@@ -21048,6 +21606,7 @@ export namespace Prisma {
     id?: boolean
     store_id?: boolean
     name?: boolean
+    payout_mode?: boolean
     created_at?: boolean
     updated_at?: boolean
     store?: boolean | StoreDefaultArgs<ExtArgs>
@@ -21062,6 +21621,7 @@ export namespace Prisma {
     id?: boolean
     store_id?: boolean
     name?: boolean
+    payout_mode?: boolean
     created_at?: boolean
     updated_at?: boolean
     store?: boolean | StoreDefaultArgs<ExtArgs>
@@ -21071,6 +21631,7 @@ export namespace Prisma {
     id?: boolean
     store_id?: boolean
     name?: boolean
+    payout_mode?: boolean
     created_at?: boolean
     updated_at?: boolean
     store?: boolean | StoreDefaultArgs<ExtArgs>
@@ -21080,11 +21641,12 @@ export namespace Prisma {
     id?: boolean
     store_id?: boolean
     name?: boolean
+    payout_mode?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type DistributionRuleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "store_id" | "name" | "created_at" | "updated_at", ExtArgs["result"]["distributionRule"]>
+  export type DistributionRuleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "store_id" | "name" | "payout_mode" | "created_at" | "updated_at", ExtArgs["result"]["distributionRule"]>
   export type DistributionRuleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     store?: boolean | StoreDefaultArgs<ExtArgs>
     recipients?: boolean | DistributionRule$recipientsArgs<ExtArgs>
@@ -21113,6 +21675,7 @@ export namespace Prisma {
       id: string
       store_id: string
       name: string
+      payout_mode: $Enums.DistributionPayoutMode
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["distributionRule"]>
@@ -21546,6 +22109,7 @@ export namespace Prisma {
     readonly id: FieldRef<"DistributionRule", 'String'>
     readonly store_id: FieldRef<"DistributionRule", 'String'>
     readonly name: FieldRef<"DistributionRule", 'String'>
+    readonly payout_mode: FieldRef<"DistributionRule", 'DistributionPayoutMode'>
     readonly created_at: FieldRef<"DistributionRule", 'DateTime'>
     readonly updated_at: FieldRef<"DistributionRule", 'DateTime'>
   }
@@ -28456,9 +29020,13 @@ export namespace Prisma {
     employee_id: string | null
     amount: number | null
     percentage: Decimal | null
+    payout_mode: $Enums.DistributionPayoutMode | null
     payout_status: $Enums.PayoutStatus | null
     payout_id: string | null
     paid_out_at: Date | null
+    settlement_status: $Enums.SettlementStatus | null
+    settlement_id: string | null
+    settled_at: Date | null
     created_at: Date | null
   }
 
@@ -28469,9 +29037,13 @@ export namespace Prisma {
     employee_id: string | null
     amount: number | null
     percentage: Decimal | null
+    payout_mode: $Enums.DistributionPayoutMode | null
     payout_status: $Enums.PayoutStatus | null
     payout_id: string | null
     paid_out_at: Date | null
+    settlement_status: $Enums.SettlementStatus | null
+    settlement_id: string | null
+    settled_at: Date | null
     created_at: Date | null
   }
 
@@ -28482,9 +29054,13 @@ export namespace Prisma {
     employee_id: number
     amount: number
     percentage: number
+    payout_mode: number
     payout_status: number
     payout_id: number
     paid_out_at: number
+    settlement_status: number
+    settlement_id: number
+    settled_at: number
     created_at: number
     _all: number
   }
@@ -28507,9 +29083,13 @@ export namespace Prisma {
     employee_id?: true
     amount?: true
     percentage?: true
+    payout_mode?: true
     payout_status?: true
     payout_id?: true
     paid_out_at?: true
+    settlement_status?: true
+    settlement_id?: true
+    settled_at?: true
     created_at?: true
   }
 
@@ -28520,9 +29100,13 @@ export namespace Prisma {
     employee_id?: true
     amount?: true
     percentage?: true
+    payout_mode?: true
     payout_status?: true
     payout_id?: true
     paid_out_at?: true
+    settlement_status?: true
+    settlement_id?: true
+    settled_at?: true
     created_at?: true
   }
 
@@ -28533,9 +29117,13 @@ export namespace Prisma {
     employee_id?: true
     amount?: true
     percentage?: true
+    payout_mode?: true
     payout_status?: true
     payout_id?: true
     paid_out_at?: true
+    settlement_status?: true
+    settlement_id?: true
+    settled_at?: true
     created_at?: true
     _all?: true
   }
@@ -28633,9 +29221,13 @@ export namespace Prisma {
     employee_id: string | null
     amount: number
     percentage: Decimal
+    payout_mode: $Enums.DistributionPayoutMode
     payout_status: $Enums.PayoutStatus
     payout_id: string | null
     paid_out_at: Date | null
+    settlement_status: $Enums.SettlementStatus
+    settlement_id: string | null
+    settled_at: Date | null
     created_at: Date
     _count: TipDistributionCountAggregateOutputType | null
     _avg: TipDistributionAvgAggregateOutputType | null
@@ -28665,13 +29257,18 @@ export namespace Prisma {
     employee_id?: boolean
     amount?: boolean
     percentage?: boolean
+    payout_mode?: boolean
     payout_status?: boolean
     payout_id?: boolean
     paid_out_at?: boolean
+    settlement_status?: boolean
+    settlement_id?: boolean
+    settled_at?: boolean
     created_at?: boolean
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }, ExtArgs["result"]["tipDistribution"]>
 
   export type TipDistributionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -28681,13 +29278,18 @@ export namespace Prisma {
     employee_id?: boolean
     amount?: boolean
     percentage?: boolean
+    payout_mode?: boolean
     payout_status?: boolean
     payout_id?: boolean
     paid_out_at?: boolean
+    settlement_status?: boolean
+    settlement_id?: boolean
+    settled_at?: boolean
     created_at?: boolean
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }, ExtArgs["result"]["tipDistribution"]>
 
   export type TipDistributionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -28697,13 +29299,18 @@ export namespace Prisma {
     employee_id?: boolean
     amount?: boolean
     percentage?: boolean
+    payout_mode?: boolean
     payout_status?: boolean
     payout_id?: boolean
     paid_out_at?: boolean
+    settlement_status?: boolean
+    settlement_id?: boolean
+    settled_at?: boolean
     created_at?: boolean
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }, ExtArgs["result"]["tipDistribution"]>
 
   export type TipDistributionSelectScalar = {
@@ -28713,27 +29320,34 @@ export namespace Prisma {
     employee_id?: boolean
     amount?: boolean
     percentage?: boolean
+    payout_mode?: boolean
     payout_status?: boolean
     payout_id?: boolean
     paid_out_at?: boolean
+    settlement_status?: boolean
+    settlement_id?: boolean
+    settled_at?: boolean
     created_at?: boolean
   }
 
-  export type TipDistributionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "recipient_type" | "employee_id" | "amount" | "percentage" | "payout_status" | "payout_id" | "paid_out_at" | "created_at", ExtArgs["result"]["tipDistribution"]>
+  export type TipDistributionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "recipient_type" | "employee_id" | "amount" | "percentage" | "payout_mode" | "payout_status" | "payout_id" | "paid_out_at" | "settlement_status" | "settlement_id" | "settled_at" | "created_at", ExtArgs["result"]["tipDistribution"]>
   export type TipDistributionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }
   export type TipDistributionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }
   export type TipDistributionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }
 
   export type $TipDistributionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -28742,6 +29356,7 @@ export namespace Prisma {
       tip: Prisma.$TipPayload<ExtArgs>
       employee: Prisma.$EmployeePayload<ExtArgs> | null
       payout: Prisma.$PayoutPayload<ExtArgs> | null
+      settlement: Prisma.$SettlementPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -28750,9 +29365,13 @@ export namespace Prisma {
       employee_id: string | null
       amount: number
       percentage: Prisma.Decimal
+      payout_mode: $Enums.DistributionPayoutMode
       payout_status: $Enums.PayoutStatus
       payout_id: string | null
       paid_out_at: Date | null
+      settlement_status: $Enums.SettlementStatus
+      settlement_id: string | null
+      settled_at: Date | null
       created_at: Date
     }, ExtArgs["result"]["tipDistribution"]>
     composites: {}
@@ -29151,6 +29770,7 @@ export namespace Prisma {
     tip<T extends TipDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TipDefaultArgs<ExtArgs>>): Prisma__TipClient<$Result.GetResult<Prisma.$TipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     employee<T extends TipDistribution$employeeArgs<ExtArgs> = {}>(args?: Subset<T, TipDistribution$employeeArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     payout<T extends TipDistribution$payoutArgs<ExtArgs> = {}>(args?: Subset<T, TipDistribution$payoutArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    settlement<T extends TipDistribution$settlementArgs<ExtArgs> = {}>(args?: Subset<T, TipDistribution$settlementArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -29186,9 +29806,13 @@ export namespace Prisma {
     readonly employee_id: FieldRef<"TipDistribution", 'String'>
     readonly amount: FieldRef<"TipDistribution", 'Int'>
     readonly percentage: FieldRef<"TipDistribution", 'Decimal'>
+    readonly payout_mode: FieldRef<"TipDistribution", 'DistributionPayoutMode'>
     readonly payout_status: FieldRef<"TipDistribution", 'PayoutStatus'>
     readonly payout_id: FieldRef<"TipDistribution", 'String'>
     readonly paid_out_at: FieldRef<"TipDistribution", 'DateTime'>
+    readonly settlement_status: FieldRef<"TipDistribution", 'SettlementStatus'>
+    readonly settlement_id: FieldRef<"TipDistribution", 'String'>
+    readonly settled_at: FieldRef<"TipDistribution", 'DateTime'>
     readonly created_at: FieldRef<"TipDistribution", 'DateTime'>
   }
     
@@ -29621,6 +30245,25 @@ export namespace Prisma {
      */
     include?: PayoutInclude<ExtArgs> | null
     where?: PayoutWhereInput
+  }
+
+  /**
+   * TipDistribution.settlement
+   */
+  export type TipDistribution$settlementArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    where?: SettlementWhereInput
   }
 
   /**
@@ -30936,6 +31579,2645 @@ export namespace Prisma {
 
 
   /**
+   * Model Settlement
+   */
+
+  export type AggregateSettlement = {
+    _count: SettlementCountAggregateOutputType | null
+    _avg: SettlementAvgAggregateOutputType | null
+    _sum: SettlementSumAggregateOutputType | null
+    _min: SettlementMinAggregateOutputType | null
+    _max: SettlementMaxAggregateOutputType | null
+  }
+
+  export type SettlementAvgAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type SettlementSumAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type SettlementMinAggregateOutputType = {
+    id: string | null
+    store_id: string | null
+    employee_id: string | null
+    employee_name_snapshot: string | null
+    amount: number | null
+    currency: $Enums.Currency | null
+    settled_at: Date | null
+    note: string | null
+    reference: string | null
+    recorded_by_user_id: string | null
+    confirmed_by_employee_at: Date | null
+    reversed_at: Date | null
+    reversed_by_user_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type SettlementMaxAggregateOutputType = {
+    id: string | null
+    store_id: string | null
+    employee_id: string | null
+    employee_name_snapshot: string | null
+    amount: number | null
+    currency: $Enums.Currency | null
+    settled_at: Date | null
+    note: string | null
+    reference: string | null
+    recorded_by_user_id: string | null
+    confirmed_by_employee_at: Date | null
+    reversed_at: Date | null
+    reversed_by_user_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type SettlementCountAggregateOutputType = {
+    id: number
+    store_id: number
+    employee_id: number
+    employee_name_snapshot: number
+    amount: number
+    currency: number
+    settled_at: number
+    note: number
+    reference: number
+    recorded_by_user_id: number
+    confirmed_by_employee_at: number
+    reversed_at: number
+    reversed_by_user_id: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type SettlementAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type SettlementSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type SettlementMinAggregateInputType = {
+    id?: true
+    store_id?: true
+    employee_id?: true
+    employee_name_snapshot?: true
+    amount?: true
+    currency?: true
+    settled_at?: true
+    note?: true
+    reference?: true
+    recorded_by_user_id?: true
+    confirmed_by_employee_at?: true
+    reversed_at?: true
+    reversed_by_user_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type SettlementMaxAggregateInputType = {
+    id?: true
+    store_id?: true
+    employee_id?: true
+    employee_name_snapshot?: true
+    amount?: true
+    currency?: true
+    settled_at?: true
+    note?: true
+    reference?: true
+    recorded_by_user_id?: true
+    confirmed_by_employee_at?: true
+    reversed_at?: true
+    reversed_by_user_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type SettlementCountAggregateInputType = {
+    id?: true
+    store_id?: true
+    employee_id?: true
+    employee_name_snapshot?: true
+    amount?: true
+    currency?: true
+    settled_at?: true
+    note?: true
+    reference?: true
+    recorded_by_user_id?: true
+    confirmed_by_employee_at?: true
+    reversed_at?: true
+    reversed_by_user_id?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type SettlementAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Settlement to aggregate.
+     */
+    where?: SettlementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Settlements to fetch.
+     */
+    orderBy?: SettlementOrderByWithRelationInput | SettlementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SettlementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Settlements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Settlements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Settlements
+    **/
+    _count?: true | SettlementCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SettlementAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SettlementSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SettlementMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SettlementMaxAggregateInputType
+  }
+
+  export type GetSettlementAggregateType<T extends SettlementAggregateArgs> = {
+        [P in keyof T & keyof AggregateSettlement]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSettlement[P]>
+      : GetScalarType<T[P], AggregateSettlement[P]>
+  }
+
+
+
+
+  export type SettlementGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementWhereInput
+    orderBy?: SettlementOrderByWithAggregationInput | SettlementOrderByWithAggregationInput[]
+    by: SettlementScalarFieldEnum[] | SettlementScalarFieldEnum
+    having?: SettlementScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SettlementCountAggregateInputType | true
+    _avg?: SettlementAvgAggregateInputType
+    _sum?: SettlementSumAggregateInputType
+    _min?: SettlementMinAggregateInputType
+    _max?: SettlementMaxAggregateInputType
+  }
+
+  export type SettlementGroupByOutputType = {
+    id: string
+    store_id: string
+    employee_id: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date
+    note: string | null
+    reference: string | null
+    recorded_by_user_id: string | null
+    confirmed_by_employee_at: Date | null
+    reversed_at: Date | null
+    reversed_by_user_id: string | null
+    created_at: Date
+    updated_at: Date
+    _count: SettlementCountAggregateOutputType | null
+    _avg: SettlementAvgAggregateOutputType | null
+    _sum: SettlementSumAggregateOutputType | null
+    _min: SettlementMinAggregateOutputType | null
+    _max: SettlementMaxAggregateOutputType | null
+  }
+
+  type GetSettlementGroupByPayload<T extends SettlementGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SettlementGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SettlementGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SettlementGroupByOutputType[P]>
+            : GetScalarType<T[P], SettlementGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SettlementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    employee_id?: boolean
+    employee_name_snapshot?: boolean
+    amount?: boolean
+    currency?: boolean
+    settled_at?: boolean
+    note?: boolean
+    reference?: boolean
+    recorded_by_user_id?: boolean
+    confirmed_by_employee_at?: boolean
+    reversed_at?: boolean
+    reversed_by_user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | Settlement$employeeArgs<ExtArgs>
+    recorded_by?: boolean | Settlement$recorded_byArgs<ExtArgs>
+    reversed_by?: boolean | Settlement$reversed_byArgs<ExtArgs>
+    distributions?: boolean | Settlement$distributionsArgs<ExtArgs>
+    adjustments?: boolean | Settlement$adjustmentsArgs<ExtArgs>
+    _count?: boolean | SettlementCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["settlement"]>
+
+  export type SettlementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    employee_id?: boolean
+    employee_name_snapshot?: boolean
+    amount?: boolean
+    currency?: boolean
+    settled_at?: boolean
+    note?: boolean
+    reference?: boolean
+    recorded_by_user_id?: boolean
+    confirmed_by_employee_at?: boolean
+    reversed_at?: boolean
+    reversed_by_user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | Settlement$employeeArgs<ExtArgs>
+    recorded_by?: boolean | Settlement$recorded_byArgs<ExtArgs>
+    reversed_by?: boolean | Settlement$reversed_byArgs<ExtArgs>
+  }, ExtArgs["result"]["settlement"]>
+
+  export type SettlementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    employee_id?: boolean
+    employee_name_snapshot?: boolean
+    amount?: boolean
+    currency?: boolean
+    settled_at?: boolean
+    note?: boolean
+    reference?: boolean
+    recorded_by_user_id?: boolean
+    confirmed_by_employee_at?: boolean
+    reversed_at?: boolean
+    reversed_by_user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | Settlement$employeeArgs<ExtArgs>
+    recorded_by?: boolean | Settlement$recorded_byArgs<ExtArgs>
+    reversed_by?: boolean | Settlement$reversed_byArgs<ExtArgs>
+  }, ExtArgs["result"]["settlement"]>
+
+  export type SettlementSelectScalar = {
+    id?: boolean
+    store_id?: boolean
+    employee_id?: boolean
+    employee_name_snapshot?: boolean
+    amount?: boolean
+    currency?: boolean
+    settled_at?: boolean
+    note?: boolean
+    reference?: boolean
+    recorded_by_user_id?: boolean
+    confirmed_by_employee_at?: boolean
+    reversed_at?: boolean
+    reversed_by_user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type SettlementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "store_id" | "employee_id" | "employee_name_snapshot" | "amount" | "currency" | "settled_at" | "note" | "reference" | "recorded_by_user_id" | "confirmed_by_employee_at" | "reversed_at" | "reversed_by_user_id" | "created_at" | "updated_at", ExtArgs["result"]["settlement"]>
+  export type SettlementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | Settlement$employeeArgs<ExtArgs>
+    recorded_by?: boolean | Settlement$recorded_byArgs<ExtArgs>
+    reversed_by?: boolean | Settlement$reversed_byArgs<ExtArgs>
+    distributions?: boolean | Settlement$distributionsArgs<ExtArgs>
+    adjustments?: boolean | Settlement$adjustmentsArgs<ExtArgs>
+    _count?: boolean | SettlementCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type SettlementIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | Settlement$employeeArgs<ExtArgs>
+    recorded_by?: boolean | Settlement$recorded_byArgs<ExtArgs>
+    reversed_by?: boolean | Settlement$reversed_byArgs<ExtArgs>
+  }
+  export type SettlementIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | Settlement$employeeArgs<ExtArgs>
+    recorded_by?: boolean | Settlement$recorded_byArgs<ExtArgs>
+    reversed_by?: boolean | Settlement$reversed_byArgs<ExtArgs>
+  }
+
+  export type $SettlementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Settlement"
+    objects: {
+      store: Prisma.$StorePayload<ExtArgs>
+      employee: Prisma.$EmployeePayload<ExtArgs> | null
+      recorded_by: Prisma.$UserPayload<ExtArgs> | null
+      reversed_by: Prisma.$UserPayload<ExtArgs> | null
+      distributions: Prisma.$TipDistributionPayload<ExtArgs>[]
+      adjustments: Prisma.$SettlementAdjustmentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      store_id: string
+      employee_id: string | null
+      employee_name_snapshot: string
+      amount: number
+      currency: $Enums.Currency
+      settled_at: Date
+      note: string | null
+      reference: string | null
+      recorded_by_user_id: string | null
+      confirmed_by_employee_at: Date | null
+      reversed_at: Date | null
+      reversed_by_user_id: string | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["settlement"]>
+    composites: {}
+  }
+
+  type SettlementGetPayload<S extends boolean | null | undefined | SettlementDefaultArgs> = $Result.GetResult<Prisma.$SettlementPayload, S>
+
+  type SettlementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SettlementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SettlementCountAggregateInputType | true
+    }
+
+  export interface SettlementDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Settlement'], meta: { name: 'Settlement' } }
+    /**
+     * Find zero or one Settlement that matches the filter.
+     * @param {SettlementFindUniqueArgs} args - Arguments to find a Settlement
+     * @example
+     * // Get one Settlement
+     * const settlement = await prisma.settlement.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SettlementFindUniqueArgs>(args: SelectSubset<T, SettlementFindUniqueArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Settlement that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SettlementFindUniqueOrThrowArgs} args - Arguments to find a Settlement
+     * @example
+     * // Get one Settlement
+     * const settlement = await prisma.settlement.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SettlementFindUniqueOrThrowArgs>(args: SelectSubset<T, SettlementFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Settlement that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementFindFirstArgs} args - Arguments to find a Settlement
+     * @example
+     * // Get one Settlement
+     * const settlement = await prisma.settlement.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SettlementFindFirstArgs>(args?: SelectSubset<T, SettlementFindFirstArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Settlement that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementFindFirstOrThrowArgs} args - Arguments to find a Settlement
+     * @example
+     * // Get one Settlement
+     * const settlement = await prisma.settlement.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SettlementFindFirstOrThrowArgs>(args?: SelectSubset<T, SettlementFindFirstOrThrowArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Settlements that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Settlements
+     * const settlements = await prisma.settlement.findMany()
+     * 
+     * // Get first 10 Settlements
+     * const settlements = await prisma.settlement.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const settlementWithIdOnly = await prisma.settlement.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SettlementFindManyArgs>(args?: SelectSubset<T, SettlementFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Settlement.
+     * @param {SettlementCreateArgs} args - Arguments to create a Settlement.
+     * @example
+     * // Create one Settlement
+     * const Settlement = await prisma.settlement.create({
+     *   data: {
+     *     // ... data to create a Settlement
+     *   }
+     * })
+     * 
+     */
+    create<T extends SettlementCreateArgs>(args: SelectSubset<T, SettlementCreateArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Settlements.
+     * @param {SettlementCreateManyArgs} args - Arguments to create many Settlements.
+     * @example
+     * // Create many Settlements
+     * const settlement = await prisma.settlement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SettlementCreateManyArgs>(args?: SelectSubset<T, SettlementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Settlements and returns the data saved in the database.
+     * @param {SettlementCreateManyAndReturnArgs} args - Arguments to create many Settlements.
+     * @example
+     * // Create many Settlements
+     * const settlement = await prisma.settlement.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Settlements and only return the `id`
+     * const settlementWithIdOnly = await prisma.settlement.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SettlementCreateManyAndReturnArgs>(args?: SelectSubset<T, SettlementCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Settlement.
+     * @param {SettlementDeleteArgs} args - Arguments to delete one Settlement.
+     * @example
+     * // Delete one Settlement
+     * const Settlement = await prisma.settlement.delete({
+     *   where: {
+     *     // ... filter to delete one Settlement
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SettlementDeleteArgs>(args: SelectSubset<T, SettlementDeleteArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Settlement.
+     * @param {SettlementUpdateArgs} args - Arguments to update one Settlement.
+     * @example
+     * // Update one Settlement
+     * const settlement = await prisma.settlement.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SettlementUpdateArgs>(args: SelectSubset<T, SettlementUpdateArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Settlements.
+     * @param {SettlementDeleteManyArgs} args - Arguments to filter Settlements to delete.
+     * @example
+     * // Delete a few Settlements
+     * const { count } = await prisma.settlement.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SettlementDeleteManyArgs>(args?: SelectSubset<T, SettlementDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Settlements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Settlements
+     * const settlement = await prisma.settlement.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SettlementUpdateManyArgs>(args: SelectSubset<T, SettlementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Settlements and returns the data updated in the database.
+     * @param {SettlementUpdateManyAndReturnArgs} args - Arguments to update many Settlements.
+     * @example
+     * // Update many Settlements
+     * const settlement = await prisma.settlement.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Settlements and only return the `id`
+     * const settlementWithIdOnly = await prisma.settlement.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SettlementUpdateManyAndReturnArgs>(args: SelectSubset<T, SettlementUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Settlement.
+     * @param {SettlementUpsertArgs} args - Arguments to update or create a Settlement.
+     * @example
+     * // Update or create a Settlement
+     * const settlement = await prisma.settlement.upsert({
+     *   create: {
+     *     // ... data to create a Settlement
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Settlement we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SettlementUpsertArgs>(args: SelectSubset<T, SettlementUpsertArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Settlements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementCountArgs} args - Arguments to filter Settlements to count.
+     * @example
+     * // Count the number of Settlements
+     * const count = await prisma.settlement.count({
+     *   where: {
+     *     // ... the filter for the Settlements we want to count
+     *   }
+     * })
+    **/
+    count<T extends SettlementCountArgs>(
+      args?: Subset<T, SettlementCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SettlementCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Settlement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SettlementAggregateArgs>(args: Subset<T, SettlementAggregateArgs>): Prisma.PrismaPromise<GetSettlementAggregateType<T>>
+
+    /**
+     * Group by Settlement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SettlementGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SettlementGroupByArgs['orderBy'] }
+        : { orderBy?: SettlementGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SettlementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSettlementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Settlement model
+   */
+  readonly fields: SettlementFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Settlement.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SettlementClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    store<T extends StoreDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StoreDefaultArgs<ExtArgs>>): Prisma__StoreClient<$Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    employee<T extends Settlement$employeeArgs<ExtArgs> = {}>(args?: Subset<T, Settlement$employeeArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    recorded_by<T extends Settlement$recorded_byArgs<ExtArgs> = {}>(args?: Subset<T, Settlement$recorded_byArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    reversed_by<T extends Settlement$reversed_byArgs<ExtArgs> = {}>(args?: Subset<T, Settlement$reversed_byArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    distributions<T extends Settlement$distributionsArgs<ExtArgs> = {}>(args?: Subset<T, Settlement$distributionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TipDistributionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    adjustments<T extends Settlement$adjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, Settlement$adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Settlement model
+   */
+  interface SettlementFieldRefs {
+    readonly id: FieldRef<"Settlement", 'String'>
+    readonly store_id: FieldRef<"Settlement", 'String'>
+    readonly employee_id: FieldRef<"Settlement", 'String'>
+    readonly employee_name_snapshot: FieldRef<"Settlement", 'String'>
+    readonly amount: FieldRef<"Settlement", 'Int'>
+    readonly currency: FieldRef<"Settlement", 'Currency'>
+    readonly settled_at: FieldRef<"Settlement", 'DateTime'>
+    readonly note: FieldRef<"Settlement", 'String'>
+    readonly reference: FieldRef<"Settlement", 'String'>
+    readonly recorded_by_user_id: FieldRef<"Settlement", 'String'>
+    readonly confirmed_by_employee_at: FieldRef<"Settlement", 'DateTime'>
+    readonly reversed_at: FieldRef<"Settlement", 'DateTime'>
+    readonly reversed_by_user_id: FieldRef<"Settlement", 'String'>
+    readonly created_at: FieldRef<"Settlement", 'DateTime'>
+    readonly updated_at: FieldRef<"Settlement", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Settlement findUnique
+   */
+  export type SettlementFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    /**
+     * Filter, which Settlement to fetch.
+     */
+    where: SettlementWhereUniqueInput
+  }
+
+  /**
+   * Settlement findUniqueOrThrow
+   */
+  export type SettlementFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    /**
+     * Filter, which Settlement to fetch.
+     */
+    where: SettlementWhereUniqueInput
+  }
+
+  /**
+   * Settlement findFirst
+   */
+  export type SettlementFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    /**
+     * Filter, which Settlement to fetch.
+     */
+    where?: SettlementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Settlements to fetch.
+     */
+    orderBy?: SettlementOrderByWithRelationInput | SettlementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Settlements.
+     */
+    cursor?: SettlementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Settlements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Settlements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Settlements.
+     */
+    distinct?: SettlementScalarFieldEnum | SettlementScalarFieldEnum[]
+  }
+
+  /**
+   * Settlement findFirstOrThrow
+   */
+  export type SettlementFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    /**
+     * Filter, which Settlement to fetch.
+     */
+    where?: SettlementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Settlements to fetch.
+     */
+    orderBy?: SettlementOrderByWithRelationInput | SettlementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Settlements.
+     */
+    cursor?: SettlementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Settlements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Settlements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Settlements.
+     */
+    distinct?: SettlementScalarFieldEnum | SettlementScalarFieldEnum[]
+  }
+
+  /**
+   * Settlement findMany
+   */
+  export type SettlementFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    /**
+     * Filter, which Settlements to fetch.
+     */
+    where?: SettlementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Settlements to fetch.
+     */
+    orderBy?: SettlementOrderByWithRelationInput | SettlementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Settlements.
+     */
+    cursor?: SettlementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Settlements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Settlements.
+     */
+    skip?: number
+    distinct?: SettlementScalarFieldEnum | SettlementScalarFieldEnum[]
+  }
+
+  /**
+   * Settlement create
+   */
+  export type SettlementCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Settlement.
+     */
+    data: XOR<SettlementCreateInput, SettlementUncheckedCreateInput>
+  }
+
+  /**
+   * Settlement createMany
+   */
+  export type SettlementCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Settlements.
+     */
+    data: SettlementCreateManyInput | SettlementCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Settlement createManyAndReturn
+   */
+  export type SettlementCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * The data used to create many Settlements.
+     */
+    data: SettlementCreateManyInput | SettlementCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Settlement update
+   */
+  export type SettlementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Settlement.
+     */
+    data: XOR<SettlementUpdateInput, SettlementUncheckedUpdateInput>
+    /**
+     * Choose, which Settlement to update.
+     */
+    where: SettlementWhereUniqueInput
+  }
+
+  /**
+   * Settlement updateMany
+   */
+  export type SettlementUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Settlements.
+     */
+    data: XOR<SettlementUpdateManyMutationInput, SettlementUncheckedUpdateManyInput>
+    /**
+     * Filter which Settlements to update
+     */
+    where?: SettlementWhereInput
+    /**
+     * Limit how many Settlements to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Settlement updateManyAndReturn
+   */
+  export type SettlementUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * The data used to update Settlements.
+     */
+    data: XOR<SettlementUpdateManyMutationInput, SettlementUncheckedUpdateManyInput>
+    /**
+     * Filter which Settlements to update
+     */
+    where?: SettlementWhereInput
+    /**
+     * Limit how many Settlements to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Settlement upsert
+   */
+  export type SettlementUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Settlement to update in case it exists.
+     */
+    where: SettlementWhereUniqueInput
+    /**
+     * In case the Settlement found by the `where` argument doesn't exist, create a new Settlement with this data.
+     */
+    create: XOR<SettlementCreateInput, SettlementUncheckedCreateInput>
+    /**
+     * In case the Settlement was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SettlementUpdateInput, SettlementUncheckedUpdateInput>
+  }
+
+  /**
+   * Settlement delete
+   */
+  export type SettlementDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    /**
+     * Filter which Settlement to delete.
+     */
+    where: SettlementWhereUniqueInput
+  }
+
+  /**
+   * Settlement deleteMany
+   */
+  export type SettlementDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Settlements to delete
+     */
+    where?: SettlementWhereInput
+    /**
+     * Limit how many Settlements to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Settlement.employee
+   */
+  export type Settlement$employeeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Employee
+     */
+    select?: EmployeeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Employee
+     */
+    omit?: EmployeeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeInclude<ExtArgs> | null
+    where?: EmployeeWhereInput
+  }
+
+  /**
+   * Settlement.recorded_by
+   */
+  export type Settlement$recorded_byArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Settlement.reversed_by
+   */
+  export type Settlement$reversed_byArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Settlement.distributions
+   */
+  export type Settlement$distributionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TipDistribution
+     */
+    select?: TipDistributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TipDistribution
+     */
+    omit?: TipDistributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TipDistributionInclude<ExtArgs> | null
+    where?: TipDistributionWhereInput
+    orderBy?: TipDistributionOrderByWithRelationInput | TipDistributionOrderByWithRelationInput[]
+    cursor?: TipDistributionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TipDistributionScalarFieldEnum | TipDistributionScalarFieldEnum[]
+  }
+
+  /**
+   * Settlement.adjustments
+   */
+  export type Settlement$adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    where?: SettlementAdjustmentWhereInput
+    orderBy?: SettlementAdjustmentOrderByWithRelationInput | SettlementAdjustmentOrderByWithRelationInput[]
+    cursor?: SettlementAdjustmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SettlementAdjustmentScalarFieldEnum | SettlementAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * Settlement without action
+   */
+  export type SettlementDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SettlementAdjustment
+   */
+
+  export type AggregateSettlementAdjustment = {
+    _count: SettlementAdjustmentCountAggregateOutputType | null
+    _avg: SettlementAdjustmentAvgAggregateOutputType | null
+    _sum: SettlementAdjustmentSumAggregateOutputType | null
+    _min: SettlementAdjustmentMinAggregateOutputType | null
+    _max: SettlementAdjustmentMaxAggregateOutputType | null
+  }
+
+  export type SettlementAdjustmentAvgAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type SettlementAdjustmentSumAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type SettlementAdjustmentMinAggregateOutputType = {
+    id: string | null
+    store_id: string | null
+    employee_id: string | null
+    amount: number | null
+    reason: string | null
+    refund_id: string | null
+    status: $Enums.SettlementAdjustmentStatus | null
+    settlement_id: string | null
+    created_by_user_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type SettlementAdjustmentMaxAggregateOutputType = {
+    id: string | null
+    store_id: string | null
+    employee_id: string | null
+    amount: number | null
+    reason: string | null
+    refund_id: string | null
+    status: $Enums.SettlementAdjustmentStatus | null
+    settlement_id: string | null
+    created_by_user_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type SettlementAdjustmentCountAggregateOutputType = {
+    id: number
+    store_id: number
+    employee_id: number
+    amount: number
+    reason: number
+    refund_id: number
+    status: number
+    settlement_id: number
+    created_by_user_id: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type SettlementAdjustmentAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type SettlementAdjustmentSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type SettlementAdjustmentMinAggregateInputType = {
+    id?: true
+    store_id?: true
+    employee_id?: true
+    amount?: true
+    reason?: true
+    refund_id?: true
+    status?: true
+    settlement_id?: true
+    created_by_user_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type SettlementAdjustmentMaxAggregateInputType = {
+    id?: true
+    store_id?: true
+    employee_id?: true
+    amount?: true
+    reason?: true
+    refund_id?: true
+    status?: true
+    settlement_id?: true
+    created_by_user_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type SettlementAdjustmentCountAggregateInputType = {
+    id?: true
+    store_id?: true
+    employee_id?: true
+    amount?: true
+    reason?: true
+    refund_id?: true
+    status?: true
+    settlement_id?: true
+    created_by_user_id?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type SettlementAdjustmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SettlementAdjustment to aggregate.
+     */
+    where?: SettlementAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SettlementAdjustments to fetch.
+     */
+    orderBy?: SettlementAdjustmentOrderByWithRelationInput | SettlementAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SettlementAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SettlementAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SettlementAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SettlementAdjustments
+    **/
+    _count?: true | SettlementAdjustmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SettlementAdjustmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SettlementAdjustmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SettlementAdjustmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SettlementAdjustmentMaxAggregateInputType
+  }
+
+  export type GetSettlementAdjustmentAggregateType<T extends SettlementAdjustmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateSettlementAdjustment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSettlementAdjustment[P]>
+      : GetScalarType<T[P], AggregateSettlementAdjustment[P]>
+  }
+
+
+
+
+  export type SettlementAdjustmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettlementAdjustmentWhereInput
+    orderBy?: SettlementAdjustmentOrderByWithAggregationInput | SettlementAdjustmentOrderByWithAggregationInput[]
+    by: SettlementAdjustmentScalarFieldEnum[] | SettlementAdjustmentScalarFieldEnum
+    having?: SettlementAdjustmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SettlementAdjustmentCountAggregateInputType | true
+    _avg?: SettlementAdjustmentAvgAggregateInputType
+    _sum?: SettlementAdjustmentSumAggregateInputType
+    _min?: SettlementAdjustmentMinAggregateInputType
+    _max?: SettlementAdjustmentMaxAggregateInputType
+  }
+
+  export type SettlementAdjustmentGroupByOutputType = {
+    id: string
+    store_id: string
+    employee_id: string | null
+    amount: number
+    reason: string
+    refund_id: string | null
+    status: $Enums.SettlementAdjustmentStatus
+    settlement_id: string | null
+    created_by_user_id: string | null
+    created_at: Date
+    updated_at: Date
+    _count: SettlementAdjustmentCountAggregateOutputType | null
+    _avg: SettlementAdjustmentAvgAggregateOutputType | null
+    _sum: SettlementAdjustmentSumAggregateOutputType | null
+    _min: SettlementAdjustmentMinAggregateOutputType | null
+    _max: SettlementAdjustmentMaxAggregateOutputType | null
+  }
+
+  type GetSettlementAdjustmentGroupByPayload<T extends SettlementAdjustmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SettlementAdjustmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SettlementAdjustmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SettlementAdjustmentGroupByOutputType[P]>
+            : GetScalarType<T[P], SettlementAdjustmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SettlementAdjustmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    employee_id?: boolean
+    amount?: boolean
+    reason?: boolean
+    refund_id?: boolean
+    status?: boolean
+    settlement_id?: boolean
+    created_by_user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | SettlementAdjustment$employeeArgs<ExtArgs>
+    refund?: boolean | SettlementAdjustment$refundArgs<ExtArgs>
+    settlement?: boolean | SettlementAdjustment$settlementArgs<ExtArgs>
+    created_by?: boolean | SettlementAdjustment$created_byArgs<ExtArgs>
+  }, ExtArgs["result"]["settlementAdjustment"]>
+
+  export type SettlementAdjustmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    employee_id?: boolean
+    amount?: boolean
+    reason?: boolean
+    refund_id?: boolean
+    status?: boolean
+    settlement_id?: boolean
+    created_by_user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | SettlementAdjustment$employeeArgs<ExtArgs>
+    refund?: boolean | SettlementAdjustment$refundArgs<ExtArgs>
+    settlement?: boolean | SettlementAdjustment$settlementArgs<ExtArgs>
+    created_by?: boolean | SettlementAdjustment$created_byArgs<ExtArgs>
+  }, ExtArgs["result"]["settlementAdjustment"]>
+
+  export type SettlementAdjustmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    employee_id?: boolean
+    amount?: boolean
+    reason?: boolean
+    refund_id?: boolean
+    status?: boolean
+    settlement_id?: boolean
+    created_by_user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | SettlementAdjustment$employeeArgs<ExtArgs>
+    refund?: boolean | SettlementAdjustment$refundArgs<ExtArgs>
+    settlement?: boolean | SettlementAdjustment$settlementArgs<ExtArgs>
+    created_by?: boolean | SettlementAdjustment$created_byArgs<ExtArgs>
+  }, ExtArgs["result"]["settlementAdjustment"]>
+
+  export type SettlementAdjustmentSelectScalar = {
+    id?: boolean
+    store_id?: boolean
+    employee_id?: boolean
+    amount?: boolean
+    reason?: boolean
+    refund_id?: boolean
+    status?: boolean
+    settlement_id?: boolean
+    created_by_user_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type SettlementAdjustmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "store_id" | "employee_id" | "amount" | "reason" | "refund_id" | "status" | "settlement_id" | "created_by_user_id" | "created_at" | "updated_at", ExtArgs["result"]["settlementAdjustment"]>
+  export type SettlementAdjustmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | SettlementAdjustment$employeeArgs<ExtArgs>
+    refund?: boolean | SettlementAdjustment$refundArgs<ExtArgs>
+    settlement?: boolean | SettlementAdjustment$settlementArgs<ExtArgs>
+    created_by?: boolean | SettlementAdjustment$created_byArgs<ExtArgs>
+  }
+  export type SettlementAdjustmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | SettlementAdjustment$employeeArgs<ExtArgs>
+    refund?: boolean | SettlementAdjustment$refundArgs<ExtArgs>
+    settlement?: boolean | SettlementAdjustment$settlementArgs<ExtArgs>
+    created_by?: boolean | SettlementAdjustment$created_byArgs<ExtArgs>
+  }
+  export type SettlementAdjustmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    employee?: boolean | SettlementAdjustment$employeeArgs<ExtArgs>
+    refund?: boolean | SettlementAdjustment$refundArgs<ExtArgs>
+    settlement?: boolean | SettlementAdjustment$settlementArgs<ExtArgs>
+    created_by?: boolean | SettlementAdjustment$created_byArgs<ExtArgs>
+  }
+
+  export type $SettlementAdjustmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SettlementAdjustment"
+    objects: {
+      store: Prisma.$StorePayload<ExtArgs>
+      employee: Prisma.$EmployeePayload<ExtArgs> | null
+      refund: Prisma.$RefundPayload<ExtArgs> | null
+      settlement: Prisma.$SettlementPayload<ExtArgs> | null
+      created_by: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      store_id: string
+      employee_id: string | null
+      amount: number
+      reason: string
+      refund_id: string | null
+      status: $Enums.SettlementAdjustmentStatus
+      settlement_id: string | null
+      created_by_user_id: string | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["settlementAdjustment"]>
+    composites: {}
+  }
+
+  type SettlementAdjustmentGetPayload<S extends boolean | null | undefined | SettlementAdjustmentDefaultArgs> = $Result.GetResult<Prisma.$SettlementAdjustmentPayload, S>
+
+  type SettlementAdjustmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SettlementAdjustmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SettlementAdjustmentCountAggregateInputType | true
+    }
+
+  export interface SettlementAdjustmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SettlementAdjustment'], meta: { name: 'SettlementAdjustment' } }
+    /**
+     * Find zero or one SettlementAdjustment that matches the filter.
+     * @param {SettlementAdjustmentFindUniqueArgs} args - Arguments to find a SettlementAdjustment
+     * @example
+     * // Get one SettlementAdjustment
+     * const settlementAdjustment = await prisma.settlementAdjustment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SettlementAdjustmentFindUniqueArgs>(args: SelectSubset<T, SettlementAdjustmentFindUniqueArgs<ExtArgs>>): Prisma__SettlementAdjustmentClient<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SettlementAdjustment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SettlementAdjustmentFindUniqueOrThrowArgs} args - Arguments to find a SettlementAdjustment
+     * @example
+     * // Get one SettlementAdjustment
+     * const settlementAdjustment = await prisma.settlementAdjustment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SettlementAdjustmentFindUniqueOrThrowArgs>(args: SelectSubset<T, SettlementAdjustmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SettlementAdjustmentClient<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SettlementAdjustment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementAdjustmentFindFirstArgs} args - Arguments to find a SettlementAdjustment
+     * @example
+     * // Get one SettlementAdjustment
+     * const settlementAdjustment = await prisma.settlementAdjustment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SettlementAdjustmentFindFirstArgs>(args?: SelectSubset<T, SettlementAdjustmentFindFirstArgs<ExtArgs>>): Prisma__SettlementAdjustmentClient<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SettlementAdjustment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementAdjustmentFindFirstOrThrowArgs} args - Arguments to find a SettlementAdjustment
+     * @example
+     * // Get one SettlementAdjustment
+     * const settlementAdjustment = await prisma.settlementAdjustment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SettlementAdjustmentFindFirstOrThrowArgs>(args?: SelectSubset<T, SettlementAdjustmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__SettlementAdjustmentClient<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SettlementAdjustments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementAdjustmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SettlementAdjustments
+     * const settlementAdjustments = await prisma.settlementAdjustment.findMany()
+     * 
+     * // Get first 10 SettlementAdjustments
+     * const settlementAdjustments = await prisma.settlementAdjustment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const settlementAdjustmentWithIdOnly = await prisma.settlementAdjustment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SettlementAdjustmentFindManyArgs>(args?: SelectSubset<T, SettlementAdjustmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SettlementAdjustment.
+     * @param {SettlementAdjustmentCreateArgs} args - Arguments to create a SettlementAdjustment.
+     * @example
+     * // Create one SettlementAdjustment
+     * const SettlementAdjustment = await prisma.settlementAdjustment.create({
+     *   data: {
+     *     // ... data to create a SettlementAdjustment
+     *   }
+     * })
+     * 
+     */
+    create<T extends SettlementAdjustmentCreateArgs>(args: SelectSubset<T, SettlementAdjustmentCreateArgs<ExtArgs>>): Prisma__SettlementAdjustmentClient<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SettlementAdjustments.
+     * @param {SettlementAdjustmentCreateManyArgs} args - Arguments to create many SettlementAdjustments.
+     * @example
+     * // Create many SettlementAdjustments
+     * const settlementAdjustment = await prisma.settlementAdjustment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SettlementAdjustmentCreateManyArgs>(args?: SelectSubset<T, SettlementAdjustmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SettlementAdjustments and returns the data saved in the database.
+     * @param {SettlementAdjustmentCreateManyAndReturnArgs} args - Arguments to create many SettlementAdjustments.
+     * @example
+     * // Create many SettlementAdjustments
+     * const settlementAdjustment = await prisma.settlementAdjustment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SettlementAdjustments and only return the `id`
+     * const settlementAdjustmentWithIdOnly = await prisma.settlementAdjustment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SettlementAdjustmentCreateManyAndReturnArgs>(args?: SelectSubset<T, SettlementAdjustmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SettlementAdjustment.
+     * @param {SettlementAdjustmentDeleteArgs} args - Arguments to delete one SettlementAdjustment.
+     * @example
+     * // Delete one SettlementAdjustment
+     * const SettlementAdjustment = await prisma.settlementAdjustment.delete({
+     *   where: {
+     *     // ... filter to delete one SettlementAdjustment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SettlementAdjustmentDeleteArgs>(args: SelectSubset<T, SettlementAdjustmentDeleteArgs<ExtArgs>>): Prisma__SettlementAdjustmentClient<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SettlementAdjustment.
+     * @param {SettlementAdjustmentUpdateArgs} args - Arguments to update one SettlementAdjustment.
+     * @example
+     * // Update one SettlementAdjustment
+     * const settlementAdjustment = await prisma.settlementAdjustment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SettlementAdjustmentUpdateArgs>(args: SelectSubset<T, SettlementAdjustmentUpdateArgs<ExtArgs>>): Prisma__SettlementAdjustmentClient<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SettlementAdjustments.
+     * @param {SettlementAdjustmentDeleteManyArgs} args - Arguments to filter SettlementAdjustments to delete.
+     * @example
+     * // Delete a few SettlementAdjustments
+     * const { count } = await prisma.settlementAdjustment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SettlementAdjustmentDeleteManyArgs>(args?: SelectSubset<T, SettlementAdjustmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SettlementAdjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementAdjustmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SettlementAdjustments
+     * const settlementAdjustment = await prisma.settlementAdjustment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SettlementAdjustmentUpdateManyArgs>(args: SelectSubset<T, SettlementAdjustmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SettlementAdjustments and returns the data updated in the database.
+     * @param {SettlementAdjustmentUpdateManyAndReturnArgs} args - Arguments to update many SettlementAdjustments.
+     * @example
+     * // Update many SettlementAdjustments
+     * const settlementAdjustment = await prisma.settlementAdjustment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SettlementAdjustments and only return the `id`
+     * const settlementAdjustmentWithIdOnly = await prisma.settlementAdjustment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SettlementAdjustmentUpdateManyAndReturnArgs>(args: SelectSubset<T, SettlementAdjustmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SettlementAdjustment.
+     * @param {SettlementAdjustmentUpsertArgs} args - Arguments to update or create a SettlementAdjustment.
+     * @example
+     * // Update or create a SettlementAdjustment
+     * const settlementAdjustment = await prisma.settlementAdjustment.upsert({
+     *   create: {
+     *     // ... data to create a SettlementAdjustment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SettlementAdjustment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SettlementAdjustmentUpsertArgs>(args: SelectSubset<T, SettlementAdjustmentUpsertArgs<ExtArgs>>): Prisma__SettlementAdjustmentClient<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SettlementAdjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementAdjustmentCountArgs} args - Arguments to filter SettlementAdjustments to count.
+     * @example
+     * // Count the number of SettlementAdjustments
+     * const count = await prisma.settlementAdjustment.count({
+     *   where: {
+     *     // ... the filter for the SettlementAdjustments we want to count
+     *   }
+     * })
+    **/
+    count<T extends SettlementAdjustmentCountArgs>(
+      args?: Subset<T, SettlementAdjustmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SettlementAdjustmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SettlementAdjustment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementAdjustmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SettlementAdjustmentAggregateArgs>(args: Subset<T, SettlementAdjustmentAggregateArgs>): Prisma.PrismaPromise<GetSettlementAdjustmentAggregateType<T>>
+
+    /**
+     * Group by SettlementAdjustment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettlementAdjustmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SettlementAdjustmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SettlementAdjustmentGroupByArgs['orderBy'] }
+        : { orderBy?: SettlementAdjustmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SettlementAdjustmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSettlementAdjustmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SettlementAdjustment model
+   */
+  readonly fields: SettlementAdjustmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SettlementAdjustment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SettlementAdjustmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    store<T extends StoreDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StoreDefaultArgs<ExtArgs>>): Prisma__StoreClient<$Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    employee<T extends SettlementAdjustment$employeeArgs<ExtArgs> = {}>(args?: Subset<T, SettlementAdjustment$employeeArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    refund<T extends SettlementAdjustment$refundArgs<ExtArgs> = {}>(args?: Subset<T, SettlementAdjustment$refundArgs<ExtArgs>>): Prisma__RefundClient<$Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    settlement<T extends SettlementAdjustment$settlementArgs<ExtArgs> = {}>(args?: Subset<T, SettlementAdjustment$settlementArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    created_by<T extends SettlementAdjustment$created_byArgs<ExtArgs> = {}>(args?: Subset<T, SettlementAdjustment$created_byArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SettlementAdjustment model
+   */
+  interface SettlementAdjustmentFieldRefs {
+    readonly id: FieldRef<"SettlementAdjustment", 'String'>
+    readonly store_id: FieldRef<"SettlementAdjustment", 'String'>
+    readonly employee_id: FieldRef<"SettlementAdjustment", 'String'>
+    readonly amount: FieldRef<"SettlementAdjustment", 'Int'>
+    readonly reason: FieldRef<"SettlementAdjustment", 'String'>
+    readonly refund_id: FieldRef<"SettlementAdjustment", 'String'>
+    readonly status: FieldRef<"SettlementAdjustment", 'SettlementAdjustmentStatus'>
+    readonly settlement_id: FieldRef<"SettlementAdjustment", 'String'>
+    readonly created_by_user_id: FieldRef<"SettlementAdjustment", 'String'>
+    readonly created_at: FieldRef<"SettlementAdjustment", 'DateTime'>
+    readonly updated_at: FieldRef<"SettlementAdjustment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SettlementAdjustment findUnique
+   */
+  export type SettlementAdjustmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which SettlementAdjustment to fetch.
+     */
+    where: SettlementAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * SettlementAdjustment findUniqueOrThrow
+   */
+  export type SettlementAdjustmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which SettlementAdjustment to fetch.
+     */
+    where: SettlementAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * SettlementAdjustment findFirst
+   */
+  export type SettlementAdjustmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which SettlementAdjustment to fetch.
+     */
+    where?: SettlementAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SettlementAdjustments to fetch.
+     */
+    orderBy?: SettlementAdjustmentOrderByWithRelationInput | SettlementAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SettlementAdjustments.
+     */
+    cursor?: SettlementAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SettlementAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SettlementAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SettlementAdjustments.
+     */
+    distinct?: SettlementAdjustmentScalarFieldEnum | SettlementAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * SettlementAdjustment findFirstOrThrow
+   */
+  export type SettlementAdjustmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which SettlementAdjustment to fetch.
+     */
+    where?: SettlementAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SettlementAdjustments to fetch.
+     */
+    orderBy?: SettlementAdjustmentOrderByWithRelationInput | SettlementAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SettlementAdjustments.
+     */
+    cursor?: SettlementAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SettlementAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SettlementAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SettlementAdjustments.
+     */
+    distinct?: SettlementAdjustmentScalarFieldEnum | SettlementAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * SettlementAdjustment findMany
+   */
+  export type SettlementAdjustmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which SettlementAdjustments to fetch.
+     */
+    where?: SettlementAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SettlementAdjustments to fetch.
+     */
+    orderBy?: SettlementAdjustmentOrderByWithRelationInput | SettlementAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SettlementAdjustments.
+     */
+    cursor?: SettlementAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SettlementAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SettlementAdjustments.
+     */
+    skip?: number
+    distinct?: SettlementAdjustmentScalarFieldEnum | SettlementAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * SettlementAdjustment create
+   */
+  export type SettlementAdjustmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SettlementAdjustment.
+     */
+    data: XOR<SettlementAdjustmentCreateInput, SettlementAdjustmentUncheckedCreateInput>
+  }
+
+  /**
+   * SettlementAdjustment createMany
+   */
+  export type SettlementAdjustmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SettlementAdjustments.
+     */
+    data: SettlementAdjustmentCreateManyInput | SettlementAdjustmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SettlementAdjustment createManyAndReturn
+   */
+  export type SettlementAdjustmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many SettlementAdjustments.
+     */
+    data: SettlementAdjustmentCreateManyInput | SettlementAdjustmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SettlementAdjustment update
+   */
+  export type SettlementAdjustmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SettlementAdjustment.
+     */
+    data: XOR<SettlementAdjustmentUpdateInput, SettlementAdjustmentUncheckedUpdateInput>
+    /**
+     * Choose, which SettlementAdjustment to update.
+     */
+    where: SettlementAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * SettlementAdjustment updateMany
+   */
+  export type SettlementAdjustmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SettlementAdjustments.
+     */
+    data: XOR<SettlementAdjustmentUpdateManyMutationInput, SettlementAdjustmentUncheckedUpdateManyInput>
+    /**
+     * Filter which SettlementAdjustments to update
+     */
+    where?: SettlementAdjustmentWhereInput
+    /**
+     * Limit how many SettlementAdjustments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SettlementAdjustment updateManyAndReturn
+   */
+  export type SettlementAdjustmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * The data used to update SettlementAdjustments.
+     */
+    data: XOR<SettlementAdjustmentUpdateManyMutationInput, SettlementAdjustmentUncheckedUpdateManyInput>
+    /**
+     * Filter which SettlementAdjustments to update
+     */
+    where?: SettlementAdjustmentWhereInput
+    /**
+     * Limit how many SettlementAdjustments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SettlementAdjustment upsert
+   */
+  export type SettlementAdjustmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SettlementAdjustment to update in case it exists.
+     */
+    where: SettlementAdjustmentWhereUniqueInput
+    /**
+     * In case the SettlementAdjustment found by the `where` argument doesn't exist, create a new SettlementAdjustment with this data.
+     */
+    create: XOR<SettlementAdjustmentCreateInput, SettlementAdjustmentUncheckedCreateInput>
+    /**
+     * In case the SettlementAdjustment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SettlementAdjustmentUpdateInput, SettlementAdjustmentUncheckedUpdateInput>
+  }
+
+  /**
+   * SettlementAdjustment delete
+   */
+  export type SettlementAdjustmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter which SettlementAdjustment to delete.
+     */
+    where: SettlementAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * SettlementAdjustment deleteMany
+   */
+  export type SettlementAdjustmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SettlementAdjustments to delete
+     */
+    where?: SettlementAdjustmentWhereInput
+    /**
+     * Limit how many SettlementAdjustments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SettlementAdjustment.employee
+   */
+  export type SettlementAdjustment$employeeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Employee
+     */
+    select?: EmployeeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Employee
+     */
+    omit?: EmployeeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeInclude<ExtArgs> | null
+    where?: EmployeeWhereInput
+  }
+
+  /**
+   * SettlementAdjustment.refund
+   */
+  export type SettlementAdjustment$refundArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refund
+     */
+    select?: RefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refund
+     */
+    omit?: RefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RefundInclude<ExtArgs> | null
+    where?: RefundWhereInput
+  }
+
+  /**
+   * SettlementAdjustment.settlement
+   */
+  export type SettlementAdjustment$settlementArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settlement
+     */
+    select?: SettlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settlement
+     */
+    omit?: SettlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementInclude<ExtArgs> | null
+    where?: SettlementWhereInput
+  }
+
+  /**
+   * SettlementAdjustment.created_by
+   */
+  export type SettlementAdjustment$created_byArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * SettlementAdjustment without action
+   */
+  export type SettlementAdjustmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Refund
    */
 
@@ -31192,6 +34474,8 @@ export namespace Prisma {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     requested_by?: boolean | Refund$requested_byArgs<ExtArgs>
     processed_by?: boolean | Refund$processed_byArgs<ExtArgs>
+    settlement_adjustments?: boolean | Refund$settlement_adjustmentsArgs<ExtArgs>
+    _count?: boolean | RefundCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["refund"]>
 
   export type RefundSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -31250,6 +34534,8 @@ export namespace Prisma {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     requested_by?: boolean | Refund$requested_byArgs<ExtArgs>
     processed_by?: boolean | Refund$processed_byArgs<ExtArgs>
+    settlement_adjustments?: boolean | Refund$settlement_adjustmentsArgs<ExtArgs>
+    _count?: boolean | RefundCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RefundIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
@@ -31268,6 +34554,7 @@ export namespace Prisma {
       tip: Prisma.$TipPayload<ExtArgs>
       requested_by: Prisma.$UserPayload<ExtArgs> | null
       processed_by: Prisma.$UserPayload<ExtArgs> | null
+      settlement_adjustments: Prisma.$SettlementAdjustmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -31679,6 +34966,7 @@ export namespace Prisma {
     tip<T extends TipDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TipDefaultArgs<ExtArgs>>): Prisma__TipClient<$Result.GetResult<Prisma.$TipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     requested_by<T extends Refund$requested_byArgs<ExtArgs> = {}>(args?: Subset<T, Refund$requested_byArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     processed_by<T extends Refund$processed_byArgs<ExtArgs> = {}>(args?: Subset<T, Refund$processed_byArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    settlement_adjustments<T extends Refund$settlement_adjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, Refund$settlement_adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -32151,6 +35439,30 @@ export namespace Prisma {
      */
     include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
+  }
+
+  /**
+   * Refund.settlement_adjustments
+   */
+  export type Refund$settlement_adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SettlementAdjustment
+     */
+    select?: SettlementAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SettlementAdjustment
+     */
+    omit?: SettlementAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettlementAdjustmentInclude<ExtArgs> | null
+    where?: SettlementAdjustmentWhereInput
+    orderBy?: SettlementAdjustmentOrderByWithRelationInput | SettlementAdjustmentOrderByWithRelationInput[]
+    cursor?: SettlementAdjustmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SettlementAdjustmentScalarFieldEnum | SettlementAdjustmentScalarFieldEnum[]
   }
 
   /**
@@ -43782,6 +47094,7 @@ export namespace Prisma {
     id: 'id',
     store_id: 'store_id',
     name: 'name',
+    payout_mode: 'payout_mode',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -43902,9 +47215,13 @@ export namespace Prisma {
     employee_id: 'employee_id',
     amount: 'amount',
     percentage: 'percentage',
+    payout_mode: 'payout_mode',
     payout_status: 'payout_status',
     payout_id: 'payout_id',
     paid_out_at: 'paid_out_at',
+    settlement_status: 'settlement_status',
+    settlement_id: 'settlement_id',
+    settled_at: 'settled_at',
     created_at: 'created_at'
   };
 
@@ -43929,6 +47246,44 @@ export namespace Prisma {
   };
 
   export type PayoutScalarFieldEnum = (typeof PayoutScalarFieldEnum)[keyof typeof PayoutScalarFieldEnum]
+
+
+  export const SettlementScalarFieldEnum: {
+    id: 'id',
+    store_id: 'store_id',
+    employee_id: 'employee_id',
+    employee_name_snapshot: 'employee_name_snapshot',
+    amount: 'amount',
+    currency: 'currency',
+    settled_at: 'settled_at',
+    note: 'note',
+    reference: 'reference',
+    recorded_by_user_id: 'recorded_by_user_id',
+    confirmed_by_employee_at: 'confirmed_by_employee_at',
+    reversed_at: 'reversed_at',
+    reversed_by_user_id: 'reversed_by_user_id',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type SettlementScalarFieldEnum = (typeof SettlementScalarFieldEnum)[keyof typeof SettlementScalarFieldEnum]
+
+
+  export const SettlementAdjustmentScalarFieldEnum: {
+    id: 'id',
+    store_id: 'store_id',
+    employee_id: 'employee_id',
+    amount: 'amount',
+    reason: 'reason',
+    refund_id: 'refund_id',
+    status: 'status',
+    settlement_id: 'settlement_id',
+    created_by_user_id: 'created_by_user_id',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type SettlementAdjustmentScalarFieldEnum = (typeof SettlementAdjustmentScalarFieldEnum)[keyof typeof SettlementAdjustmentScalarFieldEnum]
 
 
   export const RefundScalarFieldEnum: {
@@ -44339,6 +47694,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'DistributionPayoutMode'
+   */
+  export type EnumDistributionPayoutModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DistributionPayoutMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'DistributionPayoutMode[]'
+   */
+  export type ListEnumDistributionPayoutModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DistributionPayoutMode[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DistributionRecipientType'
    */
   export type EnumDistributionRecipientTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DistributionRecipientType'>
@@ -44451,6 +47820,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'SettlementStatus'
+   */
+  export type EnumSettlementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettlementStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SettlementStatus[]'
+   */
+  export type ListEnumSettlementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettlementStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'PayoutExecutionStatus'
    */
   export type EnumPayoutExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayoutExecutionStatus'>
@@ -44461,6 +47844,20 @@ export namespace Prisma {
    * Reference to a field of type 'PayoutExecutionStatus[]'
    */
   export type ListEnumPayoutExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayoutExecutionStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SettlementAdjustmentStatus'
+   */
+  export type EnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettlementAdjustmentStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SettlementAdjustmentStatus[]'
+   */
+  export type ListEnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettlementAdjustmentStatus[]'>
     
 
 
@@ -44563,6 +47960,9 @@ export namespace Prisma {
     refunds_requested?: RefundListRelationFilter
     refunds_processed?: RefundListRelationFilter
     payout_account?: XOR<PayoutAccountNullableScalarRelationFilter, PayoutAccountWhereInput> | null
+    settlements_recorded?: SettlementListRelationFilter
+    settlements_reversed?: SettlementListRelationFilter
+    settlement_adjustments?: SettlementAdjustmentListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -44588,6 +47988,9 @@ export namespace Prisma {
     refunds_requested?: RefundOrderByRelationAggregateInput
     refunds_processed?: RefundOrderByRelationAggregateInput
     payout_account?: PayoutAccountOrderByWithRelationInput
+    settlements_recorded?: SettlementOrderByRelationAggregateInput
+    settlements_reversed?: SettlementOrderByRelationAggregateInput
+    settlement_adjustments?: SettlementAdjustmentOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -44616,6 +48019,9 @@ export namespace Prisma {
     refunds_requested?: RefundListRelationFilter
     refunds_processed?: RefundListRelationFilter
     payout_account?: XOR<PayoutAccountNullableScalarRelationFilter, PayoutAccountWhereInput> | null
+    settlements_recorded?: SettlementListRelationFilter
+    settlements_reversed?: SettlementListRelationFilter
+    settlement_adjustments?: SettlementAdjustmentListRelationFilter
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -45129,6 +48535,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryListRelationFilter
     payout_account?: XOR<PayoutAccountNullableScalarRelationFilter, PayoutAccountWhereInput> | null
     payouts?: PayoutListRelationFilter
+    settlements?: SettlementListRelationFilter
+    settlement_adjustments?: SettlementAdjustmentListRelationFilter
   }
 
   export type StoreOrderByWithRelationInput = {
@@ -45181,6 +48589,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryOrderByRelationAggregateInput
     payout_account?: PayoutAccountOrderByWithRelationInput
     payouts?: PayoutOrderByRelationAggregateInput
+    settlements?: SettlementOrderByRelationAggregateInput
+    settlement_adjustments?: SettlementAdjustmentOrderByRelationAggregateInput
   }
 
   export type StoreWhereUniqueInput = Prisma.AtLeast<{
@@ -45236,6 +48646,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryListRelationFilter
     payout_account?: XOR<PayoutAccountNullableScalarRelationFilter, PayoutAccountWhereInput> | null
     payouts?: PayoutListRelationFilter
+    settlements?: SettlementListRelationFilter
+    settlement_adjustments?: SettlementAdjustmentListRelationFilter
   }, "id" | "slug" | "default_distribution_rule_id">
 
   export type StoreOrderByWithAggregationInput = {
@@ -45335,6 +48747,8 @@ export namespace Prisma {
     reviews?: ReviewListRelationFilter
     alerts?: AlertListRelationFilter
     payouts?: PayoutListRelationFilter
+    settlements?: SettlementListRelationFilter
+    settlement_adjustments?: SettlementAdjustmentListRelationFilter
   }
 
   export type EmployeeOrderByWithRelationInput = {
@@ -45359,6 +48773,8 @@ export namespace Prisma {
     reviews?: ReviewOrderByRelationAggregateInput
     alerts?: AlertOrderByRelationAggregateInput
     payouts?: PayoutOrderByRelationAggregateInput
+    settlements?: SettlementOrderByRelationAggregateInput
+    settlement_adjustments?: SettlementAdjustmentOrderByRelationAggregateInput
   }
 
   export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
@@ -45386,6 +48802,8 @@ export namespace Prisma {
     reviews?: ReviewListRelationFilter
     alerts?: AlertListRelationFilter
     payouts?: PayoutListRelationFilter
+    settlements?: SettlementListRelationFilter
+    settlement_adjustments?: SettlementAdjustmentListRelationFilter
   }, "id">
 
   export type EmployeeOrderByWithAggregationInput = {
@@ -45753,6 +49171,7 @@ export namespace Prisma {
     id?: StringFilter<"DistributionRule"> | string
     store_id?: StringFilter<"DistributionRule"> | string
     name?: StringFilter<"DistributionRule"> | string
+    payout_mode?: EnumDistributionPayoutModeFilter<"DistributionRule"> | $Enums.DistributionPayoutMode
     created_at?: DateTimeFilter<"DistributionRule"> | Date | string
     updated_at?: DateTimeFilter<"DistributionRule"> | Date | string
     store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
@@ -45766,6 +49185,7 @@ export namespace Prisma {
     id?: SortOrder
     store_id?: SortOrder
     name?: SortOrder
+    payout_mode?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     store?: StoreOrderByWithRelationInput
@@ -45783,6 +49203,7 @@ export namespace Prisma {
     NOT?: DistributionRuleWhereInput | DistributionRuleWhereInput[]
     store_id?: StringFilter<"DistributionRule"> | string
     name?: StringFilter<"DistributionRule"> | string
+    payout_mode?: EnumDistributionPayoutModeFilter<"DistributionRule"> | $Enums.DistributionPayoutMode
     created_at?: DateTimeFilter<"DistributionRule"> | Date | string
     updated_at?: DateTimeFilter<"DistributionRule"> | Date | string
     store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
@@ -45796,6 +49217,7 @@ export namespace Prisma {
     id?: SortOrder
     store_id?: SortOrder
     name?: SortOrder
+    payout_mode?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: DistributionRuleCountOrderByAggregateInput
@@ -45810,6 +49232,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DistributionRule"> | string
     store_id?: StringWithAggregatesFilter<"DistributionRule"> | string
     name?: StringWithAggregatesFilter<"DistributionRule"> | string
+    payout_mode?: EnumDistributionPayoutModeWithAggregatesFilter<"DistributionRule"> | $Enums.DistributionPayoutMode
     created_at?: DateTimeWithAggregatesFilter<"DistributionRule"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"DistributionRule"> | Date | string
   }
@@ -46392,13 +49815,18 @@ export namespace Prisma {
     employee_id?: StringNullableFilter<"TipDistribution"> | string | null
     amount?: IntFilter<"TipDistribution"> | number
     percentage?: DecimalFilter<"TipDistribution"> | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFilter<"TipDistribution"> | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFilter<"TipDistribution"> | $Enums.PayoutStatus
     payout_id?: StringNullableFilter<"TipDistribution"> | string | null
     paid_out_at?: DateTimeNullableFilter<"TipDistribution"> | Date | string | null
+    settlement_status?: EnumSettlementStatusFilter<"TipDistribution"> | $Enums.SettlementStatus
+    settlement_id?: StringNullableFilter<"TipDistribution"> | string | null
+    settled_at?: DateTimeNullableFilter<"TipDistribution"> | Date | string | null
     created_at?: DateTimeFilter<"TipDistribution"> | Date | string
     tip?: XOR<TipScalarRelationFilter, TipWhereInput>
     employee?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
     payout?: XOR<PayoutNullableScalarRelationFilter, PayoutWhereInput> | null
+    settlement?: XOR<SettlementNullableScalarRelationFilter, SettlementWhereInput> | null
   }
 
   export type TipDistributionOrderByWithRelationInput = {
@@ -46408,13 +49836,18 @@ export namespace Prisma {
     employee_id?: SortOrderInput | SortOrder
     amount?: SortOrder
     percentage?: SortOrder
+    payout_mode?: SortOrder
     payout_status?: SortOrder
     payout_id?: SortOrderInput | SortOrder
     paid_out_at?: SortOrderInput | SortOrder
+    settlement_status?: SortOrder
+    settlement_id?: SortOrderInput | SortOrder
+    settled_at?: SortOrderInput | SortOrder
     created_at?: SortOrder
     tip?: TipOrderByWithRelationInput
     employee?: EmployeeOrderByWithRelationInput
     payout?: PayoutOrderByWithRelationInput
+    settlement?: SettlementOrderByWithRelationInput
   }
 
   export type TipDistributionWhereUniqueInput = Prisma.AtLeast<{
@@ -46427,13 +49860,18 @@ export namespace Prisma {
     employee_id?: StringNullableFilter<"TipDistribution"> | string | null
     amount?: IntFilter<"TipDistribution"> | number
     percentage?: DecimalFilter<"TipDistribution"> | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFilter<"TipDistribution"> | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFilter<"TipDistribution"> | $Enums.PayoutStatus
     payout_id?: StringNullableFilter<"TipDistribution"> | string | null
     paid_out_at?: DateTimeNullableFilter<"TipDistribution"> | Date | string | null
+    settlement_status?: EnumSettlementStatusFilter<"TipDistribution"> | $Enums.SettlementStatus
+    settlement_id?: StringNullableFilter<"TipDistribution"> | string | null
+    settled_at?: DateTimeNullableFilter<"TipDistribution"> | Date | string | null
     created_at?: DateTimeFilter<"TipDistribution"> | Date | string
     tip?: XOR<TipScalarRelationFilter, TipWhereInput>
     employee?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
     payout?: XOR<PayoutNullableScalarRelationFilter, PayoutWhereInput> | null
+    settlement?: XOR<SettlementNullableScalarRelationFilter, SettlementWhereInput> | null
   }, "id">
 
   export type TipDistributionOrderByWithAggregationInput = {
@@ -46443,9 +49881,13 @@ export namespace Prisma {
     employee_id?: SortOrderInput | SortOrder
     amount?: SortOrder
     percentage?: SortOrder
+    payout_mode?: SortOrder
     payout_status?: SortOrder
     payout_id?: SortOrderInput | SortOrder
     paid_out_at?: SortOrderInput | SortOrder
+    settlement_status?: SortOrder
+    settlement_id?: SortOrderInput | SortOrder
+    settled_at?: SortOrderInput | SortOrder
     created_at?: SortOrder
     _count?: TipDistributionCountOrderByAggregateInput
     _avg?: TipDistributionAvgOrderByAggregateInput
@@ -46464,9 +49906,13 @@ export namespace Prisma {
     employee_id?: StringNullableWithAggregatesFilter<"TipDistribution"> | string | null
     amount?: IntWithAggregatesFilter<"TipDistribution"> | number
     percentage?: DecimalWithAggregatesFilter<"TipDistribution"> | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeWithAggregatesFilter<"TipDistribution"> | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusWithAggregatesFilter<"TipDistribution"> | $Enums.PayoutStatus
     payout_id?: StringNullableWithAggregatesFilter<"TipDistribution"> | string | null
     paid_out_at?: DateTimeNullableWithAggregatesFilter<"TipDistribution"> | Date | string | null
+    settlement_status?: EnumSettlementStatusWithAggregatesFilter<"TipDistribution"> | $Enums.SettlementStatus
+    settlement_id?: StringNullableWithAggregatesFilter<"TipDistribution"> | string | null
+    settled_at?: DateTimeNullableWithAggregatesFilter<"TipDistribution"> | Date | string | null
     created_at?: DateTimeWithAggregatesFilter<"TipDistribution"> | Date | string
   }
 
@@ -46581,6 +50027,227 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"Payout"> | Date | string
   }
 
+  export type SettlementWhereInput = {
+    AND?: SettlementWhereInput | SettlementWhereInput[]
+    OR?: SettlementWhereInput[]
+    NOT?: SettlementWhereInput | SettlementWhereInput[]
+    id?: StringFilter<"Settlement"> | string
+    store_id?: StringFilter<"Settlement"> | string
+    employee_id?: StringNullableFilter<"Settlement"> | string | null
+    employee_name_snapshot?: StringFilter<"Settlement"> | string
+    amount?: IntFilter<"Settlement"> | number
+    currency?: EnumCurrencyFilter<"Settlement"> | $Enums.Currency
+    settled_at?: DateTimeFilter<"Settlement"> | Date | string
+    note?: StringNullableFilter<"Settlement"> | string | null
+    reference?: StringNullableFilter<"Settlement"> | string | null
+    recorded_by_user_id?: StringNullableFilter<"Settlement"> | string | null
+    confirmed_by_employee_at?: DateTimeNullableFilter<"Settlement"> | Date | string | null
+    reversed_at?: DateTimeNullableFilter<"Settlement"> | Date | string | null
+    reversed_by_user_id?: StringNullableFilter<"Settlement"> | string | null
+    created_at?: DateTimeFilter<"Settlement"> | Date | string
+    updated_at?: DateTimeFilter<"Settlement"> | Date | string
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+    employee?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
+    recorded_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    reversed_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    distributions?: TipDistributionListRelationFilter
+    adjustments?: SettlementAdjustmentListRelationFilter
+  }
+
+  export type SettlementOrderByWithRelationInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    employee_id?: SortOrderInput | SortOrder
+    employee_name_snapshot?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    settled_at?: SortOrder
+    note?: SortOrderInput | SortOrder
+    reference?: SortOrderInput | SortOrder
+    recorded_by_user_id?: SortOrderInput | SortOrder
+    confirmed_by_employee_at?: SortOrderInput | SortOrder
+    reversed_at?: SortOrderInput | SortOrder
+    reversed_by_user_id?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    store?: StoreOrderByWithRelationInput
+    employee?: EmployeeOrderByWithRelationInput
+    recorded_by?: UserOrderByWithRelationInput
+    reversed_by?: UserOrderByWithRelationInput
+    distributions?: TipDistributionOrderByRelationAggregateInput
+    adjustments?: SettlementAdjustmentOrderByRelationAggregateInput
+  }
+
+  export type SettlementWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SettlementWhereInput | SettlementWhereInput[]
+    OR?: SettlementWhereInput[]
+    NOT?: SettlementWhereInput | SettlementWhereInput[]
+    store_id?: StringFilter<"Settlement"> | string
+    employee_id?: StringNullableFilter<"Settlement"> | string | null
+    employee_name_snapshot?: StringFilter<"Settlement"> | string
+    amount?: IntFilter<"Settlement"> | number
+    currency?: EnumCurrencyFilter<"Settlement"> | $Enums.Currency
+    settled_at?: DateTimeFilter<"Settlement"> | Date | string
+    note?: StringNullableFilter<"Settlement"> | string | null
+    reference?: StringNullableFilter<"Settlement"> | string | null
+    recorded_by_user_id?: StringNullableFilter<"Settlement"> | string | null
+    confirmed_by_employee_at?: DateTimeNullableFilter<"Settlement"> | Date | string | null
+    reversed_at?: DateTimeNullableFilter<"Settlement"> | Date | string | null
+    reversed_by_user_id?: StringNullableFilter<"Settlement"> | string | null
+    created_at?: DateTimeFilter<"Settlement"> | Date | string
+    updated_at?: DateTimeFilter<"Settlement"> | Date | string
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+    employee?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
+    recorded_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    reversed_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    distributions?: TipDistributionListRelationFilter
+    adjustments?: SettlementAdjustmentListRelationFilter
+  }, "id">
+
+  export type SettlementOrderByWithAggregationInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    employee_id?: SortOrderInput | SortOrder
+    employee_name_snapshot?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    settled_at?: SortOrder
+    note?: SortOrderInput | SortOrder
+    reference?: SortOrderInput | SortOrder
+    recorded_by_user_id?: SortOrderInput | SortOrder
+    confirmed_by_employee_at?: SortOrderInput | SortOrder
+    reversed_at?: SortOrderInput | SortOrder
+    reversed_by_user_id?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: SettlementCountOrderByAggregateInput
+    _avg?: SettlementAvgOrderByAggregateInput
+    _max?: SettlementMaxOrderByAggregateInput
+    _min?: SettlementMinOrderByAggregateInput
+    _sum?: SettlementSumOrderByAggregateInput
+  }
+
+  export type SettlementScalarWhereWithAggregatesInput = {
+    AND?: SettlementScalarWhereWithAggregatesInput | SettlementScalarWhereWithAggregatesInput[]
+    OR?: SettlementScalarWhereWithAggregatesInput[]
+    NOT?: SettlementScalarWhereWithAggregatesInput | SettlementScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Settlement"> | string
+    store_id?: StringWithAggregatesFilter<"Settlement"> | string
+    employee_id?: StringNullableWithAggregatesFilter<"Settlement"> | string | null
+    employee_name_snapshot?: StringWithAggregatesFilter<"Settlement"> | string
+    amount?: IntWithAggregatesFilter<"Settlement"> | number
+    currency?: EnumCurrencyWithAggregatesFilter<"Settlement"> | $Enums.Currency
+    settled_at?: DateTimeWithAggregatesFilter<"Settlement"> | Date | string
+    note?: StringNullableWithAggregatesFilter<"Settlement"> | string | null
+    reference?: StringNullableWithAggregatesFilter<"Settlement"> | string | null
+    recorded_by_user_id?: StringNullableWithAggregatesFilter<"Settlement"> | string | null
+    confirmed_by_employee_at?: DateTimeNullableWithAggregatesFilter<"Settlement"> | Date | string | null
+    reversed_at?: DateTimeNullableWithAggregatesFilter<"Settlement"> | Date | string | null
+    reversed_by_user_id?: StringNullableWithAggregatesFilter<"Settlement"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"Settlement"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"Settlement"> | Date | string
+  }
+
+  export type SettlementAdjustmentWhereInput = {
+    AND?: SettlementAdjustmentWhereInput | SettlementAdjustmentWhereInput[]
+    OR?: SettlementAdjustmentWhereInput[]
+    NOT?: SettlementAdjustmentWhereInput | SettlementAdjustmentWhereInput[]
+    id?: StringFilter<"SettlementAdjustment"> | string
+    store_id?: StringFilter<"SettlementAdjustment"> | string
+    employee_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    amount?: IntFilter<"SettlementAdjustment"> | number
+    reason?: StringFilter<"SettlementAdjustment"> | string
+    refund_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    status?: EnumSettlementAdjustmentStatusFilter<"SettlementAdjustment"> | $Enums.SettlementAdjustmentStatus
+    settlement_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    created_by_user_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    created_at?: DateTimeFilter<"SettlementAdjustment"> | Date | string
+    updated_at?: DateTimeFilter<"SettlementAdjustment"> | Date | string
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+    employee?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
+    refund?: XOR<RefundNullableScalarRelationFilter, RefundWhereInput> | null
+    settlement?: XOR<SettlementNullableScalarRelationFilter, SettlementWhereInput> | null
+    created_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type SettlementAdjustmentOrderByWithRelationInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    employee_id?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    reason?: SortOrder
+    refund_id?: SortOrderInput | SortOrder
+    status?: SortOrder
+    settlement_id?: SortOrderInput | SortOrder
+    created_by_user_id?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    store?: StoreOrderByWithRelationInput
+    employee?: EmployeeOrderByWithRelationInput
+    refund?: RefundOrderByWithRelationInput
+    settlement?: SettlementOrderByWithRelationInput
+    created_by?: UserOrderByWithRelationInput
+  }
+
+  export type SettlementAdjustmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SettlementAdjustmentWhereInput | SettlementAdjustmentWhereInput[]
+    OR?: SettlementAdjustmentWhereInput[]
+    NOT?: SettlementAdjustmentWhereInput | SettlementAdjustmentWhereInput[]
+    store_id?: StringFilter<"SettlementAdjustment"> | string
+    employee_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    amount?: IntFilter<"SettlementAdjustment"> | number
+    reason?: StringFilter<"SettlementAdjustment"> | string
+    refund_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    status?: EnumSettlementAdjustmentStatusFilter<"SettlementAdjustment"> | $Enums.SettlementAdjustmentStatus
+    settlement_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    created_by_user_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    created_at?: DateTimeFilter<"SettlementAdjustment"> | Date | string
+    updated_at?: DateTimeFilter<"SettlementAdjustment"> | Date | string
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+    employee?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
+    refund?: XOR<RefundNullableScalarRelationFilter, RefundWhereInput> | null
+    settlement?: XOR<SettlementNullableScalarRelationFilter, SettlementWhereInput> | null
+    created_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type SettlementAdjustmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    employee_id?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    reason?: SortOrder
+    refund_id?: SortOrderInput | SortOrder
+    status?: SortOrder
+    settlement_id?: SortOrderInput | SortOrder
+    created_by_user_id?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: SettlementAdjustmentCountOrderByAggregateInput
+    _avg?: SettlementAdjustmentAvgOrderByAggregateInput
+    _max?: SettlementAdjustmentMaxOrderByAggregateInput
+    _min?: SettlementAdjustmentMinOrderByAggregateInput
+    _sum?: SettlementAdjustmentSumOrderByAggregateInput
+  }
+
+  export type SettlementAdjustmentScalarWhereWithAggregatesInput = {
+    AND?: SettlementAdjustmentScalarWhereWithAggregatesInput | SettlementAdjustmentScalarWhereWithAggregatesInput[]
+    OR?: SettlementAdjustmentScalarWhereWithAggregatesInput[]
+    NOT?: SettlementAdjustmentScalarWhereWithAggregatesInput | SettlementAdjustmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SettlementAdjustment"> | string
+    store_id?: StringWithAggregatesFilter<"SettlementAdjustment"> | string
+    employee_id?: StringNullableWithAggregatesFilter<"SettlementAdjustment"> | string | null
+    amount?: IntWithAggregatesFilter<"SettlementAdjustment"> | number
+    reason?: StringWithAggregatesFilter<"SettlementAdjustment"> | string
+    refund_id?: StringNullableWithAggregatesFilter<"SettlementAdjustment"> | string | null
+    status?: EnumSettlementAdjustmentStatusWithAggregatesFilter<"SettlementAdjustment"> | $Enums.SettlementAdjustmentStatus
+    settlement_id?: StringNullableWithAggregatesFilter<"SettlementAdjustment"> | string | null
+    created_by_user_id?: StringNullableWithAggregatesFilter<"SettlementAdjustment"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"SettlementAdjustment"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"SettlementAdjustment"> | Date | string
+  }
+
   export type RefundWhereInput = {
     AND?: RefundWhereInput | RefundWhereInput[]
     OR?: RefundWhereInput[]
@@ -46600,6 +50267,7 @@ export namespace Prisma {
     tip?: XOR<TipScalarRelationFilter, TipWhereInput>
     requested_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     processed_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    settlement_adjustments?: SettlementAdjustmentListRelationFilter
   }
 
   export type RefundOrderByWithRelationInput = {
@@ -46618,6 +50286,7 @@ export namespace Prisma {
     tip?: TipOrderByWithRelationInput
     requested_by?: UserOrderByWithRelationInput
     processed_by?: UserOrderByWithRelationInput
+    settlement_adjustments?: SettlementAdjustmentOrderByRelationAggregateInput
   }
 
   export type RefundWhereUniqueInput = Prisma.AtLeast<{
@@ -46639,6 +50308,7 @@ export namespace Prisma {
     tip?: XOR<TipScalarRelationFilter, TipWhereInput>
     requested_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     processed_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    settlement_adjustments?: SettlementAdjustmentListRelationFilter
   }, "id">
 
   export type RefundOrderByWithAggregationInput = {
@@ -47422,6 +51092,9 @@ export namespace Prisma {
     refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -47447,6 +51120,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUpdateInput = {
@@ -47472,6 +51148,9 @@ export namespace Prisma {
     refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -47497,6 +51176,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -48055,6 +51737,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateInput = {
@@ -48103,6 +51787,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUpdateInput = {
@@ -48151,6 +51837,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateInput = {
@@ -48199,6 +51887,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreCreateManyInput = {
@@ -48312,6 +52002,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutEmployeeInput
     alerts?: AlertCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateInput = {
@@ -48333,6 +52025,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
     alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUpdateInput = {
@@ -48354,6 +52048,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateInput = {
@@ -48375,6 +52071,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeCreateManyInput = {
@@ -48742,6 +52440,7 @@ export namespace Prisma {
   export type DistributionRuleCreateInput = {
     id?: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutDistribution_rulesInput
@@ -48755,6 +52454,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     recipients?: DistributionRuleRecipientUncheckedCreateNestedManyWithoutDistribution_ruleInput
@@ -48766,6 +52466,7 @@ export namespace Prisma {
   export type DistributionRuleUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutDistribution_rulesNestedInput
@@ -48779,6 +52480,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     recipients?: DistributionRuleRecipientUncheckedUpdateManyWithoutDistribution_ruleNestedInput
@@ -48791,6 +52493,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -48798,6 +52501,7 @@ export namespace Prisma {
   export type DistributionRuleUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -48806,6 +52510,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -49462,12 +53167,16 @@ export namespace Prisma {
     recipient_type: $Enums.DistributionRecipientType
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settled_at?: Date | string | null
     created_at?: Date | string
     tip: TipCreateNestedOneWithoutDistributionsInput
     employee?: EmployeeCreateNestedOneWithoutTip_distributionsInput
     payout?: PayoutCreateNestedOneWithoutDistributionsInput
+    settlement?: SettlementCreateNestedOneWithoutDistributionsInput
   }
 
   export type TipDistributionUncheckedCreateInput = {
@@ -49477,9 +53186,13 @@ export namespace Prisma {
     employee_id?: string | null
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settlement_id?: string | null
+    settled_at?: Date | string | null
     created_at?: Date | string
   }
 
@@ -49488,12 +53201,16 @@ export namespace Prisma {
     recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tip?: TipUpdateOneRequiredWithoutDistributionsNestedInput
     employee?: EmployeeUpdateOneWithoutTip_distributionsNestedInput
     payout?: PayoutUpdateOneWithoutDistributionsNestedInput
+    settlement?: SettlementUpdateOneWithoutDistributionsNestedInput
   }
 
   export type TipDistributionUncheckedUpdateInput = {
@@ -49503,9 +53220,13 @@ export namespace Prisma {
     employee_id?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -49516,9 +53237,13 @@ export namespace Prisma {
     employee_id?: string | null
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settlement_id?: string | null
+    settled_at?: Date | string | null
     created_at?: Date | string
   }
 
@@ -49527,8 +53252,11 @@ export namespace Prisma {
     recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -49539,9 +53267,13 @@ export namespace Prisma {
     employee_id?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -49665,6 +53397,229 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SettlementCreateInput = {
+    id?: string
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlementsInput
+    employee?: EmployeeCreateNestedOneWithoutSettlementsInput
+    recorded_by?: UserCreateNestedOneWithoutSettlements_recordedInput
+    reversed_by?: UserCreateNestedOneWithoutSettlements_reversedInput
+    distributions?: TipDistributionCreateNestedManyWithoutSettlementInput
+    adjustments?: SettlementAdjustmentCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementUncheckedCreateInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    recorded_by_user_id?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    reversed_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutSettlementInput
+    adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlementsNestedInput
+    employee?: EmployeeUpdateOneWithoutSettlementsNestedInput
+    recorded_by?: UserUpdateOneWithoutSettlements_recordedNestedInput
+    reversed_by?: UserUpdateOneWithoutSettlements_reversedNestedInput
+    distributions?: TipDistributionUpdateManyWithoutSettlementNestedInput
+    adjustments?: SettlementAdjustmentUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    recorded_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutSettlementNestedInput
+    adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementCreateManyInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    recorded_by_user_id?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    reversed_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    recorded_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentCreateInput = {
+    id?: string
+    amount: number
+    reason: string
+    status?: $Enums.SettlementAdjustmentStatus
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlement_adjustmentsInput
+    employee?: EmployeeCreateNestedOneWithoutSettlement_adjustmentsInput
+    refund?: RefundCreateNestedOneWithoutSettlement_adjustmentsInput
+    settlement?: SettlementCreateNestedOneWithoutAdjustmentsInput
+    created_by?: UserCreateNestedOneWithoutSettlement_adjustmentsInput
+  }
+
+  export type SettlementAdjustmentUncheckedCreateInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    amount: number
+    reason: string
+    refund_id?: string | null
+    status?: $Enums.SettlementAdjustmentStatus
+    settlement_id?: string | null
+    created_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlement_adjustmentsNestedInput
+    employee?: EmployeeUpdateOneWithoutSettlement_adjustmentsNestedInput
+    refund?: RefundUpdateOneWithoutSettlement_adjustmentsNestedInput
+    settlement?: SettlementUpdateOneWithoutAdjustmentsNestedInput
+    created_by?: UserUpdateOneWithoutSettlement_adjustmentsNestedInput
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    refund_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentCreateManyInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    amount: number
+    reason: string
+    refund_id?: string | null
+    status?: $Enums.SettlementAdjustmentStatus
+    settlement_id?: string | null
+    created_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    refund_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RefundCreateInput = {
     id?: string
     amount: number
@@ -49678,6 +53633,7 @@ export namespace Prisma {
     tip: TipCreateNestedOneWithoutRefundsInput
     requested_by?: UserCreateNestedOneWithoutRefunds_requestedInput
     processed_by?: UserCreateNestedOneWithoutRefunds_processedInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutRefundInput
   }
 
   export type RefundUncheckedCreateInput = {
@@ -49693,6 +53649,7 @@ export namespace Prisma {
     requires_manual_reconciliation?: boolean
     created_at?: Date | string
     updated_at?: Date | string
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutRefundInput
   }
 
   export type RefundUpdateInput = {
@@ -49708,6 +53665,7 @@ export namespace Prisma {
     tip?: TipUpdateOneRequiredWithoutRefundsNestedInput
     requested_by?: UserUpdateOneWithoutRefunds_requestedNestedInput
     processed_by?: UserUpdateOneWithoutRefunds_processedNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutRefundNestedInput
   }
 
   export type RefundUncheckedUpdateInput = {
@@ -49723,6 +53681,7 @@ export namespace Prisma {
     requires_manual_reconciliation?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutRefundNestedInput
   }
 
   export type RefundCreateManyInput = {
@@ -50606,6 +54565,18 @@ export namespace Prisma {
     isNot?: PayoutAccountWhereInput | null
   }
 
+  export type SettlementListRelationFilter = {
+    every?: SettlementWhereInput
+    some?: SettlementWhereInput
+    none?: SettlementWhereInput
+  }
+
+  export type SettlementAdjustmentListRelationFilter = {
+    every?: SettlementAdjustmentWhereInput
+    some?: SettlementAdjustmentWhereInput
+    none?: SettlementAdjustmentWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -50636,6 +54607,14 @@ export namespace Prisma {
   }
 
   export type RefundOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SettlementOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SettlementAdjustmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -51811,6 +55790,13 @@ export namespace Prisma {
     updated_at?: SortOrder
   }
 
+  export type EnumDistributionPayoutModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DistributionPayoutMode | EnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    in?: $Enums.DistributionPayoutMode[] | ListEnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DistributionPayoutMode[] | ListEnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDistributionPayoutModeFilter<$PrismaModel> | $Enums.DistributionPayoutMode
+  }
+
   export type DistributionRuleStore_idNameCompoundUniqueInput = {
     store_id: string
     name: string
@@ -51820,6 +55806,7 @@ export namespace Prisma {
     id?: SortOrder
     store_id?: SortOrder
     name?: SortOrder
+    payout_mode?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -51828,6 +55815,7 @@ export namespace Prisma {
     id?: SortOrder
     store_id?: SortOrder
     name?: SortOrder
+    payout_mode?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -51836,8 +55824,19 @@ export namespace Prisma {
     id?: SortOrder
     store_id?: SortOrder
     name?: SortOrder
+    payout_mode?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+  }
+
+  export type EnumDistributionPayoutModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DistributionPayoutMode | EnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    in?: $Enums.DistributionPayoutMode[] | ListEnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DistributionPayoutMode[] | ListEnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDistributionPayoutModeWithAggregatesFilter<$PrismaModel> | $Enums.DistributionPayoutMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDistributionPayoutModeFilter<$PrismaModel>
+    _max?: NestedEnumDistributionPayoutModeFilter<$PrismaModel>
   }
 
   export type EnumDistributionRecipientTypeFilter<$PrismaModel = never> = {
@@ -52366,9 +56365,21 @@ export namespace Prisma {
     not?: NestedEnumPayoutStatusFilter<$PrismaModel> | $Enums.PayoutStatus
   }
 
+  export type EnumSettlementStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SettlementStatus | EnumSettlementStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SettlementStatus[] | ListEnumSettlementStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SettlementStatus[] | ListEnumSettlementStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSettlementStatusFilter<$PrismaModel> | $Enums.SettlementStatus
+  }
+
   export type PayoutNullableScalarRelationFilter = {
     is?: PayoutWhereInput | null
     isNot?: PayoutWhereInput | null
+  }
+
+  export type SettlementNullableScalarRelationFilter = {
+    is?: SettlementWhereInput | null
+    isNot?: SettlementWhereInput | null
   }
 
   export type TipDistributionCountOrderByAggregateInput = {
@@ -52378,9 +56389,13 @@ export namespace Prisma {
     employee_id?: SortOrder
     amount?: SortOrder
     percentage?: SortOrder
+    payout_mode?: SortOrder
     payout_status?: SortOrder
     payout_id?: SortOrder
     paid_out_at?: SortOrder
+    settlement_status?: SortOrder
+    settlement_id?: SortOrder
+    settled_at?: SortOrder
     created_at?: SortOrder
   }
 
@@ -52396,9 +56411,13 @@ export namespace Prisma {
     employee_id?: SortOrder
     amount?: SortOrder
     percentage?: SortOrder
+    payout_mode?: SortOrder
     payout_status?: SortOrder
     payout_id?: SortOrder
     paid_out_at?: SortOrder
+    settlement_status?: SortOrder
+    settlement_id?: SortOrder
+    settled_at?: SortOrder
     created_at?: SortOrder
   }
 
@@ -52409,9 +56428,13 @@ export namespace Prisma {
     employee_id?: SortOrder
     amount?: SortOrder
     percentage?: SortOrder
+    payout_mode?: SortOrder
     payout_status?: SortOrder
     payout_id?: SortOrder
     paid_out_at?: SortOrder
+    settlement_status?: SortOrder
+    settlement_id?: SortOrder
+    settled_at?: SortOrder
     created_at?: SortOrder
   }
 
@@ -52428,6 +56451,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPayoutStatusFilter<$PrismaModel>
     _max?: NestedEnumPayoutStatusFilter<$PrismaModel>
+  }
+
+  export type EnumSettlementStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SettlementStatus | EnumSettlementStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SettlementStatus[] | ListEnumSettlementStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SettlementStatus[] | ListEnumSettlementStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSettlementStatusWithAggregatesFilter<$PrismaModel> | $Enums.SettlementStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSettlementStatusFilter<$PrismaModel>
+    _max?: NestedEnumSettlementStatusFilter<$PrismaModel>
   }
 
   export type EnumPayoutExecutionStatusFilter<$PrismaModel = never> = {
@@ -52509,6 +56542,140 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPayoutExecutionStatusFilter<$PrismaModel>
     _max?: NestedEnumPayoutExecutionStatusFilter<$PrismaModel>
+  }
+
+  export type SettlementCountOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    employee_id?: SortOrder
+    employee_name_snapshot?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    settled_at?: SortOrder
+    note?: SortOrder
+    reference?: SortOrder
+    recorded_by_user_id?: SortOrder
+    confirmed_by_employee_at?: SortOrder
+    reversed_at?: SortOrder
+    reversed_by_user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type SettlementAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type SettlementMaxOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    employee_id?: SortOrder
+    employee_name_snapshot?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    settled_at?: SortOrder
+    note?: SortOrder
+    reference?: SortOrder
+    recorded_by_user_id?: SortOrder
+    confirmed_by_employee_at?: SortOrder
+    reversed_at?: SortOrder
+    reversed_by_user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type SettlementMinOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    employee_id?: SortOrder
+    employee_name_snapshot?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    settled_at?: SortOrder
+    note?: SortOrder
+    reference?: SortOrder
+    recorded_by_user_id?: SortOrder
+    confirmed_by_employee_at?: SortOrder
+    reversed_at?: SortOrder
+    reversed_by_user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type SettlementSumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type EnumSettlementAdjustmentStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SettlementAdjustmentStatus | EnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SettlementAdjustmentStatus[] | ListEnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SettlementAdjustmentStatus[] | ListEnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSettlementAdjustmentStatusFilter<$PrismaModel> | $Enums.SettlementAdjustmentStatus
+  }
+
+  export type RefundNullableScalarRelationFilter = {
+    is?: RefundWhereInput | null
+    isNot?: RefundWhereInput | null
+  }
+
+  export type SettlementAdjustmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    employee_id?: SortOrder
+    amount?: SortOrder
+    reason?: SortOrder
+    refund_id?: SortOrder
+    status?: SortOrder
+    settlement_id?: SortOrder
+    created_by_user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type SettlementAdjustmentAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type SettlementAdjustmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    employee_id?: SortOrder
+    amount?: SortOrder
+    reason?: SortOrder
+    refund_id?: SortOrder
+    status?: SortOrder
+    settlement_id?: SortOrder
+    created_by_user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type SettlementAdjustmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    employee_id?: SortOrder
+    amount?: SortOrder
+    reason?: SortOrder
+    refund_id?: SortOrder
+    status?: SortOrder
+    settlement_id?: SortOrder
+    created_by_user_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type SettlementAdjustmentSumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type EnumSettlementAdjustmentStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SettlementAdjustmentStatus | EnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SettlementAdjustmentStatus[] | ListEnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SettlementAdjustmentStatus[] | ListEnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSettlementAdjustmentStatusWithAggregatesFilter<$PrismaModel> | $Enums.SettlementAdjustmentStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSettlementAdjustmentStatusFilter<$PrismaModel>
+    _max?: NestedEnumSettlementAdjustmentStatusFilter<$PrismaModel>
   }
 
   export type EnumRefundStatusFilter<$PrismaModel = never> = {
@@ -53122,6 +57289,27 @@ export namespace Prisma {
     connect?: PayoutAccountWhereUniqueInput
   }
 
+  export type SettlementCreateNestedManyWithoutRecorded_byInput = {
+    create?: XOR<SettlementCreateWithoutRecorded_byInput, SettlementUncheckedCreateWithoutRecorded_byInput> | SettlementCreateWithoutRecorded_byInput[] | SettlementUncheckedCreateWithoutRecorded_byInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutRecorded_byInput | SettlementCreateOrConnectWithoutRecorded_byInput[]
+    createMany?: SettlementCreateManyRecorded_byInputEnvelope
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+  }
+
+  export type SettlementCreateNestedManyWithoutReversed_byInput = {
+    create?: XOR<SettlementCreateWithoutReversed_byInput, SettlementUncheckedCreateWithoutReversed_byInput> | SettlementCreateWithoutReversed_byInput[] | SettlementUncheckedCreateWithoutReversed_byInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutReversed_byInput | SettlementCreateOrConnectWithoutReversed_byInput[]
+    createMany?: SettlementCreateManyReversed_byInputEnvelope
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+  }
+
+  export type SettlementAdjustmentCreateNestedManyWithoutCreated_byInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutCreated_byInput, SettlementAdjustmentUncheckedCreateWithoutCreated_byInput> | SettlementAdjustmentCreateWithoutCreated_byInput[] | SettlementAdjustmentUncheckedCreateWithoutCreated_byInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutCreated_byInput | SettlementAdjustmentCreateOrConnectWithoutCreated_byInput[]
+    createMany?: SettlementAdjustmentCreateManyCreated_byInputEnvelope
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+  }
+
   export type PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<PasswordResetTokenCreateWithoutUserInput, PasswordResetTokenUncheckedCreateWithoutUserInput> | PasswordResetTokenCreateWithoutUserInput[] | PasswordResetTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PasswordResetTokenCreateOrConnectWithoutUserInput | PasswordResetTokenCreateOrConnectWithoutUserInput[]
@@ -53182,6 +57370,27 @@ export namespace Prisma {
     create?: XOR<PayoutAccountCreateWithoutUserInput, PayoutAccountUncheckedCreateWithoutUserInput>
     connectOrCreate?: PayoutAccountCreateOrConnectWithoutUserInput
     connect?: PayoutAccountWhereUniqueInput
+  }
+
+  export type SettlementUncheckedCreateNestedManyWithoutRecorded_byInput = {
+    create?: XOR<SettlementCreateWithoutRecorded_byInput, SettlementUncheckedCreateWithoutRecorded_byInput> | SettlementCreateWithoutRecorded_byInput[] | SettlementUncheckedCreateWithoutRecorded_byInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutRecorded_byInput | SettlementCreateOrConnectWithoutRecorded_byInput[]
+    createMany?: SettlementCreateManyRecorded_byInputEnvelope
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+  }
+
+  export type SettlementUncheckedCreateNestedManyWithoutReversed_byInput = {
+    create?: XOR<SettlementCreateWithoutReversed_byInput, SettlementUncheckedCreateWithoutReversed_byInput> | SettlementCreateWithoutReversed_byInput[] | SettlementUncheckedCreateWithoutReversed_byInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutReversed_byInput | SettlementCreateOrConnectWithoutReversed_byInput[]
+    createMany?: SettlementCreateManyReversed_byInputEnvelope
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+  }
+
+  export type SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutCreated_byInput, SettlementAdjustmentUncheckedCreateWithoutCreated_byInput> | SettlementAdjustmentCreateWithoutCreated_byInput[] | SettlementAdjustmentUncheckedCreateWithoutCreated_byInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutCreated_byInput | SettlementAdjustmentCreateOrConnectWithoutCreated_byInput[]
+    createMany?: SettlementAdjustmentCreateManyCreated_byInputEnvelope
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -53330,6 +57539,48 @@ export namespace Prisma {
     update?: XOR<XOR<PayoutAccountUpdateToOneWithWhereWithoutUserInput, PayoutAccountUpdateWithoutUserInput>, PayoutAccountUncheckedUpdateWithoutUserInput>
   }
 
+  export type SettlementUpdateManyWithoutRecorded_byNestedInput = {
+    create?: XOR<SettlementCreateWithoutRecorded_byInput, SettlementUncheckedCreateWithoutRecorded_byInput> | SettlementCreateWithoutRecorded_byInput[] | SettlementUncheckedCreateWithoutRecorded_byInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutRecorded_byInput | SettlementCreateOrConnectWithoutRecorded_byInput[]
+    upsert?: SettlementUpsertWithWhereUniqueWithoutRecorded_byInput | SettlementUpsertWithWhereUniqueWithoutRecorded_byInput[]
+    createMany?: SettlementCreateManyRecorded_byInputEnvelope
+    set?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    disconnect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    delete?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    update?: SettlementUpdateWithWhereUniqueWithoutRecorded_byInput | SettlementUpdateWithWhereUniqueWithoutRecorded_byInput[]
+    updateMany?: SettlementUpdateManyWithWhereWithoutRecorded_byInput | SettlementUpdateManyWithWhereWithoutRecorded_byInput[]
+    deleteMany?: SettlementScalarWhereInput | SettlementScalarWhereInput[]
+  }
+
+  export type SettlementUpdateManyWithoutReversed_byNestedInput = {
+    create?: XOR<SettlementCreateWithoutReversed_byInput, SettlementUncheckedCreateWithoutReversed_byInput> | SettlementCreateWithoutReversed_byInput[] | SettlementUncheckedCreateWithoutReversed_byInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutReversed_byInput | SettlementCreateOrConnectWithoutReversed_byInput[]
+    upsert?: SettlementUpsertWithWhereUniqueWithoutReversed_byInput | SettlementUpsertWithWhereUniqueWithoutReversed_byInput[]
+    createMany?: SettlementCreateManyReversed_byInputEnvelope
+    set?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    disconnect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    delete?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    update?: SettlementUpdateWithWhereUniqueWithoutReversed_byInput | SettlementUpdateWithWhereUniqueWithoutReversed_byInput[]
+    updateMany?: SettlementUpdateManyWithWhereWithoutReversed_byInput | SettlementUpdateManyWithWhereWithoutReversed_byInput[]
+    deleteMany?: SettlementScalarWhereInput | SettlementScalarWhereInput[]
+  }
+
+  export type SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutCreated_byInput, SettlementAdjustmentUncheckedCreateWithoutCreated_byInput> | SettlementAdjustmentCreateWithoutCreated_byInput[] | SettlementAdjustmentUncheckedCreateWithoutCreated_byInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutCreated_byInput | SettlementAdjustmentCreateOrConnectWithoutCreated_byInput[]
+    upsert?: SettlementAdjustmentUpsertWithWhereUniqueWithoutCreated_byInput | SettlementAdjustmentUpsertWithWhereUniqueWithoutCreated_byInput[]
+    createMany?: SettlementAdjustmentCreateManyCreated_byInputEnvelope
+    set?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    disconnect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    delete?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    update?: SettlementAdjustmentUpdateWithWhereUniqueWithoutCreated_byInput | SettlementAdjustmentUpdateWithWhereUniqueWithoutCreated_byInput[]
+    updateMany?: SettlementAdjustmentUpdateManyWithWhereWithoutCreated_byInput | SettlementAdjustmentUpdateManyWithWhereWithoutCreated_byInput[]
+    deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
+  }
+
   export type PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<PasswordResetTokenCreateWithoutUserInput, PasswordResetTokenUncheckedCreateWithoutUserInput> | PasswordResetTokenCreateWithoutUserInput[] | PasswordResetTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PasswordResetTokenCreateOrConnectWithoutUserInput | PasswordResetTokenCreateOrConnectWithoutUserInput[]
@@ -53450,6 +57701,48 @@ export namespace Prisma {
     delete?: PayoutAccountWhereInput | boolean
     connect?: PayoutAccountWhereUniqueInput
     update?: XOR<XOR<PayoutAccountUpdateToOneWithWhereWithoutUserInput, PayoutAccountUpdateWithoutUserInput>, PayoutAccountUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput = {
+    create?: XOR<SettlementCreateWithoutRecorded_byInput, SettlementUncheckedCreateWithoutRecorded_byInput> | SettlementCreateWithoutRecorded_byInput[] | SettlementUncheckedCreateWithoutRecorded_byInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutRecorded_byInput | SettlementCreateOrConnectWithoutRecorded_byInput[]
+    upsert?: SettlementUpsertWithWhereUniqueWithoutRecorded_byInput | SettlementUpsertWithWhereUniqueWithoutRecorded_byInput[]
+    createMany?: SettlementCreateManyRecorded_byInputEnvelope
+    set?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    disconnect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    delete?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    update?: SettlementUpdateWithWhereUniqueWithoutRecorded_byInput | SettlementUpdateWithWhereUniqueWithoutRecorded_byInput[]
+    updateMany?: SettlementUpdateManyWithWhereWithoutRecorded_byInput | SettlementUpdateManyWithWhereWithoutRecorded_byInput[]
+    deleteMany?: SettlementScalarWhereInput | SettlementScalarWhereInput[]
+  }
+
+  export type SettlementUncheckedUpdateManyWithoutReversed_byNestedInput = {
+    create?: XOR<SettlementCreateWithoutReversed_byInput, SettlementUncheckedCreateWithoutReversed_byInput> | SettlementCreateWithoutReversed_byInput[] | SettlementUncheckedCreateWithoutReversed_byInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutReversed_byInput | SettlementCreateOrConnectWithoutReversed_byInput[]
+    upsert?: SettlementUpsertWithWhereUniqueWithoutReversed_byInput | SettlementUpsertWithWhereUniqueWithoutReversed_byInput[]
+    createMany?: SettlementCreateManyReversed_byInputEnvelope
+    set?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    disconnect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    delete?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    update?: SettlementUpdateWithWhereUniqueWithoutReversed_byInput | SettlementUpdateWithWhereUniqueWithoutReversed_byInput[]
+    updateMany?: SettlementUpdateManyWithWhereWithoutReversed_byInput | SettlementUpdateManyWithWhereWithoutReversed_byInput[]
+    deleteMany?: SettlementScalarWhereInput | SettlementScalarWhereInput[]
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutCreated_byInput, SettlementAdjustmentUncheckedCreateWithoutCreated_byInput> | SettlementAdjustmentCreateWithoutCreated_byInput[] | SettlementAdjustmentUncheckedCreateWithoutCreated_byInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutCreated_byInput | SettlementAdjustmentCreateOrConnectWithoutCreated_byInput[]
+    upsert?: SettlementAdjustmentUpsertWithWhereUniqueWithoutCreated_byInput | SettlementAdjustmentUpsertWithWhereUniqueWithoutCreated_byInput[]
+    createMany?: SettlementAdjustmentCreateManyCreated_byInputEnvelope
+    set?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    disconnect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    delete?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    update?: SettlementAdjustmentUpdateWithWhereUniqueWithoutCreated_byInput | SettlementAdjustmentUpdateWithWhereUniqueWithoutCreated_byInput[]
+    updateMany?: SettlementAdjustmentUpdateManyWithWhereWithoutCreated_byInput | SettlementAdjustmentUpdateManyWithWhereWithoutCreated_byInput[]
+    deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutPassword_reset_tokensInput = {
@@ -54005,6 +58298,20 @@ export namespace Prisma {
     connect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
   }
 
+  export type SettlementCreateNestedManyWithoutStoreInput = {
+    create?: XOR<SettlementCreateWithoutStoreInput, SettlementUncheckedCreateWithoutStoreInput> | SettlementCreateWithoutStoreInput[] | SettlementUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutStoreInput | SettlementCreateOrConnectWithoutStoreInput[]
+    createMany?: SettlementCreateManyStoreInputEnvelope
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+  }
+
+  export type SettlementAdjustmentCreateNestedManyWithoutStoreInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutStoreInput, SettlementAdjustmentUncheckedCreateWithoutStoreInput> | SettlementAdjustmentCreateWithoutStoreInput[] | SettlementAdjustmentUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutStoreInput | SettlementAdjustmentCreateOrConnectWithoutStoreInput[]
+    createMany?: SettlementAdjustmentCreateManyStoreInputEnvelope
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+  }
+
   export type OrganizationMemberUncheckedCreateNestedManyWithoutStoreInput = {
     create?: XOR<OrganizationMemberCreateWithoutStoreInput, OrganizationMemberUncheckedCreateWithoutStoreInput> | OrganizationMemberCreateWithoutStoreInput[] | OrganizationMemberUncheckedCreateWithoutStoreInput[]
     connectOrCreate?: OrganizationMemberCreateOrConnectWithoutStoreInput | OrganizationMemberCreateOrConnectWithoutStoreInput[]
@@ -54114,6 +58421,20 @@ export namespace Prisma {
     connectOrCreate?: PayoutCreateOrConnectWithoutStoreInput | PayoutCreateOrConnectWithoutStoreInput[]
     createMany?: PayoutCreateManyStoreInputEnvelope
     connect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+  }
+
+  export type SettlementUncheckedCreateNestedManyWithoutStoreInput = {
+    create?: XOR<SettlementCreateWithoutStoreInput, SettlementUncheckedCreateWithoutStoreInput> | SettlementCreateWithoutStoreInput[] | SettlementUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutStoreInput | SettlementCreateOrConnectWithoutStoreInput[]
+    createMany?: SettlementCreateManyStoreInputEnvelope
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+  }
+
+  export type SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutStoreInput, SettlementAdjustmentUncheckedCreateWithoutStoreInput> | SettlementAdjustmentCreateWithoutStoreInput[] | SettlementAdjustmentUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutStoreInput | SettlementAdjustmentCreateOrConnectWithoutStoreInput[]
+    createMany?: SettlementAdjustmentCreateManyStoreInputEnvelope
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
   }
 
   export type EnumStoreIndustryFieldUpdateOperationsInput = {
@@ -54412,6 +58733,34 @@ export namespace Prisma {
     deleteMany?: PayoutScalarWhereInput | PayoutScalarWhereInput[]
   }
 
+  export type SettlementUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<SettlementCreateWithoutStoreInput, SettlementUncheckedCreateWithoutStoreInput> | SettlementCreateWithoutStoreInput[] | SettlementUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutStoreInput | SettlementCreateOrConnectWithoutStoreInput[]
+    upsert?: SettlementUpsertWithWhereUniqueWithoutStoreInput | SettlementUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: SettlementCreateManyStoreInputEnvelope
+    set?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    disconnect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    delete?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    update?: SettlementUpdateWithWhereUniqueWithoutStoreInput | SettlementUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: SettlementUpdateManyWithWhereWithoutStoreInput | SettlementUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: SettlementScalarWhereInput | SettlementScalarWhereInput[]
+  }
+
+  export type SettlementAdjustmentUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutStoreInput, SettlementAdjustmentUncheckedCreateWithoutStoreInput> | SettlementAdjustmentCreateWithoutStoreInput[] | SettlementAdjustmentUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutStoreInput | SettlementAdjustmentCreateOrConnectWithoutStoreInput[]
+    upsert?: SettlementAdjustmentUpsertWithWhereUniqueWithoutStoreInput | SettlementAdjustmentUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: SettlementAdjustmentCreateManyStoreInputEnvelope
+    set?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    disconnect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    delete?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    update?: SettlementAdjustmentUpdateWithWhereUniqueWithoutStoreInput | SettlementAdjustmentUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: SettlementAdjustmentUpdateManyWithWhereWithoutStoreInput | SettlementAdjustmentUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
+  }
+
   export type OrganizationMemberUncheckedUpdateManyWithoutStoreNestedInput = {
     create?: XOR<OrganizationMemberCreateWithoutStoreInput, OrganizationMemberUncheckedCreateWithoutStoreInput> | OrganizationMemberCreateWithoutStoreInput[] | OrganizationMemberUncheckedCreateWithoutStoreInput[]
     connectOrCreate?: OrganizationMemberCreateOrConnectWithoutStoreInput | OrganizationMemberCreateOrConnectWithoutStoreInput[]
@@ -54632,6 +58981,34 @@ export namespace Prisma {
     deleteMany?: PayoutScalarWhereInput | PayoutScalarWhereInput[]
   }
 
+  export type SettlementUncheckedUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<SettlementCreateWithoutStoreInput, SettlementUncheckedCreateWithoutStoreInput> | SettlementCreateWithoutStoreInput[] | SettlementUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutStoreInput | SettlementCreateOrConnectWithoutStoreInput[]
+    upsert?: SettlementUpsertWithWhereUniqueWithoutStoreInput | SettlementUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: SettlementCreateManyStoreInputEnvelope
+    set?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    disconnect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    delete?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    update?: SettlementUpdateWithWhereUniqueWithoutStoreInput | SettlementUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: SettlementUpdateManyWithWhereWithoutStoreInput | SettlementUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: SettlementScalarWhereInput | SettlementScalarWhereInput[]
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutStoreInput, SettlementAdjustmentUncheckedCreateWithoutStoreInput> | SettlementAdjustmentCreateWithoutStoreInput[] | SettlementAdjustmentUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutStoreInput | SettlementAdjustmentCreateOrConnectWithoutStoreInput[]
+    upsert?: SettlementAdjustmentUpsertWithWhereUniqueWithoutStoreInput | SettlementAdjustmentUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: SettlementAdjustmentCreateManyStoreInputEnvelope
+    set?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    disconnect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    delete?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    update?: SettlementAdjustmentUpdateWithWhereUniqueWithoutStoreInput | SettlementAdjustmentUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: SettlementAdjustmentUpdateManyWithWhereWithoutStoreInput | SettlementAdjustmentUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
+  }
+
   export type StoreCreateNestedOneWithoutEmployeesInput = {
     create?: XOR<StoreCreateWithoutEmployeesInput, StoreUncheckedCreateWithoutEmployeesInput>
     connectOrCreate?: StoreCreateOrConnectWithoutEmployeesInput
@@ -54699,6 +59076,20 @@ export namespace Prisma {
     connect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
   }
 
+  export type SettlementCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<SettlementCreateWithoutEmployeeInput, SettlementUncheckedCreateWithoutEmployeeInput> | SettlementCreateWithoutEmployeeInput[] | SettlementUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutEmployeeInput | SettlementCreateOrConnectWithoutEmployeeInput[]
+    createMany?: SettlementCreateManyEmployeeInputEnvelope
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+  }
+
+  export type SettlementAdjustmentCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutEmployeeInput, SettlementAdjustmentUncheckedCreateWithoutEmployeeInput> | SettlementAdjustmentCreateWithoutEmployeeInput[] | SettlementAdjustmentUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutEmployeeInput | SettlementAdjustmentCreateOrConnectWithoutEmployeeInput[]
+    createMany?: SettlementAdjustmentCreateManyEmployeeInputEnvelope
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+  }
+
   export type QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput = {
     create?: XOR<QrCodeEmployeeCreateWithoutEmployeeInput, QrCodeEmployeeUncheckedCreateWithoutEmployeeInput> | QrCodeEmployeeCreateWithoutEmployeeInput[] | QrCodeEmployeeUncheckedCreateWithoutEmployeeInput[]
     connectOrCreate?: QrCodeEmployeeCreateOrConnectWithoutEmployeeInput | QrCodeEmployeeCreateOrConnectWithoutEmployeeInput[]
@@ -54746,6 +59137,20 @@ export namespace Prisma {
     connectOrCreate?: PayoutCreateOrConnectWithoutEmployeeInput | PayoutCreateOrConnectWithoutEmployeeInput[]
     createMany?: PayoutCreateManyEmployeeInputEnvelope
     connect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+  }
+
+  export type SettlementUncheckedCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<SettlementCreateWithoutEmployeeInput, SettlementUncheckedCreateWithoutEmployeeInput> | SettlementCreateWithoutEmployeeInput[] | SettlementUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutEmployeeInput | SettlementCreateOrConnectWithoutEmployeeInput[]
+    createMany?: SettlementCreateManyEmployeeInputEnvelope
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+  }
+
+  export type SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutEmployeeInput, SettlementAdjustmentUncheckedCreateWithoutEmployeeInput> | SettlementAdjustmentCreateWithoutEmployeeInput[] | SettlementAdjustmentUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutEmployeeInput | SettlementAdjustmentCreateOrConnectWithoutEmployeeInput[]
+    createMany?: SettlementAdjustmentCreateManyEmployeeInputEnvelope
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
   }
 
   export type StoreUpdateOneRequiredWithoutEmployeesNestedInput = {
@@ -54874,6 +59279,34 @@ export namespace Prisma {
     deleteMany?: PayoutScalarWhereInput | PayoutScalarWhereInput[]
   }
 
+  export type SettlementUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<SettlementCreateWithoutEmployeeInput, SettlementUncheckedCreateWithoutEmployeeInput> | SettlementCreateWithoutEmployeeInput[] | SettlementUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutEmployeeInput | SettlementCreateOrConnectWithoutEmployeeInput[]
+    upsert?: SettlementUpsertWithWhereUniqueWithoutEmployeeInput | SettlementUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: SettlementCreateManyEmployeeInputEnvelope
+    set?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    disconnect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    delete?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    update?: SettlementUpdateWithWhereUniqueWithoutEmployeeInput | SettlementUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: SettlementUpdateManyWithWhereWithoutEmployeeInput | SettlementUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: SettlementScalarWhereInput | SettlementScalarWhereInput[]
+  }
+
+  export type SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutEmployeeInput, SettlementAdjustmentUncheckedCreateWithoutEmployeeInput> | SettlementAdjustmentCreateWithoutEmployeeInput[] | SettlementAdjustmentUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutEmployeeInput | SettlementAdjustmentCreateOrConnectWithoutEmployeeInput[]
+    upsert?: SettlementAdjustmentUpsertWithWhereUniqueWithoutEmployeeInput | SettlementAdjustmentUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: SettlementAdjustmentCreateManyEmployeeInputEnvelope
+    set?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    disconnect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    delete?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    update?: SettlementAdjustmentUpdateWithWhereUniqueWithoutEmployeeInput | SettlementAdjustmentUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: SettlementAdjustmentUpdateManyWithWhereWithoutEmployeeInput | SettlementAdjustmentUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
+  }
+
   export type QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput = {
     create?: XOR<QrCodeEmployeeCreateWithoutEmployeeInput, QrCodeEmployeeUncheckedCreateWithoutEmployeeInput> | QrCodeEmployeeCreateWithoutEmployeeInput[] | QrCodeEmployeeUncheckedCreateWithoutEmployeeInput[]
     connectOrCreate?: QrCodeEmployeeCreateOrConnectWithoutEmployeeInput | QrCodeEmployeeCreateOrConnectWithoutEmployeeInput[]
@@ -54970,6 +59403,34 @@ export namespace Prisma {
     update?: PayoutUpdateWithWhereUniqueWithoutEmployeeInput | PayoutUpdateWithWhereUniqueWithoutEmployeeInput[]
     updateMany?: PayoutUpdateManyWithWhereWithoutEmployeeInput | PayoutUpdateManyWithWhereWithoutEmployeeInput[]
     deleteMany?: PayoutScalarWhereInput | PayoutScalarWhereInput[]
+  }
+
+  export type SettlementUncheckedUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<SettlementCreateWithoutEmployeeInput, SettlementUncheckedCreateWithoutEmployeeInput> | SettlementCreateWithoutEmployeeInput[] | SettlementUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SettlementCreateOrConnectWithoutEmployeeInput | SettlementCreateOrConnectWithoutEmployeeInput[]
+    upsert?: SettlementUpsertWithWhereUniqueWithoutEmployeeInput | SettlementUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: SettlementCreateManyEmployeeInputEnvelope
+    set?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    disconnect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    delete?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    connect?: SettlementWhereUniqueInput | SettlementWhereUniqueInput[]
+    update?: SettlementUpdateWithWhereUniqueWithoutEmployeeInput | SettlementUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: SettlementUpdateManyWithWhereWithoutEmployeeInput | SettlementUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: SettlementScalarWhereInput | SettlementScalarWhereInput[]
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutEmployeeInput, SettlementAdjustmentUncheckedCreateWithoutEmployeeInput> | SettlementAdjustmentCreateWithoutEmployeeInput[] | SettlementAdjustmentUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutEmployeeInput | SettlementAdjustmentCreateOrConnectWithoutEmployeeInput[]
+    upsert?: SettlementAdjustmentUpsertWithWhereUniqueWithoutEmployeeInput | SettlementAdjustmentUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: SettlementAdjustmentCreateManyEmployeeInputEnvelope
+    set?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    disconnect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    delete?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    update?: SettlementAdjustmentUpdateWithWhereUniqueWithoutEmployeeInput | SettlementAdjustmentUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: SettlementAdjustmentUpdateManyWithWhereWithoutEmployeeInput | SettlementAdjustmentUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
   }
 
   export type StoreCreateNestedOneWithoutSpotsInput = {
@@ -55316,6 +59777,10 @@ export namespace Prisma {
     connectOrCreate?: TipCreateOrConnectWithoutDistribution_ruleInput | TipCreateOrConnectWithoutDistribution_ruleInput[]
     createMany?: TipCreateManyDistribution_ruleInputEnvelope
     connect?: TipWhereUniqueInput | TipWhereUniqueInput[]
+  }
+
+  export type EnumDistributionPayoutModeFieldUpdateOperationsInput = {
+    set?: $Enums.DistributionPayoutMode
   }
 
   export type StoreUpdateOneRequiredWithoutDistribution_rulesNestedInput = {
@@ -55830,8 +60295,18 @@ export namespace Prisma {
     connect?: PayoutWhereUniqueInput
   }
 
+  export type SettlementCreateNestedOneWithoutDistributionsInput = {
+    create?: XOR<SettlementCreateWithoutDistributionsInput, SettlementUncheckedCreateWithoutDistributionsInput>
+    connectOrCreate?: SettlementCreateOrConnectWithoutDistributionsInput
+    connect?: SettlementWhereUniqueInput
+  }
+
   export type EnumPayoutStatusFieldUpdateOperationsInput = {
     set?: $Enums.PayoutStatus
+  }
+
+  export type EnumSettlementStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SettlementStatus
   }
 
   export type TipUpdateOneRequiredWithoutDistributionsNestedInput = {
@@ -55860,6 +60335,16 @@ export namespace Prisma {
     delete?: PayoutWhereInput | boolean
     connect?: PayoutWhereUniqueInput
     update?: XOR<XOR<PayoutUpdateToOneWithWhereWithoutDistributionsInput, PayoutUpdateWithoutDistributionsInput>, PayoutUncheckedUpdateWithoutDistributionsInput>
+  }
+
+  export type SettlementUpdateOneWithoutDistributionsNestedInput = {
+    create?: XOR<SettlementCreateWithoutDistributionsInput, SettlementUncheckedCreateWithoutDistributionsInput>
+    connectOrCreate?: SettlementCreateOrConnectWithoutDistributionsInput
+    upsert?: SettlementUpsertWithoutDistributionsInput
+    disconnect?: SettlementWhereInput | boolean
+    delete?: SettlementWhereInput | boolean
+    connect?: SettlementWhereUniqueInput
+    update?: XOR<XOR<SettlementUpdateToOneWithWhereWithoutDistributionsInput, SettlementUpdateWithoutDistributionsInput>, SettlementUncheckedUpdateWithoutDistributionsInput>
   }
 
   export type StoreCreateNestedOneWithoutPayoutsInput = {
@@ -55954,6 +60439,234 @@ export namespace Prisma {
     deleteMany?: TipDistributionScalarWhereInput | TipDistributionScalarWhereInput[]
   }
 
+  export type StoreCreateNestedOneWithoutSettlementsInput = {
+    create?: XOR<StoreCreateWithoutSettlementsInput, StoreUncheckedCreateWithoutSettlementsInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutSettlementsInput
+    connect?: StoreWhereUniqueInput
+  }
+
+  export type EmployeeCreateNestedOneWithoutSettlementsInput = {
+    create?: XOR<EmployeeCreateWithoutSettlementsInput, EmployeeUncheckedCreateWithoutSettlementsInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutSettlementsInput
+    connect?: EmployeeWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSettlements_recordedInput = {
+    create?: XOR<UserCreateWithoutSettlements_recordedInput, UserUncheckedCreateWithoutSettlements_recordedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSettlements_recordedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSettlements_reversedInput = {
+    create?: XOR<UserCreateWithoutSettlements_reversedInput, UserUncheckedCreateWithoutSettlements_reversedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSettlements_reversedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TipDistributionCreateNestedManyWithoutSettlementInput = {
+    create?: XOR<TipDistributionCreateWithoutSettlementInput, TipDistributionUncheckedCreateWithoutSettlementInput> | TipDistributionCreateWithoutSettlementInput[] | TipDistributionUncheckedCreateWithoutSettlementInput[]
+    connectOrCreate?: TipDistributionCreateOrConnectWithoutSettlementInput | TipDistributionCreateOrConnectWithoutSettlementInput[]
+    createMany?: TipDistributionCreateManySettlementInputEnvelope
+    connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+  }
+
+  export type SettlementAdjustmentCreateNestedManyWithoutSettlementInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutSettlementInput, SettlementAdjustmentUncheckedCreateWithoutSettlementInput> | SettlementAdjustmentCreateWithoutSettlementInput[] | SettlementAdjustmentUncheckedCreateWithoutSettlementInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutSettlementInput | SettlementAdjustmentCreateOrConnectWithoutSettlementInput[]
+    createMany?: SettlementAdjustmentCreateManySettlementInputEnvelope
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+  }
+
+  export type TipDistributionUncheckedCreateNestedManyWithoutSettlementInput = {
+    create?: XOR<TipDistributionCreateWithoutSettlementInput, TipDistributionUncheckedCreateWithoutSettlementInput> | TipDistributionCreateWithoutSettlementInput[] | TipDistributionUncheckedCreateWithoutSettlementInput[]
+    connectOrCreate?: TipDistributionCreateOrConnectWithoutSettlementInput | TipDistributionCreateOrConnectWithoutSettlementInput[]
+    createMany?: TipDistributionCreateManySettlementInputEnvelope
+    connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+  }
+
+  export type SettlementAdjustmentUncheckedCreateNestedManyWithoutSettlementInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutSettlementInput, SettlementAdjustmentUncheckedCreateWithoutSettlementInput> | SettlementAdjustmentCreateWithoutSettlementInput[] | SettlementAdjustmentUncheckedCreateWithoutSettlementInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutSettlementInput | SettlementAdjustmentCreateOrConnectWithoutSettlementInput[]
+    createMany?: SettlementAdjustmentCreateManySettlementInputEnvelope
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+  }
+
+  export type StoreUpdateOneRequiredWithoutSettlementsNestedInput = {
+    create?: XOR<StoreCreateWithoutSettlementsInput, StoreUncheckedCreateWithoutSettlementsInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutSettlementsInput
+    upsert?: StoreUpsertWithoutSettlementsInput
+    connect?: StoreWhereUniqueInput
+    update?: XOR<XOR<StoreUpdateToOneWithWhereWithoutSettlementsInput, StoreUpdateWithoutSettlementsInput>, StoreUncheckedUpdateWithoutSettlementsInput>
+  }
+
+  export type EmployeeUpdateOneWithoutSettlementsNestedInput = {
+    create?: XOR<EmployeeCreateWithoutSettlementsInput, EmployeeUncheckedCreateWithoutSettlementsInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutSettlementsInput
+    upsert?: EmployeeUpsertWithoutSettlementsInput
+    disconnect?: EmployeeWhereInput | boolean
+    delete?: EmployeeWhereInput | boolean
+    connect?: EmployeeWhereUniqueInput
+    update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutSettlementsInput, EmployeeUpdateWithoutSettlementsInput>, EmployeeUncheckedUpdateWithoutSettlementsInput>
+  }
+
+  export type UserUpdateOneWithoutSettlements_recordedNestedInput = {
+    create?: XOR<UserCreateWithoutSettlements_recordedInput, UserUncheckedCreateWithoutSettlements_recordedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSettlements_recordedInput
+    upsert?: UserUpsertWithoutSettlements_recordedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSettlements_recordedInput, UserUpdateWithoutSettlements_recordedInput>, UserUncheckedUpdateWithoutSettlements_recordedInput>
+  }
+
+  export type UserUpdateOneWithoutSettlements_reversedNestedInput = {
+    create?: XOR<UserCreateWithoutSettlements_reversedInput, UserUncheckedCreateWithoutSettlements_reversedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSettlements_reversedInput
+    upsert?: UserUpsertWithoutSettlements_reversedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSettlements_reversedInput, UserUpdateWithoutSettlements_reversedInput>, UserUncheckedUpdateWithoutSettlements_reversedInput>
+  }
+
+  export type TipDistributionUpdateManyWithoutSettlementNestedInput = {
+    create?: XOR<TipDistributionCreateWithoutSettlementInput, TipDistributionUncheckedCreateWithoutSettlementInput> | TipDistributionCreateWithoutSettlementInput[] | TipDistributionUncheckedCreateWithoutSettlementInput[]
+    connectOrCreate?: TipDistributionCreateOrConnectWithoutSettlementInput | TipDistributionCreateOrConnectWithoutSettlementInput[]
+    upsert?: TipDistributionUpsertWithWhereUniqueWithoutSettlementInput | TipDistributionUpsertWithWhereUniqueWithoutSettlementInput[]
+    createMany?: TipDistributionCreateManySettlementInputEnvelope
+    set?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    disconnect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    delete?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    update?: TipDistributionUpdateWithWhereUniqueWithoutSettlementInput | TipDistributionUpdateWithWhereUniqueWithoutSettlementInput[]
+    updateMany?: TipDistributionUpdateManyWithWhereWithoutSettlementInput | TipDistributionUpdateManyWithWhereWithoutSettlementInput[]
+    deleteMany?: TipDistributionScalarWhereInput | TipDistributionScalarWhereInput[]
+  }
+
+  export type SettlementAdjustmentUpdateManyWithoutSettlementNestedInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutSettlementInput, SettlementAdjustmentUncheckedCreateWithoutSettlementInput> | SettlementAdjustmentCreateWithoutSettlementInput[] | SettlementAdjustmentUncheckedCreateWithoutSettlementInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutSettlementInput | SettlementAdjustmentCreateOrConnectWithoutSettlementInput[]
+    upsert?: SettlementAdjustmentUpsertWithWhereUniqueWithoutSettlementInput | SettlementAdjustmentUpsertWithWhereUniqueWithoutSettlementInput[]
+    createMany?: SettlementAdjustmentCreateManySettlementInputEnvelope
+    set?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    disconnect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    delete?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    update?: SettlementAdjustmentUpdateWithWhereUniqueWithoutSettlementInput | SettlementAdjustmentUpdateWithWhereUniqueWithoutSettlementInput[]
+    updateMany?: SettlementAdjustmentUpdateManyWithWhereWithoutSettlementInput | SettlementAdjustmentUpdateManyWithWhereWithoutSettlementInput[]
+    deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
+  }
+
+  export type TipDistributionUncheckedUpdateManyWithoutSettlementNestedInput = {
+    create?: XOR<TipDistributionCreateWithoutSettlementInput, TipDistributionUncheckedCreateWithoutSettlementInput> | TipDistributionCreateWithoutSettlementInput[] | TipDistributionUncheckedCreateWithoutSettlementInput[]
+    connectOrCreate?: TipDistributionCreateOrConnectWithoutSettlementInput | TipDistributionCreateOrConnectWithoutSettlementInput[]
+    upsert?: TipDistributionUpsertWithWhereUniqueWithoutSettlementInput | TipDistributionUpsertWithWhereUniqueWithoutSettlementInput[]
+    createMany?: TipDistributionCreateManySettlementInputEnvelope
+    set?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    disconnect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    delete?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    update?: TipDistributionUpdateWithWhereUniqueWithoutSettlementInput | TipDistributionUpdateWithWhereUniqueWithoutSettlementInput[]
+    updateMany?: TipDistributionUpdateManyWithWhereWithoutSettlementInput | TipDistributionUpdateManyWithWhereWithoutSettlementInput[]
+    deleteMany?: TipDistributionScalarWhereInput | TipDistributionScalarWhereInput[]
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyWithoutSettlementNestedInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutSettlementInput, SettlementAdjustmentUncheckedCreateWithoutSettlementInput> | SettlementAdjustmentCreateWithoutSettlementInput[] | SettlementAdjustmentUncheckedCreateWithoutSettlementInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutSettlementInput | SettlementAdjustmentCreateOrConnectWithoutSettlementInput[]
+    upsert?: SettlementAdjustmentUpsertWithWhereUniqueWithoutSettlementInput | SettlementAdjustmentUpsertWithWhereUniqueWithoutSettlementInput[]
+    createMany?: SettlementAdjustmentCreateManySettlementInputEnvelope
+    set?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    disconnect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    delete?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    update?: SettlementAdjustmentUpdateWithWhereUniqueWithoutSettlementInput | SettlementAdjustmentUpdateWithWhereUniqueWithoutSettlementInput[]
+    updateMany?: SettlementAdjustmentUpdateManyWithWhereWithoutSettlementInput | SettlementAdjustmentUpdateManyWithWhereWithoutSettlementInput[]
+    deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
+  }
+
+  export type StoreCreateNestedOneWithoutSettlement_adjustmentsInput = {
+    create?: XOR<StoreCreateWithoutSettlement_adjustmentsInput, StoreUncheckedCreateWithoutSettlement_adjustmentsInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutSettlement_adjustmentsInput
+    connect?: StoreWhereUniqueInput
+  }
+
+  export type EmployeeCreateNestedOneWithoutSettlement_adjustmentsInput = {
+    create?: XOR<EmployeeCreateWithoutSettlement_adjustmentsInput, EmployeeUncheckedCreateWithoutSettlement_adjustmentsInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutSettlement_adjustmentsInput
+    connect?: EmployeeWhereUniqueInput
+  }
+
+  export type RefundCreateNestedOneWithoutSettlement_adjustmentsInput = {
+    create?: XOR<RefundCreateWithoutSettlement_adjustmentsInput, RefundUncheckedCreateWithoutSettlement_adjustmentsInput>
+    connectOrCreate?: RefundCreateOrConnectWithoutSettlement_adjustmentsInput
+    connect?: RefundWhereUniqueInput
+  }
+
+  export type SettlementCreateNestedOneWithoutAdjustmentsInput = {
+    create?: XOR<SettlementCreateWithoutAdjustmentsInput, SettlementUncheckedCreateWithoutAdjustmentsInput>
+    connectOrCreate?: SettlementCreateOrConnectWithoutAdjustmentsInput
+    connect?: SettlementWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSettlement_adjustmentsInput = {
+    create?: XOR<UserCreateWithoutSettlement_adjustmentsInput, UserUncheckedCreateWithoutSettlement_adjustmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSettlement_adjustmentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumSettlementAdjustmentStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SettlementAdjustmentStatus
+  }
+
+  export type StoreUpdateOneRequiredWithoutSettlement_adjustmentsNestedInput = {
+    create?: XOR<StoreCreateWithoutSettlement_adjustmentsInput, StoreUncheckedCreateWithoutSettlement_adjustmentsInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutSettlement_adjustmentsInput
+    upsert?: StoreUpsertWithoutSettlement_adjustmentsInput
+    connect?: StoreWhereUniqueInput
+    update?: XOR<XOR<StoreUpdateToOneWithWhereWithoutSettlement_adjustmentsInput, StoreUpdateWithoutSettlement_adjustmentsInput>, StoreUncheckedUpdateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type EmployeeUpdateOneWithoutSettlement_adjustmentsNestedInput = {
+    create?: XOR<EmployeeCreateWithoutSettlement_adjustmentsInput, EmployeeUncheckedCreateWithoutSettlement_adjustmentsInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutSettlement_adjustmentsInput
+    upsert?: EmployeeUpsertWithoutSettlement_adjustmentsInput
+    disconnect?: EmployeeWhereInput | boolean
+    delete?: EmployeeWhereInput | boolean
+    connect?: EmployeeWhereUniqueInput
+    update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutSettlement_adjustmentsInput, EmployeeUpdateWithoutSettlement_adjustmentsInput>, EmployeeUncheckedUpdateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type RefundUpdateOneWithoutSettlement_adjustmentsNestedInput = {
+    create?: XOR<RefundCreateWithoutSettlement_adjustmentsInput, RefundUncheckedCreateWithoutSettlement_adjustmentsInput>
+    connectOrCreate?: RefundCreateOrConnectWithoutSettlement_adjustmentsInput
+    upsert?: RefundUpsertWithoutSettlement_adjustmentsInput
+    disconnect?: RefundWhereInput | boolean
+    delete?: RefundWhereInput | boolean
+    connect?: RefundWhereUniqueInput
+    update?: XOR<XOR<RefundUpdateToOneWithWhereWithoutSettlement_adjustmentsInput, RefundUpdateWithoutSettlement_adjustmentsInput>, RefundUncheckedUpdateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type SettlementUpdateOneWithoutAdjustmentsNestedInput = {
+    create?: XOR<SettlementCreateWithoutAdjustmentsInput, SettlementUncheckedCreateWithoutAdjustmentsInput>
+    connectOrCreate?: SettlementCreateOrConnectWithoutAdjustmentsInput
+    upsert?: SettlementUpsertWithoutAdjustmentsInput
+    disconnect?: SettlementWhereInput | boolean
+    delete?: SettlementWhereInput | boolean
+    connect?: SettlementWhereUniqueInput
+    update?: XOR<XOR<SettlementUpdateToOneWithWhereWithoutAdjustmentsInput, SettlementUpdateWithoutAdjustmentsInput>, SettlementUncheckedUpdateWithoutAdjustmentsInput>
+  }
+
+  export type UserUpdateOneWithoutSettlement_adjustmentsNestedInput = {
+    create?: XOR<UserCreateWithoutSettlement_adjustmentsInput, UserUncheckedCreateWithoutSettlement_adjustmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSettlement_adjustmentsInput
+    upsert?: UserUpsertWithoutSettlement_adjustmentsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSettlement_adjustmentsInput, UserUpdateWithoutSettlement_adjustmentsInput>, UserUncheckedUpdateWithoutSettlement_adjustmentsInput>
+  }
+
   export type TipCreateNestedOneWithoutRefundsInput = {
     create?: XOR<TipCreateWithoutRefundsInput, TipUncheckedCreateWithoutRefundsInput>
     connectOrCreate?: TipCreateOrConnectWithoutRefundsInput
@@ -55970,6 +60683,20 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutRefunds_processedInput, UserUncheckedCreateWithoutRefunds_processedInput>
     connectOrCreate?: UserCreateOrConnectWithoutRefunds_processedInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type SettlementAdjustmentCreateNestedManyWithoutRefundInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutRefundInput, SettlementAdjustmentUncheckedCreateWithoutRefundInput> | SettlementAdjustmentCreateWithoutRefundInput[] | SettlementAdjustmentUncheckedCreateWithoutRefundInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutRefundInput | SettlementAdjustmentCreateOrConnectWithoutRefundInput[]
+    createMany?: SettlementAdjustmentCreateManyRefundInputEnvelope
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+  }
+
+  export type SettlementAdjustmentUncheckedCreateNestedManyWithoutRefundInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutRefundInput, SettlementAdjustmentUncheckedCreateWithoutRefundInput> | SettlementAdjustmentCreateWithoutRefundInput[] | SettlementAdjustmentUncheckedCreateWithoutRefundInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutRefundInput | SettlementAdjustmentCreateOrConnectWithoutRefundInput[]
+    createMany?: SettlementAdjustmentCreateManyRefundInputEnvelope
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
   }
 
   export type EnumRefundStatusFieldUpdateOperationsInput = {
@@ -56002,6 +60729,34 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRefunds_processedInput, UserUpdateWithoutRefunds_processedInput>, UserUncheckedUpdateWithoutRefunds_processedInput>
+  }
+
+  export type SettlementAdjustmentUpdateManyWithoutRefundNestedInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutRefundInput, SettlementAdjustmentUncheckedCreateWithoutRefundInput> | SettlementAdjustmentCreateWithoutRefundInput[] | SettlementAdjustmentUncheckedCreateWithoutRefundInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutRefundInput | SettlementAdjustmentCreateOrConnectWithoutRefundInput[]
+    upsert?: SettlementAdjustmentUpsertWithWhereUniqueWithoutRefundInput | SettlementAdjustmentUpsertWithWhereUniqueWithoutRefundInput[]
+    createMany?: SettlementAdjustmentCreateManyRefundInputEnvelope
+    set?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    disconnect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    delete?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    update?: SettlementAdjustmentUpdateWithWhereUniqueWithoutRefundInput | SettlementAdjustmentUpdateWithWhereUniqueWithoutRefundInput[]
+    updateMany?: SettlementAdjustmentUpdateManyWithWhereWithoutRefundInput | SettlementAdjustmentUpdateManyWithWhereWithoutRefundInput[]
+    deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyWithoutRefundNestedInput = {
+    create?: XOR<SettlementAdjustmentCreateWithoutRefundInput, SettlementAdjustmentUncheckedCreateWithoutRefundInput> | SettlementAdjustmentCreateWithoutRefundInput[] | SettlementAdjustmentUncheckedCreateWithoutRefundInput[]
+    connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutRefundInput | SettlementAdjustmentCreateOrConnectWithoutRefundInput[]
+    upsert?: SettlementAdjustmentUpsertWithWhereUniqueWithoutRefundInput | SettlementAdjustmentUpsertWithWhereUniqueWithoutRefundInput[]
+    createMany?: SettlementAdjustmentCreateManyRefundInputEnvelope
+    set?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    disconnect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    delete?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+    update?: SettlementAdjustmentUpdateWithWhereUniqueWithoutRefundInput | SettlementAdjustmentUpdateWithWhereUniqueWithoutRefundInput[]
+    updateMany?: SettlementAdjustmentUpdateManyWithWhereWithoutRefundInput | SettlementAdjustmentUpdateManyWithWhereWithoutRefundInput[]
+    deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
   }
 
   export type StoreCreateNestedOneWithoutReviewsInput = {
@@ -56941,6 +61696,23 @@ export namespace Prisma {
     _max?: NestedEnumQrCodeSelectionModeFilter<$PrismaModel>
   }
 
+  export type NestedEnumDistributionPayoutModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DistributionPayoutMode | EnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    in?: $Enums.DistributionPayoutMode[] | ListEnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DistributionPayoutMode[] | ListEnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDistributionPayoutModeFilter<$PrismaModel> | $Enums.DistributionPayoutMode
+  }
+
+  export type NestedEnumDistributionPayoutModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DistributionPayoutMode | EnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    in?: $Enums.DistributionPayoutMode[] | ListEnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DistributionPayoutMode[] | ListEnumDistributionPayoutModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDistributionPayoutModeWithAggregatesFilter<$PrismaModel> | $Enums.DistributionPayoutMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDistributionPayoutModeFilter<$PrismaModel>
+    _max?: NestedEnumDistributionPayoutModeFilter<$PrismaModel>
+  }
+
   export type NestedEnumDistributionRecipientTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.DistributionRecipientType | EnumDistributionRecipientTypeFieldRefInput<$PrismaModel>
     in?: $Enums.DistributionRecipientType[] | ListEnumDistributionRecipientTypeFieldRefInput<$PrismaModel>
@@ -57111,6 +61883,13 @@ export namespace Prisma {
     not?: NestedEnumPayoutStatusFilter<$PrismaModel> | $Enums.PayoutStatus
   }
 
+  export type NestedEnumSettlementStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SettlementStatus | EnumSettlementStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SettlementStatus[] | ListEnumSettlementStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SettlementStatus[] | ListEnumSettlementStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSettlementStatusFilter<$PrismaModel> | $Enums.SettlementStatus
+  }
+
   export type NestedEnumPayoutStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.PayoutStatus | EnumPayoutStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PayoutStatus[] | ListEnumPayoutStatusFieldRefInput<$PrismaModel>
@@ -57119,6 +61898,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPayoutStatusFilter<$PrismaModel>
     _max?: NestedEnumPayoutStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSettlementStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SettlementStatus | EnumSettlementStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SettlementStatus[] | ListEnumSettlementStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SettlementStatus[] | ListEnumSettlementStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSettlementStatusWithAggregatesFilter<$PrismaModel> | $Enums.SettlementStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSettlementStatusFilter<$PrismaModel>
+    _max?: NestedEnumSettlementStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumPayoutExecutionStatusFilter<$PrismaModel = never> = {
@@ -57136,6 +61925,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPayoutExecutionStatusFilter<$PrismaModel>
     _max?: NestedEnumPayoutExecutionStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSettlementAdjustmentStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SettlementAdjustmentStatus | EnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SettlementAdjustmentStatus[] | ListEnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SettlementAdjustmentStatus[] | ListEnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSettlementAdjustmentStatusFilter<$PrismaModel> | $Enums.SettlementAdjustmentStatus
+  }
+
+  export type NestedEnumSettlementAdjustmentStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SettlementAdjustmentStatus | EnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SettlementAdjustmentStatus[] | ListEnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SettlementAdjustmentStatus[] | ListEnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSettlementAdjustmentStatusWithAggregatesFilter<$PrismaModel> | $Enums.SettlementAdjustmentStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSettlementAdjustmentStatusFilter<$PrismaModel>
+    _max?: NestedEnumSettlementAdjustmentStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumRefundStatusFilter<$PrismaModel = never> = {
@@ -57318,6 +62124,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutEmployeeInput
     alerts?: AlertCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateWithoutUserInput = {
@@ -57338,6 +62146,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
     alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeCreateOrConnectWithoutUserInput = {
@@ -57464,6 +62274,7 @@ export namespace Prisma {
     updated_at?: Date | string
     tip: TipCreateNestedOneWithoutRefundsInput
     processed_by?: UserCreateNestedOneWithoutRefunds_processedInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutRefundInput
   }
 
   export type RefundUncheckedCreateWithoutRequested_byInput = {
@@ -57478,6 +62289,7 @@ export namespace Prisma {
     requires_manual_reconciliation?: boolean
     created_at?: Date | string
     updated_at?: Date | string
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutRefundInput
   }
 
   export type RefundCreateOrConnectWithoutRequested_byInput = {
@@ -57502,6 +62314,7 @@ export namespace Prisma {
     updated_at?: Date | string
     tip: TipCreateNestedOneWithoutRefundsInput
     requested_by?: UserCreateNestedOneWithoutRefunds_requestedInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutRefundInput
   }
 
   export type RefundUncheckedCreateWithoutProcessed_byInput = {
@@ -57516,6 +62329,7 @@ export namespace Prisma {
     requires_manual_reconciliation?: boolean
     created_at?: Date | string
     updated_at?: Date | string
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutRefundInput
   }
 
   export type RefundCreateOrConnectWithoutProcessed_byInput = {
@@ -57567,6 +62381,138 @@ export namespace Prisma {
   export type PayoutAccountCreateOrConnectWithoutUserInput = {
     where: PayoutAccountWhereUniqueInput
     create: XOR<PayoutAccountCreateWithoutUserInput, PayoutAccountUncheckedCreateWithoutUserInput>
+  }
+
+  export type SettlementCreateWithoutRecorded_byInput = {
+    id?: string
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlementsInput
+    employee?: EmployeeCreateNestedOneWithoutSettlementsInput
+    reversed_by?: UserCreateNestedOneWithoutSettlements_reversedInput
+    distributions?: TipDistributionCreateNestedManyWithoutSettlementInput
+    adjustments?: SettlementAdjustmentCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementUncheckedCreateWithoutRecorded_byInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    reversed_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutSettlementInput
+    adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementCreateOrConnectWithoutRecorded_byInput = {
+    where: SettlementWhereUniqueInput
+    create: XOR<SettlementCreateWithoutRecorded_byInput, SettlementUncheckedCreateWithoutRecorded_byInput>
+  }
+
+  export type SettlementCreateManyRecorded_byInputEnvelope = {
+    data: SettlementCreateManyRecorded_byInput | SettlementCreateManyRecorded_byInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SettlementCreateWithoutReversed_byInput = {
+    id?: string
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlementsInput
+    employee?: EmployeeCreateNestedOneWithoutSettlementsInput
+    recorded_by?: UserCreateNestedOneWithoutSettlements_recordedInput
+    distributions?: TipDistributionCreateNestedManyWithoutSettlementInput
+    adjustments?: SettlementAdjustmentCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementUncheckedCreateWithoutReversed_byInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    recorded_by_user_id?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutSettlementInput
+    adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementCreateOrConnectWithoutReversed_byInput = {
+    where: SettlementWhereUniqueInput
+    create: XOR<SettlementCreateWithoutReversed_byInput, SettlementUncheckedCreateWithoutReversed_byInput>
+  }
+
+  export type SettlementCreateManyReversed_byInputEnvelope = {
+    data: SettlementCreateManyReversed_byInput | SettlementCreateManyReversed_byInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SettlementAdjustmentCreateWithoutCreated_byInput = {
+    id?: string
+    amount: number
+    reason: string
+    status?: $Enums.SettlementAdjustmentStatus
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlement_adjustmentsInput
+    employee?: EmployeeCreateNestedOneWithoutSettlement_adjustmentsInput
+    refund?: RefundCreateNestedOneWithoutSettlement_adjustmentsInput
+    settlement?: SettlementCreateNestedOneWithoutAdjustmentsInput
+  }
+
+  export type SettlementAdjustmentUncheckedCreateWithoutCreated_byInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    amount: number
+    reason: string
+    refund_id?: string | null
+    status?: $Enums.SettlementAdjustmentStatus
+    settlement_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentCreateOrConnectWithoutCreated_byInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    create: XOR<SettlementAdjustmentCreateWithoutCreated_byInput, SettlementAdjustmentUncheckedCreateWithoutCreated_byInput>
+  }
+
+  export type SettlementAdjustmentCreateManyCreated_byInputEnvelope = {
+    data: SettlementAdjustmentCreateManyCreated_byInput | SettlementAdjustmentCreateManyCreated_byInput[]
+    skipDuplicates?: boolean
   }
 
   export type PasswordResetTokenUpsertWithWhereUniqueWithoutUserInput = {
@@ -57861,6 +62807,92 @@ export namespace Prisma {
     payouts?: PayoutUncheckedUpdateManyWithoutPayout_accountNestedInput
   }
 
+  export type SettlementUpsertWithWhereUniqueWithoutRecorded_byInput = {
+    where: SettlementWhereUniqueInput
+    update: XOR<SettlementUpdateWithoutRecorded_byInput, SettlementUncheckedUpdateWithoutRecorded_byInput>
+    create: XOR<SettlementCreateWithoutRecorded_byInput, SettlementUncheckedCreateWithoutRecorded_byInput>
+  }
+
+  export type SettlementUpdateWithWhereUniqueWithoutRecorded_byInput = {
+    where: SettlementWhereUniqueInput
+    data: XOR<SettlementUpdateWithoutRecorded_byInput, SettlementUncheckedUpdateWithoutRecorded_byInput>
+  }
+
+  export type SettlementUpdateManyWithWhereWithoutRecorded_byInput = {
+    where: SettlementScalarWhereInput
+    data: XOR<SettlementUpdateManyMutationInput, SettlementUncheckedUpdateManyWithoutRecorded_byInput>
+  }
+
+  export type SettlementScalarWhereInput = {
+    AND?: SettlementScalarWhereInput | SettlementScalarWhereInput[]
+    OR?: SettlementScalarWhereInput[]
+    NOT?: SettlementScalarWhereInput | SettlementScalarWhereInput[]
+    id?: StringFilter<"Settlement"> | string
+    store_id?: StringFilter<"Settlement"> | string
+    employee_id?: StringNullableFilter<"Settlement"> | string | null
+    employee_name_snapshot?: StringFilter<"Settlement"> | string
+    amount?: IntFilter<"Settlement"> | number
+    currency?: EnumCurrencyFilter<"Settlement"> | $Enums.Currency
+    settled_at?: DateTimeFilter<"Settlement"> | Date | string
+    note?: StringNullableFilter<"Settlement"> | string | null
+    reference?: StringNullableFilter<"Settlement"> | string | null
+    recorded_by_user_id?: StringNullableFilter<"Settlement"> | string | null
+    confirmed_by_employee_at?: DateTimeNullableFilter<"Settlement"> | Date | string | null
+    reversed_at?: DateTimeNullableFilter<"Settlement"> | Date | string | null
+    reversed_by_user_id?: StringNullableFilter<"Settlement"> | string | null
+    created_at?: DateTimeFilter<"Settlement"> | Date | string
+    updated_at?: DateTimeFilter<"Settlement"> | Date | string
+  }
+
+  export type SettlementUpsertWithWhereUniqueWithoutReversed_byInput = {
+    where: SettlementWhereUniqueInput
+    update: XOR<SettlementUpdateWithoutReversed_byInput, SettlementUncheckedUpdateWithoutReversed_byInput>
+    create: XOR<SettlementCreateWithoutReversed_byInput, SettlementUncheckedCreateWithoutReversed_byInput>
+  }
+
+  export type SettlementUpdateWithWhereUniqueWithoutReversed_byInput = {
+    where: SettlementWhereUniqueInput
+    data: XOR<SettlementUpdateWithoutReversed_byInput, SettlementUncheckedUpdateWithoutReversed_byInput>
+  }
+
+  export type SettlementUpdateManyWithWhereWithoutReversed_byInput = {
+    where: SettlementScalarWhereInput
+    data: XOR<SettlementUpdateManyMutationInput, SettlementUncheckedUpdateManyWithoutReversed_byInput>
+  }
+
+  export type SettlementAdjustmentUpsertWithWhereUniqueWithoutCreated_byInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    update: XOR<SettlementAdjustmentUpdateWithoutCreated_byInput, SettlementAdjustmentUncheckedUpdateWithoutCreated_byInput>
+    create: XOR<SettlementAdjustmentCreateWithoutCreated_byInput, SettlementAdjustmentUncheckedCreateWithoutCreated_byInput>
+  }
+
+  export type SettlementAdjustmentUpdateWithWhereUniqueWithoutCreated_byInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    data: XOR<SettlementAdjustmentUpdateWithoutCreated_byInput, SettlementAdjustmentUncheckedUpdateWithoutCreated_byInput>
+  }
+
+  export type SettlementAdjustmentUpdateManyWithWhereWithoutCreated_byInput = {
+    where: SettlementAdjustmentScalarWhereInput
+    data: XOR<SettlementAdjustmentUpdateManyMutationInput, SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byInput>
+  }
+
+  export type SettlementAdjustmentScalarWhereInput = {
+    AND?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
+    OR?: SettlementAdjustmentScalarWhereInput[]
+    NOT?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
+    id?: StringFilter<"SettlementAdjustment"> | string
+    store_id?: StringFilter<"SettlementAdjustment"> | string
+    employee_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    amount?: IntFilter<"SettlementAdjustment"> | number
+    reason?: StringFilter<"SettlementAdjustment"> | string
+    refund_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    status?: EnumSettlementAdjustmentStatusFilter<"SettlementAdjustment"> | $Enums.SettlementAdjustmentStatus
+    settlement_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    created_by_user_id?: StringNullableFilter<"SettlementAdjustment"> | string | null
+    created_at?: DateTimeFilter<"SettlementAdjustment"> | Date | string
+    updated_at?: DateTimeFilter<"SettlementAdjustment"> | Date | string
+  }
+
   export type UserCreateWithoutPassword_reset_tokensInput = {
     id?: string
     email: string
@@ -57883,6 +62915,9 @@ export namespace Prisma {
     refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUncheckedCreateWithoutPassword_reset_tokensInput = {
@@ -57907,6 +62942,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserCreateOrConnectWithoutPassword_reset_tokensInput = {
@@ -57947,6 +62985,9 @@ export namespace Prisma {
     refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPassword_reset_tokensInput = {
@@ -57971,6 +63012,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserCreateWithoutDocumentsInput = {
@@ -57995,6 +63039,9 @@ export namespace Prisma {
     refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUncheckedCreateWithoutDocumentsInput = {
@@ -58019,6 +63066,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserCreateOrConnectWithoutDocumentsInput = {
@@ -58071,6 +63121,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutLogo_documentInput = {
@@ -58118,6 +63170,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutLogo_documentInput = {
@@ -58175,6 +63229,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutCover_documentInput = {
@@ -58222,6 +63278,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutCover_documentInput = {
@@ -58304,6 +63362,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutEmployeeInput
     alerts?: AlertCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateWithoutPhoto_documentInput = {
@@ -58324,6 +63384,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
     alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeCreateOrConnectWithoutPhoto_documentInput = {
@@ -58369,6 +63431,9 @@ export namespace Prisma {
     refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentsInput = {
@@ -58393,6 +63458,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
   }
 
   export type StoreUpsertWithWhereUniqueWithoutLogo_documentInput = {
@@ -58624,6 +63692,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutOrganizationInput = {
@@ -58671,6 +63741,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutOrganizationInput = {
@@ -58889,6 +63961,9 @@ export namespace Prisma {
     refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUncheckedCreateWithoutOrganization_membershipsInput = {
@@ -58913,6 +63988,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserCreateOrConnectWithoutOrganization_membershipsInput = {
@@ -58965,6 +64043,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutOrganization_membersInput = {
@@ -59012,6 +64092,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutOrganization_membersInput = {
@@ -59105,6 +64187,9 @@ export namespace Prisma {
     refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrganization_membershipsInput = {
@@ -59129,6 +64214,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
   }
 
   export type StoreUpsertWithoutOrganization_membersInput = {
@@ -59187,6 +64275,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutOrganization_membersInput = {
@@ -59234,6 +64324,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type OrganizationCreateWithoutSubscriptionInput = {
@@ -59456,6 +64548,7 @@ export namespace Prisma {
   export type DistributionRuleCreateWithoutDefault_for_storeInput = {
     id?: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutDistribution_rulesInput
@@ -59468,6 +64561,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     recipients?: DistributionRuleRecipientUncheckedCreateNestedManyWithoutDistribution_ruleInput
@@ -59526,6 +64620,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutEmployeeInput
     alerts?: AlertCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateWithoutStoreInput = {
@@ -59546,6 +64642,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
     alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeCreateOrConnectWithoutStoreInput = {
@@ -59655,6 +64753,7 @@ export namespace Prisma {
   export type DistributionRuleCreateWithoutStoreInput = {
     id?: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     recipients?: DistributionRuleRecipientCreateNestedManyWithoutDistribution_ruleInput
@@ -59666,6 +64765,7 @@ export namespace Prisma {
   export type DistributionRuleUncheckedCreateWithoutStoreInput = {
     id?: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     recipients?: DistributionRuleRecipientUncheckedCreateNestedManyWithoutDistribution_ruleInput
@@ -60051,6 +65151,90 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SettlementCreateWithoutStoreInput = {
+    id?: string
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    employee?: EmployeeCreateNestedOneWithoutSettlementsInput
+    recorded_by?: UserCreateNestedOneWithoutSettlements_recordedInput
+    reversed_by?: UserCreateNestedOneWithoutSettlements_reversedInput
+    distributions?: TipDistributionCreateNestedManyWithoutSettlementInput
+    adjustments?: SettlementAdjustmentCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementUncheckedCreateWithoutStoreInput = {
+    id?: string
+    employee_id?: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    recorded_by_user_id?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    reversed_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutSettlementInput
+    adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementCreateOrConnectWithoutStoreInput = {
+    where: SettlementWhereUniqueInput
+    create: XOR<SettlementCreateWithoutStoreInput, SettlementUncheckedCreateWithoutStoreInput>
+  }
+
+  export type SettlementCreateManyStoreInputEnvelope = {
+    data: SettlementCreateManyStoreInput | SettlementCreateManyStoreInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SettlementAdjustmentCreateWithoutStoreInput = {
+    id?: string
+    amount: number
+    reason: string
+    status?: $Enums.SettlementAdjustmentStatus
+    created_at?: Date | string
+    updated_at?: Date | string
+    employee?: EmployeeCreateNestedOneWithoutSettlement_adjustmentsInput
+    refund?: RefundCreateNestedOneWithoutSettlement_adjustmentsInput
+    settlement?: SettlementCreateNestedOneWithoutAdjustmentsInput
+    created_by?: UserCreateNestedOneWithoutSettlement_adjustmentsInput
+  }
+
+  export type SettlementAdjustmentUncheckedCreateWithoutStoreInput = {
+    id?: string
+    employee_id?: string | null
+    amount: number
+    reason: string
+    refund_id?: string | null
+    status?: $Enums.SettlementAdjustmentStatus
+    settlement_id?: string | null
+    created_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentCreateOrConnectWithoutStoreInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    create: XOR<SettlementAdjustmentCreateWithoutStoreInput, SettlementAdjustmentUncheckedCreateWithoutStoreInput>
+  }
+
+  export type SettlementAdjustmentCreateManyStoreInputEnvelope = {
+    data: SettlementAdjustmentCreateManyStoreInput | SettlementAdjustmentCreateManyStoreInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutStoresInput = {
     update: XOR<OrganizationUpdateWithoutStoresInput, OrganizationUncheckedUpdateWithoutStoresInput>
     create: XOR<OrganizationCreateWithoutStoresInput, OrganizationUncheckedCreateWithoutStoresInput>
@@ -60200,6 +65384,7 @@ export namespace Prisma {
   export type DistributionRuleUpdateWithoutDefault_for_storeInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutDistribution_rulesNestedInput
@@ -60212,6 +65397,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     recipients?: DistributionRuleRecipientUncheckedUpdateManyWithoutDistribution_ruleNestedInput
@@ -60362,6 +65548,7 @@ export namespace Prisma {
     id?: StringFilter<"DistributionRule"> | string
     store_id?: StringFilter<"DistributionRule"> | string
     name?: StringFilter<"DistributionRule"> | string
+    payout_mode?: EnumDistributionPayoutModeFilter<"DistributionRule"> | $Enums.DistributionPayoutMode
     created_at?: DateTimeFilter<"DistributionRule"> | Date | string
     updated_at?: DateTimeFilter<"DistributionRule"> | Date | string
   }
@@ -60658,6 +65845,38 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"Payout"> | Date | string
   }
 
+  export type SettlementUpsertWithWhereUniqueWithoutStoreInput = {
+    where: SettlementWhereUniqueInput
+    update: XOR<SettlementUpdateWithoutStoreInput, SettlementUncheckedUpdateWithoutStoreInput>
+    create: XOR<SettlementCreateWithoutStoreInput, SettlementUncheckedCreateWithoutStoreInput>
+  }
+
+  export type SettlementUpdateWithWhereUniqueWithoutStoreInput = {
+    where: SettlementWhereUniqueInput
+    data: XOR<SettlementUpdateWithoutStoreInput, SettlementUncheckedUpdateWithoutStoreInput>
+  }
+
+  export type SettlementUpdateManyWithWhereWithoutStoreInput = {
+    where: SettlementScalarWhereInput
+    data: XOR<SettlementUpdateManyMutationInput, SettlementUncheckedUpdateManyWithoutStoreInput>
+  }
+
+  export type SettlementAdjustmentUpsertWithWhereUniqueWithoutStoreInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    update: XOR<SettlementAdjustmentUpdateWithoutStoreInput, SettlementAdjustmentUncheckedUpdateWithoutStoreInput>
+    create: XOR<SettlementAdjustmentCreateWithoutStoreInput, SettlementAdjustmentUncheckedCreateWithoutStoreInput>
+  }
+
+  export type SettlementAdjustmentUpdateWithWhereUniqueWithoutStoreInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    data: XOR<SettlementAdjustmentUpdateWithoutStoreInput, SettlementAdjustmentUncheckedUpdateWithoutStoreInput>
+  }
+
+  export type SettlementAdjustmentUpdateManyWithWhereWithoutStoreInput = {
+    where: SettlementAdjustmentScalarWhereInput
+    data: XOR<SettlementAdjustmentUpdateManyMutationInput, SettlementAdjustmentUncheckedUpdateManyWithoutStoreInput>
+  }
+
   export type StoreCreateWithoutEmployeesInput = {
     id?: string
     name: string
@@ -60703,6 +65922,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutEmployeesInput = {
@@ -60750,6 +65971,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutEmployeesInput = {
@@ -60779,6 +66002,9 @@ export namespace Prisma {
     refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUncheckedCreateWithoutEmployee_accountsInput = {
@@ -60803,6 +66029,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserCreateOrConnectWithoutEmployee_accountsInput = {
@@ -60956,11 +66185,15 @@ export namespace Prisma {
     recipient_type: $Enums.DistributionRecipientType
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settled_at?: Date | string | null
     created_at?: Date | string
     tip: TipCreateNestedOneWithoutDistributionsInput
     payout?: PayoutCreateNestedOneWithoutDistributionsInput
+    settlement?: SettlementCreateNestedOneWithoutDistributionsInput
   }
 
   export type TipDistributionUncheckedCreateWithoutEmployeeInput = {
@@ -60969,9 +66202,13 @@ export namespace Prisma {
     recipient_type: $Enums.DistributionRecipientType
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settlement_id?: string | null
+    settled_at?: Date | string | null
     created_at?: Date | string
   }
 
@@ -61105,6 +66342,90 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SettlementCreateWithoutEmployeeInput = {
+    id?: string
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlementsInput
+    recorded_by?: UserCreateNestedOneWithoutSettlements_recordedInput
+    reversed_by?: UserCreateNestedOneWithoutSettlements_reversedInput
+    distributions?: TipDistributionCreateNestedManyWithoutSettlementInput
+    adjustments?: SettlementAdjustmentCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementUncheckedCreateWithoutEmployeeInput = {
+    id?: string
+    store_id: string
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    recorded_by_user_id?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    reversed_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutSettlementInput
+    adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementCreateOrConnectWithoutEmployeeInput = {
+    where: SettlementWhereUniqueInput
+    create: XOR<SettlementCreateWithoutEmployeeInput, SettlementUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type SettlementCreateManyEmployeeInputEnvelope = {
+    data: SettlementCreateManyEmployeeInput | SettlementCreateManyEmployeeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SettlementAdjustmentCreateWithoutEmployeeInput = {
+    id?: string
+    amount: number
+    reason: string
+    status?: $Enums.SettlementAdjustmentStatus
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlement_adjustmentsInput
+    refund?: RefundCreateNestedOneWithoutSettlement_adjustmentsInput
+    settlement?: SettlementCreateNestedOneWithoutAdjustmentsInput
+    created_by?: UserCreateNestedOneWithoutSettlement_adjustmentsInput
+  }
+
+  export type SettlementAdjustmentUncheckedCreateWithoutEmployeeInput = {
+    id?: string
+    store_id: string
+    amount: number
+    reason: string
+    refund_id?: string | null
+    status?: $Enums.SettlementAdjustmentStatus
+    settlement_id?: string | null
+    created_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentCreateOrConnectWithoutEmployeeInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    create: XOR<SettlementAdjustmentCreateWithoutEmployeeInput, SettlementAdjustmentUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type SettlementAdjustmentCreateManyEmployeeInputEnvelope = {
+    data: SettlementAdjustmentCreateManyEmployeeInput | SettlementAdjustmentCreateManyEmployeeInput[]
+    skipDuplicates?: boolean
+  }
+
   export type StoreUpsertWithoutEmployeesInput = {
     update: XOR<StoreUpdateWithoutEmployeesInput, StoreUncheckedUpdateWithoutEmployeesInput>
     create: XOR<StoreCreateWithoutEmployeesInput, StoreUncheckedCreateWithoutEmployeesInput>
@@ -61161,6 +66482,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutEmployeesInput = {
@@ -61208,6 +66531,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type UserUpsertWithoutEmployee_accountsInput = {
@@ -61243,6 +66568,9 @@ export namespace Prisma {
     refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmployee_accountsInput = {
@@ -61267,6 +66595,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
   }
 
   export type DocumentUpsertWithoutEmployees_photoInput = {
@@ -61407,9 +66738,13 @@ export namespace Prisma {
     employee_id?: StringNullableFilter<"TipDistribution"> | string | null
     amount?: IntFilter<"TipDistribution"> | number
     percentage?: DecimalFilter<"TipDistribution"> | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFilter<"TipDistribution"> | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFilter<"TipDistribution"> | $Enums.PayoutStatus
     payout_id?: StringNullableFilter<"TipDistribution"> | string | null
     paid_out_at?: DateTimeNullableFilter<"TipDistribution"> | Date | string | null
+    settlement_status?: EnumSettlementStatusFilter<"TipDistribution"> | $Enums.SettlementStatus
+    settlement_id?: StringNullableFilter<"TipDistribution"> | string | null
+    settled_at?: DateTimeNullableFilter<"TipDistribution"> | Date | string | null
     created_at?: DateTimeFilter<"TipDistribution"> | Date | string
   }
 
@@ -61461,6 +66796,38 @@ export namespace Prisma {
     data: XOR<PayoutUpdateManyMutationInput, PayoutUncheckedUpdateManyWithoutEmployeeInput>
   }
 
+  export type SettlementUpsertWithWhereUniqueWithoutEmployeeInput = {
+    where: SettlementWhereUniqueInput
+    update: XOR<SettlementUpdateWithoutEmployeeInput, SettlementUncheckedUpdateWithoutEmployeeInput>
+    create: XOR<SettlementCreateWithoutEmployeeInput, SettlementUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type SettlementUpdateWithWhereUniqueWithoutEmployeeInput = {
+    where: SettlementWhereUniqueInput
+    data: XOR<SettlementUpdateWithoutEmployeeInput, SettlementUncheckedUpdateWithoutEmployeeInput>
+  }
+
+  export type SettlementUpdateManyWithWhereWithoutEmployeeInput = {
+    where: SettlementScalarWhereInput
+    data: XOR<SettlementUpdateManyMutationInput, SettlementUncheckedUpdateManyWithoutEmployeeInput>
+  }
+
+  export type SettlementAdjustmentUpsertWithWhereUniqueWithoutEmployeeInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    update: XOR<SettlementAdjustmentUpdateWithoutEmployeeInput, SettlementAdjustmentUncheckedUpdateWithoutEmployeeInput>
+    create: XOR<SettlementAdjustmentCreateWithoutEmployeeInput, SettlementAdjustmentUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type SettlementAdjustmentUpdateWithWhereUniqueWithoutEmployeeInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    data: XOR<SettlementAdjustmentUpdateWithoutEmployeeInput, SettlementAdjustmentUncheckedUpdateWithoutEmployeeInput>
+  }
+
+  export type SettlementAdjustmentUpdateManyWithWhereWithoutEmployeeInput = {
+    where: SettlementAdjustmentScalarWhereInput
+    data: XOR<SettlementAdjustmentUpdateManyMutationInput, SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeInput>
+  }
+
   export type StoreCreateWithoutSpotsInput = {
     id?: string
     name: string
@@ -61506,6 +66873,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutSpotsInput = {
@@ -61553,6 +66922,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutSpotsInput = {
@@ -61638,6 +67009,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutSpotsInput = {
@@ -61685,6 +67058,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type QrCodeSpotUpsertWithWhereUniqueWithoutSpotInput = {
@@ -61758,6 +67133,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutQr_codesInput = {
@@ -61805,6 +67182,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutQr_codesInput = {
@@ -61815,6 +67194,7 @@ export namespace Prisma {
   export type DistributionRuleCreateWithoutQr_code_overridesInput = {
     id?: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutDistribution_rulesInput
@@ -61827,6 +67207,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     recipients?: DistributionRuleRecipientUncheckedCreateNestedManyWithoutDistribution_ruleInput
@@ -61995,6 +67376,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutQr_codesInput = {
@@ -62042,6 +67425,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type DistributionRuleUpsertWithoutQr_code_overridesInput = {
@@ -62058,6 +67443,7 @@ export namespace Prisma {
   export type DistributionRuleUpdateWithoutQr_code_overridesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutDistribution_rulesNestedInput
@@ -62070,6 +67456,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     recipients?: DistributionRuleRecipientUncheckedUpdateManyWithoutDistribution_ruleNestedInput
@@ -62300,6 +67687,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutEmployeeInput
     alerts?: AlertCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateWithoutQr_codesInput = {
@@ -62320,6 +67709,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
     alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeCreateOrConnectWithoutQr_codesInput = {
@@ -62395,6 +67786,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutQr_codesInput = {
@@ -62415,6 +67808,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type StoreCreateWithoutQr_template_customizationsInput = {
@@ -62462,6 +67857,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutQr_template_customizationsInput = {
@@ -62509,6 +67906,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutQr_template_customizationsInput = {
@@ -62572,6 +67971,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutQr_template_customizationsInput = {
@@ -62619,6 +68020,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreCreateWithoutDistribution_rulesInput = {
@@ -62666,6 +68069,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutDistribution_rulesInput = {
@@ -62713,6 +68118,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutDistribution_rulesInput = {
@@ -62793,6 +68200,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutDefault_distribution_ruleInput = {
@@ -62840,6 +68249,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutDefault_distribution_ruleInput = {
@@ -62997,6 +68408,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutDistribution_rulesInput = {
@@ -63044,6 +68457,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type DistributionRuleRecipientUpsertWithWhereUniqueWithoutDistribution_ruleInput = {
@@ -63118,6 +68533,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutDefault_distribution_ruleInput = {
@@ -63165,6 +68582,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type QrCodeUpsertWithWhereUniqueWithoutDistribution_ruleInput = {
@@ -63202,6 +68621,7 @@ export namespace Prisma {
   export type DistributionRuleCreateWithoutRecipientsInput = {
     id?: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutDistribution_rulesInput
@@ -63214,6 +68634,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     default_for_store?: StoreUncheckedCreateNestedOneWithoutDefault_distribution_ruleInput
@@ -63244,6 +68665,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutEmployeeInput
     alerts?: AlertCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateWithoutDistribution_rule_recipientsInput = {
@@ -63264,6 +68687,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
     alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeCreateOrConnectWithoutDistribution_rule_recipientsInput = {
@@ -63285,6 +68710,7 @@ export namespace Prisma {
   export type DistributionRuleUpdateWithoutRecipientsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutDistribution_rulesNestedInput
@@ -63297,6 +68723,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     default_for_store?: StoreUncheckedUpdateOneWithoutDefault_distribution_ruleNestedInput
@@ -63333,6 +68760,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutDistribution_rule_recipientsInput = {
@@ -63353,6 +68782,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type StoreCreateWithoutPayout_accountInput = {
@@ -63400,6 +68831,8 @@ export namespace Prisma {
     alerts?: AlertCreateNestedManyWithoutStoreInput
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutPayout_accountInput = {
@@ -63447,6 +68880,8 @@ export namespace Prisma {
     alerts?: AlertUncheckedCreateNestedManyWithoutStoreInput
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutPayout_accountInput = {
@@ -63476,6 +68911,9 @@ export namespace Prisma {
     customer_reviews?: ReviewCreateNestedManyWithoutCustomerInput
     refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUncheckedCreateWithoutPayout_accountInput = {
@@ -63500,6 +68938,9 @@ export namespace Prisma {
     customer_reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
     refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserCreateOrConnectWithoutPayout_accountInput = {
@@ -63607,6 +69048,8 @@ export namespace Prisma {
     alerts?: AlertUpdateManyWithoutStoreNestedInput
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutPayout_accountInput = {
@@ -63654,6 +69097,8 @@ export namespace Prisma {
     alerts?: AlertUncheckedUpdateManyWithoutStoreNestedInput
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type UserUpsertWithoutPayout_accountInput = {
@@ -63689,6 +69134,9 @@ export namespace Prisma {
     customer_reviews?: ReviewUpdateManyWithoutCustomerNestedInput
     refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPayout_accountInput = {
@@ -63713,6 +69161,9 @@ export namespace Prisma {
     customer_reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
     refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
   }
 
   export type PayoutUpsertWithWhereUniqueWithoutPayout_accountInput = {
@@ -63776,6 +69227,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutTipsInput = {
@@ -63823,6 +69276,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutTipsInput = {
@@ -63881,6 +69336,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutEmployeeInput
     alerts?: AlertCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateWithoutTipsInput = {
@@ -63901,6 +69358,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
     alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeCreateOrConnectWithoutTipsInput = {
@@ -63911,6 +69370,7 @@ export namespace Prisma {
   export type DistributionRuleCreateWithoutTipsInput = {
     id?: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     store: StoreCreateNestedOneWithoutDistribution_rulesInput
@@ -63923,6 +69383,7 @@ export namespace Prisma {
     id?: string
     store_id: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
     recipients?: DistributionRuleRecipientUncheckedCreateNestedManyWithoutDistribution_ruleInput
@@ -63957,6 +69418,9 @@ export namespace Prisma {
     refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUncheckedCreateWithoutCustomer_tipsInput = {
@@ -63981,6 +69445,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserCreateOrConnectWithoutCustomer_tipsInput = {
@@ -63993,11 +69460,15 @@ export namespace Prisma {
     recipient_type: $Enums.DistributionRecipientType
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settled_at?: Date | string | null
     created_at?: Date | string
     employee?: EmployeeCreateNestedOneWithoutTip_distributionsInput
     payout?: PayoutCreateNestedOneWithoutDistributionsInput
+    settlement?: SettlementCreateNestedOneWithoutDistributionsInput
   }
 
   export type TipDistributionUncheckedCreateWithoutTipInput = {
@@ -64006,9 +69477,13 @@ export namespace Prisma {
     employee_id?: string | null
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settlement_id?: string | null
+    settled_at?: Date | string | null
     created_at?: Date | string
   }
 
@@ -64075,6 +69550,7 @@ export namespace Prisma {
     updated_at?: Date | string
     requested_by?: UserCreateNestedOneWithoutRefunds_requestedInput
     processed_by?: UserCreateNestedOneWithoutRefunds_processedInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutRefundInput
   }
 
   export type RefundUncheckedCreateWithoutTipInput = {
@@ -64089,6 +69565,7 @@ export namespace Prisma {
     requires_manual_reconciliation?: boolean
     created_at?: Date | string
     updated_at?: Date | string
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutRefundInput
   }
 
   export type RefundCreateOrConnectWithoutTipInput = {
@@ -64224,6 +69701,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutTipsInput = {
@@ -64271,6 +69750,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type QrCodeUpsertWithoutTipsInput = {
@@ -64341,6 +69822,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutTipsInput = {
@@ -64361,6 +69844,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type DistributionRuleUpsertWithoutTipsInput = {
@@ -64377,6 +69862,7 @@ export namespace Prisma {
   export type DistributionRuleUpdateWithoutTipsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     store?: StoreUpdateOneRequiredWithoutDistribution_rulesNestedInput
@@ -64389,6 +69875,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     store_id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     recipients?: DistributionRuleRecipientUncheckedUpdateManyWithoutDistribution_ruleNestedInput
@@ -64429,6 +69916,9 @@ export namespace Prisma {
     refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCustomer_tipsInput = {
@@ -64453,6 +69943,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
   }
 
   export type TipDistributionUpsertWithWhereUniqueWithoutTipInput = {
@@ -64784,6 +70277,8 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutEmployeeInput
     alerts?: AlertCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateWithoutTip_distributionsInput = {
@@ -64804,6 +70299,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
     alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeCreateOrConnectWithoutTip_distributionsInput = {
@@ -64848,6 +70345,49 @@ export namespace Prisma {
   export type PayoutCreateOrConnectWithoutDistributionsInput = {
     where: PayoutWhereUniqueInput
     create: XOR<PayoutCreateWithoutDistributionsInput, PayoutUncheckedCreateWithoutDistributionsInput>
+  }
+
+  export type SettlementCreateWithoutDistributionsInput = {
+    id?: string
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlementsInput
+    employee?: EmployeeCreateNestedOneWithoutSettlementsInput
+    recorded_by?: UserCreateNestedOneWithoutSettlements_recordedInput
+    reversed_by?: UserCreateNestedOneWithoutSettlements_reversedInput
+    adjustments?: SettlementAdjustmentCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementUncheckedCreateWithoutDistributionsInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    recorded_by_user_id?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    reversed_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementCreateOrConnectWithoutDistributionsInput = {
+    where: SettlementWhereUniqueInput
+    create: XOR<SettlementCreateWithoutDistributionsInput, SettlementUncheckedCreateWithoutDistributionsInput>
   }
 
   export type TipUpsertWithoutDistributionsInput = {
@@ -64936,6 +70476,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutTip_distributionsInput = {
@@ -64956,6 +70498,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type PayoutUpsertWithoutDistributionsInput = {
@@ -65003,6 +70547,55 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SettlementUpsertWithoutDistributionsInput = {
+    update: XOR<SettlementUpdateWithoutDistributionsInput, SettlementUncheckedUpdateWithoutDistributionsInput>
+    create: XOR<SettlementCreateWithoutDistributionsInput, SettlementUncheckedCreateWithoutDistributionsInput>
+    where?: SettlementWhereInput
+  }
+
+  export type SettlementUpdateToOneWithWhereWithoutDistributionsInput = {
+    where?: SettlementWhereInput
+    data: XOR<SettlementUpdateWithoutDistributionsInput, SettlementUncheckedUpdateWithoutDistributionsInput>
+  }
+
+  export type SettlementUpdateWithoutDistributionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlementsNestedInput
+    employee?: EmployeeUpdateOneWithoutSettlementsNestedInput
+    recorded_by?: UserUpdateOneWithoutSettlements_recordedNestedInput
+    reversed_by?: UserUpdateOneWithoutSettlements_reversedNestedInput
+    adjustments?: SettlementAdjustmentUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateWithoutDistributionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    recorded_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutSettlementNestedInput
+  }
+
   export type StoreCreateWithoutPayoutsInput = {
     id?: string
     name: string
@@ -65048,6 +70641,8 @@ export namespace Prisma {
     alerts?: AlertCreateNestedManyWithoutStoreInput
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutPayoutsInput = {
@@ -65095,6 +70690,8 @@ export namespace Prisma {
     alerts?: AlertUncheckedCreateNestedManyWithoutStoreInput
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutPayoutsInput = {
@@ -65120,6 +70717,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionCreateNestedManyWithoutEmployeeInput
     reviews?: ReviewCreateNestedManyWithoutEmployeeInput
     alerts?: AlertCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateWithoutPayoutsInput = {
@@ -65140,6 +70739,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionUncheckedCreateNestedManyWithoutEmployeeInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
     alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeCreateOrConnectWithoutPayoutsInput = {
@@ -65193,11 +70794,15 @@ export namespace Prisma {
     recipient_type: $Enums.DistributionRecipientType
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settled_at?: Date | string | null
     created_at?: Date | string
     tip: TipCreateNestedOneWithoutDistributionsInput
     employee?: EmployeeCreateNestedOneWithoutTip_distributionsInput
+    settlement?: SettlementCreateNestedOneWithoutDistributionsInput
   }
 
   export type TipDistributionUncheckedCreateWithoutPayoutInput = {
@@ -65207,8 +70812,12 @@ export namespace Prisma {
     employee_id?: string | null
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settlement_id?: string | null
+    settled_at?: Date | string | null
     created_at?: Date | string
   }
 
@@ -65278,6 +70887,8 @@ export namespace Prisma {
     alerts?: AlertUpdateManyWithoutStoreNestedInput
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutPayoutsInput = {
@@ -65325,6 +70936,8 @@ export namespace Prisma {
     alerts?: AlertUncheckedUpdateManyWithoutStoreNestedInput
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type EmployeeUpsertWithoutPayoutsInput = {
@@ -65356,6 +70969,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionUpdateManyWithoutEmployeeNestedInput
     reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutPayoutsInput = {
@@ -65376,6 +70991,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionUncheckedUpdateManyWithoutEmployeeNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type PayoutAccountUpsertWithoutPayoutsInput = {
@@ -65439,6 +71056,1288 @@ export namespace Prisma {
   export type TipDistributionUpdateManyWithWhereWithoutPayoutInput = {
     where: TipDistributionScalarWhereInput
     data: XOR<TipDistributionUpdateManyMutationInput, TipDistributionUncheckedUpdateManyWithoutPayoutInput>
+  }
+
+  export type StoreCreateWithoutSettlementsInput = {
+    id?: string
+    name: string
+    slug: string
+    industry?: $Enums.StoreIndustry
+    is_active?: boolean
+    primary_color?: string | null
+    secondary_color?: string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    timezone?: string
+    primary_language?: $Enums.Language
+    supported_languages?: StoreCreatesupported_languagesInput | $Enums.Language[]
+    currency?: $Enums.Currency
+    suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: string | null
+    public_review_rating_threshold?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    organization: OrganizationCreateNestedOneWithoutStoresInput
+    logo_document?: DocumentCreateNestedOneWithoutStores_logoInput
+    cover_document?: DocumentCreateNestedOneWithoutStores_coverInput
+    default_distribution_rule?: DistributionRuleCreateNestedOneWithoutDefault_for_storeInput
+    organization_members?: OrganizationMemberCreateNestedManyWithoutStoreInput
+    employees?: EmployeeCreateNestedManyWithoutStoreInput
+    spots?: SpotCreateNestedManyWithoutStoreInput
+    qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
+    distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
+    tips?: TipCreateNestedManyWithoutStoreInput
+    reviews?: ReviewCreateNestedManyWithoutStoreInput
+    review_categories?: ReviewCategoryCreateNestedManyWithoutStoreInput
+    review_tags?: ReviewTagCreateNestedManyWithoutStoreInput
+    feedback_questions?: FeedbackQuestionCreateNestedManyWithoutStoreInput
+    alert_preferences?: AlertPreferenceCreateNestedManyWithoutStoreInput
+    alerts?: AlertCreateNestedManyWithoutStoreInput
+    insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
+    payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
+    payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreUncheckedCreateWithoutSettlementsInput = {
+    id?: string
+    organization_id: string
+    name: string
+    slug: string
+    industry?: $Enums.StoreIndustry
+    is_active?: boolean
+    logo_document_id?: string | null
+    cover_document_id?: string | null
+    primary_color?: string | null
+    secondary_color?: string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    timezone?: string
+    primary_language?: $Enums.Language
+    supported_languages?: StoreCreatesupported_languagesInput | $Enums.Language[]
+    currency?: $Enums.Currency
+    suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: string | null
+    public_review_rating_threshold?: number | null
+    default_distribution_rule_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    organization_members?: OrganizationMemberUncheckedCreateNestedManyWithoutStoreInput
+    employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
+    spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
+    qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
+    distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
+    tips?: TipUncheckedCreateNestedManyWithoutStoreInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
+    review_categories?: ReviewCategoryUncheckedCreateNestedManyWithoutStoreInput
+    review_tags?: ReviewTagUncheckedCreateNestedManyWithoutStoreInput
+    feedback_questions?: FeedbackQuestionUncheckedCreateNestedManyWithoutStoreInput
+    alert_preferences?: AlertPreferenceUncheckedCreateNestedManyWithoutStoreInput
+    alerts?: AlertUncheckedCreateNestedManyWithoutStoreInput
+    insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
+    payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreCreateOrConnectWithoutSettlementsInput = {
+    where: StoreWhereUniqueInput
+    create: XOR<StoreCreateWithoutSettlementsInput, StoreUncheckedCreateWithoutSettlementsInput>
+  }
+
+  export type EmployeeCreateWithoutSettlementsInput = {
+    id?: string
+    full_name: JsonNullValueInput | InputJsonValue
+    email: string
+    position?: string | null
+    is_active?: boolean
+    invited_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutEmployeesInput
+    user?: UserCreateNestedOneWithoutEmployee_accountsInput
+    photo_document?: DocumentCreateNestedOneWithoutEmployees_photoInput
+    qr_codes?: QrCodeEmployeeCreateNestedManyWithoutEmployeeInput
+    distribution_rule_recipients?: DistributionRuleRecipientCreateNestedManyWithoutEmployeeInput
+    tips?: TipCreateNestedManyWithoutEmployeeInput
+    tip_distributions?: TipDistributionCreateNestedManyWithoutEmployeeInput
+    reviews?: ReviewCreateNestedManyWithoutEmployeeInput
+    alerts?: AlertCreateNestedManyWithoutEmployeeInput
+    payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
+  }
+
+  export type EmployeeUncheckedCreateWithoutSettlementsInput = {
+    id?: string
+    store_id: string
+    user_id?: string | null
+    full_name: JsonNullValueInput | InputJsonValue
+    email: string
+    photo_document_id?: string | null
+    position?: string | null
+    is_active?: boolean
+    invited_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+    distribution_rule_recipients?: DistributionRuleRecipientUncheckedCreateNestedManyWithoutEmployeeInput
+    tips?: TipUncheckedCreateNestedManyWithoutEmployeeInput
+    tip_distributions?: TipDistributionUncheckedCreateNestedManyWithoutEmployeeInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
+    alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
+  }
+
+  export type EmployeeCreateOrConnectWithoutSettlementsInput = {
+    where: EmployeeWhereUniqueInput
+    create: XOR<EmployeeCreateWithoutSettlementsInput, EmployeeUncheckedCreateWithoutSettlementsInput>
+  }
+
+  export type UserCreateWithoutSettlements_recordedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    password?: string | null
+    role?: $Enums.AuthRole
+    registered_at?: Date | string | null
+    is_email_verified?: boolean
+    is_phone_verified?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    password_reset_tokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    documents?: DocumentCreateNestedManyWithoutUserInput
+    organization_memberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    employee_accounts?: EmployeeCreateNestedManyWithoutUserInput
+    customer_tips?: TipCreateNestedManyWithoutCustomerInput
+    customer_reviews?: ReviewCreateNestedManyWithoutCustomerInput
+    refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
+    refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
+    payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+  }
+
+  export type UserUncheckedCreateWithoutSettlements_recordedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    password?: string | null
+    role?: $Enums.AuthRole
+    registered_at?: Date | string | null
+    is_email_verified?: boolean
+    is_phone_verified?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    password_reset_tokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    organization_memberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    employee_accounts?: EmployeeUncheckedCreateNestedManyWithoutUserInput
+    customer_tips?: TipUncheckedCreateNestedManyWithoutCustomerInput
+    customer_reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
+    refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
+    refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
+    payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+  }
+
+  export type UserCreateOrConnectWithoutSettlements_recordedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSettlements_recordedInput, UserUncheckedCreateWithoutSettlements_recordedInput>
+  }
+
+  export type UserCreateWithoutSettlements_reversedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    password?: string | null
+    role?: $Enums.AuthRole
+    registered_at?: Date | string | null
+    is_email_verified?: boolean
+    is_phone_verified?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    password_reset_tokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    documents?: DocumentCreateNestedManyWithoutUserInput
+    organization_memberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    employee_accounts?: EmployeeCreateNestedManyWithoutUserInput
+    customer_tips?: TipCreateNestedManyWithoutCustomerInput
+    customer_reviews?: ReviewCreateNestedManyWithoutCustomerInput
+    refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
+    refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
+    payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+  }
+
+  export type UserUncheckedCreateWithoutSettlements_reversedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    password?: string | null
+    role?: $Enums.AuthRole
+    registered_at?: Date | string | null
+    is_email_verified?: boolean
+    is_phone_verified?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    password_reset_tokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    organization_memberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    employee_accounts?: EmployeeUncheckedCreateNestedManyWithoutUserInput
+    customer_tips?: TipUncheckedCreateNestedManyWithoutCustomerInput
+    customer_reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
+    refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
+    refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
+    payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+  }
+
+  export type UserCreateOrConnectWithoutSettlements_reversedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSettlements_reversedInput, UserUncheckedCreateWithoutSettlements_reversedInput>
+  }
+
+  export type TipDistributionCreateWithoutSettlementInput = {
+    id?: string
+    recipient_type: $Enums.DistributionRecipientType
+    amount: number
+    percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
+    payout_status?: $Enums.PayoutStatus
+    paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settled_at?: Date | string | null
+    created_at?: Date | string
+    tip: TipCreateNestedOneWithoutDistributionsInput
+    employee?: EmployeeCreateNestedOneWithoutTip_distributionsInput
+    payout?: PayoutCreateNestedOneWithoutDistributionsInput
+  }
+
+  export type TipDistributionUncheckedCreateWithoutSettlementInput = {
+    id?: string
+    tip_id: string
+    recipient_type: $Enums.DistributionRecipientType
+    employee_id?: string | null
+    amount: number
+    percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
+    payout_status?: $Enums.PayoutStatus
+    payout_id?: string | null
+    paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settled_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type TipDistributionCreateOrConnectWithoutSettlementInput = {
+    where: TipDistributionWhereUniqueInput
+    create: XOR<TipDistributionCreateWithoutSettlementInput, TipDistributionUncheckedCreateWithoutSettlementInput>
+  }
+
+  export type TipDistributionCreateManySettlementInputEnvelope = {
+    data: TipDistributionCreateManySettlementInput | TipDistributionCreateManySettlementInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SettlementAdjustmentCreateWithoutSettlementInput = {
+    id?: string
+    amount: number
+    reason: string
+    status?: $Enums.SettlementAdjustmentStatus
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlement_adjustmentsInput
+    employee?: EmployeeCreateNestedOneWithoutSettlement_adjustmentsInput
+    refund?: RefundCreateNestedOneWithoutSettlement_adjustmentsInput
+    created_by?: UserCreateNestedOneWithoutSettlement_adjustmentsInput
+  }
+
+  export type SettlementAdjustmentUncheckedCreateWithoutSettlementInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    amount: number
+    reason: string
+    refund_id?: string | null
+    status?: $Enums.SettlementAdjustmentStatus
+    created_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentCreateOrConnectWithoutSettlementInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    create: XOR<SettlementAdjustmentCreateWithoutSettlementInput, SettlementAdjustmentUncheckedCreateWithoutSettlementInput>
+  }
+
+  export type SettlementAdjustmentCreateManySettlementInputEnvelope = {
+    data: SettlementAdjustmentCreateManySettlementInput | SettlementAdjustmentCreateManySettlementInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StoreUpsertWithoutSettlementsInput = {
+    update: XOR<StoreUpdateWithoutSettlementsInput, StoreUncheckedUpdateWithoutSettlementsInput>
+    create: XOR<StoreCreateWithoutSettlementsInput, StoreUncheckedCreateWithoutSettlementsInput>
+    where?: StoreWhereInput
+  }
+
+  export type StoreUpdateToOneWithWhereWithoutSettlementsInput = {
+    where?: StoreWhereInput
+    data: XOR<StoreUpdateWithoutSettlementsInput, StoreUncheckedUpdateWithoutSettlementsInput>
+  }
+
+  export type StoreUpdateWithoutSettlementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    industry?: EnumStoreIndustryFieldUpdateOperationsInput | $Enums.StoreIndustry
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    primary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    secondary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    primary_language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    supported_languages?: StoreUpdatesupported_languagesInput | $Enums.Language[]
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
+    public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutStoresNestedInput
+    logo_document?: DocumentUpdateOneWithoutStores_logoNestedInput
+    cover_document?: DocumentUpdateOneWithoutStores_coverNestedInput
+    default_distribution_rule?: DistributionRuleUpdateOneWithoutDefault_for_storeNestedInput
+    organization_members?: OrganizationMemberUpdateManyWithoutStoreNestedInput
+    employees?: EmployeeUpdateManyWithoutStoreNestedInput
+    spots?: SpotUpdateManyWithoutStoreNestedInput
+    qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
+    distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
+    tips?: TipUpdateManyWithoutStoreNestedInput
+    reviews?: ReviewUpdateManyWithoutStoreNestedInput
+    review_categories?: ReviewCategoryUpdateManyWithoutStoreNestedInput
+    review_tags?: ReviewTagUpdateManyWithoutStoreNestedInput
+    feedback_questions?: FeedbackQuestionUpdateManyWithoutStoreNestedInput
+    alert_preferences?: AlertPreferenceUpdateManyWithoutStoreNestedInput
+    alerts?: AlertUpdateManyWithoutStoreNestedInput
+    insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
+    payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
+    payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
+  }
+
+  export type StoreUncheckedUpdateWithoutSettlementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organization_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    industry?: EnumStoreIndustryFieldUpdateOperationsInput | $Enums.StoreIndustry
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cover_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    primary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    secondary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    primary_language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    supported_languages?: StoreUpdatesupported_languagesInput | $Enums.Language[]
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
+    public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
+    default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization_members?: OrganizationMemberUncheckedUpdateManyWithoutStoreNestedInput
+    employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
+    spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
+    qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
+    distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
+    tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
+    review_categories?: ReviewCategoryUncheckedUpdateManyWithoutStoreNestedInput
+    review_tags?: ReviewTagUncheckedUpdateManyWithoutStoreNestedInput
+    feedback_questions?: FeedbackQuestionUncheckedUpdateManyWithoutStoreNestedInput
+    alert_preferences?: AlertPreferenceUncheckedUpdateManyWithoutStoreNestedInput
+    alerts?: AlertUncheckedUpdateManyWithoutStoreNestedInput
+    insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
+    payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
+  }
+
+  export type EmployeeUpsertWithoutSettlementsInput = {
+    update: XOR<EmployeeUpdateWithoutSettlementsInput, EmployeeUncheckedUpdateWithoutSettlementsInput>
+    create: XOR<EmployeeCreateWithoutSettlementsInput, EmployeeUncheckedCreateWithoutSettlementsInput>
+    where?: EmployeeWhereInput
+  }
+
+  export type EmployeeUpdateToOneWithWhereWithoutSettlementsInput = {
+    where?: EmployeeWhereInput
+    data: XOR<EmployeeUpdateWithoutSettlementsInput, EmployeeUncheckedUpdateWithoutSettlementsInput>
+  }
+
+  export type EmployeeUpdateWithoutSettlementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
+    email?: StringFieldUpdateOperationsInput | string
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
+    user?: UserUpdateOneWithoutEmployee_accountsNestedInput
+    photo_document?: DocumentUpdateOneWithoutEmployees_photoNestedInput
+    qr_codes?: QrCodeEmployeeUpdateManyWithoutEmployeeNestedInput
+    distribution_rule_recipients?: DistributionRuleRecipientUpdateManyWithoutEmployeeNestedInput
+    tips?: TipUpdateManyWithoutEmployeeNestedInput
+    tip_distributions?: TipDistributionUpdateManyWithoutEmployeeNestedInput
+    reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
+    alerts?: AlertUpdateManyWithoutEmployeeNestedInput
+    payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
+  }
+
+  export type EmployeeUncheckedUpdateWithoutSettlementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    full_name?: JsonNullValueInput | InputJsonValue
+    email?: StringFieldUpdateOperationsInput | string
+    photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+    distribution_rule_recipients?: DistributionRuleRecipientUncheckedUpdateManyWithoutEmployeeNestedInput
+    tips?: TipUncheckedUpdateManyWithoutEmployeeNestedInput
+    tip_distributions?: TipDistributionUncheckedUpdateManyWithoutEmployeeNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
+    alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  }
+
+  export type UserUpsertWithoutSettlements_recordedInput = {
+    update: XOR<UserUpdateWithoutSettlements_recordedInput, UserUncheckedUpdateWithoutSettlements_recordedInput>
+    create: XOR<UserCreateWithoutSettlements_recordedInput, UserUncheckedCreateWithoutSettlements_recordedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSettlements_recordedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSettlements_recordedInput, UserUncheckedUpdateWithoutSettlements_recordedInput>
+  }
+
+  export type UserUpdateWithoutSettlements_recordedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    registered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_email_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_phone_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    password_reset_tokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    documents?: DocumentUpdateManyWithoutUserNestedInput
+    organization_memberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    employee_accounts?: EmployeeUpdateManyWithoutUserNestedInput
+    customer_tips?: TipUpdateManyWithoutCustomerNestedInput
+    customer_reviews?: ReviewUpdateManyWithoutCustomerNestedInput
+    refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
+    refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
+    payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSettlements_recordedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    registered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_email_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_phone_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    password_reset_tokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    organization_memberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    employee_accounts?: EmployeeUncheckedUpdateManyWithoutUserNestedInput
+    customer_tips?: TipUncheckedUpdateManyWithoutCustomerNestedInput
+    customer_reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+    refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
+    refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
+    payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+  }
+
+  export type UserUpsertWithoutSettlements_reversedInput = {
+    update: XOR<UserUpdateWithoutSettlements_reversedInput, UserUncheckedUpdateWithoutSettlements_reversedInput>
+    create: XOR<UserCreateWithoutSettlements_reversedInput, UserUncheckedCreateWithoutSettlements_reversedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSettlements_reversedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSettlements_reversedInput, UserUncheckedUpdateWithoutSettlements_reversedInput>
+  }
+
+  export type UserUpdateWithoutSettlements_reversedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    registered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_email_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_phone_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    password_reset_tokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    documents?: DocumentUpdateManyWithoutUserNestedInput
+    organization_memberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    employee_accounts?: EmployeeUpdateManyWithoutUserNestedInput
+    customer_tips?: TipUpdateManyWithoutCustomerNestedInput
+    customer_reviews?: ReviewUpdateManyWithoutCustomerNestedInput
+    refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
+    refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
+    payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSettlements_reversedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    registered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_email_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_phone_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    password_reset_tokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    organization_memberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    employee_accounts?: EmployeeUncheckedUpdateManyWithoutUserNestedInput
+    customer_tips?: TipUncheckedUpdateManyWithoutCustomerNestedInput
+    customer_reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+    refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
+    refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
+    payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+  }
+
+  export type TipDistributionUpsertWithWhereUniqueWithoutSettlementInput = {
+    where: TipDistributionWhereUniqueInput
+    update: XOR<TipDistributionUpdateWithoutSettlementInput, TipDistributionUncheckedUpdateWithoutSettlementInput>
+    create: XOR<TipDistributionCreateWithoutSettlementInput, TipDistributionUncheckedCreateWithoutSettlementInput>
+  }
+
+  export type TipDistributionUpdateWithWhereUniqueWithoutSettlementInput = {
+    where: TipDistributionWhereUniqueInput
+    data: XOR<TipDistributionUpdateWithoutSettlementInput, TipDistributionUncheckedUpdateWithoutSettlementInput>
+  }
+
+  export type TipDistributionUpdateManyWithWhereWithoutSettlementInput = {
+    where: TipDistributionScalarWhereInput
+    data: XOR<TipDistributionUpdateManyMutationInput, TipDistributionUncheckedUpdateManyWithoutSettlementInput>
+  }
+
+  export type SettlementAdjustmentUpsertWithWhereUniqueWithoutSettlementInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    update: XOR<SettlementAdjustmentUpdateWithoutSettlementInput, SettlementAdjustmentUncheckedUpdateWithoutSettlementInput>
+    create: XOR<SettlementAdjustmentCreateWithoutSettlementInput, SettlementAdjustmentUncheckedCreateWithoutSettlementInput>
+  }
+
+  export type SettlementAdjustmentUpdateWithWhereUniqueWithoutSettlementInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    data: XOR<SettlementAdjustmentUpdateWithoutSettlementInput, SettlementAdjustmentUncheckedUpdateWithoutSettlementInput>
+  }
+
+  export type SettlementAdjustmentUpdateManyWithWhereWithoutSettlementInput = {
+    where: SettlementAdjustmentScalarWhereInput
+    data: XOR<SettlementAdjustmentUpdateManyMutationInput, SettlementAdjustmentUncheckedUpdateManyWithoutSettlementInput>
+  }
+
+  export type StoreCreateWithoutSettlement_adjustmentsInput = {
+    id?: string
+    name: string
+    slug: string
+    industry?: $Enums.StoreIndustry
+    is_active?: boolean
+    primary_color?: string | null
+    secondary_color?: string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    timezone?: string
+    primary_language?: $Enums.Language
+    supported_languages?: StoreCreatesupported_languagesInput | $Enums.Language[]
+    currency?: $Enums.Currency
+    suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: string | null
+    public_review_rating_threshold?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    organization: OrganizationCreateNestedOneWithoutStoresInput
+    logo_document?: DocumentCreateNestedOneWithoutStores_logoInput
+    cover_document?: DocumentCreateNestedOneWithoutStores_coverInput
+    default_distribution_rule?: DistributionRuleCreateNestedOneWithoutDefault_for_storeInput
+    organization_members?: OrganizationMemberCreateNestedManyWithoutStoreInput
+    employees?: EmployeeCreateNestedManyWithoutStoreInput
+    spots?: SpotCreateNestedManyWithoutStoreInput
+    qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
+    distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
+    tips?: TipCreateNestedManyWithoutStoreInput
+    reviews?: ReviewCreateNestedManyWithoutStoreInput
+    review_categories?: ReviewCategoryCreateNestedManyWithoutStoreInput
+    review_tags?: ReviewTagCreateNestedManyWithoutStoreInput
+    feedback_questions?: FeedbackQuestionCreateNestedManyWithoutStoreInput
+    alert_preferences?: AlertPreferenceCreateNestedManyWithoutStoreInput
+    alerts?: AlertCreateNestedManyWithoutStoreInput
+    insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
+    payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
+    payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreUncheckedCreateWithoutSettlement_adjustmentsInput = {
+    id?: string
+    organization_id: string
+    name: string
+    slug: string
+    industry?: $Enums.StoreIndustry
+    is_active?: boolean
+    logo_document_id?: string | null
+    cover_document_id?: string | null
+    primary_color?: string | null
+    secondary_color?: string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    timezone?: string
+    primary_language?: $Enums.Language
+    supported_languages?: StoreCreatesupported_languagesInput | $Enums.Language[]
+    currency?: $Enums.Currency
+    suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: string | null
+    public_review_rating_threshold?: number | null
+    default_distribution_rule_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    organization_members?: OrganizationMemberUncheckedCreateNestedManyWithoutStoreInput
+    employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
+    spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
+    qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
+    distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
+    tips?: TipUncheckedCreateNestedManyWithoutStoreInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
+    review_categories?: ReviewCategoryUncheckedCreateNestedManyWithoutStoreInput
+    review_tags?: ReviewTagUncheckedCreateNestedManyWithoutStoreInput
+    feedback_questions?: FeedbackQuestionUncheckedCreateNestedManyWithoutStoreInput
+    alert_preferences?: AlertPreferenceUncheckedCreateNestedManyWithoutStoreInput
+    alerts?: AlertUncheckedCreateNestedManyWithoutStoreInput
+    insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
+    payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreCreateOrConnectWithoutSettlement_adjustmentsInput = {
+    where: StoreWhereUniqueInput
+    create: XOR<StoreCreateWithoutSettlement_adjustmentsInput, StoreUncheckedCreateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type EmployeeCreateWithoutSettlement_adjustmentsInput = {
+    id?: string
+    full_name: JsonNullValueInput | InputJsonValue
+    email: string
+    position?: string | null
+    is_active?: boolean
+    invited_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutEmployeesInput
+    user?: UserCreateNestedOneWithoutEmployee_accountsInput
+    photo_document?: DocumentCreateNestedOneWithoutEmployees_photoInput
+    qr_codes?: QrCodeEmployeeCreateNestedManyWithoutEmployeeInput
+    distribution_rule_recipients?: DistributionRuleRecipientCreateNestedManyWithoutEmployeeInput
+    tips?: TipCreateNestedManyWithoutEmployeeInput
+    tip_distributions?: TipDistributionCreateNestedManyWithoutEmployeeInput
+    reviews?: ReviewCreateNestedManyWithoutEmployeeInput
+    alerts?: AlertCreateNestedManyWithoutEmployeeInput
+    payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+  }
+
+  export type EmployeeUncheckedCreateWithoutSettlement_adjustmentsInput = {
+    id?: string
+    store_id: string
+    user_id?: string | null
+    full_name: JsonNullValueInput | InputJsonValue
+    email: string
+    photo_document_id?: string | null
+    position?: string | null
+    is_active?: boolean
+    invited_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    qr_codes?: QrCodeEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+    distribution_rule_recipients?: DistributionRuleRecipientUncheckedCreateNestedManyWithoutEmployeeInput
+    tips?: TipUncheckedCreateNestedManyWithoutEmployeeInput
+    tip_distributions?: TipDistributionUncheckedCreateNestedManyWithoutEmployeeInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
+    alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+  }
+
+  export type EmployeeCreateOrConnectWithoutSettlement_adjustmentsInput = {
+    where: EmployeeWhereUniqueInput
+    create: XOR<EmployeeCreateWithoutSettlement_adjustmentsInput, EmployeeUncheckedCreateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type RefundCreateWithoutSettlement_adjustmentsInput = {
+    id?: string
+    amount: number
+    reason?: string | null
+    status?: $Enums.RefundStatus
+    provider_reference?: string | null
+    provider_status?: string | null
+    requires_manual_reconciliation?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    tip: TipCreateNestedOneWithoutRefundsInput
+    requested_by?: UserCreateNestedOneWithoutRefunds_requestedInput
+    processed_by?: UserCreateNestedOneWithoutRefunds_processedInput
+  }
+
+  export type RefundUncheckedCreateWithoutSettlement_adjustmentsInput = {
+    id?: string
+    tip_id: string
+    amount: number
+    reason?: string | null
+    status?: $Enums.RefundStatus
+    requested_by_user_id?: string | null
+    processed_by_user_id?: string | null
+    provider_reference?: string | null
+    provider_status?: string | null
+    requires_manual_reconciliation?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type RefundCreateOrConnectWithoutSettlement_adjustmentsInput = {
+    where: RefundWhereUniqueInput
+    create: XOR<RefundCreateWithoutSettlement_adjustmentsInput, RefundUncheckedCreateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type SettlementCreateWithoutAdjustmentsInput = {
+    id?: string
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlementsInput
+    employee?: EmployeeCreateNestedOneWithoutSettlementsInput
+    recorded_by?: UserCreateNestedOneWithoutSettlements_recordedInput
+    reversed_by?: UserCreateNestedOneWithoutSettlements_reversedInput
+    distributions?: TipDistributionCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementUncheckedCreateWithoutAdjustmentsInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    recorded_by_user_id?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    reversed_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutSettlementInput
+  }
+
+  export type SettlementCreateOrConnectWithoutAdjustmentsInput = {
+    where: SettlementWhereUniqueInput
+    create: XOR<SettlementCreateWithoutAdjustmentsInput, SettlementUncheckedCreateWithoutAdjustmentsInput>
+  }
+
+  export type UserCreateWithoutSettlement_adjustmentsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    password?: string | null
+    role?: $Enums.AuthRole
+    registered_at?: Date | string | null
+    is_email_verified?: boolean
+    is_phone_verified?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    password_reset_tokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    documents?: DocumentCreateNestedManyWithoutUserInput
+    organization_memberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    employee_accounts?: EmployeeCreateNestedManyWithoutUserInput
+    customer_tips?: TipCreateNestedManyWithoutCustomerInput
+    customer_reviews?: ReviewCreateNestedManyWithoutCustomerInput
+    refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
+    refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
+    payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+  }
+
+  export type UserUncheckedCreateWithoutSettlement_adjustmentsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    password?: string | null
+    role?: $Enums.AuthRole
+    registered_at?: Date | string | null
+    is_email_verified?: boolean
+    is_phone_verified?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    password_reset_tokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    organization_memberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    employee_accounts?: EmployeeUncheckedCreateNestedManyWithoutUserInput
+    customer_tips?: TipUncheckedCreateNestedManyWithoutCustomerInput
+    customer_reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
+    refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
+    refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
+    payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+  }
+
+  export type UserCreateOrConnectWithoutSettlement_adjustmentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSettlement_adjustmentsInput, UserUncheckedCreateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type StoreUpsertWithoutSettlement_adjustmentsInput = {
+    update: XOR<StoreUpdateWithoutSettlement_adjustmentsInput, StoreUncheckedUpdateWithoutSettlement_adjustmentsInput>
+    create: XOR<StoreCreateWithoutSettlement_adjustmentsInput, StoreUncheckedCreateWithoutSettlement_adjustmentsInput>
+    where?: StoreWhereInput
+  }
+
+  export type StoreUpdateToOneWithWhereWithoutSettlement_adjustmentsInput = {
+    where?: StoreWhereInput
+    data: XOR<StoreUpdateWithoutSettlement_adjustmentsInput, StoreUncheckedUpdateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type StoreUpdateWithoutSettlement_adjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    industry?: EnumStoreIndustryFieldUpdateOperationsInput | $Enums.StoreIndustry
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    primary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    secondary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    primary_language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    supported_languages?: StoreUpdatesupported_languagesInput | $Enums.Language[]
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
+    public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutStoresNestedInput
+    logo_document?: DocumentUpdateOneWithoutStores_logoNestedInput
+    cover_document?: DocumentUpdateOneWithoutStores_coverNestedInput
+    default_distribution_rule?: DistributionRuleUpdateOneWithoutDefault_for_storeNestedInput
+    organization_members?: OrganizationMemberUpdateManyWithoutStoreNestedInput
+    employees?: EmployeeUpdateManyWithoutStoreNestedInput
+    spots?: SpotUpdateManyWithoutStoreNestedInput
+    qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
+    distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
+    tips?: TipUpdateManyWithoutStoreNestedInput
+    reviews?: ReviewUpdateManyWithoutStoreNestedInput
+    review_categories?: ReviewCategoryUpdateManyWithoutStoreNestedInput
+    review_tags?: ReviewTagUpdateManyWithoutStoreNestedInput
+    feedback_questions?: FeedbackQuestionUpdateManyWithoutStoreNestedInput
+    alert_preferences?: AlertPreferenceUpdateManyWithoutStoreNestedInput
+    alerts?: AlertUpdateManyWithoutStoreNestedInput
+    insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
+    payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
+    payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+  }
+
+  export type StoreUncheckedUpdateWithoutSettlement_adjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organization_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    industry?: EnumStoreIndustryFieldUpdateOperationsInput | $Enums.StoreIndustry
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cover_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    primary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    secondary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    primary_language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    supported_languages?: StoreUpdatesupported_languagesInput | $Enums.Language[]
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
+    public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
+    default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization_members?: OrganizationMemberUncheckedUpdateManyWithoutStoreNestedInput
+    employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
+    spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
+    qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
+    distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
+    tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
+    review_categories?: ReviewCategoryUncheckedUpdateManyWithoutStoreNestedInput
+    review_tags?: ReviewTagUncheckedUpdateManyWithoutStoreNestedInput
+    feedback_questions?: FeedbackQuestionUncheckedUpdateManyWithoutStoreNestedInput
+    alert_preferences?: AlertPreferenceUncheckedUpdateManyWithoutStoreNestedInput
+    alerts?: AlertUncheckedUpdateManyWithoutStoreNestedInput
+    insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
+    payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+  }
+
+  export type EmployeeUpsertWithoutSettlement_adjustmentsInput = {
+    update: XOR<EmployeeUpdateWithoutSettlement_adjustmentsInput, EmployeeUncheckedUpdateWithoutSettlement_adjustmentsInput>
+    create: XOR<EmployeeCreateWithoutSettlement_adjustmentsInput, EmployeeUncheckedCreateWithoutSettlement_adjustmentsInput>
+    where?: EmployeeWhereInput
+  }
+
+  export type EmployeeUpdateToOneWithWhereWithoutSettlement_adjustmentsInput = {
+    where?: EmployeeWhereInput
+    data: XOR<EmployeeUpdateWithoutSettlement_adjustmentsInput, EmployeeUncheckedUpdateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type EmployeeUpdateWithoutSettlement_adjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    full_name?: JsonNullValueInput | InputJsonValue
+    email?: StringFieldUpdateOperationsInput | string
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutEmployeesNestedInput
+    user?: UserUpdateOneWithoutEmployee_accountsNestedInput
+    photo_document?: DocumentUpdateOneWithoutEmployees_photoNestedInput
+    qr_codes?: QrCodeEmployeeUpdateManyWithoutEmployeeNestedInput
+    distribution_rule_recipients?: DistributionRuleRecipientUpdateManyWithoutEmployeeNestedInput
+    tips?: TipUpdateManyWithoutEmployeeNestedInput
+    tip_distributions?: TipDistributionUpdateManyWithoutEmployeeNestedInput
+    reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
+    alerts?: AlertUpdateManyWithoutEmployeeNestedInput
+    payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+  }
+
+  export type EmployeeUncheckedUpdateWithoutSettlement_adjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    full_name?: JsonNullValueInput | InputJsonValue
+    email?: StringFieldUpdateOperationsInput | string
+    photo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    invited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    qr_codes?: QrCodeEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+    distribution_rule_recipients?: DistributionRuleRecipientUncheckedUpdateManyWithoutEmployeeNestedInput
+    tips?: TipUncheckedUpdateManyWithoutEmployeeNestedInput
+    tip_distributions?: TipDistributionUncheckedUpdateManyWithoutEmployeeNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
+    alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+  }
+
+  export type RefundUpsertWithoutSettlement_adjustmentsInput = {
+    update: XOR<RefundUpdateWithoutSettlement_adjustmentsInput, RefundUncheckedUpdateWithoutSettlement_adjustmentsInput>
+    create: XOR<RefundCreateWithoutSettlement_adjustmentsInput, RefundUncheckedCreateWithoutSettlement_adjustmentsInput>
+    where?: RefundWhereInput
+  }
+
+  export type RefundUpdateToOneWithWhereWithoutSettlement_adjustmentsInput = {
+    where?: RefundWhereInput
+    data: XOR<RefundUpdateWithoutSettlement_adjustmentsInput, RefundUncheckedUpdateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type RefundUpdateWithoutSettlement_adjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
+    provider_reference?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_status?: NullableStringFieldUpdateOperationsInput | string | null
+    requires_manual_reconciliation?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    tip?: TipUpdateOneRequiredWithoutRefundsNestedInput
+    requested_by?: UserUpdateOneWithoutRefunds_requestedNestedInput
+    processed_by?: UserUpdateOneWithoutRefunds_processedNestedInput
+  }
+
+  export type RefundUncheckedUpdateWithoutSettlement_adjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tip_id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
+    requested_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    processed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_reference?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_status?: NullableStringFieldUpdateOperationsInput | string | null
+    requires_manual_reconciliation?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementUpsertWithoutAdjustmentsInput = {
+    update: XOR<SettlementUpdateWithoutAdjustmentsInput, SettlementUncheckedUpdateWithoutAdjustmentsInput>
+    create: XOR<SettlementCreateWithoutAdjustmentsInput, SettlementUncheckedCreateWithoutAdjustmentsInput>
+    where?: SettlementWhereInput
+  }
+
+  export type SettlementUpdateToOneWithWhereWithoutAdjustmentsInput = {
+    where?: SettlementWhereInput
+    data: XOR<SettlementUpdateWithoutAdjustmentsInput, SettlementUncheckedUpdateWithoutAdjustmentsInput>
+  }
+
+  export type SettlementUpdateWithoutAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlementsNestedInput
+    employee?: EmployeeUpdateOneWithoutSettlementsNestedInput
+    recorded_by?: UserUpdateOneWithoutSettlements_recordedNestedInput
+    reversed_by?: UserUpdateOneWithoutSettlements_reversedNestedInput
+    distributions?: TipDistributionUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateWithoutAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    recorded_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type UserUpsertWithoutSettlement_adjustmentsInput = {
+    update: XOR<UserUpdateWithoutSettlement_adjustmentsInput, UserUncheckedUpdateWithoutSettlement_adjustmentsInput>
+    create: XOR<UserCreateWithoutSettlement_adjustmentsInput, UserUncheckedCreateWithoutSettlement_adjustmentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSettlement_adjustmentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSettlement_adjustmentsInput, UserUncheckedUpdateWithoutSettlement_adjustmentsInput>
+  }
+
+  export type UserUpdateWithoutSettlement_adjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    registered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_email_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_phone_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    password_reset_tokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    documents?: DocumentUpdateManyWithoutUserNestedInput
+    organization_memberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    employee_accounts?: EmployeeUpdateManyWithoutUserNestedInput
+    customer_tips?: TipUpdateManyWithoutCustomerNestedInput
+    customer_reviews?: ReviewUpdateManyWithoutCustomerNestedInput
+    refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
+    refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
+    payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSettlement_adjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    registered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_email_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_phone_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    password_reset_tokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    organization_memberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    employee_accounts?: EmployeeUncheckedUpdateManyWithoutUserNestedInput
+    customer_tips?: TipUncheckedUpdateManyWithoutCustomerNestedInput
+    customer_reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+    refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
+    refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
+    payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
   }
 
   export type TipCreateWithoutRefundsInput = {
@@ -65514,6 +72413,9 @@ export namespace Prisma {
     customer_reviews?: ReviewCreateNestedManyWithoutCustomerInput
     refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUncheckedCreateWithoutRefunds_requestedInput = {
@@ -65538,6 +72440,9 @@ export namespace Prisma {
     customer_reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
     refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserCreateOrConnectWithoutRefunds_requestedInput = {
@@ -65567,6 +72472,9 @@ export namespace Prisma {
     customer_reviews?: ReviewCreateNestedManyWithoutCustomerInput
     refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUncheckedCreateWithoutRefunds_processedInput = {
@@ -65591,11 +72499,50 @@ export namespace Prisma {
     customer_reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
     refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserCreateOrConnectWithoutRefunds_processedInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutRefunds_processedInput, UserUncheckedCreateWithoutRefunds_processedInput>
+  }
+
+  export type SettlementAdjustmentCreateWithoutRefundInput = {
+    id?: string
+    amount: number
+    reason: string
+    status?: $Enums.SettlementAdjustmentStatus
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutSettlement_adjustmentsInput
+    employee?: EmployeeCreateNestedOneWithoutSettlement_adjustmentsInput
+    settlement?: SettlementCreateNestedOneWithoutAdjustmentsInput
+    created_by?: UserCreateNestedOneWithoutSettlement_adjustmentsInput
+  }
+
+  export type SettlementAdjustmentUncheckedCreateWithoutRefundInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    amount: number
+    reason: string
+    status?: $Enums.SettlementAdjustmentStatus
+    settlement_id?: string | null
+    created_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentCreateOrConnectWithoutRefundInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    create: XOR<SettlementAdjustmentCreateWithoutRefundInput, SettlementAdjustmentUncheckedCreateWithoutRefundInput>
+  }
+
+  export type SettlementAdjustmentCreateManyRefundInputEnvelope = {
+    data: SettlementAdjustmentCreateManyRefundInput | SettlementAdjustmentCreateManyRefundInput[]
+    skipDuplicates?: boolean
   }
 
   export type TipUpsertWithoutRefundsInput = {
@@ -65688,6 +72635,9 @@ export namespace Prisma {
     customer_reviews?: ReviewUpdateManyWithoutCustomerNestedInput
     refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefunds_requestedInput = {
@@ -65712,6 +72662,9 @@ export namespace Prisma {
     customer_reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
     refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUpsertWithoutRefunds_processedInput = {
@@ -65747,6 +72700,9 @@ export namespace Prisma {
     customer_reviews?: ReviewUpdateManyWithoutCustomerNestedInput
     refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefunds_processedInput = {
@@ -65771,6 +72727,25 @@ export namespace Prisma {
     customer_reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
     refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+  }
+
+  export type SettlementAdjustmentUpsertWithWhereUniqueWithoutRefundInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    update: XOR<SettlementAdjustmentUpdateWithoutRefundInput, SettlementAdjustmentUncheckedUpdateWithoutRefundInput>
+    create: XOR<SettlementAdjustmentCreateWithoutRefundInput, SettlementAdjustmentUncheckedCreateWithoutRefundInput>
+  }
+
+  export type SettlementAdjustmentUpdateWithWhereUniqueWithoutRefundInput = {
+    where: SettlementAdjustmentWhereUniqueInput
+    data: XOR<SettlementAdjustmentUpdateWithoutRefundInput, SettlementAdjustmentUncheckedUpdateWithoutRefundInput>
+  }
+
+  export type SettlementAdjustmentUpdateManyWithWhereWithoutRefundInput = {
+    where: SettlementAdjustmentScalarWhereInput
+    data: XOR<SettlementAdjustmentUpdateManyMutationInput, SettlementAdjustmentUncheckedUpdateManyWithoutRefundInput>
   }
 
   export type StoreCreateWithoutReviewsInput = {
@@ -65818,6 +72793,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutReviewsInput = {
@@ -65865,6 +72842,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutReviewsInput = {
@@ -65941,6 +72920,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionCreateNestedManyWithoutEmployeeInput
     alerts?: AlertCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateWithoutReviewsInput = {
@@ -65961,6 +72942,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionUncheckedCreateNestedManyWithoutEmployeeInput
     alerts?: AlertUncheckedCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeCreateOrConnectWithoutReviewsInput = {
@@ -65990,6 +72973,9 @@ export namespace Prisma {
     refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserUncheckedCreateWithoutCustomer_reviewsInput = {
@@ -66014,6 +73000,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
     refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
   }
 
   export type UserCreateOrConnectWithoutCustomer_reviewsInput = {
@@ -66149,6 +73138,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutReviewsInput = {
@@ -66196,6 +73187,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type TipUpsertWithoutReviewInput = {
@@ -66284,6 +73277,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutReviewsInput = {
@@ -66304,6 +73299,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionUncheckedUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type UserUpsertWithoutCustomer_reviewsInput = {
@@ -66339,6 +73336,9 @@ export namespace Prisma {
     refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCustomer_reviewsInput = {
@@ -66363,6 +73363,9 @@ export namespace Prisma {
     refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
     refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
   }
 
   export type ReviewCategoryRatingUpsertWithWhereUniqueWithoutReviewInput = {
@@ -66491,6 +73494,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutReview_categoriesInput = {
@@ -66538,6 +73543,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutReview_categoriesInput = {
@@ -66625,6 +73632,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutReview_categoriesInput = {
@@ -66672,6 +73681,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type ReviewCategoryRatingUpsertWithWhereUniqueWithoutReview_categoryInput = {
@@ -66879,6 +73890,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutReview_tagsInput = {
@@ -66926,6 +73939,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutReview_tagsInput = {
@@ -67011,6 +74026,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutReview_tagsInput = {
@@ -67058,6 +74075,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type ReviewTagAssignmentUpsertWithWhereUniqueWithoutReview_tagInput = {
@@ -67265,6 +74284,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutFeedback_questionsInput = {
@@ -67312,6 +74333,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutFeedback_questionsInput = {
@@ -67401,6 +74424,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutFeedback_questionsInput = {
@@ -67448,6 +74473,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type FeedbackResponseUpsertWithWhereUniqueWithoutFeedback_questionInput = {
@@ -67659,6 +74686,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutAlert_preferencesInput = {
@@ -67706,6 +74735,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutAlert_preferencesInput = {
@@ -67769,6 +74800,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutAlert_preferencesInput = {
@@ -67816,6 +74849,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreCreateWithoutAlertsInput = {
@@ -67863,6 +74898,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutAlertsInput = {
@@ -67910,6 +74947,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutAlertsInput = {
@@ -67935,6 +74974,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionCreateNestedManyWithoutEmployeeInput
     reviews?: ReviewCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeUncheckedCreateWithoutAlertsInput = {
@@ -67955,6 +74996,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionUncheckedCreateNestedManyWithoutEmployeeInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutEmployeeInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutEmployeeInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutEmployeeInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutEmployeeInput
   }
 
   export type EmployeeCreateOrConnectWithoutAlertsInput = {
@@ -68018,6 +75061,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutAlertsInput = {
@@ -68065,6 +75110,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type EmployeeUpsertWithoutAlertsInput = {
@@ -68096,6 +75143,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionUpdateManyWithoutEmployeeNestedInput
     reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutAlertsInput = {
@@ -68116,6 +75165,8 @@ export namespace Prisma {
     tip_distributions?: TipDistributionUncheckedUpdateManyWithoutEmployeeNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type StoreCreateWithoutInsight_summariesInput = {
@@ -68163,6 +75214,8 @@ export namespace Prisma {
     alerts?: AlertCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
   export type StoreUncheckedCreateWithoutInsight_summariesInput = {
@@ -68210,6 +75263,8 @@ export namespace Prisma {
     alerts?: AlertUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
   export type StoreCreateOrConnectWithoutInsight_summariesInput = {
@@ -68273,6 +75328,8 @@ export namespace Prisma {
     alerts?: AlertUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutInsight_summariesInput = {
@@ -68320,6 +75377,8 @@ export namespace Prisma {
     alerts?: AlertUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type PasswordResetTokenCreateManyUserInput = {
@@ -68421,6 +75480,53 @@ export namespace Prisma {
     provider_reference?: string | null
     provider_status?: string | null
     requires_manual_reconciliation?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementCreateManyRecorded_byInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    reversed_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementCreateManyReversed_byInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    recorded_by_user_id?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentCreateManyCreated_byInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    amount: number
+    reason: string
+    refund_id?: string | null
+    status?: $Enums.SettlementAdjustmentStatus
+    settlement_id?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -68535,6 +75641,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutUserInput = {
@@ -68555,6 +75663,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateManyWithoutUserInput = {
@@ -68698,6 +75808,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tip?: TipUpdateOneRequiredWithoutRefundsNestedInput
     processed_by?: UserUpdateOneWithoutRefunds_processedNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutRefundNestedInput
   }
 
   export type RefundUncheckedUpdateWithoutRequested_byInput = {
@@ -68712,6 +75823,7 @@ export namespace Prisma {
     requires_manual_reconciliation?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutRefundNestedInput
   }
 
   export type RefundUncheckedUpdateManyWithoutRequested_byInput = {
@@ -68740,6 +75852,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tip?: TipUpdateOneRequiredWithoutRefundsNestedInput
     requested_by?: UserUpdateOneWithoutRefunds_requestedNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutRefundNestedInput
   }
 
   export type RefundUncheckedUpdateWithoutProcessed_byInput = {
@@ -68754,6 +75867,7 @@ export namespace Prisma {
     requires_manual_reconciliation?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutRefundNestedInput
   }
 
   export type RefundUncheckedUpdateManyWithoutProcessed_byInput = {
@@ -68766,6 +75880,155 @@ export namespace Prisma {
     provider_reference?: NullableStringFieldUpdateOperationsInput | string | null
     provider_status?: NullableStringFieldUpdateOperationsInput | string | null
     requires_manual_reconciliation?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementUpdateWithoutRecorded_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlementsNestedInput
+    employee?: EmployeeUpdateOneWithoutSettlementsNestedInput
+    reversed_by?: UserUpdateOneWithoutSettlements_reversedNestedInput
+    distributions?: TipDistributionUpdateManyWithoutSettlementNestedInput
+    adjustments?: SettlementAdjustmentUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateWithoutRecorded_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutSettlementNestedInput
+    adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateManyWithoutRecorded_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementUpdateWithoutReversed_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlementsNestedInput
+    employee?: EmployeeUpdateOneWithoutSettlementsNestedInput
+    recorded_by?: UserUpdateOneWithoutSettlements_recordedNestedInput
+    distributions?: TipDistributionUpdateManyWithoutSettlementNestedInput
+    adjustments?: SettlementAdjustmentUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateWithoutReversed_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    recorded_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutSettlementNestedInput
+    adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateManyWithoutReversed_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    recorded_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentUpdateWithoutCreated_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlement_adjustmentsNestedInput
+    employee?: EmployeeUpdateOneWithoutSettlement_adjustmentsNestedInput
+    refund?: RefundUpdateOneWithoutSettlement_adjustmentsNestedInput
+    settlement?: SettlementUpdateOneWithoutAdjustmentsNestedInput
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateWithoutCreated_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    refund_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    refund_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -68908,6 +76171,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutLogo_documentInput = {
@@ -68955,6 +76220,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateManyWithoutLogo_documentInput = {
@@ -69033,6 +76300,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutCover_documentInput = {
@@ -69080,6 +76349,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateManyWithoutCover_documentInput = {
@@ -69191,6 +76462,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutPhoto_documentInput = {
@@ -69211,6 +76484,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateManyWithoutPhoto_documentInput = {
@@ -69338,6 +76613,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateWithoutOrganizationInput = {
@@ -69385,6 +76662,8 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
   export type StoreUncheckedUpdateManyWithoutOrganizationInput = {
@@ -69471,6 +76750,7 @@ export namespace Prisma {
   export type DistributionRuleCreateManyStoreInput = {
     id?: string
     name: string
+    payout_mode?: $Enums.DistributionPayoutMode
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -69582,6 +76862,36 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
+  export type SettlementCreateManyStoreInput = {
+    id?: string
+    employee_id?: string | null
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    recorded_by_user_id?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    reversed_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentCreateManyStoreInput = {
+    id?: string
+    employee_id?: string | null
+    amount: number
+    reason: string
+    refund_id?: string | null
+    status?: $Enums.SettlementAdjustmentStatus
+    settlement_id?: string | null
+    created_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type OrganizationMemberUpdateWithoutStoreInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: EnumOrganizationRoleFieldUpdateOperationsInput | $Enums.OrganizationRole
@@ -69627,6 +76937,8 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutStoreInput = {
@@ -69647,6 +76959,8 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutEmployeeNestedInput
     alerts?: AlertUncheckedUpdateManyWithoutEmployeeNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutEmployeeNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeNestedInput
   }
 
   export type EmployeeUncheckedUpdateManyWithoutStoreInput = {
@@ -69757,6 +77071,7 @@ export namespace Prisma {
   export type DistributionRuleUpdateWithoutStoreInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     recipients?: DistributionRuleRecipientUpdateManyWithoutDistribution_ruleNestedInput
@@ -69768,6 +77083,7 @@ export namespace Prisma {
   export type DistributionRuleUncheckedUpdateWithoutStoreInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     recipients?: DistributionRuleRecipientUncheckedUpdateManyWithoutDistribution_ruleNestedInput
@@ -69779,6 +77095,7 @@ export namespace Prisma {
   export type DistributionRuleUncheckedUpdateManyWithoutStoreInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -70126,6 +77443,100 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SettlementUpdateWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    employee?: EmployeeUpdateOneWithoutSettlementsNestedInput
+    recorded_by?: UserUpdateOneWithoutSettlements_recordedNestedInput
+    reversed_by?: UserUpdateOneWithoutSettlements_reversedNestedInput
+    distributions?: TipDistributionUpdateManyWithoutSettlementNestedInput
+    adjustments?: SettlementAdjustmentUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    recorded_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutSettlementNestedInput
+    adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateManyWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    recorded_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentUpdateWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    employee?: EmployeeUpdateOneWithoutSettlement_adjustmentsNestedInput
+    refund?: RefundUpdateOneWithoutSettlement_adjustmentsNestedInput
+    settlement?: SettlementUpdateOneWithoutAdjustmentsNestedInput
+    created_by?: UserUpdateOneWithoutSettlement_adjustmentsNestedInput
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    refund_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    refund_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type QrCodeEmployeeCreateManyEmployeeInput = {
     id?: string
     qr_code_id: string
@@ -70166,9 +77577,13 @@ export namespace Prisma {
     recipient_type: $Enums.DistributionRecipientType
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settlement_id?: string | null
+    settled_at?: Date | string | null
     created_at?: Date | string
   }
 
@@ -70209,6 +77624,36 @@ export namespace Prisma {
     status?: $Enums.PayoutExecutionStatus
     failure_reason?: string | null
     executed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementCreateManyEmployeeInput = {
+    id?: string
+    store_id: string
+    employee_name_snapshot: string
+    amount: number
+    currency: $Enums.Currency
+    settled_at: Date | string
+    note?: string | null
+    reference?: string | null
+    recorded_by_user_id?: string | null
+    confirmed_by_employee_at?: Date | string | null
+    reversed_at?: Date | string | null
+    reversed_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentCreateManyEmployeeInput = {
+    id?: string
+    store_id: string
+    amount: number
+    reason: string
+    refund_id?: string | null
+    status?: $Enums.SettlementAdjustmentStatus
+    settlement_id?: string | null
+    created_by_user_id?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -70328,11 +77773,15 @@ export namespace Prisma {
     recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tip?: TipUpdateOneRequiredWithoutDistributionsNestedInput
     payout?: PayoutUpdateOneWithoutDistributionsNestedInput
+    settlement?: SettlementUpdateOneWithoutDistributionsNestedInput
   }
 
   export type TipDistributionUncheckedUpdateWithoutEmployeeInput = {
@@ -70341,9 +77790,13 @@ export namespace Prisma {
     recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -70353,9 +77806,13 @@ export namespace Prisma {
     recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -70486,6 +77943,100 @@ export namespace Prisma {
     status?: EnumPayoutExecutionStatusFieldUpdateOperationsInput | $Enums.PayoutExecutionStatus
     failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
     executed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementUpdateWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlementsNestedInput
+    recorded_by?: UserUpdateOneWithoutSettlements_recordedNestedInput
+    reversed_by?: UserUpdateOneWithoutSettlements_reversedNestedInput
+    distributions?: TipDistributionUpdateManyWithoutSettlementNestedInput
+    adjustments?: SettlementAdjustmentUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    recorded_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutSettlementNestedInput
+    adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutSettlementNestedInput
+  }
+
+  export type SettlementUncheckedUpdateManyWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_name_snapshot?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    settled_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    recorded_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmed_by_employee_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reversed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentUpdateWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlement_adjustmentsNestedInput
+    refund?: RefundUpdateOneWithoutSettlement_adjustmentsNestedInput
+    settlement?: SettlementUpdateOneWithoutAdjustmentsNestedInput
+    created_by?: UserUpdateOneWithoutSettlement_adjustmentsNestedInput
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    refund_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    refund_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -70888,9 +78439,13 @@ export namespace Prisma {
     employee_id?: string | null
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settlement_id?: string | null
+    settled_at?: Date | string | null
     created_at?: Date | string
   }
 
@@ -70913,11 +78468,15 @@ export namespace Prisma {
     recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     employee?: EmployeeUpdateOneWithoutTip_distributionsNestedInput
     payout?: PayoutUpdateOneWithoutDistributionsNestedInput
+    settlement?: SettlementUpdateOneWithoutDistributionsNestedInput
   }
 
   export type TipDistributionUncheckedUpdateWithoutTipInput = {
@@ -70926,9 +78485,13 @@ export namespace Prisma {
     employee_id?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -70938,9 +78501,13 @@ export namespace Prisma {
     employee_id?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -70956,6 +78523,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     requested_by?: UserUpdateOneWithoutRefunds_requestedNestedInput
     processed_by?: UserUpdateOneWithoutRefunds_processedNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutRefundNestedInput
   }
 
   export type RefundUncheckedUpdateWithoutTipInput = {
@@ -70970,6 +78538,7 @@ export namespace Prisma {
     requires_manual_reconciliation?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutRefundNestedInput
   }
 
   export type RefundUncheckedUpdateManyWithoutTipInput = {
@@ -70993,8 +78562,12 @@ export namespace Prisma {
     employee_id?: string | null
     amount: number
     percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settlement_id?: string | null
+    settled_at?: Date | string | null
     created_at?: Date | string
   }
 
@@ -71003,11 +78576,15 @@ export namespace Prisma {
     recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tip?: TipUpdateOneRequiredWithoutDistributionsNestedInput
     employee?: EmployeeUpdateOneWithoutTip_distributionsNestedInput
+    settlement?: SettlementUpdateOneWithoutDistributionsNestedInput
   }
 
   export type TipDistributionUncheckedUpdateWithoutPayoutInput = {
@@ -71017,8 +78594,12 @@ export namespace Prisma {
     employee_id?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -71029,9 +78610,181 @@ export namespace Prisma {
     employee_id?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: IntFieldUpdateOperationsInput | number
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TipDistributionCreateManySettlementInput = {
+    id?: string
+    tip_id: string
+    recipient_type: $Enums.DistributionRecipientType
+    employee_id?: string | null
+    amount: number
+    percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
+    payout_status?: $Enums.PayoutStatus
+    payout_id?: string | null
+    paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settled_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type SettlementAdjustmentCreateManySettlementInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    amount: number
+    reason: string
+    refund_id?: string | null
+    status?: $Enums.SettlementAdjustmentStatus
+    created_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type TipDistributionUpdateWithoutSettlementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
+    amount?: IntFieldUpdateOperationsInput | number
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
+    payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
+    paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    tip?: TipUpdateOneRequiredWithoutDistributionsNestedInput
+    employee?: EmployeeUpdateOneWithoutTip_distributionsNestedInput
+    payout?: PayoutUpdateOneWithoutDistributionsNestedInput
+  }
+
+  export type TipDistributionUncheckedUpdateWithoutSettlementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tip_id?: StringFieldUpdateOperationsInput | string
+    recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
+    payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TipDistributionUncheckedUpdateManyWithoutSettlementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tip_id?: StringFieldUpdateOperationsInput | string
+    recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
+    payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentUpdateWithoutSettlementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlement_adjustmentsNestedInput
+    employee?: EmployeeUpdateOneWithoutSettlement_adjustmentsNestedInput
+    refund?: RefundUpdateOneWithoutSettlement_adjustmentsNestedInput
+    created_by?: UserUpdateOneWithoutSettlement_adjustmentsNestedInput
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateWithoutSettlementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    refund_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    created_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyWithoutSettlementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    refund_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    created_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentCreateManyRefundInput = {
+    id?: string
+    store_id: string
+    employee_id?: string | null
+    amount: number
+    reason: string
+    status?: $Enums.SettlementAdjustmentStatus
+    settlement_id?: string | null
+    created_by_user_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type SettlementAdjustmentUpdateWithoutRefundInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutSettlement_adjustmentsNestedInput
+    employee?: EmployeeUpdateOneWithoutSettlement_adjustmentsNestedInput
+    settlement?: SettlementUpdateOneWithoutAdjustmentsNestedInput
+    created_by?: UserUpdateOneWithoutSettlement_adjustmentsNestedInput
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateWithoutRefundInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettlementAdjustmentUncheckedUpdateManyWithoutRefundInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: EnumSettlementAdjustmentStatusFieldUpdateOperationsInput | $Enums.SettlementAdjustmentStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewCategoryRatingCreateManyReviewInput = {
