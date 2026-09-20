@@ -16,6 +16,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 @.cursor/rules/app-code-structure-and-best-practices.mdc
 
+## Changelog (every commit)
+
+@.cursor/rules/changelog.mdc
+
 ## Local development
 
 For local API work, use `.env.staging` (`npm run start:staging` in `api/`), not `.env.local` — `.env.local` has empty/placeholder integration keys (e.g. `RESEND_API_KEY`), so flows like email sending fail locally with it. `.env.staging` has working keys.

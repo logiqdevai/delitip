@@ -1,0 +1,111 @@
+---
+description: How work gets recorded in the admin changelog after every commit. One entry per piece of work — refinements update the existing entry instead of adding a new one.
+alwaysApply: true
+---
+
+# Changelog
+
+The admin Changelog page (`/dashboard/admin/changelog`) renders
+`app/src/config/changelog/changelog.json`. There is no database and nothing
+parses git history at build time, so that file is written by hand — by you,
+right after a commit lands. This applies to **every** commit you make in this
+repo, whether or not you got there through the `scoped-commit` skill.
+
+Skip it entirely for: merge commits, a revert of your own commit from this
+session, and the changelog bookkeeping commit itself.
+
+## One entry per piece of work
+
+Work arrives as one substantial request followed by refinements ("also add X",
+"change Y", "fix that"). The whole arc is **one** changelog entry — not one per
+commit.
+
+- **First commit of a new piece of work → append a new entry.**
+- **Every later commit that refines, extends, fixes or polishes that same work
+  → update the entry you already wrote.** Never append a second entry for it.
+
+It is a refinement when it builds on work you already logged in this session.
+It is new work when the user moves to a different feature or area of the app.
+When it is genuinely unclear, **prefer updating**: one accurate entry per
+feature reads better than three entries narrating the same feature in stages.
+
+When updating an existing entry:
+
+- keep `commit` pointing at the **first** commit of that work — it is the
+  entry's stable anchor, and rewriting it breaks the link an admin already saw
+- set `date` to the latest commit's date
+- rewrite `title` and `description` so they describe the finished thing, not
+  its first draft — the entry is a record of what shipped, not of what you did
+  first
+- refresh `sessionMood` / `sessionNote` to cover the session so far
+- commit the file alone with `Update the <short title> changelog entry` and a
+  `Changelog: skip` trailer
+
+## The entry
+
+Append one object to the **end** of the array. Never reorder, reformat, or
+rewrite entries other than the one you are updating. Keep the file's 2-space
+indent and its trailing newline.
+
+```json
+{
+  "commit": "<%h>",
+  "date": "<%ad>",
+  "type": "FEATURE",
+  "title": "<the commit subject, verbatim>",
+  "description": "One to three plain sentences an admin can read: what changed and why it matters. Not the raw commit body.",
+  "author": "<%an>",
+  "agent": "Claude Opus 5 (1M context)",
+  "sessionMood": "FOCUSED",
+  "sessionNote": "One factual sentence about how the session ran."
+}
+```
+
+`type` is one of:
+
+- `FEATURE` — a new user-visible capability
+- `IMPROVEMENT` — existing behaviour made better (UX, copy, performance)
+- `FIX` — a bug fix
+- `CHORE` — deps, tooling, docs, internal refactor with no user-visible effect
+
+`agent` is your own model name, matching the `Co-Authored-By` trailer on the
+commit (`null` when there is none).
+
+`sessionMood` is one of `HAPPY` (upbeat, quick approvals), `FOCUSED` (knew
+exactly what they wanted), `RUSHED` (short messages, wanted it fast),
+`EXPLANATORY` (gave lots of context up front), `EXPLORATORY` (figured it out as
+we went), `FRUSTRATED` (repeated corrections, or things kept going wrong), or
+`BLUNT` (curt or harsh tone, little context). `sessionNote` is one sentence
+about it:
+
+- Judge only from what is observable in the session — message length and pace,
+  how much context was given, re-dos and corrections, stated approval or
+  annoyance. Not inferred feelings, not traits, not psychoanalysis.
+- Keep it factual and specific ("short, direct asks, no back-and-forth"), never
+  an insult and never a verdict on the person.
+- Describe the session, not the human: "the session ran hot after the third
+  failed attempt", not "he was angry".
+- Do not quote anything sensitive the user pasted.
+- **Omit both fields** when the session is too short or too mixed to call. They
+  are optional, and a wrong label is worse than none.
+
+## Mechanics
+
+A commit cannot contain its own hash, and amending would change it, so the
+entry always lands in a second, tiny commit:
+
+1. Commit the change itself.
+2. Read it: `git log -1 --format='%h|%ad|%an' --date=short`.
+3. Append the new entry, or update the one you wrote earlier in this session.
+4. `git add app/src/config/changelog/changelog.json` and commit that file alone,
+   with a `Changelog: skip` trailer and **no** `Co-Authored-By` trailer —
+   entries are selected by that co-author trailer, so leaving it off keeps the
+   bookkeeping commit out of the changelog it just wrote.
+
+## Rules
+
+- If `changelog.json` has uncommitted edits you did not make, stop and flag it
+  instead of writing on top of someone else's work.
+- Never use `app/scripts/backfill-changelog.mjs` to add or update an entry. It
+  rebuilds the whole file from git history and drops hand-written descriptions
+  and every session mood/note; it is a one-off repair tool.
