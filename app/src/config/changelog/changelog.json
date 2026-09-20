@@ -556,5 +556,14 @@
     "description": "A failed confirm left the dialog open with no explanation while the error toast rendered behind the dialog overlay — deleting a distribution rule assigned to a QR code gave no visible reason.  ConfirmationDialog now keeps the thrown message and renders it as an inline destructive alert, cleared on retry and on close.",
     "author": "Petros Rodinos",
     "agent": "Claude Opus 5 (1M context)"
+  },
+  {
+    "commit": "b3fd53e",
+    "date": "2026-09-20",
+    "type": "FEATURE",
+    "title": "Add an admin-only changelog page fed by the scoped-commit skill",
+    "description": "Admins and super admins can now open a Changelog page listing everything that shipped, newest first, with a feature/improvement/fix tag, the description, the author and AI agent, and a link to the commit. The /scoped-commit skill writes each entry as it commits, so the page stays current without a database.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Opus 5 (1M context)"
   }
 ]
