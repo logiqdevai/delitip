@@ -231,7 +231,7 @@ export const TippingConfigSettingsForm: FC = () => {
             </p>
           </div>
           <Link
-            href={Routes.dashboard.distribution}
+            href={Routes.dashboard.accessDistribution}
             className={cn(
               buttonVariants({ variant: "secondary", size: "default" }),
               "w-full justify-center text-brand-700 md:h-auto md:w-auto md:bg-transparent md:px-0 md:py-0 md:text-[15px] md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",

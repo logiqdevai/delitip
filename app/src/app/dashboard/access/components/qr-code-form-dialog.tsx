@@ -512,8 +512,8 @@ export const QrCodeFormDialog: FC<QrCodeFormDialogProps> = ({
               )}
             />
             <p className="text-[11px] text-zinc-400">
-              Store default follows the rule set on Distribution. If none is
-              set, tips are recorded without a split.
+              Store default follows the rule set on the Tip distribution tab.
+              If none is set, tips are recorded without a split.
             </p>
             <Button
               type="button"

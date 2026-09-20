@@ -125,7 +125,7 @@ export const OverviewPageContent: FC = () => {
               Add Employee
             </Link>
             <Link
-              href={Routes.dashboard.distribution}
+              href={Routes.dashboard.accessDistribution}
               className={cn(
                 buttonVariants({ variant: "default", size: "default" }),
                 "w-full justify-center gap-2 sm:w-auto",

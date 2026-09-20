@@ -1,13 +1,11 @@
 import { type FC } from "react";
-import { RoleGuard } from "@/components/auth/role-guard";
-import { DistributionPageContent } from "./components/distribution-page-content";
+import { redirect } from "next/navigation";
+import { Routes } from "@/routes/routes";
 
+// Tip distribution now lives as a tab on the QR codes page — this route stays
+// only so older links and bookmarks keep working.
 const DistributionPage: FC = () => {
-  return (
-    <RoleGuard deniedRoles={["ACCOUNTANT"]}>
-      <DistributionPageContent />
-    </RoleGuard>
-  );
+  redirect(Routes.dashboard.accessDistribution);
 };
 
 export default DistributionPage;

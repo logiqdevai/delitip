@@ -4,7 +4,6 @@ import { type FC } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  ArrowLeftRight,
   BarChart3,
   Banknote,
   Bell,
@@ -115,13 +114,6 @@ const navItems = [
     label: "Reviews",
     icon: Star,
     match: (path: string) => path.startsWith(Routes.dashboard.reviews),
-  },
-  {
-    href: Routes.dashboard.distribution,
-    label: "Tip Distribution",
-    icon: ArrowLeftRight,
-    hideForAccountant: true,
-    match: (path: string) => path.startsWith(Routes.dashboard.distribution),
   },
   {
     href: Routes.dashboard.analytics.overview,

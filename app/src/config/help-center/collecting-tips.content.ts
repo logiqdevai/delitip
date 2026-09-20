@@ -76,11 +76,16 @@ export const CollectingTipsHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "From Dashboard → Distribution, create a named rule with one or more recipients - each recipient is either a specific employee or the business/house account - and a percentage for each. The percentages across a rule must add up to 100%.",
+            "From Dashboard → QR Codes → Tip distribution, create a named rule with one or more recipients - each recipient is either a specific employee or the business/house account - and a percentage for each. The percentages across a rule must add up to 100%.",
             "One rule can be marked as the store's default, used by any QR code that doesn't specify its own override. A rule that's currently the default, in use by a QR code, or already referenced by past tips can't be deleted.",
             "Changing a distribution rule only affects future tips - it never retroactively changes how an already-completed tip was split.",
           ],
-          links: [{ label: "Dashboard → Distribution", href: Routes.dashboard.distribution }],
+          links: [
+            {
+              label: "Dashboard → QR Codes → Tip distribution",
+              href: Routes.dashboard.accessDistribution,
+            },
+          ],
         },
       ],
       related: [

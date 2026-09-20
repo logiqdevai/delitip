@@ -1,3 +1,12 @@
+export const ACCESS_TAB_PARAM = "tab";
+
+export const AccessTabs = {
+  qrCodes: "qr-codes",
+  distribution: "distribution",
+} as const;
+
+export type AccessTab = (typeof AccessTabs)[keyof typeof AccessTabs];
+
 export const Routes = {
   home: "/",
   contact: "/contact",
@@ -29,7 +38,6 @@ export const Routes = {
     tips: "/dashboard/tips",
     tipDetail: (tipId: string) => `/dashboard/tips/${tipId}` as const,
     reviews: "/dashboard/reviews",
-    distribution: "/dashboard/distribution",
     analytics: {
       root: "/dashboard/analytics",
       overview: "/dashboard/analytics/overview",
@@ -39,6 +47,8 @@ export const Routes = {
       insights: "/dashboard/analytics/insights",
     },
     access: "/dashboard/access",
+    accessDistribution:
+      `/dashboard/access?${ACCESS_TAB_PARAM}=${AccessTabs.distribution}` as const,
     alerts: "/dashboard/alerts",
     payments: "/dashboard/payments",
     payouts: "/dashboard/payouts",

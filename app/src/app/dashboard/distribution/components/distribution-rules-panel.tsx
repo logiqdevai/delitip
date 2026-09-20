@@ -4,7 +4,6 @@ import { type FC, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Plus, Scale } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   ConfirmationDialog,
@@ -18,7 +17,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { DistributionRuleCard } from "@/app/dashboard/distribution/components/distribution-rule-card";
 import { DistributionRuleFormDialog } from "@/app/dashboard/distribution/components/distribution-rule-form-dialog";
 import { DistributionRulesSkeleton } from "@/app/dashboard/distribution/components/distribution-rules-skeleton";
@@ -29,15 +27,21 @@ import {
 } from "@/features/distribution/hooks/use-distribution";
 import type { DistributionRule } from "@/features/distribution/interfaces/distribution.interfaces";
 import { formatRecipientSummary } from "@/features/distribution/utils/distribution-summary.utils";
-import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 
-export const DistributionPageContent: FC = () => {
-  const { storeId, store, isPending: workspacePending, isReady } =
-    useWorkspace();
-  const rulesQuery = useDistributionRules(storeId ?? "");
-  const setDefault = useSetDefaultDistributionRule(storeId ?? "");
+interface DistributionRulesPanelProps {
+  storeId: string;
+  store: Store;
+}
+
+export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
+  storeId,
+  store,
+}) => {
+  const rulesQuery = useDistributionRules(storeId);
+  const setDefault = useSetDefaultDistributionRule(storeId);
   const deleteRule = useDeleteDistributionRule({ showErrorToast: false });
   const deleteConfirm = useConfirmationDialog();
 
@@ -66,60 +70,37 @@ export const DistributionPageContent: FC = () => {
     deleteConfirm.openDialog();
   };
 
-  if (workspacePending) {
-    return (
-      <div className="space-y-6">
-        <DetailSkeleton fieldCount={2} />
-        <DistributionRulesSkeleton />
-      </div>
-    );
-  }
-
-  if (!isReady || !storeId) {
-    return (
-      <Empty className="border border-dashed border-zinc-200 bg-white py-16">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <Scale />
-          </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
-          <EmptyDescription>
-            Finish business setup before configuring tip distribution.
-          </EmptyDescription>
-        </EmptyHeader>
-      </Empty>
-    );
-  }
-
   const rules = rulesQuery.data ?? [];
-  const defaultRuleId = store?.default_distribution_rule_id ?? null;
+  const defaultRuleId = store.default_distribution_rule_id ?? null;
   const defaultRule = rules.find((rule) => rule.id === defaultRuleId) ?? null;
 
   return (
-    <>
-      <DashboardPageHeader
-        title="Tip Distribution"
-        description={
-          store
-            ? `How tips split for ${store.name}. Changes apply to future tips only.`
-            : "Transparent payout configuration and automated share allocation."
-        }
-        actions={
-          <Button
-            type="button"
-            className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal shadow-sm hover:bg-brand-700"
-            onClick={openCreate}
-          >
-            <Plus data-icon="inline-start" className="size-3.5" />
-            Create rule
-          </Button>
-        }
-      />
+    <div className="space-y-6">
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        <div>
+          <h2 className="text-sm font-bold text-ink-charcoal">
+            Distribution rules
+          </h2>
+          <p className="mt-0.5 text-xs text-zinc-500">
+            How tips split for {store.name}. Changes apply to future tips only.
+          </p>
+        </div>
+        <Button
+          type="button"
+          className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal shadow-sm hover:bg-brand-700"
+          onClick={openCreate}
+        >
+          <Plus data-icon="inline-start" className="size-3.5" />
+          Create rule
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-1">
           <div className="flex h-5 items-center">
-            <h2 className="text-sm font-bold text-ink-charcoal">Store default</h2>
+            <h3 className="text-sm font-bold text-ink-charcoal">
+              Store default
+            </h3>
           </div>
           <div className="space-y-2 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
             {rulesQuery.isPending ? (
@@ -162,7 +143,9 @@ export const DistributionPageContent: FC = () => {
 
         <div className="flex flex-col gap-4 lg:col-span-2">
           <div className="flex h-5 items-center justify-between gap-2">
-            <h2 className="text-sm font-bold text-ink-charcoal">Rules library</h2>
+            <h3 className="text-sm font-bold text-ink-charcoal">
+              Rules library
+            </h3>
             <span className="text-xs text-zinc-400">
               {rules.length} {rules.length === 1 ? "rule" : "rules"}
             </span>
@@ -174,9 +157,7 @@ export const DistributionPageContent: FC = () => {
             <Empty className="border border-dashed border-zinc-200 bg-white py-12">
               <EmptyHeader>
                 <EmptyTitle>Could not load rules</EmptyTitle>
-                <EmptyDescription>
-                  {rulesQuery.error.message}
-                </EmptyDescription>
+                <EmptyDescription>{rulesQuery.error.message}</EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
                 <Button
@@ -258,6 +239,6 @@ export const DistributionPageContent: FC = () => {
           setPendingDelete(null);
         }}
       />
-    </>
+    </div>
   );
 };

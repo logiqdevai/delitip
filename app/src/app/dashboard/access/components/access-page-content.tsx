@@ -1,41 +1,49 @@
 "use client";
 
-import { type FC, useState } from "react";
-import { Plus, QrCode } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { type FC, Suspense } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { QrCode, Scale } from "lucide-react";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
-import { QrCodeCard } from "@/app/dashboard/access/components/qr-code-card";
 import { QrCodeCardsSkeleton } from "@/app/dashboard/access/components/qr-code-cards-skeleton";
-import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
-import { SpotsPanel } from "@/app/dashboard/access/components/spots-panel";
-import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
-import type { QrCode as QrCodeModel } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
+import { QrCodesPanel } from "@/app/dashboard/access/components/qr-codes-panel";
+import { DistributionRulesPanel } from "@/app/dashboard/distribution/components/distribution-rules-panel";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { ACCESS_TAB_PARAM, AccessTabs, type AccessTab } from "@/routes/routes";
 
-export const AccessPageContent: FC = () => {
+const isAccessTab = (value: unknown): value is AccessTab =>
+  value === AccessTabs.qrCodes || value === AccessTabs.distribution;
+
+const AccessPageInner: FC = () => {
   const { storeId, store, isPending: workspacePending, isReady } =
     useWorkspace();
-  const qrCodesQuery = useQrCodes(storeId ?? "", { limit: 100 });
-  const [formOpen, setFormOpen] = useState(false);
-  const [editingQr, setEditingQr] = useState<QrCodeModel | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const openCreate = () => {
-    setEditingQr(null);
-    setFormOpen(true);
-  };
+  const tabParam = searchParams.get(ACCESS_TAB_PARAM);
+  const activeTab = isAccessTab(tabParam) ? tabParam : AccessTabs.qrCodes;
 
-  const openEdit = (qr: QrCodeModel) => {
-    setEditingQr(qr);
-    setFormOpen(true);
+  const handleTabChange = (value: unknown) => {
+    if (!isAccessTab(value)) return;
+    const params = new URLSearchParams(searchParams);
+    if (value === AccessTabs.qrCodes) {
+      params.delete(ACCESS_TAB_PARAM);
+    } else {
+      params.set(ACCESS_TAB_PARAM, value);
+    }
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, {
+      scroll: false,
+    });
   };
 
   if (workspacePending) {
@@ -63,83 +71,47 @@ export const AccessPageContent: FC = () => {
     );
   }
 
-  const qrCodes = qrCodesQuery.data?.data ?? [];
-
   return (
     <>
       <DashboardPageHeader
-        title="Customer Access & QR Kits"
-        description={`Generate tip links and print QR codes for ${store.name}.`}
-        actions={
-          <Button
-            type="button"
-            className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal shadow-sm hover:bg-brand-700"
-            onClick={openCreate}
-          >
-            <Plus data-icon="inline-start" className="size-3.5" />
-            Create QR code
-          </Button>
-        }
+        title="QR Codes"
+        description={`Customer access and tip splitting for ${store.name}.`}
       />
 
-      {qrCodesQuery.isPending ? (
-        <QrCodeCardsSkeleton />
-      ) : qrCodesQuery.isError ? (
-        <Empty className="border border-dashed border-zinc-200 bg-white py-16">
-          <EmptyHeader>
-            <EmptyTitle>Could not load QR codes</EmptyTitle>
-            <EmptyDescription>{qrCodesQuery.error.message}</EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => void qrCodesQuery.refetch()}
-            >
-              Try again
-            </Button>
-          </EmptyContent>
-        </Empty>
-      ) : qrCodes.length === 0 ? (
-        <Empty className="border border-dashed border-zinc-200 bg-white py-16">
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <QrCode />
-            </EmptyMedia>
-            <EmptyTitle>No QR codes yet</EmptyTitle>
-            <EmptyDescription>
-              Create your first table or counter QR so customers can tip and
-              leave feedback.
-            </EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent>
-            <Button
-              type="button"
-              className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
-              onClick={openCreate}
-            >
-              <Plus data-icon="inline-start" className="size-3.5" />
-              Create QR code
-            </Button>
-          </EmptyContent>
-        </Empty>
-      ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {qrCodes.map((qr) => (
-            <QrCodeCard key={qr.id} qr={qr} store={store} onEdit={openEdit} />
-          ))}
-        </div>
-      )}
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
+        <TabsList variant="line">
+          <TabsTrigger value={AccessTabs.qrCodes}>
+            <QrCode data-icon="inline-start" />
+            QR codes
+          </TabsTrigger>
+          <TabsTrigger value={AccessTabs.distribution}>
+            <Scale data-icon="inline-start" />
+            Tip distribution
+          </TabsTrigger>
+        </TabsList>
 
-      <SpotsPanel storeId={storeId} />
-
-      <QrCodeFormDialog
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        storeId={storeId}
-        storeSlug={store.slug}
-        qr={editingQr}
-      />
+        <TabsContent value={AccessTabs.qrCodes} className="mt-6">
+          <QrCodesPanel storeId={storeId} store={store} />
+        </TabsContent>
+        <TabsContent value={AccessTabs.distribution} className="mt-6">
+          <DistributionRulesPanel storeId={storeId} store={store} />
+        </TabsContent>
+      </Tabs>
     </>
+  );
+};
+
+export const AccessPageContent: FC = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="space-y-6">
+          <DetailSkeleton fieldCount={2} />
+          <QrCodeCardsSkeleton />
+        </div>
+      }
+    >
+      <AccessPageInner />
+    </Suspense>
   );
 };
