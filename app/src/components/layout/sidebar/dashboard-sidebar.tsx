@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
-  Banknote,
   Bell,
   ChevronDown,
   LayoutGrid,
@@ -95,12 +94,6 @@ const navItems = [
     label: "Tips",
     icon: Wallet,
     match: (path: string) => path.startsWith(Routes.dashboard.tips),
-  },
-  {
-    href: Routes.dashboard.payouts,
-    label: "Payouts",
-    icon: Banknote,
-    match: (path: string) => path.startsWith(Routes.dashboard.payouts),
   },
   {
     href: Routes.dashboard.access,

@@ -20,10 +20,8 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { useStorePayouts } from "@/features/payouts/hooks/use-payouts";
 import type { PayoutExecutionStatus } from "@/features/payouts/interfaces/payouts.interfaces";
-import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { getPayoutExecutionStatusLabel } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
@@ -43,38 +41,26 @@ const formatDateTime = (value?: string | null) => {
   });
 };
 
-export const PayoutsPageContent: FC = () => {
-  const { storeId, isPending: workspacePending, isReady } = useWorkspace();
-  const payoutsQuery = useStorePayouts(storeId ?? "", { limit: 50 });
+interface PayoutsPageContentProps {
+  storeId: string;
+}
 
-  if (workspacePending) {
-    return <TableSkeleton columns={5} />;
-  }
-
-  if (!isReady || !storeId) {
-    return (
-      <Empty className="border border-dashed border-zinc-200 bg-white py-16">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <Banknote />
-          </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
-          <EmptyDescription>
-            Finish business setup before viewing payouts.
-          </EmptyDescription>
-        </EmptyHeader>
-      </Empty>
-    );
-  }
+// Rendered as the Payouts tab of the Tips page, which owns the page header
+// and the "no store selected" guard.
+export const PayoutsPageContent: FC<PayoutsPageContentProps> = ({ storeId }) => {
+  const payoutsQuery = useStorePayouts(storeId, { limit: 50 });
 
   const payouts = payoutsQuery.data?.data ?? [];
 
   return (
-    <>
-      <DashboardPageHeader
-        title="Payouts"
-        description="History of bank transfers executed for your Store and its employees. Trigger a new payout from the Payments page."
-      />
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-sm font-bold text-ink-charcoal">Payout history</h2>
+        <p className="mt-0.5 text-xs text-zinc-500">
+          Bank transfers executed for your store and its employees. Trigger a
+          new payout from the Payments tab.
+        </p>
+      </div>
 
       {payoutsQuery.isPending ? (
         <TableSkeleton columns={5} />
@@ -102,7 +88,7 @@ export const PayoutsPageContent: FC = () => {
             </EmptyMedia>
             <EmptyTitle>No payouts yet</EmptyTitle>
             <EmptyDescription>
-              Once you run a payout from the Payments page, executed bank
+              Once you run a payout from the Payments tab, executed bank
               transfers will show up here.
             </EmptyDescription>
           </EmptyHeader>
@@ -167,6 +153,6 @@ export const PayoutsPageContent: FC = () => {
           </Table>
         </div>
       )}
-    </>
+    </div>
   );
 };

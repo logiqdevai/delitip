@@ -2,7 +2,7 @@
 
 import { type FC, Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Receipt, Wallet } from "lucide-react";
+import { Banknote, Receipt, Wallet } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
   Empty,
@@ -15,11 +15,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { TipsLedgerPanel } from "@/app/dashboard/tips/components/tips-ledger-panel";
 import { PaymentsPageContent } from "@/app/dashboard/payments/components/payments-page-content";
+import { PayoutsPageContent } from "@/app/dashboard/payouts/components/payouts-page-content";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { DASHBOARD_TAB_PARAM, TipsTabs, type TipsTab } from "@/routes/routes";
 
 const isTipsTab = (value: unknown): value is TipsTab =>
-  value === TipsTabs.ledger || value === TipsTabs.payments;
+  value === TipsTabs.ledger ||
+  value === TipsTabs.payments ||
+  value === TipsTabs.payouts;
 
 const TipsPageInner: FC = () => {
   const { storeId, store, isPending: workspacePending, isReady } =
@@ -69,7 +72,7 @@ const TipsPageInner: FC = () => {
     <>
       <DashboardPageHeader
         title="Tips"
-        description={`Tip ledger and payments for ${store.name}.`}
+        description={`Tip ledger, payments, and payouts for ${store.name}.`}
       />
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
@@ -82,6 +85,10 @@ const TipsPageInner: FC = () => {
             <Wallet data-icon="inline-start" />
             Payments
           </TabsTrigger>
+          <TabsTrigger value={TipsTabs.payouts}>
+            <Banknote data-icon="inline-start" />
+            Payouts
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value={TipsTabs.ledger} className="mt-6">
@@ -89,6 +96,9 @@ const TipsPageInner: FC = () => {
         </TabsContent>
         <TabsContent value={TipsTabs.payments} className="mt-6">
           <PaymentsPageContent storeId={storeId} store={store} />
+        </TabsContent>
+        <TabsContent value={TipsTabs.payouts} className="mt-6">
+          <PayoutsPageContent storeId={storeId} />
         </TabsContent>
       </Tabs>
     </>

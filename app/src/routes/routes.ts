@@ -10,6 +10,7 @@ export type AccessTab = (typeof AccessTabs)[keyof typeof AccessTabs];
 export const TipsTabs = {
   ledger: "ledger",
   payments: "payments",
+  payouts: "payouts",
 } as const;
 
 export type TipsTab = (typeof TipsTabs)[keyof typeof TipsTabs];
@@ -45,6 +46,8 @@ export const Routes = {
     tips: "/dashboard/tips",
     tipsPayments:
       `/dashboard/tips?${DASHBOARD_TAB_PARAM}=${TipsTabs.payments}` as const,
+    tipsPayouts:
+      `/dashboard/tips?${DASHBOARD_TAB_PARAM}=${TipsTabs.payouts}` as const,
     tipDetail: (tipId: string) => `/dashboard/tips/${tipId}` as const,
     reviews: "/dashboard/reviews",
     analytics: {
@@ -59,7 +62,6 @@ export const Routes = {
     accessDistribution:
       `/dashboard/access?${DASHBOARD_TAB_PARAM}=${AccessTabs.distribution}` as const,
     alerts: "/dashboard/alerts",
-    payouts: "/dashboard/payouts",
     account: "/dashboard/account",
     admin: {
       root: "/dashboard/admin",
