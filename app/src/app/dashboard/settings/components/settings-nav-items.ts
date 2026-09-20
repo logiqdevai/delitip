@@ -4,7 +4,6 @@ import {
   CreditCard,
   FileText,
   Globe,
-  Link2,
   MessageSquare,
   Palette,
   Users2,
@@ -50,16 +49,10 @@ export const settingsNavItems: SettingsNavItem[] = [
     icon: Globe,
   },
   {
-    href: Routes.dashboard.settings.reviewRedirect,
-    label: "Review Redirect",
-    description:
-      "Customers who rate you at or above your threshold are prompted to share their review publicly.",
-    icon: Link2,
-  },
-  {
     href: Routes.dashboard.settings.reviewsFeedback,
     label: "Reviews",
-    description: "What customers see on the review step after tipping.",
+    description:
+      "What customers see on the review step after tipping, and where high ratings are sent.",
     icon: MessageSquare,
   },
   {

@@ -78,7 +78,6 @@ export const Routes = {
       branding: "/dashboard/settings/branding",
       tipping: "/dashboard/settings/tipping",
       localization: "/dashboard/settings/localization",
-      reviewRedirect: "/dashboard/settings/review-redirect",
       reviewsFeedback: "/dashboard/settings/reviews-feedback",
       alerts: "/dashboard/settings/alerts",
       members: "/dashboard/settings/members",

@@ -32,10 +32,15 @@ export const ReviewsAndFeedbackHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "Settings → Review Redirect lets you set a star-rating threshold - for example, 4 stars and up. Customers who rate at or above that threshold are prompted to share feedback via an external link (such as your Google Business Profile).",
+            "Settings → Reviews lets you set a star-rating threshold - for example, 4 stars and up. Customers who rate at or above that threshold are prompted to share feedback via an external link (such as your Google Business Profile).",
             "Ratings below the threshold stay in your Dashboard only - no external redirect is offered.",
           ],
-          links: [{ label: "Settings → Review Redirect", href: Routes.dashboard.settings.reviewRedirect }],
+          links: [
+            {
+              label: "Settings → Reviews",
+              href: Routes.dashboard.settings.reviewsFeedback,
+            },
+          ],
         },
       ],
       related: [{ category: "collecting-tips", article: "the-customer-tip-page-walkthrough" }],
