@@ -573,11 +573,11 @@
     "date": "2026-09-20",
     "type": "IMPROVEMENT",
     "title": "Consolidate dashboard pages into tabs and tidy settings",
-    "description": "Four sidebar entries became two tabbed pages: tip distribution now sits beside QR codes on the QR Codes page, and payments beside the tip ledger on the Tips page, each opening on the primary view with the second reachable at ?tab=. The old /dashboard/distribution and /dashboard/payments addresses redirect to those tabs, so existing links and bookmarks keep working. In settings, the Review Redirect step folded into the Reviews page and the read-only VAT rate moved from Business Profile to Tax Details, and the sidebar now runs Payouts, QR Codes, Analytics, Reviews, Alerts, Settings.",
+    "description": "Five sidebar entries became two tabbed pages: tip distribution now sits beside QR codes on the QR Codes page, and payments and payout history beside the tip ledger on the Tips page, each opening on the primary view with the others reachable at ?tab=. The old /dashboard/distribution, /dashboard/payments and /dashboard/payouts addresses redirect to those tabs, so existing links and bookmarks keep working. In settings, the Review Redirect step folded into the Reviews page and the read-only VAT rate moved from Business Profile to Tax Details, leaving a sidebar of Overview, Employees, Tips, QR Codes, Analytics, Reviews, Alerts and Settings.",
     "author": "Petros Rodinos",
     "agent": "Claude Opus 5 (1M context)",
     "sessionMood": "FOCUSED",
-    "sessionNote": "A run of short, specific asks, each naming the page to merge and which view should open first; one layout question answered mid-session, no corrections."
+    "sessionNote": "A steady run of short, specific asks, each naming the page to merge and which view should open first; one layout question answered mid-session, no corrections."
   },
   {
     "commit": "caadb81",
