@@ -17,6 +17,7 @@ export const EmployeePortalHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "Signing in with staff access takes you to your own Earnings & Tips page - a personal dashboard showing your pending cash-out balance, this month's tips, today's tip count and list, your average customer rating, a 7-day earnings trend chart, and recent feedback left for you.",
+            "Each tip in today's list says how you'll be paid for it: \"Paid to your bank\" means it's transferred to the payout account you connected, and \"Paid by your Store\" means your Store collects it and hands you your share directly. Which one applies is set by your Store per QR code, so you may well see both.",
           ],
           links: [{ label: "Employee Portal", href: Routes.employee.root }],
         },
@@ -36,7 +37,38 @@ export const EmployeePortalHelpCategory: HelpCategory = {
           links: [{ label: "Employee Portal", href: Routes.employee.root }],
         },
       ],
-      related: [{ category: "money-and-payouts", article: "employee-cash-out" }],
+      related: [{ category: "employee-portal", article: "tips-your-store-pays-you-directly" }],
+    },
+    {
+      slug: "tips-your-store-pays-you-directly",
+      title: "Tips your Store pays you directly",
+      summary:
+        "Some tips go to your Store first, which then pays you your share - your portal shows what's owed and lets you confirm you got it.",
+      sections: [
+        {
+          paragraphs: [
+            "Your Store can set up a QR code so that tips go to its own account rather than straight to yours, and then pay you your share itself - in cash, by transfer, or through payroll. Your share is worked out exactly the same way; the only difference is who hands it to you.",
+            "When that applies to you, a \"Paid to you by your Store\" card appears on your Earnings & Tips page with two figures: what your Store still owes you, and what you've already received.",
+          ],
+          links: [{ label: "Employee Portal", href: Routes.employee.root }],
+        },
+        {
+          heading: "Confirming you were paid",
+          paragraphs: [
+            "Every payment your Store records shows up in that card with its date and any note they added. Tap \"I received this\" to confirm it - your Store then sees the payment as confirmed, so neither of you has to rely on memory later.",
+            "Only you can confirm a payment; your Store can't do it for you. If something looks wrong, raise it with your Store before confirming - a payment they recorded by mistake can be reversed, which puts those tips back to owed.",
+          ],
+        },
+        {
+          paragraphs: [
+            "You can still connect a personal payout account while this is happening. The route is set per QR code, so tips paid straight to your bank and tips paid to you by your Store can both appear in the same week.",
+          ],
+        },
+      ],
+      related: [
+        { category: "employee-portal", article: "viewing-your-earnings-and-tips" },
+        { category: "money-and-payouts", article: "paying-your-staff-yourself" },
+      ],
     },
     {
       slug: "your-reviews-and-badges",

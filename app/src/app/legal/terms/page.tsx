@@ -15,7 +15,7 @@ const TermsPage: FC = () => {
     <LegalDocument
       title="Terms of Service"
       description="These terms describe how businesses, staff, and guests may use delitip and the Delitip platform."
-      lastUpdated="August 30, 2026"
+      lastUpdated="September 20, 2026"
       alternateHref={Routes.legal.privacy}
       alternateLabel="Privacy Policy"
       sections={[
@@ -150,6 +150,33 @@ const TermsPage: FC = () => {
                 caused by a payment provider, incorrect payout details you
                 provided, or your bank's own processing times.
               </p>
+              <p>
+                <strong>Where a tip is paid out.</strong> Each distribution
+                rule you create decides not only how a tip is split, but
+                where the money is sent. Under a rule that pays recipients
+                directly, each recipient's share is paid out to that
+                recipient's own payout account. Under a rule set to send
+                everything to the business, the entire tip - including the
+                portion recorded as earned by an employee - is paid out to
+                the business's payout account, and the business is then
+                responsible for passing each employee their recorded share
+                by whatever means it chooses. Delitip records what was
+                earned and what you tell us you have handed over; we do not
+                hold, transfer, or guarantee that payment, and we are not a
+                party to it.
+              </p>
+              <p>
+                <strong>Your obligations to your staff.</strong> Collecting
+                tips into your own account does not make Delitip your
+                staff's employer, paymaster, or escrow agent. You remain
+                solely responsible for paying your staff what they are
+                owed, and for the tax, payroll, social-contribution, and
+                employment-law consequences of collecting their tips
+                yourself - which may differ from the treatment of a tip paid
+                directly to an employee. The balances and settlement records
+                in your dashboard are a bookkeeping aid, not tax, accounting,
+                or legal advice.
+              </p>
             </>
           ),
         },
@@ -184,6 +211,15 @@ const TermsPage: FC = () => {
                 experience - not fabricated, purchased, posted on behalf of
                 someone else without their knowledge, defamatory, or
                 otherwise unlawful.
+              </p>
+              <p>
+                Depending on how the business has set up its tip
+                distribution, a tip you leave for a named employee may be
+                paid out to that employee directly, or to the business,
+                which is then responsible for passing the employee's share
+                on to them. Either way, the amount attributed to that
+                employee is recorded, and Delitip is not a party to any
+                payment a business makes to its own staff.
               </p>
               <p>
                 We and the business may remove or decline to display

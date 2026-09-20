@@ -14,7 +14,7 @@ const PrivacyPage: FC = () => {
     <LegalDocument
       title="Privacy Policy"
       description="This policy explains how Delitip collects, uses, shares, and protects information when businesses, staff, and guests use delitip and the Delitip platform."
-      lastUpdated="August 30, 2026"
+      lastUpdated="September 20, 2026"
       alternateHref={Routes.legal.terms}
       alternateLabel="Terms of Service"
       sections={[
@@ -86,6 +86,19 @@ const PrivacyPage: FC = () => {
                 processor, Stripe. Delitip does not receive or store full
                 card numbers; we store only a payment reference and status
                 supplied by Stripe.
+              </p>
+              <p>
+                <strong>Tip settlement records.</strong> Where a business
+                collects tips into its own account and pays its staff
+                itself, we record the amount each employee earned, the
+                amounts the business marks as handed over, the date it
+                gives, any note or reference it adds, which user in the
+                business recorded it, and whether the employee has confirmed
+                receipt. Each record also stores the employee's name as it
+                stood at the time, so the history stays readable if their
+                profile is later removed (Section 8). These records describe
+                a payment between a business and its own staff; Delitip
+                does not process that payment.
               </p>
               <p>
                 <strong>Communications.</strong> If you contact us, or if a
@@ -298,6 +311,14 @@ const PrivacyPage: FC = () => {
                   deactivated.
                 </li>
                 <li>
+                  Tip settlement records - what a business collected on an
+                  employee's behalf and what it recorded as handed over -
+                  are retained alongside the tip and payment records above,
+                  and keep the employee's name as it stood when the record
+                  was made, so that a history of what was owed and paid
+                  remains meaningful after a profile is deactivated.
+                </li>
+                <li>
                   Reviews and feedback are retained to preserve a business's
                   historical analytics and performance record, unless a
                   customer who provided identifying information requests
@@ -439,7 +460,11 @@ const PrivacyPage: FC = () => {
               to access, correct, or request removal of your profile
               information, you can ask your employer, or contact us
               directly at the address in Section 16 and we will work with
-              the relevant business to resolve your request.
+              the relevant business to resolve your request. Records of tips
+              attributed to you and of payments your employer recorded
+              making to you are financial records rather than profile
+              information, and are kept under Section 8 even after a profile
+              is removed.
             </p>
           ),
         },

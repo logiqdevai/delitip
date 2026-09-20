@@ -72,7 +72,7 @@ export const CollectingTipsHelpCategory: HelpCategory = {
       slug: "setting-up-distribution-rules",
       title: "Setting up distribution rules",
       summary:
-        "Distribution rules define named percentage splits between employees and the business - they must always total 100%.",
+        "Distribution rules define named percentage splits between employees and the business - they must always total 100% - and decide who pays your staff.",
       sections: [
         {
           paragraphs: [
@@ -87,8 +87,25 @@ export const CollectingTipsHelpCategory: HelpCategory = {
             },
           ],
         },
+        {
+          heading: "Who pays your employees",
+          paragraphs: [
+            "Every rule also chooses where the money actually goes. The percentages mean the same thing either way - they decide what each employee earned - but the two options settle that amount very differently:",
+          ],
+          list: [
+            "Pay each recipient directly - each employee's share is transferred to their own bank account. They need a payout account connected before anything can reach them.",
+            "Send everything to the business - the whole tip lands in your business account, and you hand each employee their share yourself, by whatever means you like. We keep the record of what's owed so you can see it and settle up.",
+          ],
+        },
+        {
+          paragraphs: [
+            "This is set per rule, not per business, so you can pool the tips from some QR codes and pay directly from others - a rule attached to the dining-room codes can send everything to the business while a spa rule pays staff directly.",
+            "Switching an existing rule between the two moves anything still pending under it onto the new route, and the editor tells you how many shares that is before you save. Shares already paid out, or already handed over and recorded, stay as they are.",
+          ],
+        },
       ],
       related: [
+        { category: "money-and-payouts", article: "paying-your-staff-yourself" },
         { category: "money-and-payouts", article: "understanding-a-tips-distribution-breakdown" },
       ],
     },
