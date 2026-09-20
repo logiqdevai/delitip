@@ -600,7 +600,7 @@ export const ReviewsFeedbackSettingsPanel: FC = () => {
       <QuestionsSection storeId={storeId} primaryLanguage={primaryLanguage} />
       {canManageTags ? <TagsSection storeId={storeId} /> : null}
 
-      <div className="flex border-t border-zinc-100 pt-4">
+      <div className="flex border-t border-zinc-100 pt-4 lg:hidden">
         <SettingsStepNav />
       </div>
     </div>

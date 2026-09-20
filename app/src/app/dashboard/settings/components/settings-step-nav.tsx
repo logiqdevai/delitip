@@ -14,6 +14,7 @@ interface SettingsStepNavProps {
 
 // Previous/Next links to the neighboring settings step, meant to sit next to
 // a section's Save button so people can move through settings in sequence.
+// Hidden from `lg` up, where the settings sidebar already handles navigation.
 export const SettingsStepNav: FC<SettingsStepNavProps> = ({ className }) => {
   const pathname = usePathname();
   const steps = settingsNavItems.filter((item) => !item.hidden);
@@ -27,7 +28,7 @@ export const SettingsStepNav: FC<SettingsStepNavProps> = ({ className }) => {
   if (!previous && !next) return null;
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("flex items-center gap-2 lg:hidden", className)}>
       {previous ? (
         <Link
           href={previous.href}

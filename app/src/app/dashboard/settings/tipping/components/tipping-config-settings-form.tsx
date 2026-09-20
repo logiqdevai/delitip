@@ -291,7 +291,7 @@ export const TippingConfigSettingsForm: FC = () => {
         </Button>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 pt-4">
+      <div className="flex flex-wrap items-center justify-between lg:justify-end gap-3 border-t border-zinc-100 pt-4">
         <SettingsStepNav />
         <div className="flex items-center gap-3">
           <Button

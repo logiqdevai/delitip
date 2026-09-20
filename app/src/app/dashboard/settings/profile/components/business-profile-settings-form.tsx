@@ -240,7 +240,7 @@ export const BusinessProfileSettingsForm: FC = () => {
         ) : null}
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+      <div className="flex flex-wrap items-center justify-between lg:justify-end gap-3 pt-2">
         <SettingsStepNav />
         <ActionButtonWithPending type="submit" isPending={updateStore.isPending}>
           Save Changes

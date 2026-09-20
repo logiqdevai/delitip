@@ -1,8 +1,9 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { Plus, Scale } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowRight, Plus, Scale } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -29,6 +30,8 @@ import {
 import type { DistributionRule } from "@/features/distribution/interfaces/distribution.interfaces";
 import { formatRecipientSummary } from "@/features/distribution/utils/distribution-summary.utils";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { cn } from "@/lib/utils";
+import { Routes } from "@/routes/routes";
 
 export const DistributionPageContent: FC = () => {
   const { storeId, store, isPending: workspacePending, isReady } =
@@ -141,6 +144,18 @@ export const DistributionPageContent: FC = () => {
                 No default rule yet. Create a rule and set it as the store
                 default.
               </p>
+            )}
+            {rulesQuery.isPending ? null : (
+              <Link
+                href={Routes.dashboard.settings.tipping}
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "default" }),
+                  "mt-3 w-full justify-center gap-1.5 rounded-xl text-chip font-semibold",
+                )}
+              >
+                {defaultRule ? "Change default" : "Set default"}
+                <ArrowRight className="size-3.5" strokeWidth={2} />
+              </Link>
             )}
           </div>
         </div>

@@ -239,7 +239,7 @@ export const BrandingSettingsForm: FC = () => {
         />
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+      <div className="flex flex-wrap items-center justify-between lg:justify-end gap-3 pt-1">
         <SettingsStepNav />
         <Button
           type="button"

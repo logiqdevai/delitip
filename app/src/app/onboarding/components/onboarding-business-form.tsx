@@ -183,9 +183,7 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
         <input type="hidden" {...register("currency")} />
 
         <div className="space-y-1.5">
-          <Label htmlFor="onboarding-address">
-            Address <span className="font-normal text-zinc-400">(optional)</span>
-          </Label>
+          <Label htmlFor="onboarding-address">Address</Label>
           <Controller
             name="address_line"
             control={control}

@@ -41,7 +41,7 @@ export const businessSetupSchema = z.object({
   teamSize: z.enum(teamSizeValues),
   timezone: z.string().trim().min(1, "Timezone is required"),
   currency: z.enum(currencyValues),
-  address_line: z.string().trim().optional(),
+  address_line: z.string().trim().min(1, "Location is required"),
   city: z.string().trim().optional(),
   country: z.string().trim().optional(),
   postal_code: z.string().trim().optional(),
