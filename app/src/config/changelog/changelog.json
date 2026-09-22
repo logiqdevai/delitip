@@ -627,11 +627,11 @@
     "commit": "5e3adbe",
     "date": "2026-09-22",
     "type": "FEATURE",
-    "title": "Let owners add stores and copy settings from an existing store",
-    "description": "Owners can now add more stores from the sidebar store switcher, then optionally copy branding, customer messages, localization, tipping, review setup and QR designs from one of their existing stores. Copied logos and cover images are stored as separate files, so removing one from a store never affects another.",
+    "title": "Let owners add, switch between and delete stores",
+    "description": "Owners can add more stores from the sidebar store switcher, optionally copying branding, customer messages, localization, tipping, review setup and QR designs from an existing store (copied logos and covers are separate files). A new Settings > Stores page lists every store with a Switch action and an owner-only Delete; the last store, and stores that already have tips or reviews, can't be deleted.",
     "author": "Petros Rodinos",
     "agent": "Claude Opus 5 (1M context)",
     "sessionMood": "FOCUSED",
-    "sessionNote": "Started from a yes/no question and grew through short, direct follow-ups (copy settings, make it a second step, hide alerts) with no rework."
+    "sessionNote": "Started from a yes/no question and grew through short, direct follow-ups (copy settings, a second step, hiding alerts, a Stores settings page, switching) with no rework."
   }
 ]
