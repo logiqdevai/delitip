@@ -12,7 +12,7 @@ describe('DocumentsService', () => {
         prisma = {
             document: { create: jest.fn(), findUnique: jest.fn(), findMany: jest.fn(), delete: jest.fn() },
         };
-        gcsService = { uploadImageFromBuffer: jest.fn(), deleteImage: jest.fn() };
+        gcsService = { uploadImageFromBuffer: jest.fn(), deleteImage: jest.fn(), downloadImage: jest.fn() };
         service = new DocumentsService(prisma, gcsService);
     });
 
@@ -95,6 +95,52 @@ describe('DocumentsService', () => {
                 orderBy: { created_at: 'desc' },
             });
             expect(result).toEqual([{ id: 'doc1' }]);
+        });
+    });
+
+    describe('duplicate', () => {
+        it('throws NotFoundException when the document does not exist', async () => {
+            prisma.document.findUnique.mockResolvedValue(null);
+
+            await expect(service.duplicate('missing', 'u1')).rejects.toThrow(NotFoundException);
+            expect(gcsService.downloadImage).not.toHaveBeenCalled();
+        });
+
+        it('re-uploads the stored file under its original name and creates a new row owned by the caller', async () => {
+            prisma.document.findUnique.mockResolvedValue({
+                id: 'doc1',
+                user_uuid: 'someone-else',
+                filename: 'documents/1700-logo.png',
+                mimetype: 'image/png',
+                type: DocumentType.LOGO,
+            });
+            const buffer = Buffer.from('img');
+            gcsService.downloadImage.mockResolvedValue({ buffer, contentType: 'image/png' });
+            gcsService.uploadImageFromBuffer.mockResolvedValue({
+                filename: 'documents/1800-logo.png',
+                contentType: 'image/png',
+                size: 3,
+                url: 'https://cdn/documents/1800-logo.png',
+                path: 'documents/1800-logo.png',
+            });
+            prisma.document.create.mockResolvedValue({ id: 'doc2' });
+
+            const result = await service.duplicate('doc1', 'u1');
+
+            expect(gcsService.downloadImage).toHaveBeenCalledWith({ filename: 'documents/1700-logo.png' });
+            expect(gcsService.uploadImageFromBuffer).toHaveBeenCalledWith(buffer, 'logo.png', 'image/png', GcsFolders.documents);
+            expect(prisma.document.create).toHaveBeenCalledWith({
+                data: {
+                    user_uuid: 'u1',
+                    filename: 'documents/1800-logo.png',
+                    mimetype: 'image/png',
+                    size: 3,
+                    url: 'https://cdn/documents/1800-logo.png',
+                    path: 'documents/1800-logo.png',
+                    type: DocumentType.LOGO,
+                },
+            });
+            expect(result).toEqual({ id: 'doc2' });
         });
     });
 

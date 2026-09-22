@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsEnum, IsNumber, IsOptional, IsString, MinLength, ValidateNested } from 'class-validator';
+import { ArrayUnique, IsArray, IsEnum, IsIn, IsNumber, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from 'class-validator';
 import { Currency, Language, StoreIndustry } from 'generated/prisma';
+import { StoreCopyOption, StoreCopyOptions } from '../constants/store-copy-options.constant';
 
 export class StoreFullAddressDto {
     @ApiProperty({ description: 'Google Places place ID' })
@@ -123,4 +124,24 @@ export class CreateStoreDto {
     @ValidateNested()
     @Type(() => StoreFullAddressDto)
     full_address?: StoreFullAddressDto;
+
+    @ApiProperty({
+        required: false,
+        description: 'Existing store in the same Organization to copy the selected copy_options from',
+    })
+    @IsOptional()
+    @IsUUID()
+    copy_from_store_id?: string;
+
+    @ApiProperty({
+        required: false,
+        enum: Object.values(StoreCopyOptions),
+        isArray: true,
+        description: 'Which groups of settings to copy from copy_from_store_id. Copied values override the fields above.',
+    })
+    @IsOptional()
+    @IsArray()
+    @ArrayUnique()
+    @IsIn(Object.values(StoreCopyOptions), { each: true })
+    copy_options?: StoreCopyOption[];
 }

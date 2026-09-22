@@ -65,8 +65,11 @@ export const useCreateStore = (organizationId: string) => {
   return useMutation({
     mutationFn: (payload: CreateStorePayload) =>
       createStore(organizationId, payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: storesQueryKeys.root });
+    // Awaiting the org's store list refetch means mutateAsync only resolves
+    // once the new store is in the list, so callers can switch to it without
+    // the workspace falling back to the first store in the stale list.
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: storesQueryKeys.root });
       void queryClient.invalidateQueries({
         queryKey: organizationsRootKey,
       });

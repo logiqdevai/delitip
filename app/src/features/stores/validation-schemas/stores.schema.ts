@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   Currencies,
+  StoreCopyOptions,
   StoreIndustries,
 } from "@/features/stores/interfaces/stores.interfaces";
 import { TeamSizes } from "@/config/constants/dropdowns/businesses/team-size-form.options";
@@ -13,6 +14,11 @@ const storeIndustryValues = Object.values(StoreIndustries) as [
 const currencyValues = Object.values(Currencies) as [
   (typeof Currencies)[keyof typeof Currencies],
   ...(typeof Currencies)[keyof typeof Currencies][],
+];
+
+const storeCopyOptionValues = Object.values(StoreCopyOptions) as [
+  (typeof StoreCopyOptions)[keyof typeof StoreCopyOptions],
+  ...(typeof StoreCopyOptions)[keyof typeof StoreCopyOptions][],
 ];
 
 const teamSizeValues = Object.values(TeamSizes) as [
@@ -62,3 +68,18 @@ export const storeProfileFormSchema = z.object({
 });
 
 export type StoreProfileFormData = z.infer<typeof storeProfileFormSchema>;
+
+export const createStoreFormSchema = z.object({
+  name: z.string().trim().min(1, "Store name is required"),
+  industry: z.enum(storeIndustryValues),
+  address_line: z.string().trim().min(1, "Location is required"),
+  city: z.string().trim().optional(),
+  country: z.string().trim().optional(),
+  postal_code: z.string().trim().optional(),
+  full_address: parsedAddressSchema.optional(),
+  // "" means start fresh (no copying).
+  copy_from_store_id: z.string(),
+  copy_options: z.array(z.enum(storeCopyOptionValues)),
+});
+
+export type CreateStoreFormData = z.infer<typeof createStoreFormSchema>;

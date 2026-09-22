@@ -1,6 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { AuthRole, Language, OrganizationRole, Prisma, StoreIndustry } from 'generated/prisma';
 import { StoresService } from './stores.service';
+import { StoreCopyOptions } from '../constants/store-copy-options.constant';
 
 function slugConflictError() {
     return new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
@@ -14,12 +15,13 @@ describe('StoresService', () => {
     let service: StoresService;
     let prisma: any;
     let accessControl: any;
+    let documentsService: any;
 
     const user = { id: 'u1', role: AuthRole.USER };
 
     beforeEach(() => {
         prisma = {
-            store: { findUnique: jest.fn(), findMany: jest.fn(), create: jest.fn(), update: jest.fn(), delete: jest.fn() },
+            store: { findUnique: jest.fn(), findFirst: jest.fn(), findMany: jest.fn(), create: jest.fn(), update: jest.fn(), delete: jest.fn() },
             distributionRule: { findFirst: jest.fn(), create: jest.fn().mockResolvedValue({ id: 'rule1' }) },
             distributionRuleRecipient: { createMany: jest.fn() },
             spot: { create: jest.fn().mockResolvedValue({ id: 'spot1' }) },
@@ -28,6 +30,8 @@ describe('StoresService', () => {
             reviewCategory: { createMany: jest.fn() },
             feedbackQuestion: { createMany: jest.fn() },
             reviewTag: { createMany: jest.fn() },
+            alertPreference: { createMany: jest.fn() },
+            qrTemplateCustomization: { createMany: jest.fn() },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
         accessControl = {
@@ -35,7 +39,11 @@ describe('StoresService', () => {
             assertStoreAccess: jest.fn(),
             getAccessibleStoreIds: jest.fn(),
         };
-        service = new StoresService(prisma, accessControl);
+        documentsService = {
+            duplicate: jest.fn(),
+            removeById: jest.fn().mockResolvedValue({ success: true }),
+        };
+        service = new StoresService(prisma, accessControl, documentsService);
     });
 
     describe('create', () => {
@@ -103,6 +111,133 @@ describe('StoresService', () => {
             expect(prisma.reviewTag.createMany).toHaveBeenCalledWith({
                 data: expect.arrayContaining([expect.objectContaining({ store_id: 's1', name: expect.any(String) })]),
             });
+        });
+    });
+
+    describe('create with copy options', () => {
+        const sourceStore = {
+            id: 'src1',
+            organization_id: 'org1',
+            primary_color: '#111111',
+            secondary_color: '#222222',
+            logo_document_id: 'logo-src',
+            cover_document_id: null,
+            welcome_message: { en: 'Welcome!' },
+            thank_you_message: null,
+            primary_language: Language.EL,
+            supported_languages: [Language.EL, Language.EN],
+            currency: 'EUR',
+            timezone: 'Europe/Athens',
+            suggested_tip_amounts: [100, 300],
+            allow_custom_tip_amount: false,
+            vat_rate_percentage: null,
+            public_review_rating_threshold: 5,
+            review_categories: [{ name: { en: 'Service' }, is_active: true, sort_order: 0 }],
+            review_tags: [{ name: 'Friendly', sentiment: 'POSITIVE', is_active: true }],
+            feedback_questions: [{ question: { en: 'How was it?' }, type: 'RATING', is_active: false, sort_order: 2 }],
+            alert_preferences: [{ alert_type: 'NEGATIVE_REVIEW', is_enabled: false }],
+            qr_template_customizations: [{ template_id: 't1', canvas: { w: 1 }, elements: [] }],
+        };
+
+        beforeEach(() => {
+            prisma.store.findUnique.mockResolvedValue(null);
+            prisma.store.create.mockResolvedValue({ id: 's2', slug: 'branch', industry: StoreIndustry.RESTAURANT, primary_language: Language.EL });
+            prisma.store.update.mockResolvedValue({ id: 's2' });
+        });
+
+        it('rejects a source store outside the organization', async () => {
+            prisma.store.findFirst.mockResolvedValue(null);
+
+            await expect(
+                service.create(user, 'org1', {
+                    name: 'Branch',
+                    industry: StoreIndustry.RESTAURANT,
+                    copy_from_store_id: 'other',
+                    copy_options: [StoreCopyOptions.TIPPING],
+                } as any),
+            ).rejects.toThrow(BadRequestException);
+            expect(prisma.store.findFirst).toHaveBeenCalledWith(
+                expect.objectContaining({ where: { id: 'other', organization_id: 'org1' } }),
+            );
+            expect(prisma.store.create).not.toHaveBeenCalled();
+        });
+
+        it('copies only the selected store fields, duplicating the logo instead of sharing it', async () => {
+            prisma.store.findFirst.mockResolvedValue(sourceStore);
+            documentsService.duplicate.mockResolvedValue({ id: 'logo-copy' });
+
+            await service.create(user, 'org1', {
+                name: 'Branch',
+                industry: StoreIndustry.RESTAURANT,
+                currency: 'USD',
+                copy_from_store_id: 'src1',
+                copy_options: [StoreCopyOptions.BRANDING, StoreCopyOptions.TIPPING],
+            } as any);
+
+            expect(documentsService.duplicate).toHaveBeenCalledWith('logo-src', 'u1');
+            const data = prisma.store.create.mock.calls[0][0].data;
+            expect(data).toMatchObject({
+                primary_color: '#111111',
+                logo_document_id: 'logo-copy',
+                cover_document_id: null,
+                suggested_tip_amounts: [100, 300],
+                allow_custom_tip_amount: false,
+                currency: 'USD', // LOCALIZATION not selected, so the request's own value stays
+            });
+            expect(data).not.toHaveProperty('welcome_message');
+            expect(data).not.toHaveProperty('copy_options');
+            expect(data).not.toHaveProperty('copy_from_store_id');
+            // REVIEWS not selected, so industry defaults are seeded as usual
+            expect(prisma.reviewCategory.createMany).toHaveBeenCalledWith({
+                data: expect.arrayContaining([expect.objectContaining({ store_id: 's2' })]),
+            });
+            expect(prisma.alertPreference.createMany).not.toHaveBeenCalled();
+        });
+
+        it('copies review config, alert preferences and QR designs instead of seeding industry defaults', async () => {
+            prisma.store.findFirst.mockResolvedValue(sourceStore);
+
+            await service.create(user, 'org1', {
+                name: 'Branch',
+                industry: StoreIndustry.RESTAURANT,
+                copy_from_store_id: 'src1',
+                copy_options: [StoreCopyOptions.REVIEWS, StoreCopyOptions.ALERTS, StoreCopyOptions.QR_DESIGNS],
+            } as any);
+
+            expect(prisma.store.create.mock.calls[0][0].data).toMatchObject({ public_review_rating_threshold: 5 });
+            expect(prisma.reviewCategory.createMany).toHaveBeenCalledTimes(1);
+            expect(prisma.reviewCategory.createMany).toHaveBeenCalledWith({
+                data: [{ store_id: 's2', name: { en: 'Service' }, is_active: true, sort_order: 0 }],
+            });
+            expect(prisma.reviewTag.createMany).toHaveBeenCalledWith({
+                data: [{ store_id: 's2', name: 'Friendly', sentiment: 'POSITIVE', is_active: true }],
+            });
+            expect(prisma.feedbackQuestion.createMany).toHaveBeenCalledWith({
+                data: [{ store_id: 's2', question: { en: 'How was it?' }, type: 'RATING', is_active: false, sort_order: 2 }],
+            });
+            expect(prisma.alertPreference.createMany).toHaveBeenCalledWith({
+                data: [{ store_id: 's2', alert_type: 'NEGATIVE_REVIEW', is_enabled: false }],
+            });
+            expect(prisma.qrTemplateCustomization.createMany).toHaveBeenCalledWith({
+                data: [{ store_id: 's2', template_id: 't1', canvas: { w: 1 }, elements: [] }],
+            });
+            expect(documentsService.duplicate).not.toHaveBeenCalled();
+        });
+
+        it('removes the duplicated documents when creating the store fails', async () => {
+            prisma.store.findFirst.mockResolvedValue(sourceStore);
+            documentsService.duplicate.mockResolvedValue({ id: 'logo-copy' });
+            prisma.store.create.mockRejectedValue(new Error('db down'));
+
+            await expect(
+                service.create(user, 'org1', {
+                    name: 'Branch',
+                    industry: StoreIndustry.RESTAURANT,
+                    copy_from_store_id: 'src1',
+                    copy_options: [StoreCopyOptions.BRANDING],
+                } as any),
+            ).rejects.toThrow('db down');
+            expect(documentsService.removeById).toHaveBeenCalledWith('logo-copy');
         });
     });
 

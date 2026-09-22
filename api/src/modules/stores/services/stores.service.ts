@@ -5,8 +5,16 @@ import { ensureUniqueSlug, withUniqueSlugRetry } from '@/shared/utils/slug/slug.
 import { resolveTranslatedText, sanitizeTranslations, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { seedIndustryReviewConfig } from '@/shared/utils/industry-review-config/seed-industry-review-config.util';
 import { seedSampleStoreSetup } from '@/shared/utils/sample-store-setup/seed-sample-store-setup.util';
+import { DocumentsService } from '@/modules/documents/services/documents.service';
 import { CreateStoreDto } from '../dto/create-store.dto';
 import { UpdateStoreDto } from '../dto/update-store.dto';
+import { StoreCopyOptions } from '../constants/store-copy-options.constant';
+import {
+    buildCopiedStoreFields,
+    copySourceStoreInclude,
+    copyStoreRelations,
+    StoreCopyPlan,
+} from '../utils/copy-store-settings.util';
 import { OrganizationRole } from 'generated/prisma';
 
 @Injectable()
@@ -14,15 +22,68 @@ export class StoresService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
+        private readonly documentsService: DocumentsService,
     ) { }
 
     async create(user: AuthUser, organizationId: string, dto: CreateStoreDto) {
         await this.accessControl.assertOrgAccess(user, organizationId, [OrganizationRole.OWNER]);
 
-        return withUniqueSlugRetry(() => this.createStore(organizationId, dto));
+        const { copy_from_store_id, copy_options, ...fields } = dto;
+        const copyPlan = copy_from_store_id && copy_options?.length
+            ? await this.buildCopyPlan(user, organizationId, copy_from_store_id, copy_options)
+            : null;
+
+        try {
+            return await withUniqueSlugRetry(() => this.createStore(organizationId, fields, copyPlan));
+        } catch (error) {
+            // The duplicated branding documents live outside the transaction.
+            await this.removeCopiedDocuments(copyPlan);
+            throw error;
+        }
     }
 
-    private async createStore(organizationId: string, dto: CreateStoreDto) {
+    private async buildCopyPlan(
+        user: AuthUser,
+        organizationId: string,
+        sourceStoreId: string,
+        copyOptions: NonNullable<CreateStoreDto['copy_options']>,
+    ): Promise<StoreCopyPlan> {
+        const source = await this.prisma.store.findFirst({
+            where: { id: sourceStoreId, organization_id: organizationId },
+            include: copySourceStoreInclude,
+        });
+        if (!source) throw new BadRequestException('Store to copy from does not belong to this organization');
+
+        const options = new Set(copyOptions);
+        const plan: StoreCopyPlan = { source, options, logoDocumentId: null, coverDocumentId: null };
+
+        if (options.has(StoreCopyOptions.BRANDING)) {
+            try {
+                if (source.logo_document_id) {
+                    plan.logoDocumentId = (await this.documentsService.duplicate(source.logo_document_id, user.id)).id;
+                }
+                if (source.cover_document_id) {
+                    plan.coverDocumentId = (await this.documentsService.duplicate(source.cover_document_id, user.id)).id;
+                }
+            } catch {
+                await this.removeCopiedDocuments(plan);
+                throw new BadRequestException("Could not copy the store's logo or cover image");
+            }
+        }
+
+        return plan;
+    }
+
+    private async removeCopiedDocuments(plan: StoreCopyPlan | null) {
+        const ids = [plan?.logoDocumentId, plan?.coverDocumentId].filter((id): id is string => !!id);
+        await Promise.all(ids.map((id) => this.documentsService.removeById(id).catch(() => undefined)));
+    }
+
+    private async createStore(
+        organizationId: string,
+        dto: Omit<CreateStoreDto, 'copy_from_store_id' | 'copy_options'>,
+        copyPlan: StoreCopyPlan | null,
+    ) {
         const slug = await ensureUniqueSlug(dto.name, async (candidate) => {
             const existing = await this.prisma.store.findUnique({ where: { slug: candidate } });
             return !!existing;
@@ -44,10 +105,16 @@ export class StoresService {
                     country: dto.country,
                     postal_code: dto.postal_code,
                     full_address: dto.full_address ? { ...dto.full_address } : undefined,
+                    ...(copyPlan ? buildCopiedStoreFields(copyPlan) : {}),
                 },
             });
 
-            await seedIndustryReviewConfig(tx, store.id, store.industry, store.primary_language);
+            if (copyPlan) {
+                await copyStoreRelations(tx, copyPlan, store.id);
+            }
+            if (!copyPlan?.options.has(StoreCopyOptions.REVIEWS)) {
+                await seedIndustryReviewConfig(tx, store.id, store.industry, store.primary_language);
+            }
             const { distributionRuleId } = await seedSampleStoreSetup(tx, store.id, store.industry);
             store = await tx.store.update({
                 where: { id: store.id },

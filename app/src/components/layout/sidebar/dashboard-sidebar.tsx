@@ -1,17 +1,19 @@
 "use client";
 
-import { type FC } from "react";
+import { type FC, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
   Bell,
+  Check,
   ChevronDown,
   LayoutGrid,
   ListChecks,
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
+  Plus,
   QrCode,
   Settings,
   ShieldCheck,
@@ -22,22 +24,18 @@ import {
 } from "lucide-react";
 import { AccountSwitcher } from "@/components/auth/account-switcher";
 import { BrandMark } from "@/components/brand/brand-mark";
+import { AddStoreDialog } from "@/components/layout/sidebar/add-store-dialog";
 import { DashboardUserMenu } from "@/components/layout/sidebar/dashboard-user-menu";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Sidebar,
   SidebarContent,
@@ -55,8 +53,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { adminNavItems } from "@/app/dashboard/admin/components/admin-nav-items";
 import { getStoreIndustryLabel } from "@/config/constants/dropdowns/stores/store-industry-form.options";
 import { useUnreadAlertsCount } from "@/features/alerts/hooks/use-alerts";
+import { OrganizationRoles } from "@/features/organizations/interfaces/organizations.interfaces";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { usePlatformRole } from "@/hooks/use-platform-role";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 
@@ -166,8 +166,20 @@ export const DashboardSidebar: FC = () => {
   const router = useRouter();
   const { state, isMobile, toggleSidebar, setOpenMobile } = useSidebar();
   const collapsed = !isMobile && state === "collapsed";
-  const { store, storeId, storeList, role, isPending, isError, switchStore } =
-    useWorkspace();
+  const {
+    organizationId,
+    store,
+    storeId,
+    storeList,
+    role,
+    isPending,
+    isError,
+    switchStore,
+  } = useWorkspace();
+  const setWorkspace = useWorkspaceStore((s) => s.setWorkspace);
+  const [addStoreOpen, setAddStoreOpen] = useState(false);
+  const isOwner = role === OrganizationRoles.OWNER;
+  const showStoreMenu = storeList.length > 1 || isOwner;
   const unreadAlertsQuery = useUnreadAlertsCount(storeId ?? "");
   const { isPlatformAdmin } = usePlatformRole();
   const isAccountant = role === "ACCOUNTANT";
@@ -286,33 +298,59 @@ export const DashboardSidebar: FC = () => {
                     className="size-7"
                   />
                   <div className="min-w-0 flex-1 truncate">
-                    {storeList.length > 1 ? (
-                      <Select
-                        items={storeList.map((item) => ({
-                          label: item.name,
-                          value: item.id,
-                        }))}
-                        value={storeId ?? undefined}
-                        onValueChange={(value) => {
-                          if (value) switchStore(value);
-                        }}
-                      >
-                        <SelectTrigger
+                    {showStoreMenu ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
                           aria-label="Switch store"
-                          className="h-auto w-full min-w-0 justify-start gap-1 border-none bg-transparent p-0 text-xs font-bold text-ink-charcoal shadow-none focus-visible:ring-0"
+                          className="group flex w-full min-w-0 cursor-pointer items-center gap-1 text-left text-xs font-bold text-ink-charcoal outline-none"
                         >
-                          <SelectValue className="truncate" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {storeList.map((item) => (
-                              <SelectItem key={item.id} value={item.id}>
-                                {item.name}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                          <span className="truncate">{store.name}</span>
+                          <ChevronDown
+                            className="size-3.5 shrink-0 text-zinc-400 transition-transform duration-200 group-data-popup-open:rotate-180"
+                            strokeWidth={2}
+                          />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" sideOffset={8} className="w-56">
+                          <DropdownMenuGroup>
+                            <DropdownMenuLabel>Stores</DropdownMenuLabel>
+                            {storeList.map((item) => {
+                              const selected = item.id === storeId;
+                              return (
+                                <DropdownMenuItem
+                                  key={item.id}
+                                  className={cn(
+                                    "cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-chip",
+                                    selected
+                                      ? "bg-brand-50 font-semibold text-brand-800 focus:bg-brand-50 focus:text-brand-800"
+                                      : "font-medium text-zinc-600",
+                                  )}
+                                  onClick={() => {
+                                    switchStore(item.id);
+                                    closeMobileNav();
+                                  }}
+                                >
+                                  <span className="min-w-0 flex-1 truncate">{item.name}</span>
+                                  {selected ? (
+                                    <Check className="size-4 text-electric-lime" strokeWidth={2} />
+                                  ) : null}
+                                </DropdownMenuItem>
+                              );
+                            })}
+                          </DropdownMenuGroup>
+                          {isOwner ? (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-chip font-medium text-zinc-600"
+                                onClick={() => setAddStoreOpen(true)}
+                              >
+                                <Plus className="size-4 text-zinc-400" strokeWidth={2} />
+                                Add store
+                              </DropdownMenuItem>
+                            </>
+                          ) : null}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     ) : (
                       <div className="truncate text-xs font-bold text-ink-charcoal">
                         {store.name}
@@ -467,6 +505,22 @@ export const DashboardSidebar: FC = () => {
           <DashboardUserMenu onNavigate={closeMobileNav} />
         </SidebarFooter>
       </Sidebar>
+
+      {isOwner && organizationId ? (
+        <AddStoreDialog
+          open={addStoreOpen}
+          onOpenChange={setAddStoreOpen}
+          organizationId={organizationId}
+          stores={storeList}
+          currentStore={store}
+          onCreated={(created) => {
+            // switchStore validates against this render's (pre-create) list,
+            // so write the new selection to the workspace directly.
+            setWorkspace({ organizationId, storeId: created.id });
+            closeMobileNav();
+          }}
+        />
+      ) : null}
     </>
   );
 };

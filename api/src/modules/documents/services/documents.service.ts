@@ -47,6 +47,35 @@ export class DocumentsService {
         });
     }
 
+    // Copies a document into its own storage object and row, owned by userId.
+    // Used when a new store copies another's branding: stores must never share
+    // a document, since removing a logo/cover deletes its storage object.
+    async duplicate(id: string, userId: string) {
+        const document = await this.findOne(id);
+        const { buffer, contentType } = await this.gcsService.downloadImage({ filename: document.filename });
+        // Stored filenames look like "<folder>/<timestamp>-<original name>".
+        const originalName = document.filename.split('/').pop()!.replace(/^\d+-/, '');
+
+        const uploaded = await this.gcsService.uploadImageFromBuffer(
+            buffer,
+            originalName,
+            contentType || document.mimetype,
+            GcsFolders.documents,
+        );
+
+        return this.prisma.document.create({
+            data: {
+                user_uuid: userId,
+                filename: uploaded.filename,
+                mimetype: uploaded.contentType,
+                size: uploaded.size,
+                url: uploaded.url,
+                path: uploaded.path,
+                type: document.type,
+            },
+        });
+    }
+
     async remove(id: string, userId: string) {
         const document = await this.findOne(id);
         if (document.user_uuid !== userId) {

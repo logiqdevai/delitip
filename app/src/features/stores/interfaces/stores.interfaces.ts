@@ -89,6 +89,21 @@ export interface Store {
   updated_at: string;
 }
 
+// Mirrors the API's StoreCopyOptions: groups of settings a new store can copy
+// from an existing store in the same organization.
+export const StoreCopyOptions = {
+  BRANDING: "BRANDING",
+  MESSAGES: "MESSAGES",
+  LOCALIZATION: "LOCALIZATION",
+  TIPPING: "TIPPING",
+  REVIEWS: "REVIEWS",
+  ALERTS: "ALERTS",
+  QR_DESIGNS: "QR_DESIGNS",
+} as const;
+
+export type StoreCopyOption =
+  (typeof StoreCopyOptions)[keyof typeof StoreCopyOptions];
+
 export interface CreateStorePayload {
   name: string;
   industry: StoreIndustry;
@@ -101,6 +116,8 @@ export interface CreateStorePayload {
   country?: string;
   postal_code?: string;
   full_address?: ParsedAddress;
+  copy_from_store_id?: string;
+  copy_options?: StoreCopyOption[];
 }
 
 export interface UpdateStorePayload {

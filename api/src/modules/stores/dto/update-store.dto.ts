@@ -1,8 +1,10 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import { IsArray, IsBoolean, IsInt, IsNumber, IsObject, IsOptional, IsString, IsUrl, Max, Min } from 'class-validator';
 import { CreateStoreDto } from './create-store.dto';
 
-export class UpdateStoreDto extends PartialType(CreateStoreDto) {
+export class UpdateStoreDto extends PartialType(
+    OmitType(CreateStoreDto, ['copy_from_store_id', 'copy_options'] as const),
+) {
     @ApiProperty({ required: false })
     @IsOptional()
     @IsBoolean()
