@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -74,8 +75,14 @@ export const updateStore = async (
 export const deleteStore = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.stores.byId(id));
-  } catch {
-    throw new Error("Failed to delete store. Please try again.");
+  } catch (error) {
+    // Surface the API's reason (last store, or a store with tips/reviews).
+    const message = isAxiosError(error) ? error.response?.data?.message : null;
+    throw new Error(
+      typeof message === "string" && message.length > 0
+        ? message
+        : "Failed to delete store. Please try again.",
+    );
   }
 };
 

@@ -192,6 +192,22 @@ export class StoresService {
     async remove(user: AuthUser, id: string) {
         await this.accessControl.assertStoreAccess(user, id, [OrganizationRole.OWNER]);
 
+        const store = await this.prisma.store.findUnique({
+            where: { id },
+            select: { organization_id: true, _count: { select: { tips: true, reviews: true } } },
+        });
+        if (!store) throw new NotFoundException('Store not found');
+
+        const storeCount = await this.prisma.store.count({ where: { organization_id: store.organization_id } });
+        if (storeCount <= 1) {
+            throw new BadRequestException('An organization must keep at least one store');
+        }
+
+        // Tips and reviews are financial/customer records and are never cascade-deleted.
+        if (store._count.tips > 0 || store._count.reviews > 0) {
+            throw new BadRequestException('This store has tips or reviews and cannot be deleted');
+        }
+
         await this.prisma.store.delete({ where: { id } });
         return { success: true };
     }

@@ -6,6 +6,7 @@ import {
   Globe,
   MessageSquare,
   Palette,
+  Store,
   Users2,
   Wallet,
   type LucideIcon,
@@ -27,6 +28,12 @@ export const settingsNavItems: SettingsNavItem[] = [
     label: "Business Profile",
     description: "Core details customers and your team see across delitip.",
     icon: Building2,
+  },
+  {
+    href: Routes.dashboard.settings.stores,
+    label: "Stores",
+    description: "All the venues in your business.",
+    icon: Store,
   },
   {
     href: Routes.dashboard.settings.branding,

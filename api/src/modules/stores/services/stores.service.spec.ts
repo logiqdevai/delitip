@@ -21,7 +21,7 @@ describe('StoresService', () => {
 
     beforeEach(() => {
         prisma = {
-            store: { findUnique: jest.fn(), findFirst: jest.fn(), findMany: jest.fn(), create: jest.fn(), update: jest.fn(), delete: jest.fn() },
+            store: { findUnique: jest.fn(), findFirst: jest.fn(), findMany: jest.fn(), count: jest.fn(), create: jest.fn(), update: jest.fn(), delete: jest.fn() },
             distributionRule: { findFirst: jest.fn(), create: jest.fn().mockResolvedValue({ id: 'rule1' }) },
             distributionRuleRecipient: { createMany: jest.fn() },
             spot: { create: jest.fn().mockResolvedValue({ id: 'spot1' }) },
@@ -335,14 +335,45 @@ describe('StoresService', () => {
     });
 
     describe('remove', () => {
+        const deletableStore = { organization_id: 'org1', _count: { tips: 0, reviews: 0 } };
+
         it('asserts OWNER-only access, deletes, and returns success', async () => {
-            prisma.store.delete.mockResolvedValue({});
+            prisma.store.findUnique.mockResolvedValue(deletableStore);
+            prisma.store.count.mockResolvedValue(2);
 
             const result = await service.remove(user, 's1');
 
             expect(accessControl.assertStoreAccess).toHaveBeenCalledWith(user, 's1', [OrganizationRole.OWNER]);
+            expect(prisma.store.count).toHaveBeenCalledWith({ where: { organization_id: 'org1' } });
             expect(prisma.store.delete).toHaveBeenCalledWith({ where: { id: 's1' } });
             expect(result).toEqual({ success: true });
+        });
+
+        it('throws NotFoundException when the store does not exist', async () => {
+            prisma.store.findUnique.mockResolvedValue(null);
+
+            await expect(service.remove(user, 'missing')).rejects.toThrow(NotFoundException);
+            expect(prisma.store.delete).not.toHaveBeenCalled();
+        });
+
+        it("refuses to delete the organization's last store", async () => {
+            prisma.store.findUnique.mockResolvedValue(deletableStore);
+            prisma.store.count.mockResolvedValue(1);
+
+            await expect(service.remove(user, 's1')).rejects.toThrow(BadRequestException);
+            expect(prisma.store.delete).not.toHaveBeenCalled();
+        });
+
+        it('refuses to delete a store that has tips or reviews', async () => {
+            prisma.store.count.mockResolvedValue(3);
+
+            prisma.store.findUnique.mockResolvedValue({ organization_id: 'org1', _count: { tips: 1, reviews: 0 } });
+            await expect(service.remove(user, 's1')).rejects.toThrow(BadRequestException);
+
+            prisma.store.findUnique.mockResolvedValue({ organization_id: 'org1', _count: { tips: 0, reviews: 4 } });
+            await expect(service.remove(user, 's1')).rejects.toThrow(BadRequestException);
+
+            expect(prisma.store.delete).not.toHaveBeenCalled();
         });
     });
 

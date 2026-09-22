@@ -77,6 +77,7 @@ export const Routes = {
     settings: {
       root: "/dashboard/settings",
       profile: "/dashboard/settings/profile",
+      stores: "/dashboard/settings/stores",
       branding: "/dashboard/settings/branding",
       tipping: "/dashboard/settings/tipping",
       localization: "/dashboard/settings/localization",
