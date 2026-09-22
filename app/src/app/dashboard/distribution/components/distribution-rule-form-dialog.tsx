@@ -100,6 +100,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
     name: "recipients",
   });
 
+  const formRef = useRef<HTMLFormElement>(null);
   const [highlightedRecipientId, setHighlightedRecipientId] = useState<
     string | null
   >(null);
@@ -191,31 +192,45 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
     });
   };
 
-  const onSubmit = handleSubmit(async (values) => {
-    const payload = {
-      name: values.name,
-      payout_mode: values.payout_mode,
-      recipients: values.recipients.map((recipient, index) => ({
-        recipient_type: recipient.recipient_type,
-        employee_id:
-          recipient.recipient_type === DistributionRecipientTypes.EMPLOYEE
-            ? recipient.employee_id
-            : undefined,
-        percentage: recipient.percentage,
-        sort_order: index,
-      })),
-    };
+  const onSubmit = handleSubmit(
+    async (values) => {
+      const payload = {
+        name: values.name,
+        payout_mode: values.payout_mode,
+        recipients: values.recipients.map((recipient, index) => ({
+          recipient_type: recipient.recipient_type,
+          employee_id:
+            recipient.recipient_type === DistributionRecipientTypes.EMPLOYEE
+              ? recipient.employee_id
+              : undefined,
+          percentage: recipient.percentage,
+          sort_order: index,
+        })),
+      };
 
-    try {
-      if (isEdit && rule) {
-        await updateRule.mutateAsync({ id: rule.id, payload });
-      } else {
-        const created = await createRule.mutateAsync(payload);
-        onCreated?.(created);
-      }
-      onOpenChange(false);
-    } catch {}
-  });
+      try {
+        if (isEdit && rule) {
+          await updateRule.mutateAsync({ id: rule.id, payload });
+        } else {
+          const created = await createRule.mutateAsync(payload);
+          onCreated?.(created);
+        }
+        onOpenChange(false);
+      } catch {}
+    },
+    // Validation errors can land inside the scrollable body, below the fold
+    // of a tall recipients list — without this, an invalid submit inside
+    // this dialog can look like the button did nothing at all.
+    () => {
+      requestAnimationFrame(() => {
+        const firstInvalid = formRef.current?.querySelector<HTMLElement>(
+          '[aria-invalid="true"], #recipients-error, #recipients-root-error',
+        );
+        firstInvalid?.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstInvalid?.focus?.();
+      });
+    },
+  );
 
   const setRecipientType = (
     index: number,
@@ -256,6 +271,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
         </DialogHeader>
 
         <form
+          ref={formRef}
           onSubmit={onSubmit}
           className="flex min-h-0 flex-1 flex-col"
           noValidate
@@ -617,10 +633,20 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
             </div>
 
             {typeof errors.recipients?.message === "string" ? (
-              <p className="text-xs text-red-600">{errors.recipients.message}</p>
+              <p
+                id="recipients-error"
+                tabIndex={-1}
+                className="text-xs text-red-600 outline-none"
+              >
+                {errors.recipients.message}
+              </p>
             ) : null}
             {typeof errors.recipients?.root?.message === "string" ? (
-              <p className="text-xs text-red-600">
+              <p
+                id="recipients-root-error"
+                tabIndex={-1}
+                className="text-xs text-red-600 outline-none"
+              >
                 {errors.recipients.root.message}
               </p>
             ) : null}
