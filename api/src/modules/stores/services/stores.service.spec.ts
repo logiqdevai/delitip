@@ -31,6 +31,7 @@ describe('StoresService', () => {
             feedbackQuestion: { createMany: jest.fn() },
             reviewTag: { createMany: jest.fn() },
             alertPreference: { createMany: jest.fn() },
+            document: { findMany: jest.fn().mockResolvedValue([]) },
             qrTemplateCustomization: { createMany: jest.fn() },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
@@ -335,7 +336,14 @@ describe('StoresService', () => {
     });
 
     describe('remove', () => {
-        const deletableStore = { organization_id: 'org1', _count: { tips: 0, reviews: 0 } };
+        const deletableStore = {
+            organization_id: 'org1',
+            logo_document_id: null,
+            cover_document_id: null,
+            employees: [],
+            _count: { tips: 0, reviews: 0 },
+        };
+        const noRefs = { stores_logo: 0, stores_cover: 0, organizations_logo: 0, employees_photo: 0 };
 
         it('asserts OWNER-only access, deletes, and returns success', async () => {
             prisma.store.findUnique.mockResolvedValue(deletableStore);
@@ -367,13 +375,64 @@ describe('StoresService', () => {
         it('refuses to delete a store that has tips or reviews', async () => {
             prisma.store.count.mockResolvedValue(3);
 
-            prisma.store.findUnique.mockResolvedValue({ organization_id: 'org1', _count: { tips: 1, reviews: 0 } });
+            prisma.store.findUnique.mockResolvedValue({ ...deletableStore, _count: { tips: 1, reviews: 0 } });
             await expect(service.remove(user, 's1')).rejects.toThrow(BadRequestException);
 
-            prisma.store.findUnique.mockResolvedValue({ organization_id: 'org1', _count: { tips: 0, reviews: 4 } });
+            prisma.store.findUnique.mockResolvedValue({ ...deletableStore, _count: { tips: 0, reviews: 4 } });
             await expect(service.remove(user, 's1')).rejects.toThrow(BadRequestException);
 
             expect(prisma.store.delete).not.toHaveBeenCalled();
+        });
+
+        it("removes the store's logo, cover and employee photos from storage after deleting it", async () => {
+            prisma.store.findUnique.mockResolvedValue({
+                ...deletableStore,
+                logo_document_id: 'logo',
+                cover_document_id: 'cover',
+                employees: [{ photo_document_id: 'photo1' }, { photo_document_id: null }],
+            });
+            prisma.store.count.mockResolvedValue(2);
+            prisma.document.findMany.mockResolvedValue([
+                { id: 'logo', _count: noRefs },
+                { id: 'cover', _count: noRefs },
+                { id: 'photo1', _count: noRefs },
+            ]);
+
+            await service.remove(user, 's1');
+
+            expect(prisma.document.findMany).toHaveBeenCalledWith(
+                expect.objectContaining({ where: { id: { in: ['logo', 'cover', 'photo1'] } } }),
+            );
+            expect(documentsService.removeById).toHaveBeenCalledTimes(3);
+            expect(documentsService.removeById).toHaveBeenCalledWith('logo');
+            expect(documentsService.removeById).toHaveBeenCalledWith('cover');
+            expect(documentsService.removeById).toHaveBeenCalledWith('photo1');
+            expect(prisma.store.delete.mock.invocationCallOrder[0]).toBeLessThan(
+                documentsService.removeById.mock.invocationCallOrder[0],
+            );
+        });
+
+        it('keeps documents that another store, organization or employee still uses', async () => {
+            prisma.store.findUnique.mockResolvedValue({ ...deletableStore, logo_document_id: 'shared', cover_document_id: 'own' });
+            prisma.store.count.mockResolvedValue(2);
+            prisma.document.findMany.mockResolvedValue([
+                { id: 'shared', _count: { ...noRefs, stores_logo: 1 } },
+                { id: 'own', _count: noRefs },
+            ]);
+
+            await service.remove(user, 's1');
+
+            expect(documentsService.removeById).toHaveBeenCalledTimes(1);
+            expect(documentsService.removeById).toHaveBeenCalledWith('own');
+        });
+
+        it('still reports success when a document cleanup fails', async () => {
+            prisma.store.findUnique.mockResolvedValue({ ...deletableStore, logo_document_id: 'logo' });
+            prisma.store.count.mockResolvedValue(2);
+            prisma.document.findMany.mockResolvedValue([{ id: 'logo', _count: noRefs }]);
+            documentsService.removeById.mockRejectedValue(new Error('gcs down'));
+
+            await expect(service.remove(user, 's1')).resolves.toEqual({ success: true });
         });
     });
 

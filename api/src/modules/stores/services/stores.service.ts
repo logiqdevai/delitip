@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
 import { ensureUniqueSlug, withUniqueSlugRetry } from '@/shared/utils/slug/slug.utils';
@@ -19,6 +19,8 @@ import { OrganizationRole } from 'generated/prisma';
 
 @Injectable()
 export class StoresService {
+    private readonly logger = new Logger(StoresService.name);
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly accessControl: AccessControlService,
@@ -194,7 +196,13 @@ export class StoresService {
 
         const store = await this.prisma.store.findUnique({
             where: { id },
-            select: { organization_id: true, _count: { select: { tips: true, reviews: true } } },
+            select: {
+                organization_id: true,
+                logo_document_id: true,
+                cover_document_id: true,
+                employees: { select: { photo_document_id: true } },
+                _count: { select: { tips: true, reviews: true } },
+            },
         });
         if (!store) throw new NotFoundException('Store not found');
 
@@ -208,8 +216,44 @@ export class StoresService {
             throw new BadRequestException('This store has tips or reviews and cannot be deleted');
         }
 
+        const documentIds = [
+            store.logo_document_id,
+            store.cover_document_id,
+            ...store.employees.map((employee) => employee.photo_document_id),
+        ].filter((documentId): documentId is string => !!documentId);
+
         await this.prisma.store.delete({ where: { id } });
+        await this.removeOrphanedDocuments(documentIds);
+
         return { success: true };
+    }
+
+    // Deletes the store's logo/cover and its employees' photos (rows + storage
+    // objects) once the store is gone — skipping any document something else
+    // still points at, so a shared file is never pulled from under another record.
+    private async removeOrphanedDocuments(documentIds: string[]) {
+        if (documentIds.length === 0) return;
+
+        const documents = await this.prisma.document.findMany({
+            where: { id: { in: [...new Set(documentIds)] } },
+            select: {
+                id: true,
+                _count: {
+                    select: { stores_logo: true, stores_cover: true, organizations_logo: true, employees_photo: true },
+                },
+            },
+        });
+
+        for (const document of documents) {
+            const references = Object.values(document._count).reduce((sum, count) => sum + count, 0);
+            if (references > 0) continue;
+
+            try {
+                await this.documentsService.removeById(document.id);
+            } catch (error) {
+                this.logger.error(`Failed to remove document ${document.id} after deleting its store`, error);
+            }
+        }
     }
 
     async findPublicBySlug(slug: string, lang?: string) {
