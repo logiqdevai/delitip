@@ -11,6 +11,7 @@ describe('PlatformFinanceConfig', () => {
         tip_processor_fee_estimate_percentage: '2.00',
         tip_processor_fee_estimate_fixed_amount: 30,
         payout_hold_window_hours: 72,
+        vat_rate_percentage: '24.00',
     };
 
     beforeEach(() => {
@@ -33,6 +34,10 @@ describe('PlatformFinanceConfig', () => {
 
     it('reads the payout hold window from the app_config row', async () => {
         expect(await config.getPayoutHoldWindowHours()).toBe(72);
+    });
+
+    it('reads the VAT rate from the app_config row', async () => {
+        expect(await config.getVatRatePercentage()).toBe(24);
     });
 
     it('creates the default row when none exists yet', async () => {

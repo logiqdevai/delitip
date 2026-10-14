@@ -124,10 +124,10 @@ export class TipsService {
         const commissionAmount = Math.round((dto.amount * commissionPercentage) / 100);
         const platformFeePercentage = Math.round(((commissionAmount / dto.amount) * 100) * 100) / 100;
 
-        // VAT is added on top of the net tip the customer selected — never
-        // hardcode a country default here, an unset store rate means no VAT.
-        const vatRatePercentage = store.vat_rate_percentage ?? 0;
-        const vatAmount = Math.round((dto.amount * Number(vatRatePercentage)) / 100);
+        // VAT is added on top of the net tip the customer selected — the
+        // platform-wide rate from AppConfig, where 0 means no VAT.
+        const vatRatePercentage = await this.platformFinanceConfig.getVatRatePercentage();
+        const vatAmount = Math.round((dto.amount * vatRatePercentage) / 100);
         const grossAmount = dto.amount + vatAmount;
 
         const { tip, paymentTransactionId } = await this.prisma.$transaction(async (tx) => {

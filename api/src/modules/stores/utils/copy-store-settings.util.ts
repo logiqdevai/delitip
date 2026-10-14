@@ -47,7 +47,6 @@ export function buildCopiedStoreFields(plan: StoreCopyPlan): Partial<Prisma.Stor
     if (options.has(StoreCopyOptions.TIPPING)) {
         fields.suggested_tip_amounts = source.suggested_tip_amounts;
         fields.allow_custom_tip_amount = source.allow_custom_tip_amount;
-        fields.vat_rate_percentage = source.vat_rate_percentage;
     }
     if (options.has(StoreCopyOptions.REVIEWS)) {
         fields.public_review_rating_threshold = source.public_review_rating_threshold;

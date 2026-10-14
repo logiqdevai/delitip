@@ -42,6 +42,12 @@ const fields: FieldDefinition[] = [
     step: "1",
   },
   {
+    name: "vat_rate_percentage",
+    label: "VAT rate (%)",
+    hint: "Added on top of every tip at checkout. 0 means no VAT.",
+    step: "0.01",
+  },
+  {
     name: "payout_hold_window_hours",
     label: "Payout hold window (hours)",
     hint: "How long a tip is held before it becomes payable.",
@@ -73,6 +79,7 @@ export const AdminAppConfigPageContent: FC = () => {
       ),
       tip_processor_fee_estimate_fixed_amount:
         data.tip_processor_fee_estimate_fixed_amount,
+      vat_rate_percentage: Number(data.vat_rate_percentage),
       payout_hold_window_hours: data.payout_hold_window_hours,
     });
   }, [data, reset]);

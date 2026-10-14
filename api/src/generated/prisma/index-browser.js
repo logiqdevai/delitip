@@ -580,6 +580,7 @@ exports.Prisma.AppConfigScalarFieldEnum = {
   tip_processor_fee_estimate_percentage: 'tip_processor_fee_estimate_percentage',
   tip_processor_fee_estimate_fixed_amount: 'tip_processor_fee_estimate_fixed_amount',
   payout_hold_window_hours: 'payout_hold_window_hours',
+  vat_rate_percentage: 'vat_rate_percentage',
   updated_by_user_id: 'updated_by_user_id',
   created_at: 'created_at',
   updated_at: 'updated_at'

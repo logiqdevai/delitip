@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, useMemo, useState } from "react";
+import { type FC, useEffect, useMemo, useState } from "react";
 import { Info, Sparkles } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Field, FieldContent, FieldLabel, FieldDescription } from "@/components/ui/field";
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useAppConfig } from "@/features/app-config/hooks/use-app-config";
 import {
   calculateAccountingSimulation,
   EXAMPLE_ACCOUNTING_SIMULATOR_INPUTS,
@@ -39,9 +40,26 @@ const parseNumberInput = (raw: string): number => {
 };
 
 export const AccountingSimulatorWidget: FC = () => {
-  const [inputs, setInputs] = useState<AccountingSimulatorInputs>(
-    EXAMPLE_ACCOUNTING_SIMULATOR_INPUTS
+  const { data: appConfig } = useAppConfig();
+  // The platform's own sales VAT rate comes from AppConfig; the store and
+  // processor rates are third parties' and stay as example values.
+  const defaultInputs = useMemo<AccountingSimulatorInputs>(
+    () => ({
+      ...EXAMPLE_ACCOUNTING_SIMULATOR_INPUTS,
+      vatRateSales: appConfig
+        ? Number(appConfig.vat_rate_percentage)
+        : EXAMPLE_ACCOUNTING_SIMULATOR_INPUTS.vatRateSales,
+    }),
+    [appConfig]
   );
+  const [inputs, setInputs] = useState<AccountingSimulatorInputs>(defaultInputs);
+
+  useEffect(() => {
+    setInputs((current) => ({
+      ...current,
+      vatRateSales: defaultInputs.vatRateSales,
+    }));
+  }, [defaultInputs.vatRateSales]);
 
   const result = useMemo(() => calculateAccountingSimulation(inputs), [inputs]);
 
@@ -68,7 +86,7 @@ export const AccountingSimulatorWidget: FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => setInputs(EXAMPLE_ACCOUNTING_SIMULATOR_INPUTS)}
+              onClick={() => setInputs(defaultInputs)}
               className="shrink-0"
             >
               <Sparkles data-icon="inline-start" className="size-3.5" />

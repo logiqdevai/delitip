@@ -46975,6 +46975,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage: Decimal | null
     tip_processor_fee_estimate_fixed_amount: number | null
     payout_hold_window_hours: number | null
+    vat_rate_percentage: Decimal | null
   }
 
   export type AppConfigSumAggregateOutputType = {
@@ -46982,6 +46983,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage: Decimal | null
     tip_processor_fee_estimate_fixed_amount: number | null
     payout_hold_window_hours: number | null
+    vat_rate_percentage: Decimal | null
   }
 
   export type AppConfigMinAggregateOutputType = {
@@ -46990,6 +46992,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage: Decimal | null
     tip_processor_fee_estimate_fixed_amount: number | null
     payout_hold_window_hours: number | null
+    vat_rate_percentage: Decimal | null
     updated_by_user_id: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -47001,6 +47004,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage: Decimal | null
     tip_processor_fee_estimate_fixed_amount: number | null
     payout_hold_window_hours: number | null
+    vat_rate_percentage: Decimal | null
     updated_by_user_id: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -47012,6 +47016,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage: number
     tip_processor_fee_estimate_fixed_amount: number
     payout_hold_window_hours: number
+    vat_rate_percentage: number
     updated_by_user_id: number
     created_at: number
     updated_at: number
@@ -47024,6 +47029,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: true
     tip_processor_fee_estimate_fixed_amount?: true
     payout_hold_window_hours?: true
+    vat_rate_percentage?: true
   }
 
   export type AppConfigSumAggregateInputType = {
@@ -47031,6 +47037,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: true
     tip_processor_fee_estimate_fixed_amount?: true
     payout_hold_window_hours?: true
+    vat_rate_percentage?: true
   }
 
   export type AppConfigMinAggregateInputType = {
@@ -47039,6 +47046,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: true
     tip_processor_fee_estimate_fixed_amount?: true
     payout_hold_window_hours?: true
+    vat_rate_percentage?: true
     updated_by_user_id?: true
     created_at?: true
     updated_at?: true
@@ -47050,6 +47058,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: true
     tip_processor_fee_estimate_fixed_amount?: true
     payout_hold_window_hours?: true
+    vat_rate_percentage?: true
     updated_by_user_id?: true
     created_at?: true
     updated_at?: true
@@ -47061,6 +47070,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: true
     tip_processor_fee_estimate_fixed_amount?: true
     payout_hold_window_hours?: true
+    vat_rate_percentage?: true
     updated_by_user_id?: true
     created_at?: true
     updated_at?: true
@@ -47159,6 +47169,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage: Decimal
     tip_processor_fee_estimate_fixed_amount: number
     payout_hold_window_hours: number
+    vat_rate_percentage: Decimal
     updated_by_user_id: string | null
     created_at: Date
     updated_at: Date
@@ -47189,6 +47200,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: boolean
     tip_processor_fee_estimate_fixed_amount?: boolean
     payout_hold_window_hours?: boolean
+    vat_rate_percentage?: boolean
     updated_by_user_id?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -47200,6 +47212,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: boolean
     tip_processor_fee_estimate_fixed_amount?: boolean
     payout_hold_window_hours?: boolean
+    vat_rate_percentage?: boolean
     updated_by_user_id?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -47211,6 +47224,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: boolean
     tip_processor_fee_estimate_fixed_amount?: boolean
     payout_hold_window_hours?: boolean
+    vat_rate_percentage?: boolean
     updated_by_user_id?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -47222,12 +47236,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: boolean
     tip_processor_fee_estimate_fixed_amount?: boolean
     payout_hold_window_hours?: boolean
+    vat_rate_percentage?: boolean
     updated_by_user_id?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type AppConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_platform_commission_percentage" | "tip_processor_fee_estimate_percentage" | "tip_processor_fee_estimate_fixed_amount" | "payout_hold_window_hours" | "updated_by_user_id" | "created_at" | "updated_at", ExtArgs["result"]["appConfig"]>
+  export type AppConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_platform_commission_percentage" | "tip_processor_fee_estimate_percentage" | "tip_processor_fee_estimate_fixed_amount" | "payout_hold_window_hours" | "vat_rate_percentage" | "updated_by_user_id" | "created_at" | "updated_at", ExtArgs["result"]["appConfig"]>
 
   export type $AppConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AppConfig"
@@ -47238,6 +47253,7 @@ export namespace Prisma {
       tip_processor_fee_estimate_percentage: Prisma.Decimal
       tip_processor_fee_estimate_fixed_amount: number
       payout_hold_window_hours: number
+      vat_rate_percentage: Prisma.Decimal
       updated_by_user_id: string | null
       created_at: Date
       updated_at: Date
@@ -47669,6 +47685,7 @@ export namespace Prisma {
     readonly tip_processor_fee_estimate_percentage: FieldRef<"AppConfig", 'Decimal'>
     readonly tip_processor_fee_estimate_fixed_amount: FieldRef<"AppConfig", 'Int'>
     readonly payout_hold_window_hours: FieldRef<"AppConfig", 'Int'>
+    readonly vat_rate_percentage: FieldRef<"AppConfig", 'Decimal'>
     readonly updated_by_user_id: FieldRef<"AppConfig", 'String'>
     readonly created_at: FieldRef<"AppConfig", 'DateTime'>
     readonly updated_at: FieldRef<"AppConfig", 'DateTime'>
@@ -48614,6 +48631,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage: 'tip_processor_fee_estimate_percentage',
     tip_processor_fee_estimate_fixed_amount: 'tip_processor_fee_estimate_fixed_amount',
     payout_hold_window_hours: 'payout_hold_window_hours',
+    vat_rate_percentage: 'vat_rate_percentage',
     updated_by_user_id: 'updated_by_user_id',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -52263,6 +52281,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: DecimalFilter<"AppConfig"> | Decimal | DecimalJsLike | number | string
     tip_processor_fee_estimate_fixed_amount?: IntFilter<"AppConfig"> | number
     payout_hold_window_hours?: IntFilter<"AppConfig"> | number
+    vat_rate_percentage?: DecimalFilter<"AppConfig"> | Decimal | DecimalJsLike | number | string
     updated_by_user_id?: StringNullableFilter<"AppConfig"> | string | null
     created_at?: DateTimeFilter<"AppConfig"> | Date | string
     updated_at?: DateTimeFilter<"AppConfig"> | Date | string
@@ -52274,6 +52293,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: SortOrder
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
+    vat_rate_percentage?: SortOrder
     updated_by_user_id?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -52288,6 +52308,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: DecimalFilter<"AppConfig"> | Decimal | DecimalJsLike | number | string
     tip_processor_fee_estimate_fixed_amount?: IntFilter<"AppConfig"> | number
     payout_hold_window_hours?: IntFilter<"AppConfig"> | number
+    vat_rate_percentage?: DecimalFilter<"AppConfig"> | Decimal | DecimalJsLike | number | string
     updated_by_user_id?: StringNullableFilter<"AppConfig"> | string | null
     created_at?: DateTimeFilter<"AppConfig"> | Date | string
     updated_at?: DateTimeFilter<"AppConfig"> | Date | string
@@ -52299,6 +52320,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: SortOrder
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
+    vat_rate_percentage?: SortOrder
     updated_by_user_id?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -52318,6 +52340,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: DecimalWithAggregatesFilter<"AppConfig"> | Decimal | DecimalJsLike | number | string
     tip_processor_fee_estimate_fixed_amount?: IntWithAggregatesFilter<"AppConfig"> | number
     payout_hold_window_hours?: IntWithAggregatesFilter<"AppConfig"> | number
+    vat_rate_percentage?: DecimalWithAggregatesFilter<"AppConfig"> | Decimal | DecimalJsLike | number | string
     updated_by_user_id?: StringNullableWithAggregatesFilter<"AppConfig"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"AppConfig"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"AppConfig"> | Date | string
@@ -55714,6 +55737,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: Decimal | DecimalJsLike | number | string
     tip_processor_fee_estimate_fixed_amount?: number
     payout_hold_window_hours?: number
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string
     updated_by_user_id?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -55725,6 +55749,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: Decimal | DecimalJsLike | number | string
     tip_processor_fee_estimate_fixed_amount?: number
     payout_hold_window_hours?: number
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string
     updated_by_user_id?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -55736,6 +55761,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     tip_processor_fee_estimate_fixed_amount?: IntFieldUpdateOperationsInput | number
     payout_hold_window_hours?: IntFieldUpdateOperationsInput | number
+    vat_rate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55747,6 +55773,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     tip_processor_fee_estimate_fixed_amount?: IntFieldUpdateOperationsInput | number
     payout_hold_window_hours?: IntFieldUpdateOperationsInput | number
+    vat_rate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55758,6 +55785,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: Decimal | DecimalJsLike | number | string
     tip_processor_fee_estimate_fixed_amount?: number
     payout_hold_window_hours?: number
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string
     updated_by_user_id?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -55769,6 +55797,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     tip_processor_fee_estimate_fixed_amount?: IntFieldUpdateOperationsInput | number
     payout_hold_window_hours?: IntFieldUpdateOperationsInput | number
+    vat_rate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55780,6 +55809,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     tip_processor_fee_estimate_fixed_amount?: IntFieldUpdateOperationsInput | number
     payout_hold_window_hours?: IntFieldUpdateOperationsInput | number
+    vat_rate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58564,6 +58594,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: SortOrder
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
+    vat_rate_percentage?: SortOrder
     updated_by_user_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -58574,6 +58605,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: SortOrder
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
+    vat_rate_percentage?: SortOrder
   }
 
   export type AppConfigMaxOrderByAggregateInput = {
@@ -58582,6 +58614,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: SortOrder
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
+    vat_rate_percentage?: SortOrder
     updated_by_user_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -58593,6 +58626,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: SortOrder
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
+    vat_rate_percentage?: SortOrder
     updated_by_user_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -58603,6 +58637,7 @@ export namespace Prisma {
     tip_processor_fee_estimate_percentage?: SortOrder
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
+    vat_rate_percentage?: SortOrder
   }
 
   export type PasswordResetTokenCreateNestedManyWithoutUserInput = {

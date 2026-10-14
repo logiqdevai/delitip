@@ -6,6 +6,7 @@ export interface AppConfig {
   tip_processor_fee_estimate_percentage: string | number;
   tip_processor_fee_estimate_fixed_amount: number;
   payout_hold_window_hours: number;
+  vat_rate_percentage: string | number;
   updated_by_user_id: string | null;
   created_at: string;
   updated_at: string;
@@ -16,4 +17,5 @@ export interface UpdateAppConfigPayload {
   tip_processor_fee_estimate_percentage: number;
   tip_processor_fee_estimate_fixed_amount: number;
   payout_hold_window_hours: number;
+  vat_rate_percentage: number;
 }

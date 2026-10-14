@@ -27,7 +27,7 @@ import {
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const TaxDetailsSettingsForm: FC = () => {
-  const { organization, store, isPending } = useWorkspace();
+  const { organization, isPending } = useWorkspace();
   const updateOrganization = useUpdateOrganization();
 
   const {
@@ -147,21 +147,6 @@ export const TaxDetailsSettingsForm: FC = () => {
             <p className="text-xs text-red-600">{errors.profession.message}</p>
           ) : null}
         </div>
-      </div>
-
-      <div className="space-y-1.5">
-        <Label htmlFor="store-vat-rate">VAT rate (%)</Label>
-        <Input
-          id="store-vat-rate"
-          type="number"
-          placeholder="Not set"
-          value={store?.vat_rate_percentage ?? ""}
-          readOnly
-          disabled
-        />
-        <p className="text-xs text-zinc-500">
-          Added on top of the tip amount at checkout.
-        </p>
       </div>
 
       <div className="space-y-1.5">

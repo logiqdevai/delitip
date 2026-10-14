@@ -20,6 +20,7 @@ export const APP_CONFIG_DEFAULTS = {
   tip_processor_fee_estimate_percentage: 2.4,
   tip_processor_fee_estimate_fixed_amount: 24, // minor units (€0.24)
   payout_hold_window_hours: 48,
+  vat_rate_percentage: 0,
 };
 
 @Injectable()
@@ -57,6 +58,12 @@ export class PlatformFinanceConfig {
 
   async getPayoutHoldWindowHours(): Promise<number> {
     return (await this.getAppConfig()).payout_hold_window_hours;
+  }
+
+  // Added on top of the net tip at checkout — 0 means no VAT. Never defaults
+  // to a country rate automatically.
+  async getVatRatePercentage(): Promise<number> {
+    return Number((await this.getAppConfig()).vat_rate_percentage);
   }
 
   // Central rollout switch for connected-account (Marketplace) Store

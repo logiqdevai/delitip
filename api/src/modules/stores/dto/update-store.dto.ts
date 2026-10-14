@@ -1,5 +1,5 @@
 import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsInt, IsNumber, IsObject, IsOptional, IsString, IsUrl, Max, Min } from 'class-validator';
+import { IsArray, IsBoolean, IsInt, IsObject, IsOptional, IsString, IsUrl, Max, Min } from 'class-validator';
 import { CreateStoreDto } from './create-store.dto';
 
 export class UpdateStoreDto extends PartialType(
@@ -75,14 +75,4 @@ export class UpdateStoreDto extends PartialType(
     @IsOptional()
     @IsObject()
     thank_you_message_translations?: Record<string, string>;
-
-    @ApiProperty({
-        required: false,
-        description: 'VAT % added on top of the tip amount at checkout. Leave unset/0 for no VAT — never defaults to a country rate automatically.',
-    })
-    @IsOptional()
-    @IsNumber()
-    @Min(0)
-    @Max(100)
-    vat_rate_percentage?: number;
 }

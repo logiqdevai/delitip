@@ -27,4 +27,11 @@ export class UpdateAppConfigDto {
     @IsInt()
     @Min(0)
     payout_hold_window_hours?: number;
+
+    @ApiProperty({ required: false, example: 24, description: 'VAT % added on top of the tip amount at checkout. 0 = no VAT.' })
+    @IsOptional()
+    @IsNumber({ maxDecimalPlaces: 2 })
+    @Min(0)
+    @Max(100)
+    vat_rate_percentage?: number;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, type FormEvent, useState } from "react";
-import { MessageSquareText, Minus, Plus, Star, Tag, ThumbsDown, ThumbsUp, Trash2, Type } from "lucide-react";
+import { MessageSquareText, Minus, Pencil, Plus, Star, Tag, ThumbsDown, ThumbsUp, Trash2, Type } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   ConfirmationDialog,
@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { ReviewConfigItemEditDialog } from "./review-config-item-edit-dialog";
 import {
   SortableConfigList,
   SortableConfigRow,
@@ -48,7 +49,11 @@ import {
 } from "@/features/review-tags/hooks/use-review-tags";
 import { ReviewTagSentiments } from "@/features/review-tags/interfaces/review-tags.interfaces";
 import { PlatformAuthRoles } from "@/features/auth/interfaces/auth.interfaces";
-import { getReviewSentimentLabel } from "@/config/constants/dropdowns/reviews/review-sentiment-form.options";
+import { FeedbackQuestionTypeFormOptions } from "@/config/constants/dropdowns/reviews/feedback-question-type-form.options";
+import {
+  ReviewSentimentFormOptions,
+  getReviewSentimentLabel,
+} from "@/config/constants/dropdowns/reviews/review-sentiment-form.options";
 import { useMe } from "@/features/users/hooks/use-users";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useAuthStore } from "@/stores/auth.store";
@@ -102,6 +107,7 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
   const remove = useDeleteReviewCategory(storeId);
   const [name, setName] = useState("");
   const [pendingDelete, setPendingDelete] = useState<ReviewCategory | null>(null);
+  const [editing, setEditing] = useState<ReviewCategory | null>(null);
   const deleteConfirm = useConfirmationDialog();
 
   const items = query.data ?? [];
@@ -186,6 +192,14 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
                     />
                     <button
                       type="button"
+                      className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+                      onClick={() => setEditing(item)}
+                      aria-label={`Edit ${label}`}
+                    >
+                      <Pencil className="size-3" />
+                    </button>
+                    <button
+                      type="button"
                       className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
                       onClick={() => {
                         setPendingDelete(item);
@@ -202,6 +216,22 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
           })}
         </SortableConfigList>
       )}
+      {editing ? (
+        <ReviewConfigItemEditDialog
+          key={editing.id}
+          title="Edit rating category"
+          textLabel="Name"
+          initialText={resolvePrimaryText(editing.name, primaryLanguage)}
+          isPending={update.isPending}
+          onClose={() => setEditing(null)}
+          onSave={({ text }) =>
+            update.mutate(
+              { id: editing.id, payload: { name: text } },
+              { onSuccess: () => setEditing(null) },
+            )
+          }
+        />
+      ) : null}
       <ConfirmationDialog
         state={deleteConfirm}
         title="Delete this rating category?"
@@ -231,6 +261,7 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
   const [question, setQuestion] = useState("");
   const [type, setType] = useState<string>(FeedbackQuestionTypes.RATING);
   const [pendingDelete, setPendingDelete] = useState<FeedbackQuestion | null>(null);
+  const [editing, setEditing] = useState<FeedbackQuestion | null>(null);
   const deleteConfirm = useConfirmationDialog();
 
   const items = query.data ?? [];
@@ -374,6 +405,14 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
                     />
                     <button
                       type="button"
+                      className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+                      onClick={() => setEditing(item)}
+                      aria-label={`Edit ${label}`}
+                    >
+                      <Pencil className="size-3" />
+                    </button>
+                    <button
+                      type="button"
                       className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
                       onClick={() => {
                         setPendingDelete(item);
@@ -390,6 +429,31 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
           })}
         </SortableConfigList>
       )}
+      {editing ? (
+        <ReviewConfigItemEditDialog
+          key={editing.id}
+          title="Edit feedback question"
+          textLabel="Question"
+          initialText={resolvePrimaryText(editing.question, primaryLanguage)}
+          choiceLabel="Answer type"
+          initialChoice={editing.type}
+          choiceOptions={FeedbackQuestionTypeFormOptions}
+          isPending={update.isPending}
+          onClose={() => setEditing(null)}
+          onSave={({ text, choice }) =>
+            update.mutate(
+              {
+                id: editing.id,
+                payload: {
+                  question: text,
+                  type: choice as FeedbackQuestion["type"],
+                },
+              },
+              { onSuccess: () => setEditing(null) },
+            )
+          }
+        />
+      ) : null}
       <ConfirmationDialog
         state={deleteConfirm}
         title="Delete this feedback question?"
@@ -418,6 +482,7 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
   const [name, setName] = useState("");
   const [sentiment, setSentiment] = useState<string>(ReviewTagSentiments.POSITIVE);
   const [pendingDelete, setPendingDelete] = useState<ReviewTag | null>(null);
+  const [editing, setEditing] = useState<ReviewTag | null>(null);
   const deleteConfirm = useConfirmationDialog();
 
   const items = query.data ?? [];
@@ -536,6 +601,14 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
                     />
                     <button
                       type="button"
+                      className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+                      onClick={() => setEditing(item)}
+                      aria-label={`Edit ${item.name}`}
+                    >
+                      <Pencil className="size-3" />
+                    </button>
+                    <button
+                      type="button"
                       className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-red-50 hover:text-red-600"
                       onClick={() => {
                         setPendingDelete(item);
@@ -552,6 +625,31 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
           })}
         </ul>
       )}
+      {editing ? (
+        <ReviewConfigItemEditDialog
+          key={editing.id}
+          title="Edit tag"
+          textLabel="Name"
+          initialText={editing.name}
+          choiceLabel="Sentiment"
+          initialChoice={editing.sentiment ?? ReviewTagSentiments.NEUTRAL}
+          choiceOptions={ReviewSentimentFormOptions}
+          isPending={update.isPending}
+          onClose={() => setEditing(null)}
+          onSave={({ text, choice }) =>
+            update.mutate(
+              {
+                id: editing.id,
+                payload: {
+                  name: text,
+                  sentiment: choice as ReviewTag["sentiment"] & string,
+                },
+              },
+              { onSuccess: () => setEditing(null) },
+            )
+          }
+        />
+      ) : null}
       <ConfirmationDialog
         state={deleteConfirm}
         title="Delete this tag?"

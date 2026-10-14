@@ -83,6 +83,7 @@ describe('TipsService', () => {
         platformFinanceConfig = {
             getCommissionPercentage: jest.fn().mockResolvedValue(5),
             getProcessorFeeEstimatePercentage: jest.fn().mockResolvedValue(1.5),
+            getVatRatePercentage: jest.fn().mockResolvedValue(0),
         };
         vivaConfig = {
             getDefaultSourceCode: jest.fn().mockReturnValue('Default'),
@@ -359,8 +360,9 @@ describe('TipsService', () => {
             expect(result).toEqual({ tip_id: 'tip1', checkout_url: expect.stringContaining('123456789') });
         });
 
-        it('adds VAT on top of the tip amount when the store has a vat_rate_percentage set, without changing the commission base', async () => {
-            prisma.qrCode.findUnique.mockResolvedValue(qrCode({ store: store({ vat_rate_percentage: 24 }) }));
+        it('adds VAT on top of the tip amount when the platform VAT rate is set, without changing the commission base', async () => {
+            platformFinanceConfig.getVatRatePercentage.mockResolvedValue(24);
+            prisma.qrCode.findUnique.mockResolvedValue(qrCode());
 
             await service.createPublicTip(baseDto({ amount: 1000 }));
 
