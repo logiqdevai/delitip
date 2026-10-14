@@ -173,6 +173,7 @@ export const ApiRoutes = {
   },
   admin: {
     stores: "/admin/stores",
+    appConfig: "/admin/app-config",
     payments: {
       prefix: "/admin/payments",
       reconcile: "/admin/payments/reconcile",

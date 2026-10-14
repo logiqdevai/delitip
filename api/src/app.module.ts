@@ -30,6 +30,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { PayoutsModule } from './modules/payouts/payouts.module';
 import { SettlementsModule } from './modules/settlements/settlements.module';
 import { ContactModule } from './modules/contact/contact.module';
+import { AppConfigModule } from './modules/app-config/app-config.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { ContactModule } from './modules/contact/contact.module';
     PayoutsModule,
     SettlementsModule,
     ContactModule,
+    AppConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],

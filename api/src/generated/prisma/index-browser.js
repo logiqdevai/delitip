@@ -574,6 +574,17 @@ exports.Prisma.InsightSummaryScalarFieldEnum = {
   created_at: 'created_at'
 };
 
+exports.Prisma.AppConfigScalarFieldEnum = {
+  id: 'id',
+  tip_platform_commission_percentage: 'tip_platform_commission_percentage',
+  tip_processor_fee_estimate_percentage: 'tip_processor_fee_estimate_percentage',
+  tip_processor_fee_estimate_fixed_amount: 'tip_processor_fee_estimate_fixed_amount',
+  payout_hold_window_hours: 'payout_hold_window_hours',
+  updated_by_user_id: 'updated_by_user_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -824,7 +835,8 @@ exports.Prisma.ModelName = {
   FeedbackResponse: 'FeedbackResponse',
   AlertPreference: 'AlertPreference',
   Alert: 'Alert',
-  InsightSummary: 'InsightSummary'
+  InsightSummary: 'InsightSummary',
+  AppConfig: 'AppConfig'
 };
 
 /**

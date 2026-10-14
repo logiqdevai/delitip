@@ -81,8 +81,8 @@ describe('TipsService', () => {
         };
         usersService = { findOrCreateByEmail: jest.fn() };
         platformFinanceConfig = {
-            getCommissionPercentage: jest.fn().mockReturnValue(5),
-            getProcessorFeeEstimatePercentage: jest.fn().mockReturnValue(1.5),
+            getCommissionPercentage: jest.fn().mockResolvedValue(5),
+            getProcessorFeeEstimatePercentage: jest.fn().mockResolvedValue(1.5),
         };
         vivaConfig = {
             getDefaultSourceCode: jest.fn().mockReturnValue('Default'),

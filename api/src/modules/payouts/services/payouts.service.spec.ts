@@ -31,7 +31,7 @@ describe('PayoutsService', () => {
             $transaction: jest.fn((fn) => fn(prisma)),
         };
         accessControl = { assertStoreAccess: jest.fn() };
-        platformFinanceConfig = { getPayoutHoldWindowHours: jest.fn().mockReturnValue(48) };
+        platformFinanceConfig = { getPayoutHoldWindowHours: jest.fn().mockResolvedValue(48) };
         vivaConfig = { getWalletId: jest.fn().mockReturnValue(999) };
         vivaBankTransfers = {
             getBankAccount: jest.fn(),

@@ -141,7 +141,7 @@ export class PayoutsService {
   }
 
   private async loadEligibleGroups(storeId: string, employeeIdFilter?: string): Promise<RecipientGroup[]> {
-    const holdWindowHours = this.platformFinanceConfig.getPayoutHoldWindowHours();
+    const holdWindowHours = await this.platformFinanceConfig.getPayoutHoldWindowHours();
     const holdCutoff = new Date(Date.now() - holdWindowHours * 60 * 60 * 1000);
 
     const distributions = await this.prisma.tipDistribution.findMany({
@@ -534,7 +534,7 @@ export class PayoutsService {
       this.prisma.store.findUnique({ where: { id: storeId }, select: { primary_language: true } }),
     ]);
 
-    const holdWindowHours = this.platformFinanceConfig.getPayoutHoldWindowHours();
+    const holdWindowHours = await this.platformFinanceConfig.getPayoutHoldWindowHours();
     const holdCutoff = this.holdCutoff(holdWindowHours);
     const primaryLanguage = store?.primary_language ?? Language.EN;
     const data = items.map((distribution) => ({

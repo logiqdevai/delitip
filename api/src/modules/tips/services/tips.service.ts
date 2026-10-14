@@ -120,7 +120,7 @@ export class TipsService {
             : undefined;
 
         const currency: Currency = dto.currency || store.currency;
-        const commissionPercentage = this.platformFinanceConfig.getCommissionPercentage();
+        const commissionPercentage = await this.platformFinanceConfig.getCommissionPercentage();
         const commissionAmount = Math.round((dto.amount * commissionPercentage) / 100);
         const platformFeePercentage = Math.round(((commissionAmount / dto.amount) * 100) * 100) / 100;
 

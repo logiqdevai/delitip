@@ -40,8 +40,8 @@ describe('PaymentWebhooksService', () => {
         };
         vivaTransactions = { getTransaction: jest.fn() };
         platformFinanceConfig = {
-            getProcessorFeeEstimatePercentage: jest.fn().mockReturnValue(1.5),
-            getProcessorFeeEstimateFixedAmount: jest.fn().mockReturnValue(24),
+            getProcessorFeeEstimatePercentage: jest.fn().mockResolvedValue(1.5),
+            getProcessorFeeEstimateFixedAmount: jest.fn().mockResolvedValue(24),
         };
         tipsService = { triggerPerformanceChangeAlert: jest.fn().mockResolvedValue(undefined) };
         payoutAccountsService = { promoteIfVerified: jest.fn().mockResolvedValue(undefined) };

@@ -73,6 +73,7 @@ export const Routes = {
       analytics: "/dashboard/admin/analytics",
       vatSimulator: "/dashboard/admin/vat-simulator",
       changelog: "/dashboard/admin/changelog",
+      appConfig: "/dashboard/admin/app-config",
     },
     settings: {
       root: "/dashboard/settings",

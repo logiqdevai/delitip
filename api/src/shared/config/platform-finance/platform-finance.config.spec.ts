@@ -2,61 +2,49 @@ import { PlatformFinanceConfig } from './platform-finance.config';
 
 describe('PlatformFinanceConfig', () => {
     let configService: any;
+    let prisma: any;
     let config: PlatformFinanceConfig;
+
+    const row = {
+        id: 'default',
+        tip_platform_commission_percentage: '7.50',
+        tip_processor_fee_estimate_percentage: '2.00',
+        tip_processor_fee_estimate_fixed_amount: 30,
+        payout_hold_window_hours: 72,
+    };
 
     beforeEach(() => {
         configService = { get: jest.fn() };
-        config = new PlatformFinanceConfig(configService);
+        prisma = { appConfig: { findUnique: jest.fn().mockResolvedValue(row), upsert: jest.fn() } };
+        config = new PlatformFinanceConfig(configService, prisma);
     });
 
-    it('reads the commission percentage from env when set', () => {
-        configService.get.mockReturnValue(7.5);
-
-        expect(config.getCommissionPercentage()).toBe(7.5);
-        expect(configService.get).toHaveBeenCalledWith('TIP_PLATFORM_COMMISSION_PERCENTAGE');
+    it('reads the commission percentage from the app_config row', async () => {
+        expect(await config.getCommissionPercentage()).toBe(7.5);
     });
 
-    it('falls back to the default commission percentage when unset', () => {
-        configService.get.mockReturnValue(undefined);
-
-        expect(config.getCommissionPercentage()).toBe(5);
+    it('reads the processor fee estimate percentage from the app_config row', async () => {
+        expect(await config.getProcessorFeeEstimatePercentage()).toBe(2);
     });
 
-    it('reads the processor fee estimate percentage from env when set', () => {
-        configService.get.mockReturnValue(2);
-
-        expect(config.getProcessorFeeEstimatePercentage()).toBe(2);
+    it('reads the processor fee estimate fixed amount from the app_config row', async () => {
+        expect(await config.getProcessorFeeEstimateFixedAmount()).toBe(30);
     });
 
-    it('falls back to the default processor fee estimate percentage when unset', () => {
-        configService.get.mockReturnValue(undefined);
-
-        expect(config.getProcessorFeeEstimatePercentage()).toBe(2.4);
+    it('reads the payout hold window from the app_config row', async () => {
+        expect(await config.getPayoutHoldWindowHours()).toBe(72);
     });
 
-    it('reads the processor fee estimate fixed amount from env when set', () => {
-        configService.get.mockReturnValue(30);
+    it('creates the default row when none exists yet', async () => {
+        prisma.appConfig.findUnique.mockResolvedValue(null);
+        prisma.appConfig.upsert.mockResolvedValue({ ...row, payout_hold_window_hours: 48 });
 
-        expect(config.getProcessorFeeEstimateFixedAmount()).toBe(30);
-        expect(configService.get).toHaveBeenCalledWith('TIP_PROCESSOR_FEE_ESTIMATE_FIXED_AMOUNT');
-    });
-
-    it('falls back to the default processor fee estimate fixed amount when unset', () => {
-        configService.get.mockReturnValue(undefined);
-
-        expect(config.getProcessorFeeEstimateFixedAmount()).toBe(24);
-    });
-
-    it('reads the payout hold window from env when set', () => {
-        configService.get.mockReturnValue(72);
-
-        expect(config.getPayoutHoldWindowHours()).toBe(72);
-    });
-
-    it('falls back to the default payout hold window when unset', () => {
-        configService.get.mockReturnValue(undefined);
-
-        expect(config.getPayoutHoldWindowHours()).toBe(48);
+        expect(await config.getPayoutHoldWindowHours()).toBe(48);
+        expect(prisma.appConfig.upsert).toHaveBeenCalledWith({
+            where: { id: 'default' },
+            create: { id: 'default' },
+            update: {},
+        });
     });
 
     it('reports connected-account payouts disabled by default', () => {

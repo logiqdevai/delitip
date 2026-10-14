@@ -193,8 +193,8 @@ export class PaymentWebhooksService {
     const grossAmount = tip.payment_transaction.gross_amount;
     const tipAmount = tip.payment_transaction.tip_amount;
     const commissionAmount = tip.payment_transaction.commission_amount;
-    const processorFeePercentageUsed = this.platformFinanceConfig.getProcessorFeeEstimatePercentage();
-    const processorFeeFixedAmount = this.platformFinanceConfig.getProcessorFeeEstimateFixedAmount();
+    const processorFeePercentageUsed = await this.platformFinanceConfig.getProcessorFeeEstimatePercentage();
+    const processorFeeFixedAmount = await this.platformFinanceConfig.getProcessorFeeEstimateFixedAmount();
     // Estimated against grossAmount (VAT-inclusive) since that's the actual
     // amount Viva processes on the card — VAT is charged its own cut too.
     const processorFeeEstimated =

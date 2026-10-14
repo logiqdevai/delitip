@@ -46,10 +46,6 @@ const EnvSchema = z.object({
     VIVA_SOURCE_CODE: z.string().optional(),
     VIVA_WALLET_ID: z.coerce.number().optional(),
     VIVA_WEBHOOK_IP_ALLOWLIST: z.string().optional(),
-    TIP_PLATFORM_COMMISSION_PERCENTAGE: z.coerce.number().optional(),
-    TIP_PROCESSOR_FEE_ESTIMATE_PERCENTAGE: z.coerce.number().optional(),
-    TIP_PROCESSOR_FEE_ESTIMATE_FIXED_AMOUNT: z.coerce.number().optional(),
-    PAYOUT_HOLD_WINDOW_HOURS: z.coerce.number().optional(),
     CONNECTED_ACCOUNT_PAYOUTS_ENABLED: z.enum(['true', 'false']).optional(),
 });
 

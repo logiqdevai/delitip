@@ -877,7 +877,7 @@ model Payout {
 // Store knows what it still owes and the employee can verify what they got.
 // Never deleted, only reversed.
 model Settlement {
-  id                       String           @id @default(uuid())
+  id                       String    @id @default(uuid())
   store_id                 String
   employee_id              String?
   employee_name_snapshot   String // an employee row can be detached (TipDistribution.employee_id is SetNull) but the debt record must outlive it
@@ -890,8 +890,8 @@ model Settlement {
   confirmed_by_employee_at DateTime? // the employee's own acknowledgement that they received it
   reversed_at              DateTime?
   reversed_by_user_id      String?
-  created_at               DateTime         @default(now())
-  updated_at               DateTime         @updatedAt
+  created_at               DateTime  @default(now())
+  updated_at               DateTime  @updatedAt
 
   store       Store     @relation(fields: [store_id], references: [id], onDelete: Cascade)
   employee    Employee? @relation(fields: [employee_id], references: [id], onDelete: SetNull)
@@ -1162,4 +1162,22 @@ model InsightSummary {
   @@index([store_id])
   @@index([period_start, period_end])
   @@map("insight_summaries")
+}
+
+// ==================================================================
+// App Config — platform-wide finance settings, editable at runtime by
+// ADMIN / SUPER_ADMIN. Singleton: exactly one row, id "default".
+// ==================================================================
+
+model AppConfig {
+  id                                      String   @id @default("default")
+  tip_platform_commission_percentage      Decimal  @default(5) @db.Decimal(5, 2)
+  tip_processor_fee_estimate_percentage   Decimal  @default(2.4) @db.Decimal(5, 2)
+  tip_processor_fee_estimate_fixed_amount Int      @default(24) // minor units (€0.24)
+  payout_hold_window_hours                Int      @default(48)
+  updated_by_user_id                      String?
+  created_at                              DateTime @default(now())
+  updated_at                              DateTime @updatedAt
+
+  @@map("app_config")
 }
