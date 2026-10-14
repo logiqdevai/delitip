@@ -24,10 +24,12 @@ import {
   getCountryCodeByName,
   getCountryLabel,
 } from "@/config/constants/dropdowns/shared/country.options";
+import { usePlatformVatRate } from "@/features/app-config/hooks/use-app-config";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const TaxDetailsSettingsForm: FC = () => {
   const { organization, isPending } = useWorkspace();
+  const { data: vatRate } = usePlatformVatRate();
   const updateOrganization = useUpdateOrganization();
 
   const {
@@ -147,6 +149,21 @@ export const TaxDetailsSettingsForm: FC = () => {
             <p className="text-xs text-red-600">{errors.profession.message}</p>
           ) : null}
         </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="platform-vat-rate">VAT rate (%)</Label>
+        <Input
+          id="platform-vat-rate"
+          type="number"
+          placeholder="Not set"
+          value={vatRate?.vat_rate_percentage ?? ""}
+          readOnly
+          disabled
+        />
+        <p className="text-xs text-zinc-500">
+          Added on top of the tip amount at checkout.
+        </p>
       </div>
 
       <div className="space-y-1.5">

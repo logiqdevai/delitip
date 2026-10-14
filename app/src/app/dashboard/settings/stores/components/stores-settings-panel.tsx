@@ -1,7 +1,8 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { Store as StoreIcon } from "lucide-react";
+import { Plus, Store as StoreIcon } from "lucide-react";
+import { AddStoreDialog } from "@/components/layout/sidebar/add-store-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +16,7 @@ import { OrganizationRoles } from "@/features/organizations/interfaces/organizat
 import { useDeleteStore, useStores } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 export const StoresSettingsPanel: FC = () => {
   const {
@@ -24,6 +26,8 @@ export const StoresSettingsPanel: FC = () => {
     switchStore,
   } = useWorkspace();
   const storesQuery = useStores(organizationId ?? "");
+  const setWorkspace = useWorkspaceStore((s) => s.setWorkspace);
+  const [addStoreOpen, setAddStoreOpen] = useState(false);
   const deleteStore = useDeleteStore();
   const deleteConfirm = useConfirmationDialog();
   const [pendingDelete, setPendingDelete] = useState<Store | null>(null);
@@ -36,9 +40,21 @@ export const StoresSettingsPanel: FC = () => {
 
   return (
     <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
-      <div className="flex items-center gap-2">
-        <StoreIcon className="size-4 text-zinc-400" strokeWidth={2} />
-        <h2 className="text-sm font-bold text-ink-charcoal">Stores</h2>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <StoreIcon className="size-4 text-zinc-400" strokeWidth={2} />
+          <h2 className="text-sm font-bold text-ink-charcoal">Stores</h2>
+        </div>
+        {isOwner ? (
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => setAddStoreOpen(true)}
+          >
+            <Plus className="size-4" strokeWidth={2} />
+            Add store
+          </Button>
+        ) : null}
       </div>
 
       {storesQuery.isPending ? (
@@ -141,6 +157,21 @@ export const StoresSettingsPanel: FC = () => {
           Your business needs at least one store, so the last one can&apos;t be
           deleted.
         </p>
+      ) : null}
+
+      {isOwner ? (
+        <AddStoreDialog
+          open={addStoreOpen}
+          onOpenChange={setAddStoreOpen}
+          organizationId={organizationId}
+          stores={stores}
+          currentStore={stores.find((item) => item.id === currentStoreId) ?? null}
+          onCreated={(created) => {
+            // switchStore validates against this render's (pre-create) list,
+            // so write the new selection to the workspace directly.
+            setWorkspace({ organizationId, storeId: created.id });
+          }}
+        />
       ) : null}
 
       <ConfirmationDialog

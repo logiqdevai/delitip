@@ -171,6 +171,9 @@ export const ApiRoutes = {
   googleMaps: {
     timezone: "/google-maps/timezone",
   },
+  appConfig: {
+    vatRate: "/app-config/vat-rate",
+  },
   admin: {
     stores: "/admin/stores",
     appConfig: "/admin/app-config",

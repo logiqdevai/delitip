@@ -12,6 +12,10 @@ export interface AppConfig {
   updated_at: string;
 }
 
+export interface PlatformVatRate {
+  vat_rate_percentage: number;
+}
+
 export interface UpdateAppConfigPayload {
   tip_platform_commission_percentage: number;
   tip_processor_fee_estimate_percentage: number;
