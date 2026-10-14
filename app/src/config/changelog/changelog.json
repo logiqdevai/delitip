@@ -633,5 +633,16 @@
     "agent": "Claude Opus 5 (1M context)",
     "sessionMood": "FOCUSED",
     "sessionNote": "Started from a yes/no question and grew through short, direct follow-ups (copy settings, a second step, hiding alerts, a Stores settings page, switching, storage cleanup on delete) with no rework."
+  },
+  {
+    "commit": "153843f",
+    "date": "2026-10-14",
+    "type": "FEATURE",
+    "title": "Move platform finance settings from env vars to an AppConfig table",
+    "description": "Platform commission, processor fee estimate and payout hold window are now stored in an app_config table instead of environment variables. Admins and super admins can change them from the new App Config page in the admin dashboard; changes apply to future tips and payouts only.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5.5",
+    "sessionMood": "RUSHED",
+    "sessionNote": "Short, direct asks with a pasted env block and a one-word approval to go ahead."
   }
 ]
