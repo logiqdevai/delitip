@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -34,6 +34,8 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Access-Control-Allow-Origin'],
   });
 
-  await app.listen(Number(process.env.PORT) || 3000);
+  const port = Number(process.env.PORT) || 3000;
+  await app.listen(port);
+  Logger.log(`Listening on port ${port}`, 'Bootstrap');
 }
 bootstrap();
