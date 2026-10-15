@@ -249,6 +249,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                   </DropdownMenuItem>
                 ) : null}
                 <DropdownMenuItem
+                  variant={employee.is_active ? "destructive" : "default"}
                   onClick={() => {
                     if (employee.is_active) {
                       deactivateConfirm.openDialog();

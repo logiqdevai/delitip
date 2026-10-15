@@ -117,7 +117,10 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
               Resend invite
             </DropdownMenuItem>
           ) : null}
-          <DropdownMenuItem onClick={() => onToggleActive(employee)}>
+          <DropdownMenuItem
+            variant={employee.is_active ? "destructive" : "default"}
+            onClick={() => onToggleActive(employee)}
+          >
             {employee.is_active ? <UserRoundX /> : <UserCheck />}
             {employee.is_active ? "Deactivate" : "Activate"}
           </DropdownMenuItem>

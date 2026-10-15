@@ -83,9 +83,9 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
         ) : null}
         <Button
           type="button"
-          variant="outline"
+          variant="destructive"
           size="sm"
-          className="ml-auto text-red-600 hover:bg-red-50 hover:text-red-700"
+          className="ml-auto"
           onClick={() => onDelete(rule)}
         >
           <Trash2 data-icon="inline-start" className="size-3.5" />
