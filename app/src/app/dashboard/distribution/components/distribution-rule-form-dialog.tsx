@@ -51,7 +51,15 @@ interface DistributionRuleFormDialogProps {
   onCreated?: (rule: DistributionRule) => void;
 }
 
-const emptyRecipient = (): DistributionRuleFormData["recipients"][number] => ({
+// Early version: "Pay each recipient directly" is hidden in the UI and new
+// rules default to routing everything through the business.
+const DEFAULT_PAYOUT_MODE: DistributionPayoutMode =
+  DistributionPayoutModes.VIA_STORE;
+const VISIBLE_PAYOUT_MODE_OPTIONS = DistributionPayoutModeFormOptions.filter(
+  (option) => option.id !== DistributionPayoutModes.DIRECT,
+);
+
+const emptyRecipient =(): DistributionRuleFormData["recipients"][number] => ({
   recipient_type: DistributionRecipientTypes.EMPLOYEE,
   employee_id: "",
   percentage: 100,
@@ -90,7 +98,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
     resolver: zodResolver(distributionRuleFormSchema),
     defaultValues: {
       name: "",
-      payout_mode: DistributionPayoutModes.DIRECT,
+      payout_mode: DEFAULT_PAYOUT_MODE,
       recipients: [emptyRecipient()],
     },
   });
@@ -154,7 +162,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
 
     reset({
       name: "",
-      payout_mode: DistributionPayoutModes.DIRECT,
+      payout_mode: DEFAULT_PAYOUT_MODE,
       recipients: [emptyRecipient()],
     });
   }, [open, reset, rule]);
@@ -301,7 +309,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                   role="radiogroup"
                   aria-label="Who pays the employees"
                 >
-                  {DistributionPayoutModeFormOptions.map((option) => {
+                  {VISIBLE_PAYOUT_MODE_OPTIONS.map((option) => {
                     const selected = field.value === option.id;
                     const Icon =
                       option.id === DistributionPayoutModes.VIA_STORE
