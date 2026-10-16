@@ -40,9 +40,9 @@ export type InvoiceCheckVerdict =
 
 export const InvoiceCheckIssues = {
   NOT_AN_INVOICE: "NOT_AN_INVOICE",
-  TOTAL_MISSING: "TOTAL_MISSING",
-  TOTAL_MISMATCH: "TOTAL_MISMATCH",
-  TOTAL_ROUNDING: "TOTAL_ROUNDING",
+  NET_MISSING: "NET_MISSING",
+  NET_MISMATCH: "NET_MISMATCH",
+  NET_ROUNDING: "NET_ROUNDING",
   CURRENCY_MISMATCH: "CURRENCY_MISMATCH",
   ISSUER_VAT_MISMATCH: "ISSUER_VAT_MISMATCH",
   ISSUER_VAT_MISSING: "ISSUER_VAT_MISSING",
@@ -57,7 +57,7 @@ export type InvoiceCheckIssue =
 
 // Issues that make the verdict MISMATCH; the rest are advisory notes.
 export const HardInvoiceCheckIssues: ReadonlySet<InvoiceCheckIssue> = new Set<InvoiceCheckIssue>([
-  InvoiceCheckIssues.TOTAL_MISMATCH,
+  InvoiceCheckIssues.NET_MISMATCH,
   InvoiceCheckIssues.CURRENCY_MISMATCH,
   InvoiceCheckIssues.ISSUER_VAT_MISMATCH,
   InvoiceCheckIssues.RECIPIENT_VAT_MISMATCH,

@@ -215,15 +215,15 @@ const InvoiceStep: FC<{
           </p>
         )}
         <CopyRow
-          label="Invoice total (incl. VAT)"
+          label="Invoice amount (before VAT)"
           value={formatMoney(preview.amount, currency)}
         />
         <p className="pt-2 text-caption leading-snug text-zinc-500">
-          The grand total on the invoice must be exactly{" "}
+          The amount before VAT on the invoice must be exactly{" "}
           <strong className="text-ink-charcoal">
             {formatMoney(preview.amount, currency)}
           </strong>
-          . Any VAT is part of that total, not added on top.
+          . Add your VAT on top, as you normally would.
         </p>
       </div>
 
@@ -242,7 +242,7 @@ const InvoiceStep: FC<{
         isPending={isUploading}
       />
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="payout-request-invoice-number">
             Invoice number{" "}

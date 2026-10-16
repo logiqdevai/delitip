@@ -70,9 +70,13 @@ There is deliberately no `PAID`/`FAILED`:
 
 `RefundsService` still cancels PENDING rows. The admin detail computes a live
 `integrity` block (`locked_count`, `stale_count`, `live_amount`, `is_stale`);
-approval returns 409 while stale. Since the invoice total must equal the
+approval returns 409 while stale. Since the invoice amount before VAT must equal the
 amount, partial approval is never valid — the admin rejects with a note and
 the Store re-requests the corrected figure.
+
+## Invoice amount and VAT
+
+The payout amount is what the Store invoices **before VAT**; the Store adds its own VAT on top. The automatic check therefore compares `net_amount` (or total − VAT when only those are readable) to the request amount, and separately checks net + VAT = total.
 
 ## Automatic invoice check
 
@@ -85,9 +89,9 @@ the Store re-requests the corrected figure.
 | Issue code | Hard? | Meaning |
 | --- | --- | --- |
 | `NOT_AN_INVOICE` | → UNREADABLE | Not an invoice |
-| `TOTAL_MISSING` | → UNREADABLE | No total read |
-| `TOTAL_MISMATCH` | yes | Total ≠ request amount (exact cents) |
-| `TOTAL_ROUNDING` | no | ±1 cent on a photo/scan |
+| `NET_MISSING` | → UNREADABLE | No amount before VAT read (falls back to total − VAT) |
+| `NET_MISMATCH` | yes | Amount before VAT ≠ request amount (exact cents) |
+| `NET_ROUNDING` | no | ±1 cent on a photo/scan |
 | `CURRENCY_MISMATCH` | yes | |
 | `ISSUER_VAT_MISMATCH` | yes | vs `Organization.vat_number` (EL/GR prefix, spaces, dots ignored) |
 | `ISSUER_VAT_MISSING` / `ORG_VAT_MISSING` | no | Can't compare |

@@ -7,9 +7,9 @@ import { InvoiceExtraction } from './invoice-extraction.schema';
 // the money. The frontend owns the human-readable copy for these.
 export const InvoiceCheckIssues = {
   NOT_AN_INVOICE: 'NOT_AN_INVOICE',
-  TOTAL_MISSING: 'TOTAL_MISSING',
-  TOTAL_MISMATCH: 'TOTAL_MISMATCH',
-  TOTAL_ROUNDING: 'TOTAL_ROUNDING',
+  NET_MISSING: 'NET_MISSING',
+  NET_MISMATCH: 'NET_MISMATCH',
+  NET_ROUNDING: 'NET_ROUNDING',
   CURRENCY_MISMATCH: 'CURRENCY_MISMATCH',
   ISSUER_VAT_MISMATCH: 'ISSUER_VAT_MISMATCH',
   ISSUER_VAT_MISSING: 'ISSUER_VAT_MISSING',
@@ -23,7 +23,7 @@ export const InvoiceCheckIssues = {
 export type InvoiceCheckIssue = (typeof InvoiceCheckIssues)[keyof typeof InvoiceCheckIssues];
 
 export const HARD_INVOICE_ISSUES: ReadonlySet<InvoiceCheckIssue> = new Set<InvoiceCheckIssue>([
-  InvoiceCheckIssues.TOTAL_MISMATCH,
+  InvoiceCheckIssues.NET_MISMATCH,
   InvoiceCheckIssues.CURRENCY_MISMATCH,
   InvoiceCheckIssues.ISSUER_VAT_MISMATCH,
   InvoiceCheckIssues.RECIPIENT_VAT_MISMATCH,
@@ -33,9 +33,9 @@ export const HARD_INVOICE_ISSUES: ReadonlySet<InvoiceCheckIssue> = new Set<Invoi
 // has its own copy of this vocabulary under config/constants/dropdowns.
 export const InvoiceCheckIssueDescriptions: Record<InvoiceCheckIssue, string> = {
   NOT_AN_INVOICE: 'The uploaded file does not look like an invoice.',
-  TOTAL_MISSING: 'No total amount could be read from the invoice.',
-  TOTAL_MISMATCH: 'The invoice total does not equal the requested payout amount.',
-  TOTAL_ROUNDING: 'The invoice total differs from the payout amount by a cent (likely rounding in the scan).',
+  NET_MISSING: 'No amount before VAT could be read from the invoice.',
+  NET_MISMATCH: 'The invoice amount before VAT does not equal the requested payout amount.',
+  NET_ROUNDING: 'The invoice amount before VAT differs from the payout amount by a cent (likely rounding in the scan).',
   CURRENCY_MISMATCH: 'The invoice currency differs from the payout currency.',
   ISSUER_VAT_MISMATCH: "The issuer's VAT number does not match the organization's VAT number on file.",
   ISSUER_VAT_MISSING: 'No issuer VAT number could be read from the invoice.',
@@ -98,16 +98,21 @@ export function verifyInvoice(extracted: InvoiceExtraction, expected: InvoiceExp
     return { verdict: InvoiceCheckVerdict.UNREADABLE, issues: [InvoiceCheckIssues.NOT_AN_INVOICE] };
   }
 
+  // The payout amount is what the Store invoices BEFORE its own VAT; VAT is
+  // added on top, so the amount to compare is the net, not the grand total.
+  // Fall back to total - VAT when only those two were read.
   const total = majorToMinor(extracted.total_amount);
-  if (total === null) {
-    return { verdict: InvoiceCheckVerdict.UNREADABLE, issues: [InvoiceCheckIssues.TOTAL_MISSING] };
+  const vat = majorToMinor(extracted.vat_amount);
+  const net = majorToMinor(extracted.net_amount) ?? (total !== null && vat !== null ? total - vat : null);
+  if (net === null) {
+    return { verdict: InvoiceCheckVerdict.UNREADABLE, issues: [InvoiceCheckIssues.NET_MISSING] };
   }
 
-  const diff = Math.abs(total - expected.amount);
+  const diff = Math.abs(net - expected.amount);
   if (diff > 1 || (diff === 1 && !expected.is_image)) {
-    issues.push(InvoiceCheckIssues.TOTAL_MISMATCH);
+    issues.push(InvoiceCheckIssues.NET_MISMATCH);
   } else if (diff === 1) {
-    issues.push(InvoiceCheckIssues.TOTAL_ROUNDING);
+    issues.push(InvoiceCheckIssues.NET_ROUNDING);
   }
 
   if (extracted.currency && extracted.currency.toUpperCase() !== expected.currency.toUpperCase()) {
@@ -145,9 +150,7 @@ export function verifyInvoice(extracted: InvoiceExtraction, expected: InvoiceExp
     }
   }
 
-  const net = majorToMinor(extracted.net_amount);
-  const vat = majorToMinor(extracted.vat_amount);
-  if (net !== null && vat !== null && Math.abs(net + vat - total) > 1) {
+  if (total !== null && vat !== null && Math.abs(net + vat - total) > 1) {
     issues.push(InvoiceCheckIssues.NET_PLUS_VAT_MISMATCH);
   }
 

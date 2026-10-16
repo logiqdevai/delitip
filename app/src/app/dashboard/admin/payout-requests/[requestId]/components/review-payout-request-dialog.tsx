@@ -95,7 +95,7 @@ export const ReviewPayoutRequestDialog: FC<{
             maxLength={1000}
             placeholder={
               isReject
-                ? "e.g. The invoice total is €120.00 but the payout is €124.00."
+                ? "e.g. The invoice amount before VAT is €120.00 but the payout is €124.00."
                 : "Anything the store should know"
             }
           />

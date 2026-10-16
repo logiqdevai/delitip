@@ -12,17 +12,17 @@ export const InvoiceCheckIssueDescriptionOptions: {
     description: "The uploaded file does not look like an invoice.",
   },
   {
-    id: InvoiceCheckIssues.TOTAL_MISSING,
-    description: "No total amount could be read from the invoice.",
+    id: InvoiceCheckIssues.NET_MISSING,
+    description: "No amount before VAT could be read from the invoice.",
   },
   {
-    id: InvoiceCheckIssues.TOTAL_MISMATCH,
-    description: "The invoice total does not equal the requested payout amount.",
+    id: InvoiceCheckIssues.NET_MISMATCH,
+    description: "The invoice amount before VAT does not equal the requested payout amount.",
   },
   {
-    id: InvoiceCheckIssues.TOTAL_ROUNDING,
+    id: InvoiceCheckIssues.NET_ROUNDING,
     description:
-      "The invoice total differs from the payout amount by one cent — likely rounding in the scan.",
+      "The invoice amount before VAT differs from the payout amount by one cent — likely rounding in the scan.",
   },
   {
     id: InvoiceCheckIssues.CURRENCY_MISMATCH,

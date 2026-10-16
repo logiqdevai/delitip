@@ -16,7 +16,7 @@ export const InvoiceExtractionSchema = z.object({
   invoice_number: z.string().nullable().describe('Invoice number / series as printed'),
   invoice_date: z.string().nullable().describe('Issue date in YYYY-MM-DD'),
   currency: z.string().nullable().describe('ISO 4217 currency code, e.g. EUR'),
-  net_amount: z.number().nullable().describe('Total before VAT, in major units (e.g. 123.45)'),
+  net_amount: z.number().nullable().describe('Amount before VAT (net / subtotal), in major units (e.g. 123.45)'),
   vat_rate_percentage: z.number().nullable().describe('VAT rate applied, in percent (e.g. 24). 0 if VAT-exempt / reverse charge'),
   vat_amount: z.number().nullable().describe('VAT amount, in major units'),
   total_amount: z.number().nullable().describe('Grand total payable including VAT, in major units'),

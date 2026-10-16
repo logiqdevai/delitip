@@ -20,7 +20,7 @@ const extraction = (overrides: Partial<InvoiceExtraction> = {}): InvoiceExtracti
 });
 
 const expectation = (overrides: Partial<Parameters<typeof verifyInvoice>[1]> = {}) => ({
-    amount: 12400,
+    amount: 10000,
     currency: 'EUR',
     organization_vat_number: '123456789',
     platform_vat_number: 'EL987654321',
@@ -50,24 +50,24 @@ describe('verifyInvoice', () => {
             verdict: InvoiceCheckVerdict.UNREADABLE,
             issues: [InvoiceCheckIssues.NOT_AN_INVOICE],
         });
-        expect(verifyInvoice(extraction({ total_amount: null }), expectation())).toEqual({
+        expect(verifyInvoice(extraction({ net_amount: null, total_amount: null }), expectation())).toEqual({
             verdict: InvoiceCheckVerdict.UNREADABLE,
-            issues: [InvoiceCheckIssues.TOTAL_MISSING],
+            issues: [InvoiceCheckIssues.NET_MISSING],
         });
     });
 
-    it('flags a total that differs from the requested amount as a hard MISMATCH', () => {
-        const result = verifyInvoice(extraction({ total_amount: 120 }), expectation());
+    it('flags a net amount that differs from the requested amount as a hard MISMATCH', () => {
+        const result = verifyInvoice(extraction({ net_amount: 96, vat_amount: 24, total_amount: 120 }), expectation());
         expect(result.verdict).toBe(InvoiceCheckVerdict.MISMATCH);
-        expect(result.issues).toContain(InvoiceCheckIssues.TOTAL_MISMATCH);
+        expect(result.issues).toContain(InvoiceCheckIssues.NET_MISMATCH);
     });
 
     it('allows a one-cent difference on photos/scans as a soft rounding note, but not on PDFs', () => {
-        expect(verifyInvoice(extraction({ total_amount: 124.01 }), expectation({ is_image: true }))).toEqual({
+        expect(verifyInvoice(extraction({ net_amount: 100.01, vat_amount: 23.99 }), expectation({ is_image: true }))).toEqual({
             verdict: InvoiceCheckVerdict.MATCH,
-            issues: [InvoiceCheckIssues.TOTAL_ROUNDING],
+            issues: [InvoiceCheckIssues.NET_ROUNDING],
         });
-        expect(verifyInvoice(extraction({ total_amount: 124.01 }), expectation()).verdict).toBe(InvoiceCheckVerdict.MISMATCH);
+        expect(verifyInvoice(extraction({ net_amount: 100.01, vat_amount: 23.99 }), expectation()).verdict).toBe(InvoiceCheckVerdict.MISMATCH);
     });
 
     it('compares VAT numbers after normalisation and flags the issuer when it is someone else', () => {

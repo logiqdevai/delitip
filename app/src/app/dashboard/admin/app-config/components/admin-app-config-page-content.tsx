@@ -8,6 +8,7 @@ import { ActionButtonWithPending } from "@/components/ui/action-button-with-pend
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import {
@@ -31,7 +32,10 @@ type NumericField = Extract<
 
 type TextField = Extract<
   keyof AppConfigFormData,
-  "platform_legal_name" | "platform_vat_number" | "platform_tax_office" | "platform_address"
+  | "platform_legal_name"
+  | "platform_vat_number"
+  | "platform_tax_office"
+  | "platform_address"
 >;
 
 interface NumericFieldDefinition {
@@ -116,7 +120,10 @@ const FieldShell: FC<{
   children: React.ReactNode;
 }> = ({ id, label, hint, error, children }) => (
   <div>
-    <label htmlFor={id} className="mb-1.5 block text-xs font-semibold text-zinc-700">
+    <label
+      htmlFor={id}
+      className="mb-1.5 block text-xs font-semibold text-zinc-700"
+    >
       {label}
     </label>
     {children}
@@ -142,16 +149,23 @@ export const AdminAppConfigPageContent: FC = () => {
   useEffect(() => {
     if (!data) return;
     reset({
-      tip_platform_commission_percentage: Number(data.tip_platform_commission_percentage),
-      tip_processor_fee_estimate_percentage: Number(data.tip_processor_fee_estimate_percentage),
-      tip_processor_fee_estimate_fixed_amount: data.tip_processor_fee_estimate_fixed_amount,
+      tip_platform_commission_percentage: Number(
+        data.tip_platform_commission_percentage,
+      ),
+      tip_processor_fee_estimate_percentage: Number(
+        data.tip_processor_fee_estimate_percentage,
+      ),
+      tip_processor_fee_estimate_fixed_amount:
+        data.tip_processor_fee_estimate_fixed_amount,
       vat_rate_percentage: Number(data.vat_rate_percentage),
       payout_hold_window_hours: data.payout_hold_window_hours,
       // `?? false`: a flag the API doesn't return yet (e.g. an API running
       // from before its migration) must not make the form invalid.
       payout_invoice_required: data.payout_invoice_required ?? false,
-      payout_invoice_ai_check_enabled: data.payout_invoice_ai_check_enabled ?? false,
-      connected_account_payouts_enabled: data.connected_account_payouts_enabled ?? false,
+      payout_invoice_ai_check_enabled:
+        data.payout_invoice_ai_check_enabled ?? false,
+      connected_account_payouts_enabled:
+        data.connected_account_payouts_enabled ?? false,
       tip_payouts_store_only: data.tip_payouts_store_only ?? true,
       platform_legal_name: data.platform_legal_name ?? "",
       platform_vat_number: data.platform_vat_number ?? "",
@@ -161,11 +175,16 @@ export const AdminAppConfigPageContent: FC = () => {
     });
   }, [data, reset]);
 
-  const invoiceRequired = useWatch({ control, name: "payout_invoice_required" });
+  const invoiceRequired = useWatch({
+    control,
+    name: "payout_invoice_required",
+  });
 
   const onSubmit = handleSubmit(
     (values) => {
-      const changedNames = Object.keys(dirtyFields) as (keyof AppConfigFormData)[];
+      const changedNames = Object.keys(
+        dirtyFields,
+      ) as (keyof AppConfigFormData)[];
       const changed: UpdateAppConfigPayload = {};
       for (const name of changedNames) {
         Object.assign(changed, { [name]: values[name] });
@@ -175,8 +194,9 @@ export const AdminAppConfigPageContent: FC = () => {
     (formErrors) => {
       const messages = Object.entries(formErrors).map(([name, error]) => {
         const label =
-          [...financeFields, ...invoiceDetailFields].find((field) => field.name === name)
-            ?.label ?? name;
+          [...financeFields, ...invoiceDetailFields].find(
+            (field) => field.name === name,
+          )?.label ?? name;
         return `${label}: ${error?.message ?? "invalid"}`;
       });
       toast.add({
@@ -196,170 +216,212 @@ export const AdminAppConfigPageContent: FC = () => {
       {isError ? (
         <div className="mt-4 flex max-w-xl items-center justify-between gap-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
           <p className="text-sm text-red-700">Could not load the app config.</p>
-          <Button type="button" variant="outline" size="sm" onClick={() => void refetch()}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => void refetch()}
+          >
             Retry
           </Button>
         </div>
       ) : null}
       <form onSubmit={onSubmit} noValidate className="mt-4 max-w-xl space-y-6">
-        <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-bold text-ink-charcoal">Finance</h2>
-          {financeFields.map(({ name, label, hint, step }) => (
-            <FieldShell key={name} id={name} label={label} hint={hint} error={errors[name]?.message}>
-              <Input
-                id={name}
-                type="number"
-                step={step}
-                disabled={updateConfig.isPending}
-                aria-invalid={!!errors[name]}
-                {...register(name, { valueAsNumber: true })}
-              />
-            </FieldShell>
-          ))}
-        </section>
+        <Tabs defaultValue="finance">
+          <TabsList variant="line">
+            <TabsTrigger value="finance">Finance</TabsTrigger>
+            <TabsTrigger value="invoices">Payout invoices</TabsTrigger>
+            <TabsTrigger value="accounts">Payout accounts</TabsTrigger>
+          </TabsList>
 
-        <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
-          <div>
-            <h2 className="text-sm font-bold text-ink-charcoal">Payout invoices</h2>
-            <p className="mt-0.5 text-xs text-zinc-500">
-              When on, a store&apos;s own share is only paid after it uploads an invoice to the
-              platform and an admin approves it. Staff paid directly to their own IBAN are not
-              affected.
-            </p>
-          </div>
-
-          <Controller
-            control={control}
-            name="payout_invoice_required"
-            render={({ field }) => (
-              <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
-                <span>
-                  <span className="block text-sm font-semibold text-ink-charcoal">
-                    Require an invoice before paying stores
-                  </span>
-                  <span className="block text-xs text-zinc-500">
-                    Replaces &quot;Pay out now&quot; with &quot;Request payout&quot; for the store&apos;s money.
-                  </span>
-                </span>
-                <Switch
-                  checked={field.value ?? false}
-                  onCheckedChange={field.onChange}
-                  disabled={updateConfig.isPending}
-                  aria-label="Require an invoice before paying stores"
-                />
-              </label>
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="payout_invoice_ai_check_enabled"
-            render={({ field }) => (
-              <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
-                <span>
-                  <span className="block text-sm font-semibold text-ink-charcoal">
-                    Read invoices automatically
-                  </span>
-                  <span className="block text-xs text-zinc-500">
-                    Uses OpenAI to extract the total, VAT numbers and date and flag mismatches for the
-                    admin. Requires an OpenAI key on the API.
-                  </span>
-                </span>
-                <Switch
-                  checked={field.value ?? false}
-                  onCheckedChange={field.onChange}
-                  disabled={updateConfig.isPending}
-                  aria-label="Read invoices automatically"
-                />
-              </label>
-            )}
-          />
-
-          <div className={invoiceRequired ? undefined : "opacity-70"}>
-            <p className="mb-3 text-xs font-semibold text-zinc-700">
-              Who stores invoice
-              <span className="ml-1 font-normal text-zinc-400">— shown to every store when it requests a payout</span>
-            </p>
-            <div className="space-y-4">
-              {invoiceDetailFields.map(({ name, label, hint, placeholder }) => (
-                <FieldShell key={name} id={name} label={label} hint={hint} error={errors[name]?.message}>
+          <TabsContent value="finance" keepMounted className="mt-4">
+            <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
+              <h2 className="text-sm font-bold text-ink-charcoal">Finance</h2>
+              {financeFields.map(({ name, label, hint, step }) => (
+                <FieldShell
+                  key={name}
+                  id={name}
+                  label={label}
+                  hint={hint}
+                  error={errors[name]?.message}
+                >
                   <Input
                     id={name}
-                    type="text"
-                    placeholder={placeholder}
+                    type="number"
+                    step={step}
                     disabled={updateConfig.isPending}
                     aria-invalid={!!errors[name]}
-                    {...register(name)}
+                    {...register(name, { valueAsNumber: true })}
                   />
                 </FieldShell>
               ))}
-              <FieldShell
-                id="payout_invoice_instructions"
-                label="Instructions for stores"
-                hint="Free text, e.g. where to also email the PDF or which invoice series to use."
-                error={errors.payout_invoice_instructions?.message}
-              >
-                <Textarea
-                  id="payout_invoice_instructions"
-                  rows={3}
-                  disabled={updateConfig.isPending}
-                  aria-invalid={!!errors.payout_invoice_instructions}
-                  {...register("payout_invoice_instructions")}
-                />
-              </FieldShell>
-            </div>
-          </div>
-        </section>
+            </section>
+          </TabsContent>
 
-        <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-bold text-ink-charcoal">Payout accounts</h2>
-          <Controller
-            control={control}
-            name="connected_account_payouts_enabled"
-            render={({ field }) => (
-              <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
-                <span>
-                  <span className="block text-sm font-semibold text-ink-charcoal">
-                    Connected-account payouts (Viva)
+          <TabsContent value="invoices" keepMounted className="mt-4">
+            <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
+              <div>
+                <h2 className="text-sm font-bold text-ink-charcoal">
+                  Payout invoices
+                </h2>
+                <p className="mt-0.5 text-xs text-zinc-500">
+                  When on, a store&apos;s own share is only paid after it
+                  uploads an invoice to the platform and an admin approves it.
+                  Staff paid directly to their own IBAN are not affected.
+                </p>
+              </div>
+
+              <Controller
+                control={control}
+                name="payout_invoice_required"
+                render={({ field }) => (
+                  <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
+                    <span>
+                      <span className="block text-sm font-semibold text-ink-charcoal">
+                        Require an invoice before paying stores
+                      </span>
+                      <span className="block text-xs text-zinc-500">
+                        Replaces &quot;Pay out now&quot; with &quot;Request
+                        payout&quot; for the store&apos;s money.
+                      </span>
+                    </span>
+                    <Switch
+                      checked={field.value ?? false}
+                      onCheckedChange={field.onChange}
+                      disabled={updateConfig.isPending}
+                      aria-label="Require an invoice before paying stores"
+                    />
+                  </label>
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="payout_invoice_ai_check_enabled"
+                render={({ field }) => (
+                  <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
+                    <span>
+                      <span className="block text-sm font-semibold text-ink-charcoal">
+                        Read invoices automatically
+                      </span>
+                      <span className="block text-xs text-zinc-500">
+                        Uses OpenAI to extract the total, VAT numbers and date
+                        and flag mismatches for the admin. Requires an OpenAI
+                        key on the API.
+                      </span>
+                    </span>
+                    <Switch
+                      checked={field.value ?? false}
+                      onCheckedChange={field.onChange}
+                      disabled={updateConfig.isPending}
+                      aria-label="Read invoices automatically"
+                    />
+                  </label>
+                )}
+              />
+
+              <div className={invoiceRequired ? undefined : "opacity-70"}>
+                <p className="mb-3 text-xs font-semibold text-zinc-700">
+                  Who stores invoice
+                  <span className="ml-1 font-normal text-zinc-400">
+                    — shown to every store when it requests a payout
                   </span>
-                  <span className="block text-xs text-zinc-500">
-                    Shows &quot;Connect with Viva&quot; to stores. Turn on only once real Viva platform
-                    credentials exist and a sandbox onboarding has been verified.
-                  </span>
-                </span>
-                <Switch
-                  checked={field.value ?? false}
-                  onCheckedChange={field.onChange}
-                  disabled={updateConfig.isPending}
-                  aria-label="Connected-account payouts"
-                />
-              </label>
-            )}
-          />
-          <Controller
-            control={control}
-            name="tip_payouts_store_only"
-            render={({ field }) => (
-              <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
-                <span>
-                  <span className="block text-sm font-semibold text-ink-charcoal">
-                    Transfer tips to stores only
-                  </span>
-                  <span className="block text-xs text-zinc-500">
-                    Tips are paid to the store, which hands staff their share itself. Hides the
-                    direct staff payout actions.
-                  </span>
-                </span>
-                <Switch
-                  checked={field.value ?? true}
-                  onCheckedChange={field.onChange}
-                  disabled={updateConfig.isPending}
-                  aria-label="Transfer tips to stores only"
-                />
-              </label>
-            )}
-          />
-        </section>
+                </p>
+                <div className="space-y-4">
+                  {invoiceDetailFields.map(
+                    ({ name, label, hint, placeholder }) => (
+                      <FieldShell
+                        key={name}
+                        id={name}
+                        label={label}
+                        hint={hint}
+                        error={errors[name]?.message}
+                      >
+                        <Input
+                          id={name}
+                          type="text"
+                          placeholder={placeholder}
+                          disabled={updateConfig.isPending}
+                          aria-invalid={!!errors[name]}
+                          {...register(name)}
+                        />
+                      </FieldShell>
+                    ),
+                  )}
+                  <FieldShell
+                    id="payout_invoice_instructions"
+                    label="Instructions for stores"
+                    hint="Free text, e.g. where to also email the PDF or which invoice series to use."
+                    error={errors.payout_invoice_instructions?.message}
+                  >
+                    <Textarea
+                      id="payout_invoice_instructions"
+                      rows={3}
+                      disabled={updateConfig.isPending}
+                      aria-invalid={!!errors.payout_invoice_instructions}
+                      {...register("payout_invoice_instructions")}
+                    />
+                  </FieldShell>
+                </div>
+              </div>
+            </section>
+          </TabsContent>
+
+          <TabsContent value="accounts" keepMounted className="mt-4">
+            <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
+              <h2 className="text-sm font-bold text-ink-charcoal">
+                Payout accounts
+              </h2>
+              <Controller
+                control={control}
+                name="connected_account_payouts_enabled"
+                render={({ field }) => (
+                  <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
+                    <span>
+                      <span className="block text-sm font-semibold text-ink-charcoal">
+                        Connected-account payouts (Viva)
+                      </span>
+                      <span className="block text-xs text-zinc-500">
+                        Shows &quot;Connect with Viva&quot; to stores. Turn on
+                        only once real Viva platform credentials exist and a
+                        sandbox onboarding has been verified.
+                      </span>
+                    </span>
+                    <Switch
+                      checked={field.value ?? false}
+                      onCheckedChange={field.onChange}
+                      disabled={updateConfig.isPending}
+                      aria-label="Connected-account payouts"
+                    />
+                  </label>
+                )}
+              />
+              <Controller
+                control={control}
+                name="tip_payouts_store_only"
+                render={({ field }) => (
+                  <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
+                    <span>
+                      <span className="block text-sm font-semibold text-ink-charcoal">
+                        Transfer tips to stores only
+                      </span>
+                      <span className="block text-xs text-zinc-500">
+                        Tips are paid to the store, which hands staff their
+                        share itself. Hides the direct staff payout actions.
+                      </span>
+                    </span>
+                    <Switch
+                      checked={field.value ?? true}
+                      onCheckedChange={field.onChange}
+                      disabled={updateConfig.isPending}
+                      aria-label="Transfer tips to stores only"
+                    />
+                  </label>
+                )}
+              />
+            </section>
+          </TabsContent>
+        </Tabs>
 
         <ActionButtonWithPending
           type="submit"

@@ -110,10 +110,10 @@ const ChecksTable: FC<{ request: AdminPayoutRequestDetail }> = ({ request }) => 
 
   const rows: { label: string; expected: string; found: string; ok: boolean | null }[] = [
     {
-      label: "Total (incl. VAT)",
+      label: "Amount before VAT",
       expected: formatMoney(request.amount, request.currency),
-      found: extracted ? majorToLabel(extracted.total_amount, request.currency) : "—",
-      ok: extracted ? !has(InvoiceCheckIssues.TOTAL_MISMATCH, InvoiceCheckIssues.TOTAL_MISSING) : null,
+      found: extracted ? majorToLabel(extracted.net_amount ?? (extracted.total_amount !== null && extracted.vat_amount !== null ? extracted.total_amount - extracted.vat_amount : null), request.currency) : "—",
+      ok: extracted ? !has(InvoiceCheckIssues.NET_MISMATCH, InvoiceCheckIssues.NET_MISSING) : null,
     },
     {
       label: "Currency",
@@ -149,7 +149,7 @@ const ChecksTable: FC<{ request: AdminPayoutRequestDetail }> = ({ request }) => 
     },
     {
       label: "Net + VAT",
-      expected: "= total",
+      expected: "= invoice total",
       found: extracted
         ? `${majorToLabel(extracted.net_amount, request.currency)} + ${majorToLabel(extracted.vat_amount, request.currency)}${extracted.vat_rate_percentage !== null ? ` (${extracted.vat_rate_percentage}%)` : ""}`
         : "—",
