@@ -59,7 +59,8 @@
     "timeoutTitle": "Aún procesando",
     "timeoutDescription": "Tu pago está tardando más de lo esperado en confirmarse. Puede que aún se complete: vuelve a comprobarlo en breve.",
     "tryAgain": "Intentar de nuevo",
-    "refresh": "Actualizar"
+    "refresh": "Actualizar",
+    "startOver": "Empezar de nuevo"
   },
   "doneStep": {
     "heading": "¡Gracias!",

@@ -19,6 +19,23 @@ export interface AIGenerateTextResponse {
     usage?: AICostResponse
 }
 
+export interface AIGenerateObjectFromFileOptions<T> {
+    provider?: AiProvider;
+    model?: AiModel;
+    system?: string;
+    prompt: string;
+    schema: z.ZodType<T>;
+    buffer: Buffer;
+    mimeType: string;
+    filename?: string;
+    temperature?: number;
+}
+
+export interface AIGenerateObjectFromFileResponse<T> {
+    response: T;
+    usage?: AICostResponse;
+}
+
 export interface AIGenerateObjectResponse {
     response: z.ZodSchema[] | null;
     usage?: AICostResponse

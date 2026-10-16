@@ -31,6 +31,7 @@ import { PayoutsModule } from './modules/payouts/payouts.module';
 import { SettlementsModule } from './modules/settlements/settlements.module';
 import { ContactModule } from './modules/contact/contact.module';
 import { AppConfigModule } from './modules/app-config/app-config.module';
+import { PayoutRequestsModule } from './modules/payout-requests/payout-requests.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { AppConfigModule } from './modules/app-config/app-config.module';
     SettlementsModule,
     ContactModule,
     AppConfigModule,
+    PayoutRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

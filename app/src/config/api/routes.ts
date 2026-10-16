@@ -93,6 +93,16 @@ export const ApiRoutes = {
       `/stores/${storeId}/payouts/preview` as const,
     distributions: (storeId: string) =>
       `/stores/${storeId}/distributions` as const,
+    payoutRequests: (storeId: string) =>
+      `/stores/${storeId}/payout-requests` as const,
+    payoutRequestsPreview: (storeId: string) =>
+      `/stores/${storeId}/payout-requests/preview` as const,
+    payoutRequest: (storeId: string, id: string) =>
+      `/stores/${storeId}/payout-requests/${id}` as const,
+    payoutRequestInvoiceUrl: (storeId: string, id: string) =>
+      `/stores/${storeId}/payout-requests/${id}/invoice-url` as const,
+    payoutRequestCancel: (storeId: string, id: string) =>
+      `/stores/${storeId}/payout-requests/${id}/cancel` as const,
     alerts: (storeId: string) => `/stores/${storeId}/alerts` as const,
     alertsReadAll: (storeId: string) =>
       `/stores/${storeId}/alerts/read-all` as const,
@@ -173,6 +183,7 @@ export const ApiRoutes = {
   },
   appConfig: {
     vatRate: "/app-config/vat-rate",
+    payoutPolicy: "/app-config/payout-policy",
   },
   admin: {
     stores: "/admin/stores",
@@ -187,6 +198,16 @@ export const ApiRoutes = {
     payouts: {
       prefix: "/admin/payouts",
       byId: (id: string) => `/admin/payouts/${id}` as const,
+    },
+    payoutRequests: {
+      prefix: "/admin/payout-requests",
+      pendingCount: "/admin/payout-requests/pending-count",
+      byId: (id: string) => `/admin/payout-requests/${id}` as const,
+      invoiceUrl: (id: string) =>
+        `/admin/payout-requests/${id}/invoice-url` as const,
+      approve: (id: string) => `/admin/payout-requests/${id}/approve` as const,
+      reject: (id: string) => `/admin/payout-requests/${id}/reject` as const,
+      recheck: (id: string) => `/admin/payout-requests/${id}/recheck` as const,
     },
     analytics: {
       overview: "/admin/analytics/overview",

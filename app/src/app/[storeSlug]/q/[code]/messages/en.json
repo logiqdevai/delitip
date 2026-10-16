@@ -59,7 +59,8 @@
     "timeoutTitle": "Still processing",
     "timeoutDescription": "Your payment is taking longer than expected to confirm. It may still complete - check back shortly.",
     "tryAgain": "Try again",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "startOver": "Start over"
   },
   "doneStep": {
     "heading": "Thank you!",

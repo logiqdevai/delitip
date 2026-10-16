@@ -59,7 +59,8 @@
     "timeoutTitle": "Traitement en cours",
     "timeoutDescription": "La confirmation de votre paiement prend plus de temps que prévu. Il pourrait tout de même aboutir : vérifiez à nouveau dans un instant.",
     "tryAgain": "Réessayer",
-    "refresh": "Actualiser"
+    "refresh": "Actualiser",
+    "startOver": "Recommencer"
   },
   "doneStep": {
     "heading": "Merci !",

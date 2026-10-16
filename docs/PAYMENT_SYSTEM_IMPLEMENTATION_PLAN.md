@@ -24,6 +24,10 @@
 - **Frontend** — full-page redirect checkout flow (`review-step.tsx` → Viva → `/checkout/return` → back into the store's own tip flow at `?tip=<id>`, which polls status and renders processing/success/failure states via a new `CheckoutStatusStep`); real IBAN forms (shared `IbanPayoutAccountDialog`) for both store and employee payout accounts; a new Payouts history page + sidebar entry; "Pay out now" button with held/eligible breakdown; financial-breakdown panel on tip detail (OWNER/ACCOUNTANT-gated).
 - **Database** — all schema changes from §11 applied via migrations (`PaymentTransaction`, `WebhookEvent`, `Payout`, `PayoutAccount`/`Refund`/`Tip` extensions). Note: `PaymentTransaction.viva_order_code`/`viva_transaction_id` were subsequently renamed to **`provider_order_code`/`provider_transaction_id`** (provider-generic naming, since `PaymentTransaction.provider` already supports non-Viva processors) — any references to the old names elsewhere in this doc are stale.
 
+### Added later (2026-10-16): invoice-gated payout requests
+
+When `AppConfig.payout_invoice_required` is on, a Store's own money (STORE shares + pooled VIA_STORE staff shares) is no longer paid by `POST /stores/:storeId/payouts/run`; the Store submits an invoice-backed **payout request**, an admin reviews it (helped by an automatic OpenAI read of the invoice) and approval executes the same Viva transfer. DIRECT employee shares are unaffected. See **`docs/PAYOUT_INVOICE_REQUESTS.md`**.
+
 ### Deviations from this document (all deliberate, user-approved scope decisions)
 
 1. **No BullMQ.** Webhook processing and the reconciliation sweep are inline/cron (`@nestjs/schedule`) rather than queued, per §7's alternative. `api/src/core/queues/**` remains provisioned but unused.

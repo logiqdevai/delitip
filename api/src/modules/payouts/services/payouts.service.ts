@@ -16,7 +16,12 @@ import { PayoutsQueryType } from '../dto/payouts-query.schema';
 import { DistributionsQueryType } from '../dto/distributions-query.schema';
 import { AdminPayoutsQueryType } from '../dto/admin-payouts-query.schema';
 import {
-  DistributionPayoutMode,
+  eligibleDistributionsWhere,
+  groupDistributions,
+  RecipientGroup,
+  STORE_GROUP_KEY,
+} from '../utils/payout-groups.utils';
+import {
   DistributionRecipientType,
   Language,
   OrganizationRole,
@@ -27,26 +32,34 @@ import {
   TipStatus,
 } from 'generated/prisma';
 
-interface RecipientGroup {
-  key: string;
-  recipientType: DistributionRecipientType;
-  storeId?: string;
-  employeeId?: string;
-  distributionIds: string[];
-  amount: number;
-  // Under a VIA_STORE rule a Store's transfer carries its own share plus the
-  // shares it collected for its staff. Split out so the Store (and its
-  // accountant) can see which part of the deposit isn't theirs to keep.
-  ownShare: number;
-  heldForStaff: number;
-  currency: string;
-}
+export type { RecipientGroup } from '../utils/payout-groups.utils';
+
+export type PayoutSkipReason =
+  | 'NO_PAYOUT_ACCOUNT'
+  | 'ACCOUNT_NOT_ACTIVE'
+  | 'NO_LINKED_USER'
+  | 'TRANSFER_FAILED'
+  // AppConfig.payout_invoice_required is on: the Store's own money only
+  // moves through an invoice-backed PayoutRequest, never a self-service run.
+  | 'INVOICE_REQUIRED';
 
 export interface SkippedRecipient {
   recipient_type: DistributionRecipientType;
   employee_id?: string;
-  reason: 'NO_PAYOUT_ACCOUNT' | 'ACCOUNT_NOT_ACTIVE' | 'NO_LINKED_USER' | 'TRANSFER_FAILED';
+  reason: PayoutSkipReason;
 }
+
+export interface ResolvedPayoutAccount {
+  payoutAccount: {
+    id: string;
+    payout_method: PayoutMethod;
+    bank_account_id: string | null;
+    connected_account_id: string | null;
+  } | null;
+  reason?: SkippedRecipient['reason'];
+}
+
+export type DistributionHoldReason = 'HOLD_WINDOW' | 'FEE_NOT_CONFIRMED' | 'PAYOUT_REQUESTED';
 
 @Injectable()
 export class PayoutsService {
@@ -69,14 +82,18 @@ export class PayoutsService {
   async previewEligiblePayouts(user: AuthUser, storeId: string) {
     await this.accessControl.assertStoreAccess(user, storeId, [OrganizationRole.OWNER]);
 
-    const [groups, store] = await Promise.all([
+    const [groups, store, invoiceRequired] = await Promise.all([
       this.loadEligibleGroups(storeId),
       this.prisma.store.findUnique({ where: { id: storeId }, select: { name: true, primary_language: true } }),
+      this.platformFinanceConfig.isPayoutInvoiceRequired(),
     ]);
 
     const recipients = await Promise.all(
       groups.map(async (group) => {
-        const account = await this.resolvePayoutAccount(group);
+        const gated = invoiceRequired && group.key === STORE_GROUP_KEY;
+        const account: ResolvedPayoutAccount = gated
+          ? { payoutAccount: null, reason: 'INVOICE_REQUIRED' }
+          : await this.resolvePayoutAccount(group);
         const name =
           group.recipientType === DistributionRecipientType.STORE
             ? (store?.name ?? 'Store')
@@ -116,11 +133,22 @@ export class PayoutsService {
       throw new BadRequestException('VIVA_WALLET_ID is not configured — payouts cannot be executed yet');
     }
 
-    const groups = await this.loadEligibleGroups(storeId, dto.employee_id);
+    const [groups, invoiceRequired] = await Promise.all([
+      this.loadEligibleGroups(storeId, dto.employee_id),
+      this.platformFinanceConfig.isPayoutInvoiceRequired(),
+    ]);
     const payouts: any[] = [];
     const skipped: SkippedRecipient[] = [];
 
     for (const group of groups) {
+      // Never a hard failure: DIRECT employee shares aren't the Store's
+      // money and no invoice covers them, so staff must not be blocked by
+      // the Store's paperwork. The Store row is simply reported as skipped.
+      if (invoiceRequired && group.key === STORE_GROUP_KEY) {
+        skipped.push({ recipient_type: group.recipientType, reason: 'INVOICE_REQUIRED' });
+        continue;
+      }
+
       const account = await this.resolvePayoutAccount(group);
       if (!account.payoutAccount) {
         skipped.push({ recipient_type: group.recipientType, employee_id: group.employeeId, reason: account.reason! });
@@ -142,68 +170,19 @@ export class PayoutsService {
 
   private async loadEligibleGroups(storeId: string, employeeIdFilter?: string): Promise<RecipientGroup[]> {
     const holdWindowHours = await this.platformFinanceConfig.getPayoutHoldWindowHours();
-    const holdCutoff = new Date(Date.now() - holdWindowHours * 60 * 60 * 1000);
+    const holdCutoff = this.holdCutoff(holdWindowHours);
 
     const distributions = await this.prisma.tipDistribution.findMany({
-      where: {
-        payout_id: null,
-        payout_status: PayoutStatus.PENDING,
-        ...(employeeIdFilter ? { employee_id: employeeIdFilter } : {}),
-        tip: {
-          store_id: storeId,
-          status: TipStatus.COMPLETED,
-          paid_at: { lte: holdCutoff },
-          payment_transaction: { processor_fee_confirmed: true },
-        },
-      },
+      where: eligibleDistributionsWhere(storeId, holdCutoff, employeeIdFilter),
       include: { tip: true },
     });
 
-    const groups = new Map<string, RecipientGroup>();
-    for (const distribution of distributions) {
-      // The one routing decision in the payout path: a share earned under a
-      // VIA_STORE rule is transferred to the Store, not to the employee, even
-      // though the row still records who earned it. The Store hands it over
-      // off-platform and records that as a Settlement.
-      const pooled =
-        distribution.recipient_type === DistributionRecipientType.EMPLOYEE &&
-        distribution.payout_mode === DistributionPayoutMode.VIA_STORE;
-      const paidToStore = distribution.recipient_type === DistributionRecipientType.STORE || pooled;
-
-      const key = paidToStore ? 'STORE' : `EMPLOYEE:${distribution.employee_id}`;
-      const existing = groups.get(key);
-      if (existing) {
-        existing.distributionIds.push(distribution.id);
-        existing.amount += distribution.amount;
-        if (pooled) existing.heldForStaff += distribution.amount;
-        else existing.ownShare += distribution.amount;
-      } else {
-        groups.set(key, {
-          key,
-          recipientType: paidToStore ? DistributionRecipientType.STORE : DistributionRecipientType.EMPLOYEE,
-          storeId: paidToStore ? storeId : undefined,
-          employeeId: paidToStore ? undefined : distribution.employee_id ?? undefined,
-          distributionIds: [distribution.id],
-          amount: distribution.amount,
-          ownShare: pooled ? 0 : distribution.amount,
-          heldForStaff: pooled ? distribution.amount : 0,
-          currency: distribution.tip.currency,
-        });
-      }
-    }
-
-    return Array.from(groups.values());
+    return groupDistributions(storeId, distributions);
   }
 
-  private async resolvePayoutAccount(group: RecipientGroup): Promise<{
-    payoutAccount: {
-      id: string;
-      payout_method: PayoutMethod;
-      bank_account_id: string | null;
-      connected_account_id: string | null;
-    } | null;
-    reason?: SkippedRecipient['reason'];
-  }> {
+  // Public so PayoutRequestsService can reuse the exact same account
+  // resolution, claim and transfer steps when an admin approves a request.
+  async resolvePayoutAccount(group: Pick<RecipientGroup, 'recipientType' | 'storeId' | 'employeeId'>): Promise<ResolvedPayoutAccount> {
     let payoutAccount;
 
     if (group.recipientType === DistributionRecipientType.STORE) {
@@ -245,7 +224,12 @@ export class PayoutsService {
     };
   }
 
-  private async claimGroup(group: RecipientGroup, payoutAccountId: string, _walletId: number) {
+  // Atomically creates the Payout and stamps it onto the distributions. The
+  // where-clause is the double-spend guard: a row already claimed by another
+  // concurrent run (payout_id set) or locked into a different payout request
+  // is left alone. `payoutRequestId` scopes the claim to rows locked by that
+  // request; without it only unlocked rows are claimable.
+  async claimGroup(group: RecipientGroup, payoutAccountId: string, _walletId: number, payoutRequestId: string | null = null) {
     return this.prisma.$transaction(async (tx) => {
       const payout = await tx.payout.create({
         data: {
@@ -260,7 +244,12 @@ export class PayoutsService {
       });
 
       const claim = await tx.tipDistribution.updateMany({
-        where: { id: { in: group.distributionIds }, payout_id: null, payout_status: PayoutStatus.PENDING },
+        where: {
+          id: { in: group.distributionIds },
+          payout_id: null,
+          payout_request_id: payoutRequestId,
+          payout_status: PayoutStatus.PENDING,
+        },
         data: { payout_id: payout.id, payout_status: PayoutStatus.PROCESSING },
       });
 
@@ -281,7 +270,10 @@ export class PayoutsService {
     });
   }
 
-  private async executeTransfer(
+  // On failure the Payout is marked FAILED and its distributions go back to
+  // PENDING / payout_id null — but payout_request_id is deliberately left
+  // untouched, so rows locked into a request stay locked for a retry.
+  async executeTransfer(
     payout: any,
     account: { payout_method: PayoutMethod; bank_account_id: string | null; connected_account_id: string | null },
     walletId: number,
@@ -569,17 +561,24 @@ export class PayoutsService {
   private resolveEligibility(
     distribution: {
       payout_status: PayoutStatus;
+      payout_request_id?: string | null;
       tip: { status: TipStatus; paid_at: Date | null; payment_transaction: { processor_fee_confirmed: boolean } | null };
     },
     holdCutoff: Date,
     holdWindowHours: number,
-  ): { eligible_now: boolean; hold_reason: 'HOLD_WINDOW' | 'FEE_NOT_CONFIRMED' | null; eligible_at: Date | null } {
+  ): { eligible_now: boolean; hold_reason: DistributionHoldReason | null; eligible_at: Date | null } {
     if (
       distribution.payout_status !== PayoutStatus.PENDING ||
       distribution.tip.status !== TipStatus.COMPLETED ||
       !distribution.tip.paid_at
     ) {
       return { eligible_now: false, hold_reason: null, eligible_at: null };
+    }
+
+    // Locked into an invoice-backed PayoutRequest: payable, but only through
+    // that request once an admin approves it.
+    if (distribution.payout_request_id) {
+      return { eligible_now: false, hold_reason: 'PAYOUT_REQUESTED', eligible_at: null };
     }
 
     const holdWindowEligibleAt = new Date(distribution.tip.paid_at.getTime() + holdWindowHours * 60 * 60 * 1000);
@@ -597,19 +596,20 @@ export class PayoutsService {
 
   private async summarizePendingDistributions(storeId: string, holdCutoff: Date, holdWindowHours: number) {
     const pendingWhere = { tip: { store_id: storeId }, payout_status: PayoutStatus.PENDING };
-    const eligibleWhere = {
+    const eligibleWhere = eligibleDistributionsWhere(storeId, holdCutoff);
+    // Locked into an open PayoutRequest — payable money that is waiting on
+    // an admin, not on time. Reported separately so the dashboard never shows
+    // the same euros as both "eligible now" and "under review".
+    const requestedWhere = {
+      tip: { store_id: storeId },
       payout_status: PayoutStatus.PENDING,
-      tip: {
-        store_id: storeId,
-        status: TipStatus.COMPLETED,
-        paid_at: { lte: holdCutoff },
-        payment_transaction: { processor_fee_confirmed: true },
-      },
+      payout_request_id: { not: null },
     };
 
-    const [pendingTotal, eligibleTotal, earliestHeld] = await Promise.all([
+    const [pendingTotal, eligibleTotal, requestedTotal, earliestHeld] = await Promise.all([
       this.prisma.tipDistribution.aggregate({ where: pendingWhere, _sum: { amount: true } }),
       this.prisma.tipDistribution.aggregate({ where: eligibleWhere, _sum: { amount: true } }),
+      this.prisma.tipDistribution.aggregate({ where: requestedWhere, _sum: { amount: true } }),
       // The next distribution to clear the hold window — an ETA is only
       // knowable for that reason, not for fee-confirmation holds, so this
       // deliberately only looks at still-within-the-window distributions.
@@ -630,6 +630,7 @@ export class PayoutsService {
     return {
       pending_total_amount: pendingTotal._sum.amount ?? 0,
       eligible_total_amount: eligibleTotal._sum.amount ?? 0,
+      requested_total_amount: requestedTotal._sum.amount ?? 0,
       hold_window_hours: holdWindowHours,
       next_eligible_at: nextEligibleAt,
     };

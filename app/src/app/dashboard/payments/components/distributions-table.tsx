@@ -32,8 +32,18 @@ import {
 } from "@/components/ui/empty";
 import { TablePagination } from "@/app/dashboard/payments/components/table-pagination";
 import { PayOutNowDialog } from "@/app/dashboard/payments/components/pay-out-now-dialog";
+import { PayoutRequestDialog } from "@/app/dashboard/payments/components/payout-request-dialog";
+import {
+  ConfirmationDialog,
+  useConfirmationDialog,
+} from "@/components/ui/confirmation-dialog";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useStoreDistributions } from "@/features/payouts/hooks/use-payouts";
+import { usePayoutPolicy } from "@/features/app-config/hooks/use-app-config";
+import {
+  useCancelPayoutRequest,
+  usePayoutRequestPreview,
+} from "@/features/payout-requests/hooks/use-payout-requests";
 import type {
   Distribution,
   DistributionsQuery,
@@ -76,7 +86,15 @@ const eligibilityLabel = (distribution: Distribution) => {
   if (distribution.hold_reason === "FEE_NOT_CONFIRMED") {
     return "Awaiting payment confirmation";
   }
+  if (distribution.hold_reason === "PAYOUT_REQUESTED") {
+    return "In payout request";
+  }
   return "Held";
+};
+
+const formatDate = (value?: string | null) => {
+  if (!value) return "-";
+  return new Date(value).toLocaleDateString(undefined, { dateStyle: "medium" });
 };
 
 export const DistributionsTable: FC<{
@@ -106,6 +124,17 @@ export const DistributionsTable: FC<{
 
   const distributionsQuery = useStoreDistributions(storeId, query);
   const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
+  const [requestDialogOpen, setRequestDialogOpen] = useState(false);
+
+  // When invoice-gated payouts are on, the store's own money leaves through
+  // a reviewed payout request; "Pay out now" only reaches DIRECT employees.
+  const policyQuery = usePayoutPolicy();
+  const invoiceRequired = policyQuery.data?.payout_invoice_required ?? false;
+  const requestPreviewQuery = usePayoutRequestPreview(storeId, invoiceRequired);
+  const openRequest = requestPreviewQuery.data?.open_request ?? null;
+  const requestableAmount = requestPreviewQuery.data?.amount ?? 0;
+  const cancelRequest = useCancelPayoutRequest(storeId);
+  const cancelConfirm = useConfirmationDialog();
 
   const employees = employeesQuery.data?.data ?? [];
   const distributions = distributionsQuery.data?.data ?? [];
@@ -129,15 +158,49 @@ export const DistributionsTable: FC<{
                 {formatMoney(summary?.eligible_total_amount ?? 0, currency)}
               </p>
             </div>
+            {summary && summary.requested_total_amount > 0 ? (
+              <div>
+                <p className="text-xs text-zinc-400">Under review</p>
+                <p className="text-lg font-bold text-amber-700">
+                  {formatMoney(summary.requested_total_amount, currency)}
+                </p>
+              </div>
+            ) : null}
           </div>
-          <Button
-            type="button"
-            onClick={() => setPayoutDialogOpen(true)}
-            disabled={!summary || summary.eligible_total_amount === 0}
-            className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
-          >
-            Pay out now
-          </Button>
+          {invoiceRequired ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setPayoutDialogOpen(true)}
+                disabled={!summary || summary.eligible_total_amount === 0}
+                className="rounded-xl"
+              >
+                Pay out staff
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setRequestDialogOpen(true)}
+                disabled={
+                  requestPreviewQuery.isPending ||
+                  !!openRequest ||
+                  requestableAmount === 0
+                }
+                className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+              >
+                Request payout
+              </Button>
+            </div>
+          ) : (
+            <Button
+              type="button"
+              onClick={() => setPayoutDialogOpen(true)}
+              disabled={!summary || summary.eligible_total_amount === 0}
+              className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+            >
+              Pay out now
+            </Button>
+          )}
         </div>
         {summary ? (
           <p className="text-caption text-zinc-500">
@@ -146,7 +209,30 @@ export const DistributionsTable: FC<{
             {summary.next_eligible_at
               ? ` Next batch eligible ${formatDateTime(summary.next_eligible_at)}.`
               : ""}
+            {invoiceRequired
+              ? " Your store's own share is paid after you upload an invoice and Delitip approves it; staff paid directly are unaffected."
+              : ""}
           </p>
+        ) : null}
+        {openRequest ? (
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-amber-50/60 px-3.5 py-3 text-caption leading-snug text-amber-900">
+            <span>
+              <strong>{formatMoney(openRequest.amount, currency)}</strong> requested{" "}
+              {formatDate(openRequest.created_at)} is awaiting Delitip&apos;s review.
+              {openRequest.failure_reason
+                ? ` Last transfer attempt failed: ${openRequest.failure_reason}.`
+                : ""}
+            </span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 rounded-full px-2.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+              onClick={cancelConfirm.openDialog}
+            >
+              Cancel request
+            </Button>
+          </div>
         ) : null}
       </div>
 
@@ -340,6 +426,24 @@ export const DistributionsTable: FC<{
         onOpenChange={setPayoutDialogOpen}
         storeId={storeId}
         currency={currency}
+      />
+      <PayoutRequestDialog
+        open={requestDialogOpen}
+        onOpenChange={setRequestDialogOpen}
+        storeId={storeId}
+        currency={currency}
+      />
+      <ConfirmationDialog
+        state={cancelConfirm}
+        title="Cancel this payout request?"
+        description="Your tips are released immediately and you can submit a new request with a new invoice."
+        confirmLabel="Cancel request"
+        cancelLabel="Keep it"
+        isPending={cancelRequest.isPending}
+        onConfirm={async () => {
+          if (!openRequest) return;
+          await cancelRequest.mutateAsync(openRequest.id);
+        }}
       />
     </div>
   );

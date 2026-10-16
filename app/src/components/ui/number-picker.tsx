@@ -56,7 +56,11 @@ export const NumberPicker: FC<NumberPickerProps> = ({
   const [draft, setDraft] = useState(String(value));
 
   useEffect(() => {
-    setDraft(String(value));
+    // Keep the text the user is typing (e.g. "2.") when it already matches
+    // the committed value; otherwise mirror the external value.
+    setDraft((current) =>
+      Number.parseFloat(current) === value ? current : String(value),
+    );
   }, [value]);
 
   const commit = (next: number) => {
@@ -145,6 +149,12 @@ export const NumberPicker: FC<NumberPickerProps> = ({
             const next = event.target.value;
             if (next === "" || /^-?\d*\.?\d*$/.test(next)) {
               setDraft(next);
+              // Report in-range values live so a button pressed right after
+              // typing (before blur) sees the typed amount, not a stale one.
+              const parsed = Number.parseFloat(next);
+              if (Number.isFinite(parsed) && parsed >= min && parsed <= max) {
+                onChange(parsed);
+              }
             }
           }}
           onBlur={handleBlur}

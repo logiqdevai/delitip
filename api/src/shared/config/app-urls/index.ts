@@ -8,6 +8,11 @@ export const AppUrls = {
     // redirects the store owner after they finish hosted onboarding.
     payoutAccountOnboardingReturn: (storeId: string) =>
         `${process.env.APP_URL}/dashboard/payments/onboarding-return?storeId=${encodeURIComponent(storeId)}`,
+    // Admin review page for an invoice-backed payout request.
+    adminPayoutRequest: (requestId: string) =>
+        `${process.env.APP_URL}/dashboard/admin/payout-requests/${encodeURIComponent(requestId)}`,
+    // Where a Store sees its own payout requests (Tips → Payouts tab).
+    storePayouts: `${process.env.APP_URL}/dashboard/tips?tab=payouts`,
 } as const;
 
 export const ApiUrls = {

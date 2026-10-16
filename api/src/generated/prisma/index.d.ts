@@ -119,6 +119,11 @@ export type TipDistribution = $Result.DefaultSelection<Prisma.$TipDistributionPa
  */
 export type Payout = $Result.DefaultSelection<Prisma.$PayoutPayload>
 /**
+ * Model PayoutRequest
+ * 
+ */
+export type PayoutRequest = $Result.DefaultSelection<Prisma.$PayoutRequestPayload>
+/**
  * Model Settlement
  * 
  */
@@ -211,6 +216,7 @@ export const DocumentType: {
   AUDIO: 'AUDIO',
   PDF: 'PDF',
   DOCUMENT: 'DOCUMENT',
+  INVOICE: 'INVOICE',
   OTHER: 'OTHER'
 };
 
@@ -430,10 +436,41 @@ export const AlertType: {
   POSITIVE_COMPLIMENTS: 'POSITIVE_COMPLIMENTS',
   NEGATIVE_SATISFACTION_DROP: 'NEGATIVE_SATISFACTION_DROP',
   LOW_RATING_REVIEW: 'LOW_RATING_REVIEW',
-  PERFORMANCE_CHANGE: 'PERFORMANCE_CHANGE'
+  PERFORMANCE_CHANGE: 'PERFORMANCE_CHANGE',
+  PAYOUT_REQUEST_APPROVED: 'PAYOUT_REQUEST_APPROVED',
+  PAYOUT_REQUEST_REJECTED: 'PAYOUT_REQUEST_REJECTED'
 };
 
 export type AlertType = (typeof AlertType)[keyof typeof AlertType]
+
+
+export const PayoutRequestStatus: {
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type PayoutRequestStatus = (typeof PayoutRequestStatus)[keyof typeof PayoutRequestStatus]
+
+
+export const InvoiceCheckStatus: {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+};
+
+export type InvoiceCheckStatus = (typeof InvoiceCheckStatus)[keyof typeof InvoiceCheckStatus]
+
+
+export const InvoiceCheckVerdict: {
+  MATCH: 'MATCH',
+  MISMATCH: 'MISMATCH',
+  UNREADABLE: 'UNREADABLE'
+};
+
+export type InvoiceCheckVerdict = (typeof InvoiceCheckVerdict)[keyof typeof InvoiceCheckVerdict]
 
 
 export const SubscriptionPlan: {
@@ -547,6 +584,18 @@ export const RefundStatus: typeof $Enums.RefundStatus
 export type AlertType = $Enums.AlertType
 
 export const AlertType: typeof $Enums.AlertType
+
+export type PayoutRequestStatus = $Enums.PayoutRequestStatus
+
+export const PayoutRequestStatus: typeof $Enums.PayoutRequestStatus
+
+export type InvoiceCheckStatus = $Enums.InvoiceCheckStatus
+
+export const InvoiceCheckStatus: typeof $Enums.InvoiceCheckStatus
+
+export type InvoiceCheckVerdict = $Enums.InvoiceCheckVerdict
+
+export const InvoiceCheckVerdict: typeof $Enums.InvoiceCheckVerdict
 
 export type SubscriptionPlan = $Enums.SubscriptionPlan
 
@@ -882,6 +931,16 @@ export class PrismaClient<
     * ```
     */
   get payout(): Prisma.PayoutDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.payoutRequest`: Exposes CRUD operations for the **PayoutRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PayoutRequests
+    * const payoutRequests = await prisma.payoutRequest.findMany()
+    * ```
+    */
+  get payoutRequest(): Prisma.PayoutRequestDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.settlement`: Exposes CRUD operations for the **Settlement** model.
@@ -1477,6 +1536,7 @@ export namespace Prisma {
     WebhookEvent: 'WebhookEvent',
     TipDistribution: 'TipDistribution',
     Payout: 'Payout',
+    PayoutRequest: 'PayoutRequest',
     Settlement: 'Settlement',
     SettlementAdjustment: 'SettlementAdjustment',
     Refund: 'Refund',
@@ -1506,7 +1566,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "document" | "organization" | "organizationMember" | "subscription" | "store" | "employee" | "spot" | "qrCode" | "qrCodeSpot" | "qrCodeEmployee" | "qrTemplateCustomization" | "distributionRule" | "distributionRuleRecipient" | "payoutAccount" | "tip" | "paymentTransaction" | "webhookEvent" | "tipDistribution" | "payout" | "settlement" | "settlementAdjustment" | "refund" | "review" | "reviewCategory" | "reviewCategoryRating" | "reviewTag" | "reviewTagAssignment" | "feedbackQuestion" | "feedbackResponse" | "alertPreference" | "alert" | "insightSummary" | "appConfig"
+      modelProps: "user" | "passwordResetToken" | "document" | "organization" | "organizationMember" | "subscription" | "store" | "employee" | "spot" | "qrCode" | "qrCodeSpot" | "qrCodeEmployee" | "qrTemplateCustomization" | "distributionRule" | "distributionRuleRecipient" | "payoutAccount" | "tip" | "paymentTransaction" | "webhookEvent" | "tipDistribution" | "payout" | "payoutRequest" | "settlement" | "settlementAdjustment" | "refund" | "review" | "reviewCategory" | "reviewCategoryRating" | "reviewTag" | "reviewTagAssignment" | "feedbackQuestion" | "feedbackResponse" | "alertPreference" | "alert" | "insightSummary" | "appConfig"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3064,6 +3124,80 @@ export namespace Prisma {
           }
         }
       }
+      PayoutRequest: {
+        payload: Prisma.$PayoutRequestPayload<ExtArgs>
+        fields: Prisma.PayoutRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PayoutRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PayoutRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.PayoutRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PayoutRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload>
+          }
+          findMany: {
+            args: Prisma.PayoutRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload>[]
+          }
+          create: {
+            args: Prisma.PayoutRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload>
+          }
+          createMany: {
+            args: Prisma.PayoutRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PayoutRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.PayoutRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload>
+          }
+          update: {
+            args: Prisma.PayoutRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.PayoutRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PayoutRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PayoutRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.PayoutRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.PayoutRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePayoutRequest>
+          }
+          groupBy: {
+            args: Prisma.PayoutRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PayoutRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PayoutRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<PayoutRequestCountAggregateOutputType> | number
+          }
+        }
+      }
       Settlement: {
         payload: Prisma.$SettlementPayload<ExtArgs>
         fields: Prisma.SettlementFieldRefs
@@ -4229,6 +4363,7 @@ export namespace Prisma {
     webhookEvent?: WebhookEventOmit
     tipDistribution?: TipDistributionOmit
     payout?: PayoutOmit
+    payoutRequest?: PayoutRequestOmit
     settlement?: SettlementOmit
     settlementAdjustment?: SettlementAdjustmentOmit
     refund?: RefundOmit
@@ -4334,6 +4469,8 @@ export namespace Prisma {
     settlements_recorded: number
     settlements_reversed: number
     settlement_adjustments: number
+    payout_requests_made: number
+    payout_requests_reviewed: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4348,6 +4485,8 @@ export namespace Prisma {
     settlements_recorded?: boolean | UserCountOutputTypeCountSettlements_recordedArgs
     settlements_reversed?: boolean | UserCountOutputTypeCountSettlements_reversedArgs
     settlement_adjustments?: boolean | UserCountOutputTypeCountSettlement_adjustmentsArgs
+    payout_requests_made?: boolean | UserCountOutputTypeCountPayout_requests_madeArgs
+    payout_requests_reviewed?: boolean | UserCountOutputTypeCountPayout_requests_reviewedArgs
   }
 
   // Custom InputTypes
@@ -4436,6 +4575,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountSettlement_adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SettlementAdjustmentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPayout_requests_madeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PayoutRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPayout_requests_reviewedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PayoutRequestWhereInput
   }
 
 
@@ -4557,6 +4710,7 @@ export namespace Prisma {
     alerts: number
     insight_summaries: number
     payouts: number
+    payout_requests: number
     settlements: number
     settlement_adjustments: number
   }
@@ -4577,6 +4731,7 @@ export namespace Prisma {
     alerts?: boolean | StoreCountOutputTypeCountAlertsArgs
     insight_summaries?: boolean | StoreCountOutputTypeCountInsight_summariesArgs
     payouts?: boolean | StoreCountOutputTypeCountPayoutsArgs
+    payout_requests?: boolean | StoreCountOutputTypeCountPayout_requestsArgs
     settlements?: boolean | StoreCountOutputTypeCountSettlementsArgs
     settlement_adjustments?: boolean | StoreCountOutputTypeCountSettlement_adjustmentsArgs
   }
@@ -4695,6 +4850,13 @@ export namespace Prisma {
    */
   export type StoreCountOutputTypeCountPayoutsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PayoutWhereInput
+  }
+
+  /**
+   * StoreCountOutputType without action
+   */
+  export type StoreCountOutputTypeCountPayout_requestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PayoutRequestWhereInput
   }
 
   /**
@@ -5042,6 +5204,37 @@ export namespace Prisma {
    * PayoutCountOutputType without action
    */
   export type PayoutCountOutputTypeCountDistributionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TipDistributionWhereInput
+  }
+
+
+  /**
+   * Count Type PayoutRequestCountOutputType
+   */
+
+  export type PayoutRequestCountOutputType = {
+    distributions: number
+  }
+
+  export type PayoutRequestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    distributions?: boolean | PayoutRequestCountOutputTypeCountDistributionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PayoutRequestCountOutputType without action
+   */
+  export type PayoutRequestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequestCountOutputType
+     */
+    select?: PayoutRequestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PayoutRequestCountOutputType without action
+   */
+  export type PayoutRequestCountOutputTypeCountDistributionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TipDistributionWhereInput
   }
 
@@ -5503,6 +5696,8 @@ export namespace Prisma {
     settlements_recorded?: boolean | User$settlements_recordedArgs<ExtArgs>
     settlements_reversed?: boolean | User$settlements_reversedArgs<ExtArgs>
     settlement_adjustments?: boolean | User$settlement_adjustmentsArgs<ExtArgs>
+    payout_requests_made?: boolean | User$payout_requests_madeArgs<ExtArgs>
+    payout_requests_reviewed?: boolean | User$payout_requests_reviewedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5568,6 +5763,8 @@ export namespace Prisma {
     settlements_recorded?: boolean | User$settlements_recordedArgs<ExtArgs>
     settlements_reversed?: boolean | User$settlements_reversedArgs<ExtArgs>
     settlement_adjustments?: boolean | User$settlement_adjustmentsArgs<ExtArgs>
+    payout_requests_made?: boolean | User$payout_requests_madeArgs<ExtArgs>
+    payout_requests_reviewed?: boolean | User$payout_requests_reviewedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5588,6 +5785,8 @@ export namespace Prisma {
       settlements_recorded: Prisma.$SettlementPayload<ExtArgs>[]
       settlements_reversed: Prisma.$SettlementPayload<ExtArgs>[]
       settlement_adjustments: Prisma.$SettlementAdjustmentPayload<ExtArgs>[]
+      payout_requests_made: Prisma.$PayoutRequestPayload<ExtArgs>[]
+      payout_requests_reviewed: Prisma.$PayoutRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6009,6 +6208,8 @@ export namespace Prisma {
     settlements_recorded<T extends User$settlements_recordedArgs<ExtArgs> = {}>(args?: Subset<T, User$settlements_recordedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     settlements_reversed<T extends User$settlements_reversedArgs<ExtArgs> = {}>(args?: Subset<T, User$settlements_reversedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     settlement_adjustments<T extends User$settlement_adjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$settlement_adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payout_requests_made<T extends User$payout_requests_madeArgs<ExtArgs> = {}>(args?: Subset<T, User$payout_requests_madeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payout_requests_reviewed<T extends User$payout_requests_reviewedArgs<ExtArgs> = {}>(args?: Subset<T, User$payout_requests_reviewedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6719,6 +6920,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SettlementAdjustmentScalarFieldEnum | SettlementAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * User.payout_requests_made
+   */
+  export type User$payout_requests_madeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    where?: PayoutRequestWhereInput
+    orderBy?: PayoutRequestOrderByWithRelationInput | PayoutRequestOrderByWithRelationInput[]
+    cursor?: PayoutRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PayoutRequestScalarFieldEnum | PayoutRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.payout_requests_reviewed
+   */
+  export type User$payout_requests_reviewedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    where?: PayoutRequestWhereInput
+    orderBy?: PayoutRequestOrderByWithRelationInput | PayoutRequestOrderByWithRelationInput[]
+    cursor?: PayoutRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PayoutRequestScalarFieldEnum | PayoutRequestScalarFieldEnum[]
   }
 
   /**
@@ -8046,6 +8295,7 @@ export namespace Prisma {
     stores_cover?: boolean | Document$stores_coverArgs<ExtArgs>
     organizations_logo?: boolean | Document$organizations_logoArgs<ExtArgs>
     employees_photo?: boolean | Document$employees_photoArgs<ExtArgs>
+    payout_request?: boolean | Document$payout_requestArgs<ExtArgs>
     _count?: boolean | DocumentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
@@ -8094,6 +8344,7 @@ export namespace Prisma {
     stores_cover?: boolean | Document$stores_coverArgs<ExtArgs>
     organizations_logo?: boolean | Document$organizations_logoArgs<ExtArgs>
     employees_photo?: boolean | Document$employees_photoArgs<ExtArgs>
+    payout_request?: boolean | Document$payout_requestArgs<ExtArgs>
     _count?: boolean | DocumentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8111,6 +8362,7 @@ export namespace Prisma {
       stores_cover: Prisma.$StorePayload<ExtArgs>[]
       organizations_logo: Prisma.$OrganizationPayload<ExtArgs>[]
       employees_photo: Prisma.$EmployeePayload<ExtArgs>[]
+      payout_request: Prisma.$PayoutRequestPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8521,6 +8773,7 @@ export namespace Prisma {
     stores_cover<T extends Document$stores_coverArgs<ExtArgs> = {}>(args?: Subset<T, Document$stores_coverArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     organizations_logo<T extends Document$organizations_logoArgs<ExtArgs> = {}>(args?: Subset<T, Document$organizations_logoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     employees_photo<T extends Document$employees_photoArgs<ExtArgs> = {}>(args?: Subset<T, Document$employees_photoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payout_request<T extends Document$payout_requestArgs<ExtArgs> = {}>(args?: Subset<T, Document$payout_requestArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9048,6 +9301,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: EmployeeScalarFieldEnum | EmployeeScalarFieldEnum[]
+  }
+
+  /**
+   * Document.payout_request
+   */
+  export type Document$payout_requestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    where?: PayoutRequestWhereInput
   }
 
   /**
@@ -13006,6 +13278,7 @@ export namespace Prisma {
     insight_summaries?: boolean | Store$insight_summariesArgs<ExtArgs>
     payout_account?: boolean | Store$payout_accountArgs<ExtArgs>
     payouts?: boolean | Store$payoutsArgs<ExtArgs>
+    payout_requests?: boolean | Store$payout_requestsArgs<ExtArgs>
     settlements?: boolean | Store$settlementsArgs<ExtArgs>
     settlement_adjustments?: boolean | Store$settlement_adjustmentsArgs<ExtArgs>
     _count?: boolean | StoreCountOutputTypeDefaultArgs<ExtArgs>
@@ -13137,6 +13410,7 @@ export namespace Prisma {
     insight_summaries?: boolean | Store$insight_summariesArgs<ExtArgs>
     payout_account?: boolean | Store$payout_accountArgs<ExtArgs>
     payouts?: boolean | Store$payoutsArgs<ExtArgs>
+    payout_requests?: boolean | Store$payout_requestsArgs<ExtArgs>
     settlements?: boolean | Store$settlementsArgs<ExtArgs>
     settlement_adjustments?: boolean | Store$settlement_adjustmentsArgs<ExtArgs>
     _count?: boolean | StoreCountOutputTypeDefaultArgs<ExtArgs>
@@ -13177,6 +13451,7 @@ export namespace Prisma {
       insight_summaries: Prisma.$InsightSummaryPayload<ExtArgs>[]
       payout_account: Prisma.$PayoutAccountPayload<ExtArgs> | null
       payouts: Prisma.$PayoutPayload<ExtArgs>[]
+      payout_requests: Prisma.$PayoutRequestPayload<ExtArgs>[]
       settlements: Prisma.$SettlementPayload<ExtArgs>[]
       settlement_adjustments: Prisma.$SettlementAdjustmentPayload<ExtArgs>[]
     }
@@ -13624,6 +13899,7 @@ export namespace Prisma {
     insight_summaries<T extends Store$insight_summariesArgs<ExtArgs> = {}>(args?: Subset<T, Store$insight_summariesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InsightSummaryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     payout_account<T extends Store$payout_accountArgs<ExtArgs> = {}>(args?: Subset<T, Store$payout_accountArgs<ExtArgs>>): Prisma__PayoutAccountClient<$Result.GetResult<Prisma.$PayoutAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     payouts<T extends Store$payoutsArgs<ExtArgs> = {}>(args?: Subset<T, Store$payoutsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payout_requests<T extends Store$payout_requestsArgs<ExtArgs> = {}>(args?: Subset<T, Store$payout_requestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     settlements<T extends Store$settlementsArgs<ExtArgs> = {}>(args?: Subset<T, Store$settlementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     settlement_adjustments<T extends Store$settlement_adjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, Store$settlement_adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettlementAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -14513,6 +14789,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PayoutScalarFieldEnum | PayoutScalarFieldEnum[]
+  }
+
+  /**
+   * Store.payout_requests
+   */
+  export type Store$payout_requestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    where?: PayoutRequestWhereInput
+    orderBy?: PayoutRequestOrderByWithRelationInput | PayoutRequestOrderByWithRelationInput[]
+    cursor?: PayoutRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PayoutRequestScalarFieldEnum | PayoutRequestScalarFieldEnum[]
   }
 
   /**
@@ -29114,6 +29414,7 @@ export namespace Prisma {
     payout_mode: $Enums.DistributionPayoutMode | null
     payout_status: $Enums.PayoutStatus | null
     payout_id: string | null
+    payout_request_id: string | null
     paid_out_at: Date | null
     settlement_status: $Enums.SettlementStatus | null
     settlement_id: string | null
@@ -29131,6 +29432,7 @@ export namespace Prisma {
     payout_mode: $Enums.DistributionPayoutMode | null
     payout_status: $Enums.PayoutStatus | null
     payout_id: string | null
+    payout_request_id: string | null
     paid_out_at: Date | null
     settlement_status: $Enums.SettlementStatus | null
     settlement_id: string | null
@@ -29148,6 +29450,7 @@ export namespace Prisma {
     payout_mode: number
     payout_status: number
     payout_id: number
+    payout_request_id: number
     paid_out_at: number
     settlement_status: number
     settlement_id: number
@@ -29177,6 +29480,7 @@ export namespace Prisma {
     payout_mode?: true
     payout_status?: true
     payout_id?: true
+    payout_request_id?: true
     paid_out_at?: true
     settlement_status?: true
     settlement_id?: true
@@ -29194,6 +29498,7 @@ export namespace Prisma {
     payout_mode?: true
     payout_status?: true
     payout_id?: true
+    payout_request_id?: true
     paid_out_at?: true
     settlement_status?: true
     settlement_id?: true
@@ -29211,6 +29516,7 @@ export namespace Prisma {
     payout_mode?: true
     payout_status?: true
     payout_id?: true
+    payout_request_id?: true
     paid_out_at?: true
     settlement_status?: true
     settlement_id?: true
@@ -29315,6 +29621,7 @@ export namespace Prisma {
     payout_mode: $Enums.DistributionPayoutMode
     payout_status: $Enums.PayoutStatus
     payout_id: string | null
+    payout_request_id: string | null
     paid_out_at: Date | null
     settlement_status: $Enums.SettlementStatus
     settlement_id: string | null
@@ -29351,6 +29658,7 @@ export namespace Prisma {
     payout_mode?: boolean
     payout_status?: boolean
     payout_id?: boolean
+    payout_request_id?: boolean
     paid_out_at?: boolean
     settlement_status?: boolean
     settlement_id?: boolean
@@ -29359,6 +29667,7 @@ export namespace Prisma {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    payout_request?: boolean | TipDistribution$payout_requestArgs<ExtArgs>
     settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }, ExtArgs["result"]["tipDistribution"]>
 
@@ -29372,6 +29681,7 @@ export namespace Prisma {
     payout_mode?: boolean
     payout_status?: boolean
     payout_id?: boolean
+    payout_request_id?: boolean
     paid_out_at?: boolean
     settlement_status?: boolean
     settlement_id?: boolean
@@ -29380,6 +29690,7 @@ export namespace Prisma {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    payout_request?: boolean | TipDistribution$payout_requestArgs<ExtArgs>
     settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }, ExtArgs["result"]["tipDistribution"]>
 
@@ -29393,6 +29704,7 @@ export namespace Prisma {
     payout_mode?: boolean
     payout_status?: boolean
     payout_id?: boolean
+    payout_request_id?: boolean
     paid_out_at?: boolean
     settlement_status?: boolean
     settlement_id?: boolean
@@ -29401,6 +29713,7 @@ export namespace Prisma {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    payout_request?: boolean | TipDistribution$payout_requestArgs<ExtArgs>
     settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }, ExtArgs["result"]["tipDistribution"]>
 
@@ -29414,6 +29727,7 @@ export namespace Prisma {
     payout_mode?: boolean
     payout_status?: boolean
     payout_id?: boolean
+    payout_request_id?: boolean
     paid_out_at?: boolean
     settlement_status?: boolean
     settlement_id?: boolean
@@ -29421,23 +29735,26 @@ export namespace Prisma {
     created_at?: boolean
   }
 
-  export type TipDistributionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "recipient_type" | "employee_id" | "amount" | "percentage" | "payout_mode" | "payout_status" | "payout_id" | "paid_out_at" | "settlement_status" | "settlement_id" | "settled_at" | "created_at", ExtArgs["result"]["tipDistribution"]>
+  export type TipDistributionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_id" | "recipient_type" | "employee_id" | "amount" | "percentage" | "payout_mode" | "payout_status" | "payout_id" | "payout_request_id" | "paid_out_at" | "settlement_status" | "settlement_id" | "settled_at" | "created_at", ExtArgs["result"]["tipDistribution"]>
   export type TipDistributionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    payout_request?: boolean | TipDistribution$payout_requestArgs<ExtArgs>
     settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }
   export type TipDistributionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    payout_request?: boolean | TipDistribution$payout_requestArgs<ExtArgs>
     settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }
   export type TipDistributionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tip?: boolean | TipDefaultArgs<ExtArgs>
     employee?: boolean | TipDistribution$employeeArgs<ExtArgs>
     payout?: boolean | TipDistribution$payoutArgs<ExtArgs>
+    payout_request?: boolean | TipDistribution$payout_requestArgs<ExtArgs>
     settlement?: boolean | TipDistribution$settlementArgs<ExtArgs>
   }
 
@@ -29447,6 +29764,7 @@ export namespace Prisma {
       tip: Prisma.$TipPayload<ExtArgs>
       employee: Prisma.$EmployeePayload<ExtArgs> | null
       payout: Prisma.$PayoutPayload<ExtArgs> | null
+      payout_request: Prisma.$PayoutRequestPayload<ExtArgs> | null
       settlement: Prisma.$SettlementPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -29459,6 +29777,7 @@ export namespace Prisma {
       payout_mode: $Enums.DistributionPayoutMode
       payout_status: $Enums.PayoutStatus
       payout_id: string | null
+      payout_request_id: string | null
       paid_out_at: Date | null
       settlement_status: $Enums.SettlementStatus
       settlement_id: string | null
@@ -29861,6 +30180,7 @@ export namespace Prisma {
     tip<T extends TipDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TipDefaultArgs<ExtArgs>>): Prisma__TipClient<$Result.GetResult<Prisma.$TipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     employee<T extends TipDistribution$employeeArgs<ExtArgs> = {}>(args?: Subset<T, TipDistribution$employeeArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     payout<T extends TipDistribution$payoutArgs<ExtArgs> = {}>(args?: Subset<T, TipDistribution$payoutArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    payout_request<T extends TipDistribution$payout_requestArgs<ExtArgs> = {}>(args?: Subset<T, TipDistribution$payout_requestArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     settlement<T extends TipDistribution$settlementArgs<ExtArgs> = {}>(args?: Subset<T, TipDistribution$settlementArgs<ExtArgs>>): Prisma__SettlementClient<$Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -29900,6 +30220,7 @@ export namespace Prisma {
     readonly payout_mode: FieldRef<"TipDistribution", 'DistributionPayoutMode'>
     readonly payout_status: FieldRef<"TipDistribution", 'PayoutStatus'>
     readonly payout_id: FieldRef<"TipDistribution", 'String'>
+    readonly payout_request_id: FieldRef<"TipDistribution", 'String'>
     readonly paid_out_at: FieldRef<"TipDistribution", 'DateTime'>
     readonly settlement_status: FieldRef<"TipDistribution", 'SettlementStatus'>
     readonly settlement_id: FieldRef<"TipDistribution", 'String'>
@@ -30339,6 +30660,25 @@ export namespace Prisma {
   }
 
   /**
+   * TipDistribution.payout_request
+   */
+  export type TipDistribution$payout_requestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    where?: PayoutRequestWhereInput
+  }
+
+  /**
    * TipDistribution.settlement
    */
   export type TipDistribution$settlementArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -30650,6 +30990,7 @@ export namespace Prisma {
     employee?: boolean | Payout$employeeArgs<ExtArgs>
     payout_account?: boolean | PayoutAccountDefaultArgs<ExtArgs>
     distributions?: boolean | Payout$distributionsArgs<ExtArgs>
+    payout_request?: boolean | Payout$payout_requestArgs<ExtArgs>
     _count?: boolean | PayoutCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["payout"]>
 
@@ -30716,6 +31057,7 @@ export namespace Prisma {
     employee?: boolean | Payout$employeeArgs<ExtArgs>
     payout_account?: boolean | PayoutAccountDefaultArgs<ExtArgs>
     distributions?: boolean | Payout$distributionsArgs<ExtArgs>
+    payout_request?: boolean | Payout$payout_requestArgs<ExtArgs>
     _count?: boolean | PayoutCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PayoutIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -30736,6 +31078,7 @@ export namespace Prisma {
       employee: Prisma.$EmployeePayload<ExtArgs> | null
       payout_account: Prisma.$PayoutAccountPayload<ExtArgs>
       distributions: Prisma.$TipDistributionPayload<ExtArgs>[]
+      payout_request: Prisma.$PayoutRequestPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -31150,6 +31493,7 @@ export namespace Prisma {
     employee<T extends Payout$employeeArgs<ExtArgs> = {}>(args?: Subset<T, Payout$employeeArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     payout_account<T extends PayoutAccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PayoutAccountDefaultArgs<ExtArgs>>): Prisma__PayoutAccountClient<$Result.GetResult<Prisma.$PayoutAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     distributions<T extends Payout$distributionsArgs<ExtArgs> = {}>(args?: Subset<T, Payout$distributionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TipDistributionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payout_request<T extends Payout$payout_requestArgs<ExtArgs> = {}>(args?: Subset<T, Payout$payout_requestArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -31651,6 +31995,25 @@ export namespace Prisma {
   }
 
   /**
+   * Payout.payout_request
+   */
+  export type Payout$payout_requestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    where?: PayoutRequestWhereInput
+  }
+
+  /**
    * Payout without action
    */
   export type PayoutDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -31666,6 +32029,1537 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: PayoutInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PayoutRequest
+   */
+
+  export type AggregatePayoutRequest = {
+    _count: PayoutRequestCountAggregateOutputType | null
+    _avg: PayoutRequestAvgAggregateOutputType | null
+    _sum: PayoutRequestSumAggregateOutputType | null
+    _min: PayoutRequestMinAggregateOutputType | null
+    _max: PayoutRequestMaxAggregateOutputType | null
+  }
+
+  export type PayoutRequestAvgAggregateOutputType = {
+    amount: number | null
+    own_share_amount: number | null
+    held_for_staff_amount: number | null
+    distribution_count: number | null
+    check_cost_usd: Decimal | null
+  }
+
+  export type PayoutRequestSumAggregateOutputType = {
+    amount: number | null
+    own_share_amount: number | null
+    held_for_staff_amount: number | null
+    distribution_count: number | null
+    check_cost_usd: Decimal | null
+  }
+
+  export type PayoutRequestMinAggregateOutputType = {
+    id: string | null
+    store_id: string | null
+    requested_by_user_id: string | null
+    status: $Enums.PayoutRequestStatus | null
+    amount: number | null
+    own_share_amount: number | null
+    held_for_staff_amount: number | null
+    currency: $Enums.Currency | null
+    distribution_count: number | null
+    period_from: Date | null
+    period_to: Date | null
+    hold_cutoff_at: Date | null
+    invoice_document_id: string | null
+    invoice_number: string | null
+    store_note: string | null
+    failure_reason: string | null
+    check_status: $Enums.InvoiceCheckStatus | null
+    check_verdict: $Enums.InvoiceCheckVerdict | null
+    check_model: string | null
+    check_cost_usd: Decimal | null
+    checked_at: Date | null
+    reviewed_by_user_id: string | null
+    reviewed_at: Date | null
+    admin_note: string | null
+    payout_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type PayoutRequestMaxAggregateOutputType = {
+    id: string | null
+    store_id: string | null
+    requested_by_user_id: string | null
+    status: $Enums.PayoutRequestStatus | null
+    amount: number | null
+    own_share_amount: number | null
+    held_for_staff_amount: number | null
+    currency: $Enums.Currency | null
+    distribution_count: number | null
+    period_from: Date | null
+    period_to: Date | null
+    hold_cutoff_at: Date | null
+    invoice_document_id: string | null
+    invoice_number: string | null
+    store_note: string | null
+    failure_reason: string | null
+    check_status: $Enums.InvoiceCheckStatus | null
+    check_verdict: $Enums.InvoiceCheckVerdict | null
+    check_model: string | null
+    check_cost_usd: Decimal | null
+    checked_at: Date | null
+    reviewed_by_user_id: string | null
+    reviewed_at: Date | null
+    admin_note: string | null
+    payout_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type PayoutRequestCountAggregateOutputType = {
+    id: number
+    store_id: number
+    requested_by_user_id: number
+    status: number
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: number
+    distribution_count: number
+    period_from: number
+    period_to: number
+    hold_cutoff_at: number
+    invoice_document_id: number
+    invoice_number: number
+    store_note: number
+    failure_reason: number
+    check_status: number
+    check_verdict: number
+    check_issues: number
+    check_extracted: number
+    check_model: number
+    check_cost_usd: number
+    checked_at: number
+    reviewed_by_user_id: number
+    reviewed_at: number
+    admin_note: number
+    payout_id: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type PayoutRequestAvgAggregateInputType = {
+    amount?: true
+    own_share_amount?: true
+    held_for_staff_amount?: true
+    distribution_count?: true
+    check_cost_usd?: true
+  }
+
+  export type PayoutRequestSumAggregateInputType = {
+    amount?: true
+    own_share_amount?: true
+    held_for_staff_amount?: true
+    distribution_count?: true
+    check_cost_usd?: true
+  }
+
+  export type PayoutRequestMinAggregateInputType = {
+    id?: true
+    store_id?: true
+    requested_by_user_id?: true
+    status?: true
+    amount?: true
+    own_share_amount?: true
+    held_for_staff_amount?: true
+    currency?: true
+    distribution_count?: true
+    period_from?: true
+    period_to?: true
+    hold_cutoff_at?: true
+    invoice_document_id?: true
+    invoice_number?: true
+    store_note?: true
+    failure_reason?: true
+    check_status?: true
+    check_verdict?: true
+    check_model?: true
+    check_cost_usd?: true
+    checked_at?: true
+    reviewed_by_user_id?: true
+    reviewed_at?: true
+    admin_note?: true
+    payout_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type PayoutRequestMaxAggregateInputType = {
+    id?: true
+    store_id?: true
+    requested_by_user_id?: true
+    status?: true
+    amount?: true
+    own_share_amount?: true
+    held_for_staff_amount?: true
+    currency?: true
+    distribution_count?: true
+    period_from?: true
+    period_to?: true
+    hold_cutoff_at?: true
+    invoice_document_id?: true
+    invoice_number?: true
+    store_note?: true
+    failure_reason?: true
+    check_status?: true
+    check_verdict?: true
+    check_model?: true
+    check_cost_usd?: true
+    checked_at?: true
+    reviewed_by_user_id?: true
+    reviewed_at?: true
+    admin_note?: true
+    payout_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type PayoutRequestCountAggregateInputType = {
+    id?: true
+    store_id?: true
+    requested_by_user_id?: true
+    status?: true
+    amount?: true
+    own_share_amount?: true
+    held_for_staff_amount?: true
+    currency?: true
+    distribution_count?: true
+    period_from?: true
+    period_to?: true
+    hold_cutoff_at?: true
+    invoice_document_id?: true
+    invoice_number?: true
+    store_note?: true
+    failure_reason?: true
+    check_status?: true
+    check_verdict?: true
+    check_issues?: true
+    check_extracted?: true
+    check_model?: true
+    check_cost_usd?: true
+    checked_at?: true
+    reviewed_by_user_id?: true
+    reviewed_at?: true
+    admin_note?: true
+    payout_id?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type PayoutRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PayoutRequest to aggregate.
+     */
+    where?: PayoutRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PayoutRequests to fetch.
+     */
+    orderBy?: PayoutRequestOrderByWithRelationInput | PayoutRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PayoutRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PayoutRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PayoutRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PayoutRequests
+    **/
+    _count?: true | PayoutRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PayoutRequestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PayoutRequestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PayoutRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PayoutRequestMaxAggregateInputType
+  }
+
+  export type GetPayoutRequestAggregateType<T extends PayoutRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregatePayoutRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePayoutRequest[P]>
+      : GetScalarType<T[P], AggregatePayoutRequest[P]>
+  }
+
+
+
+
+  export type PayoutRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PayoutRequestWhereInput
+    orderBy?: PayoutRequestOrderByWithAggregationInput | PayoutRequestOrderByWithAggregationInput[]
+    by: PayoutRequestScalarFieldEnum[] | PayoutRequestScalarFieldEnum
+    having?: PayoutRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PayoutRequestCountAggregateInputType | true
+    _avg?: PayoutRequestAvgAggregateInputType
+    _sum?: PayoutRequestSumAggregateInputType
+    _min?: PayoutRequestMinAggregateInputType
+    _max?: PayoutRequestMaxAggregateInputType
+  }
+
+  export type PayoutRequestGroupByOutputType = {
+    id: string
+    store_id: string
+    requested_by_user_id: string | null
+    status: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date
+    period_to: Date
+    hold_cutoff_at: Date
+    invoice_document_id: string
+    invoice_number: string | null
+    store_note: string | null
+    failure_reason: string | null
+    check_status: $Enums.InvoiceCheckStatus
+    check_verdict: $Enums.InvoiceCheckVerdict | null
+    check_issues: JsonValue | null
+    check_extracted: JsonValue | null
+    check_model: string | null
+    check_cost_usd: Decimal | null
+    checked_at: Date | null
+    reviewed_by_user_id: string | null
+    reviewed_at: Date | null
+    admin_note: string | null
+    payout_id: string | null
+    created_at: Date
+    updated_at: Date
+    _count: PayoutRequestCountAggregateOutputType | null
+    _avg: PayoutRequestAvgAggregateOutputType | null
+    _sum: PayoutRequestSumAggregateOutputType | null
+    _min: PayoutRequestMinAggregateOutputType | null
+    _max: PayoutRequestMaxAggregateOutputType | null
+  }
+
+  type GetPayoutRequestGroupByPayload<T extends PayoutRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PayoutRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PayoutRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PayoutRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], PayoutRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PayoutRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    requested_by_user_id?: boolean
+    status?: boolean
+    amount?: boolean
+    own_share_amount?: boolean
+    held_for_staff_amount?: boolean
+    currency?: boolean
+    distribution_count?: boolean
+    period_from?: boolean
+    period_to?: boolean
+    hold_cutoff_at?: boolean
+    invoice_document_id?: boolean
+    invoice_number?: boolean
+    store_note?: boolean
+    failure_reason?: boolean
+    check_status?: boolean
+    check_verdict?: boolean
+    check_issues?: boolean
+    check_extracted?: boolean
+    check_model?: boolean
+    check_cost_usd?: boolean
+    checked_at?: boolean
+    reviewed_by_user_id?: boolean
+    reviewed_at?: boolean
+    admin_note?: boolean
+    payout_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    requested_by?: boolean | PayoutRequest$requested_byArgs<ExtArgs>
+    reviewed_by?: boolean | PayoutRequest$reviewed_byArgs<ExtArgs>
+    invoice_document?: boolean | DocumentDefaultArgs<ExtArgs>
+    payout?: boolean | PayoutRequest$payoutArgs<ExtArgs>
+    distributions?: boolean | PayoutRequest$distributionsArgs<ExtArgs>
+    _count?: boolean | PayoutRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payoutRequest"]>
+
+  export type PayoutRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    requested_by_user_id?: boolean
+    status?: boolean
+    amount?: boolean
+    own_share_amount?: boolean
+    held_for_staff_amount?: boolean
+    currency?: boolean
+    distribution_count?: boolean
+    period_from?: boolean
+    period_to?: boolean
+    hold_cutoff_at?: boolean
+    invoice_document_id?: boolean
+    invoice_number?: boolean
+    store_note?: boolean
+    failure_reason?: boolean
+    check_status?: boolean
+    check_verdict?: boolean
+    check_issues?: boolean
+    check_extracted?: boolean
+    check_model?: boolean
+    check_cost_usd?: boolean
+    checked_at?: boolean
+    reviewed_by_user_id?: boolean
+    reviewed_at?: boolean
+    admin_note?: boolean
+    payout_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    requested_by?: boolean | PayoutRequest$requested_byArgs<ExtArgs>
+    reviewed_by?: boolean | PayoutRequest$reviewed_byArgs<ExtArgs>
+    invoice_document?: boolean | DocumentDefaultArgs<ExtArgs>
+    payout?: boolean | PayoutRequest$payoutArgs<ExtArgs>
+  }, ExtArgs["result"]["payoutRequest"]>
+
+  export type PayoutRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    store_id?: boolean
+    requested_by_user_id?: boolean
+    status?: boolean
+    amount?: boolean
+    own_share_amount?: boolean
+    held_for_staff_amount?: boolean
+    currency?: boolean
+    distribution_count?: boolean
+    period_from?: boolean
+    period_to?: boolean
+    hold_cutoff_at?: boolean
+    invoice_document_id?: boolean
+    invoice_number?: boolean
+    store_note?: boolean
+    failure_reason?: boolean
+    check_status?: boolean
+    check_verdict?: boolean
+    check_issues?: boolean
+    check_extracted?: boolean
+    check_model?: boolean
+    check_cost_usd?: boolean
+    checked_at?: boolean
+    reviewed_by_user_id?: boolean
+    reviewed_at?: boolean
+    admin_note?: boolean
+    payout_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    requested_by?: boolean | PayoutRequest$requested_byArgs<ExtArgs>
+    reviewed_by?: boolean | PayoutRequest$reviewed_byArgs<ExtArgs>
+    invoice_document?: boolean | DocumentDefaultArgs<ExtArgs>
+    payout?: boolean | PayoutRequest$payoutArgs<ExtArgs>
+  }, ExtArgs["result"]["payoutRequest"]>
+
+  export type PayoutRequestSelectScalar = {
+    id?: boolean
+    store_id?: boolean
+    requested_by_user_id?: boolean
+    status?: boolean
+    amount?: boolean
+    own_share_amount?: boolean
+    held_for_staff_amount?: boolean
+    currency?: boolean
+    distribution_count?: boolean
+    period_from?: boolean
+    period_to?: boolean
+    hold_cutoff_at?: boolean
+    invoice_document_id?: boolean
+    invoice_number?: boolean
+    store_note?: boolean
+    failure_reason?: boolean
+    check_status?: boolean
+    check_verdict?: boolean
+    check_issues?: boolean
+    check_extracted?: boolean
+    check_model?: boolean
+    check_cost_usd?: boolean
+    checked_at?: boolean
+    reviewed_by_user_id?: boolean
+    reviewed_at?: boolean
+    admin_note?: boolean
+    payout_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type PayoutRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "store_id" | "requested_by_user_id" | "status" | "amount" | "own_share_amount" | "held_for_staff_amount" | "currency" | "distribution_count" | "period_from" | "period_to" | "hold_cutoff_at" | "invoice_document_id" | "invoice_number" | "store_note" | "failure_reason" | "check_status" | "check_verdict" | "check_issues" | "check_extracted" | "check_model" | "check_cost_usd" | "checked_at" | "reviewed_by_user_id" | "reviewed_at" | "admin_note" | "payout_id" | "created_at" | "updated_at", ExtArgs["result"]["payoutRequest"]>
+  export type PayoutRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    requested_by?: boolean | PayoutRequest$requested_byArgs<ExtArgs>
+    reviewed_by?: boolean | PayoutRequest$reviewed_byArgs<ExtArgs>
+    invoice_document?: boolean | DocumentDefaultArgs<ExtArgs>
+    payout?: boolean | PayoutRequest$payoutArgs<ExtArgs>
+    distributions?: boolean | PayoutRequest$distributionsArgs<ExtArgs>
+    _count?: boolean | PayoutRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PayoutRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    requested_by?: boolean | PayoutRequest$requested_byArgs<ExtArgs>
+    reviewed_by?: boolean | PayoutRequest$reviewed_byArgs<ExtArgs>
+    invoice_document?: boolean | DocumentDefaultArgs<ExtArgs>
+    payout?: boolean | PayoutRequest$payoutArgs<ExtArgs>
+  }
+  export type PayoutRequestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    store?: boolean | StoreDefaultArgs<ExtArgs>
+    requested_by?: boolean | PayoutRequest$requested_byArgs<ExtArgs>
+    reviewed_by?: boolean | PayoutRequest$reviewed_byArgs<ExtArgs>
+    invoice_document?: boolean | DocumentDefaultArgs<ExtArgs>
+    payout?: boolean | PayoutRequest$payoutArgs<ExtArgs>
+  }
+
+  export type $PayoutRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PayoutRequest"
+    objects: {
+      store: Prisma.$StorePayload<ExtArgs>
+      requested_by: Prisma.$UserPayload<ExtArgs> | null
+      reviewed_by: Prisma.$UserPayload<ExtArgs> | null
+      invoice_document: Prisma.$DocumentPayload<ExtArgs>
+      payout: Prisma.$PayoutPayload<ExtArgs> | null
+      distributions: Prisma.$TipDistributionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      store_id: string
+      requested_by_user_id: string | null
+      status: $Enums.PayoutRequestStatus
+      amount: number
+      own_share_amount: number
+      held_for_staff_amount: number
+      currency: $Enums.Currency
+      distribution_count: number
+      period_from: Date
+      period_to: Date
+      hold_cutoff_at: Date
+      invoice_document_id: string
+      invoice_number: string | null
+      store_note: string | null
+      failure_reason: string | null
+      check_status: $Enums.InvoiceCheckStatus
+      check_verdict: $Enums.InvoiceCheckVerdict | null
+      check_issues: Prisma.JsonValue | null
+      check_extracted: Prisma.JsonValue | null
+      check_model: string | null
+      check_cost_usd: Prisma.Decimal | null
+      checked_at: Date | null
+      reviewed_by_user_id: string | null
+      reviewed_at: Date | null
+      admin_note: string | null
+      payout_id: string | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["payoutRequest"]>
+    composites: {}
+  }
+
+  type PayoutRequestGetPayload<S extends boolean | null | undefined | PayoutRequestDefaultArgs> = $Result.GetResult<Prisma.$PayoutRequestPayload, S>
+
+  type PayoutRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PayoutRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PayoutRequestCountAggregateInputType | true
+    }
+
+  export interface PayoutRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PayoutRequest'], meta: { name: 'PayoutRequest' } }
+    /**
+     * Find zero or one PayoutRequest that matches the filter.
+     * @param {PayoutRequestFindUniqueArgs} args - Arguments to find a PayoutRequest
+     * @example
+     * // Get one PayoutRequest
+     * const payoutRequest = await prisma.payoutRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PayoutRequestFindUniqueArgs>(args: SelectSubset<T, PayoutRequestFindUniqueArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PayoutRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PayoutRequestFindUniqueOrThrowArgs} args - Arguments to find a PayoutRequest
+     * @example
+     * // Get one PayoutRequest
+     * const payoutRequest = await prisma.payoutRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PayoutRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, PayoutRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PayoutRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutRequestFindFirstArgs} args - Arguments to find a PayoutRequest
+     * @example
+     * // Get one PayoutRequest
+     * const payoutRequest = await prisma.payoutRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PayoutRequestFindFirstArgs>(args?: SelectSubset<T, PayoutRequestFindFirstArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PayoutRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutRequestFindFirstOrThrowArgs} args - Arguments to find a PayoutRequest
+     * @example
+     * // Get one PayoutRequest
+     * const payoutRequest = await prisma.payoutRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PayoutRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, PayoutRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PayoutRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PayoutRequests
+     * const payoutRequests = await prisma.payoutRequest.findMany()
+     * 
+     * // Get first 10 PayoutRequests
+     * const payoutRequests = await prisma.payoutRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const payoutRequestWithIdOnly = await prisma.payoutRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PayoutRequestFindManyArgs>(args?: SelectSubset<T, PayoutRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PayoutRequest.
+     * @param {PayoutRequestCreateArgs} args - Arguments to create a PayoutRequest.
+     * @example
+     * // Create one PayoutRequest
+     * const PayoutRequest = await prisma.payoutRequest.create({
+     *   data: {
+     *     // ... data to create a PayoutRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends PayoutRequestCreateArgs>(args: SelectSubset<T, PayoutRequestCreateArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PayoutRequests.
+     * @param {PayoutRequestCreateManyArgs} args - Arguments to create many PayoutRequests.
+     * @example
+     * // Create many PayoutRequests
+     * const payoutRequest = await prisma.payoutRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PayoutRequestCreateManyArgs>(args?: SelectSubset<T, PayoutRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PayoutRequests and returns the data saved in the database.
+     * @param {PayoutRequestCreateManyAndReturnArgs} args - Arguments to create many PayoutRequests.
+     * @example
+     * // Create many PayoutRequests
+     * const payoutRequest = await prisma.payoutRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PayoutRequests and only return the `id`
+     * const payoutRequestWithIdOnly = await prisma.payoutRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PayoutRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, PayoutRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PayoutRequest.
+     * @param {PayoutRequestDeleteArgs} args - Arguments to delete one PayoutRequest.
+     * @example
+     * // Delete one PayoutRequest
+     * const PayoutRequest = await prisma.payoutRequest.delete({
+     *   where: {
+     *     // ... filter to delete one PayoutRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PayoutRequestDeleteArgs>(args: SelectSubset<T, PayoutRequestDeleteArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PayoutRequest.
+     * @param {PayoutRequestUpdateArgs} args - Arguments to update one PayoutRequest.
+     * @example
+     * // Update one PayoutRequest
+     * const payoutRequest = await prisma.payoutRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PayoutRequestUpdateArgs>(args: SelectSubset<T, PayoutRequestUpdateArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PayoutRequests.
+     * @param {PayoutRequestDeleteManyArgs} args - Arguments to filter PayoutRequests to delete.
+     * @example
+     * // Delete a few PayoutRequests
+     * const { count } = await prisma.payoutRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PayoutRequestDeleteManyArgs>(args?: SelectSubset<T, PayoutRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PayoutRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PayoutRequests
+     * const payoutRequest = await prisma.payoutRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PayoutRequestUpdateManyArgs>(args: SelectSubset<T, PayoutRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PayoutRequests and returns the data updated in the database.
+     * @param {PayoutRequestUpdateManyAndReturnArgs} args - Arguments to update many PayoutRequests.
+     * @example
+     * // Update many PayoutRequests
+     * const payoutRequest = await prisma.payoutRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PayoutRequests and only return the `id`
+     * const payoutRequestWithIdOnly = await prisma.payoutRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PayoutRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, PayoutRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PayoutRequest.
+     * @param {PayoutRequestUpsertArgs} args - Arguments to update or create a PayoutRequest.
+     * @example
+     * // Update or create a PayoutRequest
+     * const payoutRequest = await prisma.payoutRequest.upsert({
+     *   create: {
+     *     // ... data to create a PayoutRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PayoutRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PayoutRequestUpsertArgs>(args: SelectSubset<T, PayoutRequestUpsertArgs<ExtArgs>>): Prisma__PayoutRequestClient<$Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PayoutRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutRequestCountArgs} args - Arguments to filter PayoutRequests to count.
+     * @example
+     * // Count the number of PayoutRequests
+     * const count = await prisma.payoutRequest.count({
+     *   where: {
+     *     // ... the filter for the PayoutRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends PayoutRequestCountArgs>(
+      args?: Subset<T, PayoutRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PayoutRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PayoutRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PayoutRequestAggregateArgs>(args: Subset<T, PayoutRequestAggregateArgs>): Prisma.PrismaPromise<GetPayoutRequestAggregateType<T>>
+
+    /**
+     * Group by PayoutRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PayoutRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PayoutRequestGroupByArgs['orderBy'] }
+        : { orderBy?: PayoutRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PayoutRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPayoutRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PayoutRequest model
+   */
+  readonly fields: PayoutRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PayoutRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PayoutRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    store<T extends StoreDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StoreDefaultArgs<ExtArgs>>): Prisma__StoreClient<$Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    requested_by<T extends PayoutRequest$requested_byArgs<ExtArgs> = {}>(args?: Subset<T, PayoutRequest$requested_byArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    reviewed_by<T extends PayoutRequest$reviewed_byArgs<ExtArgs> = {}>(args?: Subset<T, PayoutRequest$reviewed_byArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    invoice_document<T extends DocumentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DocumentDefaultArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    payout<T extends PayoutRequest$payoutArgs<ExtArgs> = {}>(args?: Subset<T, PayoutRequest$payoutArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    distributions<T extends PayoutRequest$distributionsArgs<ExtArgs> = {}>(args?: Subset<T, PayoutRequest$distributionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TipDistributionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PayoutRequest model
+   */
+  interface PayoutRequestFieldRefs {
+    readonly id: FieldRef<"PayoutRequest", 'String'>
+    readonly store_id: FieldRef<"PayoutRequest", 'String'>
+    readonly requested_by_user_id: FieldRef<"PayoutRequest", 'String'>
+    readonly status: FieldRef<"PayoutRequest", 'PayoutRequestStatus'>
+    readonly amount: FieldRef<"PayoutRequest", 'Int'>
+    readonly own_share_amount: FieldRef<"PayoutRequest", 'Int'>
+    readonly held_for_staff_amount: FieldRef<"PayoutRequest", 'Int'>
+    readonly currency: FieldRef<"PayoutRequest", 'Currency'>
+    readonly distribution_count: FieldRef<"PayoutRequest", 'Int'>
+    readonly period_from: FieldRef<"PayoutRequest", 'DateTime'>
+    readonly period_to: FieldRef<"PayoutRequest", 'DateTime'>
+    readonly hold_cutoff_at: FieldRef<"PayoutRequest", 'DateTime'>
+    readonly invoice_document_id: FieldRef<"PayoutRequest", 'String'>
+    readonly invoice_number: FieldRef<"PayoutRequest", 'String'>
+    readonly store_note: FieldRef<"PayoutRequest", 'String'>
+    readonly failure_reason: FieldRef<"PayoutRequest", 'String'>
+    readonly check_status: FieldRef<"PayoutRequest", 'InvoiceCheckStatus'>
+    readonly check_verdict: FieldRef<"PayoutRequest", 'InvoiceCheckVerdict'>
+    readonly check_issues: FieldRef<"PayoutRequest", 'Json'>
+    readonly check_extracted: FieldRef<"PayoutRequest", 'Json'>
+    readonly check_model: FieldRef<"PayoutRequest", 'String'>
+    readonly check_cost_usd: FieldRef<"PayoutRequest", 'Decimal'>
+    readonly checked_at: FieldRef<"PayoutRequest", 'DateTime'>
+    readonly reviewed_by_user_id: FieldRef<"PayoutRequest", 'String'>
+    readonly reviewed_at: FieldRef<"PayoutRequest", 'DateTime'>
+    readonly admin_note: FieldRef<"PayoutRequest", 'String'>
+    readonly payout_id: FieldRef<"PayoutRequest", 'String'>
+    readonly created_at: FieldRef<"PayoutRequest", 'DateTime'>
+    readonly updated_at: FieldRef<"PayoutRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PayoutRequest findUnique
+   */
+  export type PayoutRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which PayoutRequest to fetch.
+     */
+    where: PayoutRequestWhereUniqueInput
+  }
+
+  /**
+   * PayoutRequest findUniqueOrThrow
+   */
+  export type PayoutRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which PayoutRequest to fetch.
+     */
+    where: PayoutRequestWhereUniqueInput
+  }
+
+  /**
+   * PayoutRequest findFirst
+   */
+  export type PayoutRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which PayoutRequest to fetch.
+     */
+    where?: PayoutRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PayoutRequests to fetch.
+     */
+    orderBy?: PayoutRequestOrderByWithRelationInput | PayoutRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PayoutRequests.
+     */
+    cursor?: PayoutRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PayoutRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PayoutRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PayoutRequests.
+     */
+    distinct?: PayoutRequestScalarFieldEnum | PayoutRequestScalarFieldEnum[]
+  }
+
+  /**
+   * PayoutRequest findFirstOrThrow
+   */
+  export type PayoutRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which PayoutRequest to fetch.
+     */
+    where?: PayoutRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PayoutRequests to fetch.
+     */
+    orderBy?: PayoutRequestOrderByWithRelationInput | PayoutRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PayoutRequests.
+     */
+    cursor?: PayoutRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PayoutRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PayoutRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PayoutRequests.
+     */
+    distinct?: PayoutRequestScalarFieldEnum | PayoutRequestScalarFieldEnum[]
+  }
+
+  /**
+   * PayoutRequest findMany
+   */
+  export type PayoutRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which PayoutRequests to fetch.
+     */
+    where?: PayoutRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PayoutRequests to fetch.
+     */
+    orderBy?: PayoutRequestOrderByWithRelationInput | PayoutRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PayoutRequests.
+     */
+    cursor?: PayoutRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PayoutRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PayoutRequests.
+     */
+    skip?: number
+    distinct?: PayoutRequestScalarFieldEnum | PayoutRequestScalarFieldEnum[]
+  }
+
+  /**
+   * PayoutRequest create
+   */
+  export type PayoutRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PayoutRequest.
+     */
+    data: XOR<PayoutRequestCreateInput, PayoutRequestUncheckedCreateInput>
+  }
+
+  /**
+   * PayoutRequest createMany
+   */
+  export type PayoutRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PayoutRequests.
+     */
+    data: PayoutRequestCreateManyInput | PayoutRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PayoutRequest createManyAndReturn
+   */
+  export type PayoutRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many PayoutRequests.
+     */
+    data: PayoutRequestCreateManyInput | PayoutRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PayoutRequest update
+   */
+  export type PayoutRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PayoutRequest.
+     */
+    data: XOR<PayoutRequestUpdateInput, PayoutRequestUncheckedUpdateInput>
+    /**
+     * Choose, which PayoutRequest to update.
+     */
+    where: PayoutRequestWhereUniqueInput
+  }
+
+  /**
+   * PayoutRequest updateMany
+   */
+  export type PayoutRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PayoutRequests.
+     */
+    data: XOR<PayoutRequestUpdateManyMutationInput, PayoutRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which PayoutRequests to update
+     */
+    where?: PayoutRequestWhereInput
+    /**
+     * Limit how many PayoutRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PayoutRequest updateManyAndReturn
+   */
+  export type PayoutRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update PayoutRequests.
+     */
+    data: XOR<PayoutRequestUpdateManyMutationInput, PayoutRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which PayoutRequests to update
+     */
+    where?: PayoutRequestWhereInput
+    /**
+     * Limit how many PayoutRequests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PayoutRequest upsert
+   */
+  export type PayoutRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PayoutRequest to update in case it exists.
+     */
+    where: PayoutRequestWhereUniqueInput
+    /**
+     * In case the PayoutRequest found by the `where` argument doesn't exist, create a new PayoutRequest with this data.
+     */
+    create: XOR<PayoutRequestCreateInput, PayoutRequestUncheckedCreateInput>
+    /**
+     * In case the PayoutRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PayoutRequestUpdateInput, PayoutRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * PayoutRequest delete
+   */
+  export type PayoutRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter which PayoutRequest to delete.
+     */
+    where: PayoutRequestWhereUniqueInput
+  }
+
+  /**
+   * PayoutRequest deleteMany
+   */
+  export type PayoutRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PayoutRequests to delete
+     */
+    where?: PayoutRequestWhereInput
+    /**
+     * Limit how many PayoutRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PayoutRequest.requested_by
+   */
+  export type PayoutRequest$requested_byArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * PayoutRequest.reviewed_by
+   */
+  export type PayoutRequest$reviewed_byArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * PayoutRequest.payout
+   */
+  export type PayoutRequest$payoutArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    where?: PayoutWhereInput
+  }
+
+  /**
+   * PayoutRequest.distributions
+   */
+  export type PayoutRequest$distributionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TipDistribution
+     */
+    select?: TipDistributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TipDistribution
+     */
+    omit?: TipDistributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TipDistributionInclude<ExtArgs> | null
+    where?: TipDistributionWhereInput
+    orderBy?: TipDistributionOrderByWithRelationInput | TipDistributionOrderByWithRelationInput[]
+    cursor?: TipDistributionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TipDistributionScalarFieldEnum | TipDistributionScalarFieldEnum[]
+  }
+
+  /**
+   * PayoutRequest without action
+   */
+  export type PayoutRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PayoutRequest
+     */
+    select?: PayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PayoutRequest
+     */
+    omit?: PayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutRequestInclude<ExtArgs> | null
   }
 
 
@@ -46993,6 +48887,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount: number | null
     payout_hold_window_hours: number | null
     vat_rate_percentage: Decimal | null
+    payout_invoice_required: boolean | null
+    payout_invoice_ai_check_enabled: boolean | null
+    platform_legal_name: string | null
+    platform_vat_number: string | null
+    platform_tax_office: string | null
+    platform_address: string | null
+    payout_invoice_instructions: string | null
     updated_by_user_id: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -47005,6 +48906,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount: number | null
     payout_hold_window_hours: number | null
     vat_rate_percentage: Decimal | null
+    payout_invoice_required: boolean | null
+    payout_invoice_ai_check_enabled: boolean | null
+    platform_legal_name: string | null
+    platform_vat_number: string | null
+    platform_tax_office: string | null
+    platform_address: string | null
+    payout_invoice_instructions: string | null
     updated_by_user_id: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -47017,6 +48925,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount: number
     payout_hold_window_hours: number
     vat_rate_percentage: number
+    payout_invoice_required: number
+    payout_invoice_ai_check_enabled: number
+    platform_legal_name: number
+    platform_vat_number: number
+    platform_tax_office: number
+    platform_address: number
+    payout_invoice_instructions: number
     updated_by_user_id: number
     created_at: number
     updated_at: number
@@ -47047,6 +48962,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: true
     payout_hold_window_hours?: true
     vat_rate_percentage?: true
+    payout_invoice_required?: true
+    payout_invoice_ai_check_enabled?: true
+    platform_legal_name?: true
+    platform_vat_number?: true
+    platform_tax_office?: true
+    platform_address?: true
+    payout_invoice_instructions?: true
     updated_by_user_id?: true
     created_at?: true
     updated_at?: true
@@ -47059,6 +48981,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: true
     payout_hold_window_hours?: true
     vat_rate_percentage?: true
+    payout_invoice_required?: true
+    payout_invoice_ai_check_enabled?: true
+    platform_legal_name?: true
+    platform_vat_number?: true
+    platform_tax_office?: true
+    platform_address?: true
+    payout_invoice_instructions?: true
     updated_by_user_id?: true
     created_at?: true
     updated_at?: true
@@ -47071,6 +49000,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: true
     payout_hold_window_hours?: true
     vat_rate_percentage?: true
+    payout_invoice_required?: true
+    payout_invoice_ai_check_enabled?: true
+    platform_legal_name?: true
+    platform_vat_number?: true
+    platform_tax_office?: true
+    platform_address?: true
+    payout_invoice_instructions?: true
     updated_by_user_id?: true
     created_at?: true
     updated_at?: true
@@ -47170,6 +49106,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount: number
     payout_hold_window_hours: number
     vat_rate_percentage: Decimal
+    payout_invoice_required: boolean
+    payout_invoice_ai_check_enabled: boolean
+    platform_legal_name: string | null
+    platform_vat_number: string | null
+    platform_tax_office: string | null
+    platform_address: string | null
+    payout_invoice_instructions: string | null
     updated_by_user_id: string | null
     created_at: Date
     updated_at: Date
@@ -47201,6 +49144,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: boolean
     payout_hold_window_hours?: boolean
     vat_rate_percentage?: boolean
+    payout_invoice_required?: boolean
+    payout_invoice_ai_check_enabled?: boolean
+    platform_legal_name?: boolean
+    platform_vat_number?: boolean
+    platform_tax_office?: boolean
+    platform_address?: boolean
+    payout_invoice_instructions?: boolean
     updated_by_user_id?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -47213,6 +49163,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: boolean
     payout_hold_window_hours?: boolean
     vat_rate_percentage?: boolean
+    payout_invoice_required?: boolean
+    payout_invoice_ai_check_enabled?: boolean
+    platform_legal_name?: boolean
+    platform_vat_number?: boolean
+    platform_tax_office?: boolean
+    platform_address?: boolean
+    payout_invoice_instructions?: boolean
     updated_by_user_id?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -47225,6 +49182,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: boolean
     payout_hold_window_hours?: boolean
     vat_rate_percentage?: boolean
+    payout_invoice_required?: boolean
+    payout_invoice_ai_check_enabled?: boolean
+    platform_legal_name?: boolean
+    platform_vat_number?: boolean
+    platform_tax_office?: boolean
+    platform_address?: boolean
+    payout_invoice_instructions?: boolean
     updated_by_user_id?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -47237,12 +49201,19 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: boolean
     payout_hold_window_hours?: boolean
     vat_rate_percentage?: boolean
+    payout_invoice_required?: boolean
+    payout_invoice_ai_check_enabled?: boolean
+    platform_legal_name?: boolean
+    platform_vat_number?: boolean
+    platform_tax_office?: boolean
+    platform_address?: boolean
+    payout_invoice_instructions?: boolean
     updated_by_user_id?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type AppConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_platform_commission_percentage" | "tip_processor_fee_estimate_percentage" | "tip_processor_fee_estimate_fixed_amount" | "payout_hold_window_hours" | "vat_rate_percentage" | "updated_by_user_id" | "created_at" | "updated_at", ExtArgs["result"]["appConfig"]>
+  export type AppConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_platform_commission_percentage" | "tip_processor_fee_estimate_percentage" | "tip_processor_fee_estimate_fixed_amount" | "payout_hold_window_hours" | "vat_rate_percentage" | "payout_invoice_required" | "payout_invoice_ai_check_enabled" | "platform_legal_name" | "platform_vat_number" | "platform_tax_office" | "platform_address" | "payout_invoice_instructions" | "updated_by_user_id" | "created_at" | "updated_at", ExtArgs["result"]["appConfig"]>
 
   export type $AppConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AppConfig"
@@ -47254,6 +49225,13 @@ export namespace Prisma {
       tip_processor_fee_estimate_fixed_amount: number
       payout_hold_window_hours: number
       vat_rate_percentage: Prisma.Decimal
+      payout_invoice_required: boolean
+      payout_invoice_ai_check_enabled: boolean
+      platform_legal_name: string | null
+      platform_vat_number: string | null
+      platform_tax_office: string | null
+      platform_address: string | null
+      payout_invoice_instructions: string | null
       updated_by_user_id: string | null
       created_at: Date
       updated_at: Date
@@ -47686,6 +49664,13 @@ export namespace Prisma {
     readonly tip_processor_fee_estimate_fixed_amount: FieldRef<"AppConfig", 'Int'>
     readonly payout_hold_window_hours: FieldRef<"AppConfig", 'Int'>
     readonly vat_rate_percentage: FieldRef<"AppConfig", 'Decimal'>
+    readonly payout_invoice_required: FieldRef<"AppConfig", 'Boolean'>
+    readonly payout_invoice_ai_check_enabled: FieldRef<"AppConfig", 'Boolean'>
+    readonly platform_legal_name: FieldRef<"AppConfig", 'String'>
+    readonly platform_vat_number: FieldRef<"AppConfig", 'String'>
+    readonly platform_tax_office: FieldRef<"AppConfig", 'String'>
+    readonly platform_address: FieldRef<"AppConfig", 'String'>
+    readonly payout_invoice_instructions: FieldRef<"AppConfig", 'String'>
     readonly updated_by_user_id: FieldRef<"AppConfig", 'String'>
     readonly created_at: FieldRef<"AppConfig", 'DateTime'>
     readonly updated_at: FieldRef<"AppConfig", 'DateTime'>
@@ -48406,6 +50391,7 @@ export namespace Prisma {
     payout_mode: 'payout_mode',
     payout_status: 'payout_status',
     payout_id: 'payout_id',
+    payout_request_id: 'payout_request_id',
     paid_out_at: 'paid_out_at',
     settlement_status: 'settlement_status',
     settlement_id: 'settlement_id',
@@ -48434,6 +50420,41 @@ export namespace Prisma {
   };
 
   export type PayoutScalarFieldEnum = (typeof PayoutScalarFieldEnum)[keyof typeof PayoutScalarFieldEnum]
+
+
+  export const PayoutRequestScalarFieldEnum: {
+    id: 'id',
+    store_id: 'store_id',
+    requested_by_user_id: 'requested_by_user_id',
+    status: 'status',
+    amount: 'amount',
+    own_share_amount: 'own_share_amount',
+    held_for_staff_amount: 'held_for_staff_amount',
+    currency: 'currency',
+    distribution_count: 'distribution_count',
+    period_from: 'period_from',
+    period_to: 'period_to',
+    hold_cutoff_at: 'hold_cutoff_at',
+    invoice_document_id: 'invoice_document_id',
+    invoice_number: 'invoice_number',
+    store_note: 'store_note',
+    failure_reason: 'failure_reason',
+    check_status: 'check_status',
+    check_verdict: 'check_verdict',
+    check_issues: 'check_issues',
+    check_extracted: 'check_extracted',
+    check_model: 'check_model',
+    check_cost_usd: 'check_cost_usd',
+    checked_at: 'checked_at',
+    reviewed_by_user_id: 'reviewed_by_user_id',
+    reviewed_at: 'reviewed_at',
+    admin_note: 'admin_note',
+    payout_id: 'payout_id',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type PayoutRequestScalarFieldEnum = (typeof PayoutRequestScalarFieldEnum)[keyof typeof PayoutRequestScalarFieldEnum]
 
 
   export const SettlementScalarFieldEnum: {
@@ -48632,6 +50653,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount: 'tip_processor_fee_estimate_fixed_amount',
     payout_hold_window_hours: 'payout_hold_window_hours',
     vat_rate_percentage: 'vat_rate_percentage',
+    payout_invoice_required: 'payout_invoice_required',
+    payout_invoice_ai_check_enabled: 'payout_invoice_ai_check_enabled',
+    platform_legal_name: 'platform_legal_name',
+    platform_vat_number: 'platform_vat_number',
+    platform_tax_office: 'platform_tax_office',
+    platform_address: 'platform_address',
+    payout_invoice_instructions: 'payout_invoice_instructions',
     updated_by_user_id: 'updated_by_user_id',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -49051,6 +51079,48 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'PayoutRequestStatus'
+   */
+  export type EnumPayoutRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayoutRequestStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PayoutRequestStatus[]'
+   */
+  export type ListEnumPayoutRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayoutRequestStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'InvoiceCheckStatus'
+   */
+  export type EnumInvoiceCheckStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceCheckStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'InvoiceCheckStatus[]'
+   */
+  export type ListEnumInvoiceCheckStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceCheckStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'InvoiceCheckVerdict'
+   */
+  export type EnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceCheckVerdict'>
+    
+
+
+  /**
+   * Reference to a field of type 'InvoiceCheckVerdict[]'
+   */
+  export type ListEnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceCheckVerdict[]'>
+    
+
+
+  /**
    * Reference to a field of type 'SettlementAdjustmentStatus'
    */
   export type EnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettlementAdjustmentStatus'>
@@ -49166,6 +51236,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementListRelationFilter
     settlements_reversed?: SettlementListRelationFilter
     settlement_adjustments?: SettlementAdjustmentListRelationFilter
+    payout_requests_made?: PayoutRequestListRelationFilter
+    payout_requests_reviewed?: PayoutRequestListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -49194,6 +51266,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementOrderByRelationAggregateInput
     settlements_reversed?: SettlementOrderByRelationAggregateInput
     settlement_adjustments?: SettlementAdjustmentOrderByRelationAggregateInput
+    payout_requests_made?: PayoutRequestOrderByRelationAggregateInput
+    payout_requests_reviewed?: PayoutRequestOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -49225,6 +51299,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementListRelationFilter
     settlements_reversed?: SettlementListRelationFilter
     settlement_adjustments?: SettlementAdjustmentListRelationFilter
+    payout_requests_made?: PayoutRequestListRelationFilter
+    payout_requests_reviewed?: PayoutRequestListRelationFilter
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -49343,6 +51419,7 @@ export namespace Prisma {
     stores_cover?: StoreListRelationFilter
     organizations_logo?: OrganizationListRelationFilter
     employees_photo?: EmployeeListRelationFilter
+    payout_request?: XOR<PayoutRequestNullableScalarRelationFilter, PayoutRequestWhereInput> | null
   }
 
   export type DocumentOrderByWithRelationInput = {
@@ -49360,6 +51437,7 @@ export namespace Prisma {
     stores_cover?: StoreOrderByRelationAggregateInput
     organizations_logo?: OrganizationOrderByRelationAggregateInput
     employees_photo?: EmployeeOrderByRelationAggregateInput
+    payout_request?: PayoutRequestOrderByWithRelationInput
   }
 
   export type DocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -49380,6 +51458,7 @@ export namespace Prisma {
     stores_cover?: StoreListRelationFilter
     organizations_logo?: OrganizationListRelationFilter
     employees_photo?: EmployeeListRelationFilter
+    payout_request?: XOR<PayoutRequestNullableScalarRelationFilter, PayoutRequestWhereInput> | null
   }, "id">
 
   export type DocumentOrderByWithAggregationInput = {
@@ -49738,6 +51817,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryListRelationFilter
     payout_account?: XOR<PayoutAccountNullableScalarRelationFilter, PayoutAccountWhereInput> | null
     payouts?: PayoutListRelationFilter
+    payout_requests?: PayoutRequestListRelationFilter
     settlements?: SettlementListRelationFilter
     settlement_adjustments?: SettlementAdjustmentListRelationFilter
   }
@@ -49792,6 +51872,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryOrderByRelationAggregateInput
     payout_account?: PayoutAccountOrderByWithRelationInput
     payouts?: PayoutOrderByRelationAggregateInput
+    payout_requests?: PayoutRequestOrderByRelationAggregateInput
     settlements?: SettlementOrderByRelationAggregateInput
     settlement_adjustments?: SettlementAdjustmentOrderByRelationAggregateInput
   }
@@ -49849,6 +51930,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryListRelationFilter
     payout_account?: XOR<PayoutAccountNullableScalarRelationFilter, PayoutAccountWhereInput> | null
     payouts?: PayoutListRelationFilter
+    payout_requests?: PayoutRequestListRelationFilter
     settlements?: SettlementListRelationFilter
     settlement_adjustments?: SettlementAdjustmentListRelationFilter
   }, "id" | "slug" | "default_distribution_rule_id">
@@ -51021,6 +53103,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFilter<"TipDistribution"> | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFilter<"TipDistribution"> | $Enums.PayoutStatus
     payout_id?: StringNullableFilter<"TipDistribution"> | string | null
+    payout_request_id?: StringNullableFilter<"TipDistribution"> | string | null
     paid_out_at?: DateTimeNullableFilter<"TipDistribution"> | Date | string | null
     settlement_status?: EnumSettlementStatusFilter<"TipDistribution"> | $Enums.SettlementStatus
     settlement_id?: StringNullableFilter<"TipDistribution"> | string | null
@@ -51029,6 +53112,7 @@ export namespace Prisma {
     tip?: XOR<TipScalarRelationFilter, TipWhereInput>
     employee?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
     payout?: XOR<PayoutNullableScalarRelationFilter, PayoutWhereInput> | null
+    payout_request?: XOR<PayoutRequestNullableScalarRelationFilter, PayoutRequestWhereInput> | null
     settlement?: XOR<SettlementNullableScalarRelationFilter, SettlementWhereInput> | null
   }
 
@@ -51042,6 +53126,7 @@ export namespace Prisma {
     payout_mode?: SortOrder
     payout_status?: SortOrder
     payout_id?: SortOrderInput | SortOrder
+    payout_request_id?: SortOrderInput | SortOrder
     paid_out_at?: SortOrderInput | SortOrder
     settlement_status?: SortOrder
     settlement_id?: SortOrderInput | SortOrder
@@ -51050,6 +53135,7 @@ export namespace Prisma {
     tip?: TipOrderByWithRelationInput
     employee?: EmployeeOrderByWithRelationInput
     payout?: PayoutOrderByWithRelationInput
+    payout_request?: PayoutRequestOrderByWithRelationInput
     settlement?: SettlementOrderByWithRelationInput
   }
 
@@ -51066,6 +53152,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFilter<"TipDistribution"> | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFilter<"TipDistribution"> | $Enums.PayoutStatus
     payout_id?: StringNullableFilter<"TipDistribution"> | string | null
+    payout_request_id?: StringNullableFilter<"TipDistribution"> | string | null
     paid_out_at?: DateTimeNullableFilter<"TipDistribution"> | Date | string | null
     settlement_status?: EnumSettlementStatusFilter<"TipDistribution"> | $Enums.SettlementStatus
     settlement_id?: StringNullableFilter<"TipDistribution"> | string | null
@@ -51074,6 +53161,7 @@ export namespace Prisma {
     tip?: XOR<TipScalarRelationFilter, TipWhereInput>
     employee?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
     payout?: XOR<PayoutNullableScalarRelationFilter, PayoutWhereInput> | null
+    payout_request?: XOR<PayoutRequestNullableScalarRelationFilter, PayoutRequestWhereInput> | null
     settlement?: XOR<SettlementNullableScalarRelationFilter, SettlementWhereInput> | null
   }, "id">
 
@@ -51087,6 +53175,7 @@ export namespace Prisma {
     payout_mode?: SortOrder
     payout_status?: SortOrder
     payout_id?: SortOrderInput | SortOrder
+    payout_request_id?: SortOrderInput | SortOrder
     paid_out_at?: SortOrderInput | SortOrder
     settlement_status?: SortOrder
     settlement_id?: SortOrderInput | SortOrder
@@ -51112,6 +53201,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeWithAggregatesFilter<"TipDistribution"> | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusWithAggregatesFilter<"TipDistribution"> | $Enums.PayoutStatus
     payout_id?: StringNullableWithAggregatesFilter<"TipDistribution"> | string | null
+    payout_request_id?: StringNullableWithAggregatesFilter<"TipDistribution"> | string | null
     paid_out_at?: DateTimeNullableWithAggregatesFilter<"TipDistribution"> | Date | string | null
     settlement_status?: EnumSettlementStatusWithAggregatesFilter<"TipDistribution"> | $Enums.SettlementStatus
     settlement_id?: StringNullableWithAggregatesFilter<"TipDistribution"> | string | null
@@ -51141,6 +53231,7 @@ export namespace Prisma {
     employee?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
     payout_account?: XOR<PayoutAccountScalarRelationFilter, PayoutAccountWhereInput>
     distributions?: TipDistributionListRelationFilter
+    payout_request?: XOR<PayoutRequestNullableScalarRelationFilter, PayoutRequestWhereInput> | null
   }
 
   export type PayoutOrderByWithRelationInput = {
@@ -51162,6 +53253,7 @@ export namespace Prisma {
     employee?: EmployeeOrderByWithRelationInput
     payout_account?: PayoutAccountOrderByWithRelationInput
     distributions?: TipDistributionOrderByRelationAggregateInput
+    payout_request?: PayoutRequestOrderByWithRelationInput
   }
 
   export type PayoutWhereUniqueInput = Prisma.AtLeast<{
@@ -51186,6 +53278,7 @@ export namespace Prisma {
     employee?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
     payout_account?: XOR<PayoutAccountScalarRelationFilter, PayoutAccountWhereInput>
     distributions?: TipDistributionListRelationFilter
+    payout_request?: XOR<PayoutRequestNullableScalarRelationFilter, PayoutRequestWhereInput> | null
   }, "id">
 
   export type PayoutOrderByWithAggregationInput = {
@@ -51228,6 +53321,198 @@ export namespace Prisma {
     executed_at?: DateTimeNullableWithAggregatesFilter<"Payout"> | Date | string | null
     created_at?: DateTimeWithAggregatesFilter<"Payout"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Payout"> | Date | string
+  }
+
+  export type PayoutRequestWhereInput = {
+    AND?: PayoutRequestWhereInput | PayoutRequestWhereInput[]
+    OR?: PayoutRequestWhereInput[]
+    NOT?: PayoutRequestWhereInput | PayoutRequestWhereInput[]
+    id?: StringFilter<"PayoutRequest"> | string
+    store_id?: StringFilter<"PayoutRequest"> | string
+    requested_by_user_id?: StringNullableFilter<"PayoutRequest"> | string | null
+    status?: EnumPayoutRequestStatusFilter<"PayoutRequest"> | $Enums.PayoutRequestStatus
+    amount?: IntFilter<"PayoutRequest"> | number
+    own_share_amount?: IntFilter<"PayoutRequest"> | number
+    held_for_staff_amount?: IntFilter<"PayoutRequest"> | number
+    currency?: EnumCurrencyFilter<"PayoutRequest"> | $Enums.Currency
+    distribution_count?: IntFilter<"PayoutRequest"> | number
+    period_from?: DateTimeFilter<"PayoutRequest"> | Date | string
+    period_to?: DateTimeFilter<"PayoutRequest"> | Date | string
+    hold_cutoff_at?: DateTimeFilter<"PayoutRequest"> | Date | string
+    invoice_document_id?: StringFilter<"PayoutRequest"> | string
+    invoice_number?: StringNullableFilter<"PayoutRequest"> | string | null
+    store_note?: StringNullableFilter<"PayoutRequest"> | string | null
+    failure_reason?: StringNullableFilter<"PayoutRequest"> | string | null
+    check_status?: EnumInvoiceCheckStatusFilter<"PayoutRequest"> | $Enums.InvoiceCheckStatus
+    check_verdict?: EnumInvoiceCheckVerdictNullableFilter<"PayoutRequest"> | $Enums.InvoiceCheckVerdict | null
+    check_issues?: JsonNullableFilter<"PayoutRequest">
+    check_extracted?: JsonNullableFilter<"PayoutRequest">
+    check_model?: StringNullableFilter<"PayoutRequest"> | string | null
+    check_cost_usd?: DecimalNullableFilter<"PayoutRequest"> | Decimal | DecimalJsLike | number | string | null
+    checked_at?: DateTimeNullableFilter<"PayoutRequest"> | Date | string | null
+    reviewed_by_user_id?: StringNullableFilter<"PayoutRequest"> | string | null
+    reviewed_at?: DateTimeNullableFilter<"PayoutRequest"> | Date | string | null
+    admin_note?: StringNullableFilter<"PayoutRequest"> | string | null
+    payout_id?: StringNullableFilter<"PayoutRequest"> | string | null
+    created_at?: DateTimeFilter<"PayoutRequest"> | Date | string
+    updated_at?: DateTimeFilter<"PayoutRequest"> | Date | string
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+    requested_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    reviewed_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    invoice_document?: XOR<DocumentScalarRelationFilter, DocumentWhereInput>
+    payout?: XOR<PayoutNullableScalarRelationFilter, PayoutWhereInput> | null
+    distributions?: TipDistributionListRelationFilter
+  }
+
+  export type PayoutRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    requested_by_user_id?: SortOrderInput | SortOrder
+    status?: SortOrder
+    amount?: SortOrder
+    own_share_amount?: SortOrder
+    held_for_staff_amount?: SortOrder
+    currency?: SortOrder
+    distribution_count?: SortOrder
+    period_from?: SortOrder
+    period_to?: SortOrder
+    hold_cutoff_at?: SortOrder
+    invoice_document_id?: SortOrder
+    invoice_number?: SortOrderInput | SortOrder
+    store_note?: SortOrderInput | SortOrder
+    failure_reason?: SortOrderInput | SortOrder
+    check_status?: SortOrder
+    check_verdict?: SortOrderInput | SortOrder
+    check_issues?: SortOrderInput | SortOrder
+    check_extracted?: SortOrderInput | SortOrder
+    check_model?: SortOrderInput | SortOrder
+    check_cost_usd?: SortOrderInput | SortOrder
+    checked_at?: SortOrderInput | SortOrder
+    reviewed_by_user_id?: SortOrderInput | SortOrder
+    reviewed_at?: SortOrderInput | SortOrder
+    admin_note?: SortOrderInput | SortOrder
+    payout_id?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    store?: StoreOrderByWithRelationInput
+    requested_by?: UserOrderByWithRelationInput
+    reviewed_by?: UserOrderByWithRelationInput
+    invoice_document?: DocumentOrderByWithRelationInput
+    payout?: PayoutOrderByWithRelationInput
+    distributions?: TipDistributionOrderByRelationAggregateInput
+  }
+
+  export type PayoutRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    invoice_document_id?: string
+    payout_id?: string
+    AND?: PayoutRequestWhereInput | PayoutRequestWhereInput[]
+    OR?: PayoutRequestWhereInput[]
+    NOT?: PayoutRequestWhereInput | PayoutRequestWhereInput[]
+    store_id?: StringFilter<"PayoutRequest"> | string
+    requested_by_user_id?: StringNullableFilter<"PayoutRequest"> | string | null
+    status?: EnumPayoutRequestStatusFilter<"PayoutRequest"> | $Enums.PayoutRequestStatus
+    amount?: IntFilter<"PayoutRequest"> | number
+    own_share_amount?: IntFilter<"PayoutRequest"> | number
+    held_for_staff_amount?: IntFilter<"PayoutRequest"> | number
+    currency?: EnumCurrencyFilter<"PayoutRequest"> | $Enums.Currency
+    distribution_count?: IntFilter<"PayoutRequest"> | number
+    period_from?: DateTimeFilter<"PayoutRequest"> | Date | string
+    period_to?: DateTimeFilter<"PayoutRequest"> | Date | string
+    hold_cutoff_at?: DateTimeFilter<"PayoutRequest"> | Date | string
+    invoice_number?: StringNullableFilter<"PayoutRequest"> | string | null
+    store_note?: StringNullableFilter<"PayoutRequest"> | string | null
+    failure_reason?: StringNullableFilter<"PayoutRequest"> | string | null
+    check_status?: EnumInvoiceCheckStatusFilter<"PayoutRequest"> | $Enums.InvoiceCheckStatus
+    check_verdict?: EnumInvoiceCheckVerdictNullableFilter<"PayoutRequest"> | $Enums.InvoiceCheckVerdict | null
+    check_issues?: JsonNullableFilter<"PayoutRequest">
+    check_extracted?: JsonNullableFilter<"PayoutRequest">
+    check_model?: StringNullableFilter<"PayoutRequest"> | string | null
+    check_cost_usd?: DecimalNullableFilter<"PayoutRequest"> | Decimal | DecimalJsLike | number | string | null
+    checked_at?: DateTimeNullableFilter<"PayoutRequest"> | Date | string | null
+    reviewed_by_user_id?: StringNullableFilter<"PayoutRequest"> | string | null
+    reviewed_at?: DateTimeNullableFilter<"PayoutRequest"> | Date | string | null
+    admin_note?: StringNullableFilter<"PayoutRequest"> | string | null
+    created_at?: DateTimeFilter<"PayoutRequest"> | Date | string
+    updated_at?: DateTimeFilter<"PayoutRequest"> | Date | string
+    store?: XOR<StoreScalarRelationFilter, StoreWhereInput>
+    requested_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    reviewed_by?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    invoice_document?: XOR<DocumentScalarRelationFilter, DocumentWhereInput>
+    payout?: XOR<PayoutNullableScalarRelationFilter, PayoutWhereInput> | null
+    distributions?: TipDistributionListRelationFilter
+  }, "id" | "invoice_document_id" | "payout_id">
+
+  export type PayoutRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    requested_by_user_id?: SortOrderInput | SortOrder
+    status?: SortOrder
+    amount?: SortOrder
+    own_share_amount?: SortOrder
+    held_for_staff_amount?: SortOrder
+    currency?: SortOrder
+    distribution_count?: SortOrder
+    period_from?: SortOrder
+    period_to?: SortOrder
+    hold_cutoff_at?: SortOrder
+    invoice_document_id?: SortOrder
+    invoice_number?: SortOrderInput | SortOrder
+    store_note?: SortOrderInput | SortOrder
+    failure_reason?: SortOrderInput | SortOrder
+    check_status?: SortOrder
+    check_verdict?: SortOrderInput | SortOrder
+    check_issues?: SortOrderInput | SortOrder
+    check_extracted?: SortOrderInput | SortOrder
+    check_model?: SortOrderInput | SortOrder
+    check_cost_usd?: SortOrderInput | SortOrder
+    checked_at?: SortOrderInput | SortOrder
+    reviewed_by_user_id?: SortOrderInput | SortOrder
+    reviewed_at?: SortOrderInput | SortOrder
+    admin_note?: SortOrderInput | SortOrder
+    payout_id?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: PayoutRequestCountOrderByAggregateInput
+    _avg?: PayoutRequestAvgOrderByAggregateInput
+    _max?: PayoutRequestMaxOrderByAggregateInput
+    _min?: PayoutRequestMinOrderByAggregateInput
+    _sum?: PayoutRequestSumOrderByAggregateInput
+  }
+
+  export type PayoutRequestScalarWhereWithAggregatesInput = {
+    AND?: PayoutRequestScalarWhereWithAggregatesInput | PayoutRequestScalarWhereWithAggregatesInput[]
+    OR?: PayoutRequestScalarWhereWithAggregatesInput[]
+    NOT?: PayoutRequestScalarWhereWithAggregatesInput | PayoutRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PayoutRequest"> | string
+    store_id?: StringWithAggregatesFilter<"PayoutRequest"> | string
+    requested_by_user_id?: StringNullableWithAggregatesFilter<"PayoutRequest"> | string | null
+    status?: EnumPayoutRequestStatusWithAggregatesFilter<"PayoutRequest"> | $Enums.PayoutRequestStatus
+    amount?: IntWithAggregatesFilter<"PayoutRequest"> | number
+    own_share_amount?: IntWithAggregatesFilter<"PayoutRequest"> | number
+    held_for_staff_amount?: IntWithAggregatesFilter<"PayoutRequest"> | number
+    currency?: EnumCurrencyWithAggregatesFilter<"PayoutRequest"> | $Enums.Currency
+    distribution_count?: IntWithAggregatesFilter<"PayoutRequest"> | number
+    period_from?: DateTimeWithAggregatesFilter<"PayoutRequest"> | Date | string
+    period_to?: DateTimeWithAggregatesFilter<"PayoutRequest"> | Date | string
+    hold_cutoff_at?: DateTimeWithAggregatesFilter<"PayoutRequest"> | Date | string
+    invoice_document_id?: StringWithAggregatesFilter<"PayoutRequest"> | string
+    invoice_number?: StringNullableWithAggregatesFilter<"PayoutRequest"> | string | null
+    store_note?: StringNullableWithAggregatesFilter<"PayoutRequest"> | string | null
+    failure_reason?: StringNullableWithAggregatesFilter<"PayoutRequest"> | string | null
+    check_status?: EnumInvoiceCheckStatusWithAggregatesFilter<"PayoutRequest"> | $Enums.InvoiceCheckStatus
+    check_verdict?: EnumInvoiceCheckVerdictNullableWithAggregatesFilter<"PayoutRequest"> | $Enums.InvoiceCheckVerdict | null
+    check_issues?: JsonNullableWithAggregatesFilter<"PayoutRequest">
+    check_extracted?: JsonNullableWithAggregatesFilter<"PayoutRequest">
+    check_model?: StringNullableWithAggregatesFilter<"PayoutRequest"> | string | null
+    check_cost_usd?: DecimalNullableWithAggregatesFilter<"PayoutRequest"> | Decimal | DecimalJsLike | number | string | null
+    checked_at?: DateTimeNullableWithAggregatesFilter<"PayoutRequest"> | Date | string | null
+    reviewed_by_user_id?: StringNullableWithAggregatesFilter<"PayoutRequest"> | string | null
+    reviewed_at?: DateTimeNullableWithAggregatesFilter<"PayoutRequest"> | Date | string | null
+    admin_note?: StringNullableWithAggregatesFilter<"PayoutRequest"> | string | null
+    payout_id?: StringNullableWithAggregatesFilter<"PayoutRequest"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"PayoutRequest"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"PayoutRequest"> | Date | string
   }
 
   export type SettlementWhereInput = {
@@ -52282,6 +54567,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: IntFilter<"AppConfig"> | number
     payout_hold_window_hours?: IntFilter<"AppConfig"> | number
     vat_rate_percentage?: DecimalFilter<"AppConfig"> | Decimal | DecimalJsLike | number | string
+    payout_invoice_required?: BoolFilter<"AppConfig"> | boolean
+    payout_invoice_ai_check_enabled?: BoolFilter<"AppConfig"> | boolean
+    platform_legal_name?: StringNullableFilter<"AppConfig"> | string | null
+    platform_vat_number?: StringNullableFilter<"AppConfig"> | string | null
+    platform_tax_office?: StringNullableFilter<"AppConfig"> | string | null
+    platform_address?: StringNullableFilter<"AppConfig"> | string | null
+    payout_invoice_instructions?: StringNullableFilter<"AppConfig"> | string | null
     updated_by_user_id?: StringNullableFilter<"AppConfig"> | string | null
     created_at?: DateTimeFilter<"AppConfig"> | Date | string
     updated_at?: DateTimeFilter<"AppConfig"> | Date | string
@@ -52294,6 +54586,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
     vat_rate_percentage?: SortOrder
+    payout_invoice_required?: SortOrder
+    payout_invoice_ai_check_enabled?: SortOrder
+    platform_legal_name?: SortOrderInput | SortOrder
+    platform_vat_number?: SortOrderInput | SortOrder
+    platform_tax_office?: SortOrderInput | SortOrder
+    platform_address?: SortOrderInput | SortOrder
+    payout_invoice_instructions?: SortOrderInput | SortOrder
     updated_by_user_id?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -52309,6 +54608,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: IntFilter<"AppConfig"> | number
     payout_hold_window_hours?: IntFilter<"AppConfig"> | number
     vat_rate_percentage?: DecimalFilter<"AppConfig"> | Decimal | DecimalJsLike | number | string
+    payout_invoice_required?: BoolFilter<"AppConfig"> | boolean
+    payout_invoice_ai_check_enabled?: BoolFilter<"AppConfig"> | boolean
+    platform_legal_name?: StringNullableFilter<"AppConfig"> | string | null
+    platform_vat_number?: StringNullableFilter<"AppConfig"> | string | null
+    platform_tax_office?: StringNullableFilter<"AppConfig"> | string | null
+    platform_address?: StringNullableFilter<"AppConfig"> | string | null
+    payout_invoice_instructions?: StringNullableFilter<"AppConfig"> | string | null
     updated_by_user_id?: StringNullableFilter<"AppConfig"> | string | null
     created_at?: DateTimeFilter<"AppConfig"> | Date | string
     updated_at?: DateTimeFilter<"AppConfig"> | Date | string
@@ -52321,6 +54627,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
     vat_rate_percentage?: SortOrder
+    payout_invoice_required?: SortOrder
+    payout_invoice_ai_check_enabled?: SortOrder
+    platform_legal_name?: SortOrderInput | SortOrder
+    platform_vat_number?: SortOrderInput | SortOrder
+    platform_tax_office?: SortOrderInput | SortOrder
+    platform_address?: SortOrderInput | SortOrder
+    payout_invoice_instructions?: SortOrderInput | SortOrder
     updated_by_user_id?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -52341,6 +54654,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: IntWithAggregatesFilter<"AppConfig"> | number
     payout_hold_window_hours?: IntWithAggregatesFilter<"AppConfig"> | number
     vat_rate_percentage?: DecimalWithAggregatesFilter<"AppConfig"> | Decimal | DecimalJsLike | number | string
+    payout_invoice_required?: BoolWithAggregatesFilter<"AppConfig"> | boolean
+    payout_invoice_ai_check_enabled?: BoolWithAggregatesFilter<"AppConfig"> | boolean
+    platform_legal_name?: StringNullableWithAggregatesFilter<"AppConfig"> | string | null
+    platform_vat_number?: StringNullableWithAggregatesFilter<"AppConfig"> | string | null
+    platform_tax_office?: StringNullableWithAggregatesFilter<"AppConfig"> | string | null
+    platform_address?: StringNullableWithAggregatesFilter<"AppConfig"> | string | null
+    payout_invoice_instructions?: StringNullableWithAggregatesFilter<"AppConfig"> | string | null
     updated_by_user_id?: StringNullableWithAggregatesFilter<"AppConfig"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"AppConfig"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"AppConfig"> | Date | string
@@ -52372,6 +54692,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -52400,6 +54722,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUpdateInput = {
@@ -52428,6 +54752,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -52456,6 +54782,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -52582,6 +54910,7 @@ export namespace Prisma {
     stores_cover?: StoreCreateNestedManyWithoutCover_documentInput
     organizations_logo?: OrganizationCreateNestedManyWithoutLogo_documentInput
     employees_photo?: EmployeeCreateNestedManyWithoutPhoto_documentInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentUncheckedCreateInput = {
@@ -52598,6 +54927,7 @@ export namespace Prisma {
     stores_cover?: StoreUncheckedCreateNestedManyWithoutCover_documentInput
     organizations_logo?: OrganizationUncheckedCreateNestedManyWithoutLogo_documentInput
     employees_photo?: EmployeeUncheckedCreateNestedManyWithoutPhoto_documentInput
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentUpdateInput = {
@@ -52614,6 +54944,7 @@ export namespace Prisma {
     stores_cover?: StoreUpdateManyWithoutCover_documentNestedInput
     organizations_logo?: OrganizationUpdateManyWithoutLogo_documentNestedInput
     employees_photo?: EmployeeUpdateManyWithoutPhoto_documentNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type DocumentUncheckedUpdateInput = {
@@ -52630,6 +54961,7 @@ export namespace Prisma {
     stores_cover?: StoreUncheckedUpdateManyWithoutCover_documentNestedInput
     organizations_logo?: OrganizationUncheckedUpdateManyWithoutLogo_documentNestedInput
     employees_photo?: EmployeeUncheckedUpdateManyWithoutPhoto_documentNestedInput
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type DocumentCreateManyInput = {
@@ -53014,6 +55346,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -53064,6 +55397,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -53114,6 +55448,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -53164,6 +55499,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -54453,6 +56789,7 @@ export namespace Prisma {
     tip: TipCreateNestedOneWithoutDistributionsInput
     employee?: EmployeeCreateNestedOneWithoutTip_distributionsInput
     payout?: PayoutCreateNestedOneWithoutDistributionsInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutDistributionsInput
     settlement?: SettlementCreateNestedOneWithoutDistributionsInput
   }
 
@@ -54466,6 +56803,7 @@ export namespace Prisma {
     payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
+    payout_request_id?: string | null
     paid_out_at?: Date | string | null
     settlement_status?: $Enums.SettlementStatus
     settlement_id?: string | null
@@ -54487,6 +56825,7 @@ export namespace Prisma {
     tip?: TipUpdateOneRequiredWithoutDistributionsNestedInput
     employee?: EmployeeUpdateOneWithoutTip_distributionsNestedInput
     payout?: PayoutUpdateOneWithoutDistributionsNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutDistributionsNestedInput
     settlement?: SettlementUpdateOneWithoutDistributionsNestedInput
   }
 
@@ -54500,6 +56839,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
     settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54517,6 +56857,7 @@ export namespace Prisma {
     payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
+    payout_request_id?: string | null
     paid_out_at?: Date | string | null
     settlement_status?: $Enums.SettlementStatus
     settlement_id?: string | null
@@ -54547,6 +56888,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
     settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54570,6 +56912,7 @@ export namespace Prisma {
     employee?: EmployeeCreateNestedOneWithoutPayoutsInput
     payout_account: PayoutAccountCreateNestedOneWithoutPayoutsInput
     distributions?: TipDistributionCreateNestedManyWithoutPayoutInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutPayoutInput
   }
 
   export type PayoutUncheckedCreateInput = {
@@ -54588,6 +56931,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayoutInput
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutPayoutInput
   }
 
   export type PayoutUpdateInput = {
@@ -54606,6 +56950,7 @@ export namespace Prisma {
     employee?: EmployeeUpdateOneWithoutPayoutsNestedInput
     payout_account?: PayoutAccountUpdateOneRequiredWithoutPayoutsNestedInput
     distributions?: TipDistributionUpdateManyWithoutPayoutNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutPayoutNestedInput
   }
 
   export type PayoutUncheckedUpdateInput = {
@@ -54624,6 +56969,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     distributions?: TipDistributionUncheckedUpdateManyWithoutPayoutNestedInput
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutPayoutNestedInput
   }
 
   export type PayoutCreateManyInput = {
@@ -54670,6 +57016,229 @@ export namespace Prisma {
     status?: EnumPayoutExecutionStatusFieldUpdateOperationsInput | $Enums.PayoutExecutionStatus
     failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
     executed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayoutRequestCreateInput = {
+    id?: string
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutPayout_requestsInput
+    requested_by?: UserCreateNestedOneWithoutPayout_requests_madeInput
+    reviewed_by?: UserCreateNestedOneWithoutPayout_requests_reviewedInput
+    invoice_document: DocumentCreateNestedOneWithoutPayout_requestInput
+    payout?: PayoutCreateNestedOneWithoutPayout_requestInput
+    distributions?: TipDistributionCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestUncheckedCreateInput = {
+    id?: string
+    store_id: string
+    requested_by_user_id?: string | null
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_document_id: string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_by_user_id?: string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    payout_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutPayout_requestsNestedInput
+    requested_by?: UserUpdateOneWithoutPayout_requests_madeNestedInput
+    reviewed_by?: UserUpdateOneWithoutPayout_requests_reviewedNestedInput
+    invoice_document?: DocumentUpdateOneRequiredWithoutPayout_requestNestedInput
+    payout?: PayoutUpdateOneWithoutPayout_requestNestedInput
+    distributions?: TipDistributionUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    requested_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_document_id?: StringFieldUpdateOperationsInput | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestCreateManyInput = {
+    id?: string
+    store_id: string
+    requested_by_user_id?: string | null
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_document_id: string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_by_user_id?: string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    payout_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type PayoutRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayoutRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    requested_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_document_id?: StringFieldUpdateOperationsInput | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -55738,6 +58307,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: number
     payout_hold_window_hours?: number
     vat_rate_percentage?: Decimal | DecimalJsLike | number | string
+    payout_invoice_required?: boolean
+    payout_invoice_ai_check_enabled?: boolean
+    platform_legal_name?: string | null
+    platform_vat_number?: string | null
+    platform_tax_office?: string | null
+    platform_address?: string | null
+    payout_invoice_instructions?: string | null
     updated_by_user_id?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -55750,6 +58326,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: number
     payout_hold_window_hours?: number
     vat_rate_percentage?: Decimal | DecimalJsLike | number | string
+    payout_invoice_required?: boolean
+    payout_invoice_ai_check_enabled?: boolean
+    platform_legal_name?: string | null
+    platform_vat_number?: string | null
+    platform_tax_office?: string | null
+    platform_address?: string | null
+    payout_invoice_instructions?: string | null
     updated_by_user_id?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -55762,6 +58345,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: IntFieldUpdateOperationsInput | number
     payout_hold_window_hours?: IntFieldUpdateOperationsInput | number
     vat_rate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_invoice_required?: BoolFieldUpdateOperationsInput | boolean
+    payout_invoice_ai_check_enabled?: BoolFieldUpdateOperationsInput | boolean
+    platform_legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_tax_office?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_address?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_invoice_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     updated_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55774,6 +58364,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: IntFieldUpdateOperationsInput | number
     payout_hold_window_hours?: IntFieldUpdateOperationsInput | number
     vat_rate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_invoice_required?: BoolFieldUpdateOperationsInput | boolean
+    payout_invoice_ai_check_enabled?: BoolFieldUpdateOperationsInput | boolean
+    platform_legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_tax_office?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_address?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_invoice_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     updated_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55786,6 +58383,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: number
     payout_hold_window_hours?: number
     vat_rate_percentage?: Decimal | DecimalJsLike | number | string
+    payout_invoice_required?: boolean
+    payout_invoice_ai_check_enabled?: boolean
+    platform_legal_name?: string | null
+    platform_vat_number?: string | null
+    platform_tax_office?: string | null
+    platform_address?: string | null
+    payout_invoice_instructions?: string | null
     updated_by_user_id?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -55798,6 +58402,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: IntFieldUpdateOperationsInput | number
     payout_hold_window_hours?: IntFieldUpdateOperationsInput | number
     vat_rate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_invoice_required?: BoolFieldUpdateOperationsInput | boolean
+    payout_invoice_ai_check_enabled?: BoolFieldUpdateOperationsInput | boolean
+    platform_legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_tax_office?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_address?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_invoice_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     updated_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55810,6 +58421,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: IntFieldUpdateOperationsInput | number
     payout_hold_window_hours?: IntFieldUpdateOperationsInput | number
     vat_rate_percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_invoice_required?: BoolFieldUpdateOperationsInput | boolean
+    payout_invoice_ai_check_enabled?: BoolFieldUpdateOperationsInput | boolean
+    platform_legal_name?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_vat_number?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_tax_office?: NullableStringFieldUpdateOperationsInput | string | null
+    platform_address?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_invoice_instructions?: NullableStringFieldUpdateOperationsInput | string | null
     updated_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55938,6 +58556,12 @@ export namespace Prisma {
     none?: SettlementAdjustmentWhereInput
   }
 
+  export type PayoutRequestListRelationFilter = {
+    every?: PayoutRequestWhereInput
+    some?: PayoutRequestWhereInput
+    none?: PayoutRequestWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -55976,6 +58600,10 @@ export namespace Prisma {
   }
 
   export type SettlementAdjustmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PayoutRequestOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -56169,6 +58797,11 @@ export namespace Prisma {
     every?: OrganizationWhereInput
     some?: OrganizationWhereInput
     none?: OrganizationWhereInput
+  }
+
+  export type PayoutRequestNullableScalarRelationFilter = {
+    is?: PayoutRequestWhereInput | null
+    isNot?: PayoutRequestWhereInput | null
   }
 
   export type StoreOrderByRelationAggregateInput = {
@@ -57753,6 +60386,7 @@ export namespace Prisma {
     payout_mode?: SortOrder
     payout_status?: SortOrder
     payout_id?: SortOrder
+    payout_request_id?: SortOrder
     paid_out_at?: SortOrder
     settlement_status?: SortOrder
     settlement_id?: SortOrder
@@ -57775,6 +60409,7 @@ export namespace Prisma {
     payout_mode?: SortOrder
     payout_status?: SortOrder
     payout_id?: SortOrder
+    payout_request_id?: SortOrder
     paid_out_at?: SortOrder
     settlement_status?: SortOrder
     settlement_id?: SortOrder
@@ -57792,6 +60427,7 @@ export namespace Prisma {
     payout_mode?: SortOrder
     payout_status?: SortOrder
     payout_id?: SortOrder
+    payout_request_id?: SortOrder
     paid_out_at?: SortOrder
     settlement_status?: SortOrder
     settlement_id?: SortOrder
@@ -57903,6 +60539,170 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPayoutExecutionStatusFilter<$PrismaModel>
     _max?: NestedEnumPayoutExecutionStatusFilter<$PrismaModel>
+  }
+
+  export type EnumPayoutRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PayoutRequestStatus | EnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PayoutRequestStatus[] | ListEnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PayoutRequestStatus[] | ListEnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPayoutRequestStatusFilter<$PrismaModel> | $Enums.PayoutRequestStatus
+  }
+
+  export type EnumInvoiceCheckStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InvoiceCheckStatus | EnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InvoiceCheckStatus[] | ListEnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InvoiceCheckStatus[] | ListEnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInvoiceCheckStatusFilter<$PrismaModel> | $Enums.InvoiceCheckStatus
+  }
+
+  export type EnumInvoiceCheckVerdictNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.InvoiceCheckVerdict | EnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    in?: $Enums.InvoiceCheckVerdict[] | ListEnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.InvoiceCheckVerdict[] | ListEnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumInvoiceCheckVerdictNullableFilter<$PrismaModel> | $Enums.InvoiceCheckVerdict | null
+  }
+
+  export type DocumentScalarRelationFilter = {
+    is?: DocumentWhereInput
+    isNot?: DocumentWhereInput
+  }
+
+  export type PayoutRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    requested_by_user_id?: SortOrder
+    status?: SortOrder
+    amount?: SortOrder
+    own_share_amount?: SortOrder
+    held_for_staff_amount?: SortOrder
+    currency?: SortOrder
+    distribution_count?: SortOrder
+    period_from?: SortOrder
+    period_to?: SortOrder
+    hold_cutoff_at?: SortOrder
+    invoice_document_id?: SortOrder
+    invoice_number?: SortOrder
+    store_note?: SortOrder
+    failure_reason?: SortOrder
+    check_status?: SortOrder
+    check_verdict?: SortOrder
+    check_issues?: SortOrder
+    check_extracted?: SortOrder
+    check_model?: SortOrder
+    check_cost_usd?: SortOrder
+    checked_at?: SortOrder
+    reviewed_by_user_id?: SortOrder
+    reviewed_at?: SortOrder
+    admin_note?: SortOrder
+    payout_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type PayoutRequestAvgOrderByAggregateInput = {
+    amount?: SortOrder
+    own_share_amount?: SortOrder
+    held_for_staff_amount?: SortOrder
+    distribution_count?: SortOrder
+    check_cost_usd?: SortOrder
+  }
+
+  export type PayoutRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    requested_by_user_id?: SortOrder
+    status?: SortOrder
+    amount?: SortOrder
+    own_share_amount?: SortOrder
+    held_for_staff_amount?: SortOrder
+    currency?: SortOrder
+    distribution_count?: SortOrder
+    period_from?: SortOrder
+    period_to?: SortOrder
+    hold_cutoff_at?: SortOrder
+    invoice_document_id?: SortOrder
+    invoice_number?: SortOrder
+    store_note?: SortOrder
+    failure_reason?: SortOrder
+    check_status?: SortOrder
+    check_verdict?: SortOrder
+    check_model?: SortOrder
+    check_cost_usd?: SortOrder
+    checked_at?: SortOrder
+    reviewed_by_user_id?: SortOrder
+    reviewed_at?: SortOrder
+    admin_note?: SortOrder
+    payout_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type PayoutRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    store_id?: SortOrder
+    requested_by_user_id?: SortOrder
+    status?: SortOrder
+    amount?: SortOrder
+    own_share_amount?: SortOrder
+    held_for_staff_amount?: SortOrder
+    currency?: SortOrder
+    distribution_count?: SortOrder
+    period_from?: SortOrder
+    period_to?: SortOrder
+    hold_cutoff_at?: SortOrder
+    invoice_document_id?: SortOrder
+    invoice_number?: SortOrder
+    store_note?: SortOrder
+    failure_reason?: SortOrder
+    check_status?: SortOrder
+    check_verdict?: SortOrder
+    check_model?: SortOrder
+    check_cost_usd?: SortOrder
+    checked_at?: SortOrder
+    reviewed_by_user_id?: SortOrder
+    reviewed_at?: SortOrder
+    admin_note?: SortOrder
+    payout_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type PayoutRequestSumOrderByAggregateInput = {
+    amount?: SortOrder
+    own_share_amount?: SortOrder
+    held_for_staff_amount?: SortOrder
+    distribution_count?: SortOrder
+    check_cost_usd?: SortOrder
+  }
+
+  export type EnumPayoutRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PayoutRequestStatus | EnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PayoutRequestStatus[] | ListEnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PayoutRequestStatus[] | ListEnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPayoutRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.PayoutRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPayoutRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumPayoutRequestStatusFilter<$PrismaModel>
+  }
+
+  export type EnumInvoiceCheckStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InvoiceCheckStatus | EnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InvoiceCheckStatus[] | ListEnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InvoiceCheckStatus[] | ListEnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInvoiceCheckStatusWithAggregatesFilter<$PrismaModel> | $Enums.InvoiceCheckStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInvoiceCheckStatusFilter<$PrismaModel>
+    _max?: NestedEnumInvoiceCheckStatusFilter<$PrismaModel>
+  }
+
+  export type EnumInvoiceCheckVerdictNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InvoiceCheckVerdict | EnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    in?: $Enums.InvoiceCheckVerdict[] | ListEnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.InvoiceCheckVerdict[] | ListEnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumInvoiceCheckVerdictNullableWithAggregatesFilter<$PrismaModel> | $Enums.InvoiceCheckVerdict | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumInvoiceCheckVerdictNullableFilter<$PrismaModel>
+    _max?: NestedEnumInvoiceCheckVerdictNullableFilter<$PrismaModel>
   }
 
   export type SettlementCountOrderByAggregateInput = {
@@ -58595,6 +61395,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
     vat_rate_percentage?: SortOrder
+    payout_invoice_required?: SortOrder
+    payout_invoice_ai_check_enabled?: SortOrder
+    platform_legal_name?: SortOrder
+    platform_vat_number?: SortOrder
+    platform_tax_office?: SortOrder
+    platform_address?: SortOrder
+    payout_invoice_instructions?: SortOrder
     updated_by_user_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -58615,6 +61422,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
     vat_rate_percentage?: SortOrder
+    payout_invoice_required?: SortOrder
+    payout_invoice_ai_check_enabled?: SortOrder
+    platform_legal_name?: SortOrder
+    platform_vat_number?: SortOrder
+    platform_tax_office?: SortOrder
+    platform_address?: SortOrder
+    payout_invoice_instructions?: SortOrder
     updated_by_user_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -58627,6 +61441,13 @@ export namespace Prisma {
     tip_processor_fee_estimate_fixed_amount?: SortOrder
     payout_hold_window_hours?: SortOrder
     vat_rate_percentage?: SortOrder
+    payout_invoice_required?: SortOrder
+    payout_invoice_ai_check_enabled?: SortOrder
+    platform_legal_name?: SortOrder
+    platform_vat_number?: SortOrder
+    platform_tax_office?: SortOrder
+    platform_address?: SortOrder
+    payout_invoice_instructions?: SortOrder
     updated_by_user_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -58723,6 +61544,20 @@ export namespace Prisma {
     connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
   }
 
+  export type PayoutRequestCreateNestedManyWithoutRequested_byInput = {
+    create?: XOR<PayoutRequestCreateWithoutRequested_byInput, PayoutRequestUncheckedCreateWithoutRequested_byInput> | PayoutRequestCreateWithoutRequested_byInput[] | PayoutRequestUncheckedCreateWithoutRequested_byInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutRequested_byInput | PayoutRequestCreateOrConnectWithoutRequested_byInput[]
+    createMany?: PayoutRequestCreateManyRequested_byInputEnvelope
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+  }
+
+  export type PayoutRequestCreateNestedManyWithoutReviewed_byInput = {
+    create?: XOR<PayoutRequestCreateWithoutReviewed_byInput, PayoutRequestUncheckedCreateWithoutReviewed_byInput> | PayoutRequestCreateWithoutReviewed_byInput[] | PayoutRequestUncheckedCreateWithoutReviewed_byInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutReviewed_byInput | PayoutRequestCreateOrConnectWithoutReviewed_byInput[]
+    createMany?: PayoutRequestCreateManyReviewed_byInputEnvelope
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+  }
+
   export type PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<PasswordResetTokenCreateWithoutUserInput, PasswordResetTokenUncheckedCreateWithoutUserInput> | PasswordResetTokenCreateWithoutUserInput[] | PasswordResetTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PasswordResetTokenCreateOrConnectWithoutUserInput | PasswordResetTokenCreateOrConnectWithoutUserInput[]
@@ -58804,6 +61639,20 @@ export namespace Prisma {
     connectOrCreate?: SettlementAdjustmentCreateOrConnectWithoutCreated_byInput | SettlementAdjustmentCreateOrConnectWithoutCreated_byInput[]
     createMany?: SettlementAdjustmentCreateManyCreated_byInputEnvelope
     connect?: SettlementAdjustmentWhereUniqueInput | SettlementAdjustmentWhereUniqueInput[]
+  }
+
+  export type PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput = {
+    create?: XOR<PayoutRequestCreateWithoutRequested_byInput, PayoutRequestUncheckedCreateWithoutRequested_byInput> | PayoutRequestCreateWithoutRequested_byInput[] | PayoutRequestUncheckedCreateWithoutRequested_byInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutRequested_byInput | PayoutRequestCreateOrConnectWithoutRequested_byInput[]
+    createMany?: PayoutRequestCreateManyRequested_byInputEnvelope
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+  }
+
+  export type PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput = {
+    create?: XOR<PayoutRequestCreateWithoutReviewed_byInput, PayoutRequestUncheckedCreateWithoutReviewed_byInput> | PayoutRequestCreateWithoutReviewed_byInput[] | PayoutRequestUncheckedCreateWithoutReviewed_byInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutReviewed_byInput | PayoutRequestCreateOrConnectWithoutReviewed_byInput[]
+    createMany?: PayoutRequestCreateManyReviewed_byInputEnvelope
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -58994,6 +61843,34 @@ export namespace Prisma {
     deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
   }
 
+  export type PayoutRequestUpdateManyWithoutRequested_byNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutRequested_byInput, PayoutRequestUncheckedCreateWithoutRequested_byInput> | PayoutRequestCreateWithoutRequested_byInput[] | PayoutRequestUncheckedCreateWithoutRequested_byInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutRequested_byInput | PayoutRequestCreateOrConnectWithoutRequested_byInput[]
+    upsert?: PayoutRequestUpsertWithWhereUniqueWithoutRequested_byInput | PayoutRequestUpsertWithWhereUniqueWithoutRequested_byInput[]
+    createMany?: PayoutRequestCreateManyRequested_byInputEnvelope
+    set?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    disconnect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    delete?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    update?: PayoutRequestUpdateWithWhereUniqueWithoutRequested_byInput | PayoutRequestUpdateWithWhereUniqueWithoutRequested_byInput[]
+    updateMany?: PayoutRequestUpdateManyWithWhereWithoutRequested_byInput | PayoutRequestUpdateManyWithWhereWithoutRequested_byInput[]
+    deleteMany?: PayoutRequestScalarWhereInput | PayoutRequestScalarWhereInput[]
+  }
+
+  export type PayoutRequestUpdateManyWithoutReviewed_byNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutReviewed_byInput, PayoutRequestUncheckedCreateWithoutReviewed_byInput> | PayoutRequestCreateWithoutReviewed_byInput[] | PayoutRequestUncheckedCreateWithoutReviewed_byInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutReviewed_byInput | PayoutRequestCreateOrConnectWithoutReviewed_byInput[]
+    upsert?: PayoutRequestUpsertWithWhereUniqueWithoutReviewed_byInput | PayoutRequestUpsertWithWhereUniqueWithoutReviewed_byInput[]
+    createMany?: PayoutRequestCreateManyReviewed_byInputEnvelope
+    set?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    disconnect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    delete?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    update?: PayoutRequestUpdateWithWhereUniqueWithoutReviewed_byInput | PayoutRequestUpdateWithWhereUniqueWithoutReviewed_byInput[]
+    updateMany?: PayoutRequestUpdateManyWithWhereWithoutReviewed_byInput | PayoutRequestUpdateManyWithWhereWithoutReviewed_byInput[]
+    deleteMany?: PayoutRequestScalarWhereInput | PayoutRequestScalarWhereInput[]
+  }
+
   export type PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<PasswordResetTokenCreateWithoutUserInput, PasswordResetTokenUncheckedCreateWithoutUserInput> | PasswordResetTokenCreateWithoutUserInput[] | PasswordResetTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PasswordResetTokenCreateOrConnectWithoutUserInput | PasswordResetTokenCreateOrConnectWithoutUserInput[]
@@ -59158,6 +62035,34 @@ export namespace Prisma {
     deleteMany?: SettlementAdjustmentScalarWhereInput | SettlementAdjustmentScalarWhereInput[]
   }
 
+  export type PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutRequested_byInput, PayoutRequestUncheckedCreateWithoutRequested_byInput> | PayoutRequestCreateWithoutRequested_byInput[] | PayoutRequestUncheckedCreateWithoutRequested_byInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutRequested_byInput | PayoutRequestCreateOrConnectWithoutRequested_byInput[]
+    upsert?: PayoutRequestUpsertWithWhereUniqueWithoutRequested_byInput | PayoutRequestUpsertWithWhereUniqueWithoutRequested_byInput[]
+    createMany?: PayoutRequestCreateManyRequested_byInputEnvelope
+    set?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    disconnect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    delete?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    update?: PayoutRequestUpdateWithWhereUniqueWithoutRequested_byInput | PayoutRequestUpdateWithWhereUniqueWithoutRequested_byInput[]
+    updateMany?: PayoutRequestUpdateManyWithWhereWithoutRequested_byInput | PayoutRequestUpdateManyWithWhereWithoutRequested_byInput[]
+    deleteMany?: PayoutRequestScalarWhereInput | PayoutRequestScalarWhereInput[]
+  }
+
+  export type PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutReviewed_byInput, PayoutRequestUncheckedCreateWithoutReviewed_byInput> | PayoutRequestCreateWithoutReviewed_byInput[] | PayoutRequestUncheckedCreateWithoutReviewed_byInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutReviewed_byInput | PayoutRequestCreateOrConnectWithoutReviewed_byInput[]
+    upsert?: PayoutRequestUpsertWithWhereUniqueWithoutReviewed_byInput | PayoutRequestUpsertWithWhereUniqueWithoutReviewed_byInput[]
+    createMany?: PayoutRequestCreateManyReviewed_byInputEnvelope
+    set?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    disconnect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    delete?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    update?: PayoutRequestUpdateWithWhereUniqueWithoutReviewed_byInput | PayoutRequestUpdateWithWhereUniqueWithoutReviewed_byInput[]
+    updateMany?: PayoutRequestUpdateManyWithWhereWithoutReviewed_byInput | PayoutRequestUpdateManyWithWhereWithoutReviewed_byInput[]
+    deleteMany?: PayoutRequestScalarWhereInput | PayoutRequestScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutPassword_reset_tokensInput = {
     create?: XOR<UserCreateWithoutPassword_reset_tokensInput, UserUncheckedCreateWithoutPassword_reset_tokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutPassword_reset_tokensInput
@@ -59206,6 +62111,12 @@ export namespace Prisma {
     connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
   }
 
+  export type PayoutRequestCreateNestedOneWithoutInvoice_documentInput = {
+    create?: XOR<PayoutRequestCreateWithoutInvoice_documentInput, PayoutRequestUncheckedCreateWithoutInvoice_documentInput>
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutInvoice_documentInput
+    connect?: PayoutRequestWhereUniqueInput
+  }
+
   export type StoreUncheckedCreateNestedManyWithoutLogo_documentInput = {
     create?: XOR<StoreCreateWithoutLogo_documentInput, StoreUncheckedCreateWithoutLogo_documentInput> | StoreCreateWithoutLogo_documentInput[] | StoreUncheckedCreateWithoutLogo_documentInput[]
     connectOrCreate?: StoreCreateOrConnectWithoutLogo_documentInput | StoreCreateOrConnectWithoutLogo_documentInput[]
@@ -59232,6 +62143,12 @@ export namespace Prisma {
     connectOrCreate?: EmployeeCreateOrConnectWithoutPhoto_documentInput | EmployeeCreateOrConnectWithoutPhoto_documentInput[]
     createMany?: EmployeeCreateManyPhoto_documentInputEnvelope
     connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+  }
+
+  export type PayoutRequestUncheckedCreateNestedOneWithoutInvoice_documentInput = {
+    create?: XOR<PayoutRequestCreateWithoutInvoice_documentInput, PayoutRequestUncheckedCreateWithoutInvoice_documentInput>
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutInvoice_documentInput
+    connect?: PayoutRequestWhereUniqueInput
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -59310,6 +62227,16 @@ export namespace Prisma {
     deleteMany?: EmployeeScalarWhereInput | EmployeeScalarWhereInput[]
   }
 
+  export type PayoutRequestUpdateOneWithoutInvoice_documentNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutInvoice_documentInput, PayoutRequestUncheckedCreateWithoutInvoice_documentInput>
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutInvoice_documentInput
+    upsert?: PayoutRequestUpsertWithoutInvoice_documentInput
+    disconnect?: PayoutRequestWhereInput | boolean
+    delete?: PayoutRequestWhereInput | boolean
+    connect?: PayoutRequestWhereUniqueInput
+    update?: XOR<XOR<PayoutRequestUpdateToOneWithWhereWithoutInvoice_documentInput, PayoutRequestUpdateWithoutInvoice_documentInput>, PayoutRequestUncheckedUpdateWithoutInvoice_documentInput>
+  }
+
   export type StoreUncheckedUpdateManyWithoutLogo_documentNestedInput = {
     create?: XOR<StoreCreateWithoutLogo_documentInput, StoreUncheckedCreateWithoutLogo_documentInput> | StoreCreateWithoutLogo_documentInput[] | StoreUncheckedCreateWithoutLogo_documentInput[]
     connectOrCreate?: StoreCreateOrConnectWithoutLogo_documentInput | StoreCreateOrConnectWithoutLogo_documentInput[]
@@ -59364,6 +62291,16 @@ export namespace Prisma {
     update?: EmployeeUpdateWithWhereUniqueWithoutPhoto_documentInput | EmployeeUpdateWithWhereUniqueWithoutPhoto_documentInput[]
     updateMany?: EmployeeUpdateManyWithWhereWithoutPhoto_documentInput | EmployeeUpdateManyWithWhereWithoutPhoto_documentInput[]
     deleteMany?: EmployeeScalarWhereInput | EmployeeScalarWhereInput[]
+  }
+
+  export type PayoutRequestUncheckedUpdateOneWithoutInvoice_documentNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutInvoice_documentInput, PayoutRequestUncheckedCreateWithoutInvoice_documentInput>
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutInvoice_documentInput
+    upsert?: PayoutRequestUpsertWithoutInvoice_documentInput
+    disconnect?: PayoutRequestWhereInput | boolean
+    delete?: PayoutRequestWhereInput | boolean
+    connect?: PayoutRequestWhereUniqueInput
+    update?: XOR<XOR<PayoutRequestUpdateToOneWithWhereWithoutInvoice_documentInput, PayoutRequestUpdateWithoutInvoice_documentInput>, PayoutRequestUncheckedUpdateWithoutInvoice_documentInput>
   }
 
   export type DocumentCreateNestedOneWithoutOrganizations_logoInput = {
@@ -59711,6 +62648,13 @@ export namespace Prisma {
     connect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
   }
 
+  export type PayoutRequestCreateNestedManyWithoutStoreInput = {
+    create?: XOR<PayoutRequestCreateWithoutStoreInput, PayoutRequestUncheckedCreateWithoutStoreInput> | PayoutRequestCreateWithoutStoreInput[] | PayoutRequestUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutStoreInput | PayoutRequestCreateOrConnectWithoutStoreInput[]
+    createMany?: PayoutRequestCreateManyStoreInputEnvelope
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+  }
+
   export type SettlementCreateNestedManyWithoutStoreInput = {
     create?: XOR<SettlementCreateWithoutStoreInput, SettlementUncheckedCreateWithoutStoreInput> | SettlementCreateWithoutStoreInput[] | SettlementUncheckedCreateWithoutStoreInput[]
     connectOrCreate?: SettlementCreateOrConnectWithoutStoreInput | SettlementCreateOrConnectWithoutStoreInput[]
@@ -59834,6 +62778,13 @@ export namespace Prisma {
     connectOrCreate?: PayoutCreateOrConnectWithoutStoreInput | PayoutCreateOrConnectWithoutStoreInput[]
     createMany?: PayoutCreateManyStoreInputEnvelope
     connect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+  }
+
+  export type PayoutRequestUncheckedCreateNestedManyWithoutStoreInput = {
+    create?: XOR<PayoutRequestCreateWithoutStoreInput, PayoutRequestUncheckedCreateWithoutStoreInput> | PayoutRequestCreateWithoutStoreInput[] | PayoutRequestUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutStoreInput | PayoutRequestCreateOrConnectWithoutStoreInput[]
+    createMany?: PayoutRequestCreateManyStoreInputEnvelope
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
   }
 
   export type SettlementUncheckedCreateNestedManyWithoutStoreInput = {
@@ -60146,6 +63097,20 @@ export namespace Prisma {
     deleteMany?: PayoutScalarWhereInput | PayoutScalarWhereInput[]
   }
 
+  export type PayoutRequestUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutStoreInput, PayoutRequestUncheckedCreateWithoutStoreInput> | PayoutRequestCreateWithoutStoreInput[] | PayoutRequestUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutStoreInput | PayoutRequestCreateOrConnectWithoutStoreInput[]
+    upsert?: PayoutRequestUpsertWithWhereUniqueWithoutStoreInput | PayoutRequestUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: PayoutRequestCreateManyStoreInputEnvelope
+    set?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    disconnect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    delete?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    update?: PayoutRequestUpdateWithWhereUniqueWithoutStoreInput | PayoutRequestUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: PayoutRequestUpdateManyWithWhereWithoutStoreInput | PayoutRequestUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: PayoutRequestScalarWhereInput | PayoutRequestScalarWhereInput[]
+  }
+
   export type SettlementUpdateManyWithoutStoreNestedInput = {
     create?: XOR<SettlementCreateWithoutStoreInput, SettlementUncheckedCreateWithoutStoreInput> | SettlementCreateWithoutStoreInput[] | SettlementUncheckedCreateWithoutStoreInput[]
     connectOrCreate?: SettlementCreateOrConnectWithoutStoreInput | SettlementCreateOrConnectWithoutStoreInput[]
@@ -60392,6 +63357,20 @@ export namespace Prisma {
     update?: PayoutUpdateWithWhereUniqueWithoutStoreInput | PayoutUpdateWithWhereUniqueWithoutStoreInput[]
     updateMany?: PayoutUpdateManyWithWhereWithoutStoreInput | PayoutUpdateManyWithWhereWithoutStoreInput[]
     deleteMany?: PayoutScalarWhereInput | PayoutScalarWhereInput[]
+  }
+
+  export type PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutStoreInput, PayoutRequestUncheckedCreateWithoutStoreInput> | PayoutRequestCreateWithoutStoreInput[] | PayoutRequestUncheckedCreateWithoutStoreInput[]
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutStoreInput | PayoutRequestCreateOrConnectWithoutStoreInput[]
+    upsert?: PayoutRequestUpsertWithWhereUniqueWithoutStoreInput | PayoutRequestUpsertWithWhereUniqueWithoutStoreInput[]
+    createMany?: PayoutRequestCreateManyStoreInputEnvelope
+    set?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    disconnect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    delete?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    connect?: PayoutRequestWhereUniqueInput | PayoutRequestWhereUniqueInput[]
+    update?: PayoutRequestUpdateWithWhereUniqueWithoutStoreInput | PayoutRequestUpdateWithWhereUniqueWithoutStoreInput[]
+    updateMany?: PayoutRequestUpdateManyWithWhereWithoutStoreInput | PayoutRequestUpdateManyWithWhereWithoutStoreInput[]
+    deleteMany?: PayoutRequestScalarWhereInput | PayoutRequestScalarWhereInput[]
   }
 
   export type SettlementUncheckedUpdateManyWithoutStoreNestedInput = {
@@ -61708,6 +64687,12 @@ export namespace Prisma {
     connect?: PayoutWhereUniqueInput
   }
 
+  export type PayoutRequestCreateNestedOneWithoutDistributionsInput = {
+    create?: XOR<PayoutRequestCreateWithoutDistributionsInput, PayoutRequestUncheckedCreateWithoutDistributionsInput>
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutDistributionsInput
+    connect?: PayoutRequestWhereUniqueInput
+  }
+
   export type SettlementCreateNestedOneWithoutDistributionsInput = {
     create?: XOR<SettlementCreateWithoutDistributionsInput, SettlementUncheckedCreateWithoutDistributionsInput>
     connectOrCreate?: SettlementCreateOrConnectWithoutDistributionsInput
@@ -61750,6 +64735,16 @@ export namespace Prisma {
     update?: XOR<XOR<PayoutUpdateToOneWithWhereWithoutDistributionsInput, PayoutUpdateWithoutDistributionsInput>, PayoutUncheckedUpdateWithoutDistributionsInput>
   }
 
+  export type PayoutRequestUpdateOneWithoutDistributionsNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutDistributionsInput, PayoutRequestUncheckedCreateWithoutDistributionsInput>
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutDistributionsInput
+    upsert?: PayoutRequestUpsertWithoutDistributionsInput
+    disconnect?: PayoutRequestWhereInput | boolean
+    delete?: PayoutRequestWhereInput | boolean
+    connect?: PayoutRequestWhereUniqueInput
+    update?: XOR<XOR<PayoutRequestUpdateToOneWithWhereWithoutDistributionsInput, PayoutRequestUpdateWithoutDistributionsInput>, PayoutRequestUncheckedUpdateWithoutDistributionsInput>
+  }
+
   export type SettlementUpdateOneWithoutDistributionsNestedInput = {
     create?: XOR<SettlementCreateWithoutDistributionsInput, SettlementUncheckedCreateWithoutDistributionsInput>
     connectOrCreate?: SettlementCreateOrConnectWithoutDistributionsInput
@@ -61785,11 +64780,23 @@ export namespace Prisma {
     connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
   }
 
+  export type PayoutRequestCreateNestedOneWithoutPayoutInput = {
+    create?: XOR<PayoutRequestCreateWithoutPayoutInput, PayoutRequestUncheckedCreateWithoutPayoutInput>
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutPayoutInput
+    connect?: PayoutRequestWhereUniqueInput
+  }
+
   export type TipDistributionUncheckedCreateNestedManyWithoutPayoutInput = {
     create?: XOR<TipDistributionCreateWithoutPayoutInput, TipDistributionUncheckedCreateWithoutPayoutInput> | TipDistributionCreateWithoutPayoutInput[] | TipDistributionUncheckedCreateWithoutPayoutInput[]
     connectOrCreate?: TipDistributionCreateOrConnectWithoutPayoutInput | TipDistributionCreateOrConnectWithoutPayoutInput[]
     createMany?: TipDistributionCreateManyPayoutInputEnvelope
     connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+  }
+
+  export type PayoutRequestUncheckedCreateNestedOneWithoutPayoutInput = {
+    create?: XOR<PayoutRequestCreateWithoutPayoutInput, PayoutRequestUncheckedCreateWithoutPayoutInput>
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutPayoutInput
+    connect?: PayoutRequestWhereUniqueInput
   }
 
   export type EnumPayoutExecutionStatusFieldUpdateOperationsInput = {
@@ -61838,6 +64845,16 @@ export namespace Prisma {
     deleteMany?: TipDistributionScalarWhereInput | TipDistributionScalarWhereInput[]
   }
 
+  export type PayoutRequestUpdateOneWithoutPayoutNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutPayoutInput, PayoutRequestUncheckedCreateWithoutPayoutInput>
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutPayoutInput
+    upsert?: PayoutRequestUpsertWithoutPayoutInput
+    disconnect?: PayoutRequestWhereInput | boolean
+    delete?: PayoutRequestWhereInput | boolean
+    connect?: PayoutRequestWhereUniqueInput
+    update?: XOR<XOR<PayoutRequestUpdateToOneWithWhereWithoutPayoutInput, PayoutRequestUpdateWithoutPayoutInput>, PayoutRequestUncheckedUpdateWithoutPayoutInput>
+  }
+
   export type TipDistributionUncheckedUpdateManyWithoutPayoutNestedInput = {
     create?: XOR<TipDistributionCreateWithoutPayoutInput, TipDistributionUncheckedCreateWithoutPayoutInput> | TipDistributionCreateWithoutPayoutInput[] | TipDistributionUncheckedCreateWithoutPayoutInput[]
     connectOrCreate?: TipDistributionCreateOrConnectWithoutPayoutInput | TipDistributionCreateOrConnectWithoutPayoutInput[]
@@ -61849,6 +64866,146 @@ export namespace Prisma {
     connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
     update?: TipDistributionUpdateWithWhereUniqueWithoutPayoutInput | TipDistributionUpdateWithWhereUniqueWithoutPayoutInput[]
     updateMany?: TipDistributionUpdateManyWithWhereWithoutPayoutInput | TipDistributionUpdateManyWithWhereWithoutPayoutInput[]
+    deleteMany?: TipDistributionScalarWhereInput | TipDistributionScalarWhereInput[]
+  }
+
+  export type PayoutRequestUncheckedUpdateOneWithoutPayoutNestedInput = {
+    create?: XOR<PayoutRequestCreateWithoutPayoutInput, PayoutRequestUncheckedCreateWithoutPayoutInput>
+    connectOrCreate?: PayoutRequestCreateOrConnectWithoutPayoutInput
+    upsert?: PayoutRequestUpsertWithoutPayoutInput
+    disconnect?: PayoutRequestWhereInput | boolean
+    delete?: PayoutRequestWhereInput | boolean
+    connect?: PayoutRequestWhereUniqueInput
+    update?: XOR<XOR<PayoutRequestUpdateToOneWithWhereWithoutPayoutInput, PayoutRequestUpdateWithoutPayoutInput>, PayoutRequestUncheckedUpdateWithoutPayoutInput>
+  }
+
+  export type StoreCreateNestedOneWithoutPayout_requestsInput = {
+    create?: XOR<StoreCreateWithoutPayout_requestsInput, StoreUncheckedCreateWithoutPayout_requestsInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutPayout_requestsInput
+    connect?: StoreWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutPayout_requests_madeInput = {
+    create?: XOR<UserCreateWithoutPayout_requests_madeInput, UserUncheckedCreateWithoutPayout_requests_madeInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPayout_requests_madeInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutPayout_requests_reviewedInput = {
+    create?: XOR<UserCreateWithoutPayout_requests_reviewedInput, UserUncheckedCreateWithoutPayout_requests_reviewedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPayout_requests_reviewedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type DocumentCreateNestedOneWithoutPayout_requestInput = {
+    create?: XOR<DocumentCreateWithoutPayout_requestInput, DocumentUncheckedCreateWithoutPayout_requestInput>
+    connectOrCreate?: DocumentCreateOrConnectWithoutPayout_requestInput
+    connect?: DocumentWhereUniqueInput
+  }
+
+  export type PayoutCreateNestedOneWithoutPayout_requestInput = {
+    create?: XOR<PayoutCreateWithoutPayout_requestInput, PayoutUncheckedCreateWithoutPayout_requestInput>
+    connectOrCreate?: PayoutCreateOrConnectWithoutPayout_requestInput
+    connect?: PayoutWhereUniqueInput
+  }
+
+  export type TipDistributionCreateNestedManyWithoutPayout_requestInput = {
+    create?: XOR<TipDistributionCreateWithoutPayout_requestInput, TipDistributionUncheckedCreateWithoutPayout_requestInput> | TipDistributionCreateWithoutPayout_requestInput[] | TipDistributionUncheckedCreateWithoutPayout_requestInput[]
+    connectOrCreate?: TipDistributionCreateOrConnectWithoutPayout_requestInput | TipDistributionCreateOrConnectWithoutPayout_requestInput[]
+    createMany?: TipDistributionCreateManyPayout_requestInputEnvelope
+    connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+  }
+
+  export type TipDistributionUncheckedCreateNestedManyWithoutPayout_requestInput = {
+    create?: XOR<TipDistributionCreateWithoutPayout_requestInput, TipDistributionUncheckedCreateWithoutPayout_requestInput> | TipDistributionCreateWithoutPayout_requestInput[] | TipDistributionUncheckedCreateWithoutPayout_requestInput[]
+    connectOrCreate?: TipDistributionCreateOrConnectWithoutPayout_requestInput | TipDistributionCreateOrConnectWithoutPayout_requestInput[]
+    createMany?: TipDistributionCreateManyPayout_requestInputEnvelope
+    connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+  }
+
+  export type EnumPayoutRequestStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PayoutRequestStatus
+  }
+
+  export type EnumInvoiceCheckStatusFieldUpdateOperationsInput = {
+    set?: $Enums.InvoiceCheckStatus
+  }
+
+  export type NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput = {
+    set?: $Enums.InvoiceCheckVerdict | null
+  }
+
+  export type StoreUpdateOneRequiredWithoutPayout_requestsNestedInput = {
+    create?: XOR<StoreCreateWithoutPayout_requestsInput, StoreUncheckedCreateWithoutPayout_requestsInput>
+    connectOrCreate?: StoreCreateOrConnectWithoutPayout_requestsInput
+    upsert?: StoreUpsertWithoutPayout_requestsInput
+    connect?: StoreWhereUniqueInput
+    update?: XOR<XOR<StoreUpdateToOneWithWhereWithoutPayout_requestsInput, StoreUpdateWithoutPayout_requestsInput>, StoreUncheckedUpdateWithoutPayout_requestsInput>
+  }
+
+  export type UserUpdateOneWithoutPayout_requests_madeNestedInput = {
+    create?: XOR<UserCreateWithoutPayout_requests_madeInput, UserUncheckedCreateWithoutPayout_requests_madeInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPayout_requests_madeInput
+    upsert?: UserUpsertWithoutPayout_requests_madeInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPayout_requests_madeInput, UserUpdateWithoutPayout_requests_madeInput>, UserUncheckedUpdateWithoutPayout_requests_madeInput>
+  }
+
+  export type UserUpdateOneWithoutPayout_requests_reviewedNestedInput = {
+    create?: XOR<UserCreateWithoutPayout_requests_reviewedInput, UserUncheckedCreateWithoutPayout_requests_reviewedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPayout_requests_reviewedInput
+    upsert?: UserUpsertWithoutPayout_requests_reviewedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPayout_requests_reviewedInput, UserUpdateWithoutPayout_requests_reviewedInput>, UserUncheckedUpdateWithoutPayout_requests_reviewedInput>
+  }
+
+  export type DocumentUpdateOneRequiredWithoutPayout_requestNestedInput = {
+    create?: XOR<DocumentCreateWithoutPayout_requestInput, DocumentUncheckedCreateWithoutPayout_requestInput>
+    connectOrCreate?: DocumentCreateOrConnectWithoutPayout_requestInput
+    upsert?: DocumentUpsertWithoutPayout_requestInput
+    connect?: DocumentWhereUniqueInput
+    update?: XOR<XOR<DocumentUpdateToOneWithWhereWithoutPayout_requestInput, DocumentUpdateWithoutPayout_requestInput>, DocumentUncheckedUpdateWithoutPayout_requestInput>
+  }
+
+  export type PayoutUpdateOneWithoutPayout_requestNestedInput = {
+    create?: XOR<PayoutCreateWithoutPayout_requestInput, PayoutUncheckedCreateWithoutPayout_requestInput>
+    connectOrCreate?: PayoutCreateOrConnectWithoutPayout_requestInput
+    upsert?: PayoutUpsertWithoutPayout_requestInput
+    disconnect?: PayoutWhereInput | boolean
+    delete?: PayoutWhereInput | boolean
+    connect?: PayoutWhereUniqueInput
+    update?: XOR<XOR<PayoutUpdateToOneWithWhereWithoutPayout_requestInput, PayoutUpdateWithoutPayout_requestInput>, PayoutUncheckedUpdateWithoutPayout_requestInput>
+  }
+
+  export type TipDistributionUpdateManyWithoutPayout_requestNestedInput = {
+    create?: XOR<TipDistributionCreateWithoutPayout_requestInput, TipDistributionUncheckedCreateWithoutPayout_requestInput> | TipDistributionCreateWithoutPayout_requestInput[] | TipDistributionUncheckedCreateWithoutPayout_requestInput[]
+    connectOrCreate?: TipDistributionCreateOrConnectWithoutPayout_requestInput | TipDistributionCreateOrConnectWithoutPayout_requestInput[]
+    upsert?: TipDistributionUpsertWithWhereUniqueWithoutPayout_requestInput | TipDistributionUpsertWithWhereUniqueWithoutPayout_requestInput[]
+    createMany?: TipDistributionCreateManyPayout_requestInputEnvelope
+    set?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    disconnect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    delete?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    update?: TipDistributionUpdateWithWhereUniqueWithoutPayout_requestInput | TipDistributionUpdateWithWhereUniqueWithoutPayout_requestInput[]
+    updateMany?: TipDistributionUpdateManyWithWhereWithoutPayout_requestInput | TipDistributionUpdateManyWithWhereWithoutPayout_requestInput[]
+    deleteMany?: TipDistributionScalarWhereInput | TipDistributionScalarWhereInput[]
+  }
+
+  export type TipDistributionUncheckedUpdateManyWithoutPayout_requestNestedInput = {
+    create?: XOR<TipDistributionCreateWithoutPayout_requestInput, TipDistributionUncheckedCreateWithoutPayout_requestInput> | TipDistributionCreateWithoutPayout_requestInput[] | TipDistributionUncheckedCreateWithoutPayout_requestInput[]
+    connectOrCreate?: TipDistributionCreateOrConnectWithoutPayout_requestInput | TipDistributionCreateOrConnectWithoutPayout_requestInput[]
+    upsert?: TipDistributionUpsertWithWhereUniqueWithoutPayout_requestInput | TipDistributionUpsertWithWhereUniqueWithoutPayout_requestInput[]
+    createMany?: TipDistributionCreateManyPayout_requestInputEnvelope
+    set?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    disconnect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    delete?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    connect?: TipDistributionWhereUniqueInput | TipDistributionWhereUniqueInput[]
+    update?: TipDistributionUpdateWithWhereUniqueWithoutPayout_requestInput | TipDistributionUpdateWithWhereUniqueWithoutPayout_requestInput[]
+    updateMany?: TipDistributionUpdateManyWithWhereWithoutPayout_requestInput | TipDistributionUpdateManyWithWhereWithoutPayout_requestInput[]
     deleteMany?: TipDistributionScalarWhereInput | TipDistributionScalarWhereInput[]
   }
 
@@ -63340,6 +66497,57 @@ export namespace Prisma {
     _max?: NestedEnumPayoutExecutionStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumPayoutRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PayoutRequestStatus | EnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PayoutRequestStatus[] | ListEnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PayoutRequestStatus[] | ListEnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPayoutRequestStatusFilter<$PrismaModel> | $Enums.PayoutRequestStatus
+  }
+
+  export type NestedEnumInvoiceCheckStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InvoiceCheckStatus | EnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InvoiceCheckStatus[] | ListEnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InvoiceCheckStatus[] | ListEnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInvoiceCheckStatusFilter<$PrismaModel> | $Enums.InvoiceCheckStatus
+  }
+
+  export type NestedEnumInvoiceCheckVerdictNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.InvoiceCheckVerdict | EnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    in?: $Enums.InvoiceCheckVerdict[] | ListEnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.InvoiceCheckVerdict[] | ListEnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumInvoiceCheckVerdictNullableFilter<$PrismaModel> | $Enums.InvoiceCheckVerdict | null
+  }
+
+  export type NestedEnumPayoutRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PayoutRequestStatus | EnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PayoutRequestStatus[] | ListEnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PayoutRequestStatus[] | ListEnumPayoutRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPayoutRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.PayoutRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPayoutRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumPayoutRequestStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInvoiceCheckStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InvoiceCheckStatus | EnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InvoiceCheckStatus[] | ListEnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InvoiceCheckStatus[] | ListEnumInvoiceCheckStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInvoiceCheckStatusWithAggregatesFilter<$PrismaModel> | $Enums.InvoiceCheckStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInvoiceCheckStatusFilter<$PrismaModel>
+    _max?: NestedEnumInvoiceCheckStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInvoiceCheckVerdictNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InvoiceCheckVerdict | EnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    in?: $Enums.InvoiceCheckVerdict[] | ListEnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.InvoiceCheckVerdict[] | ListEnumInvoiceCheckVerdictFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumInvoiceCheckVerdictNullableWithAggregatesFilter<$PrismaModel> | $Enums.InvoiceCheckVerdict | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumInvoiceCheckVerdictNullableFilter<$PrismaModel>
+    _max?: NestedEnumInvoiceCheckVerdictNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumSettlementAdjustmentStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.SettlementAdjustmentStatus | EnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.SettlementAdjustmentStatus[] | ListEnumSettlementAdjustmentStatusFieldRefInput<$PrismaModel>
@@ -63464,6 +66672,7 @@ export namespace Prisma {
     stores_cover?: StoreCreateNestedManyWithoutCover_documentInput
     organizations_logo?: OrganizationCreateNestedManyWithoutLogo_documentInput
     employees_photo?: EmployeeCreateNestedManyWithoutPhoto_documentInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentUncheckedCreateWithoutUserInput = {
@@ -63479,6 +66688,7 @@ export namespace Prisma {
     stores_cover?: StoreUncheckedCreateNestedManyWithoutCover_documentInput
     organizations_logo?: OrganizationUncheckedCreateNestedManyWithoutLogo_documentInput
     employees_photo?: EmployeeUncheckedCreateNestedManyWithoutPhoto_documentInput
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentCreateOrConnectWithoutUserInput = {
@@ -63928,6 +67138,154 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PayoutRequestCreateWithoutRequested_byInput = {
+    id?: string
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutPayout_requestsInput
+    reviewed_by?: UserCreateNestedOneWithoutPayout_requests_reviewedInput
+    invoice_document: DocumentCreateNestedOneWithoutPayout_requestInput
+    payout?: PayoutCreateNestedOneWithoutPayout_requestInput
+    distributions?: TipDistributionCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestUncheckedCreateWithoutRequested_byInput = {
+    id?: string
+    store_id: string
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_document_id: string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_by_user_id?: string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    payout_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestCreateOrConnectWithoutRequested_byInput = {
+    where: PayoutRequestWhereUniqueInput
+    create: XOR<PayoutRequestCreateWithoutRequested_byInput, PayoutRequestUncheckedCreateWithoutRequested_byInput>
+  }
+
+  export type PayoutRequestCreateManyRequested_byInputEnvelope = {
+    data: PayoutRequestCreateManyRequested_byInput | PayoutRequestCreateManyRequested_byInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PayoutRequestCreateWithoutReviewed_byInput = {
+    id?: string
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutPayout_requestsInput
+    requested_by?: UserCreateNestedOneWithoutPayout_requests_madeInput
+    invoice_document: DocumentCreateNestedOneWithoutPayout_requestInput
+    payout?: PayoutCreateNestedOneWithoutPayout_requestInput
+    distributions?: TipDistributionCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestUncheckedCreateWithoutReviewed_byInput = {
+    id?: string
+    store_id: string
+    requested_by_user_id?: string | null
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_document_id: string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    payout_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestCreateOrConnectWithoutReviewed_byInput = {
+    where: PayoutRequestWhereUniqueInput
+    create: XOR<PayoutRequestCreateWithoutReviewed_byInput, PayoutRequestUncheckedCreateWithoutReviewed_byInput>
+  }
+
+  export type PayoutRequestCreateManyReviewed_byInputEnvelope = {
+    data: PayoutRequestCreateManyReviewed_byInput | PayoutRequestCreateManyReviewed_byInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PasswordResetTokenUpsertWithWhereUniqueWithoutUserInput = {
     where: PasswordResetTokenWhereUniqueInput
     update: XOR<PasswordResetTokenUpdateWithoutUserInput, PasswordResetTokenUncheckedUpdateWithoutUserInput>
@@ -64306,6 +67664,73 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"SettlementAdjustment"> | Date | string
   }
 
+  export type PayoutRequestUpsertWithWhereUniqueWithoutRequested_byInput = {
+    where: PayoutRequestWhereUniqueInput
+    update: XOR<PayoutRequestUpdateWithoutRequested_byInput, PayoutRequestUncheckedUpdateWithoutRequested_byInput>
+    create: XOR<PayoutRequestCreateWithoutRequested_byInput, PayoutRequestUncheckedCreateWithoutRequested_byInput>
+  }
+
+  export type PayoutRequestUpdateWithWhereUniqueWithoutRequested_byInput = {
+    where: PayoutRequestWhereUniqueInput
+    data: XOR<PayoutRequestUpdateWithoutRequested_byInput, PayoutRequestUncheckedUpdateWithoutRequested_byInput>
+  }
+
+  export type PayoutRequestUpdateManyWithWhereWithoutRequested_byInput = {
+    where: PayoutRequestScalarWhereInput
+    data: XOR<PayoutRequestUpdateManyMutationInput, PayoutRequestUncheckedUpdateManyWithoutRequested_byInput>
+  }
+
+  export type PayoutRequestScalarWhereInput = {
+    AND?: PayoutRequestScalarWhereInput | PayoutRequestScalarWhereInput[]
+    OR?: PayoutRequestScalarWhereInput[]
+    NOT?: PayoutRequestScalarWhereInput | PayoutRequestScalarWhereInput[]
+    id?: StringFilter<"PayoutRequest"> | string
+    store_id?: StringFilter<"PayoutRequest"> | string
+    requested_by_user_id?: StringNullableFilter<"PayoutRequest"> | string | null
+    status?: EnumPayoutRequestStatusFilter<"PayoutRequest"> | $Enums.PayoutRequestStatus
+    amount?: IntFilter<"PayoutRequest"> | number
+    own_share_amount?: IntFilter<"PayoutRequest"> | number
+    held_for_staff_amount?: IntFilter<"PayoutRequest"> | number
+    currency?: EnumCurrencyFilter<"PayoutRequest"> | $Enums.Currency
+    distribution_count?: IntFilter<"PayoutRequest"> | number
+    period_from?: DateTimeFilter<"PayoutRequest"> | Date | string
+    period_to?: DateTimeFilter<"PayoutRequest"> | Date | string
+    hold_cutoff_at?: DateTimeFilter<"PayoutRequest"> | Date | string
+    invoice_document_id?: StringFilter<"PayoutRequest"> | string
+    invoice_number?: StringNullableFilter<"PayoutRequest"> | string | null
+    store_note?: StringNullableFilter<"PayoutRequest"> | string | null
+    failure_reason?: StringNullableFilter<"PayoutRequest"> | string | null
+    check_status?: EnumInvoiceCheckStatusFilter<"PayoutRequest"> | $Enums.InvoiceCheckStatus
+    check_verdict?: EnumInvoiceCheckVerdictNullableFilter<"PayoutRequest"> | $Enums.InvoiceCheckVerdict | null
+    check_issues?: JsonNullableFilter<"PayoutRequest">
+    check_extracted?: JsonNullableFilter<"PayoutRequest">
+    check_model?: StringNullableFilter<"PayoutRequest"> | string | null
+    check_cost_usd?: DecimalNullableFilter<"PayoutRequest"> | Decimal | DecimalJsLike | number | string | null
+    checked_at?: DateTimeNullableFilter<"PayoutRequest"> | Date | string | null
+    reviewed_by_user_id?: StringNullableFilter<"PayoutRequest"> | string | null
+    reviewed_at?: DateTimeNullableFilter<"PayoutRequest"> | Date | string | null
+    admin_note?: StringNullableFilter<"PayoutRequest"> | string | null
+    payout_id?: StringNullableFilter<"PayoutRequest"> | string | null
+    created_at?: DateTimeFilter<"PayoutRequest"> | Date | string
+    updated_at?: DateTimeFilter<"PayoutRequest"> | Date | string
+  }
+
+  export type PayoutRequestUpsertWithWhereUniqueWithoutReviewed_byInput = {
+    where: PayoutRequestWhereUniqueInput
+    update: XOR<PayoutRequestUpdateWithoutReviewed_byInput, PayoutRequestUncheckedUpdateWithoutReviewed_byInput>
+    create: XOR<PayoutRequestCreateWithoutReviewed_byInput, PayoutRequestUncheckedCreateWithoutReviewed_byInput>
+  }
+
+  export type PayoutRequestUpdateWithWhereUniqueWithoutReviewed_byInput = {
+    where: PayoutRequestWhereUniqueInput
+    data: XOR<PayoutRequestUpdateWithoutReviewed_byInput, PayoutRequestUncheckedUpdateWithoutReviewed_byInput>
+  }
+
+  export type PayoutRequestUpdateManyWithWhereWithoutReviewed_byInput = {
+    where: PayoutRequestScalarWhereInput
+    data: XOR<PayoutRequestUpdateManyMutationInput, PayoutRequestUncheckedUpdateManyWithoutReviewed_byInput>
+  }
+
   export type UserCreateWithoutPassword_reset_tokensInput = {
     id?: string
     email: string
@@ -64331,6 +67756,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutPassword_reset_tokensInput = {
@@ -64358,6 +67785,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutPassword_reset_tokensInput = {
@@ -64401,6 +67830,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPassword_reset_tokensInput = {
@@ -64428,6 +67859,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserCreateWithoutDocumentsInput = {
@@ -64455,6 +67888,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutDocumentsInput = {
@@ -64482,6 +67917,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutDocumentsInput = {
@@ -64534,6 +67971,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -64583,6 +68021,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -64642,6 +68081,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -64691,6 +68131,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -64811,6 +68252,75 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PayoutRequestCreateWithoutInvoice_documentInput = {
+    id?: string
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutPayout_requestsInput
+    requested_by?: UserCreateNestedOneWithoutPayout_requests_madeInput
+    reviewed_by?: UserCreateNestedOneWithoutPayout_requests_reviewedInput
+    payout?: PayoutCreateNestedOneWithoutPayout_requestInput
+    distributions?: TipDistributionCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestUncheckedCreateWithoutInvoice_documentInput = {
+    id?: string
+    store_id: string
+    requested_by_user_id?: string | null
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_by_user_id?: string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    payout_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestCreateOrConnectWithoutInvoice_documentInput = {
+    where: PayoutRequestWhereUniqueInput
+    create: XOR<PayoutRequestCreateWithoutInvoice_documentInput, PayoutRequestUncheckedCreateWithoutInvoice_documentInput>
+  }
+
   export type UserUpsertWithoutDocumentsInput = {
     update: XOR<UserUpdateWithoutDocumentsInput, UserUncheckedUpdateWithoutDocumentsInput>
     create: XOR<UserCreateWithoutDocumentsInput, UserUncheckedCreateWithoutDocumentsInput>
@@ -64847,6 +68357,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentsInput = {
@@ -64874,6 +68386,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type StoreUpsertWithWhereUniqueWithoutLogo_documentInput = {
@@ -64997,6 +68511,81 @@ export namespace Prisma {
     data: XOR<EmployeeUpdateManyMutationInput, EmployeeUncheckedUpdateManyWithoutPhoto_documentInput>
   }
 
+  export type PayoutRequestUpsertWithoutInvoice_documentInput = {
+    update: XOR<PayoutRequestUpdateWithoutInvoice_documentInput, PayoutRequestUncheckedUpdateWithoutInvoice_documentInput>
+    create: XOR<PayoutRequestCreateWithoutInvoice_documentInput, PayoutRequestUncheckedCreateWithoutInvoice_documentInput>
+    where?: PayoutRequestWhereInput
+  }
+
+  export type PayoutRequestUpdateToOneWithWhereWithoutInvoice_documentInput = {
+    where?: PayoutRequestWhereInput
+    data: XOR<PayoutRequestUpdateWithoutInvoice_documentInput, PayoutRequestUncheckedUpdateWithoutInvoice_documentInput>
+  }
+
+  export type PayoutRequestUpdateWithoutInvoice_documentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutPayout_requestsNestedInput
+    requested_by?: UserUpdateOneWithoutPayout_requests_madeNestedInput
+    reviewed_by?: UserUpdateOneWithoutPayout_requests_reviewedNestedInput
+    payout?: PayoutUpdateOneWithoutPayout_requestNestedInput
+    distributions?: TipDistributionUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestUncheckedUpdateWithoutInvoice_documentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    requested_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutPayout_requestNestedInput
+  }
+
   export type DocumentCreateWithoutOrganizations_logoInput = {
     id?: string
     filename: string
@@ -65010,6 +68599,7 @@ export namespace Prisma {
     stores_logo?: StoreCreateNestedManyWithoutLogo_documentInput
     stores_cover?: StoreCreateNestedManyWithoutCover_documentInput
     employees_photo?: EmployeeCreateNestedManyWithoutPhoto_documentInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentUncheckedCreateWithoutOrganizations_logoInput = {
@@ -65025,6 +68615,7 @@ export namespace Prisma {
     stores_logo?: StoreUncheckedCreateNestedManyWithoutLogo_documentInput
     stores_cover?: StoreUncheckedCreateNestedManyWithoutCover_documentInput
     employees_photo?: EmployeeUncheckedCreateNestedManyWithoutPhoto_documentInput
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentCreateOrConnectWithoutOrganizations_logoInput = {
@@ -65105,6 +68696,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -65154,6 +68746,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -65221,6 +68814,7 @@ export namespace Prisma {
     stores_logo?: StoreUpdateManyWithoutLogo_documentNestedInput
     stores_cover?: StoreUpdateManyWithoutCover_documentNestedInput
     employees_photo?: EmployeeUpdateManyWithoutPhoto_documentNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutOrganizations_logoInput = {
@@ -65236,6 +68830,7 @@ export namespace Prisma {
     stores_logo?: StoreUncheckedUpdateManyWithoutLogo_documentNestedInput
     stores_cover?: StoreUncheckedUpdateManyWithoutCover_documentNestedInput
     employees_photo?: EmployeeUncheckedUpdateManyWithoutPhoto_documentNestedInput
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type OrganizationMemberUpsertWithWhereUniqueWithoutOrganizationInput = {
@@ -65377,6 +68972,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutOrganization_membershipsInput = {
@@ -65404,6 +69001,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutOrganization_membershipsInput = {
@@ -65456,6 +69055,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -65505,6 +69105,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -65603,6 +69204,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrganization_membershipsInput = {
@@ -65630,6 +69233,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type StoreUpsertWithoutOrganization_membersInput = {
@@ -65688,6 +69293,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -65737,6 +69343,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -65901,6 +69508,7 @@ export namespace Prisma {
     stores_cover?: StoreCreateNestedManyWithoutCover_documentInput
     organizations_logo?: OrganizationCreateNestedManyWithoutLogo_documentInput
     employees_photo?: EmployeeCreateNestedManyWithoutPhoto_documentInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentUncheckedCreateWithoutStores_logoInput = {
@@ -65916,6 +69524,7 @@ export namespace Prisma {
     stores_cover?: StoreUncheckedCreateNestedManyWithoutCover_documentInput
     organizations_logo?: OrganizationUncheckedCreateNestedManyWithoutLogo_documentInput
     employees_photo?: EmployeeUncheckedCreateNestedManyWithoutPhoto_documentInput
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentCreateOrConnectWithoutStores_logoInput = {
@@ -65936,6 +69545,7 @@ export namespace Prisma {
     stores_logo?: StoreCreateNestedManyWithoutLogo_documentInput
     organizations_logo?: OrganizationCreateNestedManyWithoutLogo_documentInput
     employees_photo?: EmployeeCreateNestedManyWithoutPhoto_documentInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentUncheckedCreateWithoutStores_coverInput = {
@@ -65951,6 +69561,7 @@ export namespace Prisma {
     stores_logo?: StoreUncheckedCreateNestedManyWithoutLogo_documentInput
     organizations_logo?: OrganizationUncheckedCreateNestedManyWithoutLogo_documentInput
     employees_photo?: EmployeeUncheckedCreateNestedManyWithoutPhoto_documentInput
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentCreateOrConnectWithoutStores_coverInput = {
@@ -66535,6 +70146,7 @@ export namespace Prisma {
     employee?: EmployeeCreateNestedOneWithoutPayoutsInput
     payout_account: PayoutAccountCreateNestedOneWithoutPayoutsInput
     distributions?: TipDistributionCreateNestedManyWithoutPayoutInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutPayoutInput
   }
 
   export type PayoutUncheckedCreateWithoutStoreInput = {
@@ -66552,6 +70164,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayoutInput
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutPayoutInput
   }
 
   export type PayoutCreateOrConnectWithoutStoreInput = {
@@ -66561,6 +70174,80 @@ export namespace Prisma {
 
   export type PayoutCreateManyStoreInputEnvelope = {
     data: PayoutCreateManyStoreInput | PayoutCreateManyStoreInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PayoutRequestCreateWithoutStoreInput = {
+    id?: string
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    requested_by?: UserCreateNestedOneWithoutPayout_requests_madeInput
+    reviewed_by?: UserCreateNestedOneWithoutPayout_requests_reviewedInput
+    invoice_document: DocumentCreateNestedOneWithoutPayout_requestInput
+    payout?: PayoutCreateNestedOneWithoutPayout_requestInput
+    distributions?: TipDistributionCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestUncheckedCreateWithoutStoreInput = {
+    id?: string
+    requested_by_user_id?: string | null
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_document_id: string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_by_user_id?: string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    payout_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestCreateOrConnectWithoutStoreInput = {
+    where: PayoutRequestWhereUniqueInput
+    create: XOR<PayoutRequestCreateWithoutStoreInput, PayoutRequestUncheckedCreateWithoutStoreInput>
+  }
+
+  export type PayoutRequestCreateManyStoreInputEnvelope = {
+    data: PayoutRequestCreateManyStoreInput | PayoutRequestCreateManyStoreInput[]
     skipDuplicates?: boolean
   }
 
@@ -66725,6 +70412,7 @@ export namespace Prisma {
     stores_cover?: StoreUpdateManyWithoutCover_documentNestedInput
     organizations_logo?: OrganizationUpdateManyWithoutLogo_documentNestedInput
     employees_photo?: EmployeeUpdateManyWithoutPhoto_documentNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutStores_logoInput = {
@@ -66740,6 +70428,7 @@ export namespace Prisma {
     stores_cover?: StoreUncheckedUpdateManyWithoutCover_documentNestedInput
     organizations_logo?: OrganizationUncheckedUpdateManyWithoutLogo_documentNestedInput
     employees_photo?: EmployeeUncheckedUpdateManyWithoutPhoto_documentNestedInput
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type DocumentUpsertWithoutStores_coverInput = {
@@ -66766,6 +70455,7 @@ export namespace Prisma {
     stores_logo?: StoreUpdateManyWithoutLogo_documentNestedInput
     organizations_logo?: OrganizationUpdateManyWithoutLogo_documentNestedInput
     employees_photo?: EmployeeUpdateManyWithoutPhoto_documentNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutStores_coverInput = {
@@ -66781,6 +70471,7 @@ export namespace Prisma {
     stores_logo?: StoreUncheckedUpdateManyWithoutLogo_documentNestedInput
     organizations_logo?: OrganizationUncheckedUpdateManyWithoutLogo_documentNestedInput
     employees_photo?: EmployeeUncheckedUpdateManyWithoutPhoto_documentNestedInput
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type DistributionRuleUpsertWithoutDefault_for_storeInput = {
@@ -67258,6 +70949,22 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"Payout"> | Date | string
   }
 
+  export type PayoutRequestUpsertWithWhereUniqueWithoutStoreInput = {
+    where: PayoutRequestWhereUniqueInput
+    update: XOR<PayoutRequestUpdateWithoutStoreInput, PayoutRequestUncheckedUpdateWithoutStoreInput>
+    create: XOR<PayoutRequestCreateWithoutStoreInput, PayoutRequestUncheckedCreateWithoutStoreInput>
+  }
+
+  export type PayoutRequestUpdateWithWhereUniqueWithoutStoreInput = {
+    where: PayoutRequestWhereUniqueInput
+    data: XOR<PayoutRequestUpdateWithoutStoreInput, PayoutRequestUncheckedUpdateWithoutStoreInput>
+  }
+
+  export type PayoutRequestUpdateManyWithWhereWithoutStoreInput = {
+    where: PayoutRequestScalarWhereInput
+    data: XOR<PayoutRequestUpdateManyMutationInput, PayoutRequestUncheckedUpdateManyWithoutStoreInput>
+  }
+
   export type SettlementUpsertWithWhereUniqueWithoutStoreInput = {
     where: SettlementWhereUniqueInput
     update: XOR<SettlementUpdateWithoutStoreInput, SettlementUncheckedUpdateWithoutStoreInput>
@@ -67335,6 +71042,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -67384,6 +71092,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -67418,6 +71127,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutEmployee_accountsInput = {
@@ -67445,6 +71156,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutEmployee_accountsInput = {
@@ -67465,6 +71178,7 @@ export namespace Prisma {
     stores_logo?: StoreCreateNestedManyWithoutLogo_documentInput
     stores_cover?: StoreCreateNestedManyWithoutCover_documentInput
     organizations_logo?: OrganizationCreateNestedManyWithoutLogo_documentInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentUncheckedCreateWithoutEmployees_photoInput = {
@@ -67480,6 +71194,7 @@ export namespace Prisma {
     stores_logo?: StoreUncheckedCreateNestedManyWithoutLogo_documentInput
     stores_cover?: StoreUncheckedCreateNestedManyWithoutCover_documentInput
     organizations_logo?: OrganizationUncheckedCreateNestedManyWithoutLogo_documentInput
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutInvoice_documentInput
   }
 
   export type DocumentCreateOrConnectWithoutEmployees_photoInput = {
@@ -67606,6 +71321,7 @@ export namespace Prisma {
     created_at?: Date | string
     tip: TipCreateNestedOneWithoutDistributionsInput
     payout?: PayoutCreateNestedOneWithoutDistributionsInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutDistributionsInput
     settlement?: SettlementCreateNestedOneWithoutDistributionsInput
   }
 
@@ -67618,6 +71334,7 @@ export namespace Prisma {
     payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
+    payout_request_id?: string | null
     paid_out_at?: Date | string | null
     settlement_status?: $Enums.SettlementStatus
     settlement_id?: string | null
@@ -67726,6 +71443,7 @@ export namespace Prisma {
     store?: StoreCreateNestedOneWithoutPayoutsInput
     payout_account: PayoutAccountCreateNestedOneWithoutPayoutsInput
     distributions?: TipDistributionCreateNestedManyWithoutPayoutInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutPayoutInput
   }
 
   export type PayoutUncheckedCreateWithoutEmployeeInput = {
@@ -67743,6 +71461,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayoutInput
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutPayoutInput
   }
 
   export type PayoutCreateOrConnectWithoutEmployeeInput = {
@@ -67895,6 +71614,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -67944,6 +71664,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -67984,6 +71705,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmployee_accountsInput = {
@@ -68011,6 +71734,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type DocumentUpsertWithoutEmployees_photoInput = {
@@ -68037,6 +71762,7 @@ export namespace Prisma {
     stores_logo?: StoreUpdateManyWithoutLogo_documentNestedInput
     stores_cover?: StoreUpdateManyWithoutCover_documentNestedInput
     organizations_logo?: OrganizationUpdateManyWithoutLogo_documentNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutEmployees_photoInput = {
@@ -68052,6 +71778,7 @@ export namespace Prisma {
     stores_logo?: StoreUncheckedUpdateManyWithoutLogo_documentNestedInput
     stores_cover?: StoreUncheckedUpdateManyWithoutCover_documentNestedInput
     organizations_logo?: OrganizationUncheckedUpdateManyWithoutLogo_documentNestedInput
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type QrCodeEmployeeUpsertWithWhereUniqueWithoutEmployeeInput = {
@@ -68154,6 +71881,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFilter<"TipDistribution"> | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFilter<"TipDistribution"> | $Enums.PayoutStatus
     payout_id?: StringNullableFilter<"TipDistribution"> | string | null
+    payout_request_id?: StringNullableFilter<"TipDistribution"> | string | null
     paid_out_at?: DateTimeNullableFilter<"TipDistribution"> | Date | string | null
     settlement_status?: EnumSettlementStatusFilter<"TipDistribution"> | $Enums.SettlementStatus
     settlement_id?: StringNullableFilter<"TipDistribution"> | string | null
@@ -68286,6 +72014,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -68335,6 +72064,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -68422,6 +72152,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -68471,6 +72202,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -68546,6 +72278,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -68595,6 +72328,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -68789,6 +72523,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -68838,6 +72573,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -69270,6 +73006,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -69319,6 +73056,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -69384,6 +73122,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -69433,6 +73172,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -69482,6 +73222,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -69531,6 +73272,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -69613,6 +73355,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -69662,6 +73405,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -69821,6 +73565,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -69870,6 +73615,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -69946,6 +73692,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -69995,6 +73742,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -70244,6 +73992,7 @@ export namespace Prisma {
     alerts?: AlertCreateNestedManyWithoutStoreInput
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -70293,6 +74042,7 @@ export namespace Prisma {
     alerts?: AlertUncheckedCreateNestedManyWithoutStoreInput
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -70327,6 +74077,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutPayout_accountInput = {
@@ -70354,6 +74106,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutPayout_accountInput = {
@@ -70376,6 +74130,7 @@ export namespace Prisma {
     store?: StoreCreateNestedOneWithoutPayoutsInput
     employee?: EmployeeCreateNestedOneWithoutPayoutsInput
     distributions?: TipDistributionCreateNestedManyWithoutPayoutInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutPayoutInput
   }
 
   export type PayoutUncheckedCreateWithoutPayout_accountInput = {
@@ -70393,6 +74148,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayoutInput
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutPayoutInput
   }
 
   export type PayoutCreateOrConnectWithoutPayout_accountInput = {
@@ -70461,6 +74217,7 @@ export namespace Prisma {
     alerts?: AlertUpdateManyWithoutStoreNestedInput
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -70510,6 +74267,7 @@ export namespace Prisma {
     alerts?: AlertUncheckedUpdateManyWithoutStoreNestedInput
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -70550,6 +74308,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPayout_accountInput = {
@@ -70577,6 +74337,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type PayoutUpsertWithWhereUniqueWithoutPayout_accountInput = {
@@ -70640,6 +74402,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -70689,6 +74452,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -70834,6 +74598,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutCustomer_tipsInput = {
@@ -70861,6 +74627,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutCustomer_tipsInput = {
@@ -70881,6 +74649,7 @@ export namespace Prisma {
     created_at?: Date | string
     employee?: EmployeeCreateNestedOneWithoutTip_distributionsInput
     payout?: PayoutCreateNestedOneWithoutDistributionsInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutDistributionsInput
     settlement?: SettlementCreateNestedOneWithoutDistributionsInput
   }
 
@@ -70893,6 +74662,7 @@ export namespace Prisma {
     payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
+    payout_request_id?: string | null
     paid_out_at?: Date | string | null
     settlement_status?: $Enums.SettlementStatus
     settlement_id?: string | null
@@ -71114,6 +74884,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -71163,6 +74934,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -71332,6 +75104,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCustomer_tipsInput = {
@@ -71359,6 +75133,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type TipDistributionUpsertWithWhereUniqueWithoutTipInput = {
@@ -71736,6 +75512,7 @@ export namespace Prisma {
     store?: StoreCreateNestedOneWithoutPayoutsInput
     employee?: EmployeeCreateNestedOneWithoutPayoutsInput
     payout_account: PayoutAccountCreateNestedOneWithoutPayoutsInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutPayoutInput
   }
 
   export type PayoutUncheckedCreateWithoutDistributionsInput = {
@@ -71753,11 +75530,81 @@ export namespace Prisma {
     executed_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
+    payout_request?: PayoutRequestUncheckedCreateNestedOneWithoutPayoutInput
   }
 
   export type PayoutCreateOrConnectWithoutDistributionsInput = {
     where: PayoutWhereUniqueInput
     create: XOR<PayoutCreateWithoutDistributionsInput, PayoutUncheckedCreateWithoutDistributionsInput>
+  }
+
+  export type PayoutRequestCreateWithoutDistributionsInput = {
+    id?: string
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutPayout_requestsInput
+    requested_by?: UserCreateNestedOneWithoutPayout_requests_madeInput
+    reviewed_by?: UserCreateNestedOneWithoutPayout_requests_reviewedInput
+    invoice_document: DocumentCreateNestedOneWithoutPayout_requestInput
+    payout?: PayoutCreateNestedOneWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestUncheckedCreateWithoutDistributionsInput = {
+    id?: string
+    store_id: string
+    requested_by_user_id?: string | null
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_document_id: string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_by_user_id?: string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    payout_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type PayoutRequestCreateOrConnectWithoutDistributionsInput = {
+    where: PayoutRequestWhereUniqueInput
+    create: XOR<PayoutRequestCreateWithoutDistributionsInput, PayoutRequestUncheckedCreateWithoutDistributionsInput>
   }
 
   export type SettlementCreateWithoutDistributionsInput = {
@@ -71941,6 +75788,7 @@ export namespace Prisma {
     store?: StoreUpdateOneWithoutPayoutsNestedInput
     employee?: EmployeeUpdateOneWithoutPayoutsNestedInput
     payout_account?: PayoutAccountUpdateOneRequiredWithoutPayoutsNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutPayoutNestedInput
   }
 
   export type PayoutUncheckedUpdateWithoutDistributionsInput = {
@@ -71956,6 +75804,82 @@ export namespace Prisma {
     status?: EnumPayoutExecutionStatusFieldUpdateOperationsInput | $Enums.PayoutExecutionStatus
     failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
     executed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutPayoutNestedInput
+  }
+
+  export type PayoutRequestUpsertWithoutDistributionsInput = {
+    update: XOR<PayoutRequestUpdateWithoutDistributionsInput, PayoutRequestUncheckedUpdateWithoutDistributionsInput>
+    create: XOR<PayoutRequestCreateWithoutDistributionsInput, PayoutRequestUncheckedCreateWithoutDistributionsInput>
+    where?: PayoutRequestWhereInput
+  }
+
+  export type PayoutRequestUpdateToOneWithWhereWithoutDistributionsInput = {
+    where?: PayoutRequestWhereInput
+    data: XOR<PayoutRequestUpdateWithoutDistributionsInput, PayoutRequestUncheckedUpdateWithoutDistributionsInput>
+  }
+
+  export type PayoutRequestUpdateWithoutDistributionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutPayout_requestsNestedInput
+    requested_by?: UserUpdateOneWithoutPayout_requests_madeNestedInput
+    reviewed_by?: UserUpdateOneWithoutPayout_requests_reviewedNestedInput
+    invoice_document?: DocumentUpdateOneRequiredWithoutPayout_requestNestedInput
+    payout?: PayoutUpdateOneWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestUncheckedUpdateWithoutDistributionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    requested_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_document_id?: StringFieldUpdateOperationsInput | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -72054,6 +75978,7 @@ export namespace Prisma {
     alerts?: AlertCreateNestedManyWithoutStoreInput
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -72103,6 +76028,7 @@ export namespace Prisma {
     alerts?: AlertUncheckedCreateNestedManyWithoutStoreInput
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -72215,6 +76141,7 @@ export namespace Prisma {
     created_at?: Date | string
     tip: TipCreateNestedOneWithoutDistributionsInput
     employee?: EmployeeCreateNestedOneWithoutTip_distributionsInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutDistributionsInput
     settlement?: SettlementCreateNestedOneWithoutDistributionsInput
   }
 
@@ -72227,6 +76154,7 @@ export namespace Prisma {
     percentage: Decimal | DecimalJsLike | number | string
     payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
+    payout_request_id?: string | null
     paid_out_at?: Date | string | null
     settlement_status?: $Enums.SettlementStatus
     settlement_id?: string | null
@@ -72242,6 +76170,75 @@ export namespace Prisma {
   export type TipDistributionCreateManyPayoutInputEnvelope = {
     data: TipDistributionCreateManyPayoutInput | TipDistributionCreateManyPayoutInput[]
     skipDuplicates?: boolean
+  }
+
+  export type PayoutRequestCreateWithoutPayoutInput = {
+    id?: string
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store: StoreCreateNestedOneWithoutPayout_requestsInput
+    requested_by?: UserCreateNestedOneWithoutPayout_requests_madeInput
+    reviewed_by?: UserCreateNestedOneWithoutPayout_requests_reviewedInput
+    invoice_document: DocumentCreateNestedOneWithoutPayout_requestInput
+    distributions?: TipDistributionCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestUncheckedCreateWithoutPayoutInput = {
+    id?: string
+    store_id: string
+    requested_by_user_id?: string | null
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_document_id: string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_by_user_id?: string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayout_requestInput
+  }
+
+  export type PayoutRequestCreateOrConnectWithoutPayoutInput = {
+    where: PayoutRequestWhereUniqueInput
+    create: XOR<PayoutRequestCreateWithoutPayoutInput, PayoutRequestUncheckedCreateWithoutPayoutInput>
   }
 
   export type StoreUpsertWithoutPayoutsInput = {
@@ -72300,6 +76297,7 @@ export namespace Prisma {
     alerts?: AlertUpdateManyWithoutStoreNestedInput
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -72349,6 +76347,7 @@ export namespace Prisma {
     alerts?: AlertUncheckedUpdateManyWithoutStoreNestedInput
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -72471,6 +76470,789 @@ export namespace Prisma {
     data: XOR<TipDistributionUpdateManyMutationInput, TipDistributionUncheckedUpdateManyWithoutPayoutInput>
   }
 
+  export type PayoutRequestUpsertWithoutPayoutInput = {
+    update: XOR<PayoutRequestUpdateWithoutPayoutInput, PayoutRequestUncheckedUpdateWithoutPayoutInput>
+    create: XOR<PayoutRequestCreateWithoutPayoutInput, PayoutRequestUncheckedCreateWithoutPayoutInput>
+    where?: PayoutRequestWhereInput
+  }
+
+  export type PayoutRequestUpdateToOneWithWhereWithoutPayoutInput = {
+    where?: PayoutRequestWhereInput
+    data: XOR<PayoutRequestUpdateWithoutPayoutInput, PayoutRequestUncheckedUpdateWithoutPayoutInput>
+  }
+
+  export type PayoutRequestUpdateWithoutPayoutInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutPayout_requestsNestedInput
+    requested_by?: UserUpdateOneWithoutPayout_requests_madeNestedInput
+    reviewed_by?: UserUpdateOneWithoutPayout_requests_reviewedNestedInput
+    invoice_document?: DocumentUpdateOneRequiredWithoutPayout_requestNestedInput
+    distributions?: TipDistributionUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestUncheckedUpdateWithoutPayoutInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    requested_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_document_id?: StringFieldUpdateOperationsInput | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type StoreCreateWithoutPayout_requestsInput = {
+    id?: string
+    name: string
+    slug: string
+    industry?: $Enums.StoreIndustry
+    is_active?: boolean
+    primary_color?: string | null
+    secondary_color?: string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    timezone?: string
+    primary_language?: $Enums.Language
+    supported_languages?: StoreCreatesupported_languagesInput | $Enums.Language[]
+    currency?: $Enums.Currency
+    suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: string | null
+    public_review_rating_threshold?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    organization: OrganizationCreateNestedOneWithoutStoresInput
+    logo_document?: DocumentCreateNestedOneWithoutStores_logoInput
+    cover_document?: DocumentCreateNestedOneWithoutStores_coverInput
+    default_distribution_rule?: DistributionRuleCreateNestedOneWithoutDefault_for_storeInput
+    organization_members?: OrganizationMemberCreateNestedManyWithoutStoreInput
+    employees?: EmployeeCreateNestedManyWithoutStoreInput
+    spots?: SpotCreateNestedManyWithoutStoreInput
+    qr_codes?: QrCodeCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationCreateNestedManyWithoutStoreInput
+    distribution_rules?: DistributionRuleCreateNestedManyWithoutStoreInput
+    tips?: TipCreateNestedManyWithoutStoreInput
+    reviews?: ReviewCreateNestedManyWithoutStoreInput
+    review_categories?: ReviewCategoryCreateNestedManyWithoutStoreInput
+    review_tags?: ReviewTagCreateNestedManyWithoutStoreInput
+    feedback_questions?: FeedbackQuestionCreateNestedManyWithoutStoreInput
+    alert_preferences?: AlertPreferenceCreateNestedManyWithoutStoreInput
+    alerts?: AlertCreateNestedManyWithoutStoreInput
+    insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
+    payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
+    payouts?: PayoutCreateNestedManyWithoutStoreInput
+    settlements?: SettlementCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreUncheckedCreateWithoutPayout_requestsInput = {
+    id?: string
+    organization_id: string
+    name: string
+    slug: string
+    industry?: $Enums.StoreIndustry
+    is_active?: boolean
+    logo_document_id?: string | null
+    cover_document_id?: string | null
+    primary_color?: string | null
+    secondary_color?: string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: string | null
+    city?: string | null
+    country?: string | null
+    postal_code?: string | null
+    timezone?: string
+    primary_language?: $Enums.Language
+    supported_languages?: StoreCreatesupported_languagesInput | $Enums.Language[]
+    currency?: $Enums.Currency
+    suggested_tip_amounts?: StoreCreatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: boolean
+    vat_rate_percentage?: Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: string | null
+    public_review_rating_threshold?: number | null
+    default_distribution_rule_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    organization_members?: OrganizationMemberUncheckedCreateNestedManyWithoutStoreInput
+    employees?: EmployeeUncheckedCreateNestedManyWithoutStoreInput
+    spots?: SpotUncheckedCreateNestedManyWithoutStoreInput
+    qr_codes?: QrCodeUncheckedCreateNestedManyWithoutStoreInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedCreateNestedManyWithoutStoreInput
+    distribution_rules?: DistributionRuleUncheckedCreateNestedManyWithoutStoreInput
+    tips?: TipUncheckedCreateNestedManyWithoutStoreInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutStoreInput
+    review_categories?: ReviewCategoryUncheckedCreateNestedManyWithoutStoreInput
+    review_tags?: ReviewTagUncheckedCreateNestedManyWithoutStoreInput
+    feedback_questions?: FeedbackQuestionUncheckedCreateNestedManyWithoutStoreInput
+    alert_preferences?: AlertPreferenceUncheckedCreateNestedManyWithoutStoreInput
+    alerts?: AlertUncheckedCreateNestedManyWithoutStoreInput
+    insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
+    payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
+  }
+
+  export type StoreCreateOrConnectWithoutPayout_requestsInput = {
+    where: StoreWhereUniqueInput
+    create: XOR<StoreCreateWithoutPayout_requestsInput, StoreUncheckedCreateWithoutPayout_requestsInput>
+  }
+
+  export type UserCreateWithoutPayout_requests_madeInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    password?: string | null
+    role?: $Enums.AuthRole
+    registered_at?: Date | string | null
+    is_email_verified?: boolean
+    is_phone_verified?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    password_reset_tokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    documents?: DocumentCreateNestedManyWithoutUserInput
+    organization_memberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    employee_accounts?: EmployeeCreateNestedManyWithoutUserInput
+    customer_tips?: TipCreateNestedManyWithoutCustomerInput
+    customer_reviews?: ReviewCreateNestedManyWithoutCustomerInput
+    refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
+    refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
+    payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
+  }
+
+  export type UserUncheckedCreateWithoutPayout_requests_madeInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    password?: string | null
+    role?: $Enums.AuthRole
+    registered_at?: Date | string | null
+    is_email_verified?: boolean
+    is_phone_verified?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    password_reset_tokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    organization_memberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    employee_accounts?: EmployeeUncheckedCreateNestedManyWithoutUserInput
+    customer_tips?: TipUncheckedCreateNestedManyWithoutCustomerInput
+    customer_reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
+    refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
+    refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
+    payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
+  }
+
+  export type UserCreateOrConnectWithoutPayout_requests_madeInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPayout_requests_madeInput, UserUncheckedCreateWithoutPayout_requests_madeInput>
+  }
+
+  export type UserCreateWithoutPayout_requests_reviewedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    password?: string | null
+    role?: $Enums.AuthRole
+    registered_at?: Date | string | null
+    is_email_verified?: boolean
+    is_phone_verified?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    password_reset_tokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    documents?: DocumentCreateNestedManyWithoutUserInput
+    organization_memberships?: OrganizationMemberCreateNestedManyWithoutUserInput
+    employee_accounts?: EmployeeCreateNestedManyWithoutUserInput
+    customer_tips?: TipCreateNestedManyWithoutCustomerInput
+    customer_reviews?: ReviewCreateNestedManyWithoutCustomerInput
+    refunds_requested?: RefundCreateNestedManyWithoutRequested_byInput
+    refunds_processed?: RefundCreateNestedManyWithoutProcessed_byInput
+    payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+  }
+
+  export type UserUncheckedCreateWithoutPayout_requests_reviewedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    password?: string | null
+    role?: $Enums.AuthRole
+    registered_at?: Date | string | null
+    is_email_verified?: boolean
+    is_phone_verified?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    password_reset_tokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    organization_memberships?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    employee_accounts?: EmployeeUncheckedCreateNestedManyWithoutUserInput
+    customer_tips?: TipUncheckedCreateNestedManyWithoutCustomerInput
+    customer_reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
+    refunds_requested?: RefundUncheckedCreateNestedManyWithoutRequested_byInput
+    refunds_processed?: RefundUncheckedCreateNestedManyWithoutProcessed_byInput
+    payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
+    settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
+    settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+  }
+
+  export type UserCreateOrConnectWithoutPayout_requests_reviewedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPayout_requests_reviewedInput, UserUncheckedCreateWithoutPayout_requests_reviewedInput>
+  }
+
+  export type DocumentCreateWithoutPayout_requestInput = {
+    id?: string
+    filename: string
+    mimetype: string
+    size: number
+    url: string
+    path: string
+    type?: $Enums.DocumentType
+    created_at?: Date | string
+    user: UserCreateNestedOneWithoutDocumentsInput
+    stores_logo?: StoreCreateNestedManyWithoutLogo_documentInput
+    stores_cover?: StoreCreateNestedManyWithoutCover_documentInput
+    organizations_logo?: OrganizationCreateNestedManyWithoutLogo_documentInput
+    employees_photo?: EmployeeCreateNestedManyWithoutPhoto_documentInput
+  }
+
+  export type DocumentUncheckedCreateWithoutPayout_requestInput = {
+    id?: string
+    user_uuid: string
+    filename: string
+    mimetype: string
+    size: number
+    url: string
+    path: string
+    type?: $Enums.DocumentType
+    created_at?: Date | string
+    stores_logo?: StoreUncheckedCreateNestedManyWithoutLogo_documentInput
+    stores_cover?: StoreUncheckedCreateNestedManyWithoutCover_documentInput
+    organizations_logo?: OrganizationUncheckedCreateNestedManyWithoutLogo_documentInput
+    employees_photo?: EmployeeUncheckedCreateNestedManyWithoutPhoto_documentInput
+  }
+
+  export type DocumentCreateOrConnectWithoutPayout_requestInput = {
+    where: DocumentWhereUniqueInput
+    create: XOR<DocumentCreateWithoutPayout_requestInput, DocumentUncheckedCreateWithoutPayout_requestInput>
+  }
+
+  export type PayoutCreateWithoutPayout_requestInput = {
+    id?: string
+    recipient_type: $Enums.DistributionRecipientType
+    amount: number
+    currency: $Enums.Currency
+    provider?: $Enums.PaymentProvider
+    provider_transfer_id?: string | null
+    status?: $Enums.PayoutExecutionStatus
+    failure_reason?: string | null
+    executed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    store?: StoreCreateNestedOneWithoutPayoutsInput
+    employee?: EmployeeCreateNestedOneWithoutPayoutsInput
+    payout_account: PayoutAccountCreateNestedOneWithoutPayoutsInput
+    distributions?: TipDistributionCreateNestedManyWithoutPayoutInput
+  }
+
+  export type PayoutUncheckedCreateWithoutPayout_requestInput = {
+    id?: string
+    recipient_type: $Enums.DistributionRecipientType
+    store_id?: string | null
+    employee_id?: string | null
+    payout_account_id: string
+    amount: number
+    currency: $Enums.Currency
+    provider?: $Enums.PaymentProvider
+    provider_transfer_id?: string | null
+    status?: $Enums.PayoutExecutionStatus
+    failure_reason?: string | null
+    executed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    distributions?: TipDistributionUncheckedCreateNestedManyWithoutPayoutInput
+  }
+
+  export type PayoutCreateOrConnectWithoutPayout_requestInput = {
+    where: PayoutWhereUniqueInput
+    create: XOR<PayoutCreateWithoutPayout_requestInput, PayoutUncheckedCreateWithoutPayout_requestInput>
+  }
+
+  export type TipDistributionCreateWithoutPayout_requestInput = {
+    id?: string
+    recipient_type: $Enums.DistributionRecipientType
+    amount: number
+    percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
+    payout_status?: $Enums.PayoutStatus
+    paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settled_at?: Date | string | null
+    created_at?: Date | string
+    tip: TipCreateNestedOneWithoutDistributionsInput
+    employee?: EmployeeCreateNestedOneWithoutTip_distributionsInput
+    payout?: PayoutCreateNestedOneWithoutDistributionsInput
+    settlement?: SettlementCreateNestedOneWithoutDistributionsInput
+  }
+
+  export type TipDistributionUncheckedCreateWithoutPayout_requestInput = {
+    id?: string
+    tip_id: string
+    recipient_type: $Enums.DistributionRecipientType
+    employee_id?: string | null
+    amount: number
+    percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
+    payout_status?: $Enums.PayoutStatus
+    payout_id?: string | null
+    paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settlement_id?: string | null
+    settled_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type TipDistributionCreateOrConnectWithoutPayout_requestInput = {
+    where: TipDistributionWhereUniqueInput
+    create: XOR<TipDistributionCreateWithoutPayout_requestInput, TipDistributionUncheckedCreateWithoutPayout_requestInput>
+  }
+
+  export type TipDistributionCreateManyPayout_requestInputEnvelope = {
+    data: TipDistributionCreateManyPayout_requestInput | TipDistributionCreateManyPayout_requestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StoreUpsertWithoutPayout_requestsInput = {
+    update: XOR<StoreUpdateWithoutPayout_requestsInput, StoreUncheckedUpdateWithoutPayout_requestsInput>
+    create: XOR<StoreCreateWithoutPayout_requestsInput, StoreUncheckedCreateWithoutPayout_requestsInput>
+    where?: StoreWhereInput
+  }
+
+  export type StoreUpdateToOneWithWhereWithoutPayout_requestsInput = {
+    where?: StoreWhereInput
+    data: XOR<StoreUpdateWithoutPayout_requestsInput, StoreUncheckedUpdateWithoutPayout_requestsInput>
+  }
+
+  export type StoreUpdateWithoutPayout_requestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    industry?: EnumStoreIndustryFieldUpdateOperationsInput | $Enums.StoreIndustry
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    primary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    secondary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    primary_language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    supported_languages?: StoreUpdatesupported_languagesInput | $Enums.Language[]
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
+    public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutStoresNestedInput
+    logo_document?: DocumentUpdateOneWithoutStores_logoNestedInput
+    cover_document?: DocumentUpdateOneWithoutStores_coverNestedInput
+    default_distribution_rule?: DistributionRuleUpdateOneWithoutDefault_for_storeNestedInput
+    organization_members?: OrganizationMemberUpdateManyWithoutStoreNestedInput
+    employees?: EmployeeUpdateManyWithoutStoreNestedInput
+    spots?: SpotUpdateManyWithoutStoreNestedInput
+    qr_codes?: QrCodeUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUpdateManyWithoutStoreNestedInput
+    distribution_rules?: DistributionRuleUpdateManyWithoutStoreNestedInput
+    tips?: TipUpdateManyWithoutStoreNestedInput
+    reviews?: ReviewUpdateManyWithoutStoreNestedInput
+    review_categories?: ReviewCategoryUpdateManyWithoutStoreNestedInput
+    review_tags?: ReviewTagUpdateManyWithoutStoreNestedInput
+    feedback_questions?: FeedbackQuestionUpdateManyWithoutStoreNestedInput
+    alert_preferences?: AlertPreferenceUpdateManyWithoutStoreNestedInput
+    alerts?: AlertUpdateManyWithoutStoreNestedInput
+    insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
+    payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
+    payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
+  }
+
+  export type StoreUncheckedUpdateWithoutPayout_requestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organization_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    industry?: EnumStoreIndustryFieldUpdateOperationsInput | $Enums.StoreIndustry
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    logo_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cover_document_id?: NullableStringFieldUpdateOperationsInput | string | null
+    primary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    secondary_color?: NullableStringFieldUpdateOperationsInput | string | null
+    welcome_message?: NullableJsonNullValueInput | InputJsonValue
+    thank_you_message?: NullableJsonNullValueInput | InputJsonValue
+    full_address?: NullableJsonNullValueInput | InputJsonValue
+    address_line?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: StringFieldUpdateOperationsInput | string
+    primary_language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    supported_languages?: StoreUpdatesupported_languagesInput | $Enums.Language[]
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    suggested_tip_amounts?: StoreUpdatesuggested_tip_amountsInput | number[]
+    allow_custom_tip_amount?: BoolFieldUpdateOperationsInput | boolean
+    vat_rate_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    public_review_redirect_url?: NullableStringFieldUpdateOperationsInput | string | null
+    public_review_rating_threshold?: NullableIntFieldUpdateOperationsInput | number | null
+    default_distribution_rule_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization_members?: OrganizationMemberUncheckedUpdateManyWithoutStoreNestedInput
+    employees?: EmployeeUncheckedUpdateManyWithoutStoreNestedInput
+    spots?: SpotUncheckedUpdateManyWithoutStoreNestedInput
+    qr_codes?: QrCodeUncheckedUpdateManyWithoutStoreNestedInput
+    qr_template_customizations?: QrTemplateCustomizationUncheckedUpdateManyWithoutStoreNestedInput
+    distribution_rules?: DistributionRuleUncheckedUpdateManyWithoutStoreNestedInput
+    tips?: TipUncheckedUpdateManyWithoutStoreNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutStoreNestedInput
+    review_categories?: ReviewCategoryUncheckedUpdateManyWithoutStoreNestedInput
+    review_tags?: ReviewTagUncheckedUpdateManyWithoutStoreNestedInput
+    feedback_questions?: FeedbackQuestionUncheckedUpdateManyWithoutStoreNestedInput
+    alert_preferences?: AlertPreferenceUncheckedUpdateManyWithoutStoreNestedInput
+    alerts?: AlertUncheckedUpdateManyWithoutStoreNestedInput
+    insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
+    payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
+  }
+
+  export type UserUpsertWithoutPayout_requests_madeInput = {
+    update: XOR<UserUpdateWithoutPayout_requests_madeInput, UserUncheckedUpdateWithoutPayout_requests_madeInput>
+    create: XOR<UserCreateWithoutPayout_requests_madeInput, UserUncheckedCreateWithoutPayout_requests_madeInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPayout_requests_madeInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPayout_requests_madeInput, UserUncheckedUpdateWithoutPayout_requests_madeInput>
+  }
+
+  export type UserUpdateWithoutPayout_requests_madeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    registered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_email_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_phone_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    password_reset_tokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    documents?: DocumentUpdateManyWithoutUserNestedInput
+    organization_memberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    employee_accounts?: EmployeeUpdateManyWithoutUserNestedInput
+    customer_tips?: TipUpdateManyWithoutCustomerNestedInput
+    customer_reviews?: ReviewUpdateManyWithoutCustomerNestedInput
+    refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
+    refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
+    payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPayout_requests_madeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    registered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_email_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_phone_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    password_reset_tokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    organization_memberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    employee_accounts?: EmployeeUncheckedUpdateManyWithoutUserNestedInput
+    customer_tips?: TipUncheckedUpdateManyWithoutCustomerNestedInput
+    customer_reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+    refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
+    refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
+    payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
+  }
+
+  export type UserUpsertWithoutPayout_requests_reviewedInput = {
+    update: XOR<UserUpdateWithoutPayout_requests_reviewedInput, UserUncheckedUpdateWithoutPayout_requests_reviewedInput>
+    create: XOR<UserCreateWithoutPayout_requests_reviewedInput, UserUncheckedCreateWithoutPayout_requests_reviewedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPayout_requests_reviewedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPayout_requests_reviewedInput, UserUncheckedUpdateWithoutPayout_requests_reviewedInput>
+  }
+
+  export type UserUpdateWithoutPayout_requests_reviewedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    registered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_email_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_phone_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    password_reset_tokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    documents?: DocumentUpdateManyWithoutUserNestedInput
+    organization_memberships?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    employee_accounts?: EmployeeUpdateManyWithoutUserNestedInput
+    customer_tips?: TipUpdateManyWithoutCustomerNestedInput
+    customer_reviews?: ReviewUpdateManyWithoutCustomerNestedInput
+    refunds_requested?: RefundUpdateManyWithoutRequested_byNestedInput
+    refunds_processed?: RefundUpdateManyWithoutProcessed_byNestedInput
+    payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPayout_requests_reviewedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
+    registered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_email_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_phone_verified?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    password_reset_tokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    organization_memberships?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    employee_accounts?: EmployeeUncheckedUpdateManyWithoutUserNestedInput
+    customer_tips?: TipUncheckedUpdateManyWithoutCustomerNestedInput
+    customer_reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+    refunds_requested?: RefundUncheckedUpdateManyWithoutRequested_byNestedInput
+    refunds_processed?: RefundUncheckedUpdateManyWithoutProcessed_byNestedInput
+    payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
+    settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
+    settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+  }
+
+  export type DocumentUpsertWithoutPayout_requestInput = {
+    update: XOR<DocumentUpdateWithoutPayout_requestInput, DocumentUncheckedUpdateWithoutPayout_requestInput>
+    create: XOR<DocumentCreateWithoutPayout_requestInput, DocumentUncheckedCreateWithoutPayout_requestInput>
+    where?: DocumentWhereInput
+  }
+
+  export type DocumentUpdateToOneWithWhereWithoutPayout_requestInput = {
+    where?: DocumentWhereInput
+    data: XOR<DocumentUpdateWithoutPayout_requestInput, DocumentUncheckedUpdateWithoutPayout_requestInput>
+  }
+
+  export type DocumentUpdateWithoutPayout_requestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimetype?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutDocumentsNestedInput
+    stores_logo?: StoreUpdateManyWithoutLogo_documentNestedInput
+    stores_cover?: StoreUpdateManyWithoutCover_documentNestedInput
+    organizations_logo?: OrganizationUpdateManyWithoutLogo_documentNestedInput
+    employees_photo?: EmployeeUpdateManyWithoutPhoto_documentNestedInput
+  }
+
+  export type DocumentUncheckedUpdateWithoutPayout_requestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimetype?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    stores_logo?: StoreUncheckedUpdateManyWithoutLogo_documentNestedInput
+    stores_cover?: StoreUncheckedUpdateManyWithoutCover_documentNestedInput
+    organizations_logo?: OrganizationUncheckedUpdateManyWithoutLogo_documentNestedInput
+    employees_photo?: EmployeeUncheckedUpdateManyWithoutPhoto_documentNestedInput
+  }
+
+  export type PayoutUpsertWithoutPayout_requestInput = {
+    update: XOR<PayoutUpdateWithoutPayout_requestInput, PayoutUncheckedUpdateWithoutPayout_requestInput>
+    create: XOR<PayoutCreateWithoutPayout_requestInput, PayoutUncheckedCreateWithoutPayout_requestInput>
+    where?: PayoutWhereInput
+  }
+
+  export type PayoutUpdateToOneWithWhereWithoutPayout_requestInput = {
+    where?: PayoutWhereInput
+    data: XOR<PayoutUpdateWithoutPayout_requestInput, PayoutUncheckedUpdateWithoutPayout_requestInput>
+  }
+
+  export type PayoutUpdateWithoutPayout_requestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    provider_transfer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutExecutionStatusFieldUpdateOperationsInput | $Enums.PayoutExecutionStatus
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    executed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneWithoutPayoutsNestedInput
+    employee?: EmployeeUpdateOneWithoutPayoutsNestedInput
+    payout_account?: PayoutAccountUpdateOneRequiredWithoutPayoutsNestedInput
+    distributions?: TipDistributionUpdateManyWithoutPayoutNestedInput
+  }
+
+  export type PayoutUncheckedUpdateWithoutPayout_requestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
+    store_id?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_account_id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    provider_transfer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutExecutionStatusFieldUpdateOperationsInput | $Enums.PayoutExecutionStatus
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    executed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutPayoutNestedInput
+  }
+
+  export type TipDistributionUpsertWithWhereUniqueWithoutPayout_requestInput = {
+    where: TipDistributionWhereUniqueInput
+    update: XOR<TipDistributionUpdateWithoutPayout_requestInput, TipDistributionUncheckedUpdateWithoutPayout_requestInput>
+    create: XOR<TipDistributionCreateWithoutPayout_requestInput, TipDistributionUncheckedCreateWithoutPayout_requestInput>
+  }
+
+  export type TipDistributionUpdateWithWhereUniqueWithoutPayout_requestInput = {
+    where: TipDistributionWhereUniqueInput
+    data: XOR<TipDistributionUpdateWithoutPayout_requestInput, TipDistributionUncheckedUpdateWithoutPayout_requestInput>
+  }
+
+  export type TipDistributionUpdateManyWithWhereWithoutPayout_requestInput = {
+    where: TipDistributionScalarWhereInput
+    data: XOR<TipDistributionUpdateManyMutationInput, TipDistributionUncheckedUpdateManyWithoutPayout_requestInput>
+  }
+
   export type StoreCreateWithoutSettlementsInput = {
     id?: string
     name: string
@@ -72517,6 +77299,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
 
@@ -72566,6 +77349,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
 
@@ -72648,6 +77432,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutSettlements_recordedInput = {
@@ -72675,6 +77461,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutSettlements_recordedInput = {
@@ -72707,6 +77495,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutSettlements_reversedInput = {
@@ -72734,6 +77524,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutSettlements_reversedInput = {
@@ -72755,6 +77547,7 @@ export namespace Prisma {
     tip: TipCreateNestedOneWithoutDistributionsInput
     employee?: EmployeeCreateNestedOneWithoutTip_distributionsInput
     payout?: PayoutCreateNestedOneWithoutDistributionsInput
+    payout_request?: PayoutRequestCreateNestedOneWithoutDistributionsInput
   }
 
   export type TipDistributionUncheckedCreateWithoutSettlementInput = {
@@ -72767,6 +77560,7 @@ export namespace Prisma {
     payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
+    payout_request_id?: string | null
     paid_out_at?: Date | string | null
     settlement_status?: $Enums.SettlementStatus
     settled_at?: Date | string | null
@@ -72876,6 +77670,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
 
@@ -72925,6 +77720,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
 
@@ -73019,6 +77815,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSettlements_recordedInput = {
@@ -73046,6 +77844,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUpsertWithoutSettlements_reversedInput = {
@@ -73084,6 +77884,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSettlements_reversedInput = {
@@ -73111,6 +77913,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type TipDistributionUpsertWithWhereUniqueWithoutSettlementInput = {
@@ -73191,6 +77995,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
   }
 
@@ -73240,6 +78045,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
   }
 
@@ -73400,6 +78206,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountCreateNestedOneWithoutUserInput
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutSettlement_adjustmentsInput = {
@@ -73427,6 +78235,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutUserInput
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutSettlement_adjustmentsInput = {
@@ -73491,6 +78301,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
   }
 
@@ -73540,6 +78351,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
   }
 
@@ -73724,6 +78536,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountUpdateOneWithoutUserNestedInput
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSettlement_adjustmentsInput = {
@@ -73751,6 +78565,8 @@ export namespace Prisma {
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutUserNestedInput
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type TipCreateWithoutRefundsInput = {
@@ -73829,6 +78645,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutRefunds_requestedInput = {
@@ -73856,6 +78674,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutRefunds_requestedInput = {
@@ -73888,6 +78708,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutRefunds_processedInput = {
@@ -73915,6 +78737,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutRefunds_processedInput = {
@@ -74051,6 +78875,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefunds_requestedInput = {
@@ -74078,6 +78904,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUpsertWithoutRefunds_processedInput = {
@@ -74116,6 +78944,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefunds_processedInput = {
@@ -74143,6 +78973,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type SettlementAdjustmentUpsertWithWhereUniqueWithoutRefundInput = {
@@ -74206,6 +79038,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -74255,6 +79088,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -74389,6 +79223,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserUncheckedCreateWithoutCustomer_reviewsInput = {
@@ -74416,6 +79252,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedCreateNestedManyWithoutRecorded_byInput
     settlements_reversed?: SettlementUncheckedCreateNestedManyWithoutReversed_byInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutCreated_byInput
+    payout_requests_made?: PayoutRequestUncheckedCreateNestedManyWithoutRequested_byInput
+    payout_requests_reviewed?: PayoutRequestUncheckedCreateNestedManyWithoutReviewed_byInput
   }
 
   export type UserCreateOrConnectWithoutCustomer_reviewsInput = {
@@ -74551,6 +79389,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -74600,6 +79439,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -74752,6 +79592,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCustomer_reviewsInput = {
@@ -74779,6 +79621,8 @@ export namespace Prisma {
     settlements_recorded?: SettlementUncheckedUpdateManyWithoutRecorded_byNestedInput
     settlements_reversed?: SettlementUncheckedUpdateManyWithoutReversed_byNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutCreated_byNestedInput
+    payout_requests_made?: PayoutRequestUncheckedUpdateManyWithoutRequested_byNestedInput
+    payout_requests_reviewed?: PayoutRequestUncheckedUpdateManyWithoutReviewed_byNestedInput
   }
 
   export type ReviewCategoryRatingUpsertWithWhereUniqueWithoutReviewInput = {
@@ -74907,6 +79751,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -74956,6 +79801,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -75045,6 +79891,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -75094,6 +79941,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -75303,6 +80151,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -75352,6 +80201,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -75439,6 +80289,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -75488,6 +80339,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -75697,6 +80549,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -75746,6 +80599,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -75837,6 +80691,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -75886,6 +80741,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -76099,6 +80955,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -76148,6 +81005,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -76213,6 +81071,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -76262,6 +81121,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -76311,6 +81171,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -76360,6 +81221,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -76474,6 +81336,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -76523,6 +81386,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -76627,6 +81491,7 @@ export namespace Prisma {
     alerts?: AlertCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountCreateNestedOneWithoutStoreInput
     payouts?: PayoutCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestCreateNestedManyWithoutStoreInput
     settlements?: SettlementCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentCreateNestedManyWithoutStoreInput
   }
@@ -76676,6 +81541,7 @@ export namespace Prisma {
     alerts?: AlertUncheckedCreateNestedManyWithoutStoreInput
     payout_account?: PayoutAccountUncheckedCreateNestedOneWithoutStoreInput
     payouts?: PayoutUncheckedCreateNestedManyWithoutStoreInput
+    payout_requests?: PayoutRequestUncheckedCreateNestedManyWithoutStoreInput
     settlements?: SettlementUncheckedCreateNestedManyWithoutStoreInput
     settlement_adjustments?: SettlementAdjustmentUncheckedCreateNestedManyWithoutStoreInput
   }
@@ -76741,6 +81607,7 @@ export namespace Prisma {
     alerts?: AlertUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -76790,6 +81657,7 @@ export namespace Prisma {
     alerts?: AlertUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -76944,6 +81812,68 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
+  export type PayoutRequestCreateManyRequested_byInput = {
+    id?: string
+    store_id: string
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_document_id: string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_by_user_id?: string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    payout_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type PayoutRequestCreateManyReviewed_byInput = {
+    id?: string
+    store_id: string
+    requested_by_user_id?: string | null
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_document_id: string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    payout_id?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type PasswordResetTokenUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     token_hash?: StringFieldUpdateOperationsInput | string
@@ -76981,6 +81911,7 @@ export namespace Prisma {
     stores_cover?: StoreUpdateManyWithoutCover_documentNestedInput
     organizations_logo?: OrganizationUpdateManyWithoutLogo_documentNestedInput
     employees_photo?: EmployeeUpdateManyWithoutPhoto_documentNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutUserInput = {
@@ -76996,6 +81927,7 @@ export namespace Prisma {
     stores_cover?: StoreUncheckedUpdateManyWithoutCover_documentNestedInput
     organizations_logo?: OrganizationUncheckedUpdateManyWithoutLogo_documentNestedInput
     employees_photo?: EmployeeUncheckedUpdateManyWithoutPhoto_documentNestedInput
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutInvoice_documentNestedInput
   }
 
   export type DocumentUncheckedUpdateManyWithoutUserInput = {
@@ -77446,6 +82378,196 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PayoutRequestUpdateWithoutRequested_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutPayout_requestsNestedInput
+    reviewed_by?: UserUpdateOneWithoutPayout_requests_reviewedNestedInput
+    invoice_document?: DocumentUpdateOneRequiredWithoutPayout_requestNestedInput
+    payout?: PayoutUpdateOneWithoutPayout_requestNestedInput
+    distributions?: TipDistributionUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestUncheckedUpdateWithoutRequested_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_document_id?: StringFieldUpdateOperationsInput | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestUncheckedUpdateManyWithoutRequested_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_document_id?: StringFieldUpdateOperationsInput | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayoutRequestUpdateWithoutReviewed_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    store?: StoreUpdateOneRequiredWithoutPayout_requestsNestedInput
+    requested_by?: UserUpdateOneWithoutPayout_requests_madeNestedInput
+    invoice_document?: DocumentUpdateOneRequiredWithoutPayout_requestNestedInput
+    payout?: PayoutUpdateOneWithoutPayout_requestNestedInput
+    distributions?: TipDistributionUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestUncheckedUpdateWithoutReviewed_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    requested_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_document_id?: StringFieldUpdateOperationsInput | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestUncheckedUpdateManyWithoutReviewed_byInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    store_id?: StringFieldUpdateOperationsInput | string
+    requested_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_document_id?: StringFieldUpdateOperationsInput | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StoreCreateManyLogo_documentInput = {
     id?: string
     organization_id: string
@@ -77584,6 +82706,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -77633,6 +82756,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -77713,6 +82837,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -77762,6 +82887,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -78026,6 +83152,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUpdateManyWithoutStoreNestedInput
   }
@@ -78075,6 +83202,7 @@ export namespace Prisma {
     insight_summaries?: InsightSummaryUncheckedUpdateManyWithoutStoreNestedInput
     payout_account?: PayoutAccountUncheckedUpdateOneWithoutStoreNestedInput
     payouts?: PayoutUncheckedUpdateManyWithoutStoreNestedInput
+    payout_requests?: PayoutRequestUncheckedUpdateManyWithoutStoreNestedInput
     settlements?: SettlementUncheckedUpdateManyWithoutStoreNestedInput
     settlement_adjustments?: SettlementAdjustmentUncheckedUpdateManyWithoutStoreNestedInput
   }
@@ -78271,6 +83399,37 @@ export namespace Prisma {
     status?: $Enums.PayoutExecutionStatus
     failure_reason?: string | null
     executed_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type PayoutRequestCreateManyStoreInput = {
+    id?: string
+    requested_by_user_id?: string | null
+    status?: $Enums.PayoutRequestStatus
+    amount: number
+    own_share_amount: number
+    held_for_staff_amount: number
+    currency: $Enums.Currency
+    distribution_count: number
+    period_from: Date | string
+    period_to: Date | string
+    hold_cutoff_at: Date | string
+    invoice_document_id: string
+    invoice_number?: string | null
+    store_note?: string | null
+    failure_reason?: string | null
+    check_status?: $Enums.InvoiceCheckStatus
+    check_verdict?: $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: string | null
+    check_cost_usd?: Decimal | DecimalJsLike | number | string | null
+    checked_at?: Date | string | null
+    reviewed_by_user_id?: string | null
+    reviewed_at?: Date | string | null
+    admin_note?: string | null
+    payout_id?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -78821,6 +83980,7 @@ export namespace Prisma {
     employee?: EmployeeUpdateOneWithoutPayoutsNestedInput
     payout_account?: PayoutAccountUpdateOneRequiredWithoutPayoutsNestedInput
     distributions?: TipDistributionUpdateManyWithoutPayoutNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutPayoutNestedInput
   }
 
   export type PayoutUncheckedUpdateWithoutStoreInput = {
@@ -78838,6 +83998,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     distributions?: TipDistributionUncheckedUpdateManyWithoutPayoutNestedInput
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutPayoutNestedInput
   }
 
   export type PayoutUncheckedUpdateManyWithoutStoreInput = {
@@ -78852,6 +84013,101 @@ export namespace Prisma {
     status?: EnumPayoutExecutionStatusFieldUpdateOperationsInput | $Enums.PayoutExecutionStatus
     failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
     executed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayoutRequestUpdateWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    requested_by?: UserUpdateOneWithoutPayout_requests_madeNestedInput
+    reviewed_by?: UserUpdateOneWithoutPayout_requests_reviewedNestedInput
+    invoice_document?: DocumentUpdateOneRequiredWithoutPayout_requestNestedInput
+    payout?: PayoutUpdateOneWithoutPayout_requestNestedInput
+    distributions?: TipDistributionUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestUncheckedUpdateWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    requested_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_document_id?: StringFieldUpdateOperationsInput | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    distributions?: TipDistributionUncheckedUpdateManyWithoutPayout_requestNestedInput
+  }
+
+  export type PayoutRequestUncheckedUpdateManyWithoutStoreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    requested_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPayoutRequestStatusFieldUpdateOperationsInput | $Enums.PayoutRequestStatus
+    amount?: IntFieldUpdateOperationsInput | number
+    own_share_amount?: IntFieldUpdateOperationsInput | number
+    held_for_staff_amount?: IntFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    distribution_count?: IntFieldUpdateOperationsInput | number
+    period_from?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_to?: DateTimeFieldUpdateOperationsInput | Date | string
+    hold_cutoff_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice_document_id?: StringFieldUpdateOperationsInput | string
+    invoice_number?: NullableStringFieldUpdateOperationsInput | string | null
+    store_note?: NullableStringFieldUpdateOperationsInput | string | null
+    failure_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    check_status?: EnumInvoiceCheckStatusFieldUpdateOperationsInput | $Enums.InvoiceCheckStatus
+    check_verdict?: NullableEnumInvoiceCheckVerdictFieldUpdateOperationsInput | $Enums.InvoiceCheckVerdict | null
+    check_issues?: NullableJsonNullValueInput | InputJsonValue
+    check_extracted?: NullableJsonNullValueInput | InputJsonValue
+    check_model?: NullableStringFieldUpdateOperationsInput | string | null
+    check_cost_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewed_by_user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    admin_note?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -78993,6 +84249,7 @@ export namespace Prisma {
     payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
+    payout_request_id?: string | null
     paid_out_at?: Date | string | null
     settlement_status?: $Enums.SettlementStatus
     settlement_id?: string | null
@@ -79194,6 +84451,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tip?: TipUpdateOneRequiredWithoutDistributionsNestedInput
     payout?: PayoutUpdateOneWithoutDistributionsNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutDistributionsNestedInput
     settlement?: SettlementUpdateOneWithoutDistributionsNestedInput
   }
 
@@ -79206,6 +84464,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
     settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79222,6 +84481,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
     settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79325,6 +84585,7 @@ export namespace Prisma {
     store?: StoreUpdateOneWithoutPayoutsNestedInput
     payout_account?: PayoutAccountUpdateOneRequiredWithoutPayoutsNestedInput
     distributions?: TipDistributionUpdateManyWithoutPayoutNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutPayoutNestedInput
   }
 
   export type PayoutUncheckedUpdateWithoutEmployeeInput = {
@@ -79342,6 +84603,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     distributions?: TipDistributionUncheckedUpdateManyWithoutPayoutNestedInput
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutPayoutNestedInput
   }
 
   export type PayoutUncheckedUpdateManyWithoutEmployeeInput = {
@@ -79811,6 +85073,7 @@ export namespace Prisma {
     store?: StoreUpdateOneWithoutPayoutsNestedInput
     employee?: EmployeeUpdateOneWithoutPayoutsNestedInput
     distributions?: TipDistributionUpdateManyWithoutPayoutNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutPayoutNestedInput
   }
 
   export type PayoutUncheckedUpdateWithoutPayout_accountInput = {
@@ -79828,6 +85091,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     distributions?: TipDistributionUncheckedUpdateManyWithoutPayoutNestedInput
+    payout_request?: PayoutRequestUncheckedUpdateOneWithoutPayoutNestedInput
   }
 
   export type PayoutUncheckedUpdateManyWithoutPayout_accountInput = {
@@ -79855,6 +85119,7 @@ export namespace Prisma {
     payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
+    payout_request_id?: string | null
     paid_out_at?: Date | string | null
     settlement_status?: $Enums.SettlementStatus
     settlement_id?: string | null
@@ -79889,6 +85154,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     employee?: EmployeeUpdateOneWithoutTip_distributionsNestedInput
     payout?: PayoutUpdateOneWithoutDistributionsNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutDistributionsNestedInput
     settlement?: SettlementUpdateOneWithoutDistributionsNestedInput
   }
 
@@ -79901,6 +85167,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
     settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79917,6 +85184,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
     settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79977,6 +85245,7 @@ export namespace Prisma {
     percentage: Decimal | DecimalJsLike | number | string
     payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
+    payout_request_id?: string | null
     paid_out_at?: Date | string | null
     settlement_status?: $Enums.SettlementStatus
     settlement_id?: string | null
@@ -79997,6 +85266,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     tip?: TipUpdateOneRequiredWithoutDistributionsNestedInput
     employee?: EmployeeUpdateOneWithoutTip_distributionsNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutDistributionsNestedInput
     settlement?: SettlementUpdateOneWithoutDistributionsNestedInput
   }
 
@@ -80009,6 +85279,7 @@ export namespace Prisma {
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
+    payout_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
     settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80025,6 +85296,75 @@ export namespace Prisma {
     percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
+    payout_request_id?: NullableStringFieldUpdateOperationsInput | string | null
+    paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TipDistributionCreateManyPayout_requestInput = {
+    id?: string
+    tip_id: string
+    recipient_type: $Enums.DistributionRecipientType
+    employee_id?: string | null
+    amount: number
+    percentage: Decimal | DecimalJsLike | number | string
+    payout_mode?: $Enums.DistributionPayoutMode
+    payout_status?: $Enums.PayoutStatus
+    payout_id?: string | null
+    paid_out_at?: Date | string | null
+    settlement_status?: $Enums.SettlementStatus
+    settlement_id?: string | null
+    settled_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type TipDistributionUpdateWithoutPayout_requestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
+    amount?: IntFieldUpdateOperationsInput | number
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
+    payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
+    paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    tip?: TipUpdateOneRequiredWithoutDistributionsNestedInput
+    employee?: EmployeeUpdateOneWithoutTip_distributionsNestedInput
+    payout?: PayoutUpdateOneWithoutDistributionsNestedInput
+    settlement?: SettlementUpdateOneWithoutDistributionsNestedInput
+  }
+
+  export type TipDistributionUncheckedUpdateWithoutPayout_requestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tip_id?: StringFieldUpdateOperationsInput | string
+    recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
+    payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
+    settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
+    settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TipDistributionUncheckedUpdateManyWithoutPayout_requestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tip_id?: StringFieldUpdateOperationsInput | string
+    recipient_type?: EnumDistributionRecipientTypeFieldUpdateOperationsInput | $Enums.DistributionRecipientType
+    employee_id?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    percentage?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
+    payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
+    payout_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
     settlement_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80042,6 +85382,7 @@ export namespace Prisma {
     payout_mode?: $Enums.DistributionPayoutMode
     payout_status?: $Enums.PayoutStatus
     payout_id?: string | null
+    payout_request_id?: string | null
     paid_out_at?: Date | string | null
     settlement_status?: $Enums.SettlementStatus
     settled_at?: Date | string | null
@@ -80075,6 +85416,7 @@ export namespace Prisma {
     tip?: TipUpdateOneRequiredWithoutDistributionsNestedInput
     employee?: EmployeeUpdateOneWithoutTip_distributionsNestedInput
     payout?: PayoutUpdateOneWithoutDistributionsNestedInput
+    payout_request?: PayoutRequestUpdateOneWithoutDistributionsNestedInput
   }
 
   export type TipDistributionUncheckedUpdateWithoutSettlementInput = {
@@ -80087,6 +85429,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
     settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80103,6 +85446,7 @@ export namespace Prisma {
     payout_mode?: EnumDistributionPayoutModeFieldUpdateOperationsInput | $Enums.DistributionPayoutMode
     payout_status?: EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
     payout_id?: NullableStringFieldUpdateOperationsInput | string | null
+    payout_request_id?: NullableStringFieldUpdateOperationsInput | string | null
     paid_out_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     settlement_status?: EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
     settled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

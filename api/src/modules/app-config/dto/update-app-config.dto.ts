@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNumber, IsOptional, Max, Min } from 'class-validator';
+import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
 
 export class UpdateAppConfigDto {
     @ApiProperty({ required: false, example: 5, description: 'Platform commission taken from each tip, in percent' })
@@ -34,4 +34,43 @@ export class UpdateAppConfigDto {
     @Min(0)
     @Max(100)
     vat_rate_percentage?: number;
+    @ApiProperty({ required: false, example: false, description: "When true, a Store's own money is only paid through an admin-reviewed payout request backed by an invoice" })
+    @IsOptional()
+    @IsBoolean()
+    payout_invoice_required?: boolean;
+
+    @ApiProperty({ required: false, example: true, description: "Read uploaded invoices with OpenAI and flag mismatches for the admin" })
+    @IsOptional()
+    @IsBoolean()
+    payout_invoice_ai_check_enabled?: boolean;
+
+    @ApiProperty({ required: false, example: "Delitip P.C.", description: "Legal name Stores must put on invoices to the platform" })
+    @IsOptional()
+    @IsString()
+    @MaxLength(200)
+    platform_legal_name?: string;
+
+    @ApiProperty({ required: false, example: "EL123456789", description: "Platform VAT number for invoices" })
+    @IsOptional()
+    @IsString()
+    @MaxLength(40)
+    platform_vat_number?: string;
+
+    @ApiProperty({ required: false, example: "Δ.Ο.Υ. Ηρακλείου", description: "Platform tax office for invoices" })
+    @IsOptional()
+    @IsString()
+    @MaxLength(120)
+    platform_tax_office?: string;
+
+    @ApiProperty({ required: false, example: "Pelasgon 32, Heraklion 71202, Greece", description: "Platform billing address for invoices" })
+    @IsOptional()
+    @IsString()
+    @MaxLength(300)
+    platform_address?: string;
+
+    @ApiProperty({ required: false, example: "Also email the PDF to invoices@delitip.com", description: "Free-text instructions shown to Stores when they request a payout" })
+    @IsOptional()
+    @IsString()
+    @MaxLength(2000)
+    payout_invoice_instructions?: string;
 }

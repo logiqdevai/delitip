@@ -5,11 +5,21 @@ import {
   Check,
   Copy,
   Download,
+  ExternalLink,
   LayoutTemplate,
+  MoreHorizontal,
   Pencil,
   Printer,
+  Trash2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "@/components/ui/toast";
 import { getQrCodeSelectionModeLabel } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
 import { QrTemplateDialog } from "@/app/dashboard/access/components/qr-templates/qr-template-dialog";
@@ -30,9 +40,15 @@ interface QrCodeCardProps {
   qr: QrCode;
   store: Store;
   onEdit: (qr: QrCode) => void;
+  onDelete: (qr: QrCode) => void;
 }
 
-export const QrCodeCard: FC<QrCodeCardProps> = ({ qr, store, onEdit }) => {
+export const QrCodeCard: FC<QrCodeCardProps> = ({
+  qr,
+  store,
+  onEdit,
+  onDelete,
+}) => {
   const [busy, setBusy] = useState<"download" | "print" | null>(null);
   const [copied, setCopied] = useState(false);
   const [templateOpen, setTemplateOpen] = useState(false);
@@ -99,8 +115,50 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({ qr, store, onEdit }) => {
         qr.is_active ? "border-zinc-200" : "border-zinc-200 opacity-75",
       )}
     >
-      <div>
-        <h3 className="text-sm font-bold text-ink-charcoal">{qr.label}</h3>
+      <div className="relative">
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "icon-sm" }),
+              "absolute -top-2 -right-2 text-zinc-500 hover:text-ink-charcoal",
+            )}
+            aria-label={`Actions for ${qr.label}`}
+          >
+            <MoreHorizontal className="size-4" strokeWidth={2} />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-48">
+            <DropdownMenuItem onClick={() => onEdit(qr)}>
+              <Pencil />
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => void handleCopy()}>
+              <Copy />
+              Copy tip link
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                window.open(tipUrl, "_blank", "noopener,noreferrer")
+              }
+            >
+              <ExternalLink />
+              Open tip page
+            </DropdownMenuItem>
+            <DropdownMenuItem disabled={busy !== null} onClick={handlePrint}>
+              <Printer />
+              Print
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => onDelete(qr)}
+            >
+              <Trash2 />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <h3 className="px-8 text-sm font-bold text-ink-charcoal">{qr.label}</h3>
         <div className="mt-1 flex items-start justify-center gap-1">
           <a
             href={tipUrl}
@@ -191,41 +249,21 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({ qr, store, onEdit }) => {
       <div className="grid grid-cols-2 gap-2">
         <Button
           type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => onEdit(qr)}
+          className="h-12 rounded-xl bg-electric-lime text-sm font-semibold text-ink-charcoal shadow-sm hover:bg-brand-700"
+          onClick={() => setTemplateOpen(true)}
         >
-          <Pencil data-icon="inline-start" className="size-3.5" />
-          Edit
+          <LayoutTemplate data-icon="inline-start" className="size-4" />
+          Template
         </Button>
         <Button
           type="button"
-          variant="secondary"
-          size="sm"
+          variant="outline"
+          className="h-12 rounded-xl border border-zinc-200 bg-white text-sm font-semibold text-ink-charcoal hover:bg-zinc-50"
           disabled={busy !== null}
           onClick={() => void handleDownload()}
         >
-          <Download data-icon="inline-start" className="size-3.5" />
-          PNG
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          disabled={busy !== null}
-          onClick={handlePrint}
-        >
-          <Printer data-icon="inline-start" className="size-3.5" />
-          Print
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => setTemplateOpen(true)}
-        >
-          <LayoutTemplate data-icon="inline-start" className="size-3.5" />
-          Get Template
+          <Download data-icon="inline-start" className="size-4" />
+          {busy === "download" ? "Preparing…" : "PNG"}
         </Button>
       </div>
 

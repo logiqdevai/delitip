@@ -59,7 +59,8 @@
     "timeoutTitle": "Wird noch verarbeitet",
     "timeoutDescription": "Die Bestätigung Ihrer Zahlung dauert länger als erwartet. Sie könnte trotzdem noch abgeschlossen werden – schauen Sie in Kürze noch einmal nach.",
     "tryAgain": "Erneut versuchen",
-    "refresh": "Aktualisieren"
+    "refresh": "Aktualisieren",
+    "startOver": "Neu beginnen"
   },
   "doneStep": {
     "heading": "Vielen Dank!",

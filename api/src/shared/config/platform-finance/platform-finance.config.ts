@@ -21,7 +21,17 @@ export const APP_CONFIG_DEFAULTS = {
   tip_processor_fee_estimate_fixed_amount: 24, // minor units (€0.24)
   payout_hold_window_hours: 48,
   vat_rate_percentage: 0,
+  payout_invoice_required: false,
+  payout_invoice_ai_check_enabled: true,
 };
+
+export interface PlatformInvoiceDetails {
+  legal_name: string | null;
+  vat_number: string | null;
+  tax_office: string | null;
+  address: string | null;
+  instructions: string | null;
+}
 
 @Injectable()
 export class PlatformFinanceConfig {
@@ -64,6 +74,31 @@ export class PlatformFinanceConfig {
   // to a country rate automatically.
   async getVatRatePercentage(): Promise<number> {
     return Number((await this.getAppConfig()).vat_rate_percentage);
+  }
+
+  // When on, a Store's own money (STORE shares + pooled VIA_STORE staff
+  // shares) can only be paid through an admin-reviewed, invoice-backed
+  // PayoutRequest. DIRECT employee shares are unaffected — they're not the
+  // Store's money and no invoice covers them.
+  async isPayoutInvoiceRequired(): Promise<boolean> {
+    return (await this.getAppConfig()).payout_invoice_required;
+  }
+
+  async isPayoutInvoiceAiCheckEnabled(): Promise<boolean> {
+    return (await this.getAppConfig()).payout_invoice_ai_check_enabled;
+  }
+
+  // The platform's own invoicing identity — what a Store puts on the invoice
+  // it issues for a payout request.
+  async getPlatformInvoiceDetails(): Promise<PlatformInvoiceDetails> {
+    const config = await this.getAppConfig();
+    return {
+      legal_name: config.platform_legal_name,
+      vat_number: config.platform_vat_number,
+      tax_office: config.platform_tax_office,
+      address: config.platform_address,
+      instructions: config.payout_invoice_instructions,
+    };
   }
 
   // Central rollout switch for connected-account (Marketplace) Store

@@ -11,11 +11,18 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import {
+  ConfirmationDialog,
+  useConfirmationDialog,
+} from "@/components/ui/confirmation-dialog";
 import { QrCodeCard } from "@/app/dashboard/access/components/qr-code-card";
 import { QrCodeCardsSkeleton } from "@/app/dashboard/access/components/qr-code-cards-skeleton";
 import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
 import { SpotsPanel } from "@/app/dashboard/access/components/spots-panel";
-import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
+import {
+  useDeleteQrCode,
+  useQrCodes,
+} from "@/features/qr-codes/hooks/use-qr-codes";
 import type { QrCode as QrCodeModel } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 
@@ -28,6 +35,9 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
   const qrCodesQuery = useQrCodes(storeId, { limit: 100 });
   const [formOpen, setFormOpen] = useState(false);
   const [editingQr, setEditingQr] = useState<QrCodeModel | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<QrCodeModel | null>(null);
+  const deleteQrCode = useDeleteQrCode();
+  const deleteConfirm = useConfirmationDialog();
 
   const openCreate = () => {
     setEditingQr(null);
@@ -37,6 +47,11 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
   const openEdit = (qr: QrCodeModel) => {
     setEditingQr(qr);
     setFormOpen(true);
+  };
+
+  const openDelete = (qr: QrCodeModel) => {
+    setPendingDelete(qr);
+    deleteConfirm.openDialog();
   };
 
   const qrCodes = qrCodesQuery.data?.data ?? [];
@@ -104,7 +119,13 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {qrCodes.map((qr) => (
-            <QrCodeCard key={qr.id} qr={qr} store={store} onEdit={openEdit} />
+            <QrCodeCard
+              key={qr.id}
+              qr={qr}
+              store={store}
+              onEdit={openEdit}
+              onDelete={openDelete}
+            />
           ))}
         </div>
       )}
@@ -117,6 +138,29 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
         storeId={storeId}
         storeSlug={store.slug}
         qr={editingQr}
+      />
+
+      <ConfirmationDialog
+        state={{
+          ...deleteConfirm,
+          onOpenChange: (open) => {
+            deleteConfirm.onOpenChange(open);
+            if (!open) setPendingDelete(null);
+          },
+        }}
+        title="Delete QR code?"
+        description={
+          pendingDelete
+            ? `"${pendingDelete.label}" will be removed and its tip link will stop working. Printed copies will no longer open the tip page.`
+            : "This QR code will be removed."
+        }
+        confirmLabel="Delete"
+        isPending={deleteQrCode.isPending}
+        onConfirm={async () => {
+          if (!pendingDelete) return;
+          await deleteQrCode.mutateAsync(pendingDelete.id);
+          setPendingDelete(null);
+        }}
       />
     </div>
   );

@@ -1,7 +1,7 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { GcsService } from '@/integrations/storage/gcs/services/gcs.service';
-import { DocumentType } from 'generated/prisma';
+import { DocumentType, Prisma } from 'generated/prisma';
 import { GcsFolders } from '@/integrations/storage/gcs/config/gcs-folders.config';
 
 @Injectable()
@@ -93,7 +93,16 @@ export class DocumentsService {
     }
 
     private async deleteDocumentAndStorage(document: { id: string; filename: string }) {
-        await this.prisma.document.delete({ where: { id: document.id } });
+        try {
+            await this.prisma.document.delete({ where: { id: document.id } });
+        } catch (error) {
+            // Restrict FK from payout_requests.invoice_document_id: an invoice
+            // that backs a payout request is part of the audit trail.
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+                throw new ConflictException('This document is attached to a payout request and cannot be deleted');
+            }
+            throw error;
+        }
 
         try {
             await this.gcsService.deleteImage({ filename: document.filename, folder: GcsFolders.documents });

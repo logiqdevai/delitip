@@ -54,6 +54,9 @@ interface DoneStepProps {
   onRestart: () => void;
 }
 
+// Refund requests are hidden for now; flip to true to bring them back.
+const SHOW_REFUND_REQUEST = false;
+
 const RefundRequest: FC<{
   tipId: string;
   amount?: number;
@@ -262,9 +265,11 @@ export const DoneStep: FC<DoneStepProps> = ({
         {t("makeAnotherTip")}
       </motion.button>
 
-      <motion.div variants={itemVariants} className="mt-auto pt-6">
-        <RefundRequest tipId={tipId} amount={amount} currency={currency} />
-      </motion.div>
+      {SHOW_REFUND_REQUEST ? (
+        <motion.div variants={itemVariants} className="mt-auto pt-6">
+          <RefundRequest tipId={tipId} amount={amount} currency={currency} />
+        </motion.div>
+      ) : null}
     </motion.div>
   );
 };

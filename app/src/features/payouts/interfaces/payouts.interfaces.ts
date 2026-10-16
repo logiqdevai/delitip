@@ -61,6 +61,9 @@ export const PayoutSkipReasons = {
   ACCOUNT_NOT_ACTIVE: "ACCOUNT_NOT_ACTIVE",
   NO_LINKED_USER: "NO_LINKED_USER",
   TRANSFER_FAILED: "TRANSFER_FAILED",
+  // Invoice-gated payouts are on: the store's own money only moves through
+  // a payout request, never a self-service run.
+  INVOICE_REQUIRED: "INVOICE_REQUIRED",
 } as const;
 export type PayoutSkipReason =
   (typeof PayoutSkipReasons)[keyof typeof PayoutSkipReasons];
@@ -113,6 +116,8 @@ export interface DistributionTipRef {
 export const DistributionHoldReasons = {
   HOLD_WINDOW: "HOLD_WINDOW",
   FEE_NOT_CONFIRMED: "FEE_NOT_CONFIRMED",
+  // Locked into an invoice-backed payout request awaiting admin review.
+  PAYOUT_REQUESTED: "PAYOUT_REQUESTED",
 } as const;
 export type DistributionHoldReason =
   (typeof DistributionHoldReasons)[keyof typeof DistributionHoldReasons];
@@ -141,6 +146,9 @@ export interface Distribution {
 export interface DistributionsSummary {
   pending_total_amount: number;
   eligible_total_amount: number;
+  // Payable money locked into an open payout request — waiting on an admin,
+  // not on time, so it is never counted as "eligible now".
+  requested_total_amount: number;
   hold_window_hours: number;
   next_eligible_at: string | null;
 }

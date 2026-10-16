@@ -6,6 +6,7 @@ export const DocumentTypes = {
   AUDIO: "AUDIO",
   PDF: "PDF",
   DOCUMENT: "DOCUMENT",
+  INVOICE: "INVOICE",
   OTHER: "OTHER",
 } as const;
 export type DocumentType = (typeof DocumentTypes)[keyof typeof DocumentTypes];

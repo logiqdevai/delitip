@@ -23,5 +23,17 @@ export const EmailConfig = {
             subject: 'New contact form message',
             template_id: EmailTemplates.CONTACT,
         },
+        payout_request_submitted: {
+            subject: 'New payout request to review',
+            template_id: EmailTemplates.PAYOUT_REQUEST_SUBMITTED,
+        },
+        payout_request_approved: {
+            subject: 'Your payout request was approved',
+            template_id: EmailTemplates.PAYOUT_REQUEST_APPROVED,
+        },
+        payout_request_rejected: {
+            subject: 'Your payout request needs attention',
+            template_id: EmailTemplates.PAYOUT_REQUEST_REJECTED,
+        },
     }
 }

@@ -31,6 +31,7 @@ const SKIP_REASON_LABELS: Record<PayoutSkipReason, string> = {
   ACCOUNT_NOT_ACTIVE: "Payout account not active yet",
   NO_LINKED_USER: "No linked login for this employee",
   TRANSFER_FAILED: "Bank transfer failed",
+  INVOICE_REQUIRED: "Needs an invoice — use Request payout",
 };
 
 type RecipientOutcome =

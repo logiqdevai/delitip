@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAppConfig,
+  getPayoutPolicy,
   getPlatformVatRate,
   updateAppConfig,
 } from "@/features/app-config/services/app-config.services";
@@ -10,6 +11,7 @@ import { toast } from "@/components/ui/toast";
 export const appConfigQueryKeys = {
   root: ["app-config"] as const,
   vatRate: ["app-config", "vat-rate"] as const,
+  payoutPolicy: ["app-config", "payout-policy"] as const,
 };
 
 export const useAppConfig = () => {
@@ -26,6 +28,13 @@ export const usePlatformVatRate = () => {
   });
 };
 
+export const usePayoutPolicy = () => {
+  return useQuery({
+    queryKey: appConfigQueryKeys.payoutPolicy,
+    queryFn: getPayoutPolicy,
+  });
+};
+
 export const useUpdateAppConfig = () => {
   const queryClient = useQueryClient();
 
@@ -35,6 +44,9 @@ export const useUpdateAppConfig = () => {
       queryClient.setQueryData(appConfigQueryKeys.root, data);
       void queryClient.invalidateQueries({
         queryKey: appConfigQueryKeys.vatRate,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: appConfigQueryKeys.payoutPolicy,
       });
       toast.add({
         title: "App config saved",

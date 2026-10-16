@@ -7,18 +7,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { AdminPaymentsTable } from "@/app/dashboard/admin/payments/components/admin-payments-table";
 import { AdminPayoutsTable } from "@/app/dashboard/admin/payments/components/admin-payouts-table";
+import { AdminPayoutRequestsTable } from "@/app/dashboard/admin/payments/components/admin-payout-requests-table";
 import { useReconcilePayments } from "@/features/tips/hooks/use-tips";
 import { useReconcilePayoutAccounts } from "@/features/payout-accounts/hooks/use-payout-accounts";
+import { useAdminPendingPayoutRequestCount } from "@/features/payout-requests/hooks/use-payout-requests";
 
 export const AdminFinancePageContent: FC = () => {
   const reconcilePayments = useReconcilePayments();
   const reconcilePayoutAccounts = useReconcilePayoutAccounts();
+  const pendingRequestsQuery = useAdminPendingPayoutRequestCount();
+  const pendingRequests = pendingRequestsQuery.data ?? 0;
 
   return (
     <>
       <DashboardPageHeader
         title="Payments & Payouts"
-        description="Every payment and payout across all delitip businesses."
+        description="Every payment, payout and payout request across all delitip businesses."
         actions={
           <>
             <Button
@@ -51,16 +55,27 @@ export const AdminFinancePageContent: FC = () => {
         }
       />
 
-      <Tabs defaultValue="payments">
+      <Tabs defaultValue={pendingRequests > 0 ? "requests" : "payments"}>
         <TabsList variant="line">
           <TabsTrigger value="payments">Payments</TabsTrigger>
           <TabsTrigger value="payouts">Payouts</TabsTrigger>
+          <TabsTrigger value="requests">
+            Payout requests
+            {pendingRequests > 0 ? (
+              <span className="ml-1.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
+                {pendingRequests}
+              </span>
+            ) : null}
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="payments" className="mt-4">
           <AdminPaymentsTable />
         </TabsContent>
         <TabsContent value="payouts" className="mt-4">
           <AdminPayoutsTable />
+        </TabsContent>
+        <TabsContent value="requests" className="mt-4">
+          <AdminPayoutRequestsTable />
         </TabsContent>
       </Tabs>
     </>

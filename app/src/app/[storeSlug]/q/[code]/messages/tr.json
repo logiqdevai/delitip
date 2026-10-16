@@ -59,7 +59,8 @@
     "timeoutTitle": "Hâlâ işleniyor",
     "timeoutDescription": "Ödemenizin onaylanması beklenenden uzun sürüyor. Yine de tamamlanabilir - kısa süre sonra tekrar kontrol edin.",
     "tryAgain": "Tekrar dene",
-    "refresh": "Yenile"
+    "refresh": "Yenile",
+    "startOver": "Baştan başla"
   },
   "doneStep": {
     "heading": "Teşekkürler!",

@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { embed, generateObject, generateText, streamText } from 'ai';
 import {
+    AIGenerateObjectFromFileOptions,
+    AIGenerateObjectFromFileResponse,
     AIGenerateObjectResponse,
     AIGenerateOptions,
     AIGenerateTextResponse,
@@ -96,6 +98,60 @@ export class AiService {
         }
 
         throw lastError || new Error('Failed to generate text after all retry attempts');
+    }
+
+    // Structured extraction from a document the user uploaded (PDF or image).
+    // Separate from generateTextWithSchema, which hardcodes output: 'array' and
+    // has no way to attach a file. With @ai-sdk/openai 1.x only
+    // application/pdf is accepted as a 'file' part; images must go as an
+    // 'image' part, and both must be inline bytes (URLs are rejected).
+    async generateObjectFromFile<T>(options: AIGenerateObjectFromFileOptions<T>): Promise<AIGenerateObjectFromFileResponse<T>> {
+        try {
+            const modelAdapter = this.aiConfig.getModelAdapter(options.provider, options.model);
+
+            const filePart =
+                options.mimeType === 'application/pdf'
+                    ? {
+                          type: 'file' as const,
+                          data: options.buffer.toString('base64'),
+                          mimeType: options.mimeType,
+                          filename: options.filename,
+                      }
+                    : { type: 'image' as const, image: options.buffer, mimeType: options.mimeType };
+
+            const { object, usage } = await generateObject({
+                model: modelAdapter,
+                output: 'object',
+                schema: options.schema,
+                system: options.system || 'You are a careful document-extraction assistant.',
+                temperature: options.temperature ?? 0,
+                messages: [
+                    {
+                        role: 'user',
+                        content: [{ type: 'text', text: options.prompt }, filePart],
+                    },
+                ],
+            });
+
+            // The model can be overridden from env to something newer than the
+            // pricing table knows; an unknown price must not fail the extraction.
+            let cost;
+            try {
+                cost = calculateAiCost({
+                    provider: options.provider,
+                    model: options.model,
+                    inputTokens: usage.promptTokens,
+                    outputTokens: usage.completionTokens,
+                });
+            } catch {
+                cost = undefined;
+            }
+
+            return { response: object as T, usage: cost };
+        } catch (error) {
+            this.logger.error(`Error extracting object from file: ${error.message}`);
+            throw new Error(`Failed to extract object from file: ${error.message}`);
+        }
     }
 
     async streamText(options: AIStreamTextOptions): Promise<void> {

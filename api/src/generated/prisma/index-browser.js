@@ -400,6 +400,7 @@ exports.Prisma.TipDistributionScalarFieldEnum = {
   payout_mode: 'payout_mode',
   payout_status: 'payout_status',
   payout_id: 'payout_id',
+  payout_request_id: 'payout_request_id',
   paid_out_at: 'paid_out_at',
   settlement_status: 'settlement_status',
   settlement_id: 'settlement_id',
@@ -420,6 +421,38 @@ exports.Prisma.PayoutScalarFieldEnum = {
   status: 'status',
   failure_reason: 'failure_reason',
   executed_at: 'executed_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.PayoutRequestScalarFieldEnum = {
+  id: 'id',
+  store_id: 'store_id',
+  requested_by_user_id: 'requested_by_user_id',
+  status: 'status',
+  amount: 'amount',
+  own_share_amount: 'own_share_amount',
+  held_for_staff_amount: 'held_for_staff_amount',
+  currency: 'currency',
+  distribution_count: 'distribution_count',
+  period_from: 'period_from',
+  period_to: 'period_to',
+  hold_cutoff_at: 'hold_cutoff_at',
+  invoice_document_id: 'invoice_document_id',
+  invoice_number: 'invoice_number',
+  store_note: 'store_note',
+  failure_reason: 'failure_reason',
+  check_status: 'check_status',
+  check_verdict: 'check_verdict',
+  check_issues: 'check_issues',
+  check_extracted: 'check_extracted',
+  check_model: 'check_model',
+  check_cost_usd: 'check_cost_usd',
+  checked_at: 'checked_at',
+  reviewed_by_user_id: 'reviewed_by_user_id',
+  reviewed_at: 'reviewed_at',
+  admin_note: 'admin_note',
+  payout_id: 'payout_id',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -581,6 +614,13 @@ exports.Prisma.AppConfigScalarFieldEnum = {
   tip_processor_fee_estimate_fixed_amount: 'tip_processor_fee_estimate_fixed_amount',
   payout_hold_window_hours: 'payout_hold_window_hours',
   vat_rate_percentage: 'vat_rate_percentage',
+  payout_invoice_required: 'payout_invoice_required',
+  payout_invoice_ai_check_enabled: 'payout_invoice_ai_check_enabled',
+  platform_legal_name: 'platform_legal_name',
+  platform_vat_number: 'platform_vat_number',
+  platform_tax_office: 'platform_tax_office',
+  platform_address: 'platform_address',
+  payout_invoice_instructions: 'payout_invoice_instructions',
   updated_by_user_id: 'updated_by_user_id',
   created_at: 'created_at',
   updated_at: 'updated_at'
@@ -630,6 +670,7 @@ exports.DocumentType = exports.$Enums.DocumentType = {
   AUDIO: 'AUDIO',
   PDF: 'PDF',
   DOCUMENT: 'DOCUMENT',
+  INVOICE: 'INVOICE',
   OTHER: 'OTHER'
 };
 
@@ -771,6 +812,26 @@ exports.PayoutExecutionStatus = exports.$Enums.PayoutExecutionStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.PayoutRequestStatus = exports.$Enums.PayoutRequestStatus = {
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.InvoiceCheckStatus = exports.$Enums.InvoiceCheckStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+};
+
+exports.InvoiceCheckVerdict = exports.$Enums.InvoiceCheckVerdict = {
+  MATCH: 'MATCH',
+  MISMATCH: 'MISMATCH',
+  UNREADABLE: 'UNREADABLE'
+};
+
 exports.SettlementAdjustmentStatus = exports.$Enums.SettlementAdjustmentStatus = {
   PROPOSED: 'PROPOSED',
   APPLIED: 'APPLIED',
@@ -799,7 +860,9 @@ exports.AlertType = exports.$Enums.AlertType = {
   POSITIVE_COMPLIMENTS: 'POSITIVE_COMPLIMENTS',
   NEGATIVE_SATISFACTION_DROP: 'NEGATIVE_SATISFACTION_DROP',
   LOW_RATING_REVIEW: 'LOW_RATING_REVIEW',
-  PERFORMANCE_CHANGE: 'PERFORMANCE_CHANGE'
+  PERFORMANCE_CHANGE: 'PERFORMANCE_CHANGE',
+  PAYOUT_REQUEST_APPROVED: 'PAYOUT_REQUEST_APPROVED',
+  PAYOUT_REQUEST_REJECTED: 'PAYOUT_REQUEST_REJECTED'
 };
 
 exports.Prisma.ModelName = {
@@ -824,6 +887,7 @@ exports.Prisma.ModelName = {
   WebhookEvent: 'WebhookEvent',
   TipDistribution: 'TipDistribution',
   Payout: 'Payout',
+  PayoutRequest: 'PayoutRequest',
   Settlement: 'Settlement',
   SettlementAdjustment: 'SettlementAdjustment',
   Refund: 'Refund',

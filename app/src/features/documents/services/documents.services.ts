@@ -20,7 +20,7 @@ export const uploadDocument = async (
     );
     return response.data;
   } catch {
-    throw new Error("Failed to upload image. Please try again.");
+    throw new Error("Failed to upload the file. Please try again.");
   }
 };
 
@@ -28,6 +28,6 @@ export const deleteDocument = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.documents.byId(id));
   } catch {
-    throw new Error("Failed to remove image. Please try again.");
+    throw new Error("Failed to remove the file. Please try again.");
   }
 };

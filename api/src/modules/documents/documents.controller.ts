@@ -6,6 +6,10 @@ import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { DocumentsService } from './services/documents.service';
 import { UploadDocumentDto } from './dto/upload-document.dto';
 
+// Generous ceiling for logos, photos and invoices alike; invoices are
+// re-checked against the same figure when attached to a payout request.
+export const MAX_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024;
+
 @ApiTags('Documents')
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
@@ -16,7 +20,7 @@ export class DocumentsController {
     @Post()
     @ApiConsumes('multipart/form-data')
     @ApiOperation({ summary: 'Upload a document/image (logo, banner, photo, ...)' })
-    @UseInterceptors(FileInterceptor('file'))
+    @UseInterceptors(FileInterceptor('file', { limits: { fileSize: MAX_UPLOAD_SIZE_BYTES } }))
     upload(
         @CurrentUser('id') userId: string,
         @UploadedFile() file: any,

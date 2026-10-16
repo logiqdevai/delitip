@@ -32,6 +32,7 @@ enum DocumentType {
   AUDIO
   PDF
   DOCUMENT
+  INVOICE
   OTHER
 }
 
@@ -209,6 +210,33 @@ enum AlertType {
   NEGATIVE_SATISFACTION_DROP
   LOW_RATING_REVIEW
   PERFORMANCE_CHANGE
+  PAYOUT_REQUEST_APPROVED
+  PAYOUT_REQUEST_REJECTED
+}
+
+// A Store's request to be paid its accumulated tips, backed by an invoice it
+// issued to the platform. No PAID/FAILED values on purpose: "paid" is derived
+// from the linked Payout's status (owned by the Viva webhook), and a failed
+// transfer keeps the request PENDING_REVIEW with `failure_reason` set so an
+// admin can simply approve again.
+enum PayoutRequestStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum InvoiceCheckStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  SKIPPED // AI check disabled in AppConfig, or no OpenAI key configured
+}
+
+enum InvoiceCheckVerdict {
+  MATCH
+  MISMATCH
+  UNREADABLE
 }
 
 enum SubscriptionPlan {
@@ -258,6 +286,8 @@ model User {
   settlements_recorded     Settlement[]           @relation("SettlementRecordedBy")
   settlements_reversed     Settlement[]           @relation("SettlementReversedBy")
   settlement_adjustments   SettlementAdjustment[] @relation("SettlementAdjustmentCreatedBy")
+  payout_requests_made     PayoutRequest[]        @relation("PayoutRequestRequestedBy")
+  payout_requests_reviewed PayoutRequest[]        @relation("PayoutRequestReviewedBy")
 
   @@index([email])
   @@index([phone])
@@ -296,6 +326,7 @@ model Document {
   stores_cover       Store[]        @relation("StoreCoverDocument")
   organizations_logo Organization[] @relation("OrganizationLogoDocument")
   employees_photo    Employee[]     @relation("EmployeePhotoDocument")
+  payout_request     PayoutRequest? // the invoice backing a payout request (Restrict: can't be deleted from under it)
 
   @@index([user_uuid])
   @@map("documents")
@@ -453,6 +484,7 @@ model Store {
   insight_summaries          InsightSummary[]
   payout_account             PayoutAccount?
   payouts                    Payout[]
+  payout_requests            PayoutRequest[]
   settlements                Settlement[]
   settlement_adjustments     SettlementAdjustment[]
 
@@ -816,6 +848,10 @@ model TipDistribution {
   payout_mode       DistributionPayoutMode    @default(DIRECT)
   payout_status     PayoutStatus              @default(PENDING) // whether this recipient's share has actually been paid out — independent of the Tip's own status
   payout_id         String? // set only inside the atomic claim of a Payout run; null while PENDING/unclaimed
+  // Set when the Store locks this share into an invoice-backed PayoutRequest.
+  // A locked row is invisible to every other payout path (self-service runs,
+  // rule re-routing) until the request is approved, rejected or cancelled.
+  payout_request_id String?
   paid_out_at       DateTime?
   // Second, independent axis: under VIA_STORE the money reaching the Store's
   // bank (payout_status) is not the employee receiving it (settlement_status).
@@ -824,15 +860,17 @@ model TipDistribution {
   settled_at        DateTime?
   created_at        DateTime                  @default(now())
 
-  tip        Tip         @relation(fields: [tip_id], references: [id], onDelete: Cascade)
-  employee   Employee?   @relation(fields: [employee_id], references: [id], onDelete: SetNull)
-  payout     Payout?     @relation(fields: [payout_id], references: [id], onDelete: SetNull)
-  settlement Settlement? @relation(fields: [settlement_id], references: [id], onDelete: SetNull)
+  tip            Tip            @relation(fields: [tip_id], references: [id], onDelete: Cascade)
+  employee       Employee?      @relation(fields: [employee_id], references: [id], onDelete: SetNull)
+  payout         Payout?        @relation(fields: [payout_id], references: [id], onDelete: SetNull)
+  payout_request PayoutRequest? @relation(fields: [payout_request_id], references: [id], onDelete: SetNull)
+  settlement     Settlement?    @relation(fields: [settlement_id], references: [id], onDelete: SetNull)
 
   @@index([tip_id])
   @@index([employee_id])
   @@index([payout_status])
   @@index([payout_id])
+  @@index([payout_request_id])
   @@index([settlement_id])
   @@index([employee_id, settlement_status])
   @@map("tip_distributions")
@@ -862,11 +900,74 @@ model Payout {
   employee       Employee?         @relation(fields: [employee_id], references: [id])
   payout_account PayoutAccount     @relation(fields: [payout_account_id], references: [id])
   distributions  TipDistribution[]
+  payout_request PayoutRequest? // set when this payout was executed by approving an invoice-backed request
 
   @@index([status])
   @@index([store_id])
   @@index([employee_id])
   @@map("payouts")
+}
+
+// ==================================================================
+// Payout requests — when AppConfig.payout_invoice_required is on, a Store's
+// own money (its STORE shares plus pooled VIA_STORE staff shares) can only
+// leave the platform through one of these: the Store issues an invoice to
+// the platform for the exact payable amount, an admin reviews it (helped by
+// an automatic AI read of the invoice), and approval executes the Viva
+// transfer. Every amount/period below is a frozen snapshot of the rows
+// locked at submission time.
+// ==================================================================
+
+model PayoutRequest {
+  id                   String              @id @default(uuid())
+  store_id             String
+  requested_by_user_id String?
+  status               PayoutRequestStatus @default(PENDING_REVIEW)
+
+  // Snapshot of the locked STORE group
+  amount                Int // what the Store must invoice and will receive (minor units)
+  own_share_amount      Int // the Store's own shares
+  held_for_staff_amount Int // pooled VIA_STORE shares it hands to staff off-platform
+  currency              Currency
+  distribution_count    Int
+  period_from           DateTime // oldest tip.paid_at among the locked rows
+  period_to             DateTime // newest tip.paid_at among the locked rows
+  hold_cutoff_at        DateTime // now - payout_hold_window_hours at submission
+
+  // The invoice
+  invoice_document_id String  @unique // one upload backs exactly one request
+  invoice_number      String? // typed by the Store, optional
+  store_note          String?
+  failure_reason      String? // last Viva transfer failure; request stays PENDING_REVIEW so admin can retry
+
+  // Automatic invoice read (advisory only — approval is always a human action)
+  check_status    InvoiceCheckStatus   @default(PENDING)
+  check_verdict   InvoiceCheckVerdict?
+  check_issues    Json? // string[] of issue codes, see invoice-verification.utils.ts
+  check_extracted Json? // raw object the model extracted
+  check_model     String?
+  check_cost_usd  Decimal?             @db.Decimal(10, 6)
+  checked_at      DateTime?
+
+  // Review
+  reviewed_by_user_id String?
+  reviewed_at         DateTime?
+  admin_note          String?
+  payout_id           String?   @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  store            Store             @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  requested_by     User?             @relation("PayoutRequestRequestedBy", fields: [requested_by_user_id], references: [id], onDelete: SetNull)
+  reviewed_by      User?             @relation("PayoutRequestReviewedBy", fields: [reviewed_by_user_id], references: [id], onDelete: SetNull)
+  invoice_document Document          @relation(fields: [invoice_document_id], references: [id], onDelete: Restrict)
+  payout           Payout?           @relation(fields: [payout_id], references: [id], onDelete: SetNull)
+  distributions    TipDistribution[]
+
+  @@index([store_id, status])
+  @@index([status, created_at])
+  @@map("payout_requests")
 }
 
 // One recorded handover from a Store to an employee, covering the shares the
@@ -1174,6 +1275,15 @@ model AppConfig {
   tip_processor_fee_estimate_fixed_amount Int      @default(24) // minor units (€0.24)
   payout_hold_window_hours                Int      @default(48)
   vat_rate_percentage                     Decimal  @default(0) @db.Decimal(5, 2) // added on top of each tip at checkout; 0 = no VAT
+  // Invoice-gated payouts: when on, a Store's own money is only paid through
+  // an admin-reviewed PayoutRequest backed by an invoice to the platform.
+  payout_invoice_required                 Boolean  @default(false)
+  payout_invoice_ai_check_enabled         Boolean  @default(true) // read the invoice with OpenAI and flag mismatches for the admin
+  platform_legal_name                     String? // the platform's own invoicing identity, shown to Stores so they know who to invoice
+  platform_vat_number                     String?
+  platform_tax_office                     String?
+  platform_address                        String?
+  payout_invoice_instructions             String? // free text shown to Stores next to the invoice details
   updated_by_user_id                      String?
   created_at                              DateTime @default(now())
   updated_at                              DateTime @updatedAt

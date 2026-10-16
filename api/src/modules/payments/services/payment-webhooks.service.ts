@@ -4,6 +4,7 @@ import {
   DistributionRecipientType,
   Prisma,
   PayoutExecutionStatus,
+  PayoutRequestStatus,
   PayoutStatus,
   SettlementStatus,
   TipStatus,
@@ -444,6 +445,18 @@ export class PaymentWebhooksService {
         await tx.tipDistribution.updateMany({
           where: { payout_id: payout.id },
           data: { payout_status: PayoutStatus.PENDING, payout_id: null },
+        });
+        // If this payout was executed by approving an invoice-backed
+        // PayoutRequest, put the request back in the admin queue. Its
+        // distributions are still locked to it (payout_request_id untouched
+        // above), so the admin can simply approve again.
+        await tx.payoutRequest.updateMany({
+          where: { payout_id: payout.id, status: PayoutRequestStatus.APPROVED },
+          data: {
+            status: PayoutRequestStatus.PENDING_REVIEW,
+            payout_id: null,
+            failure_reason: 'Viva reported bank transfer failure',
+          },
         });
       }
     });

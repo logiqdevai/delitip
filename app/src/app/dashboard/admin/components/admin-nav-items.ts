@@ -35,7 +35,8 @@ export const adminNavItems: AdminNavItem[] = [
     icon: WalletCards,
     match: (path) =>
       path.startsWith(Routes.dashboard.admin.payments) ||
-      path.startsWith("/dashboard/admin/payouts"),
+      path.startsWith("/dashboard/admin/payouts") ||
+      path.startsWith(Routes.dashboard.admin.payoutRequests),
   },
   {
     href: Routes.dashboard.admin.vatSimulator,

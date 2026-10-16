@@ -97,10 +97,13 @@ export class DistributionRulesService {
     // handed over yet — the only ones a rule edit is allowed to re-route. Money
     // already in flight, already paid, or already settled with an employee is
     // frozen: re-routing it would rewrite a record of something that happened.
+    // Rows locked into an open PayoutRequest are frozen too — the Store has
+    // already invoiced that exact amount, so its composition can't change.
     private pendingDistributionsFilter(ruleId: string): Prisma.TipDistributionWhereInput {
         return {
             tip: { distribution_rule_id: ruleId },
             payout_id: null,
+            payout_request_id: null,
             payout_status: PayoutStatus.PENDING,
             settlement_status: { notIn: [SettlementStatus.SETTLED, SettlementStatus.CANCELLED] },
         };

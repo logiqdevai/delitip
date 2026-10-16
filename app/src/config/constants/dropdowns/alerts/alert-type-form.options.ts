@@ -8,6 +8,8 @@ export const AlertTypeFormOptions: { id: AlertType; label: string }[] = [
   { id: AlertTypes.NEGATIVE_SATISFACTION_DROP, label: "Satisfaction drop" },
   { id: AlertTypes.LOW_RATING_REVIEW, label: "Low rating review" },
   { id: AlertTypes.PERFORMANCE_CHANGE, label: "Performance change" },
+  { id: AlertTypes.PAYOUT_REQUEST_APPROVED, label: "Payout approved" },
+  { id: AlertTypes.PAYOUT_REQUEST_REJECTED, label: "Payout request rejected" },
 ];
 
 export function getAlertTypeLabel(type: AlertType | string): string {

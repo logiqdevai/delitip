@@ -59,7 +59,8 @@
     "timeoutTitle": "仍在处理中",
     "timeoutDescription": "您的付款确认所需时间超出预期，可能仍会完成——请稍后再查看。",
     "tryAgain": "重试",
-    "refresh": "刷新"
+    "refresh": "刷新",
+    "startOver": "重新开始"
   },
   "doneStep": {
     "heading": "谢谢！",

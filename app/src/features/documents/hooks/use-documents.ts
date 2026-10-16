@@ -12,7 +12,7 @@ export const useUploadDocument = () => {
       uploadDocument(file, type),
     onError: (error: Error) => {
       toast.add({
-        title: "Could not upload image",
+        title: "Could not upload the file",
         description: error.message,
         type: "error",
       });
@@ -25,7 +25,7 @@ export const useDeleteDocument = () => {
     mutationFn: (id: string) => deleteDocument(id),
     onError: (error: Error) => {
       toast.add({
-        title: "Could not remove image",
+        title: "Could not remove the file",
         description: error.message,
         type: "error",
       });

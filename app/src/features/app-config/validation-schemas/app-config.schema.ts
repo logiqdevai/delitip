@@ -5,6 +5,9 @@ const percentage = z
   .min(0, "Must be at least 0")
   .max(100, "Must be at most 100");
 
+const optionalText = (max: number) =>
+  z.string().trim().max(max, `Must be at most ${max} characters`);
+
 export const appConfigSchema = z.object({
   tip_platform_commission_percentage: percentage,
   tip_processor_fee_estimate_percentage: percentage,
@@ -17,6 +20,13 @@ export const appConfigSchema = z.object({
     .number({ invalid_type_error: "Enter a number" })
     .int("Must be a whole number")
     .min(0, "Must be at least 0"),
+  payout_invoice_required: z.boolean(),
+  payout_invoice_ai_check_enabled: z.boolean(),
+  platform_legal_name: optionalText(200),
+  platform_vat_number: optionalText(40),
+  platform_tax_office: optionalText(120),
+  platform_address: optionalText(300),
+  payout_invoice_instructions: optionalText(2000),
 });
 
 export type AppConfigFormData = z.infer<typeof appConfigSchema>;

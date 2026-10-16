@@ -59,7 +59,8 @@
     "timeoutTitle": "Ancora in elaborazione",
     "timeoutDescription": "La conferma del pagamento richiede più tempo del previsto. Potrebbe comunque completarsi: ricontrolla tra poco.",
     "tryAgain": "Riprova",
-    "refresh": "Aggiorna"
+    "refresh": "Aggiorna",
+    "startOver": "Ricomincia"
   },
   "doneStep": {
     "heading": "Grazie!",

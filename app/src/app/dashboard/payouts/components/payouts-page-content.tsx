@@ -22,6 +22,10 @@ import {
 } from "@/components/ui/empty";
 import { useStorePayouts } from "@/features/payouts/hooks/use-payouts";
 import type { PayoutExecutionStatus } from "@/features/payouts/interfaces/payouts.interfaces";
+import { usePayoutPolicy } from "@/features/app-config/hooks/use-app-config";
+import { useStorePayoutRequests } from "@/features/payout-requests/hooks/use-payout-requests";
+import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { PayoutRequestsTable } from "@/app/dashboard/payouts/components/payout-requests-table";
 import { getPayoutExecutionStatusLabel } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
@@ -49,11 +53,24 @@ interface PayoutsPageContentProps {
 // and the "no store selected" guard.
 export const PayoutsPageContent: FC<PayoutsPageContentProps> = ({ storeId }) => {
   const payoutsQuery = useStorePayouts(storeId, { limit: 50 });
+  const policyQuery = usePayoutPolicy();
+  const requestsQuery = useStorePayoutRequests(storeId, { limit: 1 });
+  const { role } = useWorkspace();
 
   const payouts = payoutsQuery.data?.data ?? [];
+  // Show the requests section whenever invoices are required, or when the
+  // store has history from a time they were — never an empty section
+  // for stores that have only ever used Pay out now.
+  const showRequests =
+    (policyQuery.data?.payout_invoice_required ?? false) ||
+    (requestsQuery.data?.pagination.total ?? 0) > 0;
 
   return (
     <div className="space-y-6">
+      {showRequests ? (
+        <PayoutRequestsTable storeId={storeId} canCancel={role === "OWNER"} />
+      ) : null}
+
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">Payout history</h2>
         <p className="mt-0.5 text-xs text-zinc-500">

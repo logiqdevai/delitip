@@ -33,6 +33,9 @@ export const EmailTemplates = {
     PASSWORD_RESET: 'password-reset',
     EMPLOYEE_INVITE: 'employee-invite',
     CONTACT: 'contact',
+    PAYOUT_REQUEST_SUBMITTED: 'payout-request-submitted',
+    PAYOUT_REQUEST_APPROVED: 'payout-request-approved',
+    PAYOUT_REQUEST_REJECTED: 'payout-request-rejected',
 } as const;
 
 export type EmailTemplate = (typeof EmailTemplates)[keyof typeof EmailTemplates];

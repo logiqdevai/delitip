@@ -171,6 +171,13 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
           <RefreshCw className="size-4" strokeWidth={2} />
           <span>{t("refresh")}</span>
         </button>
+        <button
+          type="button"
+          onClick={onRestart}
+          className="text-sm font-semibold text-zinc-500 underline-offset-4 transition hover:text-ink-charcoal hover:underline"
+        >
+          {t("startOver")}
+        </button>
       </div>
     );
   }

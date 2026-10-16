@@ -35,6 +35,7 @@ describe('PaymentWebhooksService', () => {
             tipDistribution: { createMany: jest.fn(), updateMany: jest.fn() },
             refund: { findUnique: jest.fn(), update: jest.fn() },
             payout: { findFirst: jest.fn(), update: jest.fn() },
+            payoutRequest: { updateMany: jest.fn() },
             payoutAccount: { findFirst: jest.fn() },
             $transaction: jest.fn((arg) => (Array.isArray(arg) ? Promise.all(arg) : arg(prisma))),
         };
@@ -487,6 +488,12 @@ describe('PaymentWebhooksService', () => {
             expect(prisma.tipDistribution.updateMany).toHaveBeenCalledWith(
                 expect.objectContaining({ data: expect.objectContaining({ payout_status: PayoutStatus.PENDING, payout_id: null }) }),
             );
+            // An approved payout request that produced this payout goes back
+            // to the admin queue, with its distributions still locked to it.
+            expect(prisma.payoutRequest.updateMany).toHaveBeenCalledWith({
+                where: { payout_id: 'payout1', status: 'APPROVED' },
+                data: expect.objectContaining({ status: 'PENDING_REVIEW', payout_id: null }),
+            });
         });
     });
 
