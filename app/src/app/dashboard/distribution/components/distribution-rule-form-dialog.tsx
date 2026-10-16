@@ -305,7 +305,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
               name="payout_mode"
               render={({ field }) => (
                 <div
-                  className="grid gap-2 sm:grid-cols-2"
+                  className="grid gap-2"
                   role="radiogroup"
                   aria-label="Who pays the employees"
                 >

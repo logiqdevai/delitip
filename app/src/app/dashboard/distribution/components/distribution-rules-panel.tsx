@@ -193,7 +193,7 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
               </EmptyContent>
             </Empty>
           ) : (
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {rules.map((rule) => (
                 <DistributionRuleCard
                   key={rule.id}

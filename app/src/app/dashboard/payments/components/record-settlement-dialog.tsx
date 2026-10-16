@@ -300,7 +300,7 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
           </div>
         </div>
 
-        <DialogFooter className="shrink-0 flex-col gap-3 border-t border-zinc-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <DialogFooter className="m-0 shrink-0 flex-col gap-3 border-t border-zinc-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="text-left">
             <p className="text-[11px] font-semibold text-zinc-500">Total to hand over</p>
             <p className="text-lg font-bold tabular-nums text-ink-charcoal">

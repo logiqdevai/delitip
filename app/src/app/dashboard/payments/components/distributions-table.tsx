@@ -210,7 +210,7 @@ export const DistributionsTable: FC<{
               ? ` Next batch eligible ${formatDateTime(summary.next_eligible_at)}.`
               : ""}
             {invoiceRequired
-              ? " Your store's own share is paid after you upload an invoice and Delitip approves it; staff paid directly are unaffected."
+              ? " Tips are paid to your store after you upload an invoice for the amount and Delitip approves it."
               : ""}
           </p>
         ) : null}

@@ -39,7 +39,7 @@ export interface PayoutPolicy {
   instructions: string | null;
 }
 
-export interface UpdateAppConfigPayload {
+interface AppConfigEditableFields {
   tip_platform_commission_percentage: number;
   tip_processor_fee_estimate_percentage: number;
   tip_processor_fee_estimate_fixed_amount: number;
@@ -54,3 +54,6 @@ export interface UpdateAppConfigPayload {
   platform_address: string;
   payout_invoice_instructions: string;
 }
+
+// The API treats every field as optional, so only changed fields are sent.
+export type UpdateAppConfigPayload = Partial<AppConfigEditableFields>;

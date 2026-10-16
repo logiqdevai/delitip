@@ -5,13 +5,16 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/toast";
 import {
   useAppConfig,
   useUpdateAppConfig,
 } from "@/features/app-config/hooks/use-app-config";
+import type { UpdateAppConfigPayload } from "@/features/app-config/interfaces/app-config.interfaces";
 import {
   appConfigSchema,
   type AppConfigFormData,
@@ -123,7 +126,7 @@ const FieldShell: FC<{
 );
 
 export const AdminAppConfigPageContent: FC = () => {
-  const { data, isLoading } = useAppConfig();
+  const { data, isError, refetch } = useAppConfig();
   const updateConfig = useUpdateAppConfig();
 
   const {
@@ -131,7 +134,7 @@ export const AdminAppConfigPageContent: FC = () => {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, dirtyFields },
   } = useForm<AppConfigFormData>({
     resolver: zodResolver(appConfigSchema),
   });
@@ -144,9 +147,11 @@ export const AdminAppConfigPageContent: FC = () => {
       tip_processor_fee_estimate_fixed_amount: data.tip_processor_fee_estimate_fixed_amount,
       vat_rate_percentage: Number(data.vat_rate_percentage),
       payout_hold_window_hours: data.payout_hold_window_hours,
-      payout_invoice_required: data.payout_invoice_required,
-      payout_invoice_ai_check_enabled: data.payout_invoice_ai_check_enabled,
-      connected_account_payouts_enabled: data.connected_account_payouts_enabled,
+      // `?? false`: a flag the API doesn't return yet (e.g. an API running
+      // from before its migration) must not make the form invalid.
+      payout_invoice_required: data.payout_invoice_required ?? false,
+      payout_invoice_ai_check_enabled: data.payout_invoice_ai_check_enabled ?? false,
+      connected_account_payouts_enabled: data.connected_account_payouts_enabled ?? false,
       platform_legal_name: data.platform_legal_name ?? "",
       platform_vat_number: data.platform_vat_number ?? "",
       platform_tax_office: data.platform_tax_office ?? "",
@@ -157,9 +162,29 @@ export const AdminAppConfigPageContent: FC = () => {
 
   const invoiceRequired = useWatch({ control, name: "payout_invoice_required" });
 
-  const onSubmit = handleSubmit((values) => {
-    updateConfig.mutate(values);
-  });
+  const onSubmit = handleSubmit(
+    (values) => {
+      const changedNames = Object.keys(dirtyFields) as (keyof AppConfigFormData)[];
+      const changed: UpdateAppConfigPayload = {};
+      for (const name of changedNames) {
+        Object.assign(changed, { [name]: values[name] });
+      }
+      updateConfig.mutate(changed);
+    },
+    (formErrors) => {
+      const messages = Object.entries(formErrors).map(([name, error]) => {
+        const label =
+          [...financeFields, ...invoiceDetailFields].find((field) => field.name === name)
+            ?.label ?? name;
+        return `${label}: ${error?.message ?? "invalid"}`;
+      });
+      toast.add({
+        title: "Nothing was saved",
+        description: messages.join(" · ") || "Some values are invalid.",
+        type: "error",
+      });
+    },
+  );
 
   return (
     <>
@@ -167,6 +192,14 @@ export const AdminAppConfigPageContent: FC = () => {
         title="App Config"
         description="Platform-wide finance and payout settings. Changes apply to future tips and payouts only."
       />
+      {isError ? (
+        <div className="mt-4 flex max-w-xl items-center justify-between gap-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+          <p className="text-sm text-red-700">Could not load the app config.</p>
+          <Button type="button" variant="outline" size="sm" onClick={() => void refetch()}>
+            Retry
+          </Button>
+        </div>
+      ) : null}
       <form onSubmit={onSubmit} noValidate className="mt-4 max-w-xl space-y-6">
         <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
           <h2 className="text-sm font-bold text-ink-charcoal">Finance</h2>
@@ -176,7 +209,7 @@ export const AdminAppConfigPageContent: FC = () => {
                 id={name}
                 type="number"
                 step={step}
-                disabled={isLoading}
+                disabled={updateConfig.isPending}
                 aria-invalid={!!errors[name]}
                 {...register(name, { valueAsNumber: true })}
               />
@@ -210,7 +243,7 @@ export const AdminAppConfigPageContent: FC = () => {
                 <Switch
                   checked={field.value ?? false}
                   onCheckedChange={field.onChange}
-                  disabled={isLoading}
+                  disabled={updateConfig.isPending}
                   aria-label="Require an invoice before paying stores"
                 />
               </label>
@@ -234,7 +267,7 @@ export const AdminAppConfigPageContent: FC = () => {
                 <Switch
                   checked={field.value ?? false}
                   onCheckedChange={field.onChange}
-                  disabled={isLoading}
+                  disabled={updateConfig.isPending}
                   aria-label="Read invoices automatically"
                 />
               </label>
@@ -253,7 +286,7 @@ export const AdminAppConfigPageContent: FC = () => {
                     id={name}
                     type="text"
                     placeholder={placeholder}
-                    disabled={isLoading}
+                    disabled={updateConfig.isPending}
                     aria-invalid={!!errors[name]}
                     {...register(name)}
                   />
@@ -268,7 +301,7 @@ export const AdminAppConfigPageContent: FC = () => {
                 <Textarea
                   id="payout_invoice_instructions"
                   rows={3}
-                  disabled={isLoading}
+                  disabled={updateConfig.isPending}
                   aria-invalid={!!errors.payout_invoice_instructions}
                   {...register("payout_invoice_instructions")}
                 />
@@ -296,7 +329,7 @@ export const AdminAppConfigPageContent: FC = () => {
                 <Switch
                   checked={field.value ?? false}
                   onCheckedChange={field.onChange}
-                  disabled={isLoading}
+                  disabled={updateConfig.isPending}
                   aria-label="Connected-account payouts"
                 />
               </label>
@@ -307,7 +340,7 @@ export const AdminAppConfigPageContent: FC = () => {
         <ActionButtonWithPending
           type="submit"
           isPending={updateConfig.isPending}
-          disabled={isLoading || !isDirty}
+          disabled={!data || !isDirty}
         >
           Save changes
         </ActionButtonWithPending>
