@@ -39,6 +39,8 @@ const SummaryRow: FC<{ label: string; value: string }> = ({
   </div>
 );
 
+const REFUND_REQUESTS_ENABLED = false;
+
 export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
   const tipQuery = useTip(tipId);
   const [refundDialogOpen, setRefundDialogOpen] = useState(false);
@@ -72,7 +74,8 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
   const hasActiveRefund = (tip.refunds ?? []).some(
     (refund) => refund.status === "PENDING" || refund.status === "APPROVED",
   );
-  const canRequestRefund = tip.status === "COMPLETED" && !hasActiveRefund;
+  // Refund requests are hidden for now; existing refunds are still listed.
+  const canRequestRefund = REFUND_REQUESTS_ENABLED && tip.status === "COMPLETED" && !hasActiveRefund;
 
   return (
     <div className="space-y-6">

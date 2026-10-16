@@ -1279,6 +1279,7 @@ model AppConfig {
   // an admin-reviewed PayoutRequest backed by an invoice to the platform.
   payout_invoice_required                 Boolean  @default(false)
   payout_invoice_ai_check_enabled         Boolean  @default(true) // read the invoice with OpenAI and flag mismatches for the admin
+  connected_account_payouts_enabled       Boolean  @default(false) // rollout switch for Viva Marketplace (connected-account) Store payouts
   platform_legal_name                     String? // the platform's own invoicing identity, shown to Stores so they know who to invoice
   platform_vat_number                     String?
   platform_tax_office                     String?

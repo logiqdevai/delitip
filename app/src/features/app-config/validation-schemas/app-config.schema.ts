@@ -22,6 +22,7 @@ export const appConfigSchema = z.object({
     .min(0, "Must be at least 0"),
   payout_invoice_required: z.boolean(),
   payout_invoice_ai_check_enabled: z.boolean(),
+  connected_account_payouts_enabled: z.boolean(),
   platform_legal_name: optionalText(200),
   platform_vat_number: optionalText(40),
   platform_tax_office: optionalText(120),

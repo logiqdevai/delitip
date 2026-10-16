@@ -12,12 +12,15 @@ import {
   useStorePayoutAccount,
 } from "@/features/payout-accounts/hooks/use-payout-accounts";
 import { getPayoutAccountStatusLabel } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { usePayoutPolicy } from "@/features/app-config/hooks/use-app-config";
 import { cn } from "@/lib/utils";
 
 export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
   const accountQuery = useStorePayoutAccount(storeId);
   const createAccount = useCreateStorePayoutAccount(storeId);
   const refreshStatus = useRefreshStorePayoutAccountStatus(storeId);
+  const connectedAccountsEnabled =
+    usePayoutPolicy().data?.connected_account_payouts_enabled ?? false;
   const [ibanDialogOpen, setIbanDialogOpen] = useState(false);
   const [connectedAccountDialogOpen, setConnectedAccountDialogOpen] = useState(false);
 
@@ -39,8 +42,11 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
         <div className="mt-3 space-y-3">
           <p className="text-xs text-zinc-500">
             Connect a payout account so your Store can receive its share of
-            tips - link a business IBAN directly, or connect with Viva for
-            hosted onboarding.
+            tips - link a business IBAN directly
+            {connectedAccountsEnabled
+              ? ", or connect with Viva for hosted onboarding"
+              : ""}
+            .
           </p>
           <div className="flex flex-wrap gap-2">
             <Button
@@ -50,14 +56,16 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
             >
               Link payout account
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setConnectedAccountDialogOpen(true)}
-              className="rounded-xl"
-            >
-              Connect with Viva
-            </Button>
+            {connectedAccountsEnabled ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setConnectedAccountDialogOpen(true)}
+                className="rounded-xl"
+              >
+                Connect with Viva
+              </Button>
+            ) : null}
           </div>
         </div>
       ) : (

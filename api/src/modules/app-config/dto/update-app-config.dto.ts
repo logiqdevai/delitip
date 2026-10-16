@@ -44,6 +44,11 @@ export class UpdateAppConfigDto {
     @IsBoolean()
     payout_invoice_ai_check_enabled?: boolean;
 
+    @ApiProperty({ required: false, example: false, description: 'Let Stores onboard via Viva Marketplace (connected accounts). Needs real Viva platform credentials.' })
+    @IsOptional()
+    @IsBoolean()
+    connected_account_payouts_enabled?: boolean;
+
     @ApiProperty({ required: false, example: "Delitip P.C.", description: "Legal name Stores must put on invoices to the platform" })
     @IsOptional()
     @IsString()

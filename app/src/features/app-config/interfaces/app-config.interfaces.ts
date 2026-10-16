@@ -10,6 +10,7 @@ export interface AppConfig {
   // Invoice-gated payouts
   payout_invoice_required: boolean;
   payout_invoice_ai_check_enabled: boolean;
+  connected_account_payouts_enabled: boolean;
   platform_legal_name: string | null;
   platform_vat_number: string | null;
   platform_tax_office: string | null;
@@ -28,6 +29,7 @@ export interface PlatformVatRate {
 // invoice-backed payout request, and who it should invoice.
 export interface PayoutPolicy {
   payout_invoice_required: boolean;
+  connected_account_payouts_enabled: boolean;
   invoice_to: {
     legal_name: string | null;
     vat_number: string | null;
@@ -45,6 +47,7 @@ export interface UpdateAppConfigPayload {
   vat_rate_percentage: number;
   payout_invoice_required: boolean;
   payout_invoice_ai_check_enabled: boolean;
+  connected_account_payouts_enabled: boolean;
   platform_legal_name: string;
   platform_vat_number: string;
   platform_tax_office: string;

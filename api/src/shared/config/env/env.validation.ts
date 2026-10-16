@@ -46,7 +46,6 @@ const EnvSchema = z.object({
     VIVA_SOURCE_CODE: z.string().optional(),
     VIVA_WALLET_ID: z.coerce.number().optional(),
     VIVA_WEBHOOK_IP_ALLOWLIST: z.string().optional(),
-    CONNECTED_ACCOUNT_PAYOUTS_ENABLED: z.enum(['true', 'false']).optional(),
 });
 
 export function validateEnv(config: Record<string, unknown>) {

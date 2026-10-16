@@ -89,7 +89,7 @@ export class PayoutAccountsService {
     // flag, since it requires a real Viva platform account that doesn't
     // exist until Viva Sales provisions one.
     private async createConnectedAccountForStore(user: AuthUser, storeId: string) {
-        if (!this.platformFinanceConfig.isConnectedAccountPayoutsEnabled()) {
+        if (!(await this.platformFinanceConfig.isConnectedAccountPayoutsEnabled())) {
             throw new BadRequestException('Connected-account payouts are not enabled yet');
         }
 

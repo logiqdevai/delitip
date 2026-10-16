@@ -33,7 +33,7 @@ describe('PayoutAccountsService', () => {
             updateBankAccount: jest.fn().mockResolvedValue({}),
             getBankAccount: jest.fn(),
         };
-        platformFinanceConfig = { isConnectedAccountPayoutsEnabled: jest.fn().mockReturnValue(false) };
+        platformFinanceConfig = { isConnectedAccountPayoutsEnabled: jest.fn().mockResolvedValue(false) };
         connectedAccountsProvider = {
             createConnectedAccount: jest.fn(),
             getConnectedAccountStatus: jest.fn(),
@@ -118,7 +118,7 @@ describe('PayoutAccountsService', () => {
         describe('payout_method: CONNECTED_ACCOUNT', () => {
             it('throws BadRequestException when the rollout flag is disabled', async () => {
                 prisma.payoutAccount.findUnique.mockResolvedValue(null);
-                platformFinanceConfig.isConnectedAccountPayoutsEnabled.mockReturnValue(false);
+                platformFinanceConfig.isConnectedAccountPayoutsEnabled.mockResolvedValue(false);
 
                 await expect(
                     service.createForStore(user, 'store1', createDto({ payout_method: PayoutMethod.CONNECTED_ACCOUNT })),
@@ -129,7 +129,7 @@ describe('PayoutAccountsService', () => {
 
             it('creates a connected account and persists it as PENDING when the rollout flag is enabled', async () => {
                 prisma.payoutAccount.findUnique.mockResolvedValue(null);
-                platformFinanceConfig.isConnectedAccountPayoutsEnabled.mockReturnValue(true);
+                platformFinanceConfig.isConnectedAccountPayoutsEnabled.mockResolvedValue(true);
                 connectedAccountsProvider.createConnectedAccount.mockResolvedValue({
                     accountId: 'acc_1',
                     onboardingUrl: 'https://onboard',
@@ -160,7 +160,7 @@ describe('PayoutAccountsService', () => {
 
             it('wraps a provider failure in BadGatewayException', async () => {
                 prisma.payoutAccount.findUnique.mockResolvedValue(null);
-                platformFinanceConfig.isConnectedAccountPayoutsEnabled.mockReturnValue(true);
+                platformFinanceConfig.isConnectedAccountPayoutsEnabled.mockResolvedValue(true);
                 connectedAccountsProvider.createConnectedAccount.mockRejectedValue(new Error('Viva rejected this account'));
 
                 await expect(

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 
 export const APP_CONFIG_ID = 'default';
@@ -23,6 +22,7 @@ export const APP_CONFIG_DEFAULTS = {
   vat_rate_percentage: 0,
   payout_invoice_required: false,
   payout_invoice_ai_check_enabled: true,
+  connected_account_payouts_enabled: false,
 };
 
 export interface PlatformInvoiceDetails {
@@ -36,7 +36,6 @@ export interface PlatformInvoiceDetails {
 @Injectable()
 export class PlatformFinanceConfig {
   constructor(
-    private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -104,7 +103,7 @@ export class PlatformFinanceConfig {
   // Central rollout switch for connected-account (Marketplace) Store
   // payouts, gated off by default — flip on only once real platform
   // credentials exist and a sandbox onboarding has been verified end-to-end.
-  isConnectedAccountPayoutsEnabled(): boolean {
-    return this.configService.get<string>('CONNECTED_ACCOUNT_PAYOUTS_ENABLED') === 'true';
+  async isConnectedAccountPayoutsEnabled(): Promise<boolean> {
+    return (await this.getAppConfig()).connected_account_payouts_enabled;
   }
 }

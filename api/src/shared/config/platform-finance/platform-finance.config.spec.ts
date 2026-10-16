@@ -1,7 +1,6 @@
 import { PlatformFinanceConfig } from './platform-finance.config';
 
 describe('PlatformFinanceConfig', () => {
-    let configService: any;
     let prisma: any;
     let config: PlatformFinanceConfig;
 
@@ -15,9 +14,8 @@ describe('PlatformFinanceConfig', () => {
     };
 
     beforeEach(() => {
-        configService = { get: jest.fn() };
         prisma = { appConfig: { findUnique: jest.fn().mockResolvedValue(row), upsert: jest.fn() } };
-        config = new PlatformFinanceConfig(configService, prisma);
+        config = new PlatformFinanceConfig(prisma);
     });
 
     it('reads the commission percentage from the app_config row', async () => {
@@ -52,22 +50,15 @@ describe('PlatformFinanceConfig', () => {
         });
     });
 
-    it('reports connected-account payouts disabled by default', () => {
-        configService.get.mockReturnValue(undefined);
+    it('reports connected-account payouts enabled from the app_config row', async () => {
+        prisma.appConfig.findUnique.mockResolvedValue({ ...row, connected_account_payouts_enabled: true });
 
-        expect(config.isConnectedAccountPayoutsEnabled()).toBe(false);
-        expect(configService.get).toHaveBeenCalledWith('CONNECTED_ACCOUNT_PAYOUTS_ENABLED');
+        expect(await config.isConnectedAccountPayoutsEnabled()).toBe(true);
     });
 
-    it('reports connected-account payouts enabled when the flag is set to true', () => {
-        configService.get.mockReturnValue('true');
+    it('reports connected-account payouts disabled when the row has it off', async () => {
+        prisma.appConfig.findUnique.mockResolvedValue({ ...row, connected_account_payouts_enabled: false });
 
-        expect(config.isConnectedAccountPayoutsEnabled()).toBe(true);
-    });
-
-    it('reports connected-account payouts disabled for any non-"true" value', () => {
-        configService.get.mockReturnValue('false');
-
-        expect(config.isConnectedAccountPayoutsEnabled()).toBe(false);
+        expect(await config.isConnectedAccountPayoutsEnabled()).toBe(false);
     });
 });

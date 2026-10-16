@@ -146,6 +146,7 @@ export const AdminAppConfigPageContent: FC = () => {
       payout_hold_window_hours: data.payout_hold_window_hours,
       payout_invoice_required: data.payout_invoice_required,
       payout_invoice_ai_check_enabled: data.payout_invoice_ai_check_enabled,
+      connected_account_payouts_enabled: data.connected_account_payouts_enabled,
       platform_legal_name: data.platform_legal_name ?? "",
       platform_vat_number: data.platform_vat_number ?? "",
       platform_tax_office: data.platform_tax_office ?? "",
@@ -274,6 +275,33 @@ export const AdminAppConfigPageContent: FC = () => {
               </FieldShell>
             </div>
           </div>
+        </section>
+
+        <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
+          <h2 className="text-sm font-bold text-ink-charcoal">Payout accounts</h2>
+          <Controller
+            control={control}
+            name="connected_account_payouts_enabled"
+            render={({ field }) => (
+              <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
+                <span>
+                  <span className="block text-sm font-semibold text-ink-charcoal">
+                    Connected-account payouts (Viva)
+                  </span>
+                  <span className="block text-xs text-zinc-500">
+                    Shows &quot;Connect with Viva&quot; to stores. Turn on only once real Viva platform
+                    credentials exist and a sandbox onboarding has been verified.
+                  </span>
+                </span>
+                <Switch
+                  checked={field.value ?? false}
+                  onCheckedChange={field.onChange}
+                  disabled={isLoading}
+                  aria-label="Connected-account payouts"
+                />
+              </label>
+            )}
+          />
         </section>
 
         <ActionButtonWithPending
