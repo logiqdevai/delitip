@@ -130,6 +130,8 @@ export const DistributionsTable: FC<{
   // a reviewed payout request; "Pay out now" only reaches DIRECT employees.
   const policyQuery = usePayoutPolicy();
   const invoiceRequired = policyQuery.data?.payout_invoice_required ?? false;
+  // Tips only go to stores for now, so direct staff payouts stay hidden.
+  const storeOnly = policyQuery.data?.tip_payouts_store_only ?? true;
   const requestPreviewQuery = usePayoutRequestPreview(storeId, invoiceRequired);
   const openRequest = requestPreviewQuery.data?.open_request ?? null;
   const requestableAmount = requestPreviewQuery.data?.amount ?? 0;
@@ -169,15 +171,17 @@ export const DistributionsTable: FC<{
           </div>
           {invoiceRequired ? (
             <div className="flex flex-wrap items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setPayoutDialogOpen(true)}
-                disabled={!summary || summary.eligible_total_amount === 0}
-                className="rounded-xl"
-              >
-                Pay out staff
-              </Button>
+              {!storeOnly ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setPayoutDialogOpen(true)}
+                  disabled={!summary || summary.eligible_total_amount === 0}
+                  className="rounded-xl"
+                >
+                  Pay out staff
+                </Button>
+              ) : null}
               <Button
                 type="button"
                 onClick={() => setRequestDialogOpen(true)}

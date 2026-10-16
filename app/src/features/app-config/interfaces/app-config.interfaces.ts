@@ -11,6 +11,7 @@ export interface AppConfig {
   payout_invoice_required: boolean;
   payout_invoice_ai_check_enabled: boolean;
   connected_account_payouts_enabled: boolean;
+  tip_payouts_store_only: boolean;
   platform_legal_name: string | null;
   platform_vat_number: string | null;
   platform_tax_office: string | null;
@@ -30,6 +31,7 @@ export interface PlatformVatRate {
 export interface PayoutPolicy {
   payout_invoice_required: boolean;
   connected_account_payouts_enabled: boolean;
+  tip_payouts_store_only: boolean;
   invoice_to: {
     legal_name: string | null;
     vat_number: string | null;
@@ -48,6 +50,7 @@ interface AppConfigEditableFields {
   payout_invoice_required: boolean;
   payout_invoice_ai_check_enabled: boolean;
   connected_account_payouts_enabled: boolean;
+  tip_payouts_store_only: boolean;
   platform_legal_name: string;
   platform_vat_number: string;
   platform_tax_office: string;

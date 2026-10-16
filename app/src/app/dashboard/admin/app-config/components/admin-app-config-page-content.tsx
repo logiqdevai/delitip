@@ -152,6 +152,7 @@ export const AdminAppConfigPageContent: FC = () => {
       payout_invoice_required: data.payout_invoice_required ?? false,
       payout_invoice_ai_check_enabled: data.payout_invoice_ai_check_enabled ?? false,
       connected_account_payouts_enabled: data.connected_account_payouts_enabled ?? false,
+      tip_payouts_store_only: data.tip_payouts_store_only ?? true,
       platform_legal_name: data.platform_legal_name ?? "",
       platform_vat_number: data.platform_vat_number ?? "",
       platform_tax_office: data.platform_tax_office ?? "",
@@ -331,6 +332,29 @@ export const AdminAppConfigPageContent: FC = () => {
                   onCheckedChange={field.onChange}
                   disabled={updateConfig.isPending}
                   aria-label="Connected-account payouts"
+                />
+              </label>
+            )}
+          />
+          <Controller
+            control={control}
+            name="tip_payouts_store_only"
+            render={({ field }) => (
+              <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
+                <span>
+                  <span className="block text-sm font-semibold text-ink-charcoal">
+                    Transfer tips to stores only
+                  </span>
+                  <span className="block text-xs text-zinc-500">
+                    Tips are paid to the store, which hands staff their share itself. Hides the
+                    direct staff payout actions.
+                  </span>
+                </span>
+                <Switch
+                  checked={field.value ?? true}
+                  onCheckedChange={field.onChange}
+                  disabled={updateConfig.isPending}
+                  aria-label="Transfer tips to stores only"
                 />
               </label>
             )}

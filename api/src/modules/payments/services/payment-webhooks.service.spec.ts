@@ -24,6 +24,7 @@ describe('PaymentWebhooksService', () => {
     let platformFinanceConfig: any;
     let tipsService: any;
     let payoutAccountsService: any;
+    let configService: any;
 
     beforeEach(() => {
         prisma = {
@@ -47,7 +48,9 @@ describe('PaymentWebhooksService', () => {
         tipsService = { triggerPerformanceChangeAlert: jest.fn().mockResolvedValue(undefined) };
         payoutAccountsService = { promoteIfVerified: jest.fn().mockResolvedValue(undefined) };
 
-        service = new PaymentWebhooksService(prisma, vivaTransactions, platformFinanceConfig, tipsService, payoutAccountsService);
+        configService = { get: jest.fn().mockReturnValue('test') };
+
+        service = new PaymentWebhooksService(prisma, vivaTransactions, platformFinanceConfig, tipsService, payoutAccountsService, configService);
         prisma.webhookEvent.create.mockResolvedValue({ id: 'we1' });
     });
 

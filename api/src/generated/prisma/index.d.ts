@@ -48890,6 +48890,7 @@ export namespace Prisma {
     payout_invoice_required: boolean | null
     payout_invoice_ai_check_enabled: boolean | null
     connected_account_payouts_enabled: boolean | null
+    tip_payouts_store_only: boolean | null
     platform_legal_name: string | null
     platform_vat_number: string | null
     platform_tax_office: string | null
@@ -48910,6 +48911,7 @@ export namespace Prisma {
     payout_invoice_required: boolean | null
     payout_invoice_ai_check_enabled: boolean | null
     connected_account_payouts_enabled: boolean | null
+    tip_payouts_store_only: boolean | null
     platform_legal_name: string | null
     platform_vat_number: string | null
     platform_tax_office: string | null
@@ -48930,6 +48932,7 @@ export namespace Prisma {
     payout_invoice_required: number
     payout_invoice_ai_check_enabled: number
     connected_account_payouts_enabled: number
+    tip_payouts_store_only: number
     platform_legal_name: number
     platform_vat_number: number
     platform_tax_office: number
@@ -48968,6 +48971,7 @@ export namespace Prisma {
     payout_invoice_required?: true
     payout_invoice_ai_check_enabled?: true
     connected_account_payouts_enabled?: true
+    tip_payouts_store_only?: true
     platform_legal_name?: true
     platform_vat_number?: true
     platform_tax_office?: true
@@ -48988,6 +48992,7 @@ export namespace Prisma {
     payout_invoice_required?: true
     payout_invoice_ai_check_enabled?: true
     connected_account_payouts_enabled?: true
+    tip_payouts_store_only?: true
     platform_legal_name?: true
     platform_vat_number?: true
     platform_tax_office?: true
@@ -49008,6 +49013,7 @@ export namespace Prisma {
     payout_invoice_required?: true
     payout_invoice_ai_check_enabled?: true
     connected_account_payouts_enabled?: true
+    tip_payouts_store_only?: true
     platform_legal_name?: true
     platform_vat_number?: true
     platform_tax_office?: true
@@ -49115,6 +49121,7 @@ export namespace Prisma {
     payout_invoice_required: boolean
     payout_invoice_ai_check_enabled: boolean
     connected_account_payouts_enabled: boolean
+    tip_payouts_store_only: boolean
     platform_legal_name: string | null
     platform_vat_number: string | null
     platform_tax_office: string | null
@@ -49154,6 +49161,7 @@ export namespace Prisma {
     payout_invoice_required?: boolean
     payout_invoice_ai_check_enabled?: boolean
     connected_account_payouts_enabled?: boolean
+    tip_payouts_store_only?: boolean
     platform_legal_name?: boolean
     platform_vat_number?: boolean
     platform_tax_office?: boolean
@@ -49174,6 +49182,7 @@ export namespace Prisma {
     payout_invoice_required?: boolean
     payout_invoice_ai_check_enabled?: boolean
     connected_account_payouts_enabled?: boolean
+    tip_payouts_store_only?: boolean
     platform_legal_name?: boolean
     platform_vat_number?: boolean
     platform_tax_office?: boolean
@@ -49194,6 +49203,7 @@ export namespace Prisma {
     payout_invoice_required?: boolean
     payout_invoice_ai_check_enabled?: boolean
     connected_account_payouts_enabled?: boolean
+    tip_payouts_store_only?: boolean
     platform_legal_name?: boolean
     platform_vat_number?: boolean
     platform_tax_office?: boolean
@@ -49214,6 +49224,7 @@ export namespace Prisma {
     payout_invoice_required?: boolean
     payout_invoice_ai_check_enabled?: boolean
     connected_account_payouts_enabled?: boolean
+    tip_payouts_store_only?: boolean
     platform_legal_name?: boolean
     platform_vat_number?: boolean
     platform_tax_office?: boolean
@@ -49224,7 +49235,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type AppConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_platform_commission_percentage" | "tip_processor_fee_estimate_percentage" | "tip_processor_fee_estimate_fixed_amount" | "payout_hold_window_hours" | "vat_rate_percentage" | "payout_invoice_required" | "payout_invoice_ai_check_enabled" | "connected_account_payouts_enabled" | "platform_legal_name" | "platform_vat_number" | "platform_tax_office" | "platform_address" | "payout_invoice_instructions" | "updated_by_user_id" | "created_at" | "updated_at", ExtArgs["result"]["appConfig"]>
+  export type AppConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tip_platform_commission_percentage" | "tip_processor_fee_estimate_percentage" | "tip_processor_fee_estimate_fixed_amount" | "payout_hold_window_hours" | "vat_rate_percentage" | "payout_invoice_required" | "payout_invoice_ai_check_enabled" | "connected_account_payouts_enabled" | "tip_payouts_store_only" | "platform_legal_name" | "platform_vat_number" | "platform_tax_office" | "platform_address" | "payout_invoice_instructions" | "updated_by_user_id" | "created_at" | "updated_at", ExtArgs["result"]["appConfig"]>
 
   export type $AppConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AppConfig"
@@ -49239,6 +49250,7 @@ export namespace Prisma {
       payout_invoice_required: boolean
       payout_invoice_ai_check_enabled: boolean
       connected_account_payouts_enabled: boolean
+      tip_payouts_store_only: boolean
       platform_legal_name: string | null
       platform_vat_number: string | null
       platform_tax_office: string | null
@@ -49679,6 +49691,7 @@ export namespace Prisma {
     readonly payout_invoice_required: FieldRef<"AppConfig", 'Boolean'>
     readonly payout_invoice_ai_check_enabled: FieldRef<"AppConfig", 'Boolean'>
     readonly connected_account_payouts_enabled: FieldRef<"AppConfig", 'Boolean'>
+    readonly tip_payouts_store_only: FieldRef<"AppConfig", 'Boolean'>
     readonly platform_legal_name: FieldRef<"AppConfig", 'String'>
     readonly platform_vat_number: FieldRef<"AppConfig", 'String'>
     readonly platform_tax_office: FieldRef<"AppConfig", 'String'>
@@ -50669,6 +50682,7 @@ export namespace Prisma {
     payout_invoice_required: 'payout_invoice_required',
     payout_invoice_ai_check_enabled: 'payout_invoice_ai_check_enabled',
     connected_account_payouts_enabled: 'connected_account_payouts_enabled',
+    tip_payouts_store_only: 'tip_payouts_store_only',
     platform_legal_name: 'platform_legal_name',
     platform_vat_number: 'platform_vat_number',
     platform_tax_office: 'platform_tax_office',
@@ -54584,6 +54598,7 @@ export namespace Prisma {
     payout_invoice_required?: BoolFilter<"AppConfig"> | boolean
     payout_invoice_ai_check_enabled?: BoolFilter<"AppConfig"> | boolean
     connected_account_payouts_enabled?: BoolFilter<"AppConfig"> | boolean
+    tip_payouts_store_only?: BoolFilter<"AppConfig"> | boolean
     platform_legal_name?: StringNullableFilter<"AppConfig"> | string | null
     platform_vat_number?: StringNullableFilter<"AppConfig"> | string | null
     platform_tax_office?: StringNullableFilter<"AppConfig"> | string | null
@@ -54604,6 +54619,7 @@ export namespace Prisma {
     payout_invoice_required?: SortOrder
     payout_invoice_ai_check_enabled?: SortOrder
     connected_account_payouts_enabled?: SortOrder
+    tip_payouts_store_only?: SortOrder
     platform_legal_name?: SortOrderInput | SortOrder
     platform_vat_number?: SortOrderInput | SortOrder
     platform_tax_office?: SortOrderInput | SortOrder
@@ -54627,6 +54643,7 @@ export namespace Prisma {
     payout_invoice_required?: BoolFilter<"AppConfig"> | boolean
     payout_invoice_ai_check_enabled?: BoolFilter<"AppConfig"> | boolean
     connected_account_payouts_enabled?: BoolFilter<"AppConfig"> | boolean
+    tip_payouts_store_only?: BoolFilter<"AppConfig"> | boolean
     platform_legal_name?: StringNullableFilter<"AppConfig"> | string | null
     platform_vat_number?: StringNullableFilter<"AppConfig"> | string | null
     platform_tax_office?: StringNullableFilter<"AppConfig"> | string | null
@@ -54647,6 +54664,7 @@ export namespace Prisma {
     payout_invoice_required?: SortOrder
     payout_invoice_ai_check_enabled?: SortOrder
     connected_account_payouts_enabled?: SortOrder
+    tip_payouts_store_only?: SortOrder
     platform_legal_name?: SortOrderInput | SortOrder
     platform_vat_number?: SortOrderInput | SortOrder
     platform_tax_office?: SortOrderInput | SortOrder
@@ -54675,6 +54693,7 @@ export namespace Prisma {
     payout_invoice_required?: BoolWithAggregatesFilter<"AppConfig"> | boolean
     payout_invoice_ai_check_enabled?: BoolWithAggregatesFilter<"AppConfig"> | boolean
     connected_account_payouts_enabled?: BoolWithAggregatesFilter<"AppConfig"> | boolean
+    tip_payouts_store_only?: BoolWithAggregatesFilter<"AppConfig"> | boolean
     platform_legal_name?: StringNullableWithAggregatesFilter<"AppConfig"> | string | null
     platform_vat_number?: StringNullableWithAggregatesFilter<"AppConfig"> | string | null
     platform_tax_office?: StringNullableWithAggregatesFilter<"AppConfig"> | string | null
@@ -58329,6 +58348,7 @@ export namespace Prisma {
     payout_invoice_required?: boolean
     payout_invoice_ai_check_enabled?: boolean
     connected_account_payouts_enabled?: boolean
+    tip_payouts_store_only?: boolean
     platform_legal_name?: string | null
     platform_vat_number?: string | null
     platform_tax_office?: string | null
@@ -58349,6 +58369,7 @@ export namespace Prisma {
     payout_invoice_required?: boolean
     payout_invoice_ai_check_enabled?: boolean
     connected_account_payouts_enabled?: boolean
+    tip_payouts_store_only?: boolean
     platform_legal_name?: string | null
     platform_vat_number?: string | null
     platform_tax_office?: string | null
@@ -58369,6 +58390,7 @@ export namespace Prisma {
     payout_invoice_required?: BoolFieldUpdateOperationsInput | boolean
     payout_invoice_ai_check_enabled?: BoolFieldUpdateOperationsInput | boolean
     connected_account_payouts_enabled?: BoolFieldUpdateOperationsInput | boolean
+    tip_payouts_store_only?: BoolFieldUpdateOperationsInput | boolean
     platform_legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     platform_vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     platform_tax_office?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58389,6 +58411,7 @@ export namespace Prisma {
     payout_invoice_required?: BoolFieldUpdateOperationsInput | boolean
     payout_invoice_ai_check_enabled?: BoolFieldUpdateOperationsInput | boolean
     connected_account_payouts_enabled?: BoolFieldUpdateOperationsInput | boolean
+    tip_payouts_store_only?: BoolFieldUpdateOperationsInput | boolean
     platform_legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     platform_vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     platform_tax_office?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58409,6 +58432,7 @@ export namespace Prisma {
     payout_invoice_required?: boolean
     payout_invoice_ai_check_enabled?: boolean
     connected_account_payouts_enabled?: boolean
+    tip_payouts_store_only?: boolean
     platform_legal_name?: string | null
     platform_vat_number?: string | null
     platform_tax_office?: string | null
@@ -58429,6 +58453,7 @@ export namespace Prisma {
     payout_invoice_required?: BoolFieldUpdateOperationsInput | boolean
     payout_invoice_ai_check_enabled?: BoolFieldUpdateOperationsInput | boolean
     connected_account_payouts_enabled?: BoolFieldUpdateOperationsInput | boolean
+    tip_payouts_store_only?: BoolFieldUpdateOperationsInput | boolean
     platform_legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     platform_vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     platform_tax_office?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58449,6 +58474,7 @@ export namespace Prisma {
     payout_invoice_required?: BoolFieldUpdateOperationsInput | boolean
     payout_invoice_ai_check_enabled?: BoolFieldUpdateOperationsInput | boolean
     connected_account_payouts_enabled?: BoolFieldUpdateOperationsInput | boolean
+    tip_payouts_store_only?: BoolFieldUpdateOperationsInput | boolean
     platform_legal_name?: NullableStringFieldUpdateOperationsInput | string | null
     platform_vat_number?: NullableStringFieldUpdateOperationsInput | string | null
     platform_tax_office?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61424,6 +61450,7 @@ export namespace Prisma {
     payout_invoice_required?: SortOrder
     payout_invoice_ai_check_enabled?: SortOrder
     connected_account_payouts_enabled?: SortOrder
+    tip_payouts_store_only?: SortOrder
     platform_legal_name?: SortOrder
     platform_vat_number?: SortOrder
     platform_tax_office?: SortOrder
@@ -61452,6 +61479,7 @@ export namespace Prisma {
     payout_invoice_required?: SortOrder
     payout_invoice_ai_check_enabled?: SortOrder
     connected_account_payouts_enabled?: SortOrder
+    tip_payouts_store_only?: SortOrder
     platform_legal_name?: SortOrder
     platform_vat_number?: SortOrder
     platform_tax_office?: SortOrder
@@ -61472,6 +61500,7 @@ export namespace Prisma {
     payout_invoice_required?: SortOrder
     payout_invoice_ai_check_enabled?: SortOrder
     connected_account_payouts_enabled?: SortOrder
+    tip_payouts_store_only?: SortOrder
     platform_legal_name?: SortOrder
     platform_vat_number?: SortOrder
     platform_tax_office?: SortOrder

@@ -15,12 +15,13 @@ export class PlatformPayoutPolicyController {
     @Get('payout-policy')
     @ApiOperation({ summary: 'Whether payouts require an invoice-backed request, and the platform invoicing details' })
     async getPayoutPolicy() {
-        const [payout_invoice_required, connected_account_payouts_enabled, details] = await Promise.all([
+        const [payout_invoice_required, connected_account_payouts_enabled, tip_payouts_store_only, details] = await Promise.all([
             this.platformFinanceConfig.isPayoutInvoiceRequired(),
             this.platformFinanceConfig.isConnectedAccountPayoutsEnabled(),
+            this.platformFinanceConfig.isTipPayoutsStoreOnly(),
             this.platformFinanceConfig.getPlatformInvoiceDetails(),
         ]);
         const { instructions, ...invoice_to } = details;
-        return { payout_invoice_required, connected_account_payouts_enabled, invoice_to, instructions };
+        return { payout_invoice_required, connected_account_payouts_enabled, tip_payouts_store_only, invoice_to, instructions };
     }
 }

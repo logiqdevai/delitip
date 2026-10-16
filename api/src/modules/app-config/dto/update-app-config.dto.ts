@@ -49,6 +49,11 @@ export class UpdateAppConfigDto {
     @IsBoolean()
     connected_account_payouts_enabled?: boolean;
 
+    @ApiProperty({ required: false, example: true, description: "Tips are only transferred to stores (no direct staff payouts). Hides staff payout actions." })
+    @IsOptional()
+    @IsBoolean()
+    tip_payouts_store_only?: boolean;
+
     @ApiProperty({ required: false, example: "Delitip P.C.", description: "Legal name Stores must put on invoices to the platform" })
     @IsOptional()
     @IsString()

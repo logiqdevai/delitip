@@ -23,6 +23,7 @@ export const APP_CONFIG_DEFAULTS = {
   payout_invoice_required: false,
   payout_invoice_ai_check_enabled: true,
   connected_account_payouts_enabled: false,
+  tip_payouts_store_only: true,
 };
 
 export interface PlatformInvoiceDetails {
@@ -105,5 +106,11 @@ export class PlatformFinanceConfig {
   // credentials exist and a sandbox onboarding has been verified end-to-end.
   async isConnectedAccountPayoutsEnabled(): Promise<boolean> {
     return (await this.getAppConfig()).connected_account_payouts_enabled;
+  }
+
+  // Tips are only transferred to stores for now (no direct-to-employee
+  // payouts). Read by the web app to hide staff payout actions.
+  async isTipPayoutsStoreOnly(): Promise<boolean> {
+    return (await this.getAppConfig()).tip_payouts_store_only;
   }
 }

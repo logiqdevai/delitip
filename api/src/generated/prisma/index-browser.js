@@ -617,6 +617,7 @@ exports.Prisma.AppConfigScalarFieldEnum = {
   payout_invoice_required: 'payout_invoice_required',
   payout_invoice_ai_check_enabled: 'payout_invoice_ai_check_enabled',
   connected_account_payouts_enabled: 'connected_account_payouts_enabled',
+  tip_payouts_store_only: 'tip_payouts_store_only',
   platform_legal_name: 'platform_legal_name',
   platform_vat_number: 'platform_vat_number',
   platform_tax_office: 'platform_tax_office',

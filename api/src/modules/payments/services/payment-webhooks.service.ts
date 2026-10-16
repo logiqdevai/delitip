@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   DistributionPayoutMode,
   DistributionRecipientType,
@@ -35,6 +36,7 @@ export class PaymentWebhooksService {
     private readonly platformFinanceConfig: PlatformFinanceConfig,
     private readonly tipsService: TipsService,
     private readonly payoutAccountsService: PayoutAccountsService,
+    private readonly configService: ConfigService,
   ) {}
 
   async process(payload: VivaWebhookPayloadDto): Promise<void> {
@@ -211,6 +213,11 @@ export class PaymentWebhooksService {
 
     const distributionLines = calculateTipDistribution(recipients, selectedEmployeeIds, netDistributableAmount);
 
+    // Staging's Viva demo environment doesn't reliably send the 1799
+    // price-calculated webhook, so fees would stay unconfirmed forever and
+    // block payouts. There, the estimate is treated as the confirmed fee.
+    const autoConfirmFee = this.configService.get<string>('NODE_ENV') === 'staging';
+
     await this.prisma.$transaction(async (tx) => {
       await tx.tip.update({
         where: { id: tip.id },
@@ -229,6 +236,10 @@ export class PaymentWebhooksService {
           confirmed_at: new Date(),
           processor_fee_percentage_used: processorFeePercentageUsed,
           processor_fee_estimated: processorFeeEstimated,
+          ...(autoConfirmFee && {
+            processor_fee_confirmed: true,
+            processor_fee_confirmed_amount: processorFeeEstimated,
+          }),
           payment_fee_percentage: paymentFeePercentage,
           total_fee_amount: totalFeeAmount,
           total_fee_percentage: totalFeePercentage,
