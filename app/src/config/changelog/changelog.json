@@ -644,5 +644,16 @@
     "agent": "Claude Sonnet 5.5",
     "sessionMood": "RUSHED",
     "sessionNote": "Short, direct asks with a pasted env block, then a follow-up to move the VAT rate into the same table."
+  },
+  {
+    "commit": "ee15bcf",
+    "date": "2026-10-16",
+    "type": "FEATURE",
+    "title": "Require an invoice and admin approval before paying stores their tips",
+    "description": "When an admin turns on the new Payout invoices setting in App Config, a store owner requests a payout from Tips > Payments: they see the exact amount and the tips and dates it covers, issue an invoice to Delitip for that total, and upload it. The invoice is read automatically to flag a wrong total, VAT number or date, then an admin reviews it on Payments & Payouts, where approving sends the bank transfer and rejecting sends the store a note to resubmit. A new Transfer tips to stores only setting also controls whether direct staff payouts and the Who pays the employees option are offered.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5.5",
+    "sessionMood": "BLUNT",
+    "sessionNote": "A planned feature built in one long run, then short corrective asks: drop an env var and keep the value in code, fix a misleading caption, hide the staff payout button and drive it from a config."
   }
 ]
