@@ -22,6 +22,7 @@ import { EmployeeSelect } from "@/components/ui/employee-select";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
 import { DistributionRecipientTypeFormOptions } from "@/config/constants/dropdowns/distribution/distribution-recipient-type-form.options";
 import { DistributionPayoutModeFormOptions } from "@/config/constants/dropdowns/distribution/distribution-payout-mode-form.options";
+import { usePayoutPolicy } from "@/features/app-config/hooks/use-app-config";
 import { getDistributionPayoutModeDescription } from "@/config/constants/dropdowns/distribution/distribution-payout-mode-description.options";
 import {
   useCreateDistributionRule,
@@ -51,13 +52,11 @@ interface DistributionRuleFormDialogProps {
   onCreated?: (rule: DistributionRule) => void;
 }
 
-// Early version: "Pay each recipient directly" is hidden in the UI and new
-// rules default to routing everything through the business.
+// New rules default to routing everything through the business. Whether
+// "Pay each recipient directly" is offered is an App Config setting
+// (tip_payouts_store_only), read in the component below.
 const DEFAULT_PAYOUT_MODE: DistributionPayoutMode =
   DistributionPayoutModes.VIA_STORE;
-const VISIBLE_PAYOUT_MODE_OPTIONS = DistributionPayoutModeFormOptions.filter(
-  (option) => option.id !== DistributionPayoutModes.DIRECT,
-);
 
 const emptyRecipient =(): DistributionRuleFormData["recipients"][number] => ({
   recipient_type: DistributionRecipientTypes.EMPLOYEE,
@@ -119,6 +118,16 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
 
   const payoutMode = useWatch({ control, name: "payout_mode" });
   const payoutModeChanged = !!rule && payoutMode !== rule.payout_mode;
+  // Tips are only transferred to stores while this is on, so the direct
+  // option is hidden — unless this rule already uses it, so it still renders
+  // as selected and can be switched away from.
+  const storeOnly = usePayoutPolicy().data?.tip_payouts_store_only ?? true;
+  const visiblePayoutModeOptions = DistributionPayoutModeFormOptions.filter(
+    (option) =>
+      !storeOnly ||
+      option.id !== DistributionPayoutModes.DIRECT ||
+      rule?.payout_mode === DistributionPayoutModes.DIRECT,
+  );
   // Only asked for once the owner actually moves the switch — there's nothing
   // to warn about until then.
   const payoutModeImpact = useDistributionRulePayoutModeImpact(rule?.id ?? "", {
@@ -309,7 +318,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                   role="radiogroup"
                   aria-label="Who pays the employees"
                 >
-                  {VISIBLE_PAYOUT_MODE_OPTIONS.map((option) => {
+                  {visiblePayoutModeOptions.map((option) => {
                     const selected = field.value === option.id;
                     const Icon =
                       option.id === DistributionPayoutModes.VIA_STORE
