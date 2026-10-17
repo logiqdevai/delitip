@@ -69,6 +69,7 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "The Pending Distributions panel on Dashboard → Tips → Payments shows amounts from completed tips that have been split according to a distribution rule but not yet paid out - for the store, for individual employees, or both.",
+            "Eligible amounts are released after a short hold following each tip. Depending on how payouts are set up, the Payments tab offers either Pay out now or Request payout, which asks you to invoice Delitip first - see Requesting a payout.",
             "A share earned under a rule set to \"Send everything to the business\" is paid out to your business account rather than to the employee, so one transfer can cover your own share plus what you're holding for staff. The payout preview and your payout history both break out which part is which.",
           ],
           links: [
@@ -79,7 +80,52 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
           ],
         },
       ],
-      related: [{ category: "money-and-payouts", article: "connecting-your-store-payout-account" }],
+      related: [
+        { category: "money-and-payouts", article: "connecting-your-store-payout-account" },
+        { category: "money-and-payouts", article: "requesting-a-payout" },
+      ],
+    },
+    {
+      slug: "requesting-a-payout",
+      title: "Requesting a payout",
+      summary:
+        "Invoice Delitip for the tips you're owed and upload it; once an admin approves, the transfer is sent to your payout account.",
+      sections: [
+        {
+          paragraphs: [
+            "For tax compliance, your store invoices Delitip for the tips it's paid. When invoicing is switched on, a store's money is released through a payout request rather than a single Pay out now button. Only an Owner can submit one.",
+            "On Dashboard → Tips → Payments, press Request payout. You'll see the exact amount you'll be paid and the tips and dates it covers.",
+          ],
+          links: [
+            {
+              label: "Dashboard → Tips → Payments",
+              href: Routes.dashboard.tipsPayments,
+            },
+          ],
+        },
+        {
+          heading: "Issuing the invoice",
+          paragraphs: [
+            "The next step shows the details to invoice - Delitip's legal name, VAT number, tax office and address, each with a copy button. Issue an invoice to those details with the amount before VAT equal to the payout shown, adding your own VAT on top as you normally would.",
+            "Upload the invoice as a PDF or photo. You can also enter its invoice number, which helps us match it up.",
+          ],
+        },
+        {
+          heading: "What happens next",
+          paragraphs: [
+            "Once submitted, those tips are locked to your request and shown as Under review, so they can't be paid out any other way. We read the invoice automatically and flag anything that looks off - a wrong amount, VAT number or date - then an admin reviews it.",
+            "If it's approved, the bank transfer is sent to your payout account. If it's rejected, you receive a note explaining why and the tips are released so you can submit a corrected invoice. You're notified by alert and email either way.",
+            "You can have one open request at a time. To withdraw it, cancel it from the Payouts tab, where your requests are listed above the payout history.",
+          ],
+          links: [
+            { label: "Dashboard → Tips → Payouts", href: Routes.dashboard.tipsPayouts },
+          ],
+        },
+      ],
+      related: [
+        { category: "money-and-payouts", article: "connecting-your-store-payout-account" },
+        { category: "money-and-payouts", article: "pending-distributions-explained" },
+      ],
     },
     {
       slug: "paying-your-staff-yourself",

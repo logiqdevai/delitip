@@ -116,6 +116,22 @@ export const resetPassword = async (
   }
 };
 
+export const getResetTokenInfo = async (
+  token: string,
+): Promise<{ email: string }> => {
+  try {
+    const response = await axiosInstance.get<{ email: string }>(
+      ApiRoutes.auth.resetPasswordInfo,
+      { params: { token } },
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "This link is invalid or has expired."),
+    );
+  }
+};
+
 export const changePassword = async (
   payload: ChangePasswordPayload,
 ): Promise<{ message: string }> => {

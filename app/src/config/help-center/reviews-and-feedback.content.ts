@@ -12,11 +12,11 @@ export const ReviewsAndFeedbackHelpCategory: HelpCategory = {
       slug: "viewing-customer-reviews",
       title: "Viewing customer reviews",
       summary:
-        "Ratings and comments customers leave after tipping, filterable by rating and employee.",
+        "Ratings and comments customers leave after tipping, filterable by rating, employee and date.",
       sections: [
         {
           paragraphs: [
-            "Dashboard → Reviews lists every customer rating and comment, each tied to the employee it was left for. Filter by minimum rating or employee.",
+            "Dashboard → Reviews lists every customer rating and comment, each tied to the employee it was left for. Filter by minimum rating or employee, or use the From and To date pickers to narrow the list to a specific window - the To date includes the whole day it names.",
             "Open a review's detail sheet to see the full comment along with any tags or categories the customer selected.",
           ],
           links: [{ label: "Dashboard → Reviews", href: Routes.dashboard.reviews }],
@@ -56,8 +56,8 @@ export const ReviewsAndFeedbackHelpCategory: HelpCategory = {
             "Settings → Reviews & Feedback controls what customers see after they rate an employee:",
           ],
           list: [
-            "Rating categories - sub-ratings you can reorder by dragging, and show or hide",
-            "Feedback questions - Rating-type or Text-type questions, also reorderable and toggleable",
+            "Rating categories - sub-ratings you can reorder by dragging, show or hide, and edit the wording of",
+            "Feedback questions - Rating-type or Text-type questions, also reorderable, toggleable and editable",
             "Compliment/feedback tags - quick-select tags marked Positive, Neutral, or Negative sentiment, managed by Admin/Super Admin",
           ],
           links: [{ label: "Settings → Reviews & Feedback", href: Routes.dashboard.settings.reviewsFeedback }],

@@ -10,8 +10,12 @@ import {
   resetPasswordSchema,
   type ResetPasswordFormData,
 } from "@/features/auth/validation-schemas/auth.schema";
-import { useAcceptInvite } from "@/features/auth/hooks/use-auth";
+import {
+  useAcceptInvite,
+  useInviteInfo,
+} from "@/features/auth/hooks/use-auth";
 import { Routes } from "@/routes/routes";
+import { Input } from "@/components/ui/input";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { PasswordInput } from "@/components/ui/password-input";
 
@@ -19,6 +23,7 @@ export const AuthAcceptInviteForm: FC = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token")?.trim() ?? "";
   const acceptInvite = useAcceptInvite();
+  const inviteInfo = useInviteInfo(token);
 
   const {
     control,
@@ -41,7 +46,7 @@ export const AuthAcceptInviteForm: FC = () => {
     });
   });
 
-  if (!token) {
+  if (!token || inviteInfo.isError) {
     return (
       <div className="auth-fade-enter space-y-6">
         <div>
@@ -49,8 +54,10 @@ export const AuthAcceptInviteForm: FC = () => {
             Invalid invite link
           </h1>
           <p className="mt-2 text-xs leading-relaxed text-zinc-500">
-            This invite link is missing a token. Ask your store owner to
-            resend your invite.
+            {token
+              ? "This invite link is invalid or has expired."
+              : "This invite link is missing a token."}{" "}
+            Ask your store owner to resend your invite.
           </p>
         </div>
         <Link
@@ -76,6 +83,23 @@ export const AuthAcceptInviteForm: FC = () => {
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
+        <div>
+          <label
+            htmlFor="invite-email"
+            className="mb-1.5 block text-xs font-semibold text-zinc-700"
+          >
+            Email
+          </label>
+          <Input
+            id="invite-email"
+            type="email"
+            value={inviteInfo.data?.email ?? ""}
+            placeholder={inviteInfo.isPending ? "Loading…" : ""}
+            disabled
+            readOnly
+          />
+        </div>
+
         <div>
           <label
             htmlFor="invite-password"

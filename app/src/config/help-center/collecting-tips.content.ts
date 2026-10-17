@@ -100,6 +100,7 @@ export const CollectingTipsHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "This is set per rule, not per business, so you can pool the tips from some QR codes and pay directly from others - a rule attached to the dining-room codes can send everything to the business while a spa rule pays staff directly.",
+            "Right now tips are paid to your store, so \"Send everything to the business\" is the route on offer and new rules use it. \"Pay each recipient directly\" only appears if direct staff payouts have been enabled for the platform.",
             "Switching an existing rule between the two moves anything still pending under it onto the new route, and the editor tells you how many shares that is before you save. Shares already paid out, or already handed over and recorded, stay as they are.",
           ],
         },

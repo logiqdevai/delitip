@@ -78,7 +78,7 @@ export class UpdateAppConfigDto {
     @MaxLength(300)
     platform_address?: string;
 
-    @ApiProperty({ required: false, example: "Also email the PDF to invoices@delitip.com", description: "Free-text instructions shown to Stores when they request a payout" })
+    @ApiProperty({ required: false, example: "Also email the PDF to invoices@logiqdev.com", description: "Free-text instructions shown to Stores when they request a payout" })
     @IsOptional()
     @IsString()
     @MaxLength(2000)

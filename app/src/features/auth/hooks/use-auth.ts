@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import {
   changePassword,
   forgotPassword,
+  getResetTokenInfo,
   loginWithEmail,
   registerWithEmail,
   resetPassword,
@@ -203,6 +204,15 @@ export const useResetPassword = () => {
         type: "error",
       });
     },
+  });
+};
+
+export const useInviteInfo = (token: string) => {
+  return useQuery({
+    queryKey: [...authQueryKeys.root, "invite-info", token] as const,
+    queryFn: () => getResetTokenInfo(token),
+    enabled: !!token,
+    retry: false,
   });
 };
 

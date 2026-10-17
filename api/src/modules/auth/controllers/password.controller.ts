@@ -1,5 +1,5 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PasswordService } from '../services/password.service';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
@@ -36,6 +36,15 @@ export class PasswordController {
     })
     resetPassword(@Body() dto: ResetPasswordDto) {
         return this.passwordService.resetPassword(dto);
+    }
+
+    @Get('reset-password/info')
+    @ApiOperation({ summary: 'Get the email a reset/invite token belongs to' })
+    @ApiQuery({ name: 'token', type: String })
+    @ApiResponse({ status: 200, description: 'Email for the token' })
+    @ApiResponse({ status: 400, description: 'Invalid or expired token' })
+    getTokenInfo(@Query('token') token: string) {
+        return this.passwordService.getTokenInfo(token ?? '');
     }
 
     @Post('change-password')

@@ -3,6 +3,7 @@ import { type FC } from "react";
 import Link from "next/link";
 import { LegalDocument } from "../components/legal-document";
 import { Routes } from "@/routes/routes";
+import { SiteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Terms of Service - delitip",
@@ -65,9 +66,9 @@ const TermsPage: FC = () => {
                 have that level of access. Notify us promptly at{" "}
                 <a
                   className="underline underline-offset-2"
-                  href="mailto:info@delitip.com"
+                  href={SiteConfig.contactEmailHref}
                 >
-                  info@delitip.com
+                  {SiteConfig.contactEmail}
                 </a>{" "}
                 if you suspect unauthorized access to your account.
               </p>
@@ -435,9 +436,9 @@ const TermsPage: FC = () => {
               formal proceeding, we encourage you to contact us at{" "}
               <a
                 className="underline underline-offset-2"
-                href="mailto:info@delitip.com"
+                href={SiteConfig.contactEmailHref}
               >
-                info@delitip.com
+                {SiteConfig.contactEmail}
               </a>{" "}
               so we can try to resolve the issue directly.
             </p>
@@ -482,10 +483,10 @@ const TermsPage: FC = () => {
             <p>
               For questions about these Terms, contact us at{" "}
               <a
-                href="mailto:info@delitip.com"
+                href={SiteConfig.contactEmailHref}
                 className="font-medium text-ink-charcoal underline underline-offset-2"
               >
-                info@delitip.com
+                {SiteConfig.contactEmail}
               </a>
               , or by mail at Delitip, Pelasgon 32, Heraklion, Greece.
             </p>

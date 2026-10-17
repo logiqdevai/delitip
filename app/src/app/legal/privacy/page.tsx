@@ -2,6 +2,7 @@ import { type Metadata } from "next";
 import { type FC } from "react";
 import { LegalDocument } from "../components/legal-document";
 import { Routes } from "@/routes/routes";
+import { SiteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Privacy Policy - delitip",
@@ -516,10 +517,10 @@ const PrivacyPage: FC = () => {
               For privacy questions or to exercise any of the rights
               described above, contact us at{" "}
               <a
-                href="mailto:info@delitip.com"
+                href={SiteConfig.contactEmailHref}
                 className="font-medium text-ink-charcoal underline underline-offset-2"
               >
-                info@delitip.com
+                {SiteConfig.contactEmail}
               </a>
               , or by mail at Delitip, Pelasgon 32, Heraklion, Greece.
             </p>

@@ -47,6 +47,33 @@ export const GettingStartedHelpCategory: HelpCategory = {
       related: [
         { category: "getting-started", article: "your-first-qr-code-and-employee" },
         { category: "branding-and-customization", article: "business-profile-basics" },
+        { category: "getting-started", article: "adding-and-managing-stores" },
+      ],
+    },
+    {
+      slug: "adding-and-managing-stores",
+      title: "Adding and managing multiple stores",
+      summary:
+        "Owners can add more stores, copy settings from an existing one, switch between them, and delete unused ones.",
+      sections: [
+        {
+          paragraphs: [
+            "If you run more than one location, an Owner can add another store from the store switcher in the sidebar. Give it a name, industry and location.",
+            "To save setup time, you can start from an existing store and choose what to copy across: branding, customer messages, localization (languages, currency and timezone), tipping, reviews and feedback setup, and QR designs. Copied logos and covers become separate files, so changing one store's images never affects the other. Leave it on start fresh to begin with a blank store.",
+          ],
+        },
+        {
+          heading: "Switching and deleting",
+          paragraphs: [
+            "Settings → Stores lists every store with a Switch button, and the sidebar switcher does the same. Only an Owner can delete a store, and you can't delete your last store or one that already has tips or reviews - deactivate what you don't need instead. Deleting a store also removes its logo, cover and staff photos.",
+            "Once you have more than one store, Analytics gains a Stores tab for comparing them.",
+          ],
+          links: [{ label: "Settings → Stores", href: Routes.dashboard.settings.stores }],
+        },
+      ],
+      related: [
+        { category: "analytics-and-reporting", article: "comparing-stores" },
+        { category: "team-management", article: "inviting-members-and-assigning-roles" },
       ],
     },
     {

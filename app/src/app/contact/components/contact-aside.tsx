@@ -3,13 +3,14 @@ import Link from "next/link";
 import { BookOpen, Clock3, Mail } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Routes } from "@/routes/routes";
+import { SiteConfig } from "@/config/site";
 
 const channels = [
   {
     icon: Mail,
     title: "Email",
-    detail: "info@delitip.com",
-    href: "mailto:info@delitip.com",
+    detail: SiteConfig.contactEmail,
+    href: SiteConfig.contactEmailHref,
   },
   {
     icon: BookOpen,

@@ -1,9 +1,11 @@
 import { EmailTemplates } from '@/integrations/notifications/resend/interfaces/mail.interfaces';
 
+export const NO_REPLY_EMAIL_ADDRESS = 'no-reply@logiqdev.com';
+
 export const EmailConfig = {
     email_addresses: {
-        verification: 'no-reply@delitip.com',
-        alert: 'no-reply@delitip.com',
+        verification: NO_REPLY_EMAIL_ADDRESS,
+        alert: NO_REPLY_EMAIL_ADDRESS,
         contact: 'petrosrodinos@gmail.com',
     },
     templates: {

@@ -11,6 +11,7 @@ export const ApiRoutes = {
     },
     forgotPassword: "/auth/forgot-password",
     resetPassword: "/auth/reset-password",
+    resetPasswordInfo: "/auth/reset-password/info",
     changePassword: "/auth/change-password",
   },
   users: {

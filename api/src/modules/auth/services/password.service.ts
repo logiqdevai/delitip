@@ -90,6 +90,19 @@ export class PasswordService {
         return { message: 'Password has been reset successfully' };
     }
 
+    async getTokenInfo(token: string) {
+        const resetToken = await this.prisma.passwordResetToken.findUnique({
+            where: { token_hash: this.hashToken(token) },
+            include: { user: { select: { email: true } } },
+        });
+
+        if (!resetToken || resetToken.used_at || resetToken.expires_at < new Date()) {
+            throw new BadRequestException('Invalid or expired reset token');
+        }
+
+        return { email: resetToken.user.email };
+    }
+
     async changePassword(userId: string, dto: ChangePasswordDto) {
         const user = await this.prisma.user.findUnique({
             where: { id: userId },
