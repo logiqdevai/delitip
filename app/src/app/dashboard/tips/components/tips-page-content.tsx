@@ -75,18 +75,22 @@ const TipsPageInner: FC = () => {
         description={`Tip ledger, payments, and payouts for ${store.name}.`}
       />
 
-      <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList variant="line">
+      <Tabs
+        value={activeTab}
+        onValueChange={handleTabChange}
+        className="mt-6"
+      >
+        <TabsList>
           <TabsTrigger value={TipsTabs.ledger}>
-            <Receipt data-icon="inline-start" />
+            <Receipt />
             Tips
           </TabsTrigger>
           <TabsTrigger value={TipsTabs.payments}>
-            <Wallet data-icon="inline-start" />
+            <Wallet />
             Payments
           </TabsTrigger>
           <TabsTrigger value={TipsTabs.payouts}>
-            <Banknote data-icon="inline-start" />
+            <Banknote />
             Payouts
           </TabsTrigger>
         </TabsList>

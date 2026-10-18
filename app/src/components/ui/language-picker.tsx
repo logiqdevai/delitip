@@ -69,7 +69,10 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
         size={size}
         aria-invalid={invalid || undefined}
         aria-label={ariaLabel ?? (compact ? "Language" : undefined)}
-        className={cn(compact && "w-auto gap-1 px-2", className)}
+        className={cn(
+          compact && "h-8! w-auto gap-1 px-2",
+          className,
+        )}
       >
         <SelectValue>
           {(selected: Language | null) => {
@@ -88,8 +91,10 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
         <SelectGroup>
           {options.map((option) => (
             <SelectItem key={option.id} value={option.id}>
-              <CountryFlag countryCode={option.flagCountryCode} />
-              {labelFor(option)}
+              <span className="flex items-center gap-2">
+                <CountryFlag countryCode={option.flagCountryCode} />
+                {labelFor(option)}
+              </span>
             </SelectItem>
           ))}
         </SelectGroup>

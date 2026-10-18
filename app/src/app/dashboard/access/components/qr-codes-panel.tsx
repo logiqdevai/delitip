@@ -115,7 +115,7 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
           </EmptyContent>
         </Empty>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           {qrCodes.map((qr) => (
             <QrCodeCard
               key={qr.id}

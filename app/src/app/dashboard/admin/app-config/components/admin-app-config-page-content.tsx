@@ -228,7 +228,7 @@ export const AdminAppConfigPageContent: FC = () => {
       ) : null}
       <form onSubmit={onSubmit} noValidate className="mt-4 max-w-xl space-y-6">
         <Tabs defaultValue="finance">
-          <TabsList variant="line">
+          <TabsList>
             <TabsTrigger value="finance">Finance</TabsTrigger>
             <TabsTrigger value="invoices">Payout invoices</TabsTrigger>
             <TabsTrigger value="accounts">Payout accounts</TabsTrigger>

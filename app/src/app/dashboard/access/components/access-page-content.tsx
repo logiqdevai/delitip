@@ -78,14 +78,18 @@ const AccessPageInner: FC = () => {
         description={`Customer access and tip splitting for ${store.name}.`}
       />
 
-      <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList variant="line">
+      <Tabs
+        value={activeTab}
+        onValueChange={handleTabChange}
+        className="mt-6"
+      >
+        <TabsList>
           <TabsTrigger value={AccessTabs.qrCodes}>
-            <QrCode data-icon="inline-start" />
+            <QrCode />
             QR codes
           </TabsTrigger>
           <TabsTrigger value={AccessTabs.distribution}>
-            <Scale data-icon="inline-start" />
+            <Scale />
             Tip distribution
           </TabsTrigger>
         </TabsList>

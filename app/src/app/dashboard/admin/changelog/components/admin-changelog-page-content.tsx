@@ -123,7 +123,6 @@ export const AdminChangelogPageContent: FC = () => {
           className="min-w-0 max-w-full"
         >
           <TabsList
-            variant="line"
             className="h-auto max-w-full flex-wrap justify-start gap-y-1 *:data-[slot=tabs-trigger]:flex-none"
           >
             {ChangelogTypeFilterOptions.map((option) => (

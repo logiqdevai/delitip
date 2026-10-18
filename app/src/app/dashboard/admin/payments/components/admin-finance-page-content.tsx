@@ -56,7 +56,7 @@ export const AdminFinancePageContent: FC = () => {
       />
 
       <Tabs defaultValue={pendingRequests > 0 ? "requests" : "payments"}>
-        <TabsList variant="line">
+        <TabsList>
           <TabsTrigger value="payments">Payments</TabsTrigger>
           <TabsTrigger value="payouts">Payouts</TabsTrigger>
           <TabsTrigger value="requests">
