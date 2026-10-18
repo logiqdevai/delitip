@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, QrCode } from "lucide-react";
+import { VivaBadge } from "@/components/payments/viva-badge";
 import { Routes } from "@/routes/routes";
 import { readAnyPendingTip } from "@/app/[storeSlug]/q/[code]/lib/pending-tip";
 import { getPublicTipByOrderCode } from "@/features/tips/services/tips.services";
@@ -83,6 +84,7 @@ function CheckoutReturnInner() {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-paper-offwhite p-4">
       <Loader2 className="size-8 animate-spin text-zinc-400" strokeWidth={2} />
+      <VivaBadge />
     </main>
   );
 }
@@ -93,6 +95,7 @@ export default function CheckoutReturnPage() {
       fallback={
         <main className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-paper-offwhite p-4">
           <Loader2 className="size-8 animate-spin text-zinc-400" strokeWidth={2} />
+          <VivaBadge />
         </main>
       }
     >

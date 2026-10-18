@@ -8,6 +8,7 @@ import { useCreatePublicReview } from "@/features/reviews/hooks/use-reviews";
 import type { CreatePublicReviewResponse } from "@/features/reviews/interfaces/reviews.interfaces";
 import { TipStatuses } from "@/features/tips/interfaces/tips.interfaces";
 import { readPendingTip, clearPendingTip } from "@/app/[storeSlug]/q/[code]/lib/pending-tip";
+import { VivaBadge } from "@/components/payments/viva-badge";
 import { DoneStep } from "@/app/[storeSlug]/q/[code]/components/steps/done-step";
 
 const POLL_TIMEOUT_MS = 12000;
@@ -137,6 +138,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
         >
           {t("tryAgain")}
         </button>
+        <VivaBadge className="mt-2" />
       </div>
     );
   }
@@ -178,6 +180,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
         >
           {t("startOver")}
         </button>
+        <VivaBadge className="mt-2" />
       </div>
     );
   }
@@ -191,6 +194,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
         </h1>
         <p className="mt-2 text-sm text-zinc-500">{t("confirmingDescription")}</p>
       </div>
+      <VivaBadge className="mt-2" />
     </div>
   );
 };

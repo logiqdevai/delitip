@@ -8,6 +8,8 @@ import type { PublicReviewConfig } from "@/features/reviews/interfaces/reviews.i
 import { useCreatePublicTip } from "@/features/tips/hooks/use-tips";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import type { QrCodeSelectionMode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
+import { VivaBadge } from "@/components/payments/viva-badge";
+import { Routes } from "@/routes/routes";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import {
@@ -273,6 +275,31 @@ export const ReviewStep: FC<ReviewStepProps> = ({
         >
           {t("back")}
         </button>
+        <p className="text-center text-[11px] leading-relaxed text-zinc-400">
+          {t.rich("legalNotice", {
+            terms: (chunks) => (
+              <a
+                href={Routes.legal.terms}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2"
+              >
+                {chunks}
+              </a>
+            ),
+            privacy: (chunks) => (
+              <a
+                href={Routes.legal.privacy}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2"
+              >
+                {chunks}
+              </a>
+            ),
+          })}
+        </p>
+        <VivaBadge label={t("securedBy")} className="pt-1" />
       </div>
     </div>
   );

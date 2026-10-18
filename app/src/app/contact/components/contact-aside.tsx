@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import Link from "next/link";
-import { BookOpen, Clock3, Mail } from "lucide-react";
+import { BookOpen, Clock3, Mail, MapPin } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Routes } from "@/routes/routes";
 import { SiteConfig } from "@/config/site";
@@ -11,6 +11,12 @@ const channels = [
     title: "Email",
     detail: SiteConfig.contactEmail,
     href: SiteConfig.contactEmailHref,
+  },
+  {
+    icon: MapPin,
+    title: "Address",
+    detail: SiteConfig.contactAddress,
+    href: null,
   },
   {
     icon: BookOpen,

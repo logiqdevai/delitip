@@ -47,7 +47,9 @@
     "genericError": "Η πληρωμή απέτυχε. Δοκιμάστε ξανά.",
     "payCta": "Πληρωμή {amount}",
     "retryCta": "Επανάληψη πληρωμής",
-    "back": "Πίσω"
+    "back": "Πίσω",
+    "securedBy": "Ασφαλής επεξεργασία πληρωμών από",
+    "legalNotice": "Πληρώνοντας αποδέχεστε τους <terms>Όρους Χρήσης</terms> και την <privacy>Πολιτική Απορρήτου</privacy> μας."
   },
   "checkoutStatusStep": {
     "confirmingTitle": "Επιβεβαίωση της πληρωμής σας…",

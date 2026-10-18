@@ -16,7 +16,7 @@ const TermsPage: FC = () => {
     <LegalDocument
       title="Terms of Service"
       description="These terms describe how businesses, staff, and guests may use delitip and the Delitip platform."
-      lastUpdated="September 20, 2026"
+      lastUpdated="October 18, 2026"
       alternateHref={Routes.legal.privacy}
       alternateLabel="Privacy Policy"
       sections={[
@@ -96,6 +96,17 @@ const TermsPage: FC = () => {
                 terms, which you must also agree to in order to receive
                 tips or payouts.
               </p>
+              <p>
+                <strong>Delivery.</strong> Delitip is a digital service;
+                there are no physical goods and nothing is shipped. Access
+                to the dashboard is delivered online as soon as your
+                account is created. A guest tip is delivered
+                electronically: the payment is confirmed on the secure
+                payment page, the guest sees an on-screen confirmation,
+                and the tip is then paid out by bank transfer to the
+                recipient's payout account (Section 5) on the payout
+                schedule shown in the dashboard.
+              </p>
             </>
           ),
         },
@@ -133,7 +144,7 @@ const TermsPage: FC = () => {
               <p>
                 Customer tips are collected and payouts to businesses and,
                 where enabled, individual employees are processed through
-                third-party payment providers such as Stripe. To receive
+                third-party payment providers such as Viva.com. To receive
                 tips or payouts, a business (and, where applicable, an
                 employee) must complete that provider's own onboarding,
                 which may include identity verification required by law.
@@ -182,19 +193,47 @@ const TermsPage: FC = () => {
           ),
         },
         {
-          title: "6. Refunds",
+          title: "6. Refunds, returns, and cancellations",
           body: (
-            <p>
-              A refund of a tip can be requested - typically by the
-              customer or by a store manager acting on their behalf - and
-              must be reviewed and approved by an authorized user, such as
-              a Manager or Accountant, before it is processed. We may set
-              reasonable eligibility windows or limits on refunds to
-              prevent abuse. Approved refunds are returned through the same
-              payment provider used to collect the original tip, and are
-              subject to that provider's processing times. Subscription
-              fees are addressed separately in Section 4.
-            </p>
+            <>
+              <p>
+                <strong>Cancelling a tip.</strong> A guest can cancel at
+                any point before the payment is confirmed on the payment
+                page by closing it or choosing to go back; no charge is
+                made. Once a tip has been paid, it cannot be cancelled by
+                the guest, but a refund can be requested as described
+                below.
+              </p>
+              <p>
+                <strong>Refunds and returns.</strong> Because a tip is a
+                payment for a digital service and there are no goods to
+                return, we handle problems through refunds. A refund of a
+                tip can be requested - typically by the customer or by a
+                store manager acting on their behalf - for example when
+                the wrong amount was charged, the tip was paid twice, or
+                it was sent by mistake. To request one, use the refund
+                option on the tip in the dashboard, or write to us at{" "}
+                <a
+                  className="underline underline-offset-2"
+                  href={SiteConfig.contactEmailHref}
+                >
+                  {SiteConfig.contactEmail}
+                </a>{" "}
+                with the date, amount, and business. Every request must
+                be reviewed and approved by an authorized user, such as a
+                Manager or Accountant, before it is processed, and we may
+                set reasonable eligibility windows or limits on refunds
+                to prevent abuse.
+              </p>
+              <p>
+                Approved refunds are returned to the original payment
+                method through the same payment provider that collected
+                the tip, and are subject to that provider's and your
+                bank's processing times, which can take several business
+                days. Subscription fees are addressed separately in
+                Section 4.
+              </p>
+            </>
           ),
         },
         {
@@ -320,7 +359,7 @@ const TermsPage: FC = () => {
           body: (
             <p>
               The Service relies on third-party providers to operate,
-              including Stripe for payments and payouts, OpenAI for
+              including Viva.com for payments and payouts, OpenAI for
               feedback analysis, Google Cloud Storage for file storage,
               Resend and our SMTP provider for email, Twilio for SMS
               verification, and Google Maps for location lookup (see our{" "}

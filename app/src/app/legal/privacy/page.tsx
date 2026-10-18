@@ -15,7 +15,7 @@ const PrivacyPage: FC = () => {
     <LegalDocument
       title="Privacy Policy"
       description="This policy explains how Delitip collects, uses, shares, and protects information when businesses, staff, and guests use delitip and the Delitip platform."
-      lastUpdated="September 20, 2026"
+      lastUpdated="October 18, 2026"
       alternateHref={Routes.legal.terms}
       alternateLabel="Terms of Service"
       sections={[
@@ -84,9 +84,9 @@ const PrivacyPage: FC = () => {
               <p>
                 <strong>Payment information.</strong> Card and bank details
                 are collected and processed directly by our payment
-                processor, Stripe. Delitip does not receive or store full
+                processor, Viva.com. Delitip does not receive or store full
                 card numbers; we store only a payment reference and status
-                supplied by Stripe.
+                supplied by Viva.com.
               </p>
               <p>
                 <strong>Tip settlement records.</strong> Where a business
@@ -125,7 +125,7 @@ const PrivacyPage: FC = () => {
               <ul className="list-disc space-y-1 pl-5">
                 <li>
                   operate the tipping, review, and feedback flow, and
-                  process payments and payouts through Stripe;
+                  process payments and payouts through Viva.com;
                 </li>
                 <li>
                   show businesses and employees their own tips, reviews,
@@ -225,7 +225,7 @@ const PrivacyPage: FC = () => {
               </p>
               <ul className="list-disc space-y-1 pl-5">
                 <li>
-                  <strong>Stripe</strong> - payment processing, payouts, and
+                  <strong>Viva.com</strong> - payment processing, payouts, and
                   connected business accounts;
                 </li>
                 <li>
@@ -345,7 +345,7 @@ const PrivacyPage: FC = () => {
                 token-based authentication, and role-based access controls
                 so staff only see the locations, employees, and data their
                 role permits. We do not store full payment card details -
-                that is handled entirely by Stripe.
+                that is handled entirely by Viva.com.
               </p>
               <p>
                 Session access to the dashboard is authenticated using a

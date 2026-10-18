@@ -2,6 +2,8 @@ import { type FC } from "react";
 import Link from "next/link";
 import { Routes } from "@/routes/routes";
 import { BrandMark } from "@/components/brand/brand-mark";
+import { VivaBadge } from "@/components/payments/viva-badge";
+import { SiteConfig } from "@/config/site";
 
 const productLinks = [
   { href: Routes.landing.howItWorks, label: "How it works", hidden: false },
@@ -43,6 +45,16 @@ export const LandingFooter: FC = () => {
             Digital tipping and customer feedback for businesses with
             customer-facing teams, from support desks to hospitality.
           </p>
+          <address className="space-y-0.5 text-xs leading-relaxed text-zinc-400 not-italic">
+            <a
+              href={SiteConfig.contactEmailHref}
+              className="block transition hover:text-paper-offwhite"
+            >
+              {SiteConfig.contactEmail}
+            </a>
+            <span className="block">{SiteConfig.contactAddress}</span>
+          </address>
+          <VivaBadge label="Payments by" className="justify-start text-zinc-500" />
         </div>
 
         <div className="space-y-2">

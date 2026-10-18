@@ -47,7 +47,9 @@
     "genericError": "Payment failed. Please try again.",
     "payCta": "Pay {amount}",
     "retryCta": "Retry payment",
-    "back": "Back"
+    "back": "Back",
+    "securedBy": "Payments securely processed by",
+    "legalNotice": "By paying you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>."
   },
   "checkoutStatusStep": {
     "confirmingTitle": "Confirming your payment…",

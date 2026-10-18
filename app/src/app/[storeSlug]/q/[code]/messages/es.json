@@ -47,7 +47,9 @@
     "genericError": "El pago falló. Inténtalo de nuevo.",
     "payCta": "Pagar {amount}",
     "retryCta": "Reintentar pago",
-    "back": "Atrás"
+    "back": "Atrás",
+    "securedBy": "Pagos procesados de forma segura por",
+    "legalNotice": "Al pagar, aceptas nuestras <terms>Condiciones del servicio</terms> y nuestra <privacy>Política de privacidad</privacy>."
   },
   "checkoutStatusStep": {
     "confirmingTitle": "Confirmando tu pago…",

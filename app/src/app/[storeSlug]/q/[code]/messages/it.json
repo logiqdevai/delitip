@@ -47,7 +47,9 @@
     "genericError": "Pagamento non riuscito. Riprova.",
     "payCta": "Paga {amount}",
     "retryCta": "Riprova pagamento",
-    "back": "Indietro"
+    "back": "Indietro",
+    "securedBy": "Pagamenti elaborati in modo sicuro da",
+    "legalNotice": "Pagando accetti i nostri <terms>Termini di servizio</terms> e l'<privacy>Informativa sulla privacy</privacy>."
   },
   "checkoutStatusStep": {
     "confirmingTitle": "Conferma del pagamento in corso…",

@@ -47,7 +47,9 @@
     "genericError": "Платёж не прошёл. Попробуйте ещё раз.",
     "payCta": "Оплатить {amount}",
     "retryCta": "Повторить платёж",
-    "back": "Назад"
+    "back": "Назад",
+    "securedBy": "Платежи безопасно обрабатывает",
+    "legalNotice": "Оплачивая, вы принимаете наши <terms>Условия использования</terms> и <privacy>Политику конфиденциальности</privacy>."
   },
   "checkoutStatusStep": {
     "confirmingTitle": "Подтверждаем ваш платёж…",

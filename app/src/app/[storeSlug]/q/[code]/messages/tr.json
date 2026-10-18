@@ -47,7 +47,9 @@
     "genericError": "Ödeme başarısız oldu. Lütfen tekrar deneyin.",
     "payCta": "{amount} öde",
     "retryCta": "Ödemeyi tekrar dene",
-    "back": "Geri"
+    "back": "Geri",
+    "securedBy": "Ödemeler güvenli şekilde şu tarafından işlenir:",
+    "legalNotice": "Ödeme yaparak <terms>Hizmet Şartları</terms> ve <privacy>Gizlilik Politikası</privacy>'nı kabul etmiş olursunuz."
   },
   "checkoutStatusStep": {
     "confirmingTitle": "Ödemeniz onaylanıyor…",

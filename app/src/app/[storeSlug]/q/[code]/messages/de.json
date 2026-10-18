@@ -47,7 +47,9 @@
     "genericError": "Die Zahlung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "payCta": "{amount} bezahlen",
     "retryCta": "Zahlung erneut versuchen",
-    "back": "Zurück"
+    "back": "Zurück",
+    "securedBy": "Zahlungen sicher abgewickelt von",
+    "legalNotice": "Mit der Zahlung akzeptieren Sie unsere <terms>Nutzungsbedingungen</terms> und <privacy>Datenschutzerklärung</privacy>."
   },
   "checkoutStatusStep": {
     "confirmingTitle": "Ihre Zahlung wird bestätigt…",
