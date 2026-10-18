@@ -666,5 +666,16 @@
     "agent": "Claude Sonnet 5.5",
     "sessionMood": "FOCUSED",
     "sessionNote": "One clear request, then a short follow-up asking to extend the cleanup to Viva."
+  },
+  {
+    "commit": "be20b76",
+    "date": "2026-10-18",
+    "type": "IMPROVEMENT",
+    "title": "Meet Viva merchant approval requirements",
+    "description": "The viva.com logo now appears on the payment screens and footer, and the pay step links to the Terms and Privacy Policy. The Terms gained delivery and refund/cancellation sections, the legal pages now name Viva.com instead of Stripe, and the postal address shows in the footer and contact page.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5.5",
+    "sessionMood": "FOCUSED",
+    "sessionNote": "Pasted Viva's approval checklist and asked for it to be handled, then asked for the commit."
   }
 ]
