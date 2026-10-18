@@ -677,5 +677,16 @@
     "agent": "Claude Sonnet 5.5",
     "sessionMood": "FOCUSED",
     "sessionNote": "Pasted Viva's approval checklist and asked for it to be handled, then asked for the commit."
+  },
+  {
+    "commit": "539fcd2",
+    "date": "2026-10-18",
+    "type": "FEATURE",
+    "title": "Add a unified QR code editor with a live tip page preview",
+    "description": "Creating or editing a QR code now happens on one page with a side menu for details, recipients, appearance, tipping, reviews and the print card, and a live preview of the tip page on the right. One Save applies the QR and store changes together, and the QR list and employee pages open this editor instead of a dialog.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5.5",
+    "sessionMood": "FOCUSED",
+    "sessionNote": "Planned first, then steered through many small follow-up tweaks, with one reminder to keep going without stopping."
   }
 ]
