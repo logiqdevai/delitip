@@ -655,5 +655,16 @@
     "agent": "Claude Sonnet 5.5",
     "sessionMood": "BLUNT",
     "sessionNote": "A planned feature built in one long run, then short corrective asks: drop an env var and keep the value in code, fix a misleading caption, hide the staff payout button and drive it from a config."
+  },
+  {
+    "commit": "bad85a9",
+    "date": "2026-10-18",
+    "type": "FEATURE",
+    "title": "Let admins delete a user and clean up their stored data",
+    "description": "Admins can now delete a user from All Users, behind a confirmation. It also removes any business the user alone belonged to, deletes their uploaded files from Google Cloud and archives their linked Viva bank accounts. Viva connected accounts cannot be closed through its API, so they are reported for manual cleanup.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5.5",
+    "sessionMood": "FOCUSED",
+    "sessionNote": "One clear request, then a short follow-up asking to extend the cleanup to Viva."
   }
 ]
