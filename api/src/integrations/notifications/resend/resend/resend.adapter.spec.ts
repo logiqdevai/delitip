@@ -1,3 +1,4 @@
+import { NO_REPLY_EMAIL_ADDRESS } from '@/shared/constants/email';
 import { InternalServerErrorException } from '@nestjs/common';
 import { ResendAdapter } from './resend.adapter';
 
@@ -20,7 +21,7 @@ describe('ResendAdapter', () => {
         expect(result).toEqual({ id: 'email_1' });
         expect(send).toHaveBeenCalledWith(
             expect.objectContaining({
-                from: 'info@appointmy.com',
+                from: NO_REPLY_EMAIL_ADDRESS,
                 to: 'a@b.com',
                 subject: 'hi',
                 html: '<p>hi</p>',

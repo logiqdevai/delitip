@@ -4,6 +4,7 @@ import { type CSSProperties, type FC, type ReactNode } from "react";
 import { AuthRouteGuard } from "@/components/auth/auth-route-guard";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { EmployeeCashOutProvider } from "./employee-cash-out-provider";
+import { EmployeeBottomNav } from "./employee-bottom-nav";
 import { EmployeeSidebar } from "./employee-sidebar";
 
 interface EmployeeAuthShellProps {
@@ -33,6 +34,7 @@ export const EmployeeAuthShell: FC<EmployeeAuthShellProps> = ({ children }) => {
               </p>
             </footer>
           </main>
+          <EmployeeBottomNav />
         </SidebarProvider>
       </EmployeeCashOutProvider>
     </AuthRouteGuard>

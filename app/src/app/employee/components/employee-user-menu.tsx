@@ -106,20 +106,14 @@ export const EmployeeUserMenu: FC<EmployeeUserMenuProps> = ({ onNavigate }) => {
               <DropdownMenuItem
                 className="gap-2 rounded-lg px-2 py-1.5 text-chip font-medium text-zinc-700 focus:bg-neutral-fill focus:text-ink-charcoal"
                 disabled={!employee}
-                onClick={() => {
-                  onNavigate?.();
-                  setPhotoDialogOpen(true);
-                }}
+                onClick={() => setPhotoDialogOpen(true)}
               >
                 <ImagePlus className="size-4 text-zinc-400" />
                 Edit photo
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="gap-2 rounded-lg px-2 py-1.5 text-chip font-medium text-zinc-700 focus:bg-neutral-fill focus:text-ink-charcoal"
-                onClick={() => {
-                  onNavigate?.();
-                  setChangePasswordDialogOpen(true);
-                }}
+                onClick={() => setChangePasswordDialogOpen(true)}
               >
                 <KeyRound className="size-4 text-zinc-400" />
                 Change password

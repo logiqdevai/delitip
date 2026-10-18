@@ -4,7 +4,6 @@ import { type FC } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Menu,
   PanelLeftClose,
   PanelLeftOpen,
   QrCode,
@@ -78,14 +77,6 @@ export const EmployeeSidebar: FC = () => {
             </span>
           </div>
         </Link>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          onClick={toggleSidebar}
-          aria-label="Open navigation menu"
-        >
-          <Menu className="size-5" />
-        </Button>
       </div>
 
       <Sidebar collapsible="icon" className="border-zinc-200 bg-white">

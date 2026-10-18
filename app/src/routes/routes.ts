@@ -96,6 +96,7 @@ export const Routes = {
     root: "/employee",
     reviews: "/employee/reviews",
     qr: "/employee/qr",
+    profile: "/employee/profile",
   },
   legal: {
     terms: "/legal/terms",

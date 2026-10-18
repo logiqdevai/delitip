@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { EmailConfig } from '@/shared/config/email';
+import { REPLY_TO_EMAIL_ADDRESS } from '@/shared/constants/email';
 import { CreateEmail, EmailFromAddress, EmailTemplate } from '../interfaces/mail.interfaces';
 import { ResendConfig } from './resend.config';
 import { TemplateService } from '../utils/templates.utils';
@@ -36,7 +37,7 @@ export class ResendAdapter {
         html,
         cc: createEmail.cc,
         bcc: createEmail.bcc,
-        replyTo: createEmail.replyTo,
+        replyTo: createEmail.replyTo ?? REPLY_TO_EMAIL_ADDRESS,
         headers: createEmail.headers,
       });
 
