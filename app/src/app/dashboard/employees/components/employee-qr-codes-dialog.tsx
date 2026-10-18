@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Check,
   Copy,
@@ -12,7 +13,6 @@ import {
   Users,
   UsersRound,
 } from "lucide-react";
-import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -41,6 +41,7 @@ import {
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { getAbsoluteTipUrl } from "@/features/qr-codes/utils/qr-tip-url.utils";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 
 const selectionModeIcons: Record<QrCodeSelectionMode, typeof User> = {
@@ -183,8 +184,7 @@ export const EmployeeQrCodesDialog: FC<EmployeeQrCodesDialogProps> = ({
   employee,
 }) => {
   const { storeId, store } = useWorkspace();
-  const [formOpen, setFormOpen] = useState(false);
-  const [editingQr, setEditingQr] = useState<QrCode | null>(null);
+  const router = useRouter();
 
   const qrCodesQuery = useQrCodes(open ? (storeId ?? "") : "", {
     employee_ids: [employee.id],
@@ -192,18 +192,13 @@ export const EmployeeQrCodesDialog: FC<EmployeeQrCodesDialogProps> = ({
   });
 
   const qrCodes = qrCodesQuery.data?.data ?? [];
-  const presetEmployees = [
-    { id: employee.id, full_name: employee.full_name, position: employee.position },
-  ];
 
   const openCreate = () => {
-    setEditingQr(null);
-    setFormOpen(true);
+    router.push(Routes.dashboard.accessQrNewForEmployee(employee.id));
   };
 
   const openEdit = (qr: QrCode) => {
-    setEditingQr(qr);
-    setFormOpen(true);
+    router.push(Routes.dashboard.accessQrEdit(qr.id));
   };
 
   return (
@@ -280,17 +275,6 @@ export const EmployeeQrCodesDialog: FC<EmployeeQrCodesDialogProps> = ({
         </DialogContent>
       </Dialog>
 
-      {storeId && store ? (
-        <QrCodeFormDialog
-          open={formOpen}
-          onOpenChange={setFormOpen}
-          storeId={storeId}
-          storeSlug={store.slug}
-          qr={editingQr}
-          defaultEmployeeIds={editingQr ? undefined : [employee.id]}
-          presetEmployees={presetEmployees}
-        />
-      ) : null}
     </>
   );
 };

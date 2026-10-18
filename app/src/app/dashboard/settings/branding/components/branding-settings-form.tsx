@@ -2,18 +2,15 @@
 
 import { type FC, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ColorPicker } from "@/components/ui/color-picker";
-import { ImagePicker } from "@/components/ui/image-picker";
-import { Label } from "@/components/ui/label";
-import { MultilingualTextarea } from "@/components/ui/multilingual-textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  useDeleteDocument,
-  useUploadDocument,
-} from "@/features/documents/hooks/use-documents";
-import { DocumentTypes } from "@/features/documents/interfaces/documents.interfaces";
-import { deleteDocument as deleteDocumentRequest } from "@/features/documents/services/documents.services";
 import { SettingsStepNav } from "../../components/settings-step-nav";
+import {
+  BrandingColorFields,
+  BrandingMessageFields,
+  DEFAULT_PRIMARY_COLOR,
+  DEFAULT_SECONDARY_COLOR,
+} from "./branding-fields";
+import { BrandingImagePickers } from "./branding-image-pickers";
 import { useStore, useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
@@ -23,15 +20,10 @@ export const BrandingSettingsForm: FC = () => {
   const storeDetailQuery = useStore(workspaceStore?.id ?? "");
   const store = storeDetailQuery.data ?? workspaceStore;
   const updateStore = useUpdateStore();
-  const uploadDocument = useUploadDocument();
-  const deleteDocument = useDeleteDocument();
-  const [uploadingMode, setUploadingMode] = useState<"logo" | "cover" | null>(
-    null,
-  );
 
   const [loadedStoreId, setLoadedStoreId] = useState<string | null>(null);
-  const [primaryColor, setPrimaryColor] = useState("#84cc16");
-  const [secondaryColor, setSecondaryColor] = useState("#18181b");
+  const [primaryColor, setPrimaryColor] = useState(DEFAULT_PRIMARY_COLOR);
+  const [secondaryColor, setSecondaryColor] = useState(DEFAULT_SECONDARY_COLOR);
   const [welcomeMessage, setWelcomeMessage] = useState<Record<string, string>>(
     {},
   );
@@ -42,8 +34,8 @@ export const BrandingSettingsForm: FC = () => {
 
   if (store && store.id !== loadedStoreId) {
     setLoadedStoreId(store.id);
-    setPrimaryColor(store.primary_color?.trim() || "#84cc16");
-    setSecondaryColor(store.secondary_color?.trim() || "#18181b");
+    setPrimaryColor(store.primary_color?.trim() || DEFAULT_PRIMARY_COLOR);
+    setSecondaryColor(store.secondary_color?.trim() || DEFAULT_SECONDARY_COLOR);
     setWelcomeMessage(store.welcome_message ?? {});
     setThankYouMessage(store.thank_you_message ?? {});
     setHasChanges(false);
@@ -101,143 +93,25 @@ export const BrandingSettingsForm: FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-5">
-        <ImagePicker
-          mode="logo"
-          value={store.logo_document?.url}
-          isPending={uploadingMode === "logo"}
-          disabled={deleteDocument.isPending || updateStore.isPending}
-          onChange={(file) => {
-            setUploadingMode("logo");
-            const previousId = store.logo_document_id;
-            uploadDocument.mutate(
-              { file, type: DocumentTypes.LOGO },
-              {
-                onSuccess: (document) =>
-                  updateStore.mutate(
-                    {
-                      id: store.id,
-                      payload: { logo_document_id: document.id },
-                    },
-                    {
-                      onSuccess: () => {
-                        if (previousId) {
-                          void deleteDocumentRequest(previousId).catch(
-                            () => undefined,
-                          );
-                        }
-                      },
-                    },
-                  ),
-                onSettled: () => setUploadingMode(null),
-              },
-            );
-          }}
-          onClear={
-            store.logo_document_id
-              ? () =>
-                  deleteDocument.mutate(store.logo_document_id!, {
-                    onSuccess: () =>
-                      updateStore.mutate({
-                        id: store.id,
-                        payload: { logo_document_id: null },
-                      }),
-                  })
-              : undefined
-          }
-        />
-        <ImagePicker
-          mode="cover"
-          value={store.cover_document?.url}
-          isPending={uploadingMode === "cover"}
-          disabled={deleteDocument.isPending || updateStore.isPending}
-          onChange={(file) => {
-            setUploadingMode("cover");
-            const previousId = store.cover_document_id;
-            uploadDocument.mutate(
-              { file, type: DocumentTypes.BANNER },
-              {
-                onSuccess: (document) =>
-                  updateStore.mutate(
-                    {
-                      id: store.id,
-                      payload: { cover_document_id: document.id },
-                    },
-                    {
-                      onSuccess: () => {
-                        if (previousId) {
-                          void deleteDocumentRequest(previousId).catch(
-                            () => undefined,
-                          );
-                        }
-                      },
-                    },
-                  ),
-                onSettled: () => setUploadingMode(null),
-              },
-            );
-          }}
-          onClear={
-            store.cover_document_id
-              ? () =>
-                  deleteDocument.mutate(store.cover_document_id!, {
-                    onSuccess: () =>
-                      updateStore.mutate({
-                        id: store.id,
-                        payload: { cover_document_id: null },
-                      }),
-                  })
-              : undefined
-          }
-        />
-      </div>
+      <BrandingImagePickers store={store} />
 
-      <div className="grid grid-cols-1 gap-4 @md:grid-cols-2">
-        <ColorPicker
-          id="primary-color"
-          label="Primary color"
-          value={primaryColor}
-          defaultValue="#84cc16"
-          placeholder="#84cc16"
-          onChange={updatePrimaryColor}
-        />
-        <ColorPicker
-          id="secondary-color"
-          label="Secondary color"
-          value={secondaryColor}
-          defaultValue="#18181b"
-          placeholder="#18181b"
-          onChange={updateSecondaryColor}
-        />
-      </div>
+      <BrandingColorFields
+        primary={primaryColor}
+        secondary={secondaryColor}
+        onPrimaryChange={updatePrimaryColor}
+        onSecondaryChange={updateSecondaryColor}
+      />
 
-      <div className="space-y-1.5">
-        <Label htmlFor="welcome-message">Welcome message</Label>
-        <MultilingualTextarea
-          id="welcome-message"
-          storeId={store.id}
-          rows={2}
-          languages={fieldLanguages}
-          primaryLanguage={store.primary_language}
-          value={welcomeMessage}
-          onValueChange={updateWelcomeMessage}
-          placeholder={`Welcome to ${store.name}. Leave a tip for great service.`}
-        />
-      </div>
-
-      <div className="space-y-1.5">
-        <Label htmlFor="thank-you-message">Thank-you message</Label>
-        <MultilingualTextarea
-          id="thank-you-message"
-          storeId={store.id}
-          rows={2}
-          languages={fieldLanguages}
-          primaryLanguage={store.primary_language}
-          value={thankYouMessage}
-          onValueChange={updateThankYouMessage}
-          placeholder="Thank you! Your tip means a lot to our team."
-        />
-      </div>
+      <BrandingMessageFields
+        storeId={store.id}
+        storeName={store.name}
+        languages={fieldLanguages}
+        primaryLanguage={store.primary_language}
+        welcome={welcomeMessage}
+        thankYou={thankYouMessage}
+        onWelcomeChange={updateWelcomeMessage}
+        onThankYouChange={updateThankYouMessage}
+      />
 
       <div className="flex flex-wrap items-center justify-between lg:justify-end gap-3 pt-1">
         <SettingsStepNav />

@@ -2,22 +2,12 @@
 
 import { type FC, type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SettingsStepNav } from "../../components/settings-step-nav";
+import { ReviewRedirectFields } from "./review-redirect-fields";
 import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
-
-const RATING_OPTIONS = [1, 2, 3, 4, 5] as const;
 
 export const ReviewRedirectSettingsForm: FC = () => {
   const { store, isPending } = useWorkspace();
@@ -85,55 +75,12 @@ export const ReviewRedirectSettingsForm: FC = () => {
         </p>
       </div>
 
-      <div>
-        <label
-          htmlFor="rating-threshold"
-          className="mb-1 block text-xs font-semibold text-zinc-700"
-        >
-          Public prompt threshold
-        </label>
-        <Select
-          items={RATING_OPTIONS.map((rating) => ({
-            label: `${rating}+ stars`,
-            value: String(rating),
-          }))}
-          value={String(threshold)}
-          onValueChange={(value) => updateThreshold(Number(value))}
-        >
-          <SelectTrigger id="rating-threshold" className="w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {RATING_OPTIONS.map((rating) => (
-                <SelectItem key={rating} value={String(rating)}>
-                  {rating}+ stars
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <label
-          htmlFor="redirect-url"
-          className="mb-1 block text-xs font-semibold text-zinc-700"
-        >
-          Public review link (e.g. Google Business Profile)
-        </label>
-        <Input
-          id="redirect-url"
-          type="url"
-          placeholder="https://g.page/r/your-business/review"
-          value={redirectUrl}
-          onChange={(event) => updateRedirectUrl(event.target.value)}
-        />
-        <p className="mt-1 text-[14px] text-zinc-400">
-          Leave blank to skip the public redirect - high-rated customers still
-          see a thank-you, just without an outbound link.
-        </p>
-      </div>
+      <ReviewRedirectFields
+        threshold={threshold}
+        onThresholdChange={updateThreshold}
+        redirectUrl={redirectUrl}
+        onRedirectUrlChange={updateRedirectUrl}
+      />
 
       <div className="flex flex-wrap items-center justify-between lg:justify-end gap-3 pt-2">
         <SettingsStepNav />

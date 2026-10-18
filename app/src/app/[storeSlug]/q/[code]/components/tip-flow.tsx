@@ -8,7 +8,9 @@ import { useTranslations } from "next-intl";
 import type { PublicQrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import type { PublicStore } from "@/features/stores/interfaces/stores.interfaces";
 import { usePublicReviewConfig } from "@/features/reviews/hooks/use-reviews";
+import type { PublicReviewConfig } from "@/features/reviews/interfaces/reviews.interfaces";
 import { getReadableTextColor } from "@/lib/color";
+import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 import { StoreHero } from "@/app/[storeSlug]/q/[code]/components/store-hero";
 import { LanguageSelector } from "@/app/[storeSlug]/q/[code]/components/language-selector";
@@ -19,16 +21,31 @@ import {
   emptyReviewDraft,
   type ReviewDraft,
 } from "@/app/[storeSlug]/q/[code]/components/steps/review-step";
+import { DoneStep } from "@/app/[storeSlug]/q/[code]/components/steps/done-step";
 import { CheckoutStatusStep } from "@/app/[storeSlug]/q/[code]/components/steps/checkout-status-step";
+
+/**
+ * Renders the flow inside the dashboard editor: no fetching, routing, global
+ * locale store or real checkout. The parent remounts the flow (via `key`)
+ * when it wants to jump to another step.
+ */
+export interface TipFlowPreview {
+  step: FlowStep;
+  amount: number;
+  reviewConfig?: PublicReviewConfig;
+}
 
 interface TipFlowProps {
   storeSlug: string;
   code: string;
   store: PublicStore;
   qr: PublicQrCode;
+  preview?: TipFlowPreview;
 }
 
-type FlowStep = "amount" | "select" | "review" | "done";
+export type FlowStep = "amount" | "select" | "review" | "done";
+
+const PREVIEW_TIP_ID = "preview-tip";
 
 const TIP_QUERY_PARAM = "tip";
 const DEFAULT_PRIMARY_COLOR = "#C8F169";
@@ -41,13 +58,23 @@ const stepVariants = {
   exit: { opacity: 0, y: -16 },
 };
 
-export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
+export const TipFlow: FC<TipFlowProps> = ({
+  storeSlug,
+  code,
+  store,
+  qr,
+  preview,
+}) => {
   const t = useTranslations("tipFlow");
-  const { data: reviewConfig } = usePublicReviewConfig(storeSlug);
+  // An empty slug disables the query, so previews never hit the network.
+  const { data: fetchedReviewConfig } = usePublicReviewConfig(
+    preview ? "" : storeSlug,
+  );
+  const reviewConfig = preview ? preview.reviewConfig : fetchedReviewConfig;
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const recoveredTipId = searchParams.get(TIP_QUERY_PARAM);
+  const recoveredTipId = preview ? null : searchParams.get(TIP_QUERY_PARAM);
 
   const employees = qr.employees;
   const mode = qr.qr_code.selection_mode;
@@ -65,11 +92,11 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
   const needsRecipientStep = employees.length > 0;
 
   const [step, setStep] = useState<FlowStep>(
-    recoveredTipId ? "done" : "amount",
+    preview?.step ?? (recoveredTipId ? "done" : "amount"),
   );
   const [selectedEmployeeIds, setSelectedEmployeeIds] =
     useState<string[]>(initialSelectedIds);
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(preview?.amount ?? 0);
   const [reviewDraft, setReviewDraft] = useState<ReviewDraft>(emptyReviewDraft);
 
   const toggleEmployee = (id: string) => {
@@ -117,20 +144,25 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
     setSelectedEmployeeIds(initialSelectedIds);
     setAmount(0);
     setReviewDraft(emptyReviewDraft);
-    router.replace(pathname, { scroll: false });
+    if (!preview) router.replace(pathname, { scroll: false });
   };
 
   return (
     <main
-      className="relative mx-auto flex min-h-dvh w-full max-w-md flex-col bg-paper-offwhite"
+      className={cn(
+        "relative mx-auto flex w-full max-w-md flex-col bg-paper-offwhite",
+        preview ? "min-h-full" : "min-h-dvh",
+      )}
       style={themeStyle}
     >
-      <div className="absolute top-3 right-3 z-10">
-        <LanguageSelector
-          supportedLanguages={store.supported_languages}
-          primaryLanguage={store.primary_language}
-        />
-      </div>
+      {preview ? null : (
+        <div className="absolute top-3 right-3 z-10">
+          <LanguageSelector
+            supportedLanguages={store.supported_languages}
+            primaryLanguage={store.primary_language}
+          />
+        </div>
+      )}
 
       <AnimatePresence mode="wait" initial={false}>
         {step === "amount" ? (
@@ -201,6 +233,7 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
               draft={reviewDraft}
               onChange={setReviewDraft}
               onBack={() => setStep(needsRecipientStep ? "select" : "amount")}
+              onPreviewPay={preview ? () => setStep("done") : undefined}
             />
           </motion.div>
         ) : step === "done" && recoveredTipId ? (
@@ -219,17 +252,43 @@ export const TipFlow: FC<TipFlowProps> = ({ storeSlug, code, store, qr }) => {
               onRestart={resetFlow}
             />
           </motion.div>
+        ) : step === "done" && preview ? (
+          <motion.div
+            key="preview-done"
+            variants={stepVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.28, ease: stepEase }}
+            className="flex flex-1 flex-col"
+          >
+            <DoneStep
+              review={null}
+              tipId={PREVIEW_TIP_ID}
+              amount={amount}
+              currency={store.currency}
+              storeName={store.name}
+              recipientLabel={recipientLabel}
+              thankYouMessage={store.thank_you_message ?? undefined}
+              disableCelebration
+              onRestart={resetFlow}
+            />
+          </motion.div>
         ) : null}
       </AnimatePresence>
 
       <footer className="border-t border-zinc-100 px-4 py-4 text-center text-[11px] font-medium text-zinc-400">
         {t("footerPrefix")}{" "}
-        <Link
-          href={Routes.home}
-          className="font-semibold text-zinc-700 transition hover:text-ink-charcoal"
-        >
-          delitip
-        </Link>{" "}
+        {preview ? (
+          <span className="font-semibold text-zinc-700">delitip</span>
+        ) : (
+          <Link
+            href={Routes.home}
+            className="font-semibold text-zinc-700 transition hover:text-ink-charcoal"
+          >
+            delitip
+          </Link>
+        )}{" "}
         • {t("footerSuffix")}
       </footer>
     </main>

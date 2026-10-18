@@ -51,6 +51,8 @@ interface DoneStepProps {
   storeName?: string;
   recipientLabel?: string;
   thankYouMessage?: string;
+  /** Skips the confetti burst (used by the dashboard preview). */
+  disableCelebration?: boolean;
   onRestart: () => void;
 }
 
@@ -155,6 +157,7 @@ export const DoneStep: FC<DoneStepProps> = ({
   storeName,
   recipientLabel,
   thankYouMessage,
+  disableCelebration = false,
   onRestart,
 }) => {
   const t = useTranslations("doneStep");
@@ -172,6 +175,7 @@ export const DoneStep: FC<DoneStepProps> = ({
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (disableCelebration) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const styles = rootRef.current ? getComputedStyle(rootRef.current) : null;
@@ -181,7 +185,7 @@ export const DoneStep: FC<DoneStepProps> = ({
 
     const timer = window.setTimeout(() => celebrate(colors), 150);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [disableCelebration]);
 
   return (
     <motion.div

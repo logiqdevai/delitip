@@ -20,16 +20,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from "@/components/ui/toast";
 import { getQrCodeSelectionModeLabel } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
+import { useQrCodeActions } from "@/app/dashboard/access/hooks/use-qr-code-actions";
 import { QrTemplateDialog } from "@/app/dashboard/access/components/qr-templates/qr-template-dialog";
 import { useQrCodeStats } from "@/features/qr-codes/hooks/use-qr-codes";
 import type { QrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { getQrCodeEmployeeCount } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import {
-  downloadQrCodePng,
   getAbsoluteTipUrl,
-  printQrCode,
 } from "@/features/qr-codes/utils/qr-tip-url.utils";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
@@ -49,63 +47,21 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const [busy, setBusy] = useState<"download" | "print" | null>(null);
-  const [copied, setCopied] = useState(false);
   const [templateOpen, setTemplateOpen] = useState(false);
   const statsQuery = useQrCodeStats(qr.id);
   const tipUrl = getAbsoluteTipUrl(store.slug, qr.code);
   const employeeCount = getQrCodeEmployeeCount(qr);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(tipUrl);
-      setCopied(true);
-      toast.add({
-        title: "Link copied",
-        description: "Tip URL copied to clipboard.",
-        type: "success",
-      });
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast.add({
-        title: "Could not copy",
-        description: "Please copy the link manually.",
-        type: "error",
-      });
-    }
-  };
-
-  const handleDownload = async () => {
-    setBusy("download");
-    try {
-      await downloadQrCodePng(tipUrl, `${qr.label || qr.code}-qr`);
-    } catch (error) {
-      toast.add({
-        title: "Could not download QR",
-        description:
-          error instanceof Error ? error.message : "Please try again.",
-        type: "error",
-      });
-    } finally {
-      setBusy(null);
-    }
-  };
-
-  const handlePrint = () => {
-    setBusy("print");
-    try {
-      printQrCode(tipUrl, qr.label);
-    } catch (error) {
-      toast.add({
-        title: "Could not print QR",
-        description:
-          error instanceof Error ? error.message : "Please try again.",
-        type: "error",
-      });
-    } finally {
-      setBusy(null);
-    }
-  };
+  const {
+    busy,
+    copied,
+    copy: handleCopy,
+    download: handleDownload,
+    print: handlePrint,
+  } = useQrCodeActions({
+    tipUrl,
+    label: qr.label,
+    filename: `${qr.label || qr.code}-qr`,
+  });
 
   return (
     <div
@@ -142,7 +98,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
               <ExternalLink />
               Open tip page
             </DropdownMenuItem>
-            <DropdownMenuItem disabled={busy !== null} onClick={handlePrint}>
+            <DropdownMenuItem disabled={busy !== null} onClick={() => void handlePrint()}>
               <Printer />
               Print
             </DropdownMenuItem>
@@ -184,13 +140,19 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
         </div>
       </div>
 
-      <div className="mx-auto flex size-40 items-center justify-center rounded-2xl bg-ink-charcoal p-2.5 shadow-inner">
+      <button
+        type="button"
+        onClick={() => onEdit(qr)}
+        aria-label={`Edit QR code ${qr.label}`}
+        title="Edit QR code"
+        className="mx-auto flex size-40 cursor-pointer items-center justify-center rounded-2xl bg-ink-charcoal p-2.5 shadow-inner outline-none transition duration-200 ease-out hover:scale-105 hover:shadow-lg focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100"
+      >
         <QrImage
           value={tipUrl}
           alt={`QR code for ${qr.label}`}
           className="size-full rounded-xl bg-white object-contain p-1"
         />
-      </div>
+      </button>
 
       <div className="flex flex-wrap items-center justify-center gap-2 text-[11px]">
         <span

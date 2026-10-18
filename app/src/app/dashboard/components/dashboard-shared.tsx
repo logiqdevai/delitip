@@ -54,7 +54,7 @@ export const StatusPill: FC<StatusPillProps> = ({ onShift }) => {
 };
 
 interface DashboardPageHeaderProps {
-  title: string;
+  title: ReactNode;
   description: string;
   actions?: ReactNode;
 }

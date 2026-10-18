@@ -36,6 +36,8 @@ interface ReviewStepProps {
   draft: ReviewDraft;
   onChange: (draft: ReviewDraft) => void;
   onBack: () => void;
+  /** Dashboard preview: replaces the real checkout so no tip is created. */
+  onPreviewPay?: () => void;
 }
 
 const StarPicker: FC<{
@@ -93,6 +95,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
   draft,
   onChange,
   onBack,
+  onPreviewPay,
 }) => {
   const t = useTranslations("reviewStep");
   const categories = [...(config?.review_categories ?? [])].sort(
@@ -110,6 +113,10 @@ export const ReviewStep: FC<ReviewStepProps> = ({
   const submitting = createTip.isPending;
 
   const pay = () => {
+    if (onPreviewPay) {
+      onPreviewPay();
+      return;
+    }
     createTip.mutate(
       {
         qr_code_id: qrCodeId,

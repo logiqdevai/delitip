@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +18,6 @@ import {
 } from "@/components/ui/confirmation-dialog";
 import { QrCodeCard } from "@/app/dashboard/access/components/qr-code-card";
 import { QrCodeCardsSkeleton } from "@/app/dashboard/access/components/qr-code-cards-skeleton";
-import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
 import { SpotsPanel } from "@/app/dashboard/access/components/spots-panel";
 import {
   useDeleteQrCode,
@@ -25,6 +25,7 @@ import {
 } from "@/features/qr-codes/hooks/use-qr-codes";
 import type { QrCode as QrCodeModel } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
+import { Routes } from "@/routes/routes";
 
 interface QrCodesPanelProps {
   storeId: string;
@@ -33,20 +34,17 @@ interface QrCodesPanelProps {
 
 export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
   const qrCodesQuery = useQrCodes(storeId, { limit: 100 });
-  const [formOpen, setFormOpen] = useState(false);
-  const [editingQr, setEditingQr] = useState<QrCodeModel | null>(null);
+  const router = useRouter();
   const [pendingDelete, setPendingDelete] = useState<QrCodeModel | null>(null);
   const deleteQrCode = useDeleteQrCode();
   const deleteConfirm = useConfirmationDialog();
 
   const openCreate = () => {
-    setEditingQr(null);
-    setFormOpen(true);
+    router.push(Routes.dashboard.accessQrNew);
   };
 
   const openEdit = (qr: QrCodeModel) => {
-    setEditingQr(qr);
-    setFormOpen(true);
+    router.push(Routes.dashboard.accessQrEdit(qr.id));
   };
 
   const openDelete = (qr: QrCodeModel) => {
@@ -131,14 +129,6 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
       )}
 
       <SpotsPanel storeId={storeId} />
-
-      <QrCodeFormDialog
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        storeId={storeId}
-        storeSlug={store.slug}
-        qr={editingQr}
-      />
 
       <ConfirmationDialog
         state={{

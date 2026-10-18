@@ -47,7 +47,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
-import { QrCodeFormDialog } from "@/app/dashboard/access/components/qr-code-form-dialog";
 import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employee-form-dialog";
 import { EmployeePayoutAccountCard } from "@/app/dashboard/employees/[employeeId]/components/employee-payout-account-card";
 import { QrRow } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
@@ -109,8 +108,6 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   const deactivateConfirm = useConfirmationDialog();
   const deleteConfirm = useConfirmationDialog();
   const [formOpen, setFormOpen] = useState(false);
-  const [qrFormOpen, setQrFormOpen] = useState(false);
-  const [editingQr, setEditingQr] = useState<QrCode | null>(null);
 
   const platformRole = meQuery.data?.role ?? authUser?.role;
   const canDeleteEmployee =
@@ -151,13 +148,11 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   const employeeTips = tipsQuery.data?.data ?? [];
 
   const openCreateQr = () => {
-    setEditingQr(null);
-    setQrFormOpen(true);
+    router.push(Routes.dashboard.accessQrNewForEmployee(employee.id));
   };
 
   const openEditQr = (qr: QrCode) => {
-    setEditingQr(qr);
-    setQrFormOpen(true);
+    router.push(Routes.dashboard.accessQrEdit(qr.id));
   };
 
   return (
@@ -471,23 +466,6 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         />
       ) : null}
 
-      {storeId && store ? (
-        <QrCodeFormDialog
-          open={qrFormOpen}
-          onOpenChange={setQrFormOpen}
-          storeId={storeId}
-          storeSlug={store.slug}
-          qr={editingQr}
-          defaultEmployeeIds={editingQr ? undefined : [employee.id]}
-          presetEmployees={[
-            {
-              id: employee.id,
-              full_name: employee.full_name,
-              position: employee.position,
-            },
-          ]}
-        />
-      ) : null}
 
       <ConfirmationDialog
         state={deactivateConfirm}

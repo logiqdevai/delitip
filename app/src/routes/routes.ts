@@ -5,6 +5,9 @@ export const AccessTabs = {
   distribution: "distribution",
 } as const;
 
+export const QR_EDITOR_SECTION_PARAM = "section";
+export const QR_EDITOR_EMPLOYEE_PARAM = "employee";
+
 export type AccessTab = (typeof AccessTabs)[keyof typeof AccessTabs];
 
 export const TipsTabs = {
@@ -59,6 +62,10 @@ export const Routes = {
       insights: "/dashboard/analytics/insights",
     },
     access: "/dashboard/access",
+    accessQrNew: "/dashboard/access/qr/new",
+    accessQrEdit: (id: string) => `/dashboard/access/qr/${id}` as const,
+    accessQrNewForEmployee: (employeeId: string) =>
+      `/dashboard/access/qr/new?${QR_EDITOR_EMPLOYEE_PARAM}=${employeeId}` as const,
     accessDistribution:
       `/dashboard/access?${DASHBOARD_TAB_PARAM}=${AccessTabs.distribution}` as const,
     alerts: "/dashboard/alerts",
