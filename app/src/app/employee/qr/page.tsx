@@ -4,6 +4,7 @@ import { type CSSProperties, type FC, useState } from "react";
 import { QrCode } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
+import { QrImage } from "@/components/ui/qr-image";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Empty,
@@ -22,7 +23,6 @@ import type {
 } from "@/features/employees/interfaces/employees.interfaces";
 import {
   getAbsoluteTipUrl,
-  getQrCodeImageUrl,
 } from "@/features/qr-codes/utils/qr-tip-url.utils";
 import { cn } from "@/lib/utils";
 
@@ -84,8 +84,8 @@ const QrCodeTile: FC<QrCodeTileProps> = ({
       </div>
 
       <div className="mx-auto flex size-40 items-center justify-center rounded-2xl bg-ink-charcoal p-2.5 shadow-inner">
-        <img
-          src={getQrCodeImageUrl(tipUrl, 240)}
+        <QrImage
+          value={tipUrl}
           alt={`QR code for ${qrCode.label}`}
           className="size-full rounded-xl bg-white object-contain p-1"
         />

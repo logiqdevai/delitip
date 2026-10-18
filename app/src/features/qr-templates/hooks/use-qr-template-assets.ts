@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   fetchImageAsObjectUrl,
-  getQrCodeImageUrl,
+  renderQrDataUrl,
 } from "@/features/qr-codes/utils/qr-tip-url.utils";
 
 interface UseQrTemplateAssetsResult {
@@ -45,7 +45,7 @@ export function useQrTemplateAssets(
     setError(null);
 
     Promise.allSettled([
-      fetchImageAsObjectUrl(getQrCodeImageUrl(tipUrl, 1024, { ecc: "H" })),
+      renderQrDataUrl(tipUrl, 1024, { ecc: "H" }),
       logoUrl ? fetchImageAsObjectUrl(logoUrl) : Promise.resolve(null),
     ]).then(([qrResult, logoResult]) => {
       if (cancelled) return;

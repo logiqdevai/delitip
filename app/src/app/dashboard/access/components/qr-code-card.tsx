@@ -29,11 +29,11 @@ import { getQrCodeEmployeeCount } from "@/features/qr-codes/interfaces/qr-codes.
 import {
   downloadQrCodePng,
   getAbsoluteTipUrl,
-  getQrCodeImageUrl,
   printQrCode,
 } from "@/features/qr-codes/utils/qr-tip-url.utils";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
+import { QrImage } from "@/components/ui/qr-image";
 import { cn } from "@/lib/utils";
 
 interface QrCodeCardProps {
@@ -55,7 +55,6 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
   const statsQuery = useQrCodeStats(qr.id);
   const tipUrl = getAbsoluteTipUrl(store.slug, qr.code);
   const employeeCount = getQrCodeEmployeeCount(qr);
-  const imageUrl = getQrCodeImageUrl(tipUrl, 240);
 
   const handleCopy = async () => {
     try {
@@ -186,8 +185,8 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
       </div>
 
       <div className="mx-auto flex size-40 items-center justify-center rounded-2xl bg-ink-charcoal p-2.5 shadow-inner">
-        <img
-          src={imageUrl}
+        <QrImage
+          value={tipUrl}
           alt={`QR code for ${qr.label}`}
           className="size-full rounded-xl bg-white object-contain p-1"
         />

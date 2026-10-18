@@ -13,13 +13,18 @@ export function getAbsoluteTipUrl(storeSlug: string, code: string): string {
 
 export type QrCodeErrorCorrection = "L" | "M" | "Q" | "H";
 
-export function getQrCodeImageUrl(
+/** Renders the QR code client-side as a PNG data URL (no network call). */
+export async function renderQrDataUrl(
   tipUrl: string,
   size = 280,
   options?: { ecc?: QrCodeErrorCorrection },
-): string {
-  const eccParam = options?.ecc ? `&ecc=${options.ecc}` : "";
-  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&margin=8${eccParam}&data=${encodeURIComponent(tipUrl)}`;
+): Promise<string> {
+  const { default: QRCode } = await import("qrcode");
+  return QRCode.toDataURL(tipUrl, {
+    width: size,
+    margin: 2,
+    errorCorrectionLevel: options?.ecc ?? "M",
+  });
 }
 
 /** Fetches an image as a `blob:` object URL so it can be safely composited (e.g. via canvas) without cross-origin taint. Caller must revoke the URL when done. */
@@ -36,22 +41,22 @@ export async function downloadQrCodePng(
   tipUrl: string,
   filename: string,
 ): Promise<void> {
-  const objectUrl = await fetchImageAsObjectUrl(getQrCodeImageUrl(tipUrl, 512));
+  const objectUrl = await renderQrDataUrl(tipUrl, 512);
   const anchor = document.createElement("a");
   anchor.href = objectUrl;
   anchor.download = filename.endsWith(".png") ? filename : `${filename}.png`;
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
-  URL.revokeObjectURL(objectUrl);
 }
 
-export function printQrCode(tipUrl: string, label: string): void {
-  const imageUrl = getQrCodeImageUrl(tipUrl, 400);
-  const popup = window.open("", "_blank", "noopener,noreferrer,width=480,height=640");
+export async function printQrCode(tipUrl: string, label: string): Promise<void> {
+  // Open synchronously so the pop-up keeps the click's user activation.
+  const popup = window.open("", "_blank", "width=480,height=640");
   if (!popup) {
     throw new Error("Pop-up blocked. Allow pop-ups to print the QR code.");
   }
+  const imageUrl = await renderQrDataUrl(tipUrl, 400);
   popup.document.write(`<!doctype html>
 <html>
   <head>
