@@ -129,7 +129,7 @@ export const GettingStartedHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "Delitip has organization-level roles (like Owner) that gate access to Members & Access and Billing - only an Owner can invite/remove members or change the subscription plan.",
-            "It also has platform-level admin roles (Admin/Super Admin) that gate destructive or sensitive actions, such as deleting an employee profile or managing feedback tags. Everyday managers and staff without these roles can still view and use most of the Dashboard, just without those specific controls.",
+            "It also has platform-level admin roles (Admin/Super Admin) that gate destructive or sensitive actions, such as deleting an employee profile. Everyday managers and staff without these roles can still view and use most of the Dashboard, just without those specific controls.",
           ],
           links: [
             { label: "Settings → Members & Access", href: Routes.dashboard.settings.members },

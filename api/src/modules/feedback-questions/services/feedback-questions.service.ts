@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
-import { autoTranslateStub, TranslatedText } from '@/shared/utils/translation/translation.utils';
+import { autoTranslateStub, sanitizeTranslations, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { CreateFeedbackQuestionDto } from '../dto/create-feedback-question.dto';
 import { UpdateFeedbackQuestionDto } from '../dto/update-feedback-question.dto';
 import { FeedbackQuestionQueryType } from '../dto/feedback-question-query.schema';
@@ -53,21 +53,33 @@ export class FeedbackQuestionsService {
         if (!question) throw new NotFoundException('Feedback question not found');
 
         let questionText = question.question;
-        if (dto.question !== undefined) {
+        const questionChanging = dto.question_translations !== undefined || dto.question !== undefined;
+        if (questionChanging) {
             const store = await this.prisma.store.findUnique({ where: { id: storeId } });
             if (!store) throw new NotFoundException('Store not found');
-            questionText = autoTranslateStub(
-                store.primary_language,
-                dto.question,
-                store.supported_languages,
-                question.question as TranslatedText,
-            );
+            if (dto.question_translations !== undefined) {
+                const merged = {
+                    ...((question.question as TranslatedText) || {}),
+                    ...sanitizeTranslations(dto.question_translations),
+                };
+                if (!merged[store.primary_language.toLowerCase()]) {
+                    throw new BadRequestException("question_translations must include non-empty text for the store's primary language");
+                }
+                questionText = merged;
+            } else {
+                questionText = autoTranslateStub(
+                    store.primary_language,
+                    dto.question!,
+                    store.supported_languages,
+                    question.question as TranslatedText,
+                );
+            }
         }
 
         return this.prisma.feedbackQuestion.update({
             where: { id },
             data: {
-                ...(dto.question !== undefined && { question: questionText }),
+                ...(questionChanging && { question: questionText }),
                 ...(dto.type !== undefined && { type: dto.type }),
                 ...(dto.is_active !== undefined && { is_active: dto.is_active }),
                 ...(dto.sort_order !== undefined && { sort_order: dto.sort_order }),

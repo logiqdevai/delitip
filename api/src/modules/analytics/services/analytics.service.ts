@@ -201,7 +201,15 @@ export class AnalyticsService {
             ratingComponent * 0.5 + tipActivityComponent * 0.2 + positiveReviewRatioComponent * 0.3,
         );
 
-        const explanation = `Driven mainly by a ${avgRating.toFixed(1)}/5 average rating and ${reviewsCount} review${reviewsCount === 1 ? '' : 's'} this period, alongside ${tipCount} completed tip${tipCount === 1 ? '' : 's'}.`;
+        const tipsLabel = `${tipCount} completed tip${tipCount === 1 ? '' : 's'}`;
+        let explanation: string;
+        if (reviewsCount === 0 && tipCount === 0) {
+            explanation = 'No reviews or completed tips yet this period, so there is nothing to score.';
+        } else if (reviewsCount === 0) {
+            explanation = `No reviews yet this period, so the score is driven only by ${tipsLabel}.`;
+        } else {
+            explanation = `Driven mainly by a ${avgRating.toFixed(1)}/5 average rating and ${reviewsCount} review${reviewsCount === 1 ? '' : 's'} this period, alongside ${tipsLabel}.`;
+        }
 
         return {
             score,

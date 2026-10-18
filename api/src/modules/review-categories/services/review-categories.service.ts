@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AccessControlService, AuthUser } from '@/shared/services/access-control/access-control.service';
-import { autoTranslateStub, TranslatedText } from '@/shared/utils/translation/translation.utils';
+import { autoTranslateStub, sanitizeTranslations, TranslatedText } from '@/shared/utils/translation/translation.utils';
 import { CreateReviewCategoryDto } from '../dto/create-review-category.dto';
 import { UpdateReviewCategoryDto } from '../dto/update-review-category.dto';
 import { ReviewCategoryQueryType } from '../dto/review-category-query.schema';
@@ -52,16 +52,25 @@ export class ReviewCategoriesService {
         if (!category) throw new NotFoundException('Review category not found');
 
         let name = category.name;
-        if (dto.name !== undefined) {
+        const nameChanging = dto.name_translations !== undefined || dto.name !== undefined;
+        if (nameChanging) {
             const store = await this.prisma.store.findUnique({ where: { id: storeId } });
             if (!store) throw new NotFoundException('Store not found');
-            name = autoTranslateStub(store.primary_language, dto.name, store.supported_languages, category.name as TranslatedText);
+            if (dto.name_translations !== undefined) {
+                const merged = { ...((category.name as TranslatedText) || {}), ...sanitizeTranslations(dto.name_translations) };
+                if (!merged[store.primary_language.toLowerCase()]) {
+                    throw new BadRequestException("name_translations must include non-empty text for the store's primary language");
+                }
+                name = merged;
+            } else {
+                name = autoTranslateStub(store.primary_language, dto.name!, store.supported_languages, category.name as TranslatedText);
+            }
         }
 
         return this.prisma.reviewCategory.update({
             where: { id },
             data: {
-                ...(dto.name !== undefined && { name }),
+                ...(nameChanging && { name }),
                 ...(dto.is_active !== undefined && { is_active: dto.is_active }),
                 ...(dto.sort_order !== undefined && { sort_order: dto.sort_order }),
             },

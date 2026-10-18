@@ -17,7 +17,7 @@ export const ReviewsAndFeedbackHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "Dashboard → Reviews lists every customer rating and comment, each tied to the employee it was left for. Filter by minimum rating or employee, or use the From and To date pickers to narrow the list to a specific window - the To date includes the whole day it names.",
-            "Open a review's detail sheet to see the full comment along with any tags or categories the customer selected.",
+            "Open a review's detail sheet to see the full comment along with any categories the customer rated.",
           ],
           links: [{ label: "Dashboard → Reviews", href: Routes.dashboard.reviews }],
         },
@@ -58,28 +58,11 @@ export const ReviewsAndFeedbackHelpCategory: HelpCategory = {
           list: [
             "Rating categories - sub-ratings you can reorder by dragging, show or hide, and edit the wording of",
             "Feedback questions - Rating-type or Text-type questions, also reorderable, toggleable and editable",
-            "Compliment/feedback tags - quick-select tags marked Positive, Neutral, or Negative sentiment, managed by Admin/Super Admin",
           ],
           links: [{ label: "Settings → Reviews & Feedback", href: Routes.dashboard.settings.reviewsFeedback }],
         },
       ],
-      related: [{ category: "reviews-and-feedback", article: "using-feedback-tags" }],
-    },
-    {
-      slug: "using-feedback-tags",
-      title: "Using feedback tags",
-      summary:
-        "Positive, neutral, and negative sentiment tags customers can quickly select instead of typing a comment.",
-      sections: [
-        {
-          paragraphs: [
-            "Feedback tags are short, pre-written labels (like \"Friendly service\" or \"Slow to respond\") that a customer can tap instead of writing a full comment. Each tag carries a sentiment - Positive, Neutral, or Negative.",
-            "Managing the tag list itself is restricted to Admin or Super Admin roles, from Settings → Reviews & Feedback.",
-          ],
-          links: [{ label: "Settings → Reviews & Feedback", href: Routes.dashboard.settings.reviewsFeedback }],
-        },
-      ],
-      related: [{ category: "getting-started", article: "understanding-roles-and-permissions" }],
+      related: [{ category: "reviews-and-feedback", article: "viewing-customer-reviews" }],
     },
   ],
 };

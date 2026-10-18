@@ -30,6 +30,28 @@ export const SAMPLE_DISTRIBUTION_RULE: SampleDistributionRule = {
     recipients: [{ recipient_type: DistributionRecipientType.STORE, percentage: 100 }],
 };
 
+export interface SampleEmployee {
+    full_name: { en: string; el: string };
+    email: string;
+    position: string;
+}
+
+// Example Greek employees, so a new store can try an employee split right away.
+export const SAMPLE_EMPLOYEES: SampleEmployee[] = [
+    {
+        full_name: { en: 'Maria Papadopoulou', el: 'Μαρία Παπαδοπούλου' },
+        email: 'maria.papadopoulou@example.com',
+        position: 'Waiter',
+    },
+    {
+        full_name: { en: 'Nikos Georgiou', el: 'Νίκος Γεωργίου' },
+        email: 'nikos.georgiou@example.com',
+        position: 'Waiter',
+    },
+];
+
+export const SAMPLE_EMPLOYEE_SPLIT_RULE_NAME = 'Team 50/50';
+
 function buildSampleStoreSetup(spots: SampleSpot[]): SampleStoreSetup {
     return {
         spots,

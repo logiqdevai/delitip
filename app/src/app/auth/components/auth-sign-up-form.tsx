@@ -62,7 +62,7 @@ export const AuthSignUpForm: FC = () => {
               id="sign-up-name"
               type="text"
               autoComplete="name"
-              placeholder="John Miller"
+              placeholder="Giorgos Papadakis"
               aria-invalid={!!errors.fullName}
               {...register("fullName")}
             />

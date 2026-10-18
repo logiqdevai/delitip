@@ -28,6 +28,8 @@ describe('OrganizationsService', () => {
             spot: { create: jest.fn().mockResolvedValue({ id: 'spot1' }) },
             qrCode: { findUnique: jest.fn().mockResolvedValue(null), create: jest.fn().mockResolvedValue({ id: 'qr1' }) },
             qrCodeSpot: { create: jest.fn() },
+            qrCodeEmployee: { createMany: jest.fn() },
+            employee: { create: jest.fn().mockResolvedValue({ id: 'emp1' }) },
             reviewCategory: { createMany: jest.fn() },
             feedbackQuestion: { createMany: jest.fn() },
             reviewTag: { createMany: jest.fn() },

@@ -249,6 +249,19 @@ describe('AnalyticsService', () => {
                 tip_activity_component: 0,
                 positive_review_ratio_component: 0,
             });
+            expect(result.explanation).toBe('No reviews or completed tips yet this period, so there is nothing to score.');
+        });
+
+        it('only mentions tips in the explanation when there are tips but no reviews', async () => {
+            prisma.tip.count.mockResolvedValue(3);
+            prisma.review.aggregate.mockResolvedValue({ _avg: { rating: null }, _count: { _all: 0 } });
+            prisma.review.count.mockResolvedValue(0);
+
+            const result = await service.experienceScore(user, 'org1', { period: '7d' } as any);
+
+            expect(result.explanation).toBe(
+                'No reviews yet this period, so the score is driven only by 3 completed tips.',
+            );
         });
 
         it('caps the tip activity component at 100 even with more than 10 completed tips', async () => {

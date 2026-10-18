@@ -71,7 +71,9 @@ export class OrganizationsService {
                 });
 
                 await seedIndustryReviewConfig(tx, store.id, store.industry, store.primary_language);
-                const { distributionRuleId } = await seedSampleStoreSetup(tx, store.id, store.industry);
+                const { distributionRuleId } = await seedSampleStoreSetup(tx, store.id, store.industry, {
+                    includeExampleEmployees: true,
+                });
                 store = await tx.store.update({
                     where: { id: store.id },
                     data: { default_distribution_rule_id: distributionRuleId },

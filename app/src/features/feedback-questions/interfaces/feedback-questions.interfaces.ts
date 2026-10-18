@@ -25,6 +25,8 @@ export interface CreateFeedbackQuestionPayload {
 
 export interface UpdateFeedbackQuestionPayload {
   question?: string;
+  /** Map of lowercase language code -> question. Merged server-side; must include the store's primary language. */
+  question_translations?: Record<string, string>;
   type?: FeedbackQuestionType;
   sort_order?: number;
   is_active?: boolean;

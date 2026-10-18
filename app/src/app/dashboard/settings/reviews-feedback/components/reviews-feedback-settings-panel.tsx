@@ -56,6 +56,7 @@ import {
 } from "@/config/constants/dropdowns/reviews/review-sentiment-form.options";
 import { useMe } from "@/features/users/hooks/use-users";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import type { Language } from "@/features/stores/interfaces/stores.interfaces";
 import { useAuthStore } from "@/stores/auth.store";
 import { resolvePrimaryText } from "@/lib/translated-text";
 import { cn } from "@/lib/utils";
@@ -99,7 +100,16 @@ const TagSentimentIcon: FC<{
   );
 };
 
-const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ storeId, primaryLanguage }) => {
+interface LanguageConfig {
+  primary: Language;
+  supported: Language[];
+}
+
+const CategoriesSection: FC<{
+  storeId: string;
+  primaryLanguage?: string;
+  languageConfig: LanguageConfig;
+}> = ({ storeId, primaryLanguage, languageConfig }) => {
   const query = useReviewCategories(storeId);
   const create = useCreateReviewCategory(storeId);
   const update = useUpdateReviewCategory(storeId);
@@ -221,12 +231,17 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
           key={editing.id}
           title="Edit rating category"
           textLabel="Name"
-          initialText={resolvePrimaryText(editing.name, primaryLanguage)}
+          multilingual={{
+            storeId,
+            primaryLanguage: languageConfig.primary,
+            languages: languageConfig.supported,
+            initialTranslations: editing.name,
+          }}
           isPending={update.isPending}
           onClose={() => setEditing(null)}
-          onSave={({ text }) =>
+          onSave={({ translations }) =>
             update.mutate(
-              { id: editing.id, payload: { name: text } },
+              { id: editing.id, payload: { name_translations: translations } },
               { onSuccess: () => setEditing(null) },
             )
           }
@@ -252,7 +267,11 @@ const CategoriesSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ 
   );
 };
 
-const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ storeId, primaryLanguage }) => {
+const QuestionsSection: FC<{
+  storeId: string;
+  primaryLanguage?: string;
+  languageConfig: LanguageConfig;
+}> = ({ storeId, primaryLanguage, languageConfig }) => {
   const query = useFeedbackQuestions(storeId);
   const create = useCreateFeedbackQuestion(storeId);
   const update = useUpdateFeedbackQuestion(storeId);
@@ -434,18 +453,23 @@ const QuestionsSection: FC<{ storeId: string; primaryLanguage?: string }> = ({ s
           key={editing.id}
           title="Edit feedback question"
           textLabel="Question"
-          initialText={resolvePrimaryText(editing.question, primaryLanguage)}
+          multilingual={{
+            storeId,
+            primaryLanguage: languageConfig.primary,
+            languages: languageConfig.supported,
+            initialTranslations: editing.question,
+          }}
           choiceLabel="Answer type"
           initialChoice={editing.type}
           choiceOptions={FeedbackQuestionTypeFormOptions}
           isPending={update.isPending}
           onClose={() => setEditing(null)}
-          onSave={({ text, choice }) =>
+          onSave={({ translations, choice }) =>
             update.mutate(
               {
                 id: editing.id,
                 payload: {
-                  question: text,
+                  question_translations: translations,
                   type: choice as FeedbackQuestion["type"],
                 },
               },
@@ -677,6 +701,12 @@ export const ReviewsFeedbackSettingsPanel: FC = () => {
   if (!storeId) return null;
 
   const primaryLanguage = store?.primary_language?.toLowerCase();
+  const languageConfig: LanguageConfig = {
+    primary: store?.primary_language ?? "EN",
+    supported: store?.supported_languages?.length
+      ? store.supported_languages
+      : [store?.primary_language ?? "EN"],
+  };
   const platformRole = meQuery.data?.role ?? authUser?.role;
   const canManageTags =
     platformRole === PlatformAuthRoles.ADMIN ||
@@ -693,8 +723,16 @@ export const ReviewsFeedbackSettingsPanel: FC = () => {
         </p>
       </div>
 
-      <CategoriesSection storeId={storeId} primaryLanguage={primaryLanguage} />
-      <QuestionsSection storeId={storeId} primaryLanguage={primaryLanguage} />
+      <CategoriesSection
+        storeId={storeId}
+        primaryLanguage={primaryLanguage}
+        languageConfig={languageConfig}
+      />
+      <QuestionsSection
+        storeId={storeId}
+        primaryLanguage={primaryLanguage}
+        languageConfig={languageConfig}
+      />
       {canManageTags ? <TagsSection storeId={storeId} /> : null}
     </div>
   );

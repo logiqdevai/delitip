@@ -1,4 +1,4 @@
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { AuthRole, Language, OrganizationRole } from 'generated/prisma';
 import { ReviewCategoriesService } from './review-categories.service';
 
@@ -132,6 +132,31 @@ describe('ReviewCategoriesService', () => {
                 where: { id: 'c1' },
                 data: { name: { en: 'New', el: 'Custom Greek' }, sort_order: 2 },
             });
+        });
+    });
+
+    describe('update with name_translations', () => {
+        it('merges sanitized translations into the existing map', async () => {
+            prisma.reviewCategory.findFirst.mockResolvedValue({ id: 'c1', name: { en: 'Old', el: 'Παλιό' } });
+            prisma.store.findUnique.mockResolvedValue(store);
+            prisma.reviewCategory.update.mockResolvedValue({ id: 'c1' });
+
+            await service.update(user, 'store1', 'c1', { name_translations: { EN: ' New ', el: '  ' } } as any);
+
+            expect(prisma.reviewCategory.update).toHaveBeenCalledWith({
+                where: { id: 'c1' },
+                data: { name: { en: 'New', el: 'Παλιό' } },
+            });
+        });
+
+        it('rejects a map that leaves the primary language empty', async () => {
+            prisma.reviewCategory.findFirst.mockResolvedValue({ id: 'c1', name: {} });
+            prisma.store.findUnique.mockResolvedValue(store);
+
+            await expect(
+                service.update(user, 'store1', 'c1', { name_translations: { el: 'Μόνο ελληνικά' } } as any),
+            ).rejects.toThrow(BadRequestException);
+            expect(prisma.reviewCategory.update).not.toHaveBeenCalled();
         });
     });
 

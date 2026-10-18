@@ -28,7 +28,7 @@ export class ResendAdapter {
         );
       }
 
-      return await resendClient.emails.send({
+      const result = await resendClient.emails.send({
         from: createEmail.from || this.emailFromAddresses.confirmation,
         to: createEmail.to,
         subject: createEmail.subject,
@@ -39,6 +39,13 @@ export class ResendAdapter {
         replyTo: createEmail.replyTo,
         headers: createEmail.headers,
       });
+
+      // The Resend SDK reports API failures via `error` instead of throwing.
+      if (result.error) {
+        throw new Error(`${result.error.name}: ${result.error.message}`);
+      }
+
+      return result;
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException('Failed to send email with Resend');

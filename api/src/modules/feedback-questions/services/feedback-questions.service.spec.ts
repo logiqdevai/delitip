@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { AuthRole, FeedbackQuestionType, Language, OrganizationRole } from 'generated/prisma';
 import { FeedbackQuestionsService } from './feedback-questions.service';
 
@@ -141,6 +141,31 @@ describe('FeedbackQuestionsService', () => {
                 where: { id: 'q1' },
                 data: { question: { en: 'New?', el: 'Custom Greek?' }, type: FeedbackQuestionType.TEXT },
             });
+        });
+    });
+
+    describe('update with question_translations', () => {
+        it('merges sanitized translations into the existing map', async () => {
+            prisma.feedbackQuestion.findFirst.mockResolvedValue({ id: 'q1', question: { en: 'Old', el: 'Παλιό' } });
+            prisma.store.findUnique.mockResolvedValue(store);
+            prisma.feedbackQuestion.update.mockResolvedValue({ id: 'q1' });
+
+            await service.update(user, 'store1', 'q1', { question_translations: { EN: ' New ', el: '  ' } } as any);
+
+            expect(prisma.feedbackQuestion.update).toHaveBeenCalledWith({
+                where: { id: 'q1' },
+                data: { question: { en: 'New', el: 'Παλιό' } },
+            });
+        });
+
+        it('rejects a map that leaves the primary language empty', async () => {
+            prisma.feedbackQuestion.findFirst.mockResolvedValue({ id: 'q1', question: {} });
+            prisma.store.findUnique.mockResolvedValue(store);
+
+            await expect(
+                service.update(user, 'store1', 'q1', { question_translations: { el: 'Μόνο ελληνικά' } } as any),
+            ).rejects.toThrow(BadRequestException);
+            expect(prisma.feedbackQuestion.update).not.toHaveBeenCalled();
         });
     });
 

@@ -16,6 +16,8 @@ export interface CreateReviewCategoryPayload {
 
 export interface UpdateReviewCategoryPayload {
   name?: string;
+  /** Map of lowercase language code -> name. Merged server-side; must include the store's primary language. */
+  name_translations?: Record<string, string>;
   sort_order?: number;
   is_active?: boolean;
 }

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MultilingualInput } from "@/components/ui/multilingual-input";
 import {
   Select,
   SelectContent,
@@ -20,23 +21,39 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
+import type { Language } from "@/features/stores/interfaces/stores.interfaces";
+
+interface MultilingualConfig {
+  storeId: string;
+  primaryLanguage: Language;
+  languages: Language[];
+  initialTranslations: Record<string, string>;
+}
 
 interface ReviewConfigItemEditDialogProps {
   title: string;
   textLabel: string;
-  initialText: string;
+  /** Plain single-language text. Ignored when `multilingual` is given. */
+  initialText?: string;
+  /** Edit the text as a per-language map instead of a single string. */
+  multilingual?: MultilingualConfig;
   choiceLabel?: string;
   initialChoice?: string;
   choiceOptions?: { id: string; label: string }[];
   isPending: boolean;
   onClose: () => void;
-  onSave: (values: { text: string; choice: string }) => void;
+  onSave: (values: {
+    text: string;
+    translations: Record<string, string>;
+    choice: string;
+  }) => void;
 }
 
 export const ReviewConfigItemEditDialog: FC<ReviewConfigItemEditDialogProps> = ({
   title,
   textLabel,
-  initialText,
+  initialText = "",
+  multilingual,
   choiceLabel,
   initialChoice = "",
   choiceOptions,
@@ -46,15 +63,30 @@ export const ReviewConfigItemEditDialog: FC<ReviewConfigItemEditDialogProps> = (
 }) => {
   const textId = useId();
   const [text, setText] = useState(initialText);
+  const [translations, setTranslations] = useState(
+    multilingual?.initialTranslations ?? {},
+  );
   const [choice, setChoice] = useState(initialChoice);
 
-  const trimmed = text.trim();
-  const hasChanges = trimmed !== initialText.trim() || choice !== initialChoice;
+  const primaryKey = multilingual?.primaryLanguage.toLowerCase() ?? "";
+  const initialTranslations = multilingual?.initialTranslations ?? {};
+
+  const trimmed = multilingual
+    ? (translations[primaryKey]?.trim() ?? "")
+    : text.trim();
+  const textChanged = multilingual
+    ? Object.keys({ ...initialTranslations, ...translations }).some(
+        (key) =>
+          (translations[key] ?? "").trim() !==
+          (initialTranslations[key] ?? "").trim(),
+      )
+    : trimmed !== initialText.trim();
+  const hasChanges = textChanged || choice !== initialChoice;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!trimmed || !hasChanges) return;
-    onSave({ text: trimmed, choice });
+    onSave({ text: trimmed, translations, choice });
   };
 
   return (
@@ -71,12 +103,25 @@ export const ReviewConfigItemEditDialog: FC<ReviewConfigItemEditDialogProps> = (
           </DialogHeader>
           <div className="space-y-1.5">
             <Label htmlFor={textId}>{textLabel}</Label>
-            <Input
-              id={textId}
-              value={text}
-              onChange={(event) => setText(event.target.value)}
-              autoFocus
-            />
+            {multilingual ? (
+              <MultilingualInput
+                id={textId}
+                storeId={multilingual.storeId}
+                languages={multilingual.languages}
+                primaryLanguage={multilingual.primaryLanguage}
+                value={translations}
+                onValueChange={setTranslations}
+                invalid={!trimmed}
+                autoFocus
+              />
+            ) : (
+              <Input
+                id={textId}
+                value={text}
+                onChange={(event) => setText(event.target.value)}
+                autoFocus
+              />
+            )}
           </div>
           {choiceOptions && choiceLabel ? (
             <div className="space-y-1.5">
