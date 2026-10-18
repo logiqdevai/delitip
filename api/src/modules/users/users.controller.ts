@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { RolesGuard } from '@/shared/guards/roles.guard';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
+import { AuthUser } from '@/shared/services/access-control/access-control.service';
 import { UsersService } from './services/users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersQuerySchema, UsersQueryType } from './dto/users-query.schema';
@@ -51,5 +52,13 @@ export class UsersController {
     @ApiOperation({ summary: 'Get a user by id (platform staff only)' })
     findOne(@Param('id') id: string) {
         return this.usersService.getById(id);
+    }
+
+    @Delete(':id')
+    @UseGuards(RolesGuard)
+    @Roles('ADMIN', 'SUPER_ADMIN')
+    @ApiOperation({ summary: 'Permanently delete a user and all their related data, including stored files (platform admins only)' })
+    remove(@CurrentUser() actor: AuthUser, @Param('id') id: string) {
+        return this.usersService.remove(actor, id);
     }
 }

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  deleteUser,
   getMe,
   getMyAccounts,
   listUsers,
@@ -52,6 +53,50 @@ export const useMyAccounts = (enabled = true) => {
     queryFn: getMyAccounts,
     enabled,
     staleTime: 30_000,
+  });
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteUser,
+    onSuccess: (result) => {
+      void queryClient.invalidateQueries({ queryKey: usersQueryKeys.root });
+
+      const leftovers: string[] = [];
+      if (result.files_failed > 0) {
+        leftovers.push(
+          `${result.files_failed} Google Cloud file${result.files_failed === 1 ? "" : "s"} could not be deleted`,
+        );
+      }
+      if (result.viva_bank_accounts_failed > 0) {
+        leftovers.push(
+          `${result.viva_bank_accounts_failed} Viva bank account${result.viva_bank_accounts_failed === 1 ? "" : "s"} could not be archived`,
+        );
+      }
+      if (result.viva_connected_accounts_remaining > 0) {
+        leftovers.push(
+          `${result.viva_connected_accounts_remaining} Viva connected account${result.viva_connected_accounts_remaining === 1 ? "" : "s"} must be closed manually in Viva`,
+        );
+      }
+
+      toast.add({
+        title: "User deleted",
+        description:
+          leftovers.length > 0
+            ? `The user was removed, but ${leftovers.join("; ")}.`
+            : "The user and all their related data were removed.",
+        type: leftovers.length > 0 ? "warning" : "success",
+      });
+    },
+    onError: (error: Error) => {
+      toast.add({
+        title: "Could not delete user",
+        description: error.message,
+        type: "error",
+      });
+    },
   });
 };
 

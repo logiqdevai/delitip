@@ -1,8 +1,12 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { Search, Users } from "lucide-react";
+import { Search, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  ConfirmationDialog,
+  useConfirmationDialog,
+} from "@/components/ui/confirmation-dialog";
 import { Input } from "@/components/ui/input";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
@@ -23,8 +27,14 @@ import {
 } from "@/components/ui/empty";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { getUserPlatformRoleLabel } from "@/config/constants/dropdowns/users/user-platform-role-form.options";
-import { useUsers } from "@/features/users/hooks/use-users";
+import { PlatformAuthRoles } from "@/features/auth/interfaces/auth.interfaces";
+import {
+  useDeleteUser,
+  useMe,
+  useUsers,
+} from "@/features/users/hooks/use-users";
 import type { UserProfile } from "@/features/users/interfaces/users.interfaces";
+import { usePlatformRole } from "@/hooks/use-platform-role";
 import { cn } from "@/lib/utils";
 
 const roleChipClass: Record<string, string> = {
@@ -49,6 +59,19 @@ const PAGE_LIMIT = 20;
 export const AllUsersPageContent: FC = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [userToDelete, setUserToDelete] = useState<UserProfile | null>(null);
+  const deleteConfirm = useConfirmationDialog();
+  const deleteUser = useDeleteUser();
+  const meQuery = useMe();
+  const { role: myRole } = usePlatformRole();
+
+  // Mirrors the API rules: never yourself or a super admin, and only a super
+  // admin may delete an admin.
+  const canDelete = (user: UserProfile) =>
+    user.id !== meQuery.data?.id &&
+    user.role !== PlatformAuthRoles.SUPER_ADMIN &&
+    (user.role !== PlatformAuthRoles.ADMIN ||
+      myRole === PlatformAuthRoles.SUPER_ADMIN);
 
   const usersQuery = useUsers({
     page,
@@ -81,7 +104,7 @@ export const AllUsersPageContent: FC = () => {
       </div>
 
       {usersQuery.isPending ? (
-        <TableSkeleton columns={5} />
+        <TableSkeleton columns={6} />
       ) : usersQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
@@ -123,6 +146,9 @@ export const AllUsersPageContent: FC = () => {
                   <TableHead className="px-4">Phone</TableHead>
                   <TableHead className="px-4">Role</TableHead>
                   <TableHead className="px-4 text-right">Joined</TableHead>
+                  <TableHead className="w-12 px-4">
+                    <span className="sr-only">Actions</span>
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -150,6 +176,23 @@ export const AllUsersPageContent: FC = () => {
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-right text-zinc-500">
                       {formatDate(user.created_at)}
+                    </TableCell>
+                    <TableCell className="px-4 py-3.5 text-right">
+                      {canDelete(user) ? (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          aria-label={`Delete ${userDisplayName(user)}`}
+                          className="text-zinc-400 hover:text-destructive"
+                          onClick={() => {
+                            setUserToDelete(user);
+                            deleteConfirm.openDialog();
+                          }}
+                        >
+                          <Trash2 />
+                        </Button>
+                      ) : null}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -188,6 +231,18 @@ export const AllUsersPageContent: FC = () => {
           ) : null}
         </>
       )}
+
+      <ConfirmationDialog
+        state={deleteConfirm}
+        title={`Delete ${userToDelete ? userDisplayName(userToDelete) : "user"}?`}
+        description={`This permanently removes ${userToDelete?.email ?? "this user"}, any business they are the only member of (with its stores, tips and reviews), every uploaded file from Google Cloud, and archives their linked Viva bank accounts. This cannot be undone.`}
+        confirmLabel="Delete user"
+        isPending={deleteUser.isPending}
+        onConfirm={async () => {
+          if (!userToDelete) return;
+          await deleteUser.mutateAsync(userToDelete.id);
+        }}
+      />
     </>
   );
 };

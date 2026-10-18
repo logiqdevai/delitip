@@ -1,7 +1,9 @@
+import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
 import type {
+  DeleteUserResult,
   UpdateUserPayload,
   UserAccounts,
   UserProfile,
@@ -42,6 +44,26 @@ export const listUsers = async (
     return response.data;
   } catch {
     throw new Error("Failed to load users. Please try again.");
+  }
+};
+
+export const deleteUser = async (id: string): Promise<DeleteUserResult> => {
+  try {
+    const response = await axiosInstance.delete<DeleteUserResult>(
+      ApiRoutes.users.byId(id),
+    );
+    return response.data;
+  } catch (error) {
+    // The API explains why a delete is refused (own account, protected role,
+    // payout invoice in use), so surface its message instead of a generic one.
+    const message = isAxiosError<{ message?: string }>(error)
+      ? error.response?.data?.message
+      : undefined;
+    throw new Error(
+      typeof message === "string" && message
+        ? message
+        : "Failed to delete the user. Please try again.",
+    );
   }
 };
 

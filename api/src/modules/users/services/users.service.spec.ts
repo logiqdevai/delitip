@@ -1,19 +1,34 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Prisma } from 'generated/prisma';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
     let service: UsersService;
     let prisma: any;
+    let tx: any;
+    let gcsService: any;
+    let viva: any;
 
     beforeEach(() => {
+        tx = {
+            organization: { deleteMany: jest.fn() },
+            document: { deleteMany: jest.fn() },
+            user: { delete: jest.fn() },
+        };
         prisma = {
             user: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn(), findMany: jest.fn(), count: jest.fn() },
             organizationMember: { findMany: jest.fn() },
+            organization: { findMany: jest.fn() },
+            document: { findMany: jest.fn() },
+            payoutAccount: { findMany: jest.fn().mockResolvedValue([]) },
             employee: { findMany: jest.fn() },
             tip: { findFirst: jest.fn() },
             review: { findFirst: jest.fn() },
+            $transaction: jest.fn((callback: (client: any) => Promise<unknown>) => callback(tx)),
         };
-        service = new UsersService(prisma);
+        gcsService = { deleteImage: jest.fn().mockResolvedValue({ success: true }) };
+        viva = { updateBankAccount: jest.fn().mockResolvedValue({}) };
+        service = new UsersService(prisma, gcsService, viva);
     });
 
     describe('findOrCreateByEmail', () => {
@@ -125,6 +140,146 @@ describe('UsersService', () => {
             const result = await service.getMyAccounts('u1');
 
             expect(result.has_customer_account).toBe(false);
+        });
+    });
+
+    describe('remove', () => {
+        const admin = { id: 'admin1', role: 'ADMIN' };
+        const superAdmin = { id: 'super1', role: 'SUPER_ADMIN' };
+
+        const arrangeDeletable = () => {
+            prisma.user.findUnique.mockResolvedValue({ id: 'u1', role: 'USER' });
+            prisma.organizationMember.findMany.mockResolvedValue([
+                { organization_id: 'o1' },
+                { organization_id: 'o1' },
+                { organization_id: 'o2' },
+            ]);
+            prisma.organization.findMany.mockResolvedValue([{ id: 'o1' }]);
+            prisma.document.findMany.mockResolvedValue([
+                { id: 'd1', filename: 'documents/1-logo.png' },
+                { id: 'd2', filename: 'documents/2-invoice.pdf' },
+            ]);
+        };
+
+        it('refuses to delete the acting admin', async () => {
+            await expect(service.remove(admin, 'admin1')).rejects.toThrow(BadRequestException);
+            expect(prisma.$transaction).not.toHaveBeenCalled();
+        });
+
+        it('throws NotFoundException when the user does not exist', async () => {
+            prisma.user.findUnique.mockResolvedValue(null);
+
+            await expect(service.remove(admin, 'missing')).rejects.toThrow(NotFoundException);
+        });
+
+        it('never deletes a super admin', async () => {
+            prisma.user.findUnique.mockResolvedValue({ id: 'u9', role: 'SUPER_ADMIN' });
+
+            await expect(service.remove(superAdmin, 'u9')).rejects.toThrow(ForbiddenException);
+            expect(prisma.$transaction).not.toHaveBeenCalled();
+        });
+
+        it('only lets a super admin delete an admin', async () => {
+            prisma.user.findUnique.mockResolvedValue({ id: 'u8', role: 'ADMIN' });
+
+            await expect(service.remove(admin, 'u8')).rejects.toThrow(ForbiddenException);
+            expect(prisma.$transaction).not.toHaveBeenCalled();
+        });
+
+        it('deletes sole-member organizations, documents and the user in one transaction, then removes the storage files', async () => {
+            arrangeDeletable();
+
+            const result = await service.remove(admin, 'u1');
+
+            expect(prisma.organization.findMany).toHaveBeenCalledWith({
+                where: { id: { in: ['o1', 'o2'] }, members: { every: { user_id: 'u1' } } },
+                select: { id: true },
+            });
+            expect(tx.organization.deleteMany).toHaveBeenCalledWith({ where: { id: { in: ['o1'] } } });
+            expect(tx.document.deleteMany).toHaveBeenCalledWith({ where: { id: { in: ['d1', 'd2'] } } });
+            expect(tx.user.delete).toHaveBeenCalledWith({ where: { id: 'u1' } });
+            expect(gcsService.deleteImage).toHaveBeenCalledTimes(2);
+            expect(gcsService.deleteImage).toHaveBeenCalledWith({ filename: 'documents/1-logo.png', folder: 'documents' });
+            expect(gcsService.deleteImage).toHaveBeenCalledWith({ filename: 'documents/2-invoice.pdf', folder: 'documents' });
+            expect(result).toEqual({
+                success: true,
+                organizations_deleted: 1,
+                files_deleted: 2,
+                files_failed: 0,
+                viva_bank_accounts_archived: 0,
+                viva_bank_accounts_failed: 0,
+                viva_connected_accounts_remaining: 0,
+            });
+        });
+
+        it('archives the linked Viva bank accounts and reports connected accounts it cannot close', async () => {
+            arrangeDeletable();
+            prisma.payoutAccount.findMany.mockResolvedValue([
+                { bank_account_id: 'b1', connected_account_id: null },
+                { bank_account_id: 'b2', connected_account_id: null },
+                { bank_account_id: null, connected_account_id: 'c1' },
+            ]);
+            viva.updateBankAccount.mockRejectedValueOnce(new Error('viva down')).mockResolvedValueOnce({});
+
+            const result = await service.remove(admin, 'u1');
+
+            expect(prisma.payoutAccount.findMany).toHaveBeenCalledWith({
+                where: { OR: [{ user_id: 'u1' }, { store: { organization_id: { in: ['o1'] } } }] },
+                select: { bank_account_id: true, connected_account_id: true },
+            });
+            expect(viva.updateBankAccount).toHaveBeenCalledWith('b1', { archive: true });
+            expect(viva.updateBankAccount).toHaveBeenCalledWith('b2', { archive: true });
+            expect(result).toMatchObject({
+                success: true,
+                viva_bank_accounts_archived: 1,
+                viva_bank_accounts_failed: 1,
+                viva_connected_accounts_remaining: 1,
+            });
+        });
+
+        it('leaves Viva untouched when the database delete fails', async () => {
+            arrangeDeletable();
+            prisma.payoutAccount.findMany.mockResolvedValue([{ bank_account_id: 'b1', connected_account_id: null }]);
+            tx.user.delete.mockRejectedValue(new Error('boom'));
+
+            await expect(service.remove(admin, 'u1')).rejects.toThrow('boom');
+            expect(viva.updateBankAccount).not.toHaveBeenCalled();
+        });
+
+        it('lets a super admin delete an admin', async () => {
+            arrangeDeletable();
+            prisma.user.findUnique.mockResolvedValue({ id: 'u8', role: 'ADMIN' });
+
+            await expect(service.remove(superAdmin, 'u8')).resolves.toMatchObject({ success: true });
+        });
+
+        it('does not touch storage when the database delete fails on a restricted payout invoice', async () => {
+            arrangeDeletable();
+            tx.user.delete.mockRejectedValue(
+                new Prisma.PrismaClientKnownRequestError('fk', { code: 'P2003', clientVersion: 'test' }),
+            );
+
+            await expect(service.remove(admin, 'u1')).rejects.toThrow(ConflictException);
+            expect(gcsService.deleteImage).not.toHaveBeenCalled();
+        });
+
+        it('rethrows unexpected database errors', async () => {
+            arrangeDeletable();
+            tx.user.delete.mockRejectedValue(new Error('boom'));
+
+            await expect(service.remove(admin, 'u1')).rejects.toThrow('boom');
+            expect(gcsService.deleteImage).not.toHaveBeenCalled();
+        });
+
+        it('still succeeds and reports failures when a storage file cannot be removed', async () => {
+            arrangeDeletable();
+            gcsService.deleteImage
+                .mockRejectedValueOnce(new Error('gcs down'))
+                .mockResolvedValueOnce({ success: true });
+
+            const result = await service.remove(admin, 'u1');
+
+            expect(result).toMatchObject({ files_deleted: 1, files_failed: 1 });
         });
     });
 

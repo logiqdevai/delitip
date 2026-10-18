@@ -22,6 +22,16 @@ export interface UpdateUserPayload {
   phone?: string;
 }
 
+export interface DeleteUserResult {
+  success: boolean;
+  organizations_deleted: number;
+  files_deleted: number;
+  files_failed: number;
+  viva_bank_accounts_archived: number;
+  viva_bank_accounts_failed: number;
+  viva_connected_accounts_remaining: number;
+}
+
 export interface UsersQuery {
   page?: number;
   limit?: number;

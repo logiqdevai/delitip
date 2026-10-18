@@ -10,6 +10,7 @@ describe('UsersController', () => {
             updateProfile: jest.fn(),
             getMyAccounts: jest.fn(),
             findAll: jest.fn(),
+            remove: jest.fn(),
         };
         controller = new UsersController(usersService);
     });
@@ -58,6 +59,16 @@ describe('UsersController', () => {
         const result = controller.findOne('u2');
 
         expect(usersService.getById).toHaveBeenCalledWith('u2');
+        expect(result).toBe('result');
+    });
+
+    it('remove() delegates to usersService.remove with the acting user and the route param', () => {
+        const actor = { id: 'admin1', role: 'ADMIN' };
+        usersService.remove.mockReturnValue('result');
+
+        const result = controller.remove(actor, 'u2');
+
+        expect(usersService.remove).toHaveBeenCalledWith(actor, 'u2');
         expect(result).toBe('result');
     });
 });
