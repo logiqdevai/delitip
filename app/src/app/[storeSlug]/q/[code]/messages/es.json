@@ -92,6 +92,7 @@
     "descriptionWithReview": "Tu propina de {amount} y tus elogios se enviaron a {recipient}.",
     "descriptionWithoutReview": "Tu propina de {amount} se envió a {recipient}.",
     "descriptionNoDetails": "Tu propina ya ha sido enviada.",
+    "receiptTitle": "Detalles del recibo",
     "receiptIdLabel": "ID de recibo",
     "businessLabel": "Comercio",
     "recipientLabel": "Destinatario",

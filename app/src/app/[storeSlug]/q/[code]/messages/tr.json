@@ -92,6 +92,7 @@
     "descriptionWithReview": "{amount} tutarındaki bahşişiniz ve övgüleriniz {recipient} kişisine gönderildi.",
     "descriptionWithoutReview": "{amount} tutarındaki bahşişiniz {recipient} kişisine gönderildi.",
     "descriptionNoDetails": "Bahşişiniz zaten gönderildi.",
+    "receiptTitle": "Makbuz ayrıntıları",
     "receiptIdLabel": "Makbuz No",
     "businessLabel": "İşletme",
     "recipientLabel": "Alıcı",

@@ -92,6 +92,7 @@
     "descriptionWithReview": "Ваши чаевые в размере {amount} и ваш отзыв отправлены: {recipient}.",
     "descriptionWithoutReview": "Ваши чаевые в размере {amount} отправлены: {recipient}.",
     "descriptionNoDetails": "Ваши чаевые уже отправлены.",
+    "receiptTitle": "Данные квитанции",
     "receiptIdLabel": "Номер чека",
     "businessLabel": "Заведение",
     "recipientLabel": "Получатель",

@@ -92,6 +92,7 @@
     "descriptionWithReview": "Ihr Trinkgeld über {amount} und Ihr Lob wurden an {recipient} gesendet.",
     "descriptionWithoutReview": "Ihr Trinkgeld über {amount} wurde an {recipient} gesendet.",
     "descriptionNoDetails": "Ihr Trinkgeld wurde bereits gesendet.",
+    "receiptTitle": "Belegdetails",
     "receiptIdLabel": "Beleg-ID",
     "businessLabel": "Geschäft",
     "recipientLabel": "Empfänger",

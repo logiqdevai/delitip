@@ -92,6 +92,7 @@
     "descriptionWithReview": "Your {amount} tip and compliments were sent to {recipient}.",
     "descriptionWithoutReview": "Your {amount} tip was sent to {recipient}.",
     "descriptionNoDetails": "Your tip has already been sent.",
+    "receiptTitle": "Receipt details",
     "receiptIdLabel": "Receipt ID",
     "businessLabel": "Business",
     "recipientLabel": "Recipient",

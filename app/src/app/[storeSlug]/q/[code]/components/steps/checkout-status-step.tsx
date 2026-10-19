@@ -8,14 +8,19 @@ import { useCreatePublicReview } from "@/features/reviews/hooks/use-reviews";
 import type { CreatePublicReviewResponse } from "@/features/reviews/interfaces/reviews.interfaces";
 import { TipStatuses } from "@/features/tips/interfaces/tips.interfaces";
 import { readPendingTip, clearPendingTip } from "@/app/[storeSlug]/q/[code]/lib/pending-tip";
+import type { StoreIndustry } from "@/features/stores/interfaces/stores.interfaces";
 import { VivaBadge } from "@/components/payments/viva-badge";
 import { DoneStep } from "@/app/[storeSlug]/q/[code]/components/steps/done-step";
 
 const POLL_TIMEOUT_MS = 12000;
 
+// Past this many names, say "the team" instead (same rule as the tip flow).
+const MAX_NAMED_RECIPIENTS = 3;
+
 interface CheckoutStatusStepProps {
   tipId: string;
   storeName: string;
+  industry?: StoreIndustry;
   onRestart: () => void;
 }
 
@@ -26,9 +31,11 @@ interface CheckoutStatusStepProps {
 export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
   tipId,
   storeName,
+  industry,
   onRestart,
 }) => {
   const t = useTranslations("checkoutStatusStep");
+  const tFlow = useTranslations("tipFlow");
   const statusQuery = usePublicTipStatus(tipId);
   const createReview = useCreatePublicReview();
   const reviewSubmitted = useRef(false);
@@ -97,6 +104,22 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
     let review: CreatePublicReviewResponse | null = null;
     if (createReview.isSuccess) review = createReview.data;
 
+    // sessionStorage is gone after a reload or on another device, so rebuild the
+    // recipients from the tip's distribution instead of falling back to the store.
+    const distributionNames = [
+      ...new Set(
+        (data.distribution_summary ?? [])
+          .map((line) => line.employee?.full_name)
+          .filter((name): name is string => !!name),
+      ),
+    ];
+    const recipientFromDistribution =
+      distributionNames.length === 0
+        ? null
+        : distributionNames.length > MAX_NAMED_RECIPIENTS
+          ? tFlow("teamFallback")
+          : distributionNames.join(" & ");
+
     return (
       <DoneStep
         review={review}
@@ -104,8 +127,12 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
         amount={data.amount}
         currency={data.currency}
         storeName={storeName}
+        industry={industry}
         recipientLabel={
-          pending?.recipientLabel ?? data.employee?.full_name ?? storeName
+          pending?.recipientLabel ??
+          recipientFromDistribution ??
+          data.employee?.full_name ??
+          storeName
         }
         thankYouMessage={data.thank_you_message}
         onRestart={onRestart}

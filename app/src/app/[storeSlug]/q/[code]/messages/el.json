@@ -92,6 +92,7 @@
     "descriptionWithReview": "Το φιλοδώρημα {amount} και τα σχόλιά σας εστάλησαν σε: {recipient}.",
     "descriptionWithoutReview": "Το φιλοδώρημα {amount} εστάλη σε: {recipient}.",
     "descriptionNoDetails": "Το φιλοδώρημά σας έχει ήδη σταλεί.",
+    "receiptTitle": "Στοιχεία απόδειξης",
     "receiptIdLabel": "Αριθμός απόδειξης",
     "businessLabel": "Επιχείρηση",
     "recipientLabel": "Παραλήπτης",

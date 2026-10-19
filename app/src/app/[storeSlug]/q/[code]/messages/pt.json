@@ -92,6 +92,7 @@
     "descriptionWithReview": "Sua gorjeta de {amount} e seus elogios foram enviados para {recipient}.",
     "descriptionWithoutReview": "Sua gorjeta de {amount} foi enviada para {recipient}.",
     "descriptionNoDetails": "Sua gorjeta já foi enviada.",
+    "receiptTitle": "Detalhes do recibo",
     "receiptIdLabel": "ID do recibo",
     "businessLabel": "Estabelecimento",
     "recipientLabel": "Destinatário",

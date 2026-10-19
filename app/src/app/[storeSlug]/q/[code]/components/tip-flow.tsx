@@ -265,6 +265,7 @@ export const TipFlow: FC<TipFlowProps> = ({
             <CheckoutStatusStep
               tipId={recoveredTipId}
               storeName={store.name}
+              industry={store.industry}
               onRestart={resetFlow}
             />
           </motion.div>
@@ -284,6 +285,7 @@ export const TipFlow: FC<TipFlowProps> = ({
               amount={amount}
               currency={store.currency}
               storeName={store.name}
+              industry={store.industry}
               recipientLabel={recipientLabel}
               thankYouMessage={store.thank_you_message ?? undefined}
               disableCelebration

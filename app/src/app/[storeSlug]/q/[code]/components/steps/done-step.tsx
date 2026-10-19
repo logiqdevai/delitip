@@ -3,11 +3,21 @@
 import { type FC, useEffect, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { motion } from "motion/react";
-import { AlertTriangle, Check, CheckCircle2, ExternalLink } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  ExternalLink,
+  FileText,
+  RotateCw,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCreatePublicRefundRequest } from "@/features/refunds/hooks/use-refunds";
 import type { CreatePublicReviewResponse } from "@/features/reviews/interfaces/reviews.interfaces";
-import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
+import {
+  StoreIndustries,
+  type Currency,
+  type StoreIndustry,
+} from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -37,8 +47,20 @@ const celebrate = (colors: string[]) => {
   });
 
   (function frame() {
-    confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0, y: 0.4 }, colors });
-    confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1, y: 0.4 }, colors });
+    confetti({
+      particleCount: 3,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.4 },
+      colors,
+    });
+    confetti({
+      particleCount: 3,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.4 },
+      colors,
+    });
     if (Date.now() < end) requestAnimationFrame(frame);
   })();
 };
@@ -49,6 +71,7 @@ interface DoneStepProps {
   amount?: number;
   currency?: Currency;
   storeName?: string;
+  industry?: StoreIndustry;
   recipientLabel?: string;
   thankYouMessage?: string;
   /** Skips the confetti burst (used by the dashboard preview). */
@@ -58,6 +81,9 @@ interface DoneStepProps {
 
 // Refund requests are hidden for now; flip to true to bring them back.
 const SHOW_REFUND_REQUEST = false;
+
+// Shows a prev/next picker that cycles every industry illustration.
+const SHOW_ILLUSTRATION_TESTER = false;
 
 const RefundRequest: FC<{
   tipId: string;
@@ -74,7 +100,10 @@ const RefundRequest: FC<{
   if (requestRefund.isSuccess) {
     return (
       <div className="flex items-start gap-2.5 rounded-xl border border-(--tip-primary)/30 bg-(--tip-primary)/10 px-4 py-3 text-left text-xs text-ink-charcoal">
-        <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-(--tip-secondary)" strokeWidth={2} />
+        <CheckCircle2
+          className="mt-0.5 size-4 shrink-0 text-(--tip-secondary)"
+          strokeWidth={2}
+        />
         <span>
           {amountLabel
             ? t("successWithAmount", { amount: amountLabel })
@@ -155,22 +184,33 @@ export const DoneStep: FC<DoneStepProps> = ({
   amount,
   currency,
   storeName,
+  industry,
   recipientLabel,
-  thankYouMessage,
   disableCelebration = false,
   onRestart,
 }) => {
   const t = useTranslations("doneStep");
   const receiptCode = `#${tipId.replace(/-/g, "").slice(0, 8).toUpperCase()}`;
-  const hasTipDetails = amount !== undefined && currency !== undefined;
+  const industries = Object.values(StoreIndustries);
+  const [industryIndex, setIndustryIndex] = useState(
+    Math.max(0, industry ? industries.indexOf(industry) : 0),
+  );
+  const shownIndustry = SHOW_ILLUSTRATION_TESTER
+    ? industries[industryIndex]
+    : industry;
+  // The store's custom thank-you message is intentionally not shown here: it
+  // duplicates the "Thank you!" heading.
   const description =
-    thankYouMessage?.trim() ||
-    (hasTipDetails
+    amount !== undefined && currency !== undefined
       ? t(review ? "descriptionWithReview" : "descriptionWithoutReview", {
           amount: formatMoney(amount, currency),
           recipient: recipientLabel ?? "",
         })
-      : t("descriptionNoDetails"));
+      : t("descriptionNoDetails");
+
+  const illustrationUrl = shownIndustry
+    ? `url(/brand/done/${shownIndustry.toLowerCase().replace(/_/g, "-")}.png)`
+    : undefined;
 
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -181,7 +221,12 @@ export const DoneStep: FC<DoneStepProps> = ({
     const styles = rootRef.current ? getComputedStyle(rootRef.current) : null;
     const primary = styles?.getPropertyValue("--tip-primary").trim();
     const secondary = styles?.getPropertyValue("--tip-secondary").trim();
-    const colors = [primary || "#C8F169", secondary || "#9FBF3E", "#FFD166", "#FFFFFF"];
+    const colors = [
+      primary || "#C8F169",
+      secondary || "#9FBF3E",
+      "#FFD166",
+      "#FFFFFF",
+    ];
 
     const timer = window.setTimeout(() => celebrate(colors), 150);
     return () => window.clearTimeout(timer);
@@ -193,58 +238,100 @@ export const DoneStep: FC<DoneStepProps> = ({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="flex flex-1 flex-col gap-5 px-4 py-8 text-center"
+      className="flex flex-1 flex-col gap-5 px-4 pt-14 pb-8 text-center"
     >
-      <div className="relative mx-auto flex size-16 items-center justify-center">
+      {shownIndustry ? (
         <motion.div
-          className="absolute inset-0 rounded-full bg-(--tip-primary)/40"
-          initial={{ scale: 1, opacity: 0.6 }}
-          animate={{ scale: 1.8, opacity: 0 }}
-          transition={{ duration: 1.4, ease: "easeOut", delay: 0.2, repeat: 1 }}
-        />
-        <motion.div
-          className="relative flex size-16 items-center justify-center rounded-full bg-(--tip-primary)/15 text-(--tip-secondary) shadow-inner"
-          initial={{ scale: 0, rotate: -20 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.05 }}
+          variants={itemVariants}
+          aria-hidden
+          className="relative mx-auto aspect-square w-full max-w-[280px]"
         >
-          <Check className="size-8" strokeWidth={2.5} />
+          <div className="absolute inset-x-6 top-6 bottom-0 rounded-full bg-(--tip-primary)/10" />
+          <div
+            className="absolute inset-0 bg-(--tip-secondary) opacity-90"
+            style={{
+              maskImage: illustrationUrl,
+              WebkitMaskImage: illustrationUrl,
+              maskSize: "contain",
+              WebkitMaskSize: "contain",
+              maskRepeat: "no-repeat",
+              WebkitMaskRepeat: "no-repeat",
+            }}
+          />
         </motion.div>
-      </div>
+      ) : null}
+
+      {SHOW_ILLUSTRATION_TESTER ? (
+        <div className="flex items-center justify-between rounded-full border border-dashed border-zinc-300 px-2 py-1 text-xs text-zinc-600">
+          <button
+            type="button"
+            className="rounded-full px-3 py-1 font-semibold hover:bg-zinc-100"
+            onClick={() =>
+              setIndustryIndex(
+                (i) => (i - 1 + industries.length) % industries.length,
+              )
+            }
+          >
+            ← Prev
+          </button>
+          <span>
+            {shownIndustry} ({industryIndex + 1}/{industries.length})
+          </span>
+          <button
+            type="button"
+            className="rounded-full px-3 py-1 font-semibold hover:bg-zinc-100"
+            onClick={() => setIndustryIndex((i) => (i + 1) % industries.length)}
+          >
+            Next →
+          </button>
+        </div>
+      ) : null}
 
       <motion.div variants={itemVariants}>
-        <h1 className="text-xl font-bold text-ink-charcoal">{t("heading")}</h1>
-        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+        <h1 className="font-serif text-3xl font-bold text-ink-charcoal">
+          {t("heading")}
+        </h1>
+        <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-zinc-600">
           {description}
         </p>
       </motion.div>
 
       <motion.div
         variants={itemVariants}
-        className="space-y-2 rounded-2xl border border-zinc-100 bg-zinc-50 p-4 text-left"
+        className="rounded-2xl bg-white p-5 text-left shadow-sm ring-1 ring-zinc-100"
       >
-        <div className="flex items-center justify-between gap-3 text-xs text-zinc-600">
-          <span className="shrink-0">{t("receiptIdLabel")}</span>
-          <span className="min-w-0 truncate font-mono text-ink-charcoal">
-            {receiptCode}
+        <div className="flex items-center gap-3 border-b border-zinc-100 pb-4">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-(--tip-primary)/10 text-(--tip-secondary)">
+            <FileText className="size-5" strokeWidth={2} />
           </span>
+          <p className="font-serif text-base font-bold text-ink-charcoal">
+            {t("receiptTitle")}
+          </p>
         </div>
-        {storeName ? (
-          <div className="flex items-center justify-between gap-3 text-xs text-zinc-600">
-            <span className="shrink-0">{t("businessLabel")}</span>
-            <span className="min-w-0 truncate font-medium text-ink-charcoal">
-              {storeName}
+        <div className="divide-y divide-zinc-100 text-sm">
+          <div className="flex items-center justify-between gap-3 py-3 text-zinc-500">
+            <span className="shrink-0">{t("receiptIdLabel")}</span>
+            <span className="min-w-0 truncate font-mono font-semibold text-ink-charcoal">
+              {receiptCode}
             </span>
           </div>
-        ) : null}
-        {recipientLabel ? (
-          <div className="flex items-center justify-between gap-3 text-xs text-zinc-600">
-            <span className="shrink-0">{t("recipientLabel")}</span>
-            <span className="min-w-0 truncate font-medium text-ink-charcoal">
-              {recipientLabel}
-            </span>
-          </div>
-        ) : null}
+          {storeName ? (
+            <div className="flex items-center justify-between gap-3 py-3 text-zinc-500">
+              <span className="shrink-0">{t("businessLabel")}</span>
+              <span className="min-w-0 truncate font-medium text-ink-charcoal">
+                {storeName}
+              </span>
+            </div>
+          ) : null}
+          {recipientLabel ? (
+            <div className="flex items-center justify-between gap-3 pt-3 text-zinc-500">
+              <span className="shrink-0">{t("recipientLabel")}</span>
+              <span className="min-w-0 truncate font-medium text-ink-charcoal">
+                {recipientLabel}
+              </span>
+            </div>
+          ) : null}
+        </div>
       </motion.div>
 
       {review?.redirect.should_redirect && review.redirect.url ? (
@@ -253,7 +340,7 @@ export const DoneStep: FC<DoneStepProps> = ({
           href={review.redirect.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-(--tip-primary) py-3.5 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary)"
+          className="flex w-full items-center justify-center gap-2 rounded-full border border-(--tip-primary) py-4 text-sm font-semibold text-(--tip-secondary) transition hover:bg-(--tip-primary)/10"
         >
           <span>{t("sharePublicly")}</span>
           <ExternalLink className="size-4" strokeWidth={2} />
@@ -264,9 +351,10 @@ export const DoneStep: FC<DoneStepProps> = ({
         variants={itemVariants}
         type="button"
         onClick={onRestart}
-        className="mx-auto block pt-2 text-xs font-semibold text-(--tip-secondary) hover:underline"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-(--tip-primary) py-4 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary)"
       >
-        {t("makeAnotherTip")}
+        <RotateCw className="size-4" strokeWidth={2} />
+        <span>{t("makeAnotherTip")}</span>
       </motion.button>
 
       {SHOW_REFUND_REQUEST ? (

@@ -92,6 +92,7 @@
     "descriptionWithReview": "Votre pourboire de {amount} et vos compliments ont été envoyés à {recipient}.",
     "descriptionWithoutReview": "Votre pourboire de {amount} a été envoyé à {recipient}.",
     "descriptionNoDetails": "Votre pourboire a déjà été envoyé.",
+    "receiptTitle": "Détails du reçu",
     "receiptIdLabel": "N° de reçu",
     "businessLabel": "Établissement",
     "recipientLabel": "Destinataire",

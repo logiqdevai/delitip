@@ -92,6 +92,7 @@
     "descriptionWithReview": "La tua mancia di {amount} e i tuoi complimenti sono stati inviati a {recipient}.",
     "descriptionWithoutReview": "La tua mancia di {amount} è stata inviata a {recipient}.",
     "descriptionNoDetails": "La tua mancia è già stata inviata.",
+    "receiptTitle": "Dettagli della ricevuta",
     "receiptIdLabel": "ID ricevuta",
     "businessLabel": "Attività",
     "recipientLabel": "Destinatario",

@@ -92,6 +92,7 @@
     "descriptionWithReview": "您的 {amount} 打赏及评价已发送给{recipient}。",
     "descriptionWithoutReview": "您的 {amount} 打赏已发送给{recipient}。",
     "descriptionNoDetails": "您的打赏已经发送。",
+    "receiptTitle": "收据详情",
     "receiptIdLabel": "收据编号",
     "businessLabel": "商家",
     "recipientLabel": "收款人",
