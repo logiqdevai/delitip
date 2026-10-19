@@ -18,6 +18,7 @@ import { AmountStep } from "@/app/[storeSlug]/q/[code]/components/steps/amount-s
 import { RecipientStep } from "@/app/[storeSlug]/q/[code]/components/steps/recipient-step";
 import {
   ReviewStep,
+  type RecipientKind,
   emptyReviewDraft,
   type ReviewDraft,
 } from "@/app/[storeSlug]/q/[code]/components/steps/review-step";
@@ -123,6 +124,13 @@ export const TipFlow: FC<TipFlowProps> = ({
             .filter((employee) => selectedEmployeeIds.includes(employee.id))
             .map((employee) => employee.full_name)
             .join(" & ");
+
+  const recipientKind: RecipientKind =
+    employees.length === 0
+      ? "store"
+      : employees.length > 1 && mode === "TEAM"
+        ? "team"
+        : "people";
 
   const primary =
     store.primary_color?.trim() ||
@@ -234,6 +242,7 @@ export const TipFlow: FC<TipFlowProps> = ({
               amount={amount}
               currency={store.currency}
               recipientLabel={recipientLabel}
+              recipientKind={recipientKind}
               selectionMode={mode}
               selectedEmployeeIds={selectedEmployeeIds}
               config={reviewConfig}

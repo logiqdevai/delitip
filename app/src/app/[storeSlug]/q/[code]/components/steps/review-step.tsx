@@ -33,6 +33,9 @@ export {
   type ReviewDraft,
 } from "@/app/[storeSlug]/q/[code]/lib/pending-tip";
 
+/** Who the tip goes to, which decides how the review copy is worded. */
+export type RecipientKind = "store" | "people" | "team";
+
 interface ReviewStepProps {
   qrCodeId: string;
   storeId: string;
@@ -41,6 +44,7 @@ interface ReviewStepProps {
   amount: number;
   currency: Currency;
   recipientLabel: string;
+  recipientKind: RecipientKind;
   selectionMode: QrCodeSelectionMode;
   selectedEmployeeIds: string[];
   config?: PublicReviewConfig;
@@ -104,6 +108,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
   amount,
   currency,
   recipientLabel,
+  recipientKind,
   selectionMode,
   selectedEmployeeIds,
   config,
@@ -187,13 +192,17 @@ export const ReviewStep: FC<ReviewStepProps> = ({
     "w-full resize-none rounded-xl border border-zinc-200 bg-white p-3 text-xs focus:ring-2 focus:ring-(--tip-primary) focus:outline-none";
 
   return (
-    <div className="flex flex-1 flex-col gap-4 px-4 py-6">
+    <div className="flex flex-1 flex-col gap-4 px-4 pt-14 pb-6">
       <div className="text-center">
         <h2 className="font-serif text-2xl font-bold text-ink-charcoal">
           {t("heading")}
         </h2>
-        <p className="mx-auto mt-1 max-w-[300px] truncate text-xs text-zinc-500">
-          {t("subtitle", { recipient: recipientLabel })}
+        <p className="mx-auto mt-1 max-w-xs text-balance text-xs text-zinc-500">
+          {recipientKind === "team"
+            ? t("subtitleTeam")
+            : recipientKind === "store"
+              ? t("subtitleStore", { recipient: recipientLabel })
+              : t("subtitlePeople", { recipient: recipientLabel })}
         </p>
       </div>
 
@@ -313,8 +322,12 @@ export const ReviewStep: FC<ReviewStepProps> = ({
           <p className="font-serif text-2xl font-bold text-ink-charcoal">
             {formatMoney(amount, currency)}
           </p>
-          <p className="truncate text-xs text-zinc-500">
-            {t("tipThanks", { recipient: recipientLabel })}
+          <p className="text-xs text-zinc-500">
+            {recipientKind === "team"
+              ? t("tipThanksTeam")
+              : recipientKind === "store"
+                ? t("tipThanksStore", { recipient: recipientLabel })
+                : t("tipThanksPeople", { recipient: recipientLabel })}
           </p>
         </div>
       </div>
