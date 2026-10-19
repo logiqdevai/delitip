@@ -54,6 +54,12 @@
   "reviewStep": {
     "heading": "您的体验如何？",
     "subtitle": "为{recipient}评分（可选）",
+    "overallTitle": "整体体验",
+    "overallSubtitle": "您的整体体验如何？",
+    "tapToRate": "点击评分",
+    "tellUsMore": "告诉我们更多",
+    "yourTip": "您的打赏",
+    "tipThanks": "感谢您对 {recipient} 的支持！",
     "starAriaLabel": "评{count}星",
     "commentPlaceholder": "给{recipient}留下简短留言（可选）...",
     "genericError": "支付失败，请重试。",

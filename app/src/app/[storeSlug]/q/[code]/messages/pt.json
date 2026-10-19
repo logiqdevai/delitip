@@ -54,6 +54,12 @@
   "reviewStep": {
     "heading": "Como foi a sua experiência?",
     "subtitle": "Avalie {recipient} (opcional)",
+    "overallTitle": "Experiência geral",
+    "overallSubtitle": "Como foi sua experiência geral?",
+    "tapToRate": "Toque para avaliar",
+    "tellUsMore": "Conte-nos mais",
+    "yourTip": "Sua gorjeta",
+    "tipThanks": "Obrigado por apoiar {recipient}!",
     "starAriaLabel": "Avaliar com {count} estrelas",
     "commentPlaceholder": "Escreva uma breve mensagem para {recipient} (opcional)...",
     "genericError": "O pagamento falhou. Tente novamente.",

@@ -1,7 +1,18 @@
 "use client";
 
 import { type FC, useMemo } from "react";
-import { AlertTriangle, Loader2, Star } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Coins,
+  Heart,
+  Loader2,
+  Lock,
+  MessageCircle,
+  Sparkles,
+  Star,
+  ShieldCheck,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FeedbackQuestionTypes } from "@/features/feedback-questions/interfaces/feedback-questions.interfaces";
 import type { PublicReviewConfig } from "@/features/reviews/interfaces/reviews.interfaces";
@@ -43,15 +54,19 @@ interface ReviewStepProps {
 const StarPicker: FC<{
   value: number;
   onChange: (value: number) => void;
-  size?: "sm" | "default";
-  align?: "center" | "start";
+  size?: "xs" | "sm" | "default";
+  align?: "center" | "start" | "end";
 }> = ({ value, onChange, size = "default", align = "center" }) => {
   const t = useTranslations("reviewStep");
   return (
     <div
       className={cn(
-        "flex gap-2",
-        align === "center" ? "justify-center" : "justify-start",
+        size === "xs" ? "gap-1" : "gap-2",
+        align === "center"
+          ? "justify-center"
+          : align === "end"
+            ? "justify-end"
+            : "justify-start",
       )}
     >
       {Array.from({ length: 5 }).map((_, index) => {
@@ -67,7 +82,7 @@ const StarPicker: FC<{
           >
             <Star
               className={cn(
-                size === "sm" ? "size-6" : "size-8",
+                size === "xs" ? "size-5" : size === "sm" ? "size-6" : "size-9",
                 filled
                   ? "fill-rating-amber text-rating-amber"
                   : "text-zinc-300",
@@ -148,74 +163,105 @@ export const ReviewStep: FC<ReviewStepProps> = ({
     );
   };
 
+  const ratingRow = (
+    key: string,
+    label: string,
+    value: number,
+    onRate: (rating: number) => void,
+  ) => (
+    <div
+      key={key}
+      className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-sm ring-1 ring-zinc-100"
+    >
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-(--tip-primary)/10 text-(--tip-secondary)">
+        <Sparkles className="size-4" strokeWidth={2} />
+      </span>
+      <span className="min-w-0 flex-1 text-sm font-semibold text-ink-charcoal">
+        {label}
+      </span>
+      <StarPicker size="xs" align="end" value={value} onChange={onRate} />
+    </div>
+  );
+
+  const commentBoxClass =
+    "w-full resize-none rounded-xl border border-zinc-200 bg-white p-3 text-xs focus:ring-2 focus:ring-(--tip-primary) focus:outline-none";
+
   return (
-    <div className="flex flex-1 flex-col gap-6 px-4 py-8">
+    <div className="flex flex-1 flex-col gap-4 px-4 py-6">
       <div className="text-center">
-        <h1 className="text-lg font-bold text-ink-charcoal">
+        <h2 className="font-serif text-2xl font-bold text-ink-charcoal">
           {t("heading")}
-        </h1>
-        <p className="mx-auto mt-1 max-w-[280px] truncate text-xs text-zinc-500">
+        </h2>
+        <p className="mx-auto mt-1 max-w-[300px] truncate text-xs text-zinc-500">
           {t("subtitle", { recipient: recipientLabel })}
         </p>
       </div>
 
-      <StarPicker
-        value={draft.rating}
-        onChange={(rating) => onChange({ ...draft, rating })}
-      />
+      <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-zinc-100">
+        <div className="flex items-center gap-3">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-(--tip-primary)/10 text-(--tip-secondary)">
+            <Heart className="size-5" strokeWidth={2} />
+          </span>
+          <div className="min-w-0">
+            <p className="font-serif text-base font-bold text-ink-charcoal">
+              {t("overallTitle")}
+            </p>
+            <p className="text-xs text-zinc-500">{t("overallSubtitle")}</p>
+          </div>
+        </div>
+        <div className="mt-4">
+          <StarPicker
+            value={draft.rating}
+            onChange={(rating) => onChange({ ...draft, rating })}
+          />
+          <p className="mt-2 text-center text-[11px] text-zinc-400">
+            {t("tapToRate")}
+          </p>
+        </div>
+      </div>
 
       {hasRated ? (
-        <div className="space-y-5">
+        <div className="space-y-4">
           {categories.length > 0 ? (
             <div className="space-y-2">
-              {categories.map((category) => (
-                <div
-                  key={category.id}
-                  className="space-y-1.5 rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-2.5"
-                >
-                  <span className="block text-xs font-medium text-zinc-600">
-                    {category.name}
-                  </span>
-                  <StarPicker
-                    size="sm"
-                    align="start"
-                    value={draft.categoryRatings[category.id] ?? 0}
-                    onChange={(rating) =>
-                      onChange({
-                        ...draft,
-                        categoryRatings: {
-                          ...draft.categoryRatings,
-                          [category.id]: rating,
-                        },
-                      })
-                    }
-                  />
-                </div>
-              ))}
+              {categories.map((category) =>
+                ratingRow(
+                  category.id,
+                  category.name,
+                  draft.categoryRatings[category.id] ?? 0,
+                  (rating) =>
+                    onChange({
+                      ...draft,
+                      categoryRatings: {
+                        ...draft.categoryRatings,
+                        [category.id]: rating,
+                      },
+                    }),
+                ),
+              )}
             </div>
           ) : null}
 
-          {questions.map((question) => (
-            <div key={question.id} className="space-y-1.5">
-              <p className="text-xs font-medium text-zinc-600">
-                {question.question}
-              </p>
-              {question.type === FeedbackQuestionTypes.RATING ? (
-                <StarPicker
-                  size="sm"
-                  align="start"
-                  value={draft.feedbackResponses[question.id]?.ratingValue ?? 0}
-                  onChange={(ratingValue) =>
-                    onChange({
-                      ...draft,
-                      feedbackResponses: {
-                        ...draft.feedbackResponses,
-                        [question.id]: { ratingValue },
-                      },
-                    })
-                  }
-                />
-              ) : (
+          {questions.map((question) =>
+            question.type === FeedbackQuestionTypes.RATING ? (
+              ratingRow(
+                question.id,
+                question.question,
+                draft.feedbackResponses[question.id]?.ratingValue ?? 0,
+                (ratingValue) =>
+                  onChange({
+                    ...draft,
+                    feedbackResponses: {
+                      ...draft.feedbackResponses,
+                      [question.id]: { ratingValue },
+                    },
+                  }),
+              )
+            ) : (
+              <div key={question.id} className="space-y-1.5">
+                <p className="text-xs font-medium text-zinc-600">
+                  {question.question}
+                </p>
                 <textarea
                   rows={2}
                   value={draft.feedbackResponses[question.id]?.textValue ?? ""}
@@ -229,23 +275,49 @@ export const ReviewStep: FC<ReviewStepProps> = ({
                     })
                   }
                   placeholder={question.question}
-                  className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs focus:ring-2 focus:ring-(--tip-primary) focus:outline-none"
+                  className={commentBoxClass}
                 />
-              )}
-            </div>
-          ))}
+              </div>
+            ),
+          )}
 
-          <textarea
-            rows={2}
-            value={draft.comment}
-            onChange={(event) =>
-              onChange({ ...draft, comment: event.target.value })
-            }
-            placeholder={t("commentPlaceholder", { recipient: recipientLabel })}
-            className="w-full resize-none rounded-xl border border-zinc-200 p-3 text-xs focus:ring-2 focus:ring-(--tip-primary) focus:outline-none"
-          />
+          <div className="space-y-2">
+            <p className="flex items-center gap-2 text-sm font-semibold text-ink-charcoal">
+              <MessageCircle
+                className="size-4 text-(--tip-secondary)"
+                strokeWidth={2}
+              />
+              {t("tellUsMore")}
+            </p>
+            <textarea
+              rows={3}
+              value={draft.comment}
+              onChange={(event) =>
+                onChange({ ...draft, comment: event.target.value })
+              }
+              placeholder={t("commentPlaceholder", {
+                recipient: recipientLabel,
+              })}
+              className={commentBoxClass}
+            />
+          </div>
         </div>
       ) : null}
+
+      <div className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-zinc-100">
+        <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-(--tip-primary)/10 text-(--tip-secondary)">
+          <Coins className="size-6" strokeWidth={1.75} />
+        </span>
+        <div className="min-w-0">
+          <p className="text-xs text-zinc-500">{t("yourTip")}</p>
+          <p className="font-serif text-2xl font-bold text-ink-charcoal">
+            {formatMoney(amount, currency)}
+          </p>
+          <p className="truncate text-xs text-zinc-500">
+            {t("tipThanks", { recipient: recipientLabel })}
+          </p>
+        </div>
+      </div>
 
       {createTip.isError ? (
         <div className="flex items-start gap-2.5 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-700">
@@ -263,11 +335,13 @@ export const ReviewStep: FC<ReviewStepProps> = ({
           type="button"
           onClick={pay}
           disabled={submitting}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-(--tip-primary) py-3.5 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-(--tip-primary) py-4 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
         >
           {submitting ? (
             <Loader2 className="size-4 animate-spin" strokeWidth={2} />
-          ) : null}
+          ) : (
+            <Lock className="size-4" strokeWidth={2} />
+          )}
           <span>
             {createTip.isError
               ? t("retryCta")
@@ -278,33 +352,40 @@ export const ReviewStep: FC<ReviewStepProps> = ({
           type="button"
           onClick={onBack}
           disabled={submitting}
-          className="w-full rounded-2xl py-2 text-xs font-semibold text-zinc-500 transition hover:text-zinc-700 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-1.5 rounded-2xl py-2 text-xs font-semibold text-zinc-500 transition hover:text-zinc-700 disabled:opacity-60"
         >
-          {t("back")}
+          <ArrowLeft className="size-3.5" strokeWidth={2} />
+          <span>{t("back")}</span>
         </button>
-        <p className="text-center text-[11px] leading-relaxed text-zinc-400">
-          {t.rich("legalNotice", {
-            terms: (chunks) => (
-              <a
-                href={Routes.legal.terms}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2"
-              >
-                {chunks}
-              </a>
-            ),
-            privacy: (chunks) => (
-              <a
-                href={Routes.legal.privacy}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2"
-              >
-                {chunks}
-              </a>
-            ),
-          })}
+        <p className="flex items-start justify-center gap-1.5 text-center text-[11px] leading-relaxed text-zinc-400">
+          <ShieldCheck
+            className="mt-0.5 size-3.5 shrink-0 text-(--tip-primary)"
+            strokeWidth={2}
+          />
+          <span>
+            {t.rich("legalNotice", {
+              terms: (chunks) => (
+                <a
+                  href={Routes.legal.terms}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2"
+                >
+                  {chunks}
+                </a>
+              ),
+              privacy: (chunks) => (
+                <a
+                  href={Routes.legal.privacy}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2"
+                >
+                  {chunks}
+                </a>
+              ),
+            })}
+          </span>
         </p>
         <VivaBadge label={t("securedBy")} className="pt-1" />
       </div>

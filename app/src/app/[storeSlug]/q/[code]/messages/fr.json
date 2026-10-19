@@ -54,6 +54,12 @@
   "reviewStep": {
     "heading": "Comment s'est passée votre expérience ?",
     "subtitle": "Notez {recipient} (facultatif)",
+    "overallTitle": "Expérience globale",
+    "overallSubtitle": "Comment était votre expérience globale ?",
+    "tapToRate": "Touchez pour noter",
+    "tellUsMore": "Dites-nous en plus",
+    "yourTip": "Votre pourboire",
+    "tipThanks": "Merci de soutenir {recipient} !",
     "starAriaLabel": "Noter {count} étoiles",
     "commentPlaceholder": "Écrivez un court message pour {recipient} (facultatif)...",
     "genericError": "Le paiement a échoué. Veuillez réessayer.",

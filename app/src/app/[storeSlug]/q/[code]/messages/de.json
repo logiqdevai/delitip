@@ -54,6 +54,12 @@
   "reviewStep": {
     "heading": "Wie war Ihre Erfahrung?",
     "subtitle": "Bewerten Sie {recipient} (optional)",
+    "overallTitle": "Gesamterlebnis",
+    "overallSubtitle": "Wie war Ihr Gesamterlebnis?",
+    "tapToRate": "Zum Bewerten tippen",
+    "tellUsMore": "Erzählen Sie uns mehr",
+    "yourTip": "Ihr Trinkgeld",
+    "tipThanks": "Danke, dass Sie {recipient} unterstützen!",
     "starAriaLabel": "Mit {count} Sternen bewerten",
     "commentPlaceholder": "Schreiben Sie eine kurze Nachricht für {recipient} (optional)...",
     "genericError": "Die Zahlung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",

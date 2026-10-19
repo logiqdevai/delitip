@@ -54,6 +54,12 @@
   "reviewStep": {
     "heading": "Com'è stata la tua esperienza?",
     "subtitle": "Valuta {recipient} (facoltativo)",
+    "overallTitle": "Esperienza complessiva",
+    "overallSubtitle": "Com’è stata la tua esperienza complessiva?",
+    "tapToRate": "Tocca per valutare",
+    "tellUsMore": "Raccontaci di più",
+    "yourTip": "La tua mancia",
+    "tipThanks": "Grazie per aver sostenuto {recipient}!",
     "starAriaLabel": "Valuta con {count} stelle",
     "commentPlaceholder": "Scrivi un breve messaggio per {recipient} (facoltativo)...",
     "genericError": "Pagamento non riuscito. Riprova.",

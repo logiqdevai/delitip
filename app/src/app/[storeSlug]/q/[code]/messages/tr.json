@@ -54,6 +54,12 @@
   "reviewStep": {
     "heading": "Deneyiminiz nasıldı?",
     "subtitle": "{recipient} kişisini değerlendirin (isteğe bağlı)",
+    "overallTitle": "Genel deneyim",
+    "overallSubtitle": "Genel deneyiminiz nasıldı?",
+    "tapToRate": "Puanlamak için dokunun",
+    "tellUsMore": "Bize daha fazlasını anlatın",
+    "yourTip": "Bahşişiniz",
+    "tipThanks": "{recipient} kişisini desteklediğiniz için teşekkürler!",
     "starAriaLabel": "{count} yıldız ile değerlendirin",
     "commentPlaceholder": "{recipient} için kısa bir mesaj yazın (isteğe bağlı)...",
     "genericError": "Ödeme başarısız oldu. Lütfen tekrar deneyin.",

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface StoreHeroProps {
   store: PublicStore;
   logoUrl?: string | null;
-  welcome: string;
+  welcome?: string;
 }
 
 export const StoreHero: FC<StoreHeroProps> = ({ store, logoUrl, welcome }) => {
@@ -43,9 +43,11 @@ export const StoreHero: FC<StoreHeroProps> = ({ store, logoUrl, welcome }) => {
           {store.name}
         </h1>
 
-        <p className="mt-2 max-w-xs text-sm leading-relaxed text-zinc-600">
-          {welcome}
-        </p>
+        {welcome ? (
+          <p className="mt-2 max-w-xs text-sm leading-relaxed text-zinc-600">
+            {welcome}
+          </p>
+        ) : null}
         <span className="mt-3 h-0.5 w-10 rounded-full bg-(--tip-primary)" />
       </div>
     </section>

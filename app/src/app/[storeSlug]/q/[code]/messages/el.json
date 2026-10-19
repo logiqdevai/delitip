@@ -54,6 +54,12 @@
   "reviewStep": {
     "heading": "Πώς ήταν η εμπειρία σας;",
     "subtitle": "Αξιολογήστε: {recipient} (προαιρετικό)",
+    "overallTitle": "Συνολική εμπειρία",
+    "overallSubtitle": "Πώς ήταν η συνολική σας εμπειρία;",
+    "tapToRate": "Πατήστε για να βαθμολογήσετε",
+    "tellUsMore": "Πείτε μας περισσότερα",
+    "yourTip": "Το φιλοδώρημά σας",
+    "tipThanks": "Σας ευχαριστούμε για την υποστήριξη: {recipient}!",
     "starAriaLabel": "Βαθμολογήστε με {count} αστέρια",
     "commentPlaceholder": "Γράψτε ένα σύντομο μήνυμα για {recipient} (προαιρετικό)...",
     "genericError": "Η πληρωμή απέτυχε. Δοκιμάστε ξανά.",

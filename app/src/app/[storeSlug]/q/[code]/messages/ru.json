@@ -54,6 +54,12 @@
   "reviewStep": {
     "heading": "Как вам понравилось обслуживание?",
     "subtitle": "Оцените: {recipient} (необязательно)",
+    "overallTitle": "Общее впечатление",
+    "overallSubtitle": "Как вам в целом?",
+    "tapToRate": "Нажмите, чтобы оценить",
+    "tellUsMore": "Расскажите подробнее",
+    "yourTip": "Ваши чаевые",
+    "tipThanks": "Спасибо, что поддержали: {recipient}!",
     "starAriaLabel": "Оценить на {count} звезд",
     "commentPlaceholder": "Напишите короткое сообщение для {recipient} (необязательно)...",
     "genericError": "Платёж не прошёл. Попробуйте ещё раз.",

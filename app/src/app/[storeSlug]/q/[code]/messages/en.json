@@ -54,6 +54,12 @@
   "reviewStep": {
     "heading": "How was your experience?",
     "subtitle": "Rate {recipient} (optional)",
+    "overallTitle": "Overall experience",
+    "overallSubtitle": "How was your overall experience?",
+    "tapToRate": "Tap to rate",
+    "tellUsMore": "Tell us more",
+    "yourTip": "Your tip",
+    "tipThanks": "Thank you for supporting {recipient}!",
     "starAriaLabel": "Rate {count} stars",
     "commentPlaceholder": "Write a short message for {recipient} (optional)...",
     "genericError": "Payment failed. Please try again.",
