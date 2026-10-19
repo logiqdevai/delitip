@@ -4,6 +4,7 @@ import { type FC, useState } from "react";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { NumberPicker } from "@/components/ui/number-picker";
+import type { QrCodeSelectionMode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney, getCurrencySymbol } from "@/lib/money";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,8 @@ interface AmountStepProps {
   suggestedAmounts: number[];
   allowCustomAmount: boolean;
   showRecipientSubtitle?: boolean;
+  /** Set when the guest picks the recipient on the next step. */
+  chooseMode?: QrCodeSelectionMode;
   recipientLabel: string;
   onContinue: (amountMinorUnits: number) => void;
 }
@@ -22,6 +25,7 @@ export const AmountStep: FC<AmountStepProps> = ({
   suggestedAmounts,
   allowCustomAmount,
   showRecipientSubtitle,
+  chooseMode,
   recipientLabel,
   onContinue,
 }) => {
@@ -31,7 +35,8 @@ export const AmountStep: FC<AmountStepProps> = ({
   );
   const [customAmount, setCustomAmount] = useState(0);
 
-  const customMinorUnits = customAmount > 0 ? Math.round(customAmount * 100) : null;
+  const customMinorUnits =
+    customAmount > 0 ? Math.round(customAmount * 100) : null;
 
   const amount = customMinorUnits ?? selectedPreset ?? 0;
   const canContinue = amount > 0;
@@ -43,7 +48,13 @@ export const AmountStep: FC<AmountStepProps> = ({
           <h2 className="font-serif text-xl font-bold text-ink-charcoal">
             {t("heading")}
           </h2>
-          {showRecipientSubtitle ? (
+          {chooseMode === "CHOOSE_ONE" || chooseMode === "CHOOSE_MANY" ? (
+            <p className="mx-auto mt-1 max-w-[280px] text-xs text-zinc-500">
+              {chooseMode === "CHOOSE_MANY"
+                ? t("subtitleChooseMany")
+                : t("subtitleChooseOne")}
+            </p>
+          ) : showRecipientSubtitle ? (
             <p className="mx-auto mt-1 max-w-[280px] truncate text-xs text-zinc-500">
               {t("subtitleFor", { recipient: recipientLabel })}
             </p>
@@ -57,7 +68,8 @@ export const AmountStep: FC<AmountStepProps> = ({
               suggestedAmounts.length === 1 && "grid-cols-1",
               suggestedAmounts.length === 2 && "grid-cols-2",
               suggestedAmounts.length === 3 && "grid-cols-3",
-              suggestedAmounts.length >= 4 && "grid-cols-2 min-[380px]:grid-cols-4",
+              suggestedAmounts.length >= 4 &&
+                "grid-cols-2 min-[380px]:grid-cols-4",
             )}
           >
             {suggestedAmounts.map((preset) => {
@@ -116,7 +128,9 @@ export const AmountStep: FC<AmountStepProps> = ({
             className="size-4 shrink-0 text-(--tip-primary)"
             strokeWidth={2}
           />
-          <span>{t("trustNote", { recipient: recipientLabel })}</span>
+          <span>{chooseMode === "CHOOSE_ONE" || chooseMode === "CHOOSE_MANY"
+              ? t("trustNoteChoose")
+              : t("trustNote", { recipient: recipientLabel })}</span>
         </div>
       </div>
 

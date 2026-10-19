@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC } from "react";
+import { type FC, useState } from "react";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
@@ -8,8 +8,14 @@ import type {
   PublicQrCodeEmployee,
   QrCodeSelectionMode,
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
-import type { StoreIndustry } from "@/features/stores/interfaces/stores.interfaces";
+import {
+  StoreIndustries,
+  type StoreIndustry,
+} from "@/features/stores/interfaces/stores.interfaces";
 import { cn } from "@/lib/utils";
+
+// Flip to true to show the prev/next picker that cycles every industry illustration.
+const SHOW_ILLUSTRATION_TESTER = false;
 
 const EmployeeRow: FC<{
   employee: PublicQrCodeEmployee;
@@ -83,7 +89,7 @@ interface RecipientStepProps {
 
 export const RecipientStep: FC<RecipientStepProps> = ({
   storeName,
-  industry,
+  industry: storeIndustry,
   employees,
   mode,
   interactive,
@@ -93,40 +99,69 @@ export const RecipientStep: FC<RecipientStepProps> = ({
   onContinue,
 }) => {
   const t = useTranslations("recipientStep");
+  // Illustration tester state (see SHOW_ILLUSTRATION_TESTER).
+  const industries = Object.values(StoreIndustries);
+  const [industryIndex, setIndustryIndex] = useState(
+    Math.max(0, industries.indexOf(storeIndustry)),
+  );
+  const industry = industries[industryIndex];
+  const illustrationUrl = `url(/brand/team/${industry.toLowerCase().replace(/_/g, "-")}.png)`;
+  const copy =
+    employees.length === 1
+      ? {
+          eyebrow: t("eyebrowYourHost"),
+          heading: t("headingHost"),
+          subtitle: t("subtitleHost"),
+        }
+      : mode === "CHOOSE_MANY"
+        ? {
+            eyebrow: t("eyebrowSelectMany"),
+            heading: t("headingChooseMany"),
+            subtitle: t("subtitleChooseMany"),
+          }
+        : mode === "CHOOSE_ONE"
+          ? {
+              eyebrow: t("eyebrowChooseOne"),
+              heading: t("headingChooseOne"),
+              subtitle: t("subtitleChooseOne"),
+            }
+          : {
+              eyebrow: t("eyebrowTeam"),
+              heading: t("headingTeam"),
+              subtitle: t("subtitleTeam"),
+            };
   const canContinue = interactive ? selectedEmployeeIds.length > 0 : true;
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-4 py-8">
       <div className="relative min-h-44">
-        {employees.length > 1 ? (
-          <img
-            src={`/brand/team/${industry.toLowerCase().replace(/_/g, "-")}.png`}
-            alt=""
+        {employees.length > 0 ? (
+          <div
             aria-hidden
-            className="pointer-events-none absolute -top-2 -right-4 w-52 mix-blend-multiply select-none"
+            className="pointer-events-none absolute -top-2 -right-4 aspect-square w-52 bg-(--tip-secondary) opacity-80 select-none"
+            style={{
+              maskImage: illustrationUrl,
+              WebkitMaskImage: illustrationUrl,
+              maskSize: "contain",
+              WebkitMaskSize: "contain",
+              maskRepeat: "no-repeat",
+              WebkitMaskRepeat: "no-repeat",
+            }}
           />
         ) : null}
         <div className="relative max-w-[60%]">
           <div className="flex items-center gap-3 text-[11px] font-semibold tracking-widest text-zinc-500 uppercase">
             <span className="h-px w-8 shrink-0 bg-(--tip-primary)" />
             <span className="truncate">
-              {employees.length === 0
-                ? t("eyebrowTipStore")
-                : employees.length === 1
-                  ? t("eyebrowYourHost")
-                  : mode === "CHOOSE_MANY"
-                    ? t("eyebrowSelectMany")
-                    : mode === "CHOOSE_ONE"
-                      ? t("eyebrowChooseOne")
-                      : t("eyebrowTeam")}
+              {employees.length === 0 ? t("eyebrowTipStore") : copy.eyebrow}
             </span>
           </div>
           {employees.length > 0 ? (
             <>
               <h2 className="mt-4 font-serif text-3xl leading-tight font-bold text-ink-charcoal">
-                {t("heading")}
+                {copy.heading}
               </h2>
-              <p className="mt-3 text-sm text-zinc-500">{t("subtitle")}</p>
+              <p className="mt-3 text-sm text-zinc-500">{copy.subtitle}</p>
             </>
           ) : null}
         </div>
@@ -152,6 +187,33 @@ export const RecipientStep: FC<RecipientStepProps> = ({
       )}
 
       <div className="mt-auto space-y-2">
+        {SHOW_ILLUSTRATION_TESTER ? (
+          <div className="flex items-center justify-between rounded-full border border-dashed border-zinc-300 px-2 py-1 text-xs text-zinc-600">
+            <button
+              type="button"
+              className="rounded-full px-3 py-1 font-semibold hover:bg-zinc-100"
+              onClick={() =>
+                setIndustryIndex(
+                  (i) => (i - 1 + industries.length) % industries.length,
+                )
+              }
+            >
+              ← Prev
+            </button>
+            <span>
+              {industry} ({industryIndex + 1}/{industries.length})
+            </span>
+            <button
+              type="button"
+              className="rounded-full px-3 py-1 font-semibold hover:bg-zinc-100"
+              onClick={() =>
+                setIndustryIndex((i) => (i + 1) % industries.length)
+              }
+            >
+              Next →
+            </button>
+          </div>
+        ) : null}
         <button
           type="button"
           disabled={!canContinue}

@@ -45,6 +45,9 @@ interface TipFlowProps {
 
 export type FlowStep = "amount" | "select" | "review" | "done";
 
+// Past this many recipients, naming everyone gets unwieldy; say "the team".
+const MAX_NAMED_RECIPIENTS = 3;
+
 const PREVIEW_TIP_ID = "preview-tip";
 
 const TIP_QUERY_PARAM = "tip";
@@ -113,7 +116,8 @@ export const TipFlow: FC<TipFlowProps> = ({
   const recipientLabel =
     employees.length === 0
       ? store.name
-      : selectedEmployeeIds.length === 0
+      : selectedEmployeeIds.length === 0 ||
+          selectedEmployeeIds.length > MAX_NAMED_RECIPIENTS
         ? t("teamFallback")
         : employees
             .filter((employee) => selectedEmployeeIds.includes(employee.id))
@@ -181,6 +185,7 @@ export const TipFlow: FC<TipFlowProps> = ({
               suggestedAmounts={store.suggested_tip_amounts}
               allowCustomAmount={store.allow_custom_tip_amount}
               showRecipientSubtitle={!interactive}
+              chooseMode={interactive ? mode : undefined}
               recipientLabel={recipientLabel}
               onContinue={(value) => {
                 setAmount(value);

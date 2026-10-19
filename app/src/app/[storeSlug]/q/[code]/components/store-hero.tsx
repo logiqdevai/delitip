@@ -30,7 +30,7 @@ export const StoreHero: FC<StoreHeroProps> = ({ store, logoUrl, welcome }) => {
           <img
             src={logoUrl}
             alt=""
-            className="size-20 shrink-0 rounded-2xl object-cover shadow-lg ring-4 ring-brand-50"
+            className="size-20 shrink-0 rounded-2xl object-cover shadow-lg ring-4 ring-(--tip-primary)"
           />
         )}
 
