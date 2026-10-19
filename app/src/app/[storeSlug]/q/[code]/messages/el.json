@@ -22,6 +22,7 @@
   "amountStep": {
     "heading": "Επιλέξτε το φιλοδώρημά σας",
     "subtitleFor": "για {recipient}",
+    "orDivider": "ή",
     "customAmountLabel": "Προσαρμοσμένο ποσό",
     "customAmountAriaLabel": "Προσαρμοσμένο ποσό φιλοδωρήματος",
     "trustNote": "100% διαφανές. Τα φιλοδωρήματα αποστέλλονται με ασφάλεια απευθείας στον/στην {recipient}.",
@@ -29,6 +30,8 @@
     "chooseAmountCta": "Επιλέξτε ένα ποσό"
   },
   "recipientStep": {
+    "heading": "Επιλέξτε ποιον θέλετε να φιλοδωρήσετε",
+    "subtitle": "Δείξτε την εκτίμησή σας επιλέγοντας ένα μέλος της ομάδας.",
     "eyebrowTipStore": "Φιλοδώρημα στο κατάστημα",
     "eyebrowYourHost": "Ο οικοδεσπότης σας",
     "eyebrowSelectMany": "Επιλέξτε ποιον θα ευχαριστήσετε",

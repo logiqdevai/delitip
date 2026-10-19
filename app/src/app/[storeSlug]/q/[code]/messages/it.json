@@ -22,6 +22,7 @@
   "amountStep": {
     "heading": "Scegli la tua mancia",
     "subtitleFor": "per {recipient}",
+    "orDivider": "o",
     "customAmountLabel": "Importo personalizzato",
     "customAmountAriaLabel": "Importo mancia personalizzato",
     "trustNote": "100% trasparente. Le mance vengono inviate in modo sicuro e diretto a {recipient}.",
@@ -29,6 +30,8 @@
     "chooseAmountCta": "Scegli un importo"
   },
   "recipientStep": {
+    "heading": "Scegli a chi vuoi lasciare la mancia",
+    "subtitle": "Mostra il tuo apprezzamento selezionando un membro del team.",
     "eyebrowTipStore": "Mancia per il locale",
     "eyebrowYourHost": "Il tuo host",
     "eyebrowSelectMany": "Scegli chi ringraziare",

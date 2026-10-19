@@ -22,6 +22,7 @@
   "amountStep": {
     "heading": "Elige tu propina",
     "subtitleFor": "para {recipient}",
+    "orDivider": "o",
     "customAmountLabel": "Importe personalizado",
     "customAmountAriaLabel": "Importe de propina personalizado",
     "trustNote": "100% transparente. Las propinas se envían de forma segura y directa a {recipient}.",
@@ -29,6 +30,8 @@
     "chooseAmountCta": "Elige un importe"
   },
   "recipientStep": {
+    "heading": "Elige a quién quieres dar propina",
+    "subtitle": "Muestra tu agradecimiento eligiendo a un miembro del equipo.",
     "eyebrowTipStore": "Propina para el comercio",
     "eyebrowYourHost": "Tu anfitrión",
     "eyebrowSelectMany": "Elige a quién agradecer",

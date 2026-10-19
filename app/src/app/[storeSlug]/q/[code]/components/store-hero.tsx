@@ -36,16 +36,17 @@ export const StoreHero: FC<StoreHeroProps> = ({ store, logoUrl, welcome }) => {
 
         <h1
           className={cn(
-            "line-clamp-2 max-w-[280px] text-lg font-bold break-words tracking-tight text-ink-charcoal",
+            "line-clamp-2 max-w-[300px] font-serif text-2xl font-bold break-words tracking-tight text-ink-charcoal",
             logoUrl && "mt-3",
           )}
         >
           {store.name}
         </h1>
 
-        <p className="mt-3 max-w-xs text-sm leading-relaxed text-zinc-600">
+        <p className="mt-2 max-w-xs text-sm leading-relaxed text-zinc-600">
           {welcome}
         </p>
+        <span className="mt-3 h-0.5 w-10 rounded-full bg-(--tip-primary)" />
       </div>
     </section>
   );

@@ -198,8 +198,10 @@ export const TipFlow: FC<TipFlowProps> = ({
             transition={{ duration: 0.28, ease: stepEase }}
             className="flex flex-1 flex-col"
           >
+            <StoreHero store={store} logoUrl={logoUrl} welcome={welcome} />
             <RecipientStep
               storeName={store.name}
+              industry={store.industry}
               employees={employees}
               mode={mode}
               interactive={interactive}

@@ -22,6 +22,7 @@
   "amountStep": {
     "heading": "Bahşişinizi seçin",
     "subtitleFor": "{recipient} için",
+    "orDivider": "veya",
     "customAmountLabel": "Özel tutar",
     "customAmountAriaLabel": "Özel bahşiş tutarı",
     "trustNote": "%100 şeffaf. Bahşişler güvenli bir şekilde doğrudan {recipient} kişisine gönderilir.",
@@ -29,6 +30,8 @@
     "chooseAmountCta": "Bir tutar seçin"
   },
   "recipientStep": {
+    "heading": "Kime bahşiş vermek istediğinizi seçin",
+    "subtitle": "Bir ekip üyesini seçerek takdirinizi gösterin.",
     "eyebrowTipStore": "İşletmeye bahşiş",
     "eyebrowYourHost": "Ev sahibiniz",
     "eyebrowSelectMany": "Kime teşekkür edeceğinizi seçin",

@@ -22,6 +22,7 @@
   "amountStep": {
     "heading": "Wählen Sie Ihr Trinkgeld",
     "subtitleFor": "für {recipient}",
+    "orDivider": "oder",
     "customAmountLabel": "Individueller Betrag",
     "customAmountAriaLabel": "Individueller Trinkgeldbetrag",
     "trustNote": "100 % transparent. Trinkgelder werden sicher und direkt an {recipient} gesendet.",
@@ -29,6 +30,8 @@
     "chooseAmountCta": "Wählen Sie einen Betrag"
   },
   "recipientStep": {
+    "heading": "Wen möchten Sie bedenken?",
+    "subtitle": "Zeigen Sie Ihre Wertschätzung, indem Sie ein Teammitglied auswählen.",
     "eyebrowTipStore": "Trinkgeld für das Geschäft",
     "eyebrowYourHost": "Ihr Gastgeber",
     "eyebrowSelectMany": "Wählen Sie, wem Sie danken möchten",

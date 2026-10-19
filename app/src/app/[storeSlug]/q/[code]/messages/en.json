@@ -22,6 +22,7 @@
   "amountStep": {
     "heading": "Choose your tip",
     "subtitleFor": "for {recipient}",
+    "orDivider": "or",
     "customAmountLabel": "Custom amount",
     "customAmountAriaLabel": "Custom tip amount",
     "trustNote": "100% transparent. Tips are sent securely and directly to {recipient}.",
@@ -29,6 +30,8 @@
     "chooseAmountCta": "Choose an amount"
   },
   "recipientStep": {
+    "heading": "Choose who you want to tip",
+    "subtitle": "Show your appreciation by selecting a team member.",
     "eyebrowTipStore": "Tip the store",
     "eyebrowYourHost": "Your host",
     "eyebrowSelectMany": "Select who to thank",

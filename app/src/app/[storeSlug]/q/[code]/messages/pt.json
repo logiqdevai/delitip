@@ -22,6 +22,7 @@
   "amountStep": {
     "heading": "Escolha sua gorjeta",
     "subtitleFor": "para {recipient}",
+    "orDivider": "ou",
     "customAmountLabel": "Valor personalizado",
     "customAmountAriaLabel": "Valor de gorjeta personalizado",
     "trustNote": "100% transparente. As gorjetas são enviadas de forma segura, diretamente para {recipient}.",
@@ -29,6 +30,8 @@
     "chooseAmountCta": "Escolha um valor"
   },
   "recipientStep": {
+    "heading": "Escolha quem você quer presentear",
+    "subtitle": "Mostre seu apreço selecionando um membro da equipe.",
     "eyebrowTipStore": "Gorjeta para o estabelecimento",
     "eyebrowYourHost": "Seu anfitrião",
     "eyebrowSelectMany": "Escolha quem agradecer",

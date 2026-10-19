@@ -22,6 +22,7 @@
   "amountStep": {
     "heading": "Выберите сумму чаевых",
     "subtitleFor": "для {recipient}",
+    "orDivider": "или",
     "customAmountLabel": "Другая сумма",
     "customAmountAriaLabel": "Своя сумма чаевых",
     "trustNote": "100% прозрачно. Чаевые отправляются безопасно и напрямую получателю: {recipient}.",
@@ -29,6 +30,8 @@
     "chooseAmountCta": "Выберите сумму"
   },
   "recipientStep": {
+    "heading": "Выберите, кому оставить чаевые",
+    "subtitle": "Выразите признательность, выбрав сотрудника.",
     "eyebrowTipStore": "Чаевые заведению",
     "eyebrowYourHost": "Ваш хозяин",
     "eyebrowSelectMany": "Выберите, кого поблагодарить",

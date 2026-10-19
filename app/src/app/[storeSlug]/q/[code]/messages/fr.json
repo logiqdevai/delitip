@@ -22,6 +22,7 @@
   "amountStep": {
     "heading": "Choisissez votre pourboire",
     "subtitleFor": "pour {recipient}",
+    "orDivider": "ou",
     "customAmountLabel": "Montant personnalisé",
     "customAmountAriaLabel": "Montant de pourboire personnalisé",
     "trustNote": "100 % transparent. Les pourboires sont envoyés en toute sécurité, directement à {recipient}.",
@@ -29,6 +30,8 @@
     "chooseAmountCta": "Choisissez un montant"
   },
   "recipientStep": {
+    "heading": "Choisissez qui vous voulez remercier",
+    "subtitle": "Montrez votre gratitude en sélectionnant un membre de l’équipe.",
     "eyebrowTipStore": "Pourboire pour l'établissement",
     "eyebrowYourHost": "Votre hôte",
     "eyebrowSelectMany": "Choisissez qui remercier",

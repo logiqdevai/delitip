@@ -37,75 +37,94 @@ export const AmountStep: FC<AmountStepProps> = ({
   const canContinue = amount > 0;
 
   return (
-    <div className="flex flex-1 flex-col gap-6 px-4 pt-4 pb-8">
-      <div className="text-center">
-        <h1 className="text-lg font-bold text-muted-foreground uppercase">
-          {t("heading")}
-        </h1>
-        {showRecipientSubtitle ? (
-          <p className="mx-auto mt-1 max-w-[280px] truncate text-xs text-zinc-500">
-            {t("subtitleFor", { recipient: recipientLabel })}
-          </p>
+    <div className="flex flex-1 flex-col gap-4 px-4 pt-2 pb-8">
+      <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-zinc-100">
+        <div className="text-center">
+          <h2 className="font-serif text-xl font-bold text-ink-charcoal">
+            {t("heading")}
+          </h2>
+          {showRecipientSubtitle ? (
+            <p className="mx-auto mt-1 max-w-[280px] truncate text-xs text-zinc-500">
+              {t("subtitleFor", { recipient: recipientLabel })}
+            </p>
+          ) : null}
+        </div>
+
+        {suggestedAmounts.length > 0 ? (
+          <div
+            className={cn(
+              "mt-5 grid gap-2",
+              suggestedAmounts.length === 1 && "grid-cols-1",
+              suggestedAmounts.length === 2 && "grid-cols-2",
+              suggestedAmounts.length === 3 && "grid-cols-3",
+              suggestedAmounts.length >= 4 && "grid-cols-2 min-[380px]:grid-cols-4",
+            )}
+          >
+            {suggestedAmounts.map((preset) => {
+              const active = !customMinorUnits && selectedPreset === preset;
+              return (
+                <button
+                  key={preset}
+                  type="button"
+                  onClick={() => {
+                    setSelectedPreset(preset);
+                    setCustomAmount(0);
+                  }}
+                  className={cn(
+                    "rounded-2xl border px-2 py-4 text-center text-sm font-bold transition",
+                    active
+                      ? "border-2 border-(--tip-primary) bg-(--tip-primary)/10 text-(--tip-secondary)"
+                      : "border-zinc-200 bg-white text-ink-charcoal hover:border-(--tip-primary) hover:bg-(--tip-primary)/10",
+                  )}
+                >
+                  {formatMoney(preset, currency)}
+                </button>
+              );
+            })}
+          </div>
         ) : null}
-      </div>
 
-      {suggestedAmounts.length > 0 ? (
-        <div className="grid grid-cols-3 gap-2.5">
-          {suggestedAmounts.map((preset) => {
-            const active = !customMinorUnits && selectedPreset === preset;
-            return (
-              <button
-                key={preset}
-                type="button"
-                onClick={() => {
-                  setSelectedPreset(preset);
-                  setCustomAmount(0);
-                }}
-                className={cn(
-                  "rounded-2xl border p-3 text-center text-sm font-bold transition",
-                  active
-                    ? "border-2 border-(--tip-primary) bg-(--tip-primary)/10 text-(--tip-secondary)"
-                    : "border-zinc-200 bg-white text-ink-charcoal hover:border-(--tip-primary) hover:bg-(--tip-primary)/10",
-                )}
-              >
-                {formatMoney(preset, currency)}
-              </button>
-            );
-          })}
-        </div>
-      ) : null}
+        {allowCustomAmount ? (
+          <>
+            {suggestedAmounts.length > 0 ? (
+              <div className="mt-5 flex items-center gap-3 text-[11px] font-medium tracking-widest text-zinc-400 uppercase">
+                <span className="h-px flex-1 bg-zinc-200" />
+                {t("orDivider")}
+                <span className="h-px flex-1 bg-zinc-200" />
+              </div>
+            ) : null}
+            <div className="mt-5 space-y-3">
+              <p className="text-center font-serif text-base font-bold text-ink-charcoal">
+                {t("customAmountLabel")}
+              </p>
+              <NumberPicker
+                value={customAmount}
+                onChange={setCustomAmount}
+                min={0}
+                max={1000}
+                step={1}
+                suffix={getCurrencySymbol(currency)}
+                aria-label={t("customAmountAriaLabel")}
+                className="w-full"
+              />
+            </div>
+          </>
+        ) : null}
 
-      {allowCustomAmount ? (
-        <div className="space-y-2">
-          <p className="text-center text-xs font-semibold tracking-wide text-zinc-500 uppercase">
-            {t("customAmountLabel")}
-          </p>
-          <NumberPicker
-            value={customAmount}
-            onChange={setCustomAmount}
-            min={0}
-            max={1000}
-            step={1}
-            suffix={getCurrencySymbol(currency)}
-            aria-label={t("customAmountAriaLabel")}
-            className="w-full"
+        <div className="mt-5 flex items-center gap-2.5 rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-3 text-[11px] text-zinc-600">
+          <ShieldCheck
+            className="size-4 shrink-0 text-(--tip-primary)"
+            strokeWidth={2}
           />
+          <span>{t("trustNote", { recipient: recipientLabel })}</span>
         </div>
-      ) : null}
-
-      <div className="flex items-center gap-2.5 rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-3 text-[11px] text-zinc-600">
-        <ShieldCheck
-          className="size-4 shrink-0 text-(--tip-primary)"
-          strokeWidth={2}
-        />
-        <span>{t("trustNote", { recipient: recipientLabel })}</span>
       </div>
 
       <button
         type="button"
         disabled={!canContinue}
         onClick={() => onContinue(amount)}
-        className="mt-auto flex w-full items-center justify-center gap-2 rounded-2xl bg-(--tip-primary) py-3.5 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-auto flex w-full items-center justify-center gap-2 rounded-full bg-(--tip-primary) py-4 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
       >
         <span>
           {canContinue

@@ -1,13 +1,14 @@
 "use client";
 
 import { type FC } from "react";
-import { ArrowLeft, ArrowRight, Check, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import type {
   PublicQrCodeEmployee,
   QrCodeSelectionMode,
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
+import type { StoreIndustry } from "@/features/stores/interfaces/stores.interfaces";
 import { cn } from "@/lib/utils";
 
 const EmployeeRow: FC<{
@@ -23,10 +24,10 @@ const EmployeeRow: FC<{
         name={employee.full_name}
         photoUrl={employee.photo_url}
         size="xl"
-        fallback="icon"
+        fallback="initials"
       />
       <div className="min-w-0 flex-1 text-left">
-        <p className="truncate text-sm font-bold text-ink-charcoal">
+        <p className="truncate font-serif text-base font-bold text-ink-charcoal">
           {employee.full_name}
         </p>
         <p className="truncate text-xs text-zinc-500">
@@ -36,7 +37,7 @@ const EmployeeRow: FC<{
       {selectable ? (
         <div
           className={cn(
-            "flex size-5 shrink-0 items-center justify-center rounded-full border-2",
+            "flex size-6 shrink-0 items-center justify-center rounded-full border-2",
             selected
               ? "border-(--tip-primary) bg-(--tip-primary) text-(--tip-primary-foreground)"
               : "border-zinc-300 bg-white",
@@ -49,7 +50,7 @@ const EmployeeRow: FC<{
   );
 
   const rowClass = cn(
-    "flex w-full items-center gap-3 rounded-2xl border px-4 py-3 shadow-xs transition",
+    "flex w-full items-center gap-4 rounded-2xl border px-4 py-4 shadow-xs transition",
     selectable
       ? selected
         ? "border-2 border-(--tip-primary) bg-(--tip-primary)/10"
@@ -70,6 +71,7 @@ const EmployeeRow: FC<{
 
 interface RecipientStepProps {
   storeName: string;
+  industry: StoreIndustry;
   employees: PublicQrCodeEmployee[];
   mode: QrCodeSelectionMode;
   interactive: boolean;
@@ -81,6 +83,7 @@ interface RecipientStepProps {
 
 export const RecipientStep: FC<RecipientStepProps> = ({
   storeName,
+  industry,
   employees,
   mode,
   interactive,
@@ -94,19 +97,39 @@ export const RecipientStep: FC<RecipientStepProps> = ({
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-4 py-8">
-      <div className="flex items-center gap-2 text-xs font-semibold tracking-wide text-zinc-400 uppercase">
-        <Users className="size-3.5 shrink-0" />
-        <span className="truncate">
-          {employees.length === 0
-            ? t("eyebrowTipStore")
-            : employees.length === 1
-              ? t("eyebrowYourHost")
-              : mode === "CHOOSE_MANY"
-                ? t("eyebrowSelectMany")
-                : mode === "CHOOSE_ONE"
-                  ? t("eyebrowChooseOne")
-                  : t("eyebrowTeam")}
-        </span>
+      <div className="relative min-h-44">
+        {employees.length > 1 ? (
+          <img
+            src={`/brand/team/${industry.toLowerCase().replace(/_/g, "-")}.png`}
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute -top-2 -right-4 w-52 mix-blend-multiply select-none"
+          />
+        ) : null}
+        <div className="relative max-w-[60%]">
+          <div className="flex items-center gap-3 text-[11px] font-semibold tracking-widest text-zinc-500 uppercase">
+            <span className="h-px w-8 shrink-0 bg-(--tip-primary)" />
+            <span className="truncate">
+              {employees.length === 0
+                ? t("eyebrowTipStore")
+                : employees.length === 1
+                  ? t("eyebrowYourHost")
+                  : mode === "CHOOSE_MANY"
+                    ? t("eyebrowSelectMany")
+                    : mode === "CHOOSE_ONE"
+                      ? t("eyebrowChooseOne")
+                      : t("eyebrowTeam")}
+            </span>
+          </div>
+          {employees.length > 0 ? (
+            <>
+              <h2 className="mt-4 font-serif text-3xl leading-tight font-bold text-ink-charcoal">
+                {t("heading")}
+              </h2>
+              <p className="mt-3 text-sm text-zinc-500">{t("subtitle")}</p>
+            </>
+          ) : null}
+        </div>
       </div>
 
       {employees.length === 0 ? (
@@ -133,7 +156,7 @@ export const RecipientStep: FC<RecipientStepProps> = ({
           type="button"
           disabled={!canContinue}
           onClick={onContinue}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-(--tip-primary) py-3.5 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-(--tip-primary) py-4 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
         >
           <span>{t("continue")}</span>
           <ArrowRight className="size-4" strokeWidth={2} />
