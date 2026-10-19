@@ -65,6 +65,7 @@
     "tipThanksTeam": "Danke, dass Sie das ganze Team unterstützen!",
     "tipThanksStore": "Danke, dass Sie {recipient} unterstützen!",
     "starAriaLabel": "Mit {count} Sternen bewerten",
+    "commentPlaceholderTeam": "Schreiben Sie eine kurze Nachricht für das Team (optional)...",
     "commentPlaceholder": "Schreiben Sie eine kurze Nachricht für {recipient} (optional)...",
     "genericError": "Die Zahlung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "payCta": "{amount} bezahlen",

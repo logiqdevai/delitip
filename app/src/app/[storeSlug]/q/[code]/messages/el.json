@@ -65,6 +65,7 @@
     "tipThanksTeam": "Σας ευχαριστούμε που στηρίζετε όλη την ομάδα!",
     "tipThanksStore": "Σας ευχαριστούμε για την υποστήριξη: {recipient}!",
     "starAriaLabel": "Βαθμολογήστε με {count} αστέρια",
+    "commentPlaceholderTeam": "Γράψτε ένα σύντομο μήνυμα για την ομάδα (προαιρετικό)...",
     "commentPlaceholder": "Γράψτε ένα σύντομο μήνυμα για {recipient} (προαιρετικό)...",
     "genericError": "Η πληρωμή απέτυχε. Δοκιμάστε ξανά.",
     "payCta": "Πληρωμή {amount}",

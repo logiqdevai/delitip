@@ -65,6 +65,7 @@
     "tipThanksTeam": "Tüm ekibi desteklediğiniz için teşekkürler!",
     "tipThanksStore": "{recipient} işletmesini desteklediğiniz için teşekkürler!",
     "starAriaLabel": "{count} yıldız ile değerlendirin",
+    "commentPlaceholderTeam": "Ekip için kısa bir mesaj yazın (isteğe bağlı)...",
     "commentPlaceholder": "{recipient} için kısa bir mesaj yazın (isteğe bağlı)...",
     "genericError": "Ödeme başarısız oldu. Lütfen tekrar deneyin.",
     "payCta": "{amount} öde",

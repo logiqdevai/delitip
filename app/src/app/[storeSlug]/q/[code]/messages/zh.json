@@ -65,6 +65,7 @@
     "tipThanksTeam": "感谢您对整个团队的支持！",
     "tipThanksStore": "感谢您对 {recipient} 的支持！",
     "starAriaLabel": "评{count}星",
+    "commentPlaceholderTeam": "给团队留下简短留言（可选）...",
     "commentPlaceholder": "给{recipient}留下简短留言（可选）...",
     "genericError": "支付失败，请重试。",
     "payCta": "支付 {amount}",

@@ -304,9 +304,11 @@ export const ReviewStep: FC<ReviewStepProps> = ({
               onChange={(event) =>
                 onChange({ ...draft, comment: event.target.value })
               }
-              placeholder={t("commentPlaceholder", {
-                recipient: recipientLabel,
-              })}
+              placeholder={
+                recipientKind === "team"
+                  ? t("commentPlaceholderTeam")
+                  : t("commentPlaceholder", { recipient: recipientLabel })
+              }
               className={commentBoxClass}
             />
           </div>

@@ -65,6 +65,7 @@
     "tipThanksTeam": "Спасибо, что поддержали всю команду!",
     "tipThanksStore": "Спасибо, что поддержали: {recipient}!",
     "starAriaLabel": "Оценить на {count} звезд",
+    "commentPlaceholderTeam": "Напишите короткое сообщение для команды (необязательно)...",
     "commentPlaceholder": "Напишите короткое сообщение для {recipient} (необязательно)...",
     "genericError": "Платёж не прошёл. Попробуйте ещё раз.",
     "payCta": "Оплатить {amount}",

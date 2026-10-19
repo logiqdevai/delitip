@@ -65,6 +65,7 @@
     "tipThanksTeam": "Merci de soutenir toute l’équipe !",
     "tipThanksStore": "Merci de soutenir {recipient} !",
     "starAriaLabel": "Noter {count} étoiles",
+    "commentPlaceholderTeam": "Écrivez un court message pour l’équipe (facultatif)...",
     "commentPlaceholder": "Écrivez un court message pour {recipient} (facultatif)...",
     "genericError": "Le paiement a échoué. Veuillez réessayer.",
     "payCta": "Payer {amount}",
