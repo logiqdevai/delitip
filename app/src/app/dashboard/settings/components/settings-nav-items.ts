@@ -90,5 +90,6 @@ export const settingsNavItems: SettingsNavItem[] = [
     label: "Tax Details",
     description: "Billing identity and address used to issue invoices.",
     icon: FileText,
+    requiresPlatformAdmin: true,
   },
 ];
