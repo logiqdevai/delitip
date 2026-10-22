@@ -69,7 +69,7 @@ export const AmountStep: FC<AmountStepProps> = ({
               suggestedAmounts.length === 2 && "grid-cols-2",
               suggestedAmounts.length === 3 && "grid-cols-3",
               suggestedAmounts.length >= 4 &&
-                "grid-cols-2 min-[380px]:grid-cols-4",
+                "grid-cols-[repeat(auto-fit,minmax(5.5rem,1fr))]",
             )}
           >
             {suggestedAmounts.map((preset) => {

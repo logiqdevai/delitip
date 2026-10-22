@@ -61,6 +61,7 @@ import {
 import { getEmployeeStatusLabel } from "@/config/constants/dropdowns/employees/employee-status-form.options";
 import { getEmployeeAccountStatusLabel } from "@/config/constants/dropdowns/employees/employee-account-status-form.options";
 import { getPayoutStatusLabel } from "@/config/constants/dropdowns/tips/payout-status-form.options";
+import { usePayoutPolicy } from "@/features/app-config/hooks/use-app-config";
 import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
 import type { QrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
@@ -95,6 +96,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   const { store, storeId } = useWorkspace();
   const authUser = useAuthStore((state) => state.user);
   const meQuery = useMe();
+  const storeOnly = usePayoutPolicy().data?.tip_payouts_store_only ?? true;
   const employeeQuery = useEmployee(employeeId);
   const dashboardQuery = useEmployeeDashboard(employeeId);
   const qrCodesQuery = useQrCodes(storeId ?? "", {
@@ -318,10 +320,12 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         </div>
       </div>
 
-      <EmployeePayoutAccountCard
-        employeeId={employee.id}
-        hasLinkedUser={!!employee.user_id}
-      />
+      {!storeOnly && (
+        <EmployeePayoutAccountCard
+          employeeId={employee.id}
+          hasLinkedUser={!!employee.user_id}
+        />
+      )}
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-charcoal">

@@ -102,53 +102,55 @@ const QrEditorLayout: FC = () => {
         All QR codes
       </Link>
 
-      <DashboardPageHeader
-        title={
-          qr ? (
-            <span className="inline-flex items-center gap-2">
-              {qr.label}
-              <Link
-                href={Routes.tip(store.slug, qr.code)}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Open tip page in a new tab"
-                title="Open tip page"
-                className="flex size-7 items-center justify-center rounded-full text-zinc-400 transition hover:bg-brand-50 hover:text-brand-700 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-              >
-                <ExternalLink className="size-4" strokeWidth={2} />
-              </Link>
-            </span>
-          ) : (
-            "New QR code"
-          )
-        }
-        description="Everything about this QR code and its tip page, with a live preview."
-        actions={
-          <>
-            {isDirty ? (
-              <span className="text-[11px] font-medium text-zinc-400">
-                Unsaved changes
+      <div className="sticky top-0 z-20 -mx-4 -mt-2 bg-zinc-50 px-4 py-3 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <DashboardPageHeader
+          title={
+            qr ? (
+              <span className="inline-flex items-center gap-2">
+                {qr.label}
+                <Link
+                  href={Routes.tip(store.slug, qr.code)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open tip page in a new tab"
+                  title="Open tip page"
+                  className="flex size-7 items-center justify-center rounded-full text-zinc-400 transition hover:bg-brand-50 hover:text-brand-700 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                >
+                  <ExternalLink className="size-4" strokeWidth={2} />
+                </Link>
               </span>
-            ) : null}
-            <Button
-              type="button"
-              variant="outline"
-              disabled={!isDirty || isSaving}
-              onClick={discard}
-            >
-              Discard
-            </Button>
-            <ActionButtonWithPending
-              type="button"
-              isPending={isSaving}
-              disabled={(isEdit && !isDirty) || hasErrors}
-              onClick={() => void save()}
-            >
-              {isEdit ? "Save changes" : "Create QR code"}
-            </ActionButtonWithPending>
-          </>
-        }
-      />
+            ) : (
+              "New QR code"
+            )
+          }
+          description="Everything about this QR code and its tip page, with a live preview."
+          actions={
+            <>
+              {isDirty ? (
+                <span className="text-[11px] font-medium text-zinc-400">
+                  Unsaved changes
+                </span>
+              ) : null}
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!isDirty || isSaving}
+                onClick={discard}
+              >
+                Discard
+              </Button>
+              <ActionButtonWithPending
+                type="button"
+                isPending={isSaving}
+                disabled={(isEdit && !isDirty) || hasErrors}
+                onClick={() => void save()}
+              >
+                {isEdit ? "Save changes" : "Create QR code"}
+              </ActionButtonWithPending>
+            </>
+          }
+        />
+      </div>
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <QrEditorSidebar active={active} onSelect={handleSelect} />

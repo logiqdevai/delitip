@@ -49,7 +49,7 @@ export const ColorPicker: FC<ColorPickerProps> = ({
 
   return (
     <div className={cn("flex min-w-0 flex-col gap-1.5", className)}>
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex h-6 items-center justify-between gap-2">
         <Label htmlFor={inputId}>{label}</Label>
         {canReset ? (
           <Button
