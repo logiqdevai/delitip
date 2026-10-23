@@ -5,6 +5,7 @@ import {
   Settings2,
   ShieldCheck,
   WalletCards,
+  Webhook,
   type LucideIcon,
 } from "lucide-react";
 import { Routes } from "@/routes/routes";
@@ -37,6 +38,12 @@ export const adminNavItems: AdminNavItem[] = [
       path.startsWith(Routes.dashboard.admin.payments) ||
       path.startsWith("/dashboard/admin/payouts") ||
       path.startsWith(Routes.dashboard.admin.payoutRequests),
+  },
+  {
+    href: Routes.dashboard.admin.webhookEvents,
+    label: "Webhook Events",
+    icon: Webhook,
+    match: (path) => path.startsWith(Routes.dashboard.admin.webhookEvents),
   },
   {
     href: Routes.dashboard.admin.vatSimulator,

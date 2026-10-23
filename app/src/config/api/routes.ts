@@ -193,6 +193,9 @@ export const ApiRoutes = {
       prefix: "/admin/payments",
       reconcile: "/admin/payments/reconcile",
     },
+    webhookEvents: {
+      prefix: "/admin/webhook-events",
+    },
     payoutAccounts: {
       reconcile: "/admin/payout-accounts/reconcile",
     },

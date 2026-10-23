@@ -4,6 +4,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { PaymentsModule } from './payments.module';
 import { VivaWebhooksController } from './controllers/viva-webhooks.controller';
 import { AdminPaymentsController } from './controllers/admin-payments.controller';
+import { AdminWebhookEventsController } from './controllers/admin-webhook-events.controller';
 import { PaymentWebhooksService } from './services/payment-webhooks.service';
 import { PaymentsReconciliationService } from './services/payments-reconciliation.service';
 
@@ -43,5 +44,9 @@ describe('PaymentsModule', () => {
 
     it('should resolve AdminPaymentsController', () => {
         expect(module.get(AdminPaymentsController)).toBeInstanceOf(AdminPaymentsController);
+    });
+
+    it('should resolve AdminWebhookEventsController', () => {
+        expect(module.get(AdminWebhookEventsController)).toBeInstanceOf(AdminWebhookEventsController);
     });
 });
