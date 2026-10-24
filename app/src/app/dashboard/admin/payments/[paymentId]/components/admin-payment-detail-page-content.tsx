@@ -155,7 +155,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
           />
           <SummaryRow
             label="Processor fee"
-            value={
+            value={`${
               tip.payment_transaction.processor_fee_confirmed
                 ? formatMoney(
                     tip.payment_transaction.processor_fee_confirmed_amount ?? 0,
@@ -164,7 +164,11 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
                 : tip.payment_transaction.processor_fee_estimated != null
                   ? `~${formatMoney(tip.payment_transaction.processor_fee_estimated, tip.currency)} (estimated)`
                   : "Not yet confirmed"
-            }
+            }${
+              tip.payment_transaction.processor_fee_percentage_used != null
+                ? ` (${tip.payment_transaction.processor_fee_percentage_used}%)`
+                : ""
+            }`}
           />
           <SummaryRow
             label="Platform commission"

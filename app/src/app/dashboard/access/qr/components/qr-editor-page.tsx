@@ -102,7 +102,7 @@ const QrEditorLayout: FC = () => {
         All QR codes
       </Link>
 
-      <div className="sticky top-0 z-20 -mx-4 -mt-2 bg-zinc-50 px-4 py-3 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="sticky -top-4 z-20 -mx-4 -mt-6 bg-zinc-50 px-4 pt-7 pb-3 sm:-top-6 sm:-mx-6 sm:-mt-8 sm:px-6 sm:pt-9 lg:-top-8 lg:-mx-8 lg:-mt-10 lg:px-8 lg:pt-11">
         <DashboardPageHeader
           title={
             qr ? (

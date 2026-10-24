@@ -399,9 +399,9 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                       key={fields[index]?.id ?? index}
                       title={`${pct}%`}
                       className={cn(
-                        "h-full min-w-1 transition-[flex-grow]",
+                        "h-full min-w-1 border-l-2 border-white transition-[flex-grow] first:border-l-0",
                         isStore
-                          ? "bg-zinc-400"
+                          ? "bg-zinc-700"
                           : SEGMENT_COLORS[index % SEGMENT_COLORS.length],
                       )}
                       style={{ flexGrow: pct }}

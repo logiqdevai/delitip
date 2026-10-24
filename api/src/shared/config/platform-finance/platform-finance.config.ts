@@ -10,14 +10,16 @@ export const APP_CONFIG_ID = 'default';
 // transactions' Viva dashboard entries on 2026-09-02 (€5→€4.64, €10→€9.52,
 // €20→€19.28 paid to account — all three fit `2.4% + €0.24` exactly, not a
 // flat rate): €10 gave 4.8% and €20 gave 3.6%, which only makes sense with a
-// fixed component included.
+// fixed component included. Two live transactions on 2026-10-22/24 (€2.48→
+// €2.16, €2.00→€1.69 paid to account, fees €0.32 / €0.31) fit `2.4% + €0.26`,
+// so the fixed part was raised from €0.24.
 //
 // The values themselves live in the `app_config` singleton row (editable by
 // ADMIN / SUPER_ADMIN); these are only the seed values if the row is missing.
 export const APP_CONFIG_DEFAULTS = {
   tip_platform_commission_percentage: 5,
   tip_processor_fee_estimate_percentage: 2.4,
-  tip_processor_fee_estimate_fixed_amount: 24, // minor units (€0.24)
+  tip_processor_fee_estimate_fixed_amount: 26, // minor units (€0.26)
   payout_hold_window_hours: 48,
   vat_rate_percentage: 0,
   payout_invoice_required: false,

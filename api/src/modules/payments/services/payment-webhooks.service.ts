@@ -205,8 +205,10 @@ export class PaymentWebhooksService {
     const paymentFeePercentage = Math.round(((processorFeeEstimated / grossAmount) * 100) * 100) / 100;
     const totalFeeAmount = commissionAmount + processorFeeEstimated;
     const totalFeePercentage = Math.round(((totalFeeAmount / grossAmount) * 100) * 100) / 100;
+    // Both rates on the tip base (platform_fee_percentage is already
+    // commission / tip), so they add up like the amounts do even with VAT.
     const totalFeePercentageSum =
-      Math.round((Number(tip.payment_transaction.platform_fee_percentage) + paymentFeePercentage) * 100) / 100;
+      Math.round((Number(tip.payment_transaction.platform_fee_percentage) + (processorFeeEstimated / tipAmount) * 100) * 100) / 100;
     // Based on tipAmount, not grossAmount — vat_amount is retained by the
     // platform in full and must never leak into the store/employee split.
     const netDistributableAmount = Math.max(tipAmount - totalFeeAmount, 0);
@@ -383,8 +385,9 @@ export class PaymentWebhooksService {
     const paymentFeePercentage = Math.round(((confirmedFee / grossAmount) * 100) * 100) / 100;
     const totalFeeAmount = paymentTransaction.commission_amount + confirmedFee;
     const totalFeePercentage = Math.round(((totalFeeAmount / grossAmount) * 100) * 100) / 100;
+    // Tip base, same as applyVerifiedTransaction above.
     const totalFeePercentageSum =
-      Math.round((Number(paymentTransaction.platform_fee_percentage) + paymentFeePercentage) * 100) / 100;
+      Math.round((Number(paymentTransaction.platform_fee_percentage) + (confirmedFee / tipAmount) * 100) * 100) / 100;
     // Based on tipAmount, not grossAmount — see the same fix/comment in
     // applyVerifiedTransaction above.
     const netDistributableAmount = Math.max(tipAmount - totalFeeAmount, 0);
