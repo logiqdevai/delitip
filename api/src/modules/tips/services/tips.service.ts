@@ -421,12 +421,42 @@ export class TipsService {
             if (query.date_from) where.created_at.gte = new Date(query.date_from);
             if (query.date_to) where.created_at.lte = new Date(query.date_to);
         }
-        if (query.search) {
+        const search = query.search?.trim();
+        if (search) {
+            const contains = { contains: search, mode: 'insensitive' as const };
+            // Our own ids plus every Viva reference an admin might paste from the
+            // dashboard: order code, transaction GUID, authorization id.
             where.OR = [
-                { id: { contains: query.search, mode: 'insensitive' } },
-                { customer_email: { contains: query.search, mode: 'insensitive' } },
-                { customer_name: { contains: query.search, mode: 'insensitive' } },
-                { store: { name: { contains: query.search, mode: 'insensitive' } } },
+                { id: contains },
+                { payment_reference: contains },
+                { customer_email: contains },
+                { customer_name: contains },
+                { store: { name: contains } },
+                // Stores have no contact details of their own — the contact is
+                // the email/phone of the user who owns the business.
+                {
+                    store: {
+                        organization: {
+                            members: {
+                                some: {
+                                    role: 'OWNER',
+                                    user: { OR: [{ email: contains }, { phone: contains }] },
+                                },
+                            },
+                        },
+                    },
+                },
+                {
+                    payment_transaction: {
+                        OR: [
+                            { id: contains },
+                            { provider_order_code: contains },
+                            { provider_transaction_id: contains },
+                            { provider_authorization_id: contains },
+                            { client_request_id: contains },
+                        ],
+                    },
+                },
             ];
         }
 

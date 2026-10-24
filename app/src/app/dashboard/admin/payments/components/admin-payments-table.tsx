@@ -88,10 +88,32 @@ const formatDateTime = (value?: string | null) => {
 const PAGE_LIMIT = 20;
 
 // Only a settled payment with Viva's real fee confirmed can be paid out — the
-// server enforces the same rule; this just keeps unpayable rows unselectable.
+// server enforces the same rule; the selection summary previews what it'll skip.
+const isCompleted = (tip: Tip) => tip.status === "COMPLETED";
 const isPayable = (tip: Tip) =>
-  tip.status === "COMPLETED" &&
-  tip.payment_transaction?.processor_fee_confirmed === true;
+  isCompleted(tip) && tip.payment_transaction?.processor_fee_confirmed === true;
+
+const summarizeSelection = (selected: Tip[]) => {
+  const payable = selected.filter(isPayable);
+  const totals = new Map<string, number>();
+  for (const tip of payable) {
+    const net = tip.payment_transaction?.net_distributable_amount ?? 0;
+    totals.set(tip.currency, (totals.get(tip.currency) ?? 0) + net);
+  }
+  return {
+    payableCount: payable.length,
+    notCompletedCount: selected.filter((tip) => !isCompleted(tip)).length,
+    feeUnconfirmedCount: selected.filter(
+      (tip) => isCompleted(tip) && !isPayable(tip),
+    ).length,
+    totalLabel:
+      totals.size === 0
+        ? formatMoney(0, "EUR")
+        : Array.from(totals, ([currency, amount]) =>
+            formatMoney(amount, currency as Tip["currency"]),
+          ).join(" + "),
+  };
+};
 
 export const AdminPaymentsTable: FC = () => {
   const router = useRouter();
@@ -101,7 +123,7 @@ export const AdminPaymentsTable: FC = () => {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(1);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selected, setSelected] = useState<Map<string, Tip>>(new Map());
   const payoutConfirm = useConfirmationDialog();
   const manualPayout = useRunManualPayouts();
 
@@ -121,34 +143,36 @@ export const AdminPaymentsTable: FC = () => {
 
   const resetPage = () => setPage(1);
 
-  const payableOnPage = tips.filter(isPayable);
   const allOnPageSelected =
-    payableOnPage.length > 0 &&
-    payableOnPage.every((tip) => selectedIds.has(tip.id));
+    tips.length > 0 && tips.every((tip) => selected.has(tip.id));
   const someOnPageSelected =
-    !allOnPageSelected && payableOnPage.some((tip) => selectedIds.has(tip.id));
+    !allOnPageSelected && tips.some((tip) => selected.has(tip.id));
 
-  const toggleOne = (tipId: string, checked: boolean) =>
-    setSelectedIds((current) => {
-      const next = new Set(current);
-      if (checked) next.add(tipId);
-      else next.delete(tipId);
+  const toggleOne = (tip: Tip, checked: boolean) =>
+    setSelected((current) => {
+      const next = new Map(current);
+      if (checked) next.set(tip.id, tip);
+      else next.delete(tip.id);
       return next;
     });
 
   const toggleAllOnPage = (checked: boolean) =>
-    setSelectedIds((current) => {
-      const next = new Set(current);
-      for (const tip of payableOnPage) {
-        if (checked) next.add(tip.id);
+    setSelected((current) => {
+      const next = new Map(current);
+      for (const tip of tips) {
+        if (checked) next.set(tip.id, tip);
         else next.delete(tip.id);
       }
       return next;
     });
 
+  const selectionSummary = summarizeSelection(Array.from(selected.values()));
+  const skippedCount =
+    selectionSummary.notCompletedCount + selectionSummary.feeUnconfirmedCount;
+
   const confirmPayout = async () => {
-    await manualPayout.mutateAsync({ tip_ids: Array.from(selectedIds) });
-    setSelectedIds(new Set());
+    await manualPayout.mutateAsync({ tip_ids: Array.from(selected.keys()) });
+    setSelected(new Map());
   };
 
   return (
@@ -166,9 +190,9 @@ export const AdminPaymentsTable: FC = () => {
               setSearch(event.target.value);
               resetPage();
             }}
-            placeholder="Customer, store, or payment ID"
+            placeholder="Customer, store, owner contact, or any ID"
             aria-label="Search payments"
-            className="w-48 rounded-xl border-zinc-200 bg-white pl-8 font-medium text-ink-charcoal shadow-xs"
+            className="w-64 rounded-xl border-zinc-200 bg-white pl-8 font-medium text-ink-charcoal shadow-xs"
           />
         </div>
         <Select
@@ -261,25 +285,41 @@ export const AdminPaymentsTable: FC = () => {
         </Empty>
       ) : (
         <>
-          {selectedIds.size > 0 ? (
+          {selected.size > 0 ? (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand-200 bg-brand-50/60 px-4 py-2.5">
-              <p className="text-sm font-semibold text-brand-700">
-                {selectedIds.size} payment{selectedIds.size === 1 ? "" : "s"}{" "}
-                selected
-              </p>
+              <div className="space-y-0.5 text-sm">
+                <p className="font-semibold text-brand-700">
+                  {selected.size} payment{selected.size === 1 ? "" : "s"}{" "}
+                  selected - {selectionSummary.payableCount} payable, total{" "}
+                  {selectionSummary.totalLabel}
+                </p>
+                {skippedCount > 0 ? (
+                  <p className="text-xs text-amber-700">
+                    {skippedCount} will be skipped
+                    {selectionSummary.notCompletedCount > 0
+                      ? ` - ${selectionSummary.notCompletedCount} not completed`
+                      : ""}
+                    {selectionSummary.feeUnconfirmedCount > 0
+                      ? `${selectionSummary.notCompletedCount > 0 ? "," : " -"} ${selectionSummary.feeUnconfirmedCount} fee not confirmed`
+                      : ""}
+                  </p>
+                ) : null}
+              </div>
               <div className="flex items-center gap-2">
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => setSelectedIds(new Set())}
+                  onClick={() => setSelected(new Map())}
                 >
                   Clear
                 </Button>
                 <Button
                   type="button"
                   size="sm"
-                  disabled={manualPayout.isPending}
+                  disabled={
+                    manualPayout.isPending || selectionSummary.payableCount === 0
+                  }
                   onClick={payoutConfirm.openDialog}
                 >
                   <Banknote data-icon="inline-start" className="size-3.5" />
@@ -294,10 +334,9 @@ export const AdminPaymentsTable: FC = () => {
                 <TableRow>
                   <TableHead className="w-10 px-4">
                     <Checkbox
-                      aria-label="Select all payable payments on this page"
+                      aria-label="Select all payments on this page"
                       checked={allOnPageSelected}
                       indeterminate={someOnPageSelected}
-                      disabled={payableOnPage.length === 0}
                       onCheckedChange={(checked) => toggleAllOnPage(checked)}
                     />
                   </TableHead>
@@ -341,9 +380,8 @@ export const AdminPaymentsTable: FC = () => {
                     >
                       <Checkbox
                         aria-label="Select payment for payout"
-                        checked={selectedIds.has(tip.id)}
-                        disabled={!isPayable(tip)}
-                        onCheckedChange={(checked) => toggleOne(tip.id, checked)}
+                        checked={selected.has(tip.id)}
+                        onCheckedChange={(checked) => toggleOne(tip, checked)}
                       />
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
@@ -421,8 +459,8 @@ export const AdminPaymentsTable: FC = () => {
       )}
       <ConfirmationDialog
         state={payoutConfirm}
-        title={`Pay out ${selectedIds.size} payment${selectedIds.size === 1 ? "" : "s"} now?`}
-        description="This sends real money to the recipients' bank accounts immediately, skipping the usual hold window. Payments whose fee isn't confirmed, or that are already paid out, are skipped. This cannot be undone."
+        title={`Pay out ${selectionSummary.payableCount} payment${selectionSummary.payableCount === 1 ? "" : "s"} (${selectionSummary.totalLabel}) now?`}
+        description={`This sends real money to the recipients' bank accounts immediately, skipping the usual hold window.${skippedCount > 0 ? ` ${skippedCount} of the ${selected.size} selected will be skipped (${selectionSummary.notCompletedCount} not completed, ${selectionSummary.feeUnconfirmedCount} fee not confirmed).` : ""} Payments already paid out are skipped too. This cannot be undone.`}
         confirmLabel="Pay out now"
         variant="default"
         isPending={manualPayout.isPending}

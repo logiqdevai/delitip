@@ -18,6 +18,7 @@ import type {
 } from "@/features/payouts/interfaces/payouts.interfaces";
 import { tipsQueryKeys } from "@/features/tips/hooks/use-tips";
 import { toast } from "@/components/ui/toast";
+import { describePayoutFailure } from "@/features/payouts/utils/payout-failure.utils";
 import { getManualPayoutSkipLabel } from "@/config/constants/dropdowns/payouts/manual-payout-skip.options";
 
 export const payoutsQueryKeys = {
@@ -144,8 +145,15 @@ export const useRunManualPayouts = () => {
       void queryClient.invalidateQueries({ queryKey: distributionsQueryKeys.root });
       void queryClient.invalidateQueries({ queryKey: tipsQueryKeys.root });
 
-      const started = result.payouts.filter((p) => p.status !== "FAILED").length;
-      const failed = result.payouts.length - started;
+      const failedPayouts = result.payouts.filter((p) => p.status === "FAILED");
+      const started = result.payouts.length - failedPayouts.length;
+      const failures = Array.from(
+        new Set(
+          failedPayouts.map((payout) =>
+            describePayoutFailure(payout.failure_reason, payout.currency),
+          ),
+        ),
+      );
       const notes = [
         ...result.skipped_tips.map((tip) => getManualPayoutSkipLabel(tip.reason)),
         ...result.skipped_recipients
@@ -153,7 +161,7 @@ export const useRunManualPayouts = () => {
           .map((recipient) => getManualPayoutSkipLabel(recipient.reason)),
       ];
       const details = [
-        failed > 0 ? `${failed} transfer${failed === 1 ? "" : "s"} failed.` : null,
+        ...failures,
         notes.length > 0 ? `Skipped: ${Array.from(new Set(notes)).join("; ")}.` : null,
       ]
         .filter(Boolean)
@@ -161,11 +169,15 @@ export const useRunManualPayouts = () => {
 
       toast.add({
         title:
-          started > 0
-            ? `${started} payout${started === 1 ? "" : "s"} started`
-            : "Nothing was paid out",
+          failedPayouts.length > 0
+            ? started > 0
+              ? `${started} payout${started === 1 ? "" : "s"} started, ${failedPayouts.length} failed`
+              : `Payout failed`
+            : started > 0
+              ? `${started} payout${started === 1 ? "" : "s"} started`
+              : "Nothing was paid out",
         description: details || undefined,
-        type: started > 0 && failed === 0 ? "success" : "error",
+        type: started > 0 && failedPayouts.length === 0 ? "success" : "error",
       });
     },
     onError: (error: Error) => {

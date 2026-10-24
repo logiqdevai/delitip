@@ -719,6 +719,56 @@ describe('TipsService', () => {
         });
     });
 
+    describe('findAllAdmin search', () => {
+        beforeEach(() => {
+            prisma.tip.findMany.mockResolvedValue([]);
+            prisma.tip.count.mockResolvedValue(0);
+        });
+
+        it('matches our tip id and every Viva reference on the payment transaction', async () => {
+            await service.findAllAdmin({ page: 1, limit: 20, search: '  3e6d5fa4  ' } as any);
+
+            const contains = { contains: '3e6d5fa4', mode: 'insensitive' };
+            const where = prisma.tip.findMany.mock.calls[0][0].where;
+            expect(where.OR).toEqual(
+                expect.arrayContaining([
+                    { id: contains },
+                    { payment_reference: contains },
+                    {
+                        payment_transaction: {
+                            OR: expect.arrayContaining([
+                                { id: contains },
+                                { provider_order_code: contains },
+                                { provider_transaction_id: contains },
+                                { provider_authorization_id: contains },
+                                { client_request_id: contains },
+                            ]),
+                        },
+                    },
+                ]),
+            );
+        });
+
+        it("matches the store owner's email and phone", async () => {
+            await service.findAllAdmin({ page: 1, limit: 20, search: '+3069' } as any);
+
+            const contains = { contains: '+3069', mode: 'insensitive' };
+            expect(prisma.tip.findMany.mock.calls[0][0].where.OR).toContainEqual({
+                store: {
+                    organization: {
+                        members: { some: { role: 'OWNER', user: { OR: [{ email: contains }, { phone: contains }] } } },
+                    },
+                },
+            });
+        });
+
+        it('adds no search filter for a blank search', async () => {
+            await service.findAllAdmin({ page: 1, limit: 20, search: '   ' } as any);
+
+            expect(prisma.tip.findMany.mock.calls[0][0].where.OR).toBeUndefined();
+        });
+    });
+
     describe('findOne', () => {
         const user = { id: 'u1', role: AuthRole.USER };
 
