@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { PaymentsModule } from './payments.module';
 import { VivaWebhooksController } from './controllers/viva-webhooks.controller';
@@ -13,7 +13,7 @@ describe('PaymentsModule', () => {
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
-            imports: [PaymentsModule],
+            imports: [ConfigModule.forRoot({ isGlobal: true, ignoreEnvFile: true }), PaymentsModule],
         })
             .overrideProvider(PrismaService)
             .useValue({})

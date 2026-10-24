@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   DistributionPayoutMode,
@@ -204,13 +204,21 @@ export class PaymentWebhooksService {
     // amount Viva processes on the card — VAT is charged its own cut too.
     const processorFeeEstimated =
       Math.round((grossAmount * processorFeePercentageUsed) / 100) + processorFeeFixedAmount;
-    const paymentFeePercentage = Math.round(((processorFeeEstimated / grossAmount) * 100) * 100) / 100;
-    const totalFeeAmount = commissionAmount + processorFeeEstimated;
+    // The 1799 can land before this runs and has then already confirmed the
+    // real fee — keep it rather than overwriting it with the estimate.
+    const alreadyConfirmed =
+      tip.payment_transaction.processor_fee_confirmed &&
+      tip.payment_transaction.processor_fee_confirmed_amount != null;
+    const processorFee = alreadyConfirmed
+      ? tip.payment_transaction.processor_fee_confirmed_amount!
+      : processorFeeEstimated;
+    const paymentFeePercentage = Math.round(((processorFee / grossAmount) * 100) * 100) / 100;
+    const totalFeeAmount = commissionAmount + processorFee;
     const totalFeePercentage = Math.round(((totalFeeAmount / grossAmount) * 100) * 100) / 100;
     // Both rates on the tip base (platform_fee_percentage is already
     // commission / tip), so they add up like the amounts do even with VAT.
     const totalFeePercentageSum =
-      Math.round((Number(tip.payment_transaction.platform_fee_percentage) + (processorFeeEstimated / tipAmount) * 100) * 100) / 100;
+      Math.round((Number(tip.payment_transaction.platform_fee_percentage) + (processorFee / tipAmount) * 100) * 100) / 100;
     // Based on tipAmount, not grossAmount — vat_amount is retained by the
     // platform in full and must never leak into the store/employee split.
     const netDistributableAmount = Math.max(tipAmount - totalFeeAmount, 0);
@@ -220,7 +228,7 @@ export class PaymentWebhooksService {
     // Staging's Viva demo environment doesn't reliably send the 1799
     // price-calculated webhook, so fees would stay unconfirmed forever and
     // block payouts. There, the estimate is treated as the confirmed fee.
-    const autoConfirmFee = this.configService.get<string>('NODE_ENV') === 'staging';
+    const autoConfirmFee = !alreadyConfirmed && this.configService.get<string>('NODE_ENV') === 'staging';
 
     await this.prisma.$transaction(async (tx) => {
       await tx.tip.update({
@@ -350,46 +358,69 @@ export class PaymentWebhooksService {
   }
 
   private async handlePriceCalculated(eventData?: Record<string, unknown>): Promise<void> {
+    // Failures below throw (rather than log and return) so they land in
+    // webhook_events.processing_error where an admin can see them.
     const transactionId = this.extractTransactionId(eventData);
     if (!transactionId) {
-      this.logger.warn('Price-calculated webhook missing TransactionId in EventData');
-      return;
+      throw new Error('Price-calculated webhook missing TransactionId in EventData');
     }
 
     // Viva's real fee is `TotalCommission`, in major currency units (0.31 for
     // €0.31) — confirmed against a real production 1799 payload.
     const feeCandidate = eventData?.TotalCommission;
-    const confirmedFee = typeof feeCandidate === 'number' ? Math.round(feeCandidate * 100) : undefined;
+    if (typeof feeCandidate !== 'number') {
+      throw new Error(`Could not extract TotalCommission from 1799 payload for transaction ${transactionId}`);
+    }
+    const confirmedFee = Math.round(feeCandidate * 100);
 
     let paymentTransaction = await this.prisma.paymentTransaction.findFirst({
       where: { provider_transaction_id: transactionId },
     });
-    if (!paymentTransaction && eventData?.OrderCode !== undefined) {
-      // Payments applied by the reconciliation sweep (or before the GUID was
-      // stored) have no provider_transaction_id yet — match on the order code
-      // and record the GUID now so refunds can use it.
-      paymentTransaction = await this.prisma.paymentTransaction.findFirst({
-        where: { provider_order_code: String(eventData.OrderCode) },
-      });
+    if (!paymentTransaction) {
+      // No GUID on the payment yet — the 1799 can beat the 1796, and payments
+      // applied by the reconciliation sweep never get one. Resolve the tip via
+      // the transaction's merchantTrns instead of the order code: 16-digit
+      // order codes can exceed Number.MAX_SAFE_INTEGER and lose precision once
+      // the webhook JSON is parsed.
+      const transaction = await this.vivaTransactions.getTransaction(transactionId);
+      if (transaction?.merchantTrns) {
+        paymentTransaction = await this.prisma.paymentTransaction.findFirst({
+          where: { tip_id: transaction.merchantTrns },
+        });
+      }
       if (paymentTransaction && !paymentTransaction.provider_transaction_id) {
         await this.prisma.paymentTransaction.update({
           where: { id: paymentTransaction.id },
-          data: { provider_transaction_id: transactionId },
+          data: {
+            provider_transaction_id: transactionId,
+            ...(!paymentTransaction.provider_authorization_id && {
+              provider_authorization_id: transaction.authorizationId,
+            }),
+          },
         });
       }
     }
     if (!paymentTransaction) {
-      this.logger.warn(`No PaymentTransaction found for provider_transaction_id=${transactionId}`);
-      return;
+      throw new Error(`No PaymentTransaction found for provider_transaction_id=${transactionId}`);
     }
 
-    if (confirmedFee === undefined) {
-      this.logger.error(
-        `Could not extract confirmed processor fee from 1799 payload for transaction ${transactionId} — leaving processor_fee_confirmed=false`,
-      );
-      return;
-    }
+    await this.confirmProcessorFee(paymentTransaction, confirmedFee);
+  }
 
+  // Records the real processor fee and re-splits the distribution lines on it.
+  // Shared by the 1799 webhook and the admin manual confirmation, so both
+  // produce identical rows.
+  async confirmProcessorFee(
+    paymentTransaction: {
+      id: string;
+      tip_id: string;
+      gross_amount: number;
+      tip_amount: number;
+      commission_amount: number;
+      platform_fee_percentage: Prisma.Decimal | number | string;
+    },
+    confirmedFee: number,
+  ): Promise<void> {
     const grossAmount = paymentTransaction.gross_amount;
     const tipAmount = paymentTransaction.tip_amount;
     const paymentFeePercentage = Math.round(((confirmedFee / grossAmount) * 100) * 100) / 100;
@@ -462,6 +493,21 @@ export class PaymentWebhooksService {
       if (amounts[index] === line.amount) continue;
       await tx.tipDistribution.update({ where: { id: line.id }, data: { amount: amounts[index] } });
     }
+  }
+
+  // Admin backstop for payments whose 1799 never arrived (webhook off or
+  // lost): the fee is read off the Viva dashboard and entered by hand. Only for
+  // a succeeded payment that isn't confirmed yet.
+  async confirmProcessorFeeManually(tipId: string, feeAmount: number): Promise<void> {
+    const paymentTransaction = await this.prisma.paymentTransaction.findFirst({ where: { tip_id: tipId } });
+    if (!paymentTransaction) throw new NotFoundException('Payment not found');
+    if (paymentTransaction.status !== 'SUCCEEDED') {
+      throw new BadRequestException('Only a succeeded payment can have its processor fee confirmed');
+    }
+    if (paymentTransaction.processor_fee_confirmed) {
+      throw new BadRequestException('The processor fee is already confirmed');
+    }
+    await this.confirmProcessorFee(paymentTransaction, feeAmount);
   }
 
   private async handleReversalCreated(eventData?: Record<string, unknown>): Promise<void> {

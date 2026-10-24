@@ -336,33 +336,50 @@ describe('PaymentWebhooksService', () => {
             });
         });
 
-        it('falls back to the order code when no payment has the GUID yet, and records the GUID', async () => {
+        it('resolves the payment through the transaction merchantTrns when it has no GUID yet, and records the ids', async () => {
             prisma.paymentTransaction.findFirst
                 .mockResolvedValueOnce(null)
                 .mockResolvedValueOnce({
                     id: 'pt1',
+                    tip_id: 'tip1',
                     provider_transaction_id: null,
+                    provider_authorization_id: null,
                     tip_amount: 200,
                     gross_amount: 200,
                     commission_amount: 10,
                     platform_fee_percentage: 5,
                 });
+            vivaTransactions.getTransaction.mockResolvedValue({ merchantTrns: 'tip1', authorizationId: '870189' });
 
             await service.process({
                 EventTypeId: VivaWebhookEventTypeId.TRANSACTION_PRICE_CALCULATED,
                 MessageId: 'm12',
-                EventData: { TransactionId: 'guid1', OrderCode: 6462840346272603, TotalCommission: 0.31 },
+                EventData: { TransactionId: 'guid1', TotalCommission: 0.31 },
             } as any);
 
-            expect(prisma.paymentTransaction.findFirst).toHaveBeenLastCalledWith({
-                where: { provider_order_code: '6462840346272603' },
-            });
+            expect(vivaTransactions.getTransaction).toHaveBeenCalledWith('guid1');
+            expect(prisma.paymentTransaction.findFirst).toHaveBeenLastCalledWith({ where: { tip_id: 'tip1' } });
             expect(prisma.paymentTransaction.update).toHaveBeenCalledWith({
                 where: { id: 'pt1' },
-                data: { provider_transaction_id: 'guid1' },
+                data: { provider_transaction_id: 'guid1', provider_authorization_id: '870189' },
             });
             expect(prisma.paymentTransaction.update).toHaveBeenCalledWith(
                 expect.objectContaining({ data: expect.objectContaining({ processor_fee_confirmed_amount: 31, net_distributable_amount: 159 }) }),
+            );
+        });
+
+        it('records a processing_error when no payment can be found, so it shows in the webhook log', async () => {
+            prisma.paymentTransaction.findFirst.mockResolvedValue(null);
+            vivaTransactions.getTransaction.mockResolvedValue({ merchantTrns: 'unknown-tip' });
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.TRANSACTION_PRICE_CALCULATED,
+                MessageId: 'm13',
+                EventData: { TransactionId: 'guid1', TotalCommission: 0.31 },
+            } as any);
+
+            expect(prisma.webhookEvent.update).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ processing_error: expect.stringContaining('No PaymentTransaction found') }) }),
             );
         });
 
@@ -435,6 +452,9 @@ describe('PaymentWebhooksService', () => {
             } as any);
 
             expect(prisma.paymentTransaction.update).not.toHaveBeenCalled();
+            expect(prisma.webhookEvent.update).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ processing_error: expect.stringContaining('TotalCommission') }) }),
+            );
         });
 
         it('excludes VAT from net_distributable_amount when confirming the processor fee', async () => {
@@ -460,6 +480,75 @@ describe('PaymentWebhooksService', () => {
                     data: expect.objectContaining({ net_distributable_amount: 907 }),
                 }),
             );
+        });
+    });
+
+    describe('1799 arriving before the 1796 (race)', () => {
+        it('keeps an already-confirmed real fee instead of overwriting it with the estimate', async () => {
+            prisma.tip.findUnique.mockResolvedValue({
+                id: 'tip1',
+                status: TipStatus.CREATED,
+                distribution_rule_id: null,
+                selected_employee_ids: null,
+                employee_id: null,
+                payment_transaction: {
+                    id: 'pt1',
+                    tip_amount: 1000,
+                    gross_amount: 1000,
+                    commission_amount: 50,
+                    processor_fee_confirmed: true,
+                    processor_fee_confirmed_amount: 20,
+                },
+            });
+
+            await service.applyVerifiedTransaction({ merchantTrns: 'tip1', statusId: 'F', amount: 10, orderCode: 1 } as any, 'guid1');
+
+            // confirmed fee 20 -> net 1000 - 50 - 20 = 930 (the 1.5% + 24 estimate would give 911)
+            const data = prisma.paymentTransaction.update.mock.calls[0][0].data;
+            expect(data).toEqual(expect.objectContaining({ provider_transaction_id: 'guid1', net_distributable_amount: 930 }));
+            expect(data).not.toHaveProperty('processor_fee_confirmed');
+            expect(prisma.tipDistribution.createMany).toHaveBeenCalledWith({
+                data: [expect.objectContaining({ amount: 930 })],
+            });
+        });
+    });
+
+    describe('confirmProcessorFeeManually', () => {
+        const succeeded = {
+            id: 'pt1',
+            tip_id: 'tip1',
+            status: 'SUCCEEDED',
+            processor_fee_confirmed: false,
+            tip_amount: 200,
+            gross_amount: 248,
+            commission_amount: 10,
+            platform_fee_percentage: 5,
+        };
+
+        it('confirms the fee and re-splits like the webhook does', async () => {
+            prisma.paymentTransaction.findFirst.mockResolvedValue(succeeded);
+
+            await service.confirmProcessorFeeManually('tip1', 32);
+
+            expect(prisma.paymentTransaction.update).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    where: { id: 'pt1' },
+                    data: expect.objectContaining({ processor_fee_confirmed: true, processor_fee_confirmed_amount: 32, net_distributable_amount: 158 }),
+                }),
+            );
+        });
+
+        it('rejects a payment that is already confirmed', async () => {
+            prisma.paymentTransaction.findFirst.mockResolvedValue({ ...succeeded, processor_fee_confirmed: true });
+
+            await expect(service.confirmProcessorFeeManually('tip1', 32)).rejects.toThrow('already confirmed');
+            expect(prisma.paymentTransaction.update).not.toHaveBeenCalled();
+        });
+
+        it('rejects a payment that has not succeeded', async () => {
+            prisma.paymentTransaction.findFirst.mockResolvedValue({ ...succeeded, status: 'CREATED' });
+
+            await expect(service.confirmProcessorFeeManually('tip1', 32)).rejects.toThrow('succeeded');
         });
     });
 
