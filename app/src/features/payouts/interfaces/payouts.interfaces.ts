@@ -74,6 +74,24 @@ export interface SkippedPayoutRecipient {
   reason: PayoutSkipReason;
 }
 
+export const ManualPayoutTipSkipReasons = {
+  TIP_NOT_FOUND: "TIP_NOT_FOUND",
+  TIP_NOT_COMPLETED: "TIP_NOT_COMPLETED",
+  FEE_NOT_CONFIRMED: "FEE_NOT_CONFIRMED",
+  ALREADY_CLAIMED: "ALREADY_CLAIMED",
+  PAYOUT_REQUESTED: "PAYOUT_REQUESTED",
+} as const;
+export type ManualPayoutTipSkipReason =
+  (typeof ManualPayoutTipSkipReasons)[keyof typeof ManualPayoutTipSkipReasons];
+
+export interface ManualPayoutPayload {
+  tip_ids: string[];
+}
+
+export interface ManualPayoutResponse extends RunPayoutResponse {
+  skipped_tips: { tip_id: string; reason: ManualPayoutTipSkipReason }[];
+}
+
 export interface RunPayoutPayload {
   employee_id?: string;
 }

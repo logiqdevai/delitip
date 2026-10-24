@@ -28,6 +28,7 @@ describe('PayoutsService', () => {
             employee: { findUnique: jest.fn() },
             store: { findUnique: jest.fn().mockResolvedValue({ primary_language: 'EN' }) },
             payout: { create: jest.fn(), delete: jest.fn(), update: jest.fn(), findUniqueOrThrow: jest.fn(), findMany: jest.fn(), count: jest.fn() },
+            tip: { findMany: jest.fn().mockResolvedValue([]) },
             $transaction: jest.fn((fn) => fn(prisma)),
         };
         accessControl = { assertStoreAccess: jest.fn() };
@@ -429,6 +430,86 @@ describe('PayoutsService', () => {
                 }),
             }),
         );
+    });
+
+    describe('runManualForTips', () => {
+        const manualDistribution = (overrides: Partial<any> = {}, tipOverrides: Partial<any> = {}) => ({
+            id: 'dist1',
+            tip_id: 'tip1',
+            recipient_type: DistributionRecipientType.STORE,
+            employee_id: null,
+            payout_mode: DistributionPayoutMode.DIRECT,
+            payout_id: null,
+            payout_request_id: null,
+            payout_status: PayoutStatus.PENDING,
+            amount: 158,
+            tip: {
+                store_id: 'store1',
+                currency: 'EUR',
+                status: TipStatus.COMPLETED,
+                payment_transaction: { processor_fee_confirmed: true },
+                ...tipOverrides,
+            },
+            ...overrides,
+        });
+
+        it('pays a confirmed tip that is still inside the hold window', async () => {
+            prisma.tip.findMany.mockResolvedValue([{ id: 'tip1' }]);
+            prisma.tipDistribution.findMany.mockResolvedValue([manualDistribution()]);
+            prisma.payoutAccount.findUnique.mockResolvedValue({ id: 'pa1', status: PayoutAccountStatus.ACTIVE, bank_account_id: 'bank1' });
+            prisma.payout.create.mockResolvedValue({ id: 'payout1', amount: 158, currency: 'EUR' });
+            prisma.tipDistribution.updateMany.mockResolvedValue({ count: 1 });
+            prisma.payout.findUniqueOrThrow.mockResolvedValue({ id: 'payout1', amount: 158 });
+            prisma.payout.update.mockImplementation(async ({ data }: any) => ({ id: 'payout1', ...data }));
+
+            const result = await service.runManualForTips(['tip1']);
+
+            expect(prisma.payout.create).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ recipient_type: DistributionRecipientType.STORE, amount: 158 }) }),
+            );
+            expect(vivaBankTransfers.executeBankTransfer).toHaveBeenCalled();
+            expect(result.payouts).toHaveLength(1);
+            expect(result.skipped_tips).toEqual([]);
+        });
+
+        it('skips a tip whose processor fee is not confirmed, without any transfer', async () => {
+            prisma.tip.findMany.mockResolvedValue([{ id: 'tip1' }]);
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                manualDistribution({}, { payment_transaction: { processor_fee_confirmed: false } }),
+            ]);
+
+            const result = await service.runManualForTips(['tip1']);
+
+            expect(result.skipped_tips).toEqual([{ tip_id: 'tip1', reason: 'FEE_NOT_CONFIRMED' }]);
+            expect(prisma.payout.create).not.toHaveBeenCalled();
+        });
+
+        it('skips claimed, requested, unsettled and unknown tips with their reasons', async () => {
+            prisma.tip.findMany.mockResolvedValue([{ id: 'claimed' }, { id: 'requested' }, { id: 'open' }]);
+            prisma.tipDistribution.findMany.mockResolvedValue([
+                manualDistribution({ id: 'd1', tip_id: 'claimed', payout_status: PayoutStatus.PAID, payout_id: 'po1' }),
+                manualDistribution({ id: 'd2', tip_id: 'requested', payout_request_id: 'req1' }),
+                manualDistribution({ id: 'd3', tip_id: 'open' }, { status: TipStatus.CREATED }),
+            ]);
+
+            const result = await service.runManualForTips(['claimed', 'requested', 'open', 'ghost']);
+
+            expect(result.skipped_tips).toEqual(
+                expect.arrayContaining([
+                    { tip_id: 'ghost', reason: 'TIP_NOT_FOUND' },
+                    { tip_id: 'claimed', reason: 'ALREADY_CLAIMED' },
+                    { tip_id: 'requested', reason: 'PAYOUT_REQUESTED' },
+                    { tip_id: 'open', reason: 'TIP_NOT_COMPLETED' },
+                ]),
+            );
+            expect(prisma.payout.create).not.toHaveBeenCalled();
+        });
+
+        it('throws when VIVA_WALLET_ID is not configured', async () => {
+            vivaConfig.getWalletId.mockReturnValue(undefined);
+
+            await expect(service.runManualForTips(['tip1'])).rejects.toThrow(BadRequestException);
+        });
     });
 
     describe('previewEligiblePayouts', () => {

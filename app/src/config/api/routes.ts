@@ -201,6 +201,7 @@ export const ApiRoutes = {
     },
     payouts: {
       prefix: "/admin/payouts",
+      manual: "/admin/payouts/manual",
       byId: (id: string) => `/admin/payouts/${id}` as const,
     },
     payoutRequests: {

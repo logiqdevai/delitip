@@ -46,6 +46,7 @@ export type PayoutSkipReason =
 export interface SkippedRecipient {
   recipient_type: DistributionRecipientType;
   employee_id?: string;
+  store_id?: string;
   reason: PayoutSkipReason;
 }
 
@@ -58,6 +59,13 @@ export interface ResolvedPayoutAccount {
   } | null;
   reason?: SkippedRecipient['reason'];
 }
+
+export type ManualPayoutTipSkipReason =
+  | 'TIP_NOT_FOUND'
+  | 'TIP_NOT_COMPLETED'
+  | 'FEE_NOT_CONFIRMED'
+  | 'ALREADY_CLAIMED'
+  | 'PAYOUT_REQUESTED';
 
 export type DistributionHoldReason = 'HOLD_WINDOW' | 'FEE_NOT_CONFIRMED' | 'PAYOUT_REQUESTED';
 
@@ -166,6 +174,103 @@ export class PayoutsService {
     }
 
     return { payouts, skipped_recipients: skipped };
+  }
+
+  // Admin-triggered payout of specific tips, skipping only the hold window —
+  // meant for testing the real transfer path without waiting it out. Every
+  // other gate stays: the tip must be settled, Viva's real fee confirmed, and
+  // the share unclaimed and not locked into a payout request. Goes through the
+  // same grouping, account resolution, claim and transfer steps as run().
+  async runManualForTips(tipIds: string[]) {
+    const walletId = this.vivaConfig.getWalletId();
+    if (!walletId) {
+      throw new BadRequestException('VIVA_WALLET_ID is not configured — payouts cannot be executed yet');
+    }
+
+    const uniqueTipIds = Array.from(new Set(tipIds));
+    const [distributions, foundTips, invoiceRequired] = await Promise.all([
+      this.prisma.tipDistribution.findMany({
+        where: { tip_id: { in: uniqueTipIds } },
+        include: { tip: { include: { payment_transaction: true } } },
+      }),
+      this.prisma.tip.findMany({ where: { id: { in: uniqueTipIds } }, select: { id: true } }),
+      this.platformFinanceConfig.isPayoutInvoiceRequired(),
+    ]);
+
+    const skippedTips: { tip_id: string; reason: ManualPayoutTipSkipReason }[] = [];
+    const foundIds = new Set(foundTips.map((tip) => tip.id));
+    for (const tipId of uniqueTipIds) {
+      if (!foundIds.has(tipId)) skippedTips.push({ tip_id: tipId, reason: 'TIP_NOT_FOUND' });
+    }
+
+    const eligible = new Map<string, typeof distributions>();
+    const skippedReasons = new Map<string, ManualPayoutTipSkipReason>();
+    for (const distribution of distributions) {
+      const reason = this.manualSkipReason(distribution);
+      if (reason) {
+        skippedReasons.set(distribution.tip_id, reason);
+        continue;
+      }
+      const storeId = distribution.tip.store_id;
+      eligible.set(storeId, [...(eligible.get(storeId) ?? []), distribution]);
+    }
+    // A tip with any payable line is not reported as skipped.
+    const payableTipIds = new Set(Array.from(eligible.values()).flat().map((d) => d.tip_id));
+    for (const [tipId, reason] of skippedReasons) {
+      if (!payableTipIds.has(tipId)) skippedTips.push({ tip_id: tipId, reason });
+    }
+
+    const payouts: any[] = [];
+    const skipped: SkippedRecipient[] = [];
+
+    for (const [storeId, storeDistributions] of eligible) {
+      for (const group of groupDistributions(storeId, storeDistributions)) {
+        if (invoiceRequired && group.key === STORE_GROUP_KEY) {
+          skipped.push({ recipient_type: group.recipientType, store_id: storeId, reason: 'INVOICE_REQUIRED' });
+          continue;
+        }
+
+        const account = await this.resolvePayoutAccount(group);
+        if (!account.payoutAccount) {
+          skipped.push({
+            recipient_type: group.recipientType,
+            employee_id: group.employeeId,
+            store_id: storeId,
+            reason: account.reason!,
+          });
+          continue;
+        }
+
+        const claimed = await this.claimGroup(group, account.payoutAccount.id, walletId);
+        if (!claimed) continue;
+
+        const executed = await this.executeTransfer(claimed, account.payoutAccount, walletId);
+        payouts.push(executed);
+        if (executed.status === PayoutExecutionStatus.FAILED) {
+          skipped.push({
+            recipient_type: group.recipientType,
+            employee_id: group.employeeId,
+            store_id: storeId,
+            reason: 'TRANSFER_FAILED',
+          });
+        }
+      }
+    }
+
+    return { payouts, skipped_recipients: skipped, skipped_tips: skippedTips };
+  }
+
+  private manualSkipReason(distribution: {
+    payout_id: string | null;
+    payout_request_id: string | null;
+    payout_status: PayoutStatus;
+    tip: { status: TipStatus; payment_transaction: { processor_fee_confirmed: boolean } | null };
+  }): ManualPayoutTipSkipReason | null {
+    if (distribution.tip.status !== TipStatus.COMPLETED) return 'TIP_NOT_COMPLETED';
+    if (distribution.payout_id || distribution.payout_status !== PayoutStatus.PENDING) return 'ALREADY_CLAIMED';
+    if (distribution.payout_request_id) return 'PAYOUT_REQUESTED';
+    if (!distribution.tip.payment_transaction?.processor_fee_confirmed) return 'FEE_NOT_CONFIRMED';
+    return null;
   }
 
   private async loadEligibleGroups(storeId: string, employeeIdFilter?: string): Promise<RecipientGroup[]> {

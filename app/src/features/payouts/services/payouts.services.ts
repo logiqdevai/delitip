@@ -10,6 +10,8 @@ import type {
   PayoutDetail,
   PayoutPreview,
   PayoutsQuery,
+  ManualPayoutPayload,
+  ManualPayoutResponse,
   RunPayoutPayload,
   RunPayoutResponse,
 } from "@/features/payouts/interfaces/payouts.interfaces";
@@ -125,6 +127,22 @@ export const runStorePayouts = async (
   } catch (error) {
     throw new Error(
       getApiErrorMessage(error, "Failed to run payouts. Please try again."),
+    );
+  }
+};
+
+export const runManualPayouts = async (
+  payload: ManualPayoutPayload,
+): Promise<ManualPayoutResponse> => {
+  try {
+    const response = await axiosInstance.post<ManualPayoutResponse>(
+      ApiRoutes.admin.payouts.manual,
+      payload,
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to run the manual payout. Please try again."),
     );
   }
 };

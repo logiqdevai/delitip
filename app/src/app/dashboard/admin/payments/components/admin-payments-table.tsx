@@ -2,8 +2,13 @@
 
 import { type FC, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Info, Receipt, Search, SlidersHorizontal } from "lucide-react";
+import { Banknote, Info, Receipt, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  ConfirmationDialog,
+  useConfirmationDialog,
+} from "@/components/ui/confirmation-dialog";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
@@ -39,7 +44,8 @@ import {
 import { TipStatusFilterOptions } from "@/config/constants/dropdowns/tips/tip-status-filter.options";
 import { getTipStatusLabel } from "@/config/constants/dropdowns/tips/tip-status-form.options";
 import { useAdminTips } from "@/features/tips/hooks/use-tips";
-import type { TipStatus } from "@/features/tips/interfaces/tips.interfaces";
+import { useRunManualPayouts } from "@/features/payouts/hooks/use-payouts";
+import type { Tip, TipStatus } from "@/features/tips/interfaces/tips.interfaces";
 import { AdminStoreFilter } from "@/app/dashboard/admin/payments/components/admin-store-filter";
 import { AdminPaymentFeesCell } from "@/app/dashboard/admin/payments/components/admin-payment-fees-cell";
 import { formatMoney } from "@/lib/money";
@@ -81,6 +87,12 @@ const formatDateTime = (value?: string | null) => {
 
 const PAGE_LIMIT = 20;
 
+// Only a settled payment with Viva's real fee confirmed can be paid out — the
+// server enforces the same rule; this just keeps unpayable rows unselectable.
+const isPayable = (tip: Tip) =>
+  tip.status === "COMPLETED" &&
+  tip.payment_transaction?.processor_fee_confirmed === true;
+
 export const AdminPaymentsTable: FC = () => {
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -89,6 +101,9 @@ export const AdminPaymentsTable: FC = () => {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const payoutConfirm = useConfirmationDialog();
+  const manualPayout = useRunManualPayouts();
 
   const query = {
     page,
@@ -105,6 +120,36 @@ export const AdminPaymentsTable: FC = () => {
   const pagination = tipsQuery.data?.pagination;
 
   const resetPage = () => setPage(1);
+
+  const payableOnPage = tips.filter(isPayable);
+  const allOnPageSelected =
+    payableOnPage.length > 0 &&
+    payableOnPage.every((tip) => selectedIds.has(tip.id));
+  const someOnPageSelected =
+    !allOnPageSelected && payableOnPage.some((tip) => selectedIds.has(tip.id));
+
+  const toggleOne = (tipId: string, checked: boolean) =>
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (checked) next.add(tipId);
+      else next.delete(tipId);
+      return next;
+    });
+
+  const toggleAllOnPage = (checked: boolean) =>
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      for (const tip of payableOnPage) {
+        if (checked) next.add(tip.id);
+        else next.delete(tip.id);
+      }
+      return next;
+    });
+
+  const confirmPayout = async () => {
+    await manualPayout.mutateAsync({ tip_ids: Array.from(selectedIds) });
+    setSelectedIds(new Set());
+  };
 
   return (
     <div className="space-y-4">
@@ -183,7 +228,7 @@ export const AdminPaymentsTable: FC = () => {
       </div>
 
       {tipsQuery.isPending ? (
-        <TableSkeleton columns={8} />
+        <TableSkeleton columns={9} />
       ) : tipsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
@@ -216,10 +261,46 @@ export const AdminPaymentsTable: FC = () => {
         </Empty>
       ) : (
         <>
+          {selectedIds.size > 0 ? (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand-200 bg-brand-50/60 px-4 py-2.5">
+              <p className="text-sm font-semibold text-brand-700">
+                {selectedIds.size} payment{selectedIds.size === 1 ? "" : "s"}{" "}
+                selected
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedIds(new Set())}
+                >
+                  Clear
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={manualPayout.isPending}
+                  onClick={payoutConfirm.openDialog}
+                >
+                  <Banknote data-icon="inline-start" className="size-3.5" />
+                  Pay out selected
+                </Button>
+              </div>
+            </div>
+          ) : null}
           <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-10 px-4">
+                    <Checkbox
+                      aria-label="Select all payable payments on this page"
+                      checked={allOnPageSelected}
+                      indeterminate={someOnPageSelected}
+                      disabled={payableOnPage.length === 0}
+                      onCheckedChange={(checked) => toggleAllOnPage(checked)}
+                    />
+                  </TableHead>
                   <TableHead className="px-4">When</TableHead>
                   <TableHead className="px-4">Store</TableHead>
                   <TableHead className="px-4">Customer</TableHead>
@@ -254,6 +335,17 @@ export const AdminPaymentsTable: FC = () => {
                       router.push(Routes.dashboard.admin.paymentDetail(tip.id))
                     }
                   >
+                    <TableCell
+                      className="w-10 px-4 py-3.5"
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      <Checkbox
+                        aria-label="Select payment for payout"
+                        checked={selectedIds.has(tip.id)}
+                        disabled={!isPayable(tip)}
+                        onCheckedChange={(checked) => toggleOne(tip.id, checked)}
+                      />
+                    </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
                       {formatDateTime(tip.paid_at ?? tip.created_at)}
                     </TableCell>
@@ -327,6 +419,15 @@ export const AdminPaymentsTable: FC = () => {
           ) : null}
         </>
       )}
+      <ConfirmationDialog
+        state={payoutConfirm}
+        title={`Pay out ${selectedIds.size} payment${selectedIds.size === 1 ? "" : "s"} now?`}
+        description="This sends real money to the recipients' bank accounts immediately, skipping the usual hold window. Payments whose fee isn't confirmed, or that are already paid out, are skipped. This cannot be undone."
+        confirmLabel="Pay out now"
+        variant="default"
+        isPending={manualPayout.isPending}
+        onConfirm={confirmPayout}
+      />
     </div>
   );
 };
