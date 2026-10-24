@@ -799,7 +799,7 @@ model PaymentTransaction {
   payment_fee_percentage         Decimal?                 @db.Decimal(5, 2) // processor fee / gross_amount (VAT-inclusive — Viva's fee is charged on the full amount it processes), using whichever of the two fields above is current
   total_fee_amount               Int? // commission_amount + processor fee (estimated until processor_fee_confirmed, then confirmed) — does NOT include vat_amount, which is tracked and retained separately
   total_fee_percentage           Decimal?                 @db.Decimal(5, 2) // total_fee_amount / gross_amount
-  total_fee_percentage_sum       Decimal?                 @db.Decimal(5, 2) // platform_fee_percentage + payment_fee_percentage — the two rates added directly, kept alongside total_fee_percentage as a cross-check since per-fee rounding can make them differ slightly
+  total_fee_percentage_sum       Decimal?                 @db.Decimal(5, 2) // platform_fee_percentage + processor fee / tip_amount — both rates on the tip base (VAT excluded), kept alongside total_fee_percentage as a cross-check since per-fee rounding can make them differ slightly
   net_distributable_amount       Int? // tip_amount - total_fee_amount — what's actually split via distribution rules to store/employee; vat_amount never enters this pool
   payment_method                 String?
   status                         PaymentTransactionStatus @default(CREATED)
@@ -1272,7 +1272,7 @@ model AppConfig {
   id                                      String   @id @default("default")
   tip_platform_commission_percentage      Decimal  @default(5) @db.Decimal(5, 2)
   tip_processor_fee_estimate_percentage   Decimal  @default(2.4) @db.Decimal(5, 2)
-  tip_processor_fee_estimate_fixed_amount Int      @default(24) // minor units (€0.24)
+  tip_processor_fee_estimate_fixed_amount Int      @default(26) // minor units (€0.26)
   payout_hold_window_hours                Int      @default(48)
   vat_rate_percentage                     Decimal  @default(0) @db.Decimal(5, 2) // added on top of each tip at checkout; 0 = no VAT
   // Invoice-gated payouts: when on, a Store's own money is only paid through
