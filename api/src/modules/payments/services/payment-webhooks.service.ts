@@ -120,12 +120,14 @@ export class PaymentWebhooksService {
     // Never trust the webhook payload for the actual state transition —
     // Viva's own docs require re-fetching the transaction server-side.
     const transaction = await this.vivaTransactions.getTransaction(transactionId);
-    await this.applyVerifiedTransaction(transaction);
+    await this.applyVerifiedTransaction(transaction, transactionId);
   }
 
   // Shared by the 1796 webhook handler and the reconciliation sweep — both
-  // must apply the exact same verified-success logic.
-  async applyVerifiedTransaction(transaction: VivaTransaction): Promise<void> {
+  // must apply the exact same verified-success logic. `providerTransactionId`
+  // is Viva's transaction GUID: the GET response doesn't echo it back, and
+  // the reconciliation sweep (order lookup) never has it.
+  async applyVerifiedTransaction(transaction: VivaTransaction, providerTransactionId?: string): Promise<void> {
     const tipId = transaction.merchantTrns;
     if (!tipId) {
       this.logger.warn('Verified Viva transaction has no merchantTrns to match against a Tip');
@@ -233,10 +235,12 @@ export class PaymentWebhooksService {
       await tx.paymentTransaction.update({
         where: { id: tip.payment_transaction!.id },
         data: {
-          provider_transaction_id: this.transactionIdOf(transaction),
+          provider_transaction_id: providerTransactionId,
+          provider_authorization_id: transaction.authorizationId,
           status: 'SUCCEEDED',
           confirmed_at: new Date(),
           processor_fee_percentage_used: processorFeePercentageUsed,
+          processor_fee_fixed_used: processorFeeFixedAmount,
           processor_fee_estimated: processorFeeEstimated,
           ...(autoConfirmFee && {
             processor_fee_confirmed: true,
@@ -271,13 +275,6 @@ export class PaymentWebhooksService {
     });
 
     this.tipsService.triggerPerformanceChangeAlert(tip.store_id).catch(() => {});
-  }
-
-  private transactionIdOf(transaction: VivaTransaction): string | undefined {
-    // VivaTransaction doesn't expose its own id field directly in the
-    // documented response shape — authorizationId is the closest stable
-    // per-transaction reference returned by GET .../transactions/{id}.
-    return transaction.authorizationId;
   }
 
   private async handleTransactionFailed(eventData?: Record<string, unknown>): Promise<void> {
@@ -359,15 +356,28 @@ export class PaymentWebhooksService {
       return;
     }
 
-    // The exact field carrying Viva's real fee isn't documented publicly —
-    // try the plausible candidates before giving up (§19 of the payment plan).
-    const feeCandidate =
-      eventData?.CommissionAmount ?? eventData?.FeeAmount ?? eventData?.Amount ?? eventData?.Fee;
-    const confirmedFee = typeof feeCandidate === 'number' ? Math.round(feeCandidate) : undefined;
+    // Viva's real fee is `TotalCommission`, in major currency units (0.31 for
+    // €0.31) — confirmed against a real production 1799 payload.
+    const feeCandidate = eventData?.TotalCommission;
+    const confirmedFee = typeof feeCandidate === 'number' ? Math.round(feeCandidate * 100) : undefined;
 
-    const paymentTransaction = await this.prisma.paymentTransaction.findFirst({
+    let paymentTransaction = await this.prisma.paymentTransaction.findFirst({
       where: { provider_transaction_id: transactionId },
     });
+    if (!paymentTransaction && eventData?.OrderCode !== undefined) {
+      // Payments applied by the reconciliation sweep (or before the GUID was
+      // stored) have no provider_transaction_id yet — match on the order code
+      // and record the GUID now so refunds can use it.
+      paymentTransaction = await this.prisma.paymentTransaction.findFirst({
+        where: { provider_order_code: String(eventData.OrderCode) },
+      });
+      if (paymentTransaction && !paymentTransaction.provider_transaction_id) {
+        await this.prisma.paymentTransaction.update({
+          where: { id: paymentTransaction.id },
+          data: { provider_transaction_id: transactionId },
+        });
+      }
+    }
     if (!paymentTransaction) {
       this.logger.warn(`No PaymentTransaction found for provider_transaction_id=${transactionId}`);
       return;
@@ -392,18 +402,66 @@ export class PaymentWebhooksService {
     // applyVerifiedTransaction above.
     const netDistributableAmount = Math.max(tipAmount - totalFeeAmount, 0);
 
-    await this.prisma.paymentTransaction.update({
-      where: { id: paymentTransaction.id },
-      data: {
-        processor_fee_confirmed_amount: confirmedFee,
-        processor_fee_confirmed: true,
-        payment_fee_percentage: paymentFeePercentage,
-        total_fee_amount: totalFeeAmount,
-        total_fee_percentage: totalFeePercentage,
-        total_fee_percentage_sum: totalFeePercentageSum,
-        net_distributable_amount: netDistributableAmount,
-      },
+    await this.prisma.$transaction(async (tx) => {
+      await tx.paymentTransaction.update({
+        where: { id: paymentTransaction.id },
+        data: {
+          processor_fee_confirmed_amount: confirmedFee,
+          processor_fee_confirmed: true,
+          payment_fee_percentage: paymentFeePercentage,
+          total_fee_amount: totalFeeAmount,
+          total_fee_percentage: totalFeePercentage,
+          total_fee_percentage_sum: totalFeePercentageSum,
+          net_distributable_amount: netDistributableAmount,
+        },
+      });
+
+      await this.rescaleDistributions(tx, paymentTransaction.tip_id, netDistributableAmount);
     });
+  }
+
+  // The distribution lines were split from the *estimated* net when the payment
+  // was applied. Once Viva's real fee is known, re-split the same lines on the
+  // confirmed net using each line's frozen percentage. Only done while every
+  // line is still untouched — once any share is claimed by a payout, a payout
+  // request or a settlement, the split is no longer ours to change.
+  private async rescaleDistributions(
+    tx: Prisma.TransactionClient,
+    tipId: string,
+    netDistributableAmount: number,
+  ): Promise<void> {
+    const lines = await tx.tipDistribution.findMany({ where: { tip_id: tipId }, orderBy: { id: 'asc' } });
+    if (lines.length === 0) return;
+
+    const currentTotal = lines.reduce((sum, line) => sum + line.amount, 0);
+    if (currentTotal === netDistributableAmount) return;
+
+    const untouched = lines.every(
+      (line) =>
+        line.payout_status === PayoutStatus.PENDING &&
+        !line.payout_id &&
+        !line.payout_request_id &&
+        !line.settlement_id,
+    );
+    if (!untouched) {
+      this.logger.warn(
+        `Not re-splitting tip ${tipId} on the confirmed fee: some distribution lines are already claimed`,
+      );
+      return;
+    }
+
+    // Same rule as the calculator: floor each share, remainder to one line — here
+    // the one holding the largest share (the original first-listed line isn't
+    // recorded on the row).
+    const amounts = lines.map((line) => Math.floor((netDistributableAmount * Number(line.percentage)) / 100));
+    const remainder = netDistributableAmount - amounts.reduce((sum, amount) => sum + amount, 0);
+    const largest = lines.reduce((best, line, index) => (line.amount > lines[best].amount ? index : best), 0);
+    amounts[largest] += remainder;
+
+    for (const [index, line] of lines.entries()) {
+      if (amounts[index] === line.amount) continue;
+      await tx.tipDistribution.update({ where: { id: line.id }, data: { amount: amounts[index] } });
+    }
   }
 
   private async handleReversalCreated(eventData?: Record<string, unknown>): Promise<void> {

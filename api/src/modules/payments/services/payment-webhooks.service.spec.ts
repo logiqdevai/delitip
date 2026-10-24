@@ -33,7 +33,7 @@ describe('PaymentWebhooksService', () => {
             paymentTransaction: { update: jest.fn(), findFirst: jest.fn() },
             distributionRuleRecipient: { findMany: jest.fn().mockResolvedValue([]) },
             distributionRule: { findUnique: jest.fn().mockResolvedValue(null) },
-            tipDistribution: { createMany: jest.fn(), updateMany: jest.fn() },
+            tipDistribution: { createMany: jest.fn(), updateMany: jest.fn(), findMany: jest.fn().mockResolvedValue([]), update: jest.fn() },
             refund: { findUnique: jest.fn(), update: jest.fn() },
             payout: { findFirst: jest.fn(), update: jest.fn() },
             payoutRequest: { updateMany: jest.fn() },
@@ -169,7 +169,7 @@ describe('PaymentWebhooksService', () => {
             expect(prisma.paymentTransaction.update).toHaveBeenCalledWith(
                 expect.objectContaining({
                     where: { id: 'pt1' },
-                    data: expect.objectContaining({ status: 'SUCCEEDED', processor_fee_estimated: 39, net_distributable_amount: 911 }),
+                    data: expect.objectContaining({ status: 'SUCCEEDED', processor_fee_estimated: 39, processor_fee_fixed_used: 24, net_distributable_amount: 911 }),
                 }),
             );
             // no recipients configured -> falls back to 100% STORE
@@ -319,7 +319,7 @@ describe('PaymentWebhooksService', () => {
             await service.process({
                 EventTypeId: VivaWebhookEventTypeId.TRANSACTION_PRICE_CALCULATED,
                 MessageId: 'm3',
-                EventData: { TransactionId: 't1', CommissionAmount: 20 },
+                EventData: { TransactionId: 't1', TotalCommission: 0.2 },
             } as any);
 
             expect(prisma.paymentTransaction.update).toHaveBeenCalledWith({
@@ -333,6 +333,95 @@ describe('PaymentWebhooksService', () => {
                     total_fee_percentage_sum: 7,
                     net_distributable_amount: 930,
                 },
+            });
+        });
+
+        it('falls back to the order code when no payment has the GUID yet, and records the GUID', async () => {
+            prisma.paymentTransaction.findFirst
+                .mockResolvedValueOnce(null)
+                .mockResolvedValueOnce({
+                    id: 'pt1',
+                    provider_transaction_id: null,
+                    tip_amount: 200,
+                    gross_amount: 200,
+                    commission_amount: 10,
+                    platform_fee_percentage: 5,
+                });
+
+            await service.process({
+                EventTypeId: VivaWebhookEventTypeId.TRANSACTION_PRICE_CALCULATED,
+                MessageId: 'm12',
+                EventData: { TransactionId: 'guid1', OrderCode: 6462840346272603, TotalCommission: 0.31 },
+            } as any);
+
+            expect(prisma.paymentTransaction.findFirst).toHaveBeenLastCalledWith({
+                where: { provider_order_code: '6462840346272603' },
+            });
+            expect(prisma.paymentTransaction.update).toHaveBeenCalledWith({
+                where: { id: 'pt1' },
+                data: { provider_transaction_id: 'guid1' },
+            });
+            expect(prisma.paymentTransaction.update).toHaveBeenCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ processor_fee_confirmed_amount: 31, net_distributable_amount: 159 }) }),
+            );
+        });
+
+        describe('re-splitting distributions on the confirmed fee', () => {
+            const paymentTransaction = {
+                id: 'pt1',
+                tip_id: 'tip1',
+                tip_amount: 1000,
+                gross_amount: 1000,
+                commission_amount: 50,
+                platform_fee_percentage: 5,
+            };
+            const line = (id: string, percentage: number, amount: number, overrides: object = {}) => ({
+                id,
+                percentage,
+                amount,
+                payout_status: PayoutStatus.PENDING,
+                payout_id: null,
+                payout_request_id: null,
+                settlement_id: null,
+                ...overrides,
+            });
+            const send = () =>
+                service.process({
+                    EventTypeId: VivaWebhookEventTypeId.TRANSACTION_PRICE_CALCULATED,
+                    MessageId: 'm20',
+                    EventData: { TransactionId: 't1', TotalCommission: 0.2 },
+                } as any);
+
+            it('re-splits untouched lines on the confirmed net using their frozen percentages', async () => {
+                prisma.paymentTransaction.findFirst.mockResolvedValue(paymentTransaction);
+                // estimate said net 911 (70/30 split); confirmed fee 20 -> net 930
+                prisma.tipDistribution.findMany.mockResolvedValue([line('d1', 70, 638), line('d2', 30, 273)]);
+
+                await send();
+
+                expect(prisma.tipDistribution.update).toHaveBeenCalledWith({ where: { id: 'd1' }, data: { amount: 651 } });
+                expect(prisma.tipDistribution.update).toHaveBeenCalledWith({ where: { id: 'd2' }, data: { amount: 279 } });
+            });
+
+            it('leaves the split alone once any line is claimed by a payout', async () => {
+                prisma.paymentTransaction.findFirst.mockResolvedValue(paymentTransaction);
+                prisma.tipDistribution.findMany.mockResolvedValue([
+                    line('d1', 70, 638, { payout_status: PayoutStatus.PAID, payout_id: 'po1' }),
+                    line('d2', 30, 273),
+                ]);
+
+                await send();
+
+                expect(prisma.tipDistribution.update).not.toHaveBeenCalled();
+            });
+
+            it('does nothing when the lines already add up to the confirmed net', async () => {
+                prisma.paymentTransaction.findFirst.mockResolvedValue(paymentTransaction);
+                prisma.tipDistribution.findMany.mockResolvedValue([line('d1', 100, 930)]);
+
+                await send();
+
+                expect(prisma.tipDistribution.update).not.toHaveBeenCalled();
             });
         });
 
@@ -360,7 +449,7 @@ describe('PaymentWebhooksService', () => {
             await service.process({
                 EventTypeId: VivaWebhookEventTypeId.TRANSACTION_PRICE_CALCULATED,
                 MessageId: 'm11',
-                EventData: { TransactionId: 't1', CommissionAmount: 43 },
+                EventData: { TransactionId: 't1', TotalCommission: 0.43 },
             } as any);
 
             // totalFeeAmount = commission(50) + confirmedFee(43) = 93
