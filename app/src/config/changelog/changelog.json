@@ -688,5 +688,16 @@
     "agent": "Claude Sonnet 5.5",
     "sessionMood": "FOCUSED",
     "sessionNote": "Planned first, then steered through many small follow-up tweaks, with one reminder to keep going without stopping."
+  },
+  {
+    "commit": "37ca89e",
+    "date": "2026-10-24",
+    "type": "FEATURE",
+    "title": "Add admin manual payout from the payments table",
+    "description": "Admins can tick completed payments on the Payments tab (or select all) and pay them out immediately after a confirmation, skipping the usual hold window. Payments whose processor fee isn't confirmed yet, or that are already paid out, are skipped with a reason.",
+    "author": "Petros Rodinos",
+    "agent": "Claude Sonnet 5.5",
+    "sessionMood": "EXPLORATORY",
+    "sessionNote": "Started from checking Viva fees against live transactions and moved through several related fixes and follow-up asks as results came in."
   }
 ]
