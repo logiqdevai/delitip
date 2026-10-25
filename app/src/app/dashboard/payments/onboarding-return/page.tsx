@@ -19,14 +19,14 @@ function OnboardingReturnInner() {
 
   useEffect(() => {
     if (!storeId) {
-      router.replace(Routes.dashboard.tipsPayments);
+      router.replace(Routes.dashboard.tips);
       return;
     }
     if (triggered.current) return;
     triggered.current = true;
 
     refreshStatus.mutate(undefined, {
-      onSettled: () => router.replace(Routes.dashboard.tipsPayments),
+      onSettled: () => router.replace(Routes.dashboard.tips),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storeId]);

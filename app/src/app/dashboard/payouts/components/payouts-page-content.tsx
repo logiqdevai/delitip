@@ -75,7 +75,7 @@ export const PayoutsPageContent: FC<PayoutsPageContentProps> = ({ storeId }) => 
         <h2 className="text-sm font-bold text-ink-charcoal">Payout history</h2>
         <p className="mt-0.5 text-xs text-zinc-500">
           Bank transfers executed for your store and its employees. Trigger a
-          new payout from the Payments tab.
+          new payout from the Tips tab.
         </p>
       </div>
 
@@ -105,7 +105,7 @@ export const PayoutsPageContent: FC<PayoutsPageContentProps> = ({ storeId }) => 
             </EmptyMedia>
             <EmptyTitle>No payouts yet</EmptyTitle>
             <EmptyDescription>
-              Once you run a payout from the Payments tab, executed bank
+              Once you run a payout from the Tips tab, executed bank
               transfers will show up here.
             </EmptyDescription>
           </EmptyHeader>

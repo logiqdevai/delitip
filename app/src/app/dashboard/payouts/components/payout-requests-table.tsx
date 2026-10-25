@@ -111,7 +111,7 @@ export const PayoutRequestsTable: FC<{
             </EmptyMedia>
             <EmptyTitle>No payout requests yet</EmptyTitle>
             <EmptyDescription>
-              Press Request payout on the Payments tab once you have eligible
+              Press Request payout on the Tips tab once you have eligible
               tips.
             </EmptyDescription>
           </EmptyHeader>

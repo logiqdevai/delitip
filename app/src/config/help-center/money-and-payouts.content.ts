@@ -48,12 +48,12 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
       sections: [
         {
           paragraphs: [
-            "Dashboard → Tips → Payments shows your store's payout account card and its connection status. Connecting an account is required before your store's share of distributed tips can be paid out.",
+            "Dashboard → Tips shows your store's payout account card and its connection status. Connecting an account is required before your store's share of distributed tips can be paid out.",
           ],
           links: [
             {
-              label: "Dashboard → Tips → Payments",
-              href: Routes.dashboard.tipsPayments,
+              label: "Dashboard → Tips",
+              href: Routes.dashboard.tips,
             },
           ],
         },
@@ -64,18 +64,18 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
       slug: "pending-distributions-explained",
       title: "Pending distributions explained",
       summary:
-        "Distributed tip amounts that haven't been paid out yet, listed on Dashboard → Tips → Payments.",
+        "Distributed tip amounts that haven't been paid out yet, listed on Dashboard → Tips.",
       sections: [
         {
           paragraphs: [
-            "The Pending Distributions panel on Dashboard → Tips → Payments shows amounts from completed tips that have been split according to a distribution rule but not yet paid out - for the store, for individual employees, or both.",
-            "Eligible amounts are released after a short hold following each tip. Depending on how payouts are set up, the Payments tab offers either Pay out now or Request payout, which asks you to invoice Delitip first - see Requesting a payout.",
+            "The payout summary on Dashboard → Tips shows amounts from completed tips that have been split according to a distribution rule but not yet paid out - for the store, for individual employees, or both.",
+            "Eligible amounts are released after a short hold following each tip. Depending on how payouts are set up, the Tips page offers either Pay out now or Request payout, which asks you to invoice Delitip first - see Requesting a payout.",
             "A share earned under a rule set to \"Send everything to the business\" is paid out to your business account rather than to the employee, so one transfer can cover your own share plus what you're holding for staff. The payout preview and your payout history both break out which part is which.",
           ],
           links: [
             {
-              label: "Dashboard → Tips → Payments",
-              href: Routes.dashboard.tipsPayments,
+              label: "Dashboard → Tips",
+              href: Routes.dashboard.tips,
             },
           ],
         },
@@ -94,12 +94,12 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "For tax compliance, your store invoices Delitip for the tips it's paid. When invoicing is switched on, a store's money is released through a payout request rather than a single Pay out now button. Only an Owner can submit one.",
-            "On Dashboard → Tips → Payments, press Request payout. You'll see the exact amount you'll be paid and the tips and dates it covers.",
+            "On Dashboard → Tips, press Request payout. You'll see the exact amount you'll be paid and the tips and dates it covers.",
           ],
           links: [
             {
-              label: "Dashboard → Tips → Payments",
-              href: Routes.dashboard.tipsPayments,
+              label: "Dashboard → Tips",
+              href: Routes.dashboard.tips,
             },
           ],
         },
@@ -148,14 +148,14 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
         {
           heading: "Seeing what you owe",
           paragraphs: [
-            "The Staff balances tab on Dashboard → Tips → Payments lists each employee with what they earned, what you've already handed over, and what's still owed. People who are square drop off the list unless you switch them back on.",
+            "The Staff balances tab on Dashboard → Tips lists each employee with what they earned, what you've already handed over, and what's still owed. People who are square drop off the list unless you switch them back on.",
             "When you pay someone, click Record payment and tick the tips it covers. The amount is worked out from the tips themselves rather than typed in, so every cent traces back to a specific tip. Add a date, and a note or reference if you want one on the record.",
             "You can record a payment for tips that haven't reached your account yet - handy if you pay cash the same night and our transfer lands days later. Those tips are marked so you know you're fronting them.",
           ],
           links: [
             {
-              label: "Dashboard → Tips → Payments",
-              href: Routes.dashboard.tipsPayments,
+              label: "Dashboard → Tips",
+              href: Routes.dashboard.tips,
             },
           ],
         },
@@ -187,12 +187,12 @@ export const MoneyAndPayoutsHelpCategory: HelpCategory = {
         {
           paragraphs: [
             "A customer can request a refund directly from the Done step of the tip flow, with an optional reason. From a Dashboard tip's detail page, a manager can also request a refund on a completed tip that doesn't already have an active refund in progress.",
-            "The Refunds on Dashboard → Tips → Payments lists every request, filterable by status: Pending, Approved, Rejected, or Completed. Refund history for a specific tip is always visible on that tip's detail page.",
+            "The Refunds on Dashboard → Tips lists every request, filterable by status: Pending, Approved, Rejected, or Completed. Refund history for a specific tip is always visible on that tip's detail page.",
           ],
           links: [
             {
-              label: "Dashboard → Tips → Payments",
-              href: Routes.dashboard.tipsPayments,
+              label: "Dashboard → Tips",
+              href: Routes.dashboard.tips,
             },
           ],
         },

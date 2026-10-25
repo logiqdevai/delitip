@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Receipt, SlidersHorizontal } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
+import { EmployeeSelect } from "@/components/ui/employee-select";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
   Table,
@@ -31,6 +32,8 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { TablePagination } from "@/app/dashboard/payments/components/table-pagination";
+import { useEmployees } from "@/features/employees/hooks/use-employees";
 import {
   useExportStoreTipsCsv,
   useStoreTips,
@@ -55,6 +58,8 @@ const statusChipClass: Record<TipStatus, string> = {
   REFUNDED: "bg-zinc-100 text-zinc-600",
 };
 
+const PAGE_LIMIT = 20;
+
 const formatDateTime = (value?: string | null) => {
   if (!value) return "-";
   return new Date(value).toLocaleString(undefined, {
@@ -72,31 +77,33 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
   const [status, setStatus] = useState<TipStatus | "all">("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [employeeId, setEmployeeId] = useState("all");
+  const [page, setPage] = useState(1);
 
-  const query: TipsQuery = {
-    limit: 50,
+  const employeesQuery = useEmployees(storeId, { limit: 100 });
+
+  const filters = {
     ...(status !== "all" ? { status } : {}),
+    ...(employeeId !== "all" ? { employee_id: employeeId } : {}),
     ...(dateFrom ? { date_from: dateFrom } : {}),
     ...(dateTo ? { date_to: dateTo } : {}),
   };
-
+  const query: TipsQuery = { page, limit: PAGE_LIMIT, ...filters };
   const tipsQuery = useStoreTips(storeId, query);
   const exportCsv = useExportStoreTipsCsv();
 
+  const employees = employeesQuery.data?.data ?? [];
   const tips = tipsQuery.data?.data ?? [];
-  const exportQuery = {
-    ...(status !== "all" ? { status } : {}),
-    ...(dateFrom ? { date_from: dateFrom } : {}),
-    ...(dateTo ? { date_to: dateTo } : {}),
-  };
+  const pagination = tipsQuery.data?.pagination;
+  const resetPage = () => setPage(1);
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>
-          <h2 className="text-sm font-bold text-ink-charcoal">Tip ledger</h2>
+          <h2 className="text-sm font-bold text-ink-charcoal">All tips</h2>
           <p className="mt-0.5 text-xs text-zinc-500">
-            Real-time transactional ledger of all tips paid by customers.
+            Every tip paid by customers and what your team receives from it.
           </p>
         </div>
         <Button
@@ -105,7 +112,7 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
           disabled={
             exportCsv.isPending || tipsQuery.isPending || tips.length === 0
           }
-          onClick={() => exportCsv.mutate({ storeId, query: exportQuery })}
+          onClick={() => exportCsv.mutate({ storeId, query: filters })}
           className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-chip font-semibold"
         >
           {exportCsv.isPending ? "Exporting…" : "Export CSV"}
@@ -124,7 +131,10 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
           }))}
           value={status}
           onValueChange={(value) => {
-            if (value) setStatus(value as TipStatus | "all");
+            if (value) {
+              setStatus(value as TipStatus | "all");
+              resetPage();
+            }
           }}
         >
           <SelectTrigger className="w-full rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto sm:min-w-36">
@@ -140,9 +150,24 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
             </SelectGroup>
           </SelectContent>
         </Select>
+        <EmployeeSelect
+          employees={employees}
+          value={employeeId}
+          onValueChange={(value) => {
+            setEmployeeId(value);
+            resetPage();
+          }}
+          includeAll
+          triggerClassName="w-full min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto"
+          contentClassName="min-w-44"
+          aria-label="Filter by employee"
+        />
         <DatePicker
           value={dateFrom}
-          onChange={setDateFrom}
+          onChange={(value) => {
+            setDateFrom(value);
+            resetPage();
+          }}
           placeholder="From date"
           aria-label="From date"
           className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
@@ -150,7 +175,10 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
         <span className="hidden text-xs text-zinc-400 sm:inline">to</span>
         <DatePicker
           value={dateTo}
-          onChange={setDateTo}
+          onChange={(value) => {
+            setDateTo(value);
+            resetPage();
+          }}
           placeholder="To date"
           aria-label="To date"
           className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
@@ -158,7 +186,7 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
       </div>
 
       {tipsQuery.isPending ? (
-        <TableSkeleton columns={5} />
+        <TableSkeleton columns={7} />
       ) : tipsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
@@ -205,9 +233,11 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
             <TableHeader>
               <TableRow>
                 <TableHead className="px-4">When</TableHead>
+                <TableHead className="px-4">Customer</TableHead>
                 <TableHead className="px-4">Employee</TableHead>
                 <TableHead className="px-4">QR</TableHead>
-                <TableHead className="px-4">Amount</TableHead>
+                <TableHead className="px-4">Tip amount</TableHead>
+                <TableHead className="px-4">Net</TableHead>
                 <TableHead className="px-4 text-right">Status</TableHead>
               </TableRow>
             </TableHeader>
@@ -221,6 +251,9 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
                   <TableCell className="px-4 py-3.5 text-zinc-500">
                     {formatDateTime(tip.paid_at ?? tip.created_at)}
                   </TableCell>
+                  <TableCell className="px-4 py-3.5 text-zinc-500">
+                    {tip.customer_name ?? tip.customer_email ?? "Anonymous"}
+                  </TableCell>
                   <TableCell className="px-4 py-3.5 font-semibold text-ink-charcoal">
                     {tip.employee?.full_name ?? "Store"}
                   </TableCell>
@@ -229,6 +262,14 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
                   </TableCell>
                   <TableCell className="px-4 py-3.5 font-bold text-brand-700">
                     {formatMoney(tip.amount, tip.currency)}
+                  </TableCell>
+                  <TableCell className="px-4 py-3.5 font-semibold text-ink-charcoal">
+                    {tip.payment_transaction?.net_distributable_amount != null
+                      ? formatMoney(
+                          tip.payment_transaction.net_distributable_amount,
+                          tip.currency,
+                        )
+                      : "-"}
                   </TableCell>
                   <TableCell className="px-4 py-3.5 text-right">
                     <span
@@ -246,6 +287,13 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
           </Table>
         </div>
       )}
+
+      <TablePagination
+        page={pagination?.page ?? 1}
+        totalPages={pagination?.total_pages ?? 1}
+        onPageChange={setPage}
+      />
+
     </div>
   );
 };

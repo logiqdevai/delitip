@@ -396,12 +396,16 @@ export const PayoutRequestDialog: FC<{
         onOpenChange(next);
       }}
     >
-      <DialogContent showCloseButton={!isSubmitting} className="sm:max-w-lg">
+      <DialogContent
+        showCloseButton={!isSubmitting}
+        className="max-h-[calc(100dvh-2rem)] grid-rows-[auto_minmax(0,1fr)_auto] sm:max-w-lg"
+      >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
+        <div className="-mx-6 min-h-0 overflow-y-auto px-6">
         {step !== "done" && previewQuery.isPending ? (
           <div className="space-y-2">
             <Skeleton className="h-24 w-full rounded-2xl" />
@@ -444,6 +448,7 @@ export const PayoutRequestDialog: FC<{
         ) : step === "done" ? (
           <DoneStep amount={submittedAmount} currency={resolvedCurrency} />
         ) : null}
+        </div>
 
         <DialogFooter>
           {step === "overview" ? (

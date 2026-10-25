@@ -2,7 +2,7 @@
 
 import { type FC, Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Banknote, Receipt, Wallet } from "lucide-react";
+import { Banknote, HandCoins, Receipt } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
   Empty,
@@ -14,14 +14,16 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { TipsLedgerPanel } from "@/app/dashboard/tips/components/tips-ledger-panel";
-import { PaymentsPageContent } from "@/app/dashboard/payments/components/payments-page-content";
+import { PayoutSummaryCard } from "@/app/dashboard/tips/components/payout-summary-card";
+import { PayoutAccountCard } from "@/app/dashboard/payments/components/payout-account-card";
+import { StaffBalancesTable } from "@/app/dashboard/payments/components/staff-balances-table";
 import { PayoutsPageContent } from "@/app/dashboard/payouts/components/payouts-page-content";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { DASHBOARD_TAB_PARAM, TipsTabs, type TipsTab } from "@/routes/routes";
 
 const isTipsTab = (value: unknown): value is TipsTab =>
   value === TipsTabs.ledger ||
-  value === TipsTabs.payments ||
+  value === TipsTabs.staffBalances ||
   value === TipsTabs.payouts;
 
 const TipsPageInner: FC = () => {
@@ -72,7 +74,7 @@ const TipsPageInner: FC = () => {
     <>
       <DashboardPageHeader
         title="Tips"
-        description={`Tip ledger, payments, and payouts for ${store.name}.`}
+        description={`Tips, payouts, and staff balances for ${store.name}.`}
       />
 
       <Tabs
@@ -85,9 +87,9 @@ const TipsPageInner: FC = () => {
             <Receipt />
             Tips
           </TabsTrigger>
-          <TabsTrigger value={TipsTabs.payments}>
-            <Wallet />
-            Payments
+          <TabsTrigger value={TipsTabs.staffBalances}>
+            <HandCoins />
+            Staff balances
           </TabsTrigger>
           <TabsTrigger value={TipsTabs.payouts}>
             <Banknote />
@@ -96,10 +98,18 @@ const TipsPageInner: FC = () => {
         </TabsList>
 
         <TabsContent value={TipsTabs.ledger} className="mt-6">
-          <TipsLedgerPanel storeId={storeId} />
+          <div className="space-y-6">
+            <PayoutAccountCard storeId={storeId} />
+            <PayoutSummaryCard storeId={storeId} currency={store.currency} />
+            <TipsLedgerPanel storeId={storeId} />
+          </div>
         </TabsContent>
-        <TabsContent value={TipsTabs.payments} className="mt-6">
-          <PaymentsPageContent storeId={storeId} store={store} />
+        <TabsContent value={TipsTabs.staffBalances} className="mt-6">
+          <StaffBalancesTable
+            storeId={storeId}
+            storeName={store.name}
+            currency={store.currency}
+          />
         </TabsContent>
         <TabsContent value={TipsTabs.payouts} className="mt-6">
           <PayoutsPageContent storeId={storeId} />

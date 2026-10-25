@@ -355,14 +355,14 @@ export class TipsService {
     }
 
     async findAll(user: AuthUser, storeId: string, query: TipsQueryType) {
-        await this.accessControl.assertStoreAccess(user, storeId);
+        const { membership } = await this.accessControl.assertStoreAccess(user, storeId);
 
         const where = this.buildStoreTipsWhere(storeId, query);
 
         const [items, total, store] = await Promise.all([
             this.prisma.tip.findMany({
                 where,
-                include: { employee: true, qr_code: true, distributions: true },
+                include: { employee: true, qr_code: true, distributions: true, payment_transaction: true },
                 skip: (query.page - 1) * query.limit,
                 take: query.limit,
                 orderBy: { created_at: 'desc' },
@@ -372,11 +372,25 @@ export class TipsService {
         ]);
         const primaryLanguage = store?.primary_language ?? Language.EN;
 
+        const canViewFinancials = this.canViewFinancials(membership);
+
         return paginate(
-            items.map((item) => this.resolveTipEmployeeNames(item, primaryLanguage)),
+            items.map((item) => {
+                const resolved = this.resolveTipEmployeeNames(item, primaryLanguage);
+                if (canViewFinancials) return resolved;
+                const { payment_transaction, ...rest } = resolved;
+                return rest;
+            }),
             total,
             query,
         );
+    }
+
+    // membership is null only for platform admins (assertStoreAccess
+    // short-circuits for them) — everyone else must be OWNER/ACCOUNTANT
+    // to see the financial breakdown (payment plan §16).
+    private canViewFinancials(membership: { role: string } | null) {
+        return membership === null || membership.role === 'OWNER' || membership.role === 'ACCOUNTANT';
     }
 
     async exportCsv(user: AuthUser, storeId: string, query: TipsExportQueryType) {
@@ -500,14 +514,9 @@ export class TipsService {
 
         const { membership } = await this.accessControl.assertStoreAccess(user, tip.store_id);
 
-        // membership is null only for platform admins (assertStoreAccess
-        // short-circuits for them) — everyone else must be OWNER/ACCOUNTANT
-        // to see the financial breakdown (payment plan §16).
-        const canViewFinancials = membership === null || membership.role === 'OWNER' || membership.role === 'ACCOUNTANT';
-
         const resolved = this.resolveTipEmployeeNames(tip, tip.store?.primary_language ?? Language.EN);
 
-        if (!canViewFinancials) {
+        if (!this.canViewFinancials(membership)) {
             const { payment_transaction, ...rest } = resolved;
             return rest;
         }

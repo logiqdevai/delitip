@@ -12,7 +12,7 @@ export type AccessTab = (typeof AccessTabs)[keyof typeof AccessTabs];
 
 export const TipsTabs = {
   ledger: "ledger",
-  payments: "payments",
+  staffBalances: "staff-balances",
   payouts: "payouts",
 } as const;
 
@@ -47,8 +47,6 @@ export const Routes = {
     employeeDetail: (employeeId: string) =>
       `/dashboard/employees/${employeeId}` as const,
     tips: "/dashboard/tips",
-    tipsPayments:
-      `/dashboard/tips?${DASHBOARD_TAB_PARAM}=${TipsTabs.payments}` as const,
     tipsPayouts:
       `/dashboard/tips?${DASHBOARD_TAB_PARAM}=${TipsTabs.payouts}` as const,
     tipDetail: (tipId: string) => `/dashboard/tips/${tipId}` as const,

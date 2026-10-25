@@ -118,8 +118,8 @@ export const PaymentTransactionStatuses = {
 export type PaymentTransactionStatus =
   (typeof PaymentTransactionStatuses)[keyof typeof PaymentTransactionStatuses];
 
-// Only present on GET /tips/:id when the viewer is OWNER/ACCOUNTANT (or a
-// platform admin) — omitted entirely otherwise.
+// Only present on GET /tips/:id and the store tips listing when the viewer is
+// OWNER/ACCOUNTANT (or a platform admin) — omitted entirely otherwise.
 export interface PaymentTransaction {
   id: string;
   provider: PaymentProvider;
