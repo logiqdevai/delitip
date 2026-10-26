@@ -9,7 +9,7 @@ const productLinks = [
   { href: Routes.landing.howItWorks, label: "How it works", hidden: false },
   { href: Routes.landing.ecosystem, label: "For businesses", hidden: false },
   { href: Routes.landing.ecosystem, label: "For staff", hidden: false },
-  { href: Routes.landing.pricing, label: "Pricing", hidden: true },
+  { href: Routes.landing.pricing, label: "Pricing", hidden: false },
 ] as const;
 
 const industryLinks = [
@@ -112,8 +112,19 @@ export const LandingFooter: FC = () => {
         </div>
       </div>
 
-      <div className="mx-auto mt-8 max-w-7xl border-t border-zinc-900 px-4 pt-8 text-center text-xs text-zinc-600 sm:px-6 lg:px-8">
-        © 2026 delitip. Tip. Feedback. Recognize.
+      <div className="mx-auto mt-8 flex max-w-7xl flex-col items-center gap-4 border-t border-zinc-900 px-4 pt-8 text-xs text-zinc-600 sm:flex-row sm:justify-between sm:px-6 lg:px-8">
+        <span>© 2026 delitip. Tip. Feedback. Recognize.</span>
+        <div className="flex items-center gap-2 text-zinc-500">
+          <span>Powered by</span>
+          <a href="https://www.logiqdev.com/" target="_blank" rel="noopener noreferrer">
+            <img
+              src="/logiqdev.png"
+              alt="LogiqDev"
+              className="w-auto"
+              style={{ height: "1.8rem" }}
+            />
+          </a>
+        </div>
       </div>
     </footer>
   );

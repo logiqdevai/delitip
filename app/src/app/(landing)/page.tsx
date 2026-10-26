@@ -1,7 +1,6 @@
 import { type FC } from "react";
 import { LandingHeader } from "./components/landing-header";
 import { LandingHero } from "./components/landing-hero";
-import { LandingIndustries } from "./components/landing-industries";
 import { LandingHowItWorks } from "./components/landing-how-it-works";
 import { LandingEcosystem } from "./components/landing-ecosystem";
 import { LandingCalculator } from "./components/landing-calculator";
@@ -15,13 +14,10 @@ const LandingPage: FC = () => {
       <LandingHeader />
       <main>
         <LandingHero />
-        <LandingIndustries />
         <LandingHowItWorks />
         <LandingEcosystem />
         <LandingCalculator />
-        <div className="hidden" hidden>
-          <LandingPricing />
-        </div>
+        <LandingPricing />
         <LandingCta />
       </main>
       <LandingFooter />

@@ -1,56 +1,31 @@
-"use client";
-
-import { type FC, type FormEvent, useState } from "react";
-import { BrandMark } from "@/components/brand/brand-mark";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { type FC } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { Routes } from "@/routes/routes";
 
 export const LandingCta: FC = () => {
-  const [email, setEmail] = useState("");
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
-
   return (
-    <section id="get-started" className="bg-white py-20 lg:py-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div className="relative space-y-6 overflow-hidden rounded-[36px] border border-zinc-800 bg-ink-charcoal px-4 py-8 text-center text-white shadow-2xl sm:p-14">
-          <BrandMark
-            size="lg"
-            className="mx-auto shadow-lg shadow-electric-lime/30"
-          />
-
-          <h2 className="mx-auto max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Start tipping and feedback for your support team
+    <section className="px-6 pb-20">
+      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] px-8 py-16 text-center text-ink-charcoal sm:py-20">
+        <div className="relative">
+          <h2 className="mx-auto max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
+            Start tipping and feedback{" "}
+            <span className="text-magic">for your team</span>
           </h2>
-
-          <p className="mx-auto max-w-lg text-xs text-zinc-400 sm:text-sm">
-            Create your account, add your team, and set up QR codes. Customers
-            tip and leave feedback in seconds.
+          <p className="mx-auto mt-5 max-w-xl text-sm text-zinc-500 sm:text-base">
+            Create your account, add your team, and set up QR codes.
+            Customers tip and leave feedback in seconds.
           </p>
-
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col items-center justify-center gap-3 pt-4 sm:flex-row"
-          >
-            <Input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="Business email"
-              aria-label="Business email"
-              className="w-full rounded-xl border-zinc-700 bg-ink-charcoal text-white placeholder:text-zinc-500 sm:w-72"
-            />
-            <Button
-              type="submit"
-              className="w-full rounded-xl bg-electric-lime px-6 font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-400 sm:w-auto"
+          <div className="mt-10">
+            <Link
+              href={Routes.landing.getStarted}
+              className="inline-flex items-center gap-2 rounded-full bg-electric-lime px-7 py-4 font-semibold text-ink-charcoal transition hover:scale-105"
             >
               Create your business account
-            </Button>
-          </form>
-
-          <p className="text-xs text-zinc-500">
+              <ArrowRight className="size-4" strokeWidth={2} />
+            </Link>
+          </div>
+          <p className="mt-5 text-xs text-zinc-400">
             No credit card required · Instant QR codes
           </p>
         </div>
