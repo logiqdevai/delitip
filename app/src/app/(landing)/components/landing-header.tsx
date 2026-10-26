@@ -2,21 +2,28 @@
 
 import { type FC, useEffect, useState } from "react";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import { BrandMark } from "@/components/brand/brand-mark";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 
 const SCROLL_THRESHOLD_PX = 80;
 
 const navLinks = [
-  { href: Routes.landing.howItWorks, label: "How it works", hidden: false },
-  { href: Routes.landing.ecosystem, label: "For teams", hidden: false },
-  { href: Routes.landing.calculator, label: "Estimate", hidden: false },
-  { href: Routes.landing.pricing, label: "Pricing", hidden: true },
+  { href: Routes.landing.howItWorks, labelKey: "howItWorks", hidden: false },
+  { href: Routes.landing.ecosystem, labelKey: "forTeams", hidden: false },
+  { href: Routes.landing.calculator, labelKey: "estimate", hidden: false },
+  { href: Routes.landing.pricing, labelKey: "pricing", hidden: true },
 ] as const;
 
 export const LandingHeader: FC = () => {
+  const t = useTranslations("landing.header");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const visibleLinks = navLinks.filter((link) => !link.hidden);
 
   useEffect(() => {
     const update = () => setIsScrolled(window.scrollY > SCROLL_THRESHOLD_PX);
@@ -28,18 +35,35 @@ export const LandingHeader: FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMenuOpen(false);
+    };
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const onBreakpoint = (event: MediaQueryListEvent) => {
+      if (event.matches) setIsMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    mediaQuery.addEventListener("change", onBreakpoint);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      mediaQuery.removeEventListener("change", onBreakpoint);
+    };
+  }, [isMenuOpen]);
+
   return (
     <div
       className={cn(
-        "fixed inset-x-0 z-50 text-ink-foreground transition-all duration-300",
+        "fixed z-50 text-ink-foreground transition-all duration-300",
         isScrolled
-          ? "top-0 border-b border-white/10 bg-ink-charcoal/90 backdrop-blur-md"
-          : "top-4 border-b border-transparent"
+          ? "inset-x-3 top-2 rounded-[2rem] border border-white/10 bg-ink-charcoal/90 backdrop-blur-md sm:inset-x-4 sm:rounded-[2.5rem]"
+          : "inset-x-0 top-4 rounded-[2rem] border border-transparent sm:rounded-[2.5rem]"
       )}
     >
       <header
         className={cn(
-          "mx-auto flex max-w-7xl items-center justify-between px-12 transition-all duration-300",
+          "relative mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-300 md:grid md:grid-cols-[1fr_auto_1fr] md:px-12",
           isScrolled ? "h-16" : "h-[5.75rem]"
         )}
       >
@@ -49,25 +73,68 @@ export const LandingHeader: FC = () => {
         </Link>
 
         <nav className="hidden gap-8 text-sm text-ink-foreground/70 md:flex">
-          {navLinks
-            .filter((link) => !link.hidden)
-            .map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="transition hover:text-electric-lime"
-              >
-                {link.label}
-              </Link>
-            ))}
+          {visibleLinks.map((link) => (
+            <Link
+              key={link.labelKey}
+              href={link.href}
+              className="transition hover:text-electric-lime"
+            >
+              {t(link.labelKey)}
+            </Link>
+          ))}
         </nav>
 
-        <Link
-          href={Routes.auth.sign_up}
-          className="rounded-full border border-electric-lime/40 px-4 py-2 text-sm font-semibold text-electric-lime transition hover:bg-electric-lime hover:text-ink-charcoal"
-        >
-          Create account
-        </Link>
+        <div className="flex items-center gap-3 md:justify-self-end">
+          <LanguageSwitcher className="hidden md:inline-flex" />
+          <Link
+            href={Routes.auth.sign_up}
+            className="rounded-full border border-electric-lime/40 px-4 py-2 text-sm font-semibold text-electric-lime transition hover:bg-electric-lime hover:text-ink-charcoal"
+          >
+            {t("createAccount")}
+          </Link>
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen((open) => !open)}
+            aria-expanded={isMenuOpen}
+            aria-controls="landing-mobile-menu"
+            aria-label={t(isMenuOpen ? "closeMenu" : "openMenu")}
+            className="flex size-10 items-center justify-center rounded-full border border-white/15 text-ink-foreground transition hover:border-electric-lime/40 hover:text-electric-lime md:hidden"
+          >
+            {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              id="landing-mobile-menu"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="absolute inset-x-4 top-full mt-2 rounded-3xl border border-white/15 bg-[#26292B] p-4 shadow-2xl shadow-black/40 md:hidden"
+            >
+              <nav className="flex flex-col">
+                {visibleLinks.map((link) => (
+                  <Link
+                    key={link.labelKey}
+                    href={link.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="rounded-2xl px-4 py-3 text-base font-medium text-ink-foreground/80 transition hover:bg-white/5 hover:text-electric-lime"
+                  >
+                    {t(link.labelKey)}
+                  </Link>
+                ))}
+              </nav>
+              <div className="mt-2 flex items-center justify-between border-t border-white/10 px-4 pt-4">
+                <span className="text-sm text-ink-foreground/60">
+                  {t("language")}
+                </span>
+                <LanguageSwitcher />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
     </div>
   );

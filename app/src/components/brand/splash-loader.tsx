@@ -1,15 +1,18 @@
 "use client";
 
-import { type FC, useEffect, useState } from "react";
+import { type FC, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { BrandMark } from "@/components/brand/brand-mark";
 
 const TILE_COLUMNS = 14;
 const TILE_ROWS = 28;
 const QR_SIZE = 17;
 const FINDER_SIZE = 5;
-const LOGO_CLEARANCE = 5;
-const HOLD_MS = 1400;
+const MIN_HOLD_MS = 1200;
+const MAX_HOLD_MS = 8000;
+const BUILD_DURATION_S = 1.5;
+const BUILD_JITTER_S = 0.12;
+const CYCLE_MS = 2400;
+const MODULE_POP_S = 0.18;
 const DISSOLVE_SPREAD_S = 0.6;
 const TILE_DURATION_S = 0.25;
 
@@ -42,30 +45,52 @@ const isFinderZone = (row: number, col: number): boolean => {
   );
 };
 
-const isLogoZone = (row: number, col: number): boolean => {
-  const start = Math.floor((QR_SIZE - LOGO_CLEARANCE) / 2);
-  return (
-    row >= start &&
-    row < start + LOGO_CLEARANCE &&
-    col >= start &&
-    col < start + LOGO_CLEARANCE
-  );
-};
-
-const QR_MODULES = Array.from({ length: QR_SIZE * QR_SIZE }, (_, i) => {
-  const row = Math.floor(i / QR_SIZE);
-  const col = i % QR_SIZE;
-  if (isFinderZone(row, col)) return isFinderModule(row, col);
-  if (isLogoZone(row, col)) return false;
-  return hash(i + 1) > 0.5;
-});
+const buildQrModules = (cycle: number) =>
+  Array.from({ length: QR_SIZE * QR_SIZE }, (_, i) => {
+    const row = Math.floor(i / QR_SIZE);
+    const col = i % QR_SIZE;
+    const isDark = isFinderZone(row, col)
+      ? isFinderModule(row, col)
+      : hash(i + 1 + cycle * 97) > 0.5;
+    if (!isDark) return null;
+    const delay =
+      (i / (QR_SIZE * QR_SIZE)) * BUILD_DURATION_S +
+      hash(i + 500 + cycle) * BUILD_JITTER_S;
+    return { row, col, delay };
+  }).filter((module) => module !== null);
 
 export const SplashLoader: FC = () => {
   const [isVisible, setIsVisible] = useState(true);
+  const [cycle, setCycle] = useState(0);
+  const qrModules = useMemo(() => buildQrModules(cycle), [cycle]);
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => setIsVisible(false), HOLD_MS);
-    return () => window.clearTimeout(timeout);
+    const interval = window.setInterval(
+      () => setCycle((current) => current + 1),
+      CYCLE_MS
+    );
+    return () => window.clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const close = () => setIsVisible(false);
+    const startedAt = performance.now();
+    const closeWhenLoaded = () => {
+      const remaining = Math.max(0, MIN_HOLD_MS - (performance.now() - startedAt));
+      window.setTimeout(close, remaining);
+    };
+
+    const failsafe = window.setTimeout(close, MAX_HOLD_MS);
+    if (document.readyState === "complete") {
+      closeWhenLoaded();
+    } else {
+      window.addEventListener("load", closeWhenLoaded, { once: true });
+    }
+
+    return () => {
+      window.clearTimeout(failsafe);
+      window.removeEventListener("load", closeWhenLoaded);
+    };
   }, []);
 
   useEffect(() => {
@@ -120,33 +145,34 @@ export const SplashLoader: FC = () => {
             }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            <div className="relative">
-              <svg
-                viewBox={`0 0 ${QR_SIZE} ${QR_SIZE}`}
-                className="size-56 text-ink-charcoal"
-                shapeRendering="crispEdges"
-                aria-hidden
-              >
-                {QR_MODULES.map((isDark, i) =>
-                  isDark ? (
-                    <rect
-                      key={i}
-                      x={i % QR_SIZE}
-                      y={Math.floor(i / QR_SIZE)}
-                      width={1}
-                      height={1}
-                      fill="currentColor"
-                    />
-                  ) : null
-                )}
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <BrandMark size="lg" className="brightness-0" />
-              </div>
-            </div>
-            <span className="text-4xl font-extrabold tracking-tight text-black">
+            <span className="text-5xl font-extrabold tracking-tight text-black">
               delitip
             </span>
+            <svg
+              viewBox={`0 0 ${QR_SIZE} ${QR_SIZE}`}
+              className="size-16 text-ink-charcoal"
+              shapeRendering="crispEdges"
+              aria-hidden
+            >
+              {qrModules.map(({ row, col, delay }) => (
+                <motion.rect
+                  key={`${cycle}-${row}-${col}`}
+                  x={col}
+                  y={row}
+                  width={1}
+                  height={1}
+                  fill="currentColor"
+                  style={{ transformBox: "fill-box", transformOrigin: "center" }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{
+                    delay,
+                    duration: MODULE_POP_S,
+                    ease: "easeOut",
+                  }}
+                />
+              ))}
+            </svg>
           </motion.div>
         </motion.div>
       )}

@@ -2,6 +2,7 @@
 
 import { type CSSProperties, type FC, useState } from "react";
 import Link from "next/link";
+import { useFormatter, useTranslations } from "next-intl";
 import { Routes } from "@/routes/routes";
 
 const SLIDER_CLASS_NAME =
@@ -10,11 +11,9 @@ const SLIDER_CLASS_NAME =
 const fillStyle = (value: number, min: number, max: number): CSSProperties =>
   ({ "--fill": `${((value - min) / (max - min)) * 100}%` }) as CSSProperties;
 
-function formatEur(value: number): string {
-  return value.toLocaleString("en-US");
-}
-
 export const LandingCalculator: FC = () => {
+  const t = useTranslations("landing.calculator");
+  const format = useFormatter();
   const [staffCount, setStaffCount] = useState(8);
   const [dailyInteractions, setDailyInteractions] = useState(120);
 
@@ -27,21 +26,20 @@ export const LandingCalculator: FC = () => {
       <div className="grid items-stretch gap-12 lg:grid-cols-2">
         <div>
           <p className="text-xs tracking-[0.2em] text-zinc-500 uppercase">
-            Estimate
+            {t("eyebrow")}
           </p>
           <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-ink-charcoal sm:text-4xl lg:text-5xl">
-            Rough tip potential <span>for your team</span>
+            {t.rich("title", { span: (chunks) => <span>{chunks}</span> })}
           </h2>
           <p className="mt-4 text-sm text-zinc-500">
-            A simple estimate based on how many customers you help each day.
-            Not a guarantee.
+            {t("subtitle")}
           </p>
 
           <div className="mt-10 space-y-8">
             <label className="block">
               <div className="flex justify-between text-sm font-semibold text-ink-charcoal">
-                <span>Team members</span>
-                <span>{staffCount} people</span>
+                <span>{t("teamMembers")}</span>
+                <span>{t("people", { count: staffCount })}</span>
               </div>
               <div className="relative mt-3">
                 <input
@@ -50,7 +48,7 @@ export const LandingCalculator: FC = () => {
                   max={50}
                   value={staffCount}
                   onChange={(event) => setStaffCount(Number(event.target.value))}
-                  aria-label="Team members"
+                  aria-label={t("teamMembers")}
                   style={fillStyle(staffCount, 1, 50)}
                   className={SLIDER_CLASS_NAME}
                 />
@@ -59,8 +57,8 @@ export const LandingCalculator: FC = () => {
 
             <label className="block">
               <div className="flex justify-between text-sm font-semibold text-ink-charcoal">
-                <span>Customer interactions per day</span>
-                <span>{dailyInteractions} / day</span>
+                <span>{t("interactions")}</span>
+                <span>{t("perDay", { count: dailyInteractions })}</span>
               </div>
               <div className="relative mt-3">
                 <input
@@ -72,7 +70,7 @@ export const LandingCalculator: FC = () => {
                   onChange={(event) =>
                     setDailyInteractions(Number(event.target.value))
                   }
-                  aria-label="Customer interactions per day"
+                  aria-label={t("interactions")}
                   style={fillStyle(dailyInteractions, 10, 1000)}
                   className={SLIDER_CLASS_NAME}
                 />
@@ -84,27 +82,27 @@ export const LandingCalculator: FC = () => {
         <div className="bg-night relative flex h-full flex-col justify-center overflow-hidden rounded-[2rem] p-10 text-left text-ink-foreground">
           <div className="relative space-y-4">
             <p className="text-sm text-ink-foreground/60">
-              Estimated annual tips
+              {t("annualTips")}
             </p>
             <p className="font-serif text-5xl text-magic sm:text-6xl">
-              ~€{formatEur(annualBoost)}
+              ~€{format.number(annualBoost)}
             </p>
             <p className="text-sm text-ink-foreground/70">
-              About{" "}
-              <strong className="text-electric-lime">
-                €{formatEur(monthlyPerStaff)}/mo
-              </strong>{" "}
-              per team member in this estimate
+              {t.rich("perMember", {
+                amount: format.number(monthlyPerStaff),
+                strong: (chunks) => (
+                  <strong className="text-electric-lime">{chunks}</strong>
+                ),
+              })}
             </p>
             <Link
               href={Routes.landing.getStarted}
               className="inline-block w-full rounded-full bg-electric-lime py-3 text-center text-sm font-bold text-ink-charcoal transition hover:scale-[1.02]"
             >
-              Create your business account
+              {t("cta")}
             </Link>
             <p className="text-xs text-ink-foreground/40">
-              Illustrative only. Real results depend on your volume, tip
-              amounts, and how often customers use the QR.
+              {t("disclaimer")}
             </p>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { LandingHowItWorks } from "./components/landing-how-it-works";
 import { LandingEcosystem } from "./components/landing-ecosystem";
 import { LandingCalculator } from "./components/landing-calculator";
 import { LandingCta } from "./components/landing-cta";
+import { LandingFaq } from "./components/landing-faq";
 import { LandingFooter } from "./components/landing-footer";
 
 const LandingPage: FC = () => {
@@ -18,6 +19,7 @@ const LandingPage: FC = () => {
         <LandingHowItWorks />
         <LandingEcosystem />
         <LandingCalculator />
+        <LandingFaq />
         <LandingCta />
       </main>
       <LandingFooter />
