@@ -1,51 +1,45 @@
-import { type FC } from 'react';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import { BrandMark } from '@/components/brand/brand-mark';
-import { Routes } from '@/routes/routes';
+import { type FC } from "react";
+import Link from "next/link";
+import { BrandMark } from "@/components/brand/brand-mark";
+import { Routes } from "@/routes/routes";
 
 const navLinks = [
-	{ href: Routes.landing.howItWorks, label: 'How it works', hidden: false },
-	{ href: Routes.landing.ecosystem, label: 'For teams', hidden: false },
-	{ href: Routes.landing.calculator, label: 'Estimate', hidden: false },
-	{ href: Routes.landing.pricing, label: 'Pricing', hidden: true },
+  { href: Routes.landing.howItWorks, label: "How it works", hidden: false },
+  { href: Routes.landing.ecosystem, label: "For teams", hidden: false },
+  { href: Routes.landing.calculator, label: "Estimate", hidden: false },
+  { href: Routes.landing.pricing, label: "Pricing", hidden: false },
 ] as const;
 
 export const LandingHeader: FC = () => {
-	return (
-		<header className="sticky top-0 z-50 border-b border-zinc-100 bg-white/90 backdrop-blur-md">
-			<div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-				<Link href={Routes.home} className="flex items-center gap-2.5">
-					<BrandMark />
-					<span className="text-lg font-extrabold tracking-tight text-ink-charcoal">delitip</span>
-				</Link>
+  return (
+    <div className="sticky top-0 z-50 border-b border-white/10 bg-ink-charcoal text-ink-foreground">
+      <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+        <Link href={Routes.home} className="flex items-center gap-2 font-bold">
+          <BrandMark size="sm" />
+          <span className="text-ink-foreground">delitip</span>
+        </Link>
 
-				<nav className="hidden items-center gap-8 text-xs font-semibold text-zinc-600 md:flex">
-					{navLinks
-						.filter((link) => !link.hidden)
-						.map((link) => (
-							<Link key={link.label} href={link.href} className="transition hover:text-zinc-950">
-								{link.label}
-							</Link>
-						))}
-				</nav>
+        <nav className="hidden gap-8 text-sm text-ink-foreground/70 md:flex">
+          {navLinks
+            .filter((link) => !link.hidden)
+            .map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="transition hover:text-electric-lime"
+              >
+                {link.label}
+              </Link>
+            ))}
+        </nav>
 
-				<div className="flex items-center gap-3">
-					<Link
-						href={Routes.auth.sign_in}
-						className="hidden px-3 py-2 text-xs font-bold text-zinc-700 transition hover:text-zinc-950 sm:inline-block"
-					>
-						Sign in
-					</Link>
-					<Link
-						href={Routes.auth.sign_up}
-						className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-electric-lime px-4 py-2.5 text-chip font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700"
-					>
-						<span>Create account</span>
-						<ArrowRight className="size-3.5 shrink-0" strokeWidth={2} />
-					</Link>
-				</div>
-			</div>
-		</header>
-	);
+        <Link
+          href={Routes.auth.sign_up}
+          className="rounded-full border border-electric-lime/40 px-4 py-2 text-sm font-semibold text-electric-lime transition hover:bg-electric-lime hover:text-ink-charcoal"
+        >
+          Create account
+        </Link>
+      </header>
+    </div>
+  );
 };
