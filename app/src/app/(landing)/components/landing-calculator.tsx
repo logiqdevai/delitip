@@ -1,8 +1,14 @@
 "use client";
 
-import { type FC, useState } from "react";
+import { type CSSProperties, type FC, useState } from "react";
 import Link from "next/link";
 import { Routes } from "@/routes/routes";
+
+const SLIDER_CLASS_NAME =
+  "h-2 w-full cursor-pointer appearance-none rounded-lg bg-[linear-gradient(to_right,var(--color-electric-lime)_var(--fill),var(--color-zinc-200)_var(--fill))] [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-ink-charcoal [&::-moz-range-thumb]:bg-electric-lime [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-ink-charcoal [&::-webkit-slider-thumb]:bg-electric-lime";
+
+const fillStyle = (value: number, min: number, max: number): CSSProperties =>
+  ({ "--fill": `${((value - min) / (max - min)) * 100}%` }) as CSSProperties;
 
 function formatEur(value: number): string {
   return value.toLocaleString("en-US");
@@ -45,7 +51,8 @@ export const LandingCalculator: FC = () => {
                   value={staffCount}
                   onChange={(event) => setStaffCount(Number(event.target.value))}
                   aria-label="Team members"
-                  className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-black [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-black [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black"
+                  style={fillStyle(staffCount, 1, 50)}
+                  className={SLIDER_CLASS_NAME}
                 />
               </div>
             </label>
@@ -66,7 +73,8 @@ export const LandingCalculator: FC = () => {
                     setDailyInteractions(Number(event.target.value))
                   }
                   aria-label="Customer interactions per day"
-                  className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-black [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-black [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black"
+                  style={fillStyle(dailyInteractions, 10, 1000)}
+                  className={SLIDER_CLASS_NAME}
                 />
               </div>
             </label>
