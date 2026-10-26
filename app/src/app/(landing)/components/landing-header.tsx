@@ -12,7 +12,7 @@ const navLinks = [
   { href: Routes.landing.howItWorks, label: "How it works", hidden: false },
   { href: Routes.landing.ecosystem, label: "For teams", hidden: false },
   { href: Routes.landing.calculator, label: "Estimate", hidden: false },
-  { href: Routes.landing.pricing, label: "Pricing", hidden: false },
+  { href: Routes.landing.pricing, label: "Pricing", hidden: true },
 ] as const;
 
 export const LandingHeader: FC = () => {

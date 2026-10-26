@@ -9,7 +9,7 @@ const productLinks = [
   { href: Routes.landing.howItWorks, label: "How it works", hidden: false },
   { href: Routes.landing.ecosystem, label: "For businesses", hidden: false },
   { href: Routes.landing.ecosystem, label: "For staff", hidden: false },
-  { href: Routes.landing.pricing, label: "Pricing", hidden: false },
+  { href: Routes.landing.pricing, label: "Pricing", hidden: true },
 ] as const;
 
 const industryLinks = [
