@@ -110,7 +110,7 @@ export const SplashLoader: FC = () => {
           </div>
 
           <motion.div
-            className="pointer-events-none absolute inset-0 flex items-center justify-center"
+            className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{
@@ -141,9 +141,12 @@ export const SplashLoader: FC = () => {
                 )}
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <BrandMark size="lg" />
+                <BrandMark size="lg" className="brightness-0" />
               </div>
             </div>
+            <span className="text-4xl font-extrabold tracking-tight text-black">
+              delitip
+            </span>
           </motion.div>
         </motion.div>
       )}
