@@ -45,13 +45,8 @@ export const LandingCalculator: FC = () => {
                   value={staffCount}
                   onChange={(event) => setStaffCount(Number(event.target.value))}
                   aria-label="Team members"
-                  className="relative z-10 h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-black"
+                  className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-black [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-black [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black"
                 />
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-1">
-                  {Array.from({ length: 6 }).map((_, index) => (
-                    <span key={index} className="size-1 rounded-full bg-ink-charcoal" />
-                  ))}
-                </div>
               </div>
             </label>
 
@@ -71,13 +66,8 @@ export const LandingCalculator: FC = () => {
                     setDailyInteractions(Number(event.target.value))
                   }
                   aria-label="Customer interactions per day"
-                  className="relative z-10 h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-black"
+                  className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-black [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-black [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black"
                 />
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-1">
-                  {Array.from({ length: 6 }).map((_, index) => (
-                    <span key={index} className="size-1 rounded-full bg-ink-charcoal" />
-                  ))}
-                </div>
               </div>
             </label>
           </div>

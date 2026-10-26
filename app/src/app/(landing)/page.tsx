@@ -1,4 +1,5 @@
 import { type FC } from "react";
+import { SplashLoader } from "@/components/brand/splash-loader";
 import { LandingHeader } from "./components/landing-header";
 import { LandingHero } from "./components/landing-hero";
 import { LandingHowItWorks } from "./components/landing-how-it-works";
@@ -11,6 +12,7 @@ import { LandingFooter } from "./components/landing-footer";
 const LandingPage: FC = () => {
   return (
     <div className="bg-paper-offwhite text-ink-charcoal antialiased">
+      <SplashLoader />
       <LandingHeader />
       <main>
         <LandingHero />

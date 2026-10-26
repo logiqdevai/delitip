@@ -12,8 +12,8 @@ const navLinks = [
 
 export const LandingHeader: FC = () => {
   return (
-    <div className="sticky top-0 z-50 border-b border-white/10 bg-ink-charcoal text-ink-foreground">
-      <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+    <div className="absolute inset-x-0 top-4 z-50 text-ink-foreground">
+      <header className="mx-auto flex h-[5.75rem] max-w-7xl items-center justify-between px-12">
         <Link href={Routes.home} className="flex items-center gap-2 font-bold">
           <BrandMark size="sm" />
           <span className="text-ink-foreground">delitip</span>
