@@ -20,10 +20,10 @@ export const LandingAbout: FC = async () => {
                 ),
               })}
             </h2>
-            <p className="mt-6 text-base leading-relaxed text-ink-charcoal/70">
+            <p className="mt-6 text-base leading-relaxed text-ink-charcoal/70 lg:text-[18px]">
               {t("paragraphOne")}
             </p>
-            <p className="mt-4 text-base leading-relaxed text-ink-charcoal/70">
+            <p className="mt-4 text-base leading-relaxed text-ink-charcoal/70 lg:text-[18px]">
               {t("paragraphTwo")}
             </p>
           </div>

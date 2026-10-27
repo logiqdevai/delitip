@@ -31,7 +31,7 @@ export const LandingFaq: FC = async () => {
                   ),
                 })}
               </h2>
-              <p className="mt-4 max-w-md text-sm text-ink-charcoal/60">
+              <p className="mt-4 max-w-md text-sm text-ink-charcoal/60 lg:text-[18px]">
                 {t("subtitle")}
               </p>
             </div>

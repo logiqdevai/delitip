@@ -74,7 +74,7 @@ export const LandingFaqList: FC<Props> = ({ items }) => {
               )}
             >
               <div className="overflow-hidden">
-                <p className="max-w-2xl px-6 pb-7 text-base leading-relaxed text-ink-charcoal/60 sm:px-10">
+                <p className="max-w-2xl px-6 pb-7 text-base leading-relaxed text-ink-charcoal/60 sm:px-10 lg:text-[18px]">
                   {item.answer}
                 </p>
               </div>

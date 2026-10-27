@@ -68,7 +68,9 @@ const StepCard: FC<StepCardProps> = ({
       <h3 className="mt-10 text-2xl font-bold text-ink-charcoal">
         {t(`${stepKey}.title`)}
       </h3>
-      <p className="mt-3 text-sm text-zinc-600">{t(`${stepKey}.body`)}</p>
+      <p className="mt-3 text-sm text-zinc-600 lg:text-[18px]">
+        {t(`${stepKey}.body`)}
+      </p>
       <p className="mt-auto pt-6 text-sm font-semibold text-brand-800">
         ✦ {t(`${stepKey}.note`)}
       </p>

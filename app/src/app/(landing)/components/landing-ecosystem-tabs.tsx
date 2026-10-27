@@ -86,8 +86,8 @@ export const LandingEcosystemTabs: FC<Props> = ({ tabs }) => {
             >
               <div className="flex flex-col justify-center p-5 sm:p-8">
                 <h3 className="text-2xl font-bold sm:text-3xl">{tab.title}</h3>
-                <p className="mt-3 text-ink-foreground/60">{tab.description}</p>
-                <ul className="mt-6 space-y-4">
+                <p className="mt-3 text-ink-foreground/60 lg:text-[18px]">{tab.description}</p>
+                <ul className="mt-6 space-y-4 lg:text-[18px]">
                   {tab.points.map((point) => (
                     <li key={point.strong} className="flex gap-3">
                       <span className="text-electric-lime">✦</span>

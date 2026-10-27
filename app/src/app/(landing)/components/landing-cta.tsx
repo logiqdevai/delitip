@@ -16,7 +16,7 @@ export const LandingCta: FC = async () => {
               accent: (chunks) => <span className="text-magic">{chunks}</span>,
             })}
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-sm text-zinc-500 sm:text-base">
+          <p className="mx-auto mt-5 max-w-xl text-sm text-zinc-500 sm:text-base lg:text-[18px]">
             {t("description")}
           </p>
           <div className="mt-10">
