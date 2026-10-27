@@ -13,10 +13,12 @@ import { cn } from "@/lib/utils";
 const SCROLL_THRESHOLD_PX = 80;
 
 const navLinks = [
+  { href: Routes.landing.about, labelKey: "about", hidden: false },
   { href: Routes.landing.howItWorks, labelKey: "howItWorks", hidden: false },
   { href: Routes.landing.ecosystem, labelKey: "forTeams", hidden: false },
-  { href: Routes.landing.calculator, labelKey: "estimate", hidden: false },
+  { href: Routes.landing.calculator, labelKey: "estimate", hidden: true },
   { href: Routes.landing.pricing, labelKey: "pricing", hidden: true },
+  { href: Routes.contact, labelKey: "contact", hidden: false },
 ] as const;
 
 export const LandingHeader: FC = () => {
@@ -40,7 +42,7 @@ export const LandingHeader: FC = () => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setIsMenuOpen(false);
     };
-    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
     const onBreakpoint = (event: MediaQueryListEvent) => {
       if (event.matches) setIsMenuOpen(false);
     };
@@ -57,13 +59,13 @@ export const LandingHeader: FC = () => {
       className={cn(
         "fixed z-50 text-ink-foreground transition-all duration-300",
         isScrolled
-          ? "inset-x-3 top-2 rounded-[2rem] border border-white/10 bg-ink-charcoal/90 backdrop-blur-md sm:inset-x-4 sm:rounded-[2.5rem]"
+          ? "inset-x-3 top-2 rounded-[2rem] border border-white/10 bg-ink-charcoal/90 backdrop-blur-md sm:inset-x-4 sm:rounded-[2.5rem] lg:inset-x-0 lg:top-0 lg:rounded-none lg:border-x-0 lg:border-t-0"
           : "inset-x-0 top-4 rounded-[2rem] border border-transparent sm:rounded-[2.5rem]"
       )}
     >
       <header
         className={cn(
-          "relative mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-300 md:grid md:grid-cols-[1fr_auto_1fr] md:px-12",
+          "relative mx-auto flex items-center justify-between px-6 transition-all duration-300 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-16",
           isScrolled ? "h-16" : "h-[5.75rem]"
         )}
       >
@@ -72,7 +74,7 @@ export const LandingHeader: FC = () => {
           <span className="text-ink-foreground">delitip</span>
         </Link>
 
-        <nav className="hidden gap-8 text-sm text-ink-foreground/70 md:flex">
+        <nav className="hidden gap-8 text-sm text-ink-foreground/70 lg:flex">
           {visibleLinks.map((link) => (
             <Link
               key={link.labelKey}
@@ -84,8 +86,8 @@ export const LandingHeader: FC = () => {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3 md:justify-self-end">
-          <LanguageSwitcher className="hidden md:inline-flex" />
+        <div className="flex items-center gap-3 lg:justify-self-end">
+          <LanguageSwitcher className="hidden lg:inline-flex" />
           <Link
             href={Routes.auth.sign_up}
             className="rounded-full border border-electric-lime/40 px-4 py-2 text-sm font-semibold text-electric-lime transition hover:bg-electric-lime hover:text-ink-charcoal"
@@ -98,7 +100,7 @@ export const LandingHeader: FC = () => {
             aria-expanded={isMenuOpen}
             aria-controls="landing-mobile-menu"
             aria-label={t(isMenuOpen ? "closeMenu" : "openMenu")}
-            className="flex size-10 items-center justify-center rounded-full border border-white/15 text-ink-foreground transition hover:border-electric-lime/40 hover:text-electric-lime md:hidden"
+            className="flex size-10 items-center justify-center rounded-full border border-white/15 text-ink-foreground transition hover:border-electric-lime/40 hover:text-electric-lime lg:hidden"
           >
             {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -112,7 +114,7 @@ export const LandingHeader: FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute inset-x-4 top-full mt-2 rounded-3xl border border-white/15 bg-[#26292B] p-4 shadow-2xl shadow-black/40 md:hidden"
+              className="absolute inset-x-4 top-full mt-2 rounded-3xl border border-white/15 bg-[#26292B] p-4 shadow-2xl shadow-black/40 lg:hidden"
             >
               <nav className="flex flex-col">
                 {visibleLinks.map((link) => (

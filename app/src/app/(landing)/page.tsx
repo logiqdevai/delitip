@@ -2,6 +2,7 @@ import { type FC } from "react";
 import { SplashLoader } from "@/components/brand/splash-loader";
 import { LandingHeader } from "./components/landing-header";
 import { LandingHero } from "./components/landing-hero";
+import { LandingAbout } from "./components/landing-about";
 import { LandingHowItWorks } from "./components/landing-how-it-works";
 import { LandingEcosystem } from "./components/landing-ecosystem";
 import { LandingCalculator } from "./components/landing-calculator";
@@ -16,6 +17,7 @@ const LandingPage: FC = () => {
       <LandingHeader />
       <main>
         <LandingHero />
+        <LandingAbout />
         <LandingHowItWorks />
         <LandingEcosystem />
         <LandingCalculator />

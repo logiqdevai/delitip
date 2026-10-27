@@ -35,7 +35,7 @@ const channels = [
 
 export const ContactAside: FC = () => {
   return (
-    <aside className="relative overflow-hidden rounded-[28px] border border-zinc-800 bg-ink-charcoal px-4 py-6 text-paper-offwhite shadow-2xl sm:p-8">
+    <aside className="relative h-full overflow-hidden rounded-[28px] border border-zinc-800 bg-ink-charcoal px-4 py-6 text-paper-offwhite shadow-2xl sm:p-8">
       <div
         aria-hidden
         className="pointer-events-none absolute -top-16 -right-10 size-56 rounded-full bg-electric-lime/20 blur-3xl"

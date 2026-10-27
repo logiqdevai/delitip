@@ -11,7 +11,9 @@
       "createAccount": "Create account",
       "openMenu": "Open menu",
       "closeMenu": "Close menu",
-      "language": "Language"
+      "language": "Language",
+      "about": "About us",
+      "contact": "Contact"
     },
     "hero": {
       "title": "Tip and feedback for the people who <accent>help your customers</accent>",
@@ -163,6 +165,13 @@
       },
       "copyright": "© 2026 delitip. Tip. Feedback. Recognize.",
       "poweredBy": "Powered by"
+    },
+    "about": {
+      "eyebrow": "About us",
+      "title": "Made to say thank you <accent>where it counts</accent>",
+      "paragraphOne": "delitip is built on a simple idea: the people who make a good experience happen should be recognized for it. A QR code on the table is all a customer needs to leave a tip and share how it went.",
+      "paragraphTwo": "We make tipping and feedback tools for cafés, restaurants, hotels and any business with customer-facing teams. Tips reach the right person, and owners can finally see what their customers are saying.",
+      "imageAlt": "A QR code stand on a restaurant table inviting guests to leave a tip and a review"
     }
   }
 }

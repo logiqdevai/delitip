@@ -18,7 +18,7 @@ export const ContactHero: FC = () => {
           </p>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 items-start gap-8 lg:mt-14 lg:grid-cols-12 lg:gap-10">
+        <div className="mt-10 grid grid-cols-1 items-stretch gap-8 lg:mt-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7">
             <ContactForm />
           </div>
