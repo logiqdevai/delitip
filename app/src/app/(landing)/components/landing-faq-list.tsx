@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const LandingFaqList: FC<Props> = ({ items }) => {
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(items[0]?.id ?? null);
 
   return (
     <ul className="mt-12 space-y-1">
