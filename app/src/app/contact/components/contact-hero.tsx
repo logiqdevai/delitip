@@ -8,13 +8,12 @@ export const ContactHero: FC = () => {
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl space-y-4 text-center lg:mx-0 lg:max-w-xl lg:text-left">
           <h1 className="text-3xl leading-[1.12] font-extrabold tracking-tight text-ink-charcoal sm:text-5xl">
-            Talk to us about{" "}
-            <span className="text-electric-lime">tips and feedback</span>
+            Contact <span className="text-electric-lime">Us</span>
           </h1>
           <p className="text-sm leading-relaxed text-zinc-600 sm:text-base">
-            Questions about setting up your team, customer support tipping, or
-            your account? Send a note and we&apos;ll reply within one business
-            day.
+            Have questions about setting up your team, accepting tips via QR
+            code, or managing your account? Send us a message and we&apos;ll
+            get back to you as soon as possible.
           </p>
         </div>
 

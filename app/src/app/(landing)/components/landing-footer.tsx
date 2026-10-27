@@ -7,28 +7,16 @@ import { VivaBadge } from "@/components/payments/viva-badge";
 import { SiteConfig } from "@/config/site";
 
 const productLinks = [
+  { href: Routes.landing.about, labelKey: "aboutUs", hidden: false },
   { href: Routes.landing.howItWorks, labelKey: "howItWorks", hidden: false },
-  { href: Routes.landing.ecosystem, labelKey: "forBusinesses", hidden: false },
-  { href: Routes.landing.ecosystem, labelKey: "forStaff", hidden: false },
-  { href: Routes.landing.pricing, labelKey: "pricing", hidden: true },
-] as const;
-
-const industryKeys = [
-  "retail",
-  "hotels",
-  "restaurants",
-  "bars",
-  "spas",
-  "fitness",
-  "foodTrucks",
+  { href: Routes.auth.sign_up, labelKey: "ourPlatform", hidden: false },
+  { href: Routes.contact, labelKey: "contact", hidden: false },
 ] as const;
 
 const trustLinks = [
   { href: Routes.help.root, labelKey: "helpCenter" },
   { href: Routes.legal.privacy, labelKey: "privacy" },
   { href: Routes.legal.terms, labelKey: "terms" },
-  { href: Routes.home, labelKey: "security" },
-  { href: Routes.contact, labelKey: "contact" },
 ] as const;
 
 export const LandingFooter: FC = async () => {
@@ -48,15 +36,6 @@ export const LandingFooter: FC = async () => {
           <p className="max-w-sm text-xs leading-relaxed text-zinc-500">
             {t("description")}
           </p>
-          <address className="space-y-0.5 text-xs leading-relaxed text-zinc-400 not-italic">
-            <a
-              href={SiteConfig.contactEmailHref}
-              className="block transition hover:text-paper-offwhite"
-            >
-              {SiteConfig.contactEmail}
-            </a>
-            <span className="block">{SiteConfig.contactAddress}</span>
-          </address>
           <VivaBadge label={t("paymentsBy")} className="justify-start text-zinc-500" />
         </div>
 
@@ -80,24 +59,6 @@ export const LandingFooter: FC = async () => {
 
         <div className="space-y-2">
           <span className="block text-xs font-bold tracking-wider text-paper-offwhite uppercase">
-            {t("industries.title")}
-          </span>
-          <ul className="space-y-1.5 text-zinc-400">
-            {industryKeys.map((key) => (
-              <li key={key}>
-                <Link
-                  href={Routes.home}
-                  className="transition hover:text-paper-offwhite"
-                >
-                  {t(`industries.${key}`)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="space-y-2">
-          <span className="block text-xs font-bold tracking-wider text-paper-offwhite uppercase">
             {t("trust.title")}
           </span>
           <ul className="space-y-1.5 text-zinc-400">
@@ -112,6 +73,41 @@ export const LandingFooter: FC = async () => {
               </li>
             ))}
           </ul>
+        </div>
+
+        <div className="space-y-2">
+          <span className="block text-xs font-bold tracking-wider text-paper-offwhite uppercase">
+            {t("contactTitle")}
+          </span>
+          <address className="space-y-0.5 text-zinc-400 not-italic">
+            <a
+              href={SiteConfig.contactEmailHref}
+              className="block transition hover:text-paper-offwhite"
+            >
+              {SiteConfig.contactEmail}
+            </a>
+            <span className="block">{t("address")}</span>
+          </address>
+          <a
+            href="https://www.instagram.com/delitip_com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="mt-2 inline-flex items-center gap-2 transition hover:text-paper-offwhite"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.75}
+              className="size-6"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
         </div>
       </div>
 

@@ -16,134 +16,135 @@
       "contact": "Contact"
     },
     "hero": {
-      "title": "Tip and feedback for the people who <accent>help your customers</accent>",
-      "description": "Customers scan a QR code, tip the team member who helped them, and leave feedback. No app required. You see who was recognized and what customers said.",
+      "title": "Reward great service with <accent>tips and reviews</accent>",
+      "description": "Your customers scan a QR code, leave a tip for the employee who served them, and rate their experience - all without downloading an app. You can see which team members stand out and what your customers have to say.",
       "cta": "Create your business account"
     },
     "howItWorks": {
       "eyebrow": "How it works",
-      "title": "Three steps. <span>A little spell.</span>",
-      "subtitle": "Simple for customers. Clear for your business and your team.",
+      "title": "Three simple <span>steps</span>",
+      "subtitle": "Easy for your customers. Valuable for your business and your team.",
       "steps": {
         "scan": {
-          "title": "Scan",
-          "body": "The customer scans a QR code at the desk or on a team card. They see your business and the person who helped them.",
-          "note": "Printed QR cards available."
+          "title": "Scan the QR code",
+          "body": "Customers scan the QR code displayed on a table, at the checkout, or on an employee's card. They can easily find the employee who served them and leave a tip.",
+          "note": "Printed QR cards are also available."
         },
         "tip": {
-          "title": "Tip",
-          "body": "They choose an amount and pay online. The tip goes to that team member or the whole team, if you set it that way.",
-          "note": "No app. No account for customers."
+          "title": "Leave a tip",
+          "body": "Customers choose how much they want to tip and pay online. The tip goes directly to the selected employee or is shared across the team, depending on your settings.",
+          "note": "No app or customer account required."
         },
         "feedback": {
-          "title": "Feedback",
-          "body": "They rate the experience and leave a short note. Tips and feedback land in one dashboard, tied to the people who earned them.",
-          "note": "Useful signal. Not just a review site."
+          "title": "Share their feedback",
+          "body": "Customers rate their experience and can leave a short comment. All tips and reviews are collected in your dashboard, so you can see who received tips and what customers think about the service.",
+          "note": "Meaningful feedback on your service, not just another review platform."
         }
       }
     },
     "ecosystem": {
-      "eyebrow": "Built for both sides",
-      "title": "Clear for the business. <accent>Fair for the team.</accent>",
+      "eyebrow": "Built for your business and your team",
+      "title": "Transparency for your business. <accent>Recognition for your team.</accent>",
       "business": {
-        "title": "For business owners & managers",
-        "description": "Run tipping and feedback without POS hardware.",
-        "cta": "Set up your business →",
+        "title": "For owners and managers",
+        "description": "Manage tips and customer feedback easily, without any additional POS equipment.",
+        "cta": "Create your business account",
         "points": {
           "seeWho": {
-            "strong": "See who customers thank.",
-            "rest": "Tips and feedback tied to the people who helped."
+            "strong": "See which employees stand out.",
+            "rest": "Connect tips and customer feedback to the employees who served each customer."
           },
           "feedbackEarly": {
-            "strong": "Collect feedback early.",
-            "rest": "Hear from customers before they post elsewhere."
+            "strong": "Get timely customer feedback.",
+            "rest": "See what customers liked and what could be improved."
           },
           "noHardware": {
-            "strong": "No extra hardware.",
-            "rest": "A QR code at the desk is enough to start."
+            "strong": "No additional equipment needed.",
+            "rest": "A QR code at the checkout or on tables is all you need to get started."
           }
         }
       },
       "staff": {
-        "title": "For frontline staff",
-        "description": "When someone goes out of their way, customers can say thank you — to you, not a tip jar.",
-        "cta": "Join with your team →",
+        "tabLabel": "For your team",
+        "title": "Your efforts deserve recognition",
+        "description": "When you go the extra mile to provide great service, customers can show their appreciation with a tip and a positive comment.",
+        "cta": "Join your team",
         "points": {
           "rightPerson": {
-            "strong": "Tips to the right person.",
-            "rest": "Customers tip the teammate who helped them."
+            "strong": "Tips go directly to the employee.",
+            "rest": "Customers can reward the person who served them."
           },
           "cashless": {
-            "strong": "Cashless and simple.",
-            "rest": "No missed tips because someone didn't have cash."
+            "strong": "Tip by card or phone.",
+            "rest": "Customers can leave you a tip electronically, even if they don't have cash on hand."
           },
           "goodWords": {
-            "strong": "Keep the good words.",
-            "rest": "Positive feedback stays with your profile."
+            "strong": "Your hard work gets recognized.",
+            "rest": "Positive customer feedback is collected on your profile."
           }
         }
       }
     },
     "calculator": {
       "eyebrow": "Estimate",
-      "title": "Rough tip potential <span>for your team</span>",
-      "subtitle": "A simple estimate based on how many customers you help each day. Not a guarantee.",
+      "title": "How Much Could <span>Your Team Earn in Tips?</span>",
+      "subtitle": "An estimate based on the number of customers you serve each day. These figures are indicative and actual results may vary.",
       "teamMembers": "Team members",
       "people": "{count} people",
-      "interactions": "Customer interactions per day",
-      "perDay": "{count} / day",
-      "annualTips": "Estimated annual tips",
-      "perMember": "About <strong>€{amount}/mo</strong> per team member in this estimate",
-      "cta": "Create your business account",
-      "disclaimer": "Illustrative only. Real results depend on your volume, tip amounts, and how often customers use the QR."
+      "interactions": "Customers per day",
+      "perDay": "{count}",
+      "annualTips": "Estimated Annual Tips",
+      "perMember": "Approximately <strong>€{amount} per month per team member</strong>, based on this estimate.",
+      "cta": "Create Your Business Account",
+      "disclaimer": "These figures are estimates. Actual results depend on the number of customers you serve, tip amounts, and how often customers use the QR code."
     },
     "cta": {
-      "title": "Start tipping and feedback <accent>for your team</accent>",
-      "description": "Create your account, add your team, and set up QR codes. Customers tip and leave feedback in seconds.",
-      "button": "Create your business account",
-      "footnote": "No credit card required · Instant QR codes"
+      "title": "<accent>Start Accepting Tips and Feedback</accent> for Your Team",
+      "description": "Create your business account, add your team, and set up your QR codes. Customers can leave tips and share their feedback in seconds.",
+      "button": "Create Your Business Account",
+      "footnote": "No credit card required · QR codes ready instantly"
     },
     "faq": {
-      "eyebrow": "Questions",
-      "title": "Answers to <accent>what you're wondering</accent>",
-      "subtitle": "Everything you need to know about tipping, feedback and getting your team started.",
-      "cta": "Get started",
+      "eyebrow": "Frequently asked questions",
+      "title": "Answers to <accent>your questions</accent>",
+      "subtitle": "Everything you need to know about tipping, customer feedback, and getting started with your team.",
+      "cta": "Create Your Business Account",
       "items": {
         "q1": {
-          "question": "How do customers tip?",
-          "answer": "They scan your QR code, choose an amount and pay online. There is no app to download and no account to create."
+          "question": "How do customers leave a tip?",
+          "answer": "They scan the QR code, choose the amount they want, and pay online. There's no app to download or account to create."
         },
         "q2": {
-          "question": "Can customers tip a specific person?",
-          "answer": "Yes. A tip can go to the team member who helped them, or be shared with the whole team, depending on how you set it up."
+          "question": "Can customers tip a specific employee?",
+          "answer": "Yes. A tip can go to the employee who served the customer, or be shared across the whole team, depending on your settings."
         },
         "q3": {
-          "question": "Do I need any extra hardware?",
-          "answer": "No. A QR code at the desk, table or counter is enough to start. It works alongside your existing setup, with no POS integration needed."
+          "question": "Do I need any extra equipment?",
+          "answer": "No. A QR code at the counter, on the tables, or on an employee card is enough. delitip works alongside your existing setup, with no POS integration required."
         },
         "q4": {
-          "question": "What happens to the feedback customers leave?",
-          "answer": "Customers can rate their experience and add a short note. Feedback lands in the same dashboard as tips, tied to the people who earned it, so you hear about problems before they become public reviews."
+          "question": "What happens with customer feedback?",
+          "answer": "Customers rate their experience and can leave a short note. Feedback appears on the same dashboard as tips and is tied to the employees who served the customers, so you find out their opinion early."
         },
         "q5": {
-          "question": "How do team members join?",
-          "answer": "Add your team from your business account. Employees and managers use a separate staff sign-in from business owners, and their tips and positive feedback stay with their profile."
+          "question": "How do I add my team members?",
+          "answer": "You can add your team through your business account. Each employee and manager has separate access, while tips and positive feedback are collected on their personal profile."
         },
         "q6": {
           "question": "Who processes the payments?",
-          "answer": "Payments are handled securely by Viva.com, so card details never touch your business or your team."
+          "answer": "Payments are securely processed by Viva.com. Your business and team members never handle customers' card details."
         }
       }
     },
     "footer": {
-      "description": "Digital tipping and customer feedback for businesses with customer-facing teams, from support desks to hospitality.",
-      "paymentsBy": "Payments by",
+      "description": "Digital tipping and customer feedback for businesses with customer-facing teams, from customer support offices to hotels and restaurants.",
+      "paymentsBy": "Payments processed by",
       "product": {
         "title": "Product",
+        "aboutUs": "About us",
         "howItWorks": "How it works",
-        "forBusinesses": "For businesses",
-        "forStaff": "For staff",
-        "pricing": "Pricing"
+        "ourPlatform": "Our platform",
+        "contact": "Contact"
       },
       "industries": {
         "title": "Industries",
@@ -155,22 +156,22 @@
         "fitness": "Fitness & training",
         "foodTrucks": "Food trucks"
       },
+      "contactTitle": "Contact",
+      "address": "32 Pelasgon Street, Heraklion, Crete, Greece",
       "trust": {
-        "title": "Trust & security",
+        "title": "Useful Information",
         "helpCenter": "Help Center",
         "privacy": "Privacy Policy",
-        "terms": "Terms of Service",
-        "security": "Security",
-        "contact": "Contact"
+        "terms": "Terms of Service"
       },
-      "copyright": "© 2026 delitip. Tip. Feedback. Recognize.",
+      "copyright": "© 2026 delitip",
       "poweredBy": "Powered by"
     },
     "about": {
       "eyebrow": "About us",
-      "title": "Made to say thank you <accent>where it counts</accent>",
-      "paragraphOne": "delitip is built on a simple idea: the people who make a good experience happen should be recognized for it. A QR code on the table is all a customer needs to leave a tip and share how it went.",
-      "paragraphTwo": "We make tipping and feedback tools for cafés, restaurants, hotels and any business with customer-facing teams. Tips reach the right person, and owners can finally see what their customers are saying.",
+      "title": "Great service deserves to be <accent>recognized</accent>",
+      "paragraphOne": "At delitip, we want to make it easier for customers to reward the people who serve them. With a simple QR code scan, they can leave a tip and share their feedback.",
+      "paragraphTwo": "We're building a simple, easy-to-use tipping and review solution for cafés, restaurants, hotels, and any business that wants to deliver a better customer experience. Employees receive the tips they earn, while businesses gain valuable insight into the quality of service they provide.",
       "imageAlt": "A QR code stand on a restaurant table inviting guests to leave a tip and a review"
     }
   }

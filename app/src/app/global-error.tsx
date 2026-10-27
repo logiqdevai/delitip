@@ -1,20 +1,8 @@
 "use client";
 
 import { type FC, useEffect } from "react";
-import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { AppStatusPage } from "@/components/system/app-status-page";
 import "./globals.css";
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
-  weight: ["300", "400", "500", "600", "700", "800"],
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 interface GlobalErrorPageProps {
   error: Error & { digest?: string };
@@ -27,10 +15,15 @@ const GlobalErrorPage: FC<GlobalErrorPageProps> = ({ error, reset }) => {
   }, [error]);
 
   return (
-    <html
-      lang="en"
-      className={`${plusJakartaSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="en" className="h-full antialiased">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="flex min-h-full flex-col bg-paper-offwhite text-ink-charcoal">
         <AppStatusPage
           code="500"

@@ -57,8 +57,8 @@ export const ContactForm: FC = () => {
             We&apos;ll reply to{" "}
             <span className="font-semibold text-ink-charcoal">
               {submitted.email}
-            </span>{" "}
-            within one business day.
+            </span>
+            .
           </p>
         </div>
         <button
@@ -83,7 +83,7 @@ export const ContactForm: FC = () => {
     >
       <div className="space-y-7">
         <span className="block text-xs font-semibold text-zinc-700">
-          What do you need help with?
+          How can we help you?
         </span>
         <Controller
           name="topic"

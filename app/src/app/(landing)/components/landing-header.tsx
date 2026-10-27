@@ -21,21 +21,27 @@ const navLinks = [
   { href: Routes.contact, labelKey: "contact", hidden: false },
 ] as const;
 
-export const LandingHeader: FC = () => {
+interface LandingHeaderProps {
+  alwaysScrolled?: boolean;
+}
+
+export const LandingHeader: FC<LandingHeaderProps> = ({ alwaysScrolled = false }) => {
   const t = useTranslations("landing.header");
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const visibleLinks = navLinks.filter((link) => !link.hidden);
+  const isScrolled = alwaysScrolled || hasScrolled;
 
   useEffect(() => {
-    const update = () => setIsScrolled(window.scrollY > SCROLL_THRESHOLD_PX);
+    if (alwaysScrolled) return;
+    const update = () => setHasScrolled(window.scrollY > SCROLL_THRESHOLD_PX);
     const frame = window.requestAnimationFrame(update);
     window.addEventListener("scroll", update, { passive: true });
     return () => {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", update);
     };
-  }, []);
+  }, [alwaysScrolled]);
 
   useEffect(() => {
     if (!isMenuOpen) return;

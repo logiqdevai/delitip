@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 
 export type EcosystemTab = {
   id: string;
+  tabLabel: string;
   title: string;
   description: string;
   cta: string;
@@ -63,7 +64,7 @@ export const LandingEcosystemTabs: FC<Props> = ({ tabs }) => {
                 : "text-ink-foreground/60 hover:text-ink-foreground",
             )}
           >
-            {tab.title}
+            {tab.tabLabel}
           </button>
         ))}
       </div>

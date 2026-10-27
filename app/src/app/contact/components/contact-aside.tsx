@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import Link from "next/link";
-import { BookOpen, Clock3, Mail, MapPin } from "lucide-react";
+import { BookOpen, Mail, MapPin } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Routes } from "@/routes/routes";
 import { SiteConfig } from "@/config/site";
@@ -21,15 +21,8 @@ const channels = [
   {
     icon: BookOpen,
     title: "Help Center",
-    detail:
-      "Browse guides for your store, team, and tip page on delitip.",
+    detail: "Browse guides for your business, team, and tipping page.",
     href: Routes.help.root,
-  },
-  {
-    icon: Clock3,
-    title: "Response time",
-    detail: "We reply within one business day.",
-    href: null,
   },
 ] as const;
 
@@ -49,11 +42,12 @@ export const ContactAside: FC = () => {
           />
           <div className="space-y-2">
             <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">
-              We&apos;re here to help
+              We&apos;re Here to Help
             </h2>
             <p className="text-xs leading-relaxed text-zinc-400 sm:text-sm">
-              From your first tip to feedback across locations,
-              ask us anything. Printed QR cards available.
+              From your first tip to managing customer feedback across
+              multiple locations, we&apos;re here to answer your questions.
+              Printed QR cards are also available.
             </p>
           </div>
         </div>
@@ -90,10 +84,6 @@ export const ContactAside: FC = () => {
             return <li key={channel.title}>{body}</li>;
           })}
         </ul>
-
-        <p className="text-xs font-medium text-zinc-500">
-          Tip. Feedback. Recognize.
-        </p>
       </div>
     </aside>
   );

@@ -16,6 +16,7 @@ export const LandingEcosystem: FC = async () => {
   const tabs: EcosystemTab[] = [
     {
       id: "business",
+      tabLabel: t("business.title"),
       title: t("business.title"),
       description: t("business.description"),
       cta: t("business.cta"),
@@ -27,6 +28,7 @@ export const LandingEcosystem: FC = async () => {
     },
     {
       id: "staff",
+      tabLabel: t("staff.tabLabel"),
       title: t("staff.title"),
       description: t("staff.description"),
       cta: t("staff.cta"),

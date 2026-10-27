@@ -13,8 +13,8 @@ export const metadata: Metadata = {
 const ContactPage: FC = () => {
   return (
     <div className="bg-paper-offwhite text-ink-charcoal antialiased">
-      <LandingHeader />
-      <main>
+      <LandingHeader alwaysScrolled />
+      <main className="pt-16">
         <ContactHero />
       </main>
       <LandingFooter />
