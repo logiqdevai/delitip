@@ -119,7 +119,7 @@ export const ReviewPayoutRequestDialog: FC<{
             disabled={noteMissing}
             onClick={() => void handleConfirm()}
             className={
-              isReject ? undefined : "bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+              isReject ? undefined : "bg-electric-lime text-ink-charcoal"
             }
           >
             {isReject ? "Reject request" : "Approve & pay"}

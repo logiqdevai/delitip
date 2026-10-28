@@ -197,7 +197,7 @@ export const ContactForm: FC = () => {
       <ActionButtonWithPending
         type="submit"
         isPending={submitContact.isPending}
-        className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-700"
+        className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30"
       >
         Send message
         <ArrowRight data-icon="inline-end" className="size-3.5" />

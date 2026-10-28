@@ -62,7 +62,7 @@ export const AppStatusPage: FC<AppStatusPageProps> = ({
           <button
             type="button"
             onClick={onTryAgain}
-            className="inline-flex items-center gap-2 rounded-xl bg-electric-lime px-5 py-3 text-sm font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700"
+            className="inline-flex items-center gap-2 rounded-xl bg-electric-lime px-5 py-3 text-sm font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition"
           >
             <RefreshCw className="size-4" strokeWidth={2.25} />
             Try again

@@ -49,7 +49,7 @@ const HelpArticlePage: FC<HelpArticlePageProps> = async ({ params }) => {
 
   return (
     <section className="hero-glow relative overflow-hidden pt-10 pb-20 md:pt-14 md:pb-28">
-      <div className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <HelpBreadcrumbs
           items={[
             { label: "Help Center", href: Routes.help.root },

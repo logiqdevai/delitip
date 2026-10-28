@@ -464,7 +464,7 @@ export const PayoutRequestDialog: FC<{
                 type="button"
                 disabled={!preview || preview.amount === 0 || !!preview.open_request}
                 onClick={() => setStep("invoice")}
-                className="bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+                className="bg-electric-lime text-ink-charcoal"
               >
                 Continue to invoice
               </Button>
@@ -484,7 +484,7 @@ export const PayoutRequestDialog: FC<{
                 isPending={isSubmitting}
                 disabled={!file}
                 onClick={() => void handleSubmit()}
-                className="bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+                className="bg-electric-lime text-ink-charcoal"
               >
                 Submit request
               </ActionButtonWithPending>

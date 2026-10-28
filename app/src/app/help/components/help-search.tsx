@@ -2,6 +2,7 @@
 
 import { type FC, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   Command,
   CommandDialog,
@@ -20,6 +21,7 @@ interface HelpSearchProps {
 
 export const HelpSearch: FC<HelpSearchProps> = ({ searchIndex }) => {
   const router = useRouter();
+  const t = useTranslations("help");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -65,7 +67,7 @@ export const HelpSearch: FC<HelpSearchProps> = ({ searchIndex }) => {
         onClick={() => setOpen(true)}
         className="mx-auto flex w-full max-w-md items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-500 shadow-sm transition hover:border-zinc-300"
       >
-        <span>Search help articles…</span>
+        <span>{t("searchPlaceholder")}</span>
         <kbd className="rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-xs font-semibold text-zinc-400">
           ⌘K
         </kbd>
@@ -74,17 +76,17 @@ export const HelpSearch: FC<HelpSearchProps> = ({ searchIndex }) => {
       <CommandDialog
         open={open}
         onOpenChange={setOpen}
-        title="Search help articles"
-        description="Search across every Help Center article"
+        title={t("searchTitle")}
+        description={t("searchDescription")}
       >
         <Command
           filter={(value, search) =>
             value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0
           }
         >
-          <CommandInput placeholder="Search help articles…" />
+          <CommandInput placeholder={t("searchPlaceholder")} />
           <CommandList>
-            <CommandEmpty>No articles found.</CommandEmpty>
+            <CommandEmpty>{t("noResults")}</CommandEmpty>
             {groupedByCategory.map((group) => (
               <CommandGroup key={group.categoryTitle} heading={group.categoryTitle}>
                 {group.entries.map((entry) => (

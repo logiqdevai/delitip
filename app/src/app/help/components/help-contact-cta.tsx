@@ -1,21 +1,25 @@
 import { type FC } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Routes } from "@/routes/routes";
 
 export const HelpContactCta: FC = () => {
+  const t = useTranslations("help");
+
   return (
     <div className="mt-8 rounded-2xl border border-zinc-200 bg-white px-4 py-6 text-sm text-zinc-600 sm:p-8">
-      <p className="font-bold text-ink-charcoal">Still need help?</p>
-      <p className="mt-1">
-        Can&apos;t find what you&apos;re looking for? Our team is happy to
-        help.
-      </p>
-      <Link
-        href={Routes.contact}
-        className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-electric-lime px-4 py-2.5 text-chip font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition hover:bg-brand-700"
-      >
-        Contact us
-      </Link>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="font-bold text-ink-charcoal">{t("stillNeedHelp")}</p>
+          <p className="mt-1">{t("stillNeedHelpBody")}</p>
+        </div>
+        <Link
+          href={Routes.contact}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-electric-lime px-4 py-2.5 text-chip font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition"
+        >
+          {t("contactUs")}
+        </Link>
+      </div>
     </div>
   );
 };

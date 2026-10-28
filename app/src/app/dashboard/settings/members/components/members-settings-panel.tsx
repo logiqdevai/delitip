@@ -57,7 +57,7 @@ export const MembersSettingsPanel: FC = () => {
             type="button"
             size="sm"
             onClick={() => setInviteOpen(true)}
-            className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+            className="rounded-xl bg-electric-lime text-ink-charcoal"
           >
             Invite member
           </Button>
