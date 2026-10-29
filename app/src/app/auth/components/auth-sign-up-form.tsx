@@ -137,8 +137,7 @@ export const AuthSignUpForm: FC = () => {
         <ActionButtonWithPending
           type="submit"
           isPending={isPending}
-          size="lg"
-          className="h-12 w-full rounded-full bg-electric-lime text-sm font-bold text-ink-charcoal hover:scale-[1.03]"
+          className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal"
         >
           Create Business Account
           <ArrowRight data-icon="inline-end" className="size-3.5" />

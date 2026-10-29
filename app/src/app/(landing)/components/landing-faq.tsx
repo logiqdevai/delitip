@@ -37,7 +37,7 @@ export const LandingFaq: FC = async () => {
             </div>
             <Link
               href={Routes.landing.getStarted}
-              className="inline-flex w-fit items-center rounded-full bg-electric-lime px-6 py-3 text-sm font-semibold text-ink-charcoal transition hover:scale-105"
+              className="inline-flex w-fit items-center rounded-xl bg-electric-lime px-6 py-3 text-sm font-semibold text-ink-charcoal transition hover:scale-105"
             >
               {t("cta")}
             </Link>

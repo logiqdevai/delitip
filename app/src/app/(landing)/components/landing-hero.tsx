@@ -44,7 +44,7 @@ export const LandingHero: FC = async () => {
           <div className="mt-10">
             <Link
               href={Routes.landing.getStarted}
-              className="inline-flex items-center gap-2 rounded-full bg-electric-lime px-7 py-4 font-semibold text-ink-charcoal transition hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-xl bg-electric-lime px-7 py-4 font-semibold text-ink-charcoal transition hover:scale-105"
             >
               {t("cta")}
               <ArrowRight className="size-4" strokeWidth={2} />

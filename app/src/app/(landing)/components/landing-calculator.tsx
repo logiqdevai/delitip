@@ -97,7 +97,7 @@ export const LandingCalculator: FC = () => {
             </p>
             <Link
               href={Routes.landing.getStarted}
-              className="inline-block w-full rounded-full bg-electric-lime py-3 text-center text-sm font-bold text-ink-charcoal transition hover:scale-[1.02]"
+              className="inline-block w-full rounded-xl bg-electric-lime py-3 text-center text-sm font-bold text-ink-charcoal transition hover:scale-[1.02]"
             >
               {t("cta")}
             </Link>

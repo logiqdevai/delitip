@@ -102,7 +102,7 @@ export const LandingEcosystemTabs: FC<Props> = ({ tabs }) => {
                 </ul>
                 <Link
                   href={tab.href}
-                  className="mt-8 inline-flex w-fit items-center rounded-full bg-electric-lime px-6 py-3 text-sm font-semibold text-ink-charcoal transition-transform hover:scale-[1.03]"
+                  className="mt-8 inline-flex w-fit items-center rounded-xl bg-electric-lime px-6 py-3 text-sm font-semibold text-ink-charcoal transition-transform hover:scale-[1.03]"
                 >
                   {tab.cta}
                 </Link>

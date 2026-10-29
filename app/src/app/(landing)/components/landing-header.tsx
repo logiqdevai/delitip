@@ -96,7 +96,7 @@ export const LandingHeader: FC<LandingHeaderProps> = ({ alwaysScrolled = false }
           <LanguageSwitcher className="hidden lg:inline-flex" />
           <Link
             href={Routes.auth.sign_up}
-            className="rounded-full border border-electric-lime/40 px-4 py-2 text-sm font-semibold text-electric-lime transition duration-200 ease-out hover:scale-[1.03] hover:bg-electric-lime hover:text-ink-charcoal"
+            className="inline-flex h-11 items-center justify-center rounded-xl bg-electric-lime px-4 text-sm font-bold text-ink-charcoal transition duration-200 ease-out hover:scale-[1.03]"
           >
             {t("createAccount")}
           </Link>
