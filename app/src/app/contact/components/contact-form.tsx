@@ -3,6 +3,7 @@
 import { type FC, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { ArrowRight, Check } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ import {
 import { useSubmitContact } from "@/features/contact/hooks/use-contact";
 
 export const ContactForm: FC = () => {
+  const t = useTranslations("contact.form");
   const submitContact = useSubmitContact();
   const [submitted, setSubmitted] = useState<ContactFormData | null>(null);
 
@@ -50,15 +52,18 @@ export const ContactForm: FC = () => {
         </div>
         <div className="space-y-2">
           <h2 className="text-xl font-extrabold tracking-tight text-ink-charcoal">
-            Message received
+            {t("receivedTitle")}
           </h2>
           <p className="max-w-md text-xs leading-relaxed text-zinc-500 sm:text-sm">
-            Thanks{submitted.name ? `, ${submitted.name.split(" ")[0]}` : ""}.
-            We&apos;ll reply to{" "}
-            <span className="font-semibold text-ink-charcoal">
-              {submitted.email}
-            </span>
-            .
+            {t.rich("receivedBody", {
+              name: submitted.name ? `, ${submitted.name.split(" ")[0]}` : "",
+              email: submitted.email,
+              strong: (chunks) => (
+                <span className="font-semibold text-ink-charcoal">
+                  {chunks}
+                </span>
+              ),
+            })}
           </p>
         </div>
         <button
@@ -69,7 +74,7 @@ export const ContactForm: FC = () => {
           }}
           className="rounded-xl bg-neutral-fill px-4 py-2.5 text-xs font-bold text-ink-charcoal transition hover:scale-[1.03] hover:bg-zinc-200"
         >
-          Send another message
+          {t("sendAnother")}
         </button>
       </div>
     );
@@ -83,7 +88,7 @@ export const ContactForm: FC = () => {
     >
       <div className="space-y-7">
         <span className="block text-xs font-semibold text-zinc-700">
-          How can we help you?
+          {t("topicLabel")}
         </span>
         <Controller
           name="topic"
@@ -102,7 +107,7 @@ export const ContactForm: FC = () => {
                       : "bg-neutral-fill text-zinc-600 hover:bg-zinc-200",
                   )}
                 >
-                  {item.label}
+                  {t(`topics.${item.id}`)}
                 </button>
               ))}
             </div>
@@ -117,13 +122,13 @@ export const ContactForm: FC = () => {
               htmlFor="contact-name"
               className="mb-1.5 block text-xs font-semibold text-zinc-700"
             >
-              Full name
+              {t("fullName")}
             </label>
             <Input
               id="contact-name"
               type="text"
               autoComplete="name"
-              placeholder="Alex Rivera"
+              placeholder={t("fullNamePlaceholder")}
               aria-invalid={!!errors.name}
               {...register("name")}
             />
@@ -136,13 +141,13 @@ export const ContactForm: FC = () => {
               htmlFor="contact-email"
               className="mb-1.5 block text-xs font-semibold text-zinc-700"
             >
-              Email
+              {t("email")}
             </label>
             <Input
               id="contact-email"
               type="email"
               autoComplete="email"
-              placeholder="alex@northline.com"
+              placeholder={t("emailPlaceholder")}
               aria-invalid={!!errors.email}
               {...register("email")}
             />
@@ -159,14 +164,14 @@ export const ContactForm: FC = () => {
             htmlFor="contact-company"
             className="mb-1.5 block text-xs font-semibold text-zinc-700"
           >
-            Business{" "}
-            <span className="font-medium text-zinc-400">(optional)</span>
+            {t("business")}{" "}
+            <span className="font-medium text-zinc-400">{t("optional")}</span>
           </label>
           <Input
             id="contact-company"
             type="text"
             autoComplete="organization"
-            placeholder="Northline Support"
+            placeholder={t("businessPlaceholder")}
             {...register("company")}
           />
         </div>
@@ -176,12 +181,12 @@ export const ContactForm: FC = () => {
             htmlFor="contact-message"
             className="mb-1.5 block text-xs font-semibold text-zinc-700"
           >
-            How can we help?
+            {t("message")}
           </label>
           <Textarea
             id="contact-message"
             rows={5}
-            placeholder="Tell us about your team or what you need help with."
+            placeholder={t("messagePlaceholder")}
             className="min-h-28 resize-y"
             aria-invalid={!!errors.message}
             {...register("message")}
@@ -199,7 +204,7 @@ export const ContactForm: FC = () => {
         isPending={submitContact.isPending}
         className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal"
       >
-        Send message
+        {t("send")}
         <ArrowRight data-icon="inline-end" className="size-3.5" />
       </ActionButtonWithPending>
     </form>

@@ -1,53 +1,46 @@
 import { type FC } from "react";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { BookOpen, Mail, MapPin } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Routes } from "@/routes/routes";
 import { SiteConfig } from "@/config/site";
 
-const channels = [
-  {
-    icon: Mail,
-    title: "Email",
-    detail: SiteConfig.contactEmail,
-    href: SiteConfig.contactEmailHref,
-  },
-  {
-    icon: MapPin,
-    title: "Address",
-    detail: SiteConfig.contactAddress,
-    href: null,
-  },
-  {
-    icon: BookOpen,
-    title: "Help Center",
-    detail: "Browse guides for your business, team, and tipping page.",
-    href: Routes.help.root,
-  },
-] as const;
+export const ContactAside: FC = async () => {
+  const t = await getTranslations("contact.aside");
 
-export const ContactAside: FC = () => {
+  const channels = [
+    {
+      icon: Mail,
+      title: t("email"),
+      detail: SiteConfig.contactEmail,
+      href: SiteConfig.contactEmailHref,
+    },
+    {
+      icon: MapPin,
+      title: t("address"),
+      detail: t("addressValue"),
+      href: null,
+    },
+    {
+      icon: BookOpen,
+      title: t("helpCenter"),
+      detail: t("helpCenterBody"),
+      href: Routes.help.root,
+    },
+  ] as const;
+
   return (
     <aside className="relative h-full overflow-hidden rounded-[28px] border border-zinc-800 bg-ink-charcoal px-4 py-6 text-paper-offwhite shadow-2xl sm:p-8">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-16 -right-10 size-56 rounded-full bg-electric-lime/20 blur-3xl"
-      />
-
       <div className="relative z-10 space-y-8">
         <div className="space-y-4">
-          <BrandMark
-            size="lg"
-            className="shadow-lg shadow-electric-lime/30"
-          />
+          <BrandMark size="lg" />
           <div className="space-y-2">
             <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">
-              We&apos;re Here to Help
+              {t("title")}
             </h2>
-            <p className="text-xs leading-relaxed text-zinc-400 sm:text-sm">
-              From your first tip to managing customer feedback across
-              multiple locations, we&apos;re here to answer your questions.
-              Printed QR cards are also available.
+            <p className="text-xs leading-relaxed text-zinc-400 sm:text-sm lg:text-[17px]">
+              {t("description")}
             </p>
           </div>
         </div>
@@ -64,7 +57,7 @@ export const ContactAside: FC = () => {
                   <span className="block text-xs font-bold text-paper-offwhite">
                     {channel.title}
                   </span>
-                  <span className="block text-xs leading-relaxed text-zinc-400">
+                  <span className="block text-xs leading-relaxed text-zinc-400 lg:text-[17px]">
                     {channel.detail}
                   </span>
                 </div>

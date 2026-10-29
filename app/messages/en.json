@@ -277,4 +277,42 @@
     "relatedArticles": "Related articles",
     "goTo": "Go to {label}"
   }
+,
+  "contact": {
+    "metaTitle": "Contact - delitip",
+    "metaDescription": "Contact delitip about tipping and feedback for customer support teams. We reply within one business day.",
+    "title": "Contact <accent>Us</accent>",
+    "description": "Have questions or need assistance? We're here to help. Send us a message, and we'll get back to you as soon as possible.",
+    "form": {
+      "topicLabel": "How can we help you?",
+      "topics": {
+        "sales": "Sales & Demos",
+        "support": "Account Support",
+        "billing": "Billing & Payments",
+        "partnerships": "Partnerships"
+      },
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Alex Rivera",
+      "email": "Email",
+      "emailPlaceholder": "alex@northline.com",
+      "business": "Business",
+      "optional": "(optional)",
+      "businessPlaceholder": "Northline Support",
+      "message": "Your Message",
+      "messagePlaceholder": "Tell us about your team or what you need help with.",
+      "send": "Send message",
+      "receivedTitle": "Message received",
+      "receivedBody": "Thanks{name}. We'll reply to <strong>{email}</strong>.",
+      "sendAnother": "Send another message"
+    },
+    "aside": {
+      "title": "We're Here to Help",
+      "description": "Have questions about delitip or need help using the platform? We're happy to answer your questions.",
+      "email": "Email",
+      "address": "Address",
+      "addressValue": "32 Pelasgon Street, Heraklion, Crete, Greece",
+      "helpCenter": "Help Center",
+      "helpCenterBody": "Browse guides for your business, team, and tipping page."
+    }
+  }
 }

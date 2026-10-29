@@ -76,6 +76,7 @@ export const HelpSearch: FC<HelpSearchProps> = ({ searchIndex }) => {
       <CommandDialog
         open={open}
         onOpenChange={setOpen}
+        disablePointerDismissal={false}
         title={t("searchTitle")}
         description={t("searchDescription")}
       >

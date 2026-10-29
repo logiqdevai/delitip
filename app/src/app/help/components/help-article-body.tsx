@@ -24,7 +24,7 @@ export const HelpArticleBody: FC<HelpArticleBodyProps> = ({ sections }) => {
             {section.paragraphs.map((paragraph, paragraphIndex) => (
               <p key={paragraphIndex}>{paragraph}</p>
             ))}
-            {section.list && (
+            {section.list && section.list.length > 0 && (
               <ul className="list-disc space-y-1 pl-5">
                 {section.list.map((item, itemIndex) => (
                   <li key={itemIndex}>{item}</li>

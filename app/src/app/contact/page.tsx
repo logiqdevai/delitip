@@ -2,13 +2,17 @@ import { type Metadata } from "next";
 import { type FC } from "react";
 import { LandingHeader } from "../(landing)/components/landing-header";
 import { LandingFooter } from "../(landing)/components/landing-footer";
+import { getTranslations } from "next-intl/server";
 import { ContactHero } from "./components/contact-hero";
 
-export const metadata: Metadata = {
-  title: "Contact - delitip",
-  description:
-    "Contact delitip about tipping and feedback for customer support teams. We reply within one business day.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("contact");
+
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  };
+}
 
 const ContactPage: FC = () => {
   return (
