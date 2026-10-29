@@ -7,6 +7,7 @@ export interface HelpArticleSection {
   heading?: string;
   paragraphs: string[];
   list?: string[];
+  closingParagraphs?: string[];
   links?: HelpMenuLink[];
 }
 

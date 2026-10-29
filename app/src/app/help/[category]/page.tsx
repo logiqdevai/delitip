@@ -67,7 +67,7 @@ const HelpCategoryPage: FC<HelpCategoryPageProps> = async ({ params }) => {
         <h1 className="mt-3 text-3xl leading-[1.12] font-extrabold tracking-tight text-ink-charcoal sm:text-5xl">
           {title}
         </h1>
-        <p className="mt-4 text-sm leading-relaxed text-zinc-600 sm:text-base">
+        <p className="mt-4 text-sm leading-relaxed text-zinc-600 sm:text-[18px]">
           {description}
         </p>
 

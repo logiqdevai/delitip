@@ -10,8 +10,8 @@ export const HelpContactCta: FC = () => {
     <div className="mt-8 rounded-2xl border border-zinc-200 bg-white px-4 py-6 text-sm text-zinc-600 sm:p-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="font-bold text-ink-charcoal">{t("stillNeedHelp")}</p>
-          <p className="mt-1">{t("stillNeedHelpBody")}</p>
+          <p className="font-bold text-ink-charcoal sm:text-[18px]">{t("stillNeedHelp")}</p>
+          <p className="mt-1 sm:text-[17px]">{t("stillNeedHelpBody")}</p>
         </div>
         <Link
           href={Routes.contact}

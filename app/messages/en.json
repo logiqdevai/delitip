@@ -273,6 +273,8 @@
     "helpCenter": "Help Center",
     "stillNeedHelp": "Still need help?",
     "stillNeedHelpBody": "Can't find what you're looking for? Our team is happy to help.",
-    "contactUs": "Contact us"
+    "contactUs": "Contact us",
+    "relatedArticles": "Related articles",
+    "goTo": "Go to {label}"
   }
 }

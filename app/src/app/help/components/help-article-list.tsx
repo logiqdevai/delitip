@@ -34,10 +34,10 @@ export const HelpArticleList: FC<HelpArticleListProps> = ({
               className="group flex items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white px-4 py-5 transition hover:border-zinc-300 hover:shadow-md"
             >
               <span>
-                <span className="block text-sm font-bold text-ink-charcoal">
+                <span className="block text-sm font-bold text-ink-charcoal sm:text-[18px]">
                   {title}
                 </span>
-                <span className="mt-1 block text-sm text-zinc-600">
+                <span className="mt-1 block text-sm text-zinc-600 sm:text-[17px]">
                   {summary}
                 </span>
               </span>
