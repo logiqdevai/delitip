@@ -15,7 +15,7 @@ export const HelpContactCta: FC = () => {
         </div>
         <Link
           href={Routes.contact}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-electric-lime px-4 py-2.5 text-chip font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-electric-lime px-4 py-2.5 text-chip font-bold text-ink-charcoal transition hover:scale-[1.03]"
         >
           {t("contactUs")}
         </Link>

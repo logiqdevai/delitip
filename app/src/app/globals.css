@@ -194,6 +194,16 @@
   input[type="reset"] {
     @apply cursor-pointer;
   }
+  button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    transition-property: color, background-color, border-color, box-shadow,
+      opacity, scale, translate, rotate, transform;
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
+  }
   button:disabled,
   [role="button"][aria-disabled="true"],
   input:disabled {

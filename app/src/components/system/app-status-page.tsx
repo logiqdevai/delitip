@@ -62,7 +62,7 @@ export const AppStatusPage: FC<AppStatusPageProps> = ({
           <button
             type="button"
             onClick={onTryAgain}
-            className="inline-flex items-center gap-2 rounded-xl bg-electric-lime px-5 py-3 text-sm font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30 transition"
+            className="inline-flex items-center gap-2 rounded-xl bg-electric-lime px-5 py-3 text-sm font-bold text-ink-charcoal transition hover:scale-[1.03]"
           >
             <RefreshCw className="size-4" strokeWidth={2.25} />
             Try again
@@ -70,7 +70,7 @@ export const AppStatusPage: FC<AppStatusPageProps> = ({
           <button
             type="button"
             onClick={() => router.back()}
-            className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-3 text-sm font-bold text-ink-charcoal shadow-xs transition hover:bg-zinc-50"
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-3 text-sm font-bold text-ink-charcoal shadow-xs transition hover:scale-[1.03] hover:bg-zinc-50"
           >
             <ArrowLeft className="size-4" strokeWidth={2.25} />
             Go back

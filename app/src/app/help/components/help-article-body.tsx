@@ -35,7 +35,7 @@ export const HelpArticleBody: FC<HelpArticleBodyProps> = ({ sections }) => {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-paper-offwhite px-3 py-1.5 text-xs font-bold text-ink-charcoal transition hover:border-zinc-300 hover:bg-white"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-paper-offwhite px-3 py-1.5 text-xs font-bold text-ink-charcoal transition hover:scale-[1.03] hover:border-zinc-300 hover:bg-white"
                 >
                   Go to {link.label}
                   <ArrowUpRight className="size-3.5 shrink-0" strokeWidth={2} />

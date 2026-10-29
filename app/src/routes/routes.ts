@@ -26,6 +26,7 @@ export const Routes = {
     features: "/#how-it-works",
     howItWorks: "/#how-it-works",
     ecosystem: "/#ecosystem",
+    faq: "/#faq",
     calculator: "/#calculator",
     pricing: "/#pricing",
     getStarted: "/auth/sign-up",

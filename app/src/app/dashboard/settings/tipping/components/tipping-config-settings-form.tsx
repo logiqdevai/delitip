@@ -125,7 +125,7 @@ export const TippingConfigSettingsForm: FC = () => {
             type="button"
             onClick={handleSave}
             disabled={updateStore.isPending || !hasChanges}
-            className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal shadow-lg shadow-lime/30 disabled:opacity-40"
+            className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal disabled:opacity-40"
           >
             {updateStore.isPending ? "Saving…" : "Save Changes"}
           </Button>

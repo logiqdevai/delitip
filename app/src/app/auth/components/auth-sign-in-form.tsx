@@ -119,7 +119,7 @@ export const AuthSignInForm: FC = () => {
           type="submit"
           isPending={isPending}
           size="lg"
-          className="mt-2 h-12 w-full rounded-full bg-electric-lime text-sm font-bold text-ink-charcoal shadow-[0_10px_28px_rgba(200,241,105,0.45)] hover:bg-brand-300 lg:mt-1 lg:h-11 lg:rounded-xl lg:text-sm lg:font-bold lg:shadow-[0_12px_28px_rgba(200,241,105,0.35)] lg:hover:bg-brand-300"
+          className="mt-2 h-12 w-full rounded-full bg-electric-lime text-sm font-bold text-ink-charcoal hover:scale-[1.03] lg:mt-1 lg:h-11 lg:rounded-xl lg:text-sm lg:font-bold lg:shadow-[0_12px_28px_rgba(200,241,105,0.35)] lg:hover:bg-brand-300"
         >
           Sign in to delitip
           <ArrowRight data-icon="inline-end" className="size-4 lg:size-3.5" />

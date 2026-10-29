@@ -67,7 +67,7 @@ export const ContactForm: FC = () => {
             setSubmitted(null);
             reset();
           }}
-          className="rounded-xl bg-neutral-fill px-4 py-2.5 text-xs font-bold text-ink-charcoal transition hover:bg-zinc-200"
+          className="rounded-xl bg-neutral-fill px-4 py-2.5 text-xs font-bold text-ink-charcoal transition hover:scale-[1.03] hover:bg-zinc-200"
         >
           Send another message
         </button>
@@ -98,7 +98,7 @@ export const ContactForm: FC = () => {
                   className={cn(
                     "rounded-full px-3.5 py-1.5 text-xs font-bold transition",
                     field.value === item.id
-                      ? "bg-electric-lime text-ink-charcoal shadow-lg shadow-electric-lime/25"
+                      ? "bg-electric-lime text-ink-charcoal"
                       : "bg-neutral-fill text-zinc-600 hover:bg-zinc-200",
                   )}
                 >
@@ -197,7 +197,7 @@ export const ContactForm: FC = () => {
       <ActionButtonWithPending
         type="submit"
         isPending={submitContact.isPending}
-        className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal shadow-lg shadow-electric-lime/30"
+        className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal"
       >
         Send message
         <ArrowRight data-icon="inline-end" className="size-3.5" />

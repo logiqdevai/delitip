@@ -15,7 +15,7 @@ const SCROLL_THRESHOLD_PX = 80;
 const navLinks = [
   { href: Routes.landing.about, labelKey: "about", hidden: false },
   { href: Routes.landing.howItWorks, labelKey: "howItWorks", hidden: false },
-  { href: Routes.landing.ecosystem, labelKey: "forTeams", hidden: false },
+  { href: Routes.landing.faq, labelKey: "faq", hidden: false },
   { href: Routes.landing.calculator, labelKey: "estimate", hidden: true },
   { href: Routes.landing.pricing, labelKey: "pricing", hidden: true },
   { href: Routes.contact, labelKey: "contact", hidden: false },
@@ -96,7 +96,7 @@ export const LandingHeader: FC<LandingHeaderProps> = ({ alwaysScrolled = false }
           <LanguageSwitcher className="hidden lg:inline-flex" />
           <Link
             href={Routes.auth.sign_up}
-            className="rounded-full border border-electric-lime/40 px-4 py-2 text-sm font-semibold text-electric-lime transition hover:bg-electric-lime hover:text-ink-charcoal"
+            className="rounded-full border border-electric-lime/40 px-4 py-2 text-sm font-semibold text-electric-lime transition duration-200 ease-out hover:scale-[1.03] hover:bg-electric-lime hover:text-ink-charcoal"
           >
             {t("createAccount")}
           </Link>
