@@ -1,5 +1,7 @@
 "use client";
 
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { type FC, useMemo } from "react";
 import {
   AlertTriangle,
@@ -137,6 +139,12 @@ export const ReviewStep: FC<ReviewStepProps> = ({
       onPreviewPay();
       return;
     }
+    trackEvent(AnalyticsEvents.tipCheckoutStarted, {
+      store_slug: storeSlug,
+      value: amount / 100,
+      currency,
+      rated: hasRated,
+    });
     createTip.mutate(
       {
         qr_code_id: qrCodeId,

@@ -1,4 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import {
   createPublicReview,
   deleteReview,
@@ -110,7 +112,11 @@ export const useCreatePublicReview = () => {
   return useMutation({
     mutationFn: (payload: CreatePublicReviewPayload) =>
       createPublicReview(payload),
-    onSuccess: () => {
+    onSuccess: (_data, payload) => {
+      trackEvent(AnalyticsEvents.reviewSubmitted, {
+        rating: payload.rating,
+        has_comment: !!payload.comment,
+      });
       void queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.root });
     },
   });

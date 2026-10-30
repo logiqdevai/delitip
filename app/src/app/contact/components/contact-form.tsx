@@ -1,5 +1,7 @@
 "use client";
 
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { type FC, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,7 +40,10 @@ export const ContactForm: FC = () => {
 
   const onSubmit = handleSubmit((values) => {
     submitContact.mutate(values, {
-      onSuccess: () => setSubmitted(values),
+      onSuccess: () => {
+        trackEvent(AnalyticsEvents.contactFormSubmitted, { topic: values.topic });
+        setSubmitted(values);
+      },
     });
   });
 

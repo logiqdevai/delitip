@@ -1,4 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import {
   createOrganization,
   getOrganization,
@@ -170,6 +172,7 @@ export const useCompleteBusinessSetup = () => {
       return organization;
     },
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.onboardingCompleted);
       void queryClient.invalidateQueries({
         queryKey: organizationsQueryKeys.root,
       });

@@ -1,5 +1,7 @@
 "use client";
 
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { type FC, useEffect, useRef, useState } from "react";
 import { AlertTriangle, Loader2, RefreshCw, XCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -94,6 +96,30 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
         })),
     });
   }, [status, pending, tipId, createReview]);
+
+  useEffect(() => {
+    if (!statusQuery.data) return;
+    const { status: finalStatus, amount, currency } = statusQuery.data;
+    const completed = finalStatus === TipStatuses.COMPLETED;
+    if (!completed && finalStatus !== TipStatuses.FAILED && finalStatus !== TipStatuses.CANCELLED) {
+      return;
+    }
+    // The page can be reloaded or revisited via the ?tip= link; count each tip once.
+    const dedupeKey = `delitip-analytics-tip-${tipId}`;
+    try {
+      if (window.sessionStorage.getItem(dedupeKey)) return;
+      window.sessionStorage.setItem(dedupeKey, "1");
+    } catch {}
+    trackEvent(
+      completed ? AnalyticsEvents.tipCompleted : AnalyticsEvents.tipFailed,
+      {
+        transaction_id: tipId,
+        value: amount / 100,
+        currency,
+        status: finalStatus,
+      },
+    );
+  }, [statusQuery.data, tipId]);
 
   useEffect(() => {
     if (isTerminal) clearPendingTip();
