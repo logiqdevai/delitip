@@ -57,110 +57,90 @@ const plans = [
 
 export const LandingPricing: FC = () => {
   return (
-    <section
-      id="pricing"
-      className="border-t border-zinc-100 bg-paper-offwhite py-20"
-    >
-      <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl space-y-3 text-center">
-          <span className="text-xs font-bold tracking-widest text-brand-700 uppercase">
-            Pricing
-          </span>
-          <h2 className="text-3xl font-extrabold tracking-tight text-ink-charcoal sm:text-4xl">
-            Simple plans for every team size
-          </h2>
-          <p className="text-xs text-zinc-500 sm:text-sm">
-            No setup fees. No hardware lock-in. Cancel anytime.
-          </p>
-        </div>
+    <section id="pricing" className="mx-auto max-w-7xl px-6 pb-20 lg:pb-28">
+      <div className="text-center">
+        <p className="text-xs tracking-[0.2em] text-zinc-500 uppercase">
+          Pricing
+        </p>
+        <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-ink-charcoal sm:text-4xl lg:text-5xl">
+          Simple plans <span>for every team</span>
+        </h2>
+        <p className="mt-4 text-sm text-zinc-500">
+          No setup fees. No hardware lock-in. Cancel anytime.
+        </p>
+      </div>
 
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
+      <div className="mt-14 grid gap-6 md:grid-cols-3">
+        {plans.map((plan) => (
+          <div
+            key={plan.name}
+            className={cn(
+              "relative rounded-3xl border p-8",
+              plan.featured
+                ? "bg-night border-electric-lime/40 text-ink-foreground md:-translate-y-4"
+                : "border-zinc-200 bg-white"
+            )}
+          >
+            {plan.featured ? (
+              <span className="absolute -top-3 left-8 rounded-full bg-electric-lime px-3 py-1 text-xs font-bold text-ink-charcoal">
+                ✦ Most popular
+              </span>
+            ) : null}
+
+            <h3 className="text-xl font-bold">{plan.name}</h3>
+            <p
               className={cn(
-                "relative flex flex-col justify-between space-y-6 rounded-3xl px-4 py-8",
-                plan.featured
-                  ? "border-2 border-electric-lime bg-ink-charcoal text-paper-offwhite shadow-2xl"
-                  : "border border-zinc-200 bg-white shadow-xs"
+                "text-sm",
+                plan.featured ? "text-ink-foreground/60" : "text-zinc-500"
               )}
             >
-              {plan.featured ? (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-electric-lime px-3 py-1 text-xs font-extrabold tracking-widest text-ink-charcoal uppercase">
-                  Most popular
-                </div>
+              {plan.blurb}
+            </p>
+            <p className="mt-6 text-4xl font-extrabold sm:text-5xl">
+              {plan.price}
+              {plan.priceSuffix ? (
+                <span className="text-base font-normal opacity-60">
+                  {" "}
+                  {plan.priceSuffix}
+                </span>
               ) : null}
+            </p>
+            <p
+              className={cn(
+                "mt-4 text-sm",
+                plan.featured ? "text-ink-foreground/70" : "text-zinc-600"
+              )}
+            >
+              {plan.description}
+            </p>
+            <ul className="mt-6 space-y-2 text-sm">
+              {plan.features.map((feature) => (
+                <li key={feature} className="flex gap-2">
+                  <span className={plan.featured ? "text-electric-lime" : ""}>
+                    ✦
+                  </span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
 
-              <div className="space-y-4">
-                <div>
-                  <h3
-                    className={cn(
-                      "text-base font-bold",
-                      plan.featured
-                        ? "text-paper-offwhite"
-                        : "text-ink-charcoal"
-                    )}
-                  >
-                    {plan.name}
-                  </h3>
-                  <p className="mt-1 text-xs text-zinc-400">{plan.blurb}</p>
-                </div>
-                <div
-                  className={cn(
-                    "text-3xl font-extrabold",
-                    plan.featured
-                      ? "text-paper-offwhite"
-                      : "text-ink-charcoal"
-                  )}
-                >
-                  {plan.price}
-                  {plan.priceSuffix ? (
-                    <span className="text-xs font-normal text-zinc-400">
-                      {" "}
-                      {plan.priceSuffix}
-                    </span>
-                  ) : null}
-                </div>
-                <p
-                  className={cn(
-                    "text-xs",
-                    plan.featured ? "text-zinc-400" : "text-zinc-600"
-                  )}
-                >
-                  {plan.description}
-                </p>
-                <ul
-                  className={cn(
-                    "space-y-2 pt-3 text-xs",
-                    plan.featured ? "text-zinc-300" : "text-zinc-700"
-                  )}
-                >
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2">
-                      ✓ {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <Link
-                href={
-                  plan.name === "Organization"
-                    ? Routes.contact
-                    : Routes.landing.getStarted
-                }
-                className={cn(
-                  "w-full rounded-xl py-3 text-center text-xs font-bold transition",
-                  plan.featured
-                    ? "bg-electric-lime text-ink-charcoal shadow-lg shadow-electric-lime/30 hover:bg-brand-400"
-                    : "bg-neutral-fill text-ink-charcoal hover:bg-zinc-200"
-                )}
-              >
-                {plan.cta}
-              </Link>
-            </div>
-          ))}
-        </div>
+            <Link
+              href={
+                plan.name === "Organization"
+                  ? Routes.contact
+                  : Routes.landing.getStarted
+              }
+              className={cn(
+                "mt-8 block rounded-full py-3 text-center text-sm font-semibold transition hover:scale-[1.02]",
+                plan.featured
+                  ? "bg-electric-lime text-ink-charcoal"
+                  : "bg-ink-charcoal text-paper-offwhite"
+              )}
+            >
+              {plan.cta}
+            </Link>
+          </div>
+        ))}
       </div>
     </section>
   );

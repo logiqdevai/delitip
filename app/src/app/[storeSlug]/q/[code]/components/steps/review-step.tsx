@@ -358,7 +358,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
           type="button"
           onClick={pay}
           disabled={submitting}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-(--tip-primary) py-4 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-(--tip-primary) py-4 text-sm font-semibold text-(--tip-primary-foreground) transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
         >
           {submitting ? (
             <Loader2 className="size-4 animate-spin" strokeWidth={2} />

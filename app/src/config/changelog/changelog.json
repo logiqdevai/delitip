@@ -699,5 +699,27 @@
     "agent": "Claude Sonnet 5.5",
     "sessionMood": "EXPLORATORY",
     "sessionNote": "Started from checking Viva fees against live transactions and moved through several related fixes and follow-up asks as results came in."
+  },
+  {
+    "commit": "835a9d0",
+    "date": "2026-10-26",
+    "type": "IMPROVEMENT",
+    "title": "Refine the landing hero, navbar and calculator sliders",
+    "description": "The landing hero is now a rounded card with an even gap on every side and centered copy. The navbar stays at the top and turns solid when you scroll, and the calculator sliders show a lime fill with a lime handle.",
+    "author": "Anna Zoi",
+    "agent": "Claude Sonnet 5.5",
+    "sessionMood": "FRUSTRATED",
+    "sessionNote": "Many quick visual iterations, and the hero file kept reverting to an older version when saved from the editor."
+  },
+  {
+    "commit": "4b7fb14",
+    "date": "2026-10-26",
+    "type": "CHORE",
+    "title": "Hide the pricing section on the landing page",
+    "description": "The pricing section is removed from the landing page and its Pricing links are hidden from the navbar and footer. The pricing component is still in the code, so it can be switched back on later.",
+    "author": "Anna Zoi",
+    "agent": "Claude Sonnet 5.5",
+    "sessionMood": "FOCUSED",
+    "sessionNote": "A short, direct ask with a clear target."
   }
 ]

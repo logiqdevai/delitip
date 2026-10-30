@@ -29,7 +29,7 @@ export const InsightsTab: FC<{ storeId: string }> = ({ storeId }) => {
           type="button"
           onClick={() => generateInsight.mutate({})}
           disabled={generateInsight.isPending}
-          className="rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal hover:bg-brand-700"
+          className="rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal"
         >
           <Sparkles data-icon="inline-start" className="size-3.5" />
           {generateInsight.isPending ? "Generating…" : "Generate insight"}

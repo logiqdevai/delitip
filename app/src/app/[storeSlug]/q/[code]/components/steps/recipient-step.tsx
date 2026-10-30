@@ -191,7 +191,7 @@ export const RecipientStep: FC<RecipientStepProps> = ({
           <div className="flex items-center justify-between rounded-full border border-dashed border-zinc-300 px-2 py-1 text-xs text-zinc-600">
             <button
               type="button"
-              className="rounded-full px-3 py-1 font-semibold hover:bg-zinc-100"
+              className="rounded-full px-3 py-1 font-semibold transition hover:scale-[1.03] hover:bg-zinc-100"
               onClick={() =>
                 setIndustryIndex(
                   (i) => (i - 1 + industries.length) % industries.length,
@@ -205,7 +205,7 @@ export const RecipientStep: FC<RecipientStepProps> = ({
             </span>
             <button
               type="button"
-              className="rounded-full px-3 py-1 font-semibold hover:bg-zinc-100"
+              className="rounded-full px-3 py-1 font-semibold transition hover:scale-[1.03] hover:bg-zinc-100"
               onClick={() =>
                 setIndustryIndex((i) => (i + 1) % industries.length)
               }
@@ -218,7 +218,7 @@ export const RecipientStep: FC<RecipientStepProps> = ({
           type="button"
           disabled={!canContinue}
           onClick={onContinue}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-(--tip-primary) py-4 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-(--tip-primary) py-4 text-sm font-semibold text-(--tip-primary-foreground) transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
         >
           <span>{t("continue")}</span>
           <ArrowRight className="size-4" strokeWidth={2} />

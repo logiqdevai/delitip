@@ -187,7 +187,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
         <button
           type="button"
           onClick={onRestart}
-          className="mt-4 rounded-2xl bg-(--tip-primary) px-6 py-3 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary)"
+          className="mt-4 rounded-2xl bg-(--tip-primary) px-6 py-3 text-sm font-semibold text-(--tip-primary-foreground) transition hover:bg-(--tip-secondary)"
         >
           {t("tryAgain")}
         </button>
@@ -221,7 +221,7 @@ export const CheckoutStatusStep: FC<CheckoutStatusStepProps> = ({
             setTimedOut(false);
             void statusQuery.refetch();
           }}
-          className="mt-4 flex items-center gap-2 rounded-2xl bg-(--tip-primary) px-6 py-3 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary)"
+          className="mt-4 flex items-center gap-2 rounded-2xl bg-(--tip-primary) px-6 py-3 text-sm font-semibold text-(--tip-primary-foreground) transition hover:bg-(--tip-secondary)"
         >
           <RefreshCw className="size-4" strokeWidth={2} />
           <span>{t("refresh")}</span>

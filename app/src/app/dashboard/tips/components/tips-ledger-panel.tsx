@@ -220,7 +220,7 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
               href={Routes.dashboard.access}
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700",
+                "rounded-xl bg-electric-lime text-ink-charcoal",
               )}
             >
               View QR codes

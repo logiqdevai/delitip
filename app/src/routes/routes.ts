@@ -22,9 +22,11 @@ export const Routes = {
   home: "/",
   contact: "/contact",
   landing: {
+    about: "/#about",
     features: "/#how-it-works",
     howItWorks: "/#how-it-works",
     ecosystem: "/#ecosystem",
+    faq: "/#faq",
     calculator: "/#calculator",
     pricing: "/#pricing",
     getStarted: "/auth/sign-up",

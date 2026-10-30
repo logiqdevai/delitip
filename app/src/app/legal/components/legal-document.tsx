@@ -2,6 +2,7 @@
 
 import { type FC, type ReactNode, useCallback, useMemo } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { LegalDocumentNav } from "./legal-document-nav";
 import { useActiveSection } from "../hooks/use-active-section";
 import { Routes } from "@/routes/routes";
@@ -47,6 +48,7 @@ export const LegalDocument: FC<LegalDocumentProps> = ({
   );
 
   const activeId = useActiveSection(sectionIds);
+  const t = useTranslations("legal.common");
 
   const onNavigate = useCallback((id: string) => {
     const el = document.getElementById(id);
@@ -76,7 +78,7 @@ export const LegalDocument: FC<LegalDocumentProps> = ({
           <div className="min-w-0">
             <header className="max-w-2xl">
               <p className="text-chip font-bold tracking-wider text-zinc-500 uppercase">
-                Legal
+                {t("kicker")}
               </p>
               <h1 className="mt-3 text-3xl leading-[1.12] font-extrabold tracking-tight text-ink-charcoal sm:text-4xl md:text-5xl">
                 {title}
@@ -85,8 +87,7 @@ export const LegalDocument: FC<LegalDocumentProps> = ({
                 {description}
               </p>
               <p className="mt-3 text-xs text-zinc-500">
-                Last updated: {lastUpdated} · Draft placeholder pending counsel
-                review
+                {t("lastUpdatedLabel")}: {lastUpdated} · {t("draftNotice")}
               </p>
             </header>
 
@@ -112,19 +113,19 @@ export const LegalDocument: FC<LegalDocumentProps> = ({
             </div>
 
             <p className="mt-20 max-w-2xl text-sm text-zinc-500">
-              Also see our{" "}
+              {t("alsoSee")}{" "}
               <Link
                 href={alternateHref}
                 className="font-medium text-ink-charcoal underline underline-offset-2 transition hover:text-zinc-700"
               >
                 {alternateLabel}
               </Link>
-              . Questions?{" "}
+              . {t("questions")}{" "}
               <Link
                 href={Routes.contact}
                 className="font-medium text-ink-charcoal underline underline-offset-2 transition hover:text-zinc-700"
               >
-                Contact us
+                {t("contactUs")}
               </Link>
               .
             </p>

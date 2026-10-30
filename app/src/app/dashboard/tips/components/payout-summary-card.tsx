@@ -109,7 +109,7 @@ export const PayoutSummaryCard: FC<PayoutSummaryCardProps> = ({
                 !!openRequest ||
                 requestableAmount === 0
               }
-              className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+              className="rounded-xl bg-electric-lime text-ink-charcoal"
             >
               Request payout
             </Button>
@@ -119,7 +119,7 @@ export const PayoutSummaryCard: FC<PayoutSummaryCardProps> = ({
             type="button"
             onClick={() => setPayoutDialogOpen(true)}
             disabled={!summary || summary.eligible_total_amount === 0}
-            className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+            className="rounded-xl bg-electric-lime text-ink-charcoal"
           >
             Pay out now
           </Button>

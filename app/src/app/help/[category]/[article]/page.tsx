@@ -1,6 +1,7 @@
 import { type Metadata } from "next";
 import { type FC } from "react";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { HelpBreadcrumbs } from "../../components/help-breadcrumbs";
 import { HelpArticleBody } from "../../components/help-article-body";
 import { HelpRelatedArticles } from "../../components/help-related-articles";
@@ -11,6 +12,7 @@ import {
 } from "@/lib/help-center.utils";
 import { environments } from "@/config/environments";
 import { Routes } from "@/routes/routes";
+import type { HelpArticleSection } from "@/interfaces/help-center.interfaces";
 
 interface HelpArticlePageProps {
   params: Promise<{ category: string; article: string }>;
@@ -30,9 +32,16 @@ export async function generateMetadata({
   const found = getHelpArticle(categorySlug, articleSlug);
   if (!found) return {};
 
+  const t = await getTranslations("help");
+  const base = `categories.${categorySlug}.articles.${articleSlug}`;
+  const title = t.has(`${base}.title`) ? t(`${base}.title`) : found.article.title;
+  const summary = t.has(`${base}.summary`)
+    ? t(`${base}.summary`)
+    : found.article.summary;
+
   return {
-    title: `${found.article.title} - Help Center - delitip`,
-    description: found.article.summary,
+    title: `${title} - ${t("helpCenter")} - delitip`,
+    description: summary,
     alternates: {
       canonical: `${environments.siteUrl}${Routes.help.article(categorySlug, articleSlug)}`,
     },
@@ -47,28 +56,45 @@ const HelpArticlePage: FC<HelpArticlePageProps> = async ({ params }) => {
 
   const { category, article } = found;
 
+  const t = await getTranslations("help");
+  const categoryKey = `categories.${category.slug}`;
+  const base = `${categoryKey}.articles.${article.slug}`;
+  const categoryTitle = t.has(`${categoryKey}.title`)
+    ? t(`${categoryKey}.title`)
+    : category.title;
+  const title = t.has(`${base}.title`) ? t(`${base}.title`) : article.title;
+  const summary = t.has(`${base}.summary`)
+    ? t(`${base}.summary`)
+    : article.summary;
+  const sections = t.has(`${base}.sections`)
+    ? (t.raw(`${base}.sections`) as HelpArticleSection[]).map((section, index) => ({
+        ...article.sections[index],
+        ...section,
+      }))
+    : article.sections;
+
   return (
     <section className="hero-glow relative overflow-hidden pt-10 pb-20 md:pt-14 md:pb-28">
-      <div className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <HelpBreadcrumbs
           items={[
-            { label: "Help Center", href: Routes.help.root },
+            { label: t("helpCenter"), href: Routes.help.root },
             {
-              label: category.title,
+              label: categoryTitle,
               href: Routes.help.category(category.slug),
             },
-            { label: article.title },
+            { label: title },
           ]}
         />
         <h1 className="mt-3 text-3xl leading-[1.12] font-extrabold tracking-tight text-ink-charcoal sm:text-5xl">
-          {article.title}
+          {title}
         </h1>
-        <p className="mt-4 text-sm leading-relaxed text-zinc-600 sm:text-base">
-          {article.summary}
+        <p className="mt-4 text-sm leading-relaxed text-zinc-600 sm:text-[18px]">
+          {summary}
         </p>
 
         <article className="mt-10">
-          <HelpArticleBody sections={article.sections} />
+          <HelpArticleBody sections={sections} />
         </article>
 
         {article.related && article.related.length > 0 && (

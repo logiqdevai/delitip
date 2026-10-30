@@ -1,7 +1,4 @@
 import { type FC, type ReactNode } from "react";
-import Link from "next/link";
-import { BrandMark } from "@/components/brand/brand-mark";
-import { Routes } from "@/routes/routes";
 import { AuthBrandPanel } from "./auth-brand-panel";
 
 interface AuthShellProps {
@@ -15,21 +12,6 @@ export const AuthShell: FC<AuthShellProps> = ({ children }) => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(200,241,105,0.09),transparent_42%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_100%_100%,rgba(24,26,27,0.04),transparent_40%)]" />
       </div>
-
-      <header className="relative z-10 mx-auto hidden w-full max-w-5xl items-center justify-between pb-6 lg:flex">
-        <Link href={Routes.home} className="flex items-center gap-3">
-          <BrandMark />
-          <span className="text-base font-bold tracking-tight text-ink-charcoal">
-            delitip
-          </span>
-        </Link>
-        <Link
-          href={Routes.contact}
-          className="text-xs font-semibold text-zinc-500 transition hover:text-ink-charcoal"
-        >
-          Contact Support
-        </Link>
-      </header>
 
       <div className="relative z-10 flex min-h-dvh w-full flex-col lg:min-h-0 lg:max-w-5xl lg:overflow-hidden lg:rounded-[2rem] lg:bg-white lg:shadow-[0_24px_80px_rgba(24,26,27,0.08)] lg:ring-1 lg:ring-zinc-200/70 lg:grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <AuthBrandPanel />

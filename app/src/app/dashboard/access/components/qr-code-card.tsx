@@ -266,7 +266,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
         <div className="flex">
           <Button
             type="button"
-            className="h-11 flex-1 rounded-l-xl rounded-r-none bg-electric-lime text-sm font-semibold text-ink-charcoal shadow-sm hover:bg-brand-700"
+            className="h-11 flex-1 rounded-l-xl rounded-r-none bg-electric-lime text-sm font-semibold text-ink-charcoal shadow-sm"
             disabled={busy !== null}
             onClick={() => void handleDownload()}
           >
@@ -277,7 +277,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
             <DropdownMenuTrigger
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "h-11 rounded-l-none rounded-r-xl border-l border-ink-charcoal/10 bg-electric-lime px-3 text-ink-charcoal shadow-sm hover:bg-brand-700",
+                "h-11 rounded-l-none rounded-r-xl border-l border-ink-charcoal/10 bg-electric-lime px-3 text-ink-charcoal shadow-sm",
               )}
               aria-label="More download options"
             >

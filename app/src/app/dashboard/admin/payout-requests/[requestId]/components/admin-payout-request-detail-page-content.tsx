@@ -538,7 +538,7 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
               type="button"
               disabled={!!approveBlockedReason || approve.isPending || reject.isPending}
               onClick={() => setReviewAction("approve")}
-              className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+              className="rounded-xl bg-electric-lime text-ink-charcoal"
             >
               Approve & pay
             </Button>

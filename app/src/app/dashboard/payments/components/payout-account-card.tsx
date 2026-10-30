@@ -52,7 +52,7 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
             <Button
               type="button"
               onClick={() => setIbanDialogOpen(true)}
-              className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+              className="rounded-xl bg-electric-lime text-ink-charcoal"
             >
               Link payout account
             </Button>

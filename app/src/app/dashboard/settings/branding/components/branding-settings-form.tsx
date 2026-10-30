@@ -119,7 +119,7 @@ export const BrandingSettingsForm: FC = () => {
           type="button"
           onClick={() => void handleSave()}
           disabled={updateStore.isPending}
-          className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal hover:bg-brand-700"
+          className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal"
         >
           {updateStore.isPending ? "Saving…" : "Save Changes"}
         </Button>

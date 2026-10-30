@@ -1,5 +1,6 @@
 import { type Metadata } from "next";
-import { type FC } from "react";
+import { type FC, type ReactNode } from "react";
+import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { LegalDocument } from "../components/legal-document";
 import { Routes } from "@/routes/routes";
@@ -11,7 +12,51 @@ export const metadata: Metadata = {
     "Terms of Service for delitip - digital tipping and customer feedback for businesses.",
 };
 
-const TermsPage: FC = () => {
+const SECTION_KEYS = Array.from({ length: 20 }, (_, i) => `s${i + 1}`);
+
+const richTags = {
+  p: (chunks: ReactNode) => <p>{chunks}</p>,
+  ul: (chunks: ReactNode) => (
+    <ul className="list-disc space-y-1 pl-5">{chunks}</ul>
+  ),
+  li: (chunks: ReactNode) => <li>{chunks}</li>,
+  strong: (chunks: ReactNode) => <strong>{chunks}</strong>,
+  privacy: (chunks: ReactNode) => (
+    <Link className="underline underline-offset-2" href={Routes.legal.privacy}>
+      {chunks}
+    </Link>
+  ),
+  email: () => (
+    <a
+      href={SiteConfig.contactEmailHref}
+      className="font-medium text-ink-charcoal underline underline-offset-2"
+    >
+      {SiteConfig.contactEmail}
+    </a>
+  ),
+};
+
+const LocalizedTerms: FC = async () => {
+  const t = await getTranslations("legal.terms");
+
+  const sections = SECTION_KEYS.map((key) => ({
+    title: t(`sections.${key}.title`),
+    body: <>{t.rich(`sections.${key}.body`, richTags)}</>,
+  }));
+
+  return (
+    <LegalDocument
+      title={t("title")}
+      description={t("description")}
+      lastUpdated={t("lastUpdated")}
+      alternateHref={Routes.legal.privacy}
+      alternateLabel={t("alternateLabel")}
+      sections={sections}
+    />
+  );
+};
+
+const EnglishTerms: FC = () => {
   return (
     <LegalDocument
       title="Terms of Service"
@@ -534,6 +579,11 @@ const TermsPage: FC = () => {
       ]}
     />
   );
+};
+
+const TermsPage: FC = async () => {
+  const locale = await getLocale();
+  return locale === "el" ? <LocalizedTerms /> : <EnglishTerms />;
 };
 
 export default TermsPage;

@@ -58,7 +58,7 @@ export const EmployeePayoutAccountCard: FC<{
           <Button
             type="button"
             onClick={() => setDialogOpen(true)}
-            className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+            className="rounded-xl bg-electric-lime text-ink-charcoal"
           >
             Link payout account
           </Button>

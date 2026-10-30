@@ -122,7 +122,7 @@ export const EmployeesPageContent: FC = () => {
         actions={
           <Button
             type="button"
-            className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal shadow-sm hover:bg-brand-700"
+            className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal shadow-sm"
             onClick={openCreate}
           >
             <Plus data-icon="inline-start" className="size-3.5" />
@@ -166,7 +166,7 @@ export const EmployeesPageContent: FC = () => {
           <EmptyContent>
             <Button
               type="button"
-              className="rounded-xl bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+              className="rounded-xl bg-electric-lime text-ink-charcoal"
               onClick={openCreate}
             >
               <Plus data-icon="inline-start" className="size-3.5" />

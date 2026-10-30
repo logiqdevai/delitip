@@ -21,7 +21,7 @@ export const BrandMark: FC<BrandMarkProps> = ({
       src="/delitip.png"
       alt="delitip"
       className={cn(
-        "shrink-0 rounded-full object-contain",
+        "shrink-0 object-contain",
         sizeClass[size],
         className
       )}

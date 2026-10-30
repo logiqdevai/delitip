@@ -138,7 +138,7 @@ export const AmountStep: FC<AmountStepProps> = ({
         type="button"
         disabled={!canContinue}
         onClick={() => onContinue(amount)}
-        className="mt-auto flex w-full items-center justify-center gap-2 rounded-full bg-(--tip-primary) py-4 text-sm font-semibold text-(--tip-primary-foreground) shadow-lg shadow-(--tip-primary)/30 transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-auto flex w-full items-center justify-center gap-2 rounded-full bg-(--tip-primary) py-4 text-sm font-semibold text-(--tip-primary-foreground) transition hover:bg-(--tip-secondary) disabled:cursor-not-allowed disabled:opacity-40"
       >
         <span>
           {canContinue

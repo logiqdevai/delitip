@@ -124,11 +124,10 @@ export const AuthEmployeeForm: FC = () => {
         <ActionButtonWithPending
           type="submit"
           isPending={isPending}
-          size="lg"
-          className="mt-2 h-12 w-full rounded-full bg-ink-charcoal text-sm font-bold text-white shadow-lg shadow-ink-charcoal/20 hover:bg-zinc-800 lg:mt-0 lg:h-(--control-height-default) lg:rounded-xl lg:text-xs lg:font-semibold"
+          className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal"
         >
           Access My Tip Profile
-          <ArrowRight data-icon="inline-end" className="size-4 lg:size-3.5" />
+          <ArrowRight data-icon="inline-end" className="size-3.5" />
         </ActionButtonWithPending>
       </form>
 

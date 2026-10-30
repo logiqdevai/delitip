@@ -49,25 +49,26 @@ export const AuthBrandPanel: FC = () => {
 
   return (
     <div className="relative min-w-0 overflow-hidden bg-ink-charcoal px-6 pb-12 pt-8 text-white sm:px-8 lg:col-start-1 lg:flex lg:min-h-[36rem] lg:flex-col lg:justify-between lg:px-9 lg:py-10 xl:px-10">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_40%_0%,rgba(200,241,105,0.2),transparent_50%)]" />
-
       <div className="relative z-10">
         <motion.div
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease }}
-          className="mb-8 flex justify-center lg:mb-0 lg:justify-start"
+          className="mb-8 flex items-center justify-between gap-4 lg:mb-0"
         >
           <Link
             href={Routes.home}
-            className="inline-flex items-center gap-2.5 lg:hidden"
+            className="inline-flex items-center gap-2.5"
           >
-            <BrandMark size="sm" className="size-8 rounded-full" />
+            <BrandMark size="sm" className="size-8" />
             <span className="text-sm font-bold tracking-tight">delitip</span>
           </Link>
-          <p className="hidden text-[0.65rem] font-semibold tracking-[0.2em] text-zinc-500 uppercase lg:block">
-            delitip
-          </p>
+          <Link
+            href={Routes.contact}
+            className="text-xs font-semibold text-zinc-400 transition hover:text-white"
+          >
+            Contact Support
+          </Link>
         </motion.div>
 
         <motion.div

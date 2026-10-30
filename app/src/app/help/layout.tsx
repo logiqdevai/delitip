@@ -5,8 +5,8 @@ import { LandingFooter } from "../(landing)/components/landing-footer";
 const HelpLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <div className="bg-paper-offwhite text-ink-charcoal antialiased">
-      <LandingHeader />
-      <main>{children}</main>
+      <LandingHeader alwaysScrolled />
+      <main className="pt-16">{children}</main>
       <LandingFooter />
     </div>
   );

@@ -267,7 +267,7 @@ export const PayOutNowDialog: FC<{
                 isPending={runPayouts.isPending}
                 disabled={payableRecipients.length === 0}
                 onClick={() => void handleConfirm()}
-                className="bg-electric-lime text-ink-charcoal hover:bg-brand-700"
+                className="bg-electric-lime text-ink-charcoal"
               >
                 Pay out now
               </ActionButtonWithPending>

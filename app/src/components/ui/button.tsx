@@ -4,20 +4,20 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-lg text-sm font-semibold whitespace-nowrap transition-colors outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-45 aria-invalid:ring-3 aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-lg text-sm font-semibold whitespace-nowrap transition-[color,background-color,box-shadow,scale,transform] duration-200 ease-out outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-45 aria-invalid:ring-3 aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-brand-300",
+          "bg-primary text-primary-foreground hover:scale-[1.03]",
         outline:
-          "[&.text-destructive]:bg-destructive/10 [&.text-destructive]:hover:bg-destructive/20 [&.text-destructive]:aria-expanded:bg-destructive/20 bg-accent text-accent-foreground hover:bg-brand-100 aria-expanded:bg-brand-100 dark:hover:bg-brand-800/60 dark:aria-expanded:bg-brand-800/60",
+          "hover:scale-[1.03] [&.text-destructive]:bg-destructive/10 [&.text-destructive]:hover:bg-destructive/20 [&.text-destructive]:aria-expanded:bg-destructive/20 bg-accent text-accent-foreground hover:bg-brand-100 aria-expanded:bg-brand-100 dark:hover:bg-brand-800/60 dark:aria-expanded:bg-brand-800/60",
         secondary:
-          "[&.text-destructive]:bg-destructive/10 [&.text-destructive]:hover:bg-destructive/20 [&.text-destructive]:aria-expanded:bg-destructive/20 bg-brand-100 text-brand-900 hover:bg-brand-200 aria-expanded:bg-brand-200 dark:bg-brand-900 dark:text-primary dark:hover:bg-brand-800/70",
+          "hover:scale-[1.03] [&.text-destructive]:bg-destructive/10 [&.text-destructive]:hover:bg-destructive/20 [&.text-destructive]:aria-expanded:bg-destructive/20 bg-brand-100 text-brand-900 hover:bg-brand-200 aria-expanded:bg-brand-200 dark:bg-brand-900 dark:text-primary dark:hover:bg-brand-800/70",
         ghost:
-          "[&.text-destructive]:hover:bg-destructive/10 [&.text-destructive]:aria-expanded:bg-destructive/10 text-foreground hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground",
+          "hover:scale-[1.03] [&.text-destructive]:hover:bg-destructive/10 [&.text-destructive]:aria-expanded:bg-destructive/10 text-foreground hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground",
         destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/30",
+          "hover:scale-[1.03] bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/30",
         link: "rounded-md text-foreground underline decoration-primary decoration-2 underline-offset-4 hover:decoration-foreground",
       },
       size: {
