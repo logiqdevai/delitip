@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createQrCode,
@@ -63,6 +65,7 @@ export const useCreateQrCode = (storeId: string) => {
     mutationFn: (payload: CreateQrCodePayload) =>
       createQrCode(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.qrCodeCreated, { store_id: storeId });
       void queryClient.invalidateQueries({ queryKey: qrCodesQueryKeys.root });
       toast.add({
         title: "QR code created",
@@ -92,6 +95,7 @@ export const useUpdateQrCode = () => {
       payload: UpdateQrCodePayload;
     }) => updateQrCode(id, payload),
     onSuccess: (_data, variables) => {
+      trackEvent(AnalyticsEvents.qrCodeUpdated);
       void queryClient.invalidateQueries({ queryKey: qrCodesQueryKeys.root });
       void queryClient.invalidateQueries({
         queryKey: qrCodesQueryKeys.detail(variables.id),
@@ -118,6 +122,7 @@ export const useDeleteQrCode = () => {
   return useMutation({
     mutationFn: (id: string) => deleteQrCode(id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.qrCodeDeleted);
       void queryClient.invalidateQueries({ queryKey: qrCodesQueryKeys.root });
       toast.add({
         title: "QR code deleted",

@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFeedbackQuestion,
@@ -30,6 +32,7 @@ export const useCreateFeedbackQuestion = (storeId: string) => {
     mutationFn: (payload: CreateFeedbackQuestionPayload) =>
       createFeedbackQuestion(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewConfigChanged, { entity: "feedback_question", action: "created", store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: feedbackQuestionsQueryKeys.list(storeId),
       });
@@ -46,6 +49,7 @@ export const useUpdateFeedbackQuestion = (storeId: string) => {
     mutationFn: ({ id, payload }: { id: string; payload: UpdateFeedbackQuestionPayload }) =>
       updateFeedbackQuestion(storeId, id, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewConfigChanged, { entity: "feedback_question", action: "updated", store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: feedbackQuestionsQueryKeys.list(storeId),
       });
@@ -61,6 +65,7 @@ export const useDeleteFeedbackQuestion = (storeId: string) => {
   return useMutation({
     mutationFn: (id: string) => deleteFeedbackQuestion(storeId, id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewConfigChanged, { entity: "feedback_question", action: "deleted", store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: feedbackQuestionsQueryKeys.list(storeId),
       });

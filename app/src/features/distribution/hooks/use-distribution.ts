@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createDistributionRule,
@@ -61,6 +63,7 @@ export const useCreateDistributionRule = (storeId: string) => {
     mutationFn: (payload: CreateDistributionRulePayload) =>
       createDistributionRule(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.distributionRuleCreated, { store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: distributionQueryKeys.root,
       });
@@ -92,6 +95,7 @@ export const useUpdateDistributionRule = () => {
       payload: UpdateDistributionRulePayload;
     }) => updateDistributionRule(id, payload),
     onSuccess: (data, variables) => {
+      trackEvent(AnalyticsEvents.distributionRuleUpdated);
       void queryClient.invalidateQueries({
         queryKey: distributionQueryKeys.root,
       });
@@ -131,6 +135,7 @@ export const useDeleteDistributionRule = (options?: {
   return useMutation({
     mutationFn: (id: string) => deleteDistributionRule(id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.distributionRuleDeleted);
       void queryClient.invalidateQueries({
         queryKey: distributionQueryKeys.root,
       });
@@ -157,6 +162,7 @@ export const useSetDefaultDistributionRule = (storeId: string) => {
     mutationFn: (payload: SetDefaultDistributionRulePayload) =>
       setDefaultDistributionRule(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.distributionRuleSetDefault, { store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: distributionQueryKeys.root,
       });

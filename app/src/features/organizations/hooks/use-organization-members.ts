@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addOrganizationMember,
@@ -31,6 +33,7 @@ export const useAddOrganizationMember = (organizationId: string) => {
     mutationFn: (payload: AddMemberPayload) =>
       addOrganizationMember(organizationId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.memberAdded, { organization_id: organizationId });
       void queryClient.invalidateQueries({
         queryKey: organizationMembersQueryKeys.list(organizationId),
       });
@@ -58,6 +61,7 @@ export const useUpdateOrganizationMember = (organizationId: string) => {
       payload: UpdateMemberPayload;
     }) => updateOrganizationMember(organizationId, memberId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.memberUpdated, { organization_id: organizationId });
       void queryClient.invalidateQueries({
         queryKey: organizationMembersQueryKeys.list(organizationId),
       });
@@ -80,6 +84,7 @@ export const useRemoveOrganizationMember = (organizationId: string) => {
     mutationFn: (memberId: string) =>
       removeOrganizationMember(organizationId, memberId),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.memberRemoved, { organization_id: organizationId });
       void queryClient.invalidateQueries({
         queryKey: organizationMembersQueryKeys.list(organizationId),
       });

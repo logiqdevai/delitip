@@ -20,6 +20,8 @@ import { updateMe } from "@/features/users/services/users.services";
 import { useAuthStore } from "@/stores/auth.store";
 import { Routes } from "@/routes/routes";
 import { toast } from "@/components/ui/toast";
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 
 export const authQueryKeys = {
   root: ["auth"] as const,
@@ -69,6 +71,7 @@ export const useLoginBusiness = () => {
     mutationFn: (payload: LoginEmailPayload) => loginWithEmail(payload),
     onSuccess: (data: AuthResponse) => {
       setSession({ accessToken: data.access_token, user: data.user });
+      trackEvent(AnalyticsEvents.loginCompleted, { method: "email", account_type: "business" });
       toast.add({
         title: "Signed in",
         description: "Welcome back to delitip.",
@@ -94,6 +97,7 @@ export const useLoginEmployee = () => {
     mutationFn: (payload: LoginEmailPayload) => loginWithEmail(payload),
     onSuccess: (data: AuthResponse) => {
       setSession({ accessToken: data.access_token, user: data.user });
+      trackEvent(AnalyticsEvents.loginCompleted, { method: "email", account_type: "employee" });
       toast.add({
         title: "Signed in",
         description: "Welcome to your tip profile.",
@@ -146,6 +150,7 @@ export const useRegisterBusiness = () => {
       return auth;
     },
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.signUpCompleted, { method: "email", account_type: "business" });
       toast.add({
         title: "Account created",
         description: "Finish a few details to open your dashboard.",
@@ -169,6 +174,9 @@ export const useForgotPassword = () => {
       if (payload.role === "employee") rememberAuthRoleHint("employee");
       return forgotPassword({ email: payload.email });
     },
+    onSuccess: () => {
+      trackEvent(AnalyticsEvents.passwordResetRequested);
+    },
     onError: (error: Error) => {
       toast.add({
         title: "Could not send reset email",
@@ -185,6 +193,7 @@ export const useResetPassword = () => {
   return useMutation({
     mutationFn: (payload: ResetPasswordPayload) => resetPassword(payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.passwordResetCompleted);
       toast.add({
         title: "Password updated",
         description: "You can sign in with your new password.",
@@ -222,6 +231,7 @@ export const useAcceptInvite = () => {
   return useMutation({
     mutationFn: (payload: ResetPasswordPayload) => resetPassword(payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.inviteAccepted);
       toast.add({
         title: "Account activated",
         description: "You can now sign in with your new password.",
@@ -243,6 +253,7 @@ export const useChangePassword = () => {
   return useMutation({
     mutationFn: (payload: ChangePasswordPayload) => changePassword(payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.passwordChanged);
       toast.add({
         title: "Password updated",
         description: "Your password has been changed.",
@@ -265,6 +276,7 @@ export const useLogout = () => {
   const clearSession = useAuthStore((state) => state.clearSession);
 
   return (options?: { redirectTo?: string }) => {
+    trackEvent(AnalyticsEvents.logoutCompleted);
     clearSession();
     queryClient.clear();
     toast.add({

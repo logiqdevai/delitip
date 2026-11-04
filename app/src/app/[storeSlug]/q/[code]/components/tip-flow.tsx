@@ -1,6 +1,8 @@
 "use client";
 
-import { type CSSProperties, type FC, useMemo, useState } from "react";
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
+import { type CSSProperties, type FC, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -94,6 +96,17 @@ export const TipFlow: FC<TipFlowProps> = ({
   }, [employees, mode]);
 
   const needsRecipientStep = employees.length > 0;
+
+  useEffect(() => {
+    if (preview) return;
+    trackEvent(AnalyticsEvents.tipPageViewed, {
+      store_slug: storeSlug,
+      qr_code_id: qr.qr_code.id,
+      resumed_checkout: !!recoveredTipId,
+    });
+    // Once per page load.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [step, setStep] = useState<FlowStep>(
     preview?.step ?? (recoveredTipId ? "done" : "amount"),
@@ -196,6 +209,13 @@ export const TipFlow: FC<TipFlowProps> = ({
               chooseMode={interactive ? mode : undefined}
               recipientLabel={recipientLabel}
               onContinue={(value) => {
+                if (!preview) {
+                  trackEvent(AnalyticsEvents.tipAmountSelected, {
+                    store_slug: storeSlug,
+                    value: value / 100,
+                    currency: store.currency,
+                  });
+                }
                 setAmount(value);
                 setStep(needsRecipientStep ? "select" : "review");
               }}
@@ -221,7 +241,16 @@ export const TipFlow: FC<TipFlowProps> = ({
               selectedEmployeeIds={selectedEmployeeIds}
               onToggle={toggleEmployee}
               onBack={() => setStep("amount")}
-              onContinue={() => setStep("review")}
+              onContinue={() => {
+                if (!preview) {
+                  trackEvent(AnalyticsEvents.tipRecipientsSelected, {
+                    store_slug: storeSlug,
+                    recipient_count: selectedEmployeeIds.length,
+                    selection_mode: mode,
+                  });
+                }
+                setStep("review");
+              }}
             />
           </motion.div>
         ) : step === "review" ? (

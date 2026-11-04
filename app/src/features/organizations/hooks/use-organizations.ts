@@ -1,4 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import {
   createOrganization,
   getOrganization,
@@ -52,6 +54,7 @@ export const useCreateOrganization = () => {
     mutationFn: (payload: CreateOrganizationPayload) =>
       createOrganization(payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.organizationCreated);
       void queryClient.invalidateQueries({
         queryKey: organizationsQueryKeys.root,
       });
@@ -72,6 +75,7 @@ export const useUpdateOrganization = () => {
       payload: UpdateOrganizationPayload;
     }) => updateOrganization(id, payload),
     onSuccess: (_data, variables) => {
+      trackEvent(AnalyticsEvents.organizationUpdated);
       void queryClient.invalidateQueries({
         queryKey: organizationsQueryKeys.root,
       });
@@ -170,6 +174,7 @@ export const useCompleteBusinessSetup = () => {
       return organization;
     },
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.onboardingCompleted);
       void queryClient.invalidateQueries({
         queryKey: organizationsQueryKeys.root,
       });

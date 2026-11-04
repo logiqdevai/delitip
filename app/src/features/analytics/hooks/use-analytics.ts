@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   generateInsight,
@@ -137,6 +139,7 @@ export const useGenerateInsight = (storeId: string) => {
     mutationFn: (payload: GenerateInsightPayload) =>
       generateInsight(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.insightGenerated, { store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: analyticsQueryKeys.insights(storeId),
       });

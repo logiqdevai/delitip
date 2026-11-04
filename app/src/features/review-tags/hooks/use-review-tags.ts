@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createReviewTag,
@@ -29,6 +31,7 @@ export const useCreateReviewTag = (storeId: string) => {
     mutationFn: (payload: CreateReviewTagPayload) =>
       createReviewTag(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewConfigChanged, { entity: "review_tag", action: "created", store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: reviewTagsQueryKeys.list(storeId),
       });
@@ -45,6 +48,7 @@ export const useUpdateReviewTag = (storeId: string) => {
     mutationFn: ({ id, payload }: { id: string; payload: UpdateReviewTagPayload }) =>
       updateReviewTag(storeId, id, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewConfigChanged, { entity: "review_tag", action: "updated", store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: reviewTagsQueryKeys.list(storeId),
       });
@@ -60,6 +64,7 @@ export const useDeleteReviewTag = (storeId: string) => {
   return useMutation({
     mutationFn: (id: string) => deleteReviewTag(storeId, id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewConfigChanged, { entity: "review_tag", action: "deleted", store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: reviewTagsQueryKeys.list(storeId),
       });

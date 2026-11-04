@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/components/ui/toast";
 import {
@@ -35,6 +37,7 @@ export const useSaveQrTemplateCustomization = (
     mutationFn: (payload: UpsertQrTemplateCustomizationPayload) =>
       saveQrTemplateCustomization(storeId, templateId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.qrTemplateSaved, { store_id: storeId, template_id: templateId });
       void queryClient.invalidateQueries({
         queryKey: qrTemplateCustomizationQueryKeys.detail(storeId, templateId),
       });
@@ -59,6 +62,7 @@ export const useResetQrTemplateCustomization = (
   return useMutation({
     mutationFn: () => resetQrTemplateCustomization(storeId, templateId),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.qrTemplateReset, { store_id: storeId, template_id: templateId });
       void queryClient.invalidateQueries({
         queryKey: qrTemplateCustomizationQueryKeys.detail(storeId, templateId),
       });

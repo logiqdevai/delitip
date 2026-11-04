@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createPublicTip,
@@ -54,6 +56,7 @@ export const useExportStoreTipsCsv = () => {
       query?: TipsExportQuery;
     }) => exportStoreTipsCsv(storeId, query),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.tipsExported);
       toast.add({
         title: "Tips exported",
         description: "Your CSV download has started.",
@@ -99,6 +102,7 @@ export const useReconcilePayments = () => {
   return useMutation({
     mutationFn: reconcilePayments,
     onSuccess: ({ corrected }) => {
+      trackEvent(AnalyticsEvents.adminPaymentsReconciled, { corrected });
       void queryClient.invalidateQueries({ queryKey: tipsQueryKeys.root });
       toast.add({
         title: "Payments reconciled",

@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createSpot,
@@ -32,6 +34,7 @@ export const useCreateSpot = (storeId: string) => {
   return useMutation({
     mutationFn: (payload: CreateSpotPayload) => createSpot(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.spotCreated, { store_id: storeId });
       void queryClient.invalidateQueries({ queryKey: spotsQueryKeys.root });
       toast.add({ title: "Spot created", type: "success" });
     },
@@ -52,6 +55,7 @@ export const useUpdateSpot = () => {
     mutationFn: ({ id, payload }: { id: string; payload: UpdateSpotPayload }) =>
       updateSpot(id, payload),
     onSuccess: (_data, variables) => {
+      trackEvent(AnalyticsEvents.spotUpdated);
       void queryClient.invalidateQueries({ queryKey: spotsQueryKeys.root });
       if (
         variables.payload.is_active !== undefined &&
@@ -87,6 +91,7 @@ export const useDeleteSpot = () => {
   return useMutation({
     mutationFn: (id: string) => deleteSpot(id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.spotDeleted);
       void queryClient.invalidateQueries({ queryKey: spotsQueryKeys.root });
       toast.add({ title: "Spot removed", type: "success" });
     },

@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAppConfig,
@@ -41,6 +43,7 @@ export const useUpdateAppConfig = () => {
   return useMutation({
     mutationFn: (payload: UpdateAppConfigPayload) => updateAppConfig(payload),
     onSuccess: (data) => {
+      trackEvent(AnalyticsEvents.appConfigUpdated);
       queryClient.setQueryData(appConfigQueryKeys.root, data);
       void queryClient.invalidateQueries({
         queryKey: appConfigQueryKeys.vatRate,
