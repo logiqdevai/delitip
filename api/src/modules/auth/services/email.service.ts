@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException, HttpException, Logger } from '@nestjs/common';
 import { RegisterEmailDto } from '../dto/register-email.dto';
 import { LoginEmailDto } from '../dto/login-email.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
@@ -11,11 +11,26 @@ import { EmailConfig } from '@/shared/constants/email';
 
 @Injectable()
 export class EmailAuthService {
+    private readonly logger = new Logger(EmailAuthService.name);
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly jwtService: CreateJwtService,
         private readonly mailService: ResendMailService,
     ) { }
+
+    /**
+     * Expected errors (HttpException) keep their client-safe message.
+     * Anything else (Prisma, network, ...) is logged server-side only and
+     * replaced with a friendly generic message so internals never reach the client.
+     */
+    private toClientError(error: unknown, fallback: string): HttpException {
+        if (error instanceof HttpException) {
+            return new BadRequestException(error.message);
+        }
+        this.logger.error(error instanceof Error ? error.stack ?? error.message : String(error));
+        return new BadRequestException(fallback);
+    }
 
     async registerWithEmail(dto: RegisterEmailDto) {
 
@@ -60,8 +75,7 @@ export class EmailAuthService {
 
             return { access_token: token, expires_in: expires_in, user: user };
         } catch (error) {
-            console.log(error);
-            throw new BadRequestException(error.message);
+            throw this.toClientError(error, 'We could not create your account right now. Please try again in a few minutes.');
         }
     }
 
@@ -95,7 +109,7 @@ export class EmailAuthService {
 
             return { access_token: token, expires_in: expires_in, user: user };
         } catch (error) {
-            throw new BadRequestException(error.message);
+            throw this.toClientError(error, 'We could not sign you in right now. Please try again in a few minutes.');
         }
 
     }
@@ -132,7 +146,7 @@ export class EmailAuthService {
             return { message: 'You have been successfully added to the waitlist', code: 'WAITLIST_SUCCESS' };
 
         } catch (error) {
-            throw new BadRequestException('Failed to waitlist user', error.message);
+            throw this.toClientError(error, 'We could not add you to the waitlist right now. Please try again in a few minutes.');
         }
     }
 
