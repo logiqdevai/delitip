@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAdminPayout,
@@ -100,6 +102,7 @@ export const useRunStorePayouts = (storeId: string) => {
   return useMutation({
     mutationFn: (payload: RunPayoutPayload) => runStorePayouts(storeId, payload),
     onSuccess: (result) => {
+      trackEvent(AnalyticsEvents.payoutsRun, { store_id: storeId });
       void queryClient.invalidateQueries({ queryKey: payoutsQueryKeys.root });
       void queryClient.invalidateQueries({ queryKey: distributionsQueryKeys.root });
       void queryClient.invalidateQueries({ queryKey: tipsQueryKeys.root });
@@ -141,6 +144,7 @@ export const useRunManualPayouts = () => {
   return useMutation({
     mutationFn: (payload: ManualPayoutPayload) => runManualPayouts(payload),
     onSuccess: (result) => {
+      trackEvent(AnalyticsEvents.adminManualPayoutsRun);
       void queryClient.invalidateQueries({ queryKey: payoutsQueryKeys.root });
       void queryClient.invalidateQueries({ queryKey: distributionsQueryKeys.root });
       void queryClient.invalidateQueries({ queryKey: tipsQueryKeys.root });

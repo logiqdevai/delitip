@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createStore,
@@ -69,6 +71,7 @@ export const useCreateStore = (organizationId: string) => {
     // once the new store is in the list, so callers can switch to it without
     // the workspace falling back to the first store in the stale list.
     onSuccess: async () => {
+      trackEvent(AnalyticsEvents.storeCreated, { organization_id: organizationId });
       await queryClient.invalidateQueries({ queryKey: storesQueryKeys.root });
       void queryClient.invalidateQueries({
         queryKey: organizationsRootKey,
@@ -99,6 +102,7 @@ export const useUpdateStore = () => {
     mutationFn: ({ id, payload }: { id: string; payload: UpdateStorePayload }) =>
       updateStore(id, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.storeUpdated);
       void queryClient.invalidateQueries({ queryKey: storesQueryKeys.root });
       void queryClient.invalidateQueries({
         queryKey: organizationsRootKey,
@@ -128,6 +132,7 @@ export const useDeleteStore = () => {
   return useMutation({
     mutationFn: (id: string) => deleteStore(id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.storeDeleted);
       void queryClient.invalidateQueries({ queryKey: storesQueryKeys.root });
       void queryClient.invalidateQueries({
         queryKey: organizationsRootKey,

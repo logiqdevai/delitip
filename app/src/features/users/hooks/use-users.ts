@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   deleteUser,
@@ -30,6 +32,7 @@ export const useUpdateMe = () => {
   return useMutation({
     mutationFn: updateMe,
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.profileUpdated);
       void queryClient.invalidateQueries({ queryKey: usersQueryKeys.root });
       toast.add({
         title: "Account updated",
@@ -62,6 +65,7 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationFn: deleteUser,
     onSuccess: (result) => {
+      trackEvent(AnalyticsEvents.accountDeleted);
       void queryClient.invalidateQueries({ queryKey: usersQueryKeys.root });
 
       const leftovers: string[] = [];

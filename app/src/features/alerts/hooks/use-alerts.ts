@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   listAlertPreferences,
@@ -39,6 +41,7 @@ export const useMarkAlertRead = (storeId: string) => {
   return useMutation({
     mutationFn: (id: string) => markAlertRead(id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.alertRead, { store_id: storeId });
       void queryClient.invalidateQueries({ queryKey: ["alerts", storeId] });
     },
   });
@@ -50,6 +53,7 @@ export const useMarkAllAlertsRead = (storeId: string) => {
   return useMutation({
     mutationFn: () => markAllAlertsRead(storeId),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.alertsAllRead, { store_id: storeId });
       void queryClient.invalidateQueries({ queryKey: ["alerts", storeId] });
       toast.add({ title: "All alerts marked as read", type: "success" });
     },
@@ -83,6 +87,7 @@ export const useUpdateAlertPreference = (storeId: string) => {
       isEnabled: boolean;
     }) => updateAlertPreference(storeId, alertType, isEnabled),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.alertPreferenceUpdated, { store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: alertsQueryKeys.preferences(storeId),
       });

@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   confirmSettlement,
@@ -109,6 +111,7 @@ export const useCreateSettlement = (storeId: string) => {
     mutationFn: (payload: CreateSettlementPayload) =>
       createSettlement(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.settlementCreated, { store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: settlementsQueryKeys.root,
       });
@@ -139,6 +142,7 @@ export const useReverseSettlement = (options?: { showErrorToast?: boolean }) => 
   return useMutation({
     mutationFn: (id: string) => reverseSettlement(id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.settlementReversed);
       void queryClient.invalidateQueries({
         queryKey: settlementsQueryKeys.root,
       });
@@ -166,6 +170,7 @@ export const useConfirmSettlement = () => {
   return useMutation({
     mutationFn: (id: string) => confirmSettlement(id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.settlementConfirmed);
       void queryClient.invalidateQueries({
         queryKey: settlementsQueryKeys.root,
       });
@@ -190,6 +195,7 @@ export const useExportStoreSettlementsCsv = (storeId: string) => {
     mutationFn: (query?: SettlementsExportQuery) =>
       exportStoreSettlementsCsv(storeId, query),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.settlementsExported, { store_id: storeId });
       toast.add({ title: "Export ready", type: "success" });
     },
     onError: (error: Error) => {

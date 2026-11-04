@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createReviewCategory,
@@ -30,6 +32,7 @@ export const useCreateReviewCategory = (storeId: string) => {
     mutationFn: (payload: CreateReviewCategoryPayload) =>
       createReviewCategory(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewConfigChanged, { entity: "review_category", action: "created", store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: reviewCategoriesQueryKeys.list(storeId),
       });
@@ -46,6 +49,7 @@ export const useUpdateReviewCategory = (storeId: string) => {
     mutationFn: ({ id, payload }: { id: string; payload: UpdateReviewCategoryPayload }) =>
       updateReviewCategory(storeId, id, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewConfigChanged, { entity: "review_category", action: "updated", store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: reviewCategoriesQueryKeys.list(storeId),
       });
@@ -61,6 +65,7 @@ export const useDeleteReviewCategory = (storeId: string) => {
   return useMutation({
     mutationFn: (id: string) => deleteReviewCategory(storeId, id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewConfigChanged, { entity: "review_category", action: "deleted", store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: reviewCategoriesQueryKeys.list(storeId),
       });

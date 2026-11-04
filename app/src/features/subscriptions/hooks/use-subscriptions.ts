@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   cancelSubscription,
@@ -25,6 +27,7 @@ export const useChangeSubscriptionPlan = (organizationId: string) => {
     mutationFn: (payload: UpdateSubscriptionPayload) =>
       changeSubscriptionPlan(organizationId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.subscriptionPlanChanged, { organization_id: organizationId });
       void queryClient.invalidateQueries({
         queryKey: subscriptionsQueryKeys.detail(organizationId),
       });
@@ -41,6 +44,7 @@ export const useCancelSubscription = (organizationId: string) => {
   return useMutation({
     mutationFn: () => cancelSubscription(organizationId),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.subscriptionCancelled, { organization_id: organizationId });
       void queryClient.invalidateQueries({
         queryKey: subscriptionsQueryKeys.detail(organizationId),
       });

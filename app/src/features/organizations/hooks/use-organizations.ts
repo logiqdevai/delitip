@@ -54,6 +54,7 @@ export const useCreateOrganization = () => {
     mutationFn: (payload: CreateOrganizationPayload) =>
       createOrganization(payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.organizationCreated);
       void queryClient.invalidateQueries({
         queryKey: organizationsQueryKeys.root,
       });
@@ -74,6 +75,7 @@ export const useUpdateOrganization = () => {
       payload: UpdateOrganizationPayload;
     }) => updateOrganization(id, payload),
     onSuccess: (_data, variables) => {
+      trackEvent(AnalyticsEvents.organizationUpdated);
       void queryClient.invalidateQueries({
         queryKey: organizationsQueryKeys.root,
       });

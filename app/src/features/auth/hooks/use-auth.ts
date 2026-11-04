@@ -193,6 +193,7 @@ export const useResetPassword = () => {
   return useMutation({
     mutationFn: (payload: ResetPasswordPayload) => resetPassword(payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.passwordResetCompleted);
       toast.add({
         title: "Password updated",
         description: "You can sign in with your new password.",
@@ -230,6 +231,7 @@ export const useAcceptInvite = () => {
   return useMutation({
     mutationFn: (payload: ResetPasswordPayload) => resetPassword(payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.inviteAccepted);
       toast.add({
         title: "Account activated",
         description: "You can now sign in with your new password.",
@@ -251,6 +253,7 @@ export const useChangePassword = () => {
   return useMutation({
     mutationFn: (payload: ChangePasswordPayload) => changePassword(payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.passwordChanged);
       toast.add({
         title: "Password updated",
         description: "Your password has been changed.",

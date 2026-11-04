@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createEmployeePayoutAccount,
@@ -39,6 +41,7 @@ export const useReconcilePayoutAccounts = () => {
   return useMutation({
     mutationFn: reconcilePayoutAccounts,
     onSuccess: ({ checked, promoted }) => {
+      trackEvent(AnalyticsEvents.adminPayoutAccountsReconciled, { checked, promoted });
       void queryClient.invalidateQueries({
         predicate: (query) => query.queryKey[0] === "payout-account",
       });
@@ -76,6 +79,7 @@ export const useCreateMyPayoutAccount = () => {
     mutationFn: (payload: CreatePayoutAccountPayload) =>
       createMyPayoutAccount(payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.payoutAccountCreated, { scope: "me" });
       void queryClient.invalidateQueries({
         queryKey: payoutAccountsQueryKeys.mine,
       });
@@ -101,6 +105,7 @@ export const useRefreshMyPayoutAccountStatus = () => {
   return useMutation({
     mutationFn: refreshMyPayoutAccountStatus,
     onSuccess: (account) => {
+      trackEvent(AnalyticsEvents.payoutAccountStatusRefreshed, { scope: "me" });
       queryClient.setQueryData(payoutAccountsQueryKeys.mine, account);
       toast.add(describeRefreshResult(account));
     },
@@ -129,6 +134,7 @@ export const useCreateStorePayoutAccount = (storeId: string) => {
     mutationFn: (payload: CreatePayoutAccountPayload) =>
       createStorePayoutAccount(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.payoutAccountCreated, { scope: "store", store_id: storeId });
       void queryClient.invalidateQueries({
         queryKey: payoutAccountsQueryKeys.store(storeId),
       });
@@ -154,6 +160,7 @@ export const useRefreshStorePayoutAccountStatus = (storeId: string) => {
   return useMutation({
     mutationFn: () => refreshStorePayoutAccountStatus(storeId),
     onSuccess: (account) => {
+      trackEvent(AnalyticsEvents.payoutAccountStatusRefreshed, { scope: "store", store_id: storeId });
       queryClient.setQueryData(payoutAccountsQueryKeys.store(storeId), account);
       toast.add(describeRefreshResult(account));
     },
@@ -182,6 +189,7 @@ export const useCreateEmployeePayoutAccount = (employeeId: string) => {
     mutationFn: (payload: CreatePayoutAccountPayload) =>
       createEmployeePayoutAccount(employeeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.payoutAccountCreated, { scope: "employee" });
       void queryClient.invalidateQueries({
         queryKey: payoutAccountsQueryKeys.employee(employeeId),
       });
@@ -207,6 +215,7 @@ export const useRefreshEmployeePayoutAccountStatus = (employeeId: string) => {
   return useMutation({
     mutationFn: () => refreshEmployeePayoutAccountStatus(employeeId),
     onSuccess: (account) => {
+      trackEvent(AnalyticsEvents.payoutAccountStatusRefreshed, { scope: "employee" });
       queryClient.setQueryData(payoutAccountsQueryKeys.employee(employeeId), account);
       toast.add(describeRefreshResult(account));
     },

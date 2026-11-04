@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createEmployee,
@@ -100,6 +102,7 @@ export const useCreateEmployee = (storeId: string) => {
     mutationFn: (payload: CreateEmployeePayload) =>
       createEmployee(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.employeeCreated, { store_id: storeId });
       void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
       toast.add({
         title: "Employee added",
@@ -129,6 +132,7 @@ export const useUpdateEmployee = () => {
       payload: UpdateEmployeePayload;
     }) => updateEmployee(id, payload),
     onSuccess: (data, variables) => {
+      trackEvent(AnalyticsEvents.employeeUpdated);
       queryClient.setQueryData(employeesQueryKeys.detail(variables.id), data);
       void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
       void queryClient.invalidateQueries({
@@ -169,6 +173,7 @@ export const useResendEmployeeInvite = () => {
   return useMutation({
     mutationFn: (id: string) => resendEmployeeInvite(id),
     onSuccess: (data) => {
+      trackEvent(AnalyticsEvents.employeeInviteResent);
       queryClient.setQueryData(employeesQueryKeys.detail(data.id), data);
       void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
       toast.add({
@@ -193,6 +198,7 @@ export const useDeleteEmployee = () => {
   return useMutation({
     mutationFn: (id: string) => deleteEmployee(id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.employeeDeleted);
       void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
       toast.add({
         title: "Employee removed",

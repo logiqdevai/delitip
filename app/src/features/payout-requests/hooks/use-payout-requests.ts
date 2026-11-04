@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   approvePayoutRequest,
@@ -77,6 +79,7 @@ export const useCreatePayoutRequest = (storeId: string) => {
     mutationFn: (payload: CreatePayoutRequestPayload) =>
       createPayoutRequest(storeId, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.payoutRequestCreated, { store_id: storeId });
       invalidateMoneyViews(queryClient);
       toast.add({
         title: "Payout request submitted",
@@ -101,6 +104,7 @@ export const useCancelPayoutRequest = (storeId: string) => {
   return useMutation({
     mutationFn: (id: string) => cancelPayoutRequest(storeId, id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.payoutRequestCancelled, { store_id: storeId });
       invalidateMoneyViews(queryClient);
       toast.add({
         title: "Payout request cancelled",
@@ -175,6 +179,7 @@ export const useApprovePayoutRequest = (id: string) => {
     mutationFn: (payload: ReviewPayoutRequestPayload) =>
       approvePayoutRequest(id, payload),
     onSuccess: (data) => {
+      trackEvent(AnalyticsEvents.adminPayoutRequestApproved, { request_id: id });
       queryClient.setQueryData(payoutRequestsQueryKeys.adminDetail(id), data);
       invalidateMoneyViews(queryClient);
       if (data.failure_reason && data.status === "PENDING_REVIEW") {
@@ -208,6 +213,7 @@ export const useRejectPayoutRequest = (id: string) => {
     mutationFn: (payload: { admin_note: string }) =>
       rejectPayoutRequest(id, payload),
     onSuccess: (data) => {
+      trackEvent(AnalyticsEvents.adminPayoutRequestRejected, { request_id: id });
       queryClient.setQueryData(payoutRequestsQueryKeys.adminDetail(id), data);
       invalidateMoneyViews(queryClient);
       toast.add({
@@ -232,6 +238,7 @@ export const useRecheckPayoutRequest = (id: string) => {
   return useMutation({
     mutationFn: () => recheckPayoutRequest(id),
     onSuccess: (data) => {
+      trackEvent(AnalyticsEvents.adminPayoutRequestRechecked, { request_id: id });
       queryClient.setQueryData(payoutRequestsQueryKeys.adminDetail(id), data);
       void queryClient.invalidateQueries({ queryKey: payoutRequestsQueryKeys.root });
       toast.add({

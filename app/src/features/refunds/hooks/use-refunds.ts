@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics/analytics";
+import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createPublicRefundRequest,
@@ -43,6 +45,7 @@ export const useCreateRefund = () => {
   return useMutation({
     mutationFn: (payload: CreateRefundPayload) => createRefund(payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.refundCreated);
       void queryClient.invalidateQueries({ queryKey: refundsQueryKeys.root });
       toast.add({
         title: "Refund requested",
@@ -72,6 +75,9 @@ export const useCreatePublicRefundRequest = () => {
       tipId: string;
       payload: CreatePublicRefundRequestPayload;
     }) => createPublicRefundRequest(tipId, payload),
+    onSuccess: () => {
+      trackEvent(AnalyticsEvents.refundRequestSubmitted);
+    },
   });
 };
 
@@ -82,6 +88,7 @@ export const useUpdateRefund = () => {
     mutationFn: ({ id, payload }: { id: string; payload: UpdateRefundPayload }) =>
       updateRefund(id, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.refundUpdated);
       void queryClient.invalidateQueries({ queryKey: refundsQueryKeys.root });
       toast.add({ title: "Refund updated", type: "success" });
     },

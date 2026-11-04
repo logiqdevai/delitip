@@ -74,6 +74,7 @@ export const useUpdateReview = () => {
       payload: UpdateReviewPayload;
     }) => updateReview(id, payload),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewUpdated);
       void queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.root });
       toast.add({ title: "Review updated", type: "success" });
     },
@@ -93,6 +94,7 @@ export const useDeleteReview = () => {
   return useMutation({
     mutationFn: (id: string) => deleteReview(id),
     onSuccess: () => {
+      trackEvent(AnalyticsEvents.reviewDeleted);
       void queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.root });
       toast.add({ title: "Review deleted", type: "success" });
     },
