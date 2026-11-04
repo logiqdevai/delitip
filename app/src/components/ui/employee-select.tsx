@@ -2,6 +2,7 @@
 
 import { type FC, useId } from "react";
 import { UserPlus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import {
   Select,
@@ -51,11 +52,11 @@ export const EmployeeSelect: FC<EmployeeSelectProps> = ({
   value,
   onValueChange,
   includeAll = false,
-  allLabel = "All employees",
+  allLabel: allLabelProp,
   allValue = "all",
-  placeholder = "Select employee",
+  placeholder: placeholderProp,
   emptyValue,
-  emptyLabel = "Select employee",
+  emptyLabel: emptyLabelProp,
   disabled = false,
   invalid = false,
   id: idProp,
@@ -65,11 +66,16 @@ export const EmployeeSelect: FC<EmployeeSelectProps> = ({
   size = "default",
   showPosition = false,
   onCreateNew,
-  createNewLabel = "Add employee",
+  createNewLabel: createNewLabelProp,
   "aria-label": ariaLabel,
 }) => {
+  const t = useTranslations("dashboard.shell.ui");
   const generatedId = useId();
   const id = idProp ?? generatedId;
+  const allLabel = allLabelProp ?? t("allEmployees");
+  const placeholder = placeholderProp ?? t("selectEmployee");
+  const emptyLabel = emptyLabelProp ?? t("selectEmployee");
+  const createNewLabel = createNewLabelProp ?? t("addEmployee");
 
   const items = [
     ...(includeAll ? [{ label: allLabel, value: allValue }] : []),

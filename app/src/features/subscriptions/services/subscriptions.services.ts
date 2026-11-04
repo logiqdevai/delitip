@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
@@ -19,7 +20,7 @@ export const getSubscription = async (
     if (isAxiosError(error) && error.response?.status === 404) {
       return null;
     }
-    throw new Error(getErrorMessage(error, "We couldn't load subscription. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadSubscription")));
   }
 };
 
@@ -34,7 +35,7 @@ export const changeSubscriptionPlan = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't change plan. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.changePlan")));
   }
 };
 
@@ -47,6 +48,6 @@ export const cancelSubscription = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't cancel subscription. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.cancelSubscription")));
   }
 };

@@ -2,7 +2,7 @@
 
 import { type FC, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { useWatch } from "react-hook-form";
-import { NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider, useTranslations } from "next-intl";
 import { useQrEditor } from "@/app/dashboard/access/qr/hooks/use-qr-editor";
 import { parseTipAmounts } from "@/app/dashboard/access/qr/hooks/use-qr-editor-defaults";
 import { TipFlow, type FlowStep } from "@/app/[storeSlug]/q/[code]/components/tip-flow";
@@ -25,13 +25,12 @@ import type {
 } from "@/features/stores/interfaces/stores.interfaces";
 import { cn } from "@/lib/utils";
 
-const PREVIEW_STEPS: { id: FlowStep; label: string; needsRecipients?: boolean }[] =
-  [
-    { id: "amount", label: "Amount" },
-    { id: "select", label: "Recipient", needsRecipients: true },
-    { id: "review", label: "Review" },
-    { id: "done", label: "Done" },
-  ];
+const PREVIEW_STEPS: { id: FlowStep; needsRecipients?: boolean }[] = [
+  { id: "amount" },
+  { id: "select", needsRecipients: true },
+  { id: "review" },
+  { id: "done" },
+];
 
 const FALLBACK_PREVIEW_AMOUNT = 500;
 
@@ -48,6 +47,7 @@ function resolveTranslation(
 }
 
 export const QrTipPreview: FC = () => {
+  const t = useTranslations("dashboard.access.qrEditor.preview");
   const { form, store, qr } = useQrEditor();
   const values = useDeferredValue(useWatch({ control: form.control }));
   const [requestedStep, setRequestedStep] = useState<FlowStep>("amount");
@@ -210,7 +210,7 @@ export const QrTipPreview: FC = () => {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div
           role="tablist"
-          aria-label="Preview step"
+          aria-label={t("stepAria")}
           className="inline-flex rounded-full bg-zinc-100 p-0.5"
         >
           {steps.map((item) => (
@@ -230,7 +230,7 @@ export const QrTipPreview: FC = () => {
                   : "text-zinc-500 hover:text-ink-charcoal",
               )}
             >
-              {item.label}
+              {t(`steps.${item.id}`)}
             </button>
           ))}
         </div>
@@ -245,7 +245,7 @@ export const QrTipPreview: FC = () => {
             labelSource="native"
             compact
             size="sm"
-            aria-label="Preview language"
+            aria-label={t("languageAria")}
           />
         ) : null}
       </div>
@@ -271,8 +271,8 @@ export const QrTipPreview: FC = () => {
           </NextIntlClientProvider>
         </div>
       </div>
-      <p className="text-center text-[11px] text-zinc-400">
-        Live preview — nothing here creates a real tip.
+      <p className="text-center text-base text-zinc-400">
+        {t("caption")}
       </p>
     </div>
   );

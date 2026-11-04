@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "@/components/ui/toast";
 import {
   downloadQrCodePng,
@@ -21,6 +22,7 @@ export const useQrCodeActions = ({
   label,
   filename,
 }: UseQrCodeActionsOptions) => {
+  const t = useTranslations("dashboard.access.actions");
   const [busy, setBusy] = useState<"download" | "print" | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -29,15 +31,15 @@ export const useQrCodeActions = ({
       await navigator.clipboard.writeText(tipUrl);
       setCopied(true);
       toast.add({
-        title: "Link copied",
-        description: "Tip URL copied to clipboard.",
+        title: t("linkCopied"),
+        description: t("linkCopiedDescription"),
         type: "success",
       });
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       toast.add({
-        title: "Could not copy",
-        description: "Please copy the link manually.",
+        title: t("copyFailed"),
+        description: t("copyFailedDescription"),
         type: "error",
       });
     }
@@ -49,8 +51,8 @@ export const useQrCodeActions = ({
       await downloadQrCodePng(tipUrl, filename);
     } catch (error) {
       toast.add({
-        title: "Could not download QR",
-        description: getErrorMessage(error, "Please try again."),
+        title: t("downloadFailed"),
+        description: getErrorMessage(error, t("tryAgain")),
         type: "error",
       });
     } finally {
@@ -64,8 +66,8 @@ export const useQrCodeActions = ({
       await printQrCode(tipUrl, label);
     } catch (error) {
       toast.add({
-        title: "Could not print QR",
-        description: getErrorMessage(error, "Please try again."),
+        title: t("printFailed"),
+        description: getErrorMessage(error, t("tryAgain")),
         type: "error",
       });
     } finally {

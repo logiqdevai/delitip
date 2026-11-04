@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -21,7 +22,7 @@ export const uploadDocument = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't upload the file. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.uploadTheFile")));
   }
 };
 
@@ -29,6 +30,6 @@ export const deleteDocument = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.documents.byId(id));
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't remove the file. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.removeTheFile")));
   }
 };

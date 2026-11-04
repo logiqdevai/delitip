@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { Banknote, Info, Receipt, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -42,7 +43,8 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { TipStatusFilterOptions } from "@/config/constants/dropdowns/tips/tip-status-filter.options";
-import { getTipStatusLabel } from "@/config/constants/dropdowns/tips/tip-status-form.options";
+import { TipStatusFormOptions } from "@/config/constants/dropdowns/tips/tip-status-form.options";
+import { useDropdownLabel, useDropdownOptions } from "@/hooks/use-dropdown-options";
 import { useAdminTips } from "@/features/tips/hooks/use-tips";
 import { useRunManualPayouts } from "@/features/payouts/hooks/use-payouts";
 import type { Tip, TipStatus } from "@/features/tips/interfaces/tips.interfaces";
@@ -78,14 +80,6 @@ const statusChipClass: Record<TipStatus, string> = {
   REFUNDED: "bg-zinc-100 text-zinc-600",
 };
 
-const formatDateTime = (value?: string | null) => {
-  if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-};
-
 const PAGE_LIMIT = 20;
 
 // Only a settled payment with Viva's real fee confirmed can be paid out — the
@@ -94,7 +88,10 @@ const isCompleted = (tip: Tip) => tip.status === "COMPLETED";
 const isPayable = (tip: Tip) =>
   isCompleted(tip) && tip.payment_transaction?.processor_fee_confirmed === true;
 
-const summarizeSelection = (selected: Tip[]) => {
+const summarizeSelection = (
+  selected: Tip[],
+  money: (amount: number, currency: Tip["currency"]) => string,
+) => {
   const payable = selected.filter(isPayable);
   const totals = new Map<string, number>();
   for (const tip of payable) {
@@ -109,15 +106,27 @@ const summarizeSelection = (selected: Tip[]) => {
     ).length,
     totalLabel:
       totals.size === 0
-        ? formatMoney(0, "EUR")
+        ? money(0, "EUR")
         : Array.from(totals, ([currency, amount]) =>
-            formatMoney(amount, currency as Tip["currency"]),
+            money(amount, currency as Tip["currency"]),
           ).join(" + "),
   };
 };
 
 export const AdminPaymentsTable: FC = () => {
   const router = useRouter();
+  const t = useTranslations("dashboard.admin.payments");
+  const tc = useTranslations("dashboard.admin.common");
+  const locale = useLocale();
+  const format = useFormatter();
+  const statusOptions = useDropdownOptions(TipStatusFilterOptions);
+  const statusLabel = useDropdownLabel();
+  const money = (amount: number, currency: Tip["currency"]) =>
+    formatMoney(amount, currency, locale);
+  const formatDateTime = (value?: string | null) =>
+    value
+      ? format.dateTime(new Date(value), { dateStyle: "medium", timeStyle: "short" })
+      : "-";
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<TipStatus | "all">("all");
   const [storeId, setStoreId] = useState<string | null>(null);
@@ -167,9 +176,23 @@ export const AdminPaymentsTable: FC = () => {
       return next;
     });
 
-  const selectionSummary = summarizeSelection(Array.from(selected.values()));
+  const selectionSummary = summarizeSelection(Array.from(selected.values()), money);
   const skippedCount =
     selectionSummary.notCompletedCount + selectionSummary.feeUnconfirmedCount;
+
+  const skippedValues = {
+    skipped: skippedCount,
+    notCompleted: selectionSummary.notCompletedCount,
+    feeUnconfirmed: selectionSummary.feeUnconfirmedCount,
+  };
+  const skippedMessage =
+    selectionSummary.notCompletedCount > 0 && selectionSummary.feeUnconfirmedCount > 0
+      ? t("skippedBoth", skippedValues)
+      : selectionSummary.notCompletedCount > 0
+        ? t("skippedNotCompleted", skippedValues)
+        : selectionSummary.feeUnconfirmedCount > 0
+          ? t("skippedFee", skippedValues)
+          : t("skippedOnly", skippedValues);
 
   const confirmPayout = async () => {
     await manualPayout.mutateAsync({ tip_ids: Array.from(selected.keys()) });
@@ -181,7 +204,7 @@ export const AdminPaymentsTable: FC = () => {
       <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
-          Filters
+          {tc("filters")}
         </div>
         <div className="relative">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-zinc-400" />
@@ -191,13 +214,13 @@ export const AdminPaymentsTable: FC = () => {
               setSearch(event.target.value);
               resetPage();
             }}
-            placeholder="Customer, store, owner contact, or any ID"
-            aria-label="Search payments"
+            placeholder={t("searchPlaceholder")}
+            aria-label={t("searchAria")}
             className="w-64 rounded-xl border-zinc-200 bg-white pl-8 font-medium text-ink-charcoal shadow-xs"
           />
         </div>
         <Select
-          items={TipStatusFilterOptions.map((option) => ({
+          items={statusOptions.map((option) => ({
             label: option.label,
             value: option.id,
           }))}
@@ -214,7 +237,7 @@ export const AdminPaymentsTable: FC = () => {
           </SelectTrigger>
           <SelectContent className="w-auto min-w-40">
             <SelectGroup>
-              {TipStatusFilterOptions.map((option) => (
+              {statusOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.label}
                 </SelectItem>
@@ -235,19 +258,19 @@ export const AdminPaymentsTable: FC = () => {
             setDateFrom(value);
             resetPage();
           }}
-          placeholder="From date"
-          aria-label="From date"
+          placeholder={tc("fromDate")}
+          aria-label={tc("fromDate")}
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
-        <span className="text-xs text-zinc-400">to</span>
+        <span className="text-xs text-zinc-400">{tc("dateRangeTo")}</span>
         <DatePicker
           value={dateTo}
           onChange={(value) => {
             setDateTo(value);
             resetPage();
           }}
-          placeholder="To date"
-          aria-label="To date"
+          placeholder={tc("toDate")}
+          aria-label={tc("toDate")}
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
       </div>
@@ -257,7 +280,7 @@ export const AdminPaymentsTable: FC = () => {
       ) : tipsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load payments</EmptyTitle>
+            <EmptyTitle>{t("loadError")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(tipsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -266,7 +289,7 @@ export const AdminPaymentsTable: FC = () => {
               variant="outline"
               onClick={() => void tipsQuery.refetch()}
             >
-              Try again
+              {tc("tryAgain")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -276,11 +299,11 @@ export const AdminPaymentsTable: FC = () => {
             <EmptyMedia variant="icon">
               <Receipt />
             </EmptyMedia>
-            <EmptyTitle>No payments found</EmptyTitle>
+            <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>
               {search || status !== "all" || storeId || dateFrom || dateTo
-                ? "No payments match your filters."
-                : "No one has paid a tip yet."}
+                ? t("emptyFiltered")
+                : t("emptyNone")}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -290,19 +313,15 @@ export const AdminPaymentsTable: FC = () => {
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand-200 bg-brand-50/60 px-4 py-2.5">
               <div className="space-y-0.5 text-sm">
                 <p className="font-semibold text-brand-700">
-                  {selected.size} payment{selected.size === 1 ? "" : "s"}{" "}
-                  selected - {selectionSummary.payableCount} payable, total{" "}
-                  {selectionSummary.totalLabel}
+                  {t("selectedSummary", {
+                    count: selected.size,
+                    payable: selectionSummary.payableCount,
+                    total: selectionSummary.totalLabel,
+                  })}
                 </p>
                 {skippedCount > 0 ? (
                   <p className="text-xs text-amber-700">
-                    {skippedCount} will be skipped
-                    {selectionSummary.notCompletedCount > 0
-                      ? ` - ${selectionSummary.notCompletedCount} not completed`
-                      : ""}
-                    {selectionSummary.feeUnconfirmedCount > 0
-                      ? `${selectionSummary.notCompletedCount > 0 ? "," : " -"} ${selectionSummary.feeUnconfirmedCount} fee not confirmed`
-                      : ""}
+                    {skippedMessage}
                   </p>
                 ) : null}
               </div>
@@ -313,7 +332,7 @@ export const AdminPaymentsTable: FC = () => {
                   size="sm"
                   onClick={() => setSelected(new Map())}
                 >
-                  Clear
+                  {t("clear")}
                 </Button>
                 <Button
                   type="button"
@@ -324,7 +343,7 @@ export const AdminPaymentsTable: FC = () => {
                   onClick={payoutConfirm.openDialog}
                 >
                   <Banknote data-icon="inline-start" className="size-3.5" />
-                  Pay out selected
+                  {t("payOutSelected")}
                 </Button>
               </div>
             </div>
@@ -335,35 +354,35 @@ export const AdminPaymentsTable: FC = () => {
                 <TableRow>
                   <TableHead className="w-10 px-4">
                     <Checkbox
-                      aria-label="Select all payments on this page"
+                      aria-label={t("selectAllAria")}
                       checked={allOnPageSelected}
                       indeterminate={someOnPageSelected}
                       onCheckedChange={(checked) => toggleAllOnPage(checked)}
                     />
                   </TableHead>
-                  <TableHead className="px-4">When</TableHead>
-                  <TableHead className="px-4">Store</TableHead>
-                  <TableHead className="px-4">Customer</TableHead>
-                  <TableHead className="px-4">Employee</TableHead>
+                  <TableHead className="px-4">{t("columns.when")}</TableHead>
+                  <TableHead className="px-4">{t("columns.store")}</TableHead>
+                  <TableHead className="px-4">{t("columns.customer")}</TableHead>
+                  <TableHead className="px-4">{t("columns.employee")}</TableHead>
                   <TableHead className="px-4">
                     <ColumnHeaderWithTooltip
-                      label="Tip amount"
-                      explanation="The full amount the customer paid, before any fees are deducted."
+                      label={t("columns.tipAmount")}
+                      explanation={t("help.tipAmount")}
                     />
                   </TableHead>
                   <TableHead className="px-4">
                     <ColumnHeaderWithTooltip
-                      label="Fees"
-                      explanation="Platform commission and payment processor fee taken out of this tip, each shown with its share of the tip amount, plus the combined total."
+                      label={t("columns.fees")}
+                      explanation={t("help.fees")}
                     />
                   </TableHead>
                   <TableHead className="px-4">
                     <ColumnHeaderWithTooltip
-                      label="Net"
-                      explanation="What's left after platform and payment fees are deducted - the pool the store then splits with its employees."
+                      label={t("columns.net")}
+                      explanation={t("help.net")}
                     />
                   </TableHead>
-                  <TableHead className="px-4 text-right">Status</TableHead>
+                  <TableHead className="px-4 text-right">{t("columns.status")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -380,7 +399,7 @@ export const AdminPaymentsTable: FC = () => {
                       onClick={(event) => event.stopPropagation()}
                     >
                       <Checkbox
-                        aria-label="Select payment for payout"
+                        aria-label={t("selectOneAria")}
                         checked={selected.has(tip.id)}
                         onCheckedChange={(checked) => toggleOne(tip, checked)}
                       />
@@ -392,13 +411,13 @@ export const AdminPaymentsTable: FC = () => {
                       {tip.store?.name ?? "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
-                      {tip.customer_name ?? tip.customer_email ?? "Anonymous"}
+                      {tip.customer_name ?? tip.customer_email ?? tc("anonymous")}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
-                      {tip.employee?.full_name ?? "Store"}
+                      {tip.employee?.full_name ?? t("storeFallback")}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 font-bold text-brand-700">
-                      {formatMoney(tip.amount, tip.currency)}
+                      {money(tip.amount, tip.currency)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5">
                       <AdminPaymentFeesCell
@@ -408,7 +427,7 @@ export const AdminPaymentsTable: FC = () => {
                     </TableCell>
                     <TableCell className="px-4 py-3.5 font-semibold text-ink-charcoal">
                       {tip.payment_transaction?.net_distributable_amount != null
-                        ? formatMoney(tip.payment_transaction.net_distributable_amount, tip.currency)
+                        ? money(tip.payment_transaction.net_distributable_amount, tip.currency)
                         : "-"}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-right">
@@ -418,7 +437,7 @@ export const AdminPaymentsTable: FC = () => {
                           statusChipClass[tip.status],
                         )}
                       >
-                        {getTipStatusLabel(tip.status)}
+                        {statusLabel(TipStatusFormOptions, tip.status)}
                       </span>
                     </TableCell>
                   </TableRow>
@@ -430,9 +449,11 @@ export const AdminPaymentsTable: FC = () => {
           {pagination ? (
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-zinc-500">
-                {pagination.total} payment{pagination.total === 1 ? "" : "s"}{" "}
-                total - page {pagination.page} of{" "}
-                {Math.max(pagination.total_pages, 1)}
+                {t("pagination", {
+                  total: pagination.total,
+                  page: pagination.page,
+                  pages: Math.max(pagination.total_pages, 1),
+                })}
               </p>
               <div className="flex items-center gap-2">
                 <Button
@@ -442,7 +463,7 @@ export const AdminPaymentsTable: FC = () => {
                   disabled={!pagination.has_prev}
                   onClick={() => setPage((current) => Math.max(1, current - 1))}
                 >
-                  Previous
+                  {tc("previous")}
                 </Button>
                 <Button
                   type="button"
@@ -451,7 +472,7 @@ export const AdminPaymentsTable: FC = () => {
                   disabled={!pagination.has_next}
                   onClick={() => setPage((current) => current + 1)}
                 >
-                  Next
+                  {tc("next")}
                 </Button>
               </div>
             </div>
@@ -460,9 +481,19 @@ export const AdminPaymentsTable: FC = () => {
       )}
       <ConfirmationDialog
         state={payoutConfirm}
-        title={`Pay out ${selectionSummary.payableCount} payment${selectionSummary.payableCount === 1 ? "" : "s"} (${selectionSummary.totalLabel}) now?`}
-        description={`This sends real money to the recipients' bank accounts immediately, skipping the usual hold window.${skippedCount > 0 ? ` ${skippedCount} of the ${selected.size} selected will be skipped (${selectionSummary.notCompletedCount} not completed, ${selectionSummary.feeUnconfirmedCount} fee not confirmed).` : ""} Payments already paid out are skipped too. This cannot be undone.`}
-        confirmLabel="Pay out now"
+        title={t("confirmTitle", {
+          count: selectionSummary.payableCount,
+          total: selectionSummary.totalLabel,
+        })}
+        description={
+          skippedCount > 0
+            ? t("confirmDescriptionSkipped", {
+                ...skippedValues,
+                selected: selected.size,
+              })
+            : t("confirmDescription")
+        }
+        confirmLabel={t("confirmLabel")}
         variant="default"
         isPending={manualPayout.isPending}
         onConfirm={confirmPayout}

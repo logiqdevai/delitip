@@ -1063,14 +1063,17 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2d$intl$2f$dist$2f$esm$2f$development$2f$react$2d$client$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/node_modules/next-intl/dist/esm/development/react-client/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$src$2f$components$2f$system$2f$app$2d$status$2d$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/src/components/system/app-status-page.tsx [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
 ;
 ;
+;
 const ErrorPage = ({ error, reset })=>{
     _s();
+    const t = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2d$intl$2f$dist$2f$esm$2f$development$2f$react$2d$client$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslations"])("errors.page");
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "ErrorPage.useEffect": ()=>{
             console.error(error);
@@ -1080,17 +1083,21 @@ const ErrorPage = ({ error, reset })=>{
     ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$src$2f$components$2f$system$2f$app$2d$status$2d$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AppStatusPage"], {
         code: "500",
-        title: "This page couldn't load",
-        description: "Something went wrong on our side. Try again, or go back and continue from where you left off.",
+        title: t("errorTitle"),
+        description: t("errorDescription"),
         onTryAgain: reset,
         digest: error.digest
     }, void 0, false, {
         fileName: "[project]/app/src/app/error.tsx",
-        lineNumber: 17,
+        lineNumber: 20,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s(ErrorPage, "OD7bBpZva5O2jO+Puf00hKivP7c=");
+_s(ErrorPage, "etYYvAa+NcFbn1DAUOfsAwohSEY=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2d$intl$2f$dist$2f$esm$2f$development$2f$react$2d$client$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslations"]
+    ];
+});
 _c = ErrorPage;
 const __TURBOPACK__default__export__ = ErrorPage;
 var _c;
@@ -1144,14 +1151,16 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2d$intl$2f$dist$2f$esm$2f$development$2f$react$2d$client$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/node_modules/next-intl/dist/esm/development/react-client/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$left$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowLeft$3e$__ = __turbopack_context__.i("[project]/app/node_modules/lucide-react/dist/esm/icons/arrow-left.mjs [app-client] (ecmascript) <export default as ArrowLeft>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__ = __turbopack_context__.i("[project]/app/node_modules/lucide-react/dist/esm/icons/refresh-cw.mjs [app-client] (ecmascript) <export default as RefreshCw>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$src$2f$components$2f$brand$2f$brand$2d$mark$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/src/components/brand/brand-mark.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$src$2f$routes$2f$routes$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/src/routes/routes.ts [app-client] (ecmascript)");
 ;
-var _s = __turbopack_context__.k.signature();
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -1160,6 +1169,7 @@ var _s = __turbopack_context__.k.signature();
 const AppStatusPage = ({ code, title, description, onTryAgain, digest })=>{
     _s();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
+    const t = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2d$intl$2f$dist$2f$esm$2f$development$2f$react$2d$client$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslations"])("errors.page");
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "relative flex min-h-dvh flex-col overflow-hidden bg-paper-offwhite text-ink-charcoal",
         children: [
@@ -1170,20 +1180,20 @@ const AppStatusPage = ({ code, title, description, onTryAgain, digest })=>{
                         className: "absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(200,241,105,0.14),transparent_48%)]"
                     }, void 0, false, {
                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                        lineNumber: 30,
+                        lineNumber: 32,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "absolute inset-0 bg-[radial-gradient(ellipse_at_100%_100%,rgba(24,26,27,0.05),transparent_42%)]"
                     }, void 0, false, {
                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                        lineNumber: 31,
+                        lineNumber: 33,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                lineNumber: 29,
+                lineNumber: 31,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
@@ -1195,7 +1205,7 @@ const AppStatusPage = ({ code, title, description, onTryAgain, digest })=>{
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$src$2f$components$2f$brand$2f$brand$2d$mark$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["BrandMark"], {}, void 0, false, {
                                 fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                                lineNumber: 36,
+                                lineNumber: 38,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1207,34 +1217,34 @@ const AppStatusPage = ({ code, title, description, onTryAgain, digest })=>{
                                         children: "tip"
                                     }, void 0, false, {
                                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                                        lineNumber: 39,
+                                        lineNumber: 41,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                                lineNumber: 37,
+                                lineNumber: 39,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                        lineNumber: 35,
+                        lineNumber: 37,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         href: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$src$2f$routes$2f$routes$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Routes"].contact,
                         className: "text-xs font-semibold text-zinc-500 transition hover:text-ink-charcoal",
-                        children: "Contact support"
+                        children: t("contactSupport")
                     }, void 0, false, {
                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                        lineNumber: 42,
+                        lineNumber: 44,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                lineNumber: 34,
+                lineNumber: 36,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -1245,7 +1255,7 @@ const AppStatusPage = ({ code, title, description, onTryAgain, digest })=>{
                         children: code
                     }, void 0, false, {
                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                        lineNumber: 51,
+                        lineNumber: 53,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -1253,7 +1263,7 @@ const AppStatusPage = ({ code, title, description, onTryAgain, digest })=>{
                         children: title
                     }, void 0, false, {
                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                        lineNumber: 54,
+                        lineNumber: 56,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1261,7 +1271,7 @@ const AppStatusPage = ({ code, title, description, onTryAgain, digest })=>{
                         children: description
                     }, void 0, false, {
                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                        lineNumber: 57,
+                        lineNumber: 59,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1277,14 +1287,14 @@ const AppStatusPage = ({ code, title, description, onTryAgain, digest })=>{
                                         strokeWidth: 2.25
                                     }, void 0, false, {
                                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                                        lineNumber: 67,
+                                        lineNumber: 69,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
-                                    "Try again"
+                                    t("tryAgain")
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                                lineNumber: 62,
+                                lineNumber: 64,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1297,66 +1307,73 @@ const AppStatusPage = ({ code, title, description, onTryAgain, digest })=>{
                                         strokeWidth: 2.25
                                     }, void 0, false, {
                                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                                        lineNumber: 75,
+                                        lineNumber: 77,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
-                                    "Go back"
+                                    t("goBack")
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                                lineNumber: 70,
+                                lineNumber: 72,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                        lineNumber: 61,
+                        lineNumber: 63,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     digest ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         className: "mt-8 font-mono text-caption text-zinc-400",
-                        children: [
-                            "Ref ",
+                        children: t("reference", {
                             digest
-                        ]
-                    }, void 0, true, {
+                        })
+                    }, void 0, false, {
                         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                        lineNumber: 81,
+                        lineNumber: 83,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)) : null
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/src/components/system/app-status-page.tsx",
-                lineNumber: 50,
+                lineNumber: 52,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-        lineNumber: 28,
+        lineNumber: 30,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s(AppStatusPage, "fN7XvhJ+p5oE6+Xlo0NJmXpxjC8=", false, function() {
+_s(AppStatusPage, "DPrMQu7CQKOaEJNNtxOxwF+VJUg=", false, function() {
     return [
-        __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
+        __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2d$intl$2f$dist$2f$esm$2f$development$2f$react$2d$client$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslations"]
     ];
 });
 _c = AppStatusPage;
 const NotFoundStatusPage = ()=>{
+    _s1();
+    const t = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2d$intl$2f$dist$2f$esm$2f$development$2f$react$2d$client$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslations"])("errors.page");
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AppStatusPage, {
         code: "404",
-        title: "Page not found",
-        description: "That URL isn't on delitip. Try again, or go back to the previous page.",
+        title: t("notFoundTitle"),
+        description: t("notFoundDescription"),
         onTryAgain: ()=>{
             window.location.reload();
         }
     }, void 0, false, {
         fileName: "[project]/app/src/components/system/app-status-page.tsx",
-        lineNumber: 92,
+        lineNumber: 95,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
+_s1(NotFoundStatusPage, "h6+q2O3NJKPY5uL0BIJGLIanww8=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2d$intl$2f$dist$2f$esm$2f$development$2f$react$2d$client$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslations"]
+    ];
+});
 _c1 = NotFoundStatusPage;
 var _c, _c1;
 __turbopack_context__.k.register(_c, "AppStatusPage");

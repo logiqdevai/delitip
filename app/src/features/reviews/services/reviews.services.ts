@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -22,7 +23,7 @@ export const listStoreReviews = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load reviews. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadReviews")));
   }
 };
 
@@ -33,7 +34,7 @@ export const getReview = async (id: string): Promise<Review> => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load review. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadReview")));
   }
 };
 
@@ -48,7 +49,7 @@ export const updateReview = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't update review. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.updateReview")));
   }
 };
 
@@ -56,7 +57,7 @@ export const deleteReview = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.reviews.byId(id));
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't delete review. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.deleteReview")));
   }
 };
 
@@ -71,7 +72,7 @@ export const listEmployeeReviews = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load employee reviews. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadEmployeeReviews")));
   }
 };
 
@@ -86,7 +87,7 @@ export const getPublicReviewConfig = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load review config. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadReviewConfig")));
   }
 };
 
@@ -101,7 +102,7 @@ export const createPublicReview = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't submit review. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.submitReview")),
     );
   }
 };

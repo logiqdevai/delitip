@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -11,18 +12,18 @@ import {
 } from "@/components/ui/select";
 import type { DashboardPeriod } from "@/features/analytics/interfaces/analytics.interfaces";
 
-const PERIOD_OPTIONS: { id: DashboardPeriod; label: string }[] = [
-  { id: "today", label: "Today" },
-  { id: "7d", label: "Last 7 days" },
-  { id: "30d", label: "Last 30 days" },
-];
+const PERIOD_IDS: DashboardPeriod[] = ["today", "7d", "30d"];
 
 export const AnalyticsPeriodSelect: FC<{
   value: DashboardPeriod;
   onChange: (value: DashboardPeriod) => void;
-}> = ({ value, onChange }) => (
+}> = ({ value, onChange }) => {
+  const t = useTranslations("dashboard.analytics.period");
+  const periodOptions = PERIOD_IDS.map((id) => ({ id, label: t(id) }));
+
+  return (
   <Select
-    items={PERIOD_OPTIONS.map((option) => ({
+    items={periodOptions.map((option) => ({
       label: option.label,
       value: option.id,
     }))}
@@ -36,7 +37,7 @@ export const AnalyticsPeriodSelect: FC<{
     </SelectTrigger>
     <SelectContent>
       <SelectGroup>
-        {PERIOD_OPTIONS.map((option) => (
+        {periodOptions.map((option) => (
           <SelectItem key={option.id} value={option.id}>
             {option.label}
           </SelectItem>
@@ -44,4 +45,5 @@ export const AnalyticsPeriodSelect: FC<{
       </SelectGroup>
     </SelectContent>
   </Select>
-);
+  );
+};

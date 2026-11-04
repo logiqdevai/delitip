@@ -5,19 +5,22 @@ import {
 
 export const PayoutRequestStatusFormOptions: {
   id: PayoutRequestStatus;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: PayoutRequestStatuses.PENDING_REVIEW, label: "Awaiting review" },
-  { id: PayoutRequestStatuses.APPROVED, label: "Approved" },
-  { id: PayoutRequestStatuses.REJECTED, label: "Rejected" },
-  { id: PayoutRequestStatuses.CANCELLED, label: "Cancelled" },
+  {
+    id: PayoutRequestStatuses.PENDING_REVIEW,
+    labelKey: "dashboard.enums.payoutRequestStatus.PENDING_REVIEW",
+  },
+  {
+    id: PayoutRequestStatuses.APPROVED,
+    labelKey: "dashboard.enums.payoutRequestStatus.APPROVED",
+  },
+  {
+    id: PayoutRequestStatuses.REJECTED,
+    labelKey: "dashboard.enums.payoutRequestStatus.REJECTED",
+  },
+  {
+    id: PayoutRequestStatuses.CANCELLED,
+    labelKey: "dashboard.enums.payoutRequestStatus.CANCELLED",
+  },
 ];
-
-export function getPayoutRequestStatusLabel(
-  status: PayoutRequestStatus | string,
-): string {
-  return (
-    PayoutRequestStatusFormOptions.find((option) => option.id === status)
-      ?.label ?? status
-  );
-}

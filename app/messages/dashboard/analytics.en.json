@@ -3,11 +3,26 @@
   "defaultDescription": "Detailed intelligence on tipping and customer experience.",
   "overviewDescription": "Detailed intelligence on tipping and customer experience for {storeName}.",
   "nav": {
-    "overview": { "label": "Overview", "description": "Tip totals, volume, and experience score for the selected period." },
-    "tips": { "label": "Tips", "description": "Break down tip volume by day, week, month, employee, or store." },
-    "employees": { "label": "Employees", "description": "Informational performance stats for your team - not a ranking." },
-    "stores": { "label": "Stores", "description": "Compare tip performance across locations in your business." },
-    "insights": { "label": "Insights", "description": "Rule-based summaries of recent feedback computed from your data." }
+    "overview": {
+      "label": "Overview",
+      "description": "Tip totals, volume, and experience score for the selected period."
+    },
+    "tips": {
+      "label": "Tips",
+      "description": "Break down tip volume by day, week, month, employee, or store."
+    },
+    "employees": {
+      "label": "Employees",
+      "description": "Informational performance stats for your team - not a ranking."
+    },
+    "stores": {
+      "label": "Stores",
+      "description": "Compare tip performance across locations in your business."
+    },
+    "insights": {
+      "label": "Insights",
+      "description": "Rule-based summaries of recent feedback computed from your data."
+    }
   },
   "period": {
     "today": "Today",
@@ -68,6 +83,9 @@
     "generate": "Generate insight",
     "generating": "Generating…",
     "emptyTitle": "No summaries yet",
-    "emptyDescription": "Generate your first insight to see a summary of recent customer feedback."
+    "emptyDescription": "Generate your first insight to see a summary of recent customer feedback.",
+    "dateRange": "{start} – {end}",
+    "generatedToast": "Insight generated",
+    "generateErrorToast": "Could not generate insight"
   }
 }

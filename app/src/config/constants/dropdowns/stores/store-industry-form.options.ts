@@ -3,27 +3,47 @@ import {
   type StoreIndustry,
 } from "@/features/stores/interfaces/stores.interfaces";
 
-export const StoreIndustryFormOptions: { id: StoreIndustry; label: string }[] =
-  [
-    { id: StoreIndustries.RESTAURANT, label: "Restaurant" },
-    { id: StoreIndustries.CAFE, label: "Café / Coffee Bar" },
-    { id: StoreIndustries.BAR, label: "Bar & Lounge" },
-    { id: StoreIndustries.HOTEL, label: "Hotel & Hospitality" },
-    { id: StoreIndustries.SALON, label: "Salon" },
-    { id: StoreIndustries.SPA, label: "Spa" },
-    { id: StoreIndustries.RETAIL, label: "Retail" },
-    { id: StoreIndustries.BARBERSHOP, label: "Barbershop" },
-    { id: StoreIndustries.FITNESS, label: "Fitness & Personal Training" },
-    { id: StoreIndustries.FOOD_TRUCK, label: "Food Truck" },
-    { id: StoreIndustries.CLEANING, label: "Cleaning Services" },
-    { id: StoreIndustries.OTHER, label: "Other Service Business" },
-  ];
-
-export function getStoreIndustryLabel(
-  industry: StoreIndustry | string,
-): string {
-  return (
-    StoreIndustryFormOptions.find((option) => option.id === industry)?.label ??
-    industry
-  );
-}
+export const StoreIndustryFormOptions: {
+  id: StoreIndustry;
+  labelKey: string;
+}[] = [
+  {
+    id: StoreIndustries.RESTAURANT,
+    labelKey: "dashboard.enums.storeIndustry.RESTAURANT",
+  },
+  { id: StoreIndustries.CAFE, labelKey: "dashboard.enums.storeIndustry.CAFE" },
+  { id: StoreIndustries.BAR, labelKey: "dashboard.enums.storeIndustry.BAR" },
+  {
+    id: StoreIndustries.HOTEL,
+    labelKey: "dashboard.enums.storeIndustry.HOTEL",
+  },
+  {
+    id: StoreIndustries.SALON,
+    labelKey: "dashboard.enums.storeIndustry.SALON",
+  },
+  { id: StoreIndustries.SPA, labelKey: "dashboard.enums.storeIndustry.SPA" },
+  {
+    id: StoreIndustries.RETAIL,
+    labelKey: "dashboard.enums.storeIndustry.RETAIL",
+  },
+  {
+    id: StoreIndustries.BARBERSHOP,
+    labelKey: "dashboard.enums.storeIndustry.BARBERSHOP",
+  },
+  {
+    id: StoreIndustries.FITNESS,
+    labelKey: "dashboard.enums.storeIndustry.FITNESS",
+  },
+  {
+    id: StoreIndustries.FOOD_TRUCK,
+    labelKey: "dashboard.enums.storeIndustry.FOOD_TRUCK",
+  },
+  {
+    id: StoreIndustries.CLEANING,
+    labelKey: "dashboard.enums.storeIndustry.CLEANING",
+  },
+  {
+    id: StoreIndustries.OTHER,
+    labelKey: "dashboard.enums.storeIndustry.OTHER",
+  },
+];

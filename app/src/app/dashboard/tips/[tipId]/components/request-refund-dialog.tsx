@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, type FormEvent, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +34,8 @@ export const RequestRefundDialog: FC<RequestRefundDialogProps> = ({
   tipAmount,
   currency,
 }) => {
+  const t = useTranslations("dashboard.money.requestRefund");
+  const locale = useLocale();
   const createRefund = useCreateRefund();
   const [amount, setAmount] = useState(String(tipAmount / 100));
   const [reason, setReason] = useState("");
@@ -62,16 +65,15 @@ export const RequestRefundDialog: FC<RequestRefundDialogProps> = ({
     >
       <DialogContent showCloseButton={!createRefund.isPending}>
         <DialogHeader>
-          <DialogTitle>Request refund</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Up to {formatMoney(tipAmount, currency)}. A manager will need to
-            approve it before it&apos;s marked complete.
+            {t("description", { amount: formatMoney(tipAmount, currency, locale) })}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div className="space-y-1.5">
-            <Label htmlFor="refund-amount">Amount</Label>
+            <Label htmlFor="refund-amount">{t("amount")}</Label>
             <Input
               id="refund-amount"
               type="number"
@@ -85,12 +87,13 @@ export const RequestRefundDialog: FC<RequestRefundDialogProps> = ({
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="refund-reason">
-              Reason <span className="font-normal text-zinc-400">(optional)</span>
+              {t("reason")}{" "}
+              <span className="font-normal text-zinc-400">{t("optional")}</span>
             </Label>
             <Textarea
               id="refund-reason"
               rows={3}
-              placeholder="e.g. Order was cancelled after tipping"
+              placeholder={t("reasonPlaceholder")}
               value={reason}
               onChange={(event) => setReason(event.target.value)}
             />
@@ -103,13 +106,13 @@ export const RequestRefundDialog: FC<RequestRefundDialogProps> = ({
               disabled={createRefund.isPending}
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <ActionButtonWithPending
               type="submit"
               isPending={createRefund.isPending}
             >
-              Request refund
+              {t("submit")}
             </ActionButtonWithPending>
           </DialogFooter>
         </form>

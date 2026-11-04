@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStoresPerformance } from "@/features/analytics/hooks/use-analytics";
 import type { DashboardPeriod } from "@/features/analytics/interfaces/analytics.interfaces";
@@ -13,6 +14,8 @@ export const StoresTab: FC<{
   stores: Store[];
   period: DashboardPeriod;
 }> = ({ organizationId, stores, period }) => {
+  const t = useTranslations("dashboard.analytics.stores");
+  const locale = useLocale();
   const performanceQuery = useStoresPerformance(organizationId, { period });
   const currencyByStoreId = new Map(
     stores.map((store) => [store.id, store.currency]),
@@ -29,11 +32,11 @@ export const StoresTab: FC<{
       ) : (
         <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-zinc-100 bg-zinc-50 text-caption font-semibold tracking-wider text-zinc-400 uppercase">
+            <thead className="border-b border-zinc-100 bg-zinc-50 text-base font-semibold tracking-wider text-zinc-400 uppercase">
               <tr>
-                <th className="px-4 py-2.5">Store</th>
-                <th className="px-4 py-2.5">Tips</th>
-                <th className="px-4 py-2.5">Rating</th>
+                <th className="px-4 py-2.5">{t("store")}</th>
+                <th className="px-4 py-2.5">{t("tips")}</th>
+                <th className="px-4 py-2.5">{t("rating")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100">
@@ -46,6 +49,7 @@ export const StoresTab: FC<{
                     {formatMoney(
                       row.tips_total,
                       currencyByStoreId.get(row.store_id) ?? "EUR",
+                      locale,
                     )}
                   </td>
                   <td className="px-4 py-2.5 text-rating-amber">

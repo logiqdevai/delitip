@@ -1,6 +1,7 @@
 "use client";
 
 import { type CSSProperties, type FC, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { AuthRouteGuard } from "@/components/auth/auth-route-guard";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { EmployeeCashOutProvider } from "./employee-cash-out-provider";
@@ -12,6 +13,8 @@ interface EmployeeAuthShellProps {
 }
 
 export const EmployeeAuthShell: FC<EmployeeAuthShellProps> = ({ children }) => {
+  const t = useTranslations("employee.shell");
+
   return (
     <AuthRouteGuard portal="employee">
       <EmployeeCashOutProvider>
@@ -26,11 +29,13 @@ export const EmployeeAuthShell: FC<EmployeeAuthShellProps> = ({ children }) => {
             </div>
             <footer className="w-full border-t border-zinc-200/60 bg-white px-4 py-4 text-center text-xs text-zinc-400">
               <p>
-                © 2026{" "}
-                <strong className="font-semibold text-zinc-700">
-                  delitip
-                </strong>{" "}
-                • Transparent Direct Tipping for Service Staff
+                {t.rich("footer", {
+                  brand: (chunks) => (
+                    <strong className="font-semibold text-zinc-700">
+                      {chunks}
+                    </strong>
+                  ),
+                })}
               </p>
             </footer>
           </main>

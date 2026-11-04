@@ -9,47 +9,48 @@ export const QrEditorSections = {
 export type QrEditorSection =
   (typeof QrEditorSections)[keyof typeof QrEditorSections];
 
+// Labels/descriptions are message keys: t(option.labelKey), t(option.descriptionKey).
 export const QrEditorSectionOptions: {
   id: QrEditorSection;
-  label: string;
-  description: string;
+  labelKey: string;
+  descriptionKey: string;
   /** Store-wide sections apply to every QR code, not only this one. */
   storeWide: boolean;
 }[] = [
   {
     id: QrEditorSections.DETAILS,
-    label: "Details",
-    description: "Name, status and the link behind this QR code.",
+    labelKey: "dashboard.enums.qrEditorSection.DETAILS",
+    descriptionKey: "dashboard.enums.qrEditorSectionDescription.DETAILS",
     storeWide: false,
   },
   {
     id: QrEditorSections.RECIPIENTS,
-    label: "Recipients",
-    description: "Who guests can tip and how the tip is split.",
+    labelKey: "dashboard.enums.qrEditorSection.RECIPIENTS",
+    descriptionKey: "dashboard.enums.qrEditorSectionDescription.RECIPIENTS",
     storeWide: false,
   },
   {
     id: QrEditorSections.APPEARANCE,
-    label: "Appearance",
-    description: "Logo, colors and messages shown on the tip page.",
+    labelKey: "dashboard.enums.qrEditorSection.APPEARANCE",
+    descriptionKey: "dashboard.enums.qrEditorSectionDescription.APPEARANCE",
     storeWide: true,
   },
   {
     id: QrEditorSections.TIPPING,
-    label: "Tipping",
-    description: "Suggested amounts and custom tips.",
+    labelKey: "dashboard.enums.qrEditorSection.TIPPING",
+    descriptionKey: "dashboard.enums.qrEditorSectionDescription.TIPPING",
     storeWide: true,
   },
   {
     id: QrEditorSections.REVIEWS,
-    label: "Reviews",
-    description: "When happy guests are sent to a public review site.",
+    labelKey: "dashboard.enums.qrEditorSection.REVIEWS",
+    descriptionKey: "dashboard.enums.qrEditorSectionDescription.REVIEWS",
     storeWide: true,
   },
   {
     id: QrEditorSections.PRINT,
-    label: "Print card",
-    description: "Design and download the printable QR card.",
+    labelKey: "dashboard.enums.qrEditorSection.PRINT",
+    descriptionKey: "dashboard.enums.qrEditorSectionDescription.PRINT",
     storeWide: false,
   },
 ];

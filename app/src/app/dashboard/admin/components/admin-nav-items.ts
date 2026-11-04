@@ -12,7 +12,8 @@ import { Routes } from "@/routes/routes";
 
 export interface AdminNavItem {
   href: string;
-  label: string;
+  /** Message key under `dashboard.adminSystem.shell.nav`. */
+  labelKey: string;
   icon: LucideIcon;
   match: (path: string) => boolean;
 }
@@ -20,19 +21,19 @@ export interface AdminNavItem {
 export const adminNavItems: AdminNavItem[] = [
   {
     href: Routes.dashboard.admin.analytics,
-    label: "Analytics",
+    labelKey: "dashboard.adminSystem.shell.nav.analytics",
     icon: BarChart3,
     match: (path) => path.startsWith(Routes.dashboard.admin.analytics),
   },
   {
     href: Routes.dashboard.admin.users,
-    label: "All Users",
+    labelKey: "dashboard.adminSystem.shell.nav.allUsers",
     icon: ShieldCheck,
     match: (path) => path.startsWith(Routes.dashboard.admin.users),
   },
   {
     href: Routes.dashboard.admin.payments,
-    label: "Payments & Payouts",
+    labelKey: "dashboard.adminSystem.shell.nav.paymentsPayouts",
     icon: WalletCards,
     match: (path) =>
       path.startsWith(Routes.dashboard.admin.payments) ||
@@ -41,25 +42,25 @@ export const adminNavItems: AdminNavItem[] = [
   },
   {
     href: Routes.dashboard.admin.webhookEvents,
-    label: "Webhook Events",
+    labelKey: "dashboard.adminSystem.shell.nav.webhookEvents",
     icon: Webhook,
     match: (path) => path.startsWith(Routes.dashboard.admin.webhookEvents),
   },
   {
     href: Routes.dashboard.admin.vatSimulator,
-    label: "VAT Simulator",
+    labelKey: "dashboard.adminSystem.shell.nav.vatSimulator",
     icon: Calculator,
     match: (path) => path.startsWith(Routes.dashboard.admin.vatSimulator),
   },
   {
     href: Routes.dashboard.admin.appConfig,
-    label: "App Config",
+    labelKey: "dashboard.adminSystem.shell.nav.appConfig",
     icon: Settings2,
     match: (path) => path.startsWith(Routes.dashboard.admin.appConfig),
   },
   {
     href: Routes.dashboard.admin.changelog,
-    label: "Changelog",
+    labelKey: "dashboard.adminSystem.shell.nav.changelog",
     icon: History,
     match: (path) => path.startsWith(Routes.dashboard.admin.changelog),
   },

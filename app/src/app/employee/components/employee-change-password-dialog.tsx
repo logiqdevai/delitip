@@ -2,7 +2,8 @@
 
 import { type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +30,7 @@ interface EmployeeChangePasswordDialogProps {
 export const EmployeeChangePasswordDialog: FC<
   EmployeeChangePasswordDialogProps
 > = ({ open, onOpenChange }) => {
+  const t = useTranslations("employee.changePassword");
   const changePassword = useChangePassword();
 
   const {
@@ -73,16 +75,16 @@ export const EmployeeChangePasswordDialog: FC<
     >
       <DialogContent className="sm:max-w-sm" showCloseButton={!isPending}>
         <DialogHeader>
-          <DialogTitle>Change password</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Update the password used to sign in to your tip profile.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={onSubmit} className="space-y-4" noValidate>
           <div className="space-y-1.5">
             <Label htmlFor="employee-current-password">
-              Current password
+              {t("currentLabel")}
             </Label>
             <Controller
               name="current_password"
@@ -91,7 +93,7 @@ export const EmployeeChangePasswordDialog: FC<
                 <PasswordInput
                   id="employee-current-password"
                   autoComplete="current-password"
-                  placeholder="Your current password"
+                  placeholder={t("currentPlaceholder")}
                   aria-invalid={!!errors.current_password}
                   {...field}
                 />
@@ -105,7 +107,7 @@ export const EmployeeChangePasswordDialog: FC<
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="employee-new-password">New password</Label>
+            <Label htmlFor="employee-new-password">{t("newLabel")}</Label>
             <Controller
               name="password"
               control={control}
@@ -113,7 +115,7 @@ export const EmployeeChangePasswordDialog: FC<
                 <PasswordInput
                   id="employee-new-password"
                   autoComplete="new-password"
-                  placeholder="At least 8 characters"
+                  placeholder={t("newPlaceholder")}
                   aria-invalid={!!errors.password}
                   {...field}
                 />
@@ -126,7 +128,7 @@ export const EmployeeChangePasswordDialog: FC<
 
           <div className="space-y-1.5">
             <Label htmlFor="employee-confirm-password">
-              Confirm new password
+              {t("confirmLabel")}
             </Label>
             <Controller
               name="confirmPassword"
@@ -135,7 +137,7 @@ export const EmployeeChangePasswordDialog: FC<
                 <PasswordInput
                   id="employee-confirm-password"
                   autoComplete="new-password"
-                  placeholder="Repeat new password"
+                  placeholder={t("confirmPlaceholder")}
                   aria-invalid={!!errors.confirmPassword}
                   {...field}
                 />
@@ -155,10 +157,10 @@ export const EmployeeChangePasswordDialog: FC<
               disabled={isPending}
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <ActionButtonWithPending type="submit" isPending={isPending}>
-              Update password
+              {t("submit")}
             </ActionButtonWithPending>
           </DialogFooter>
         </form>

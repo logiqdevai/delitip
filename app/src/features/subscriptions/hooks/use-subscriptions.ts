@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   cancelSubscription,
   changeSubscriptionPlan,
@@ -23,6 +24,7 @@ export const useSubscription = (organizationId: string) => {
 };
 
 export const useChangeSubscriptionPlan = (organizationId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.subscriptions");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: UpdateSubscriptionPayload) =>
@@ -32,15 +34,16 @@ export const useChangeSubscriptionPlan = (organizationId: string) => {
       void queryClient.invalidateQueries({
         queryKey: subscriptionsQueryKeys.detail(organizationId),
       });
-      toast.add({ title: "Plan updated", type: "success" });
+      toast.add({ title: t("planUpdated"), type: "success" });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not change plan", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("planFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };
 
 export const useCancelSubscription = (organizationId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.subscriptions");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => cancelSubscription(organizationId),
@@ -49,10 +52,10 @@ export const useCancelSubscription = (organizationId: string) => {
       void queryClient.invalidateQueries({
         queryKey: subscriptionsQueryKeys.detail(organizationId),
       });
-      toast.add({ title: "Subscription canceled", type: "success" });
+      toast.add({ title: t("canceled"), type: "success" });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not cancel subscription", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("cancelFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };

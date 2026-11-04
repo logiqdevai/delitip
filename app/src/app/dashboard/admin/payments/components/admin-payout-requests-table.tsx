@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { ReceiptText, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -33,6 +34,7 @@ import {
 } from "@/components/ui/empty";
 import { PayoutRequestStatusFilterOptions } from "@/config/constants/dropdowns/payouts/payout-request-status-filter.options";
 import { InvoiceCheckVerdictFilterOptions } from "@/config/constants/dropdowns/payouts/invoice-check-verdict-filter.options";
+import { useDropdownOptions } from "@/hooks/use-dropdown-options";
 import { useAdminPayoutRequests } from "@/features/payout-requests/hooks/use-payout-requests";
 import type {
   InvoiceCheckVerdict,
@@ -47,23 +49,22 @@ import { formatMoney } from "@/lib/money";
 import { Routes } from "@/routes/routes";
 import { getErrorMessage } from "@/lib/api-error";
 
-const formatDate = (value?: string | null) => {
-  if (!value) return "-";
-  return new Date(value).toLocaleDateString(undefined, { dateStyle: "medium" });
-};
-
-const formatDateTime = (value?: string | null) => {
-  if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-};
-
 const PAGE_LIMIT = 20;
 
 export const AdminPayoutRequestsTable: FC = () => {
   const router = useRouter();
+  const t = useTranslations("dashboard.admin.payoutRequests");
+  const tc = useTranslations("dashboard.admin.common");
+  const locale = useLocale();
+  const format = useFormatter();
+  const formatDateTime = (value?: string | null) =>
+    value
+      ? format.dateTime(new Date(value), { dateStyle: "medium", timeStyle: "short" })
+      : "-";
+  const formatDate = (value?: string | null) =>
+    value ? format.dateTime(new Date(value), { dateStyle: "medium" }) : "-";
+  const statusOptions = useDropdownOptions(PayoutRequestStatusFilterOptions);
+  const verdictOptions = useDropdownOptions(InvoiceCheckVerdictFilterOptions);
   const [search, setSearch] = useState("");
   // Default to the queue that needs a human — everything else is history.
   const [status, setStatus] = useState<PayoutRequestStatus | "all">("PENDING_REVIEW");
@@ -97,7 +98,7 @@ export const AdminPayoutRequestsTable: FC = () => {
       <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
-          Filters
+          {tc("filters")}
         </div>
         <div className="relative">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-zinc-400" />
@@ -107,13 +108,13 @@ export const AdminPayoutRequestsTable: FC = () => {
               setSearch(event.target.value);
               resetPage();
             }}
-            placeholder="Store, invoice no., or request ID"
-            aria-label="Search payout requests"
+            placeholder={t("searchPlaceholder")}
+            aria-label={t("searchAria")}
             className="w-52 rounded-xl border-zinc-200 bg-white pl-8 font-medium text-ink-charcoal shadow-xs"
           />
         </div>
         <Select
-          items={PayoutRequestStatusFilterOptions.map((option) => ({
+          items={statusOptions.map((option) => ({
             label: option.label,
             value: option.id,
           }))}
@@ -130,7 +131,7 @@ export const AdminPayoutRequestsTable: FC = () => {
           </SelectTrigger>
           <SelectContent className="w-auto min-w-40">
             <SelectGroup>
-              {PayoutRequestStatusFilterOptions.map((option) => (
+              {statusOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.label}
                 </SelectItem>
@@ -139,7 +140,7 @@ export const AdminPayoutRequestsTable: FC = () => {
           </SelectContent>
         </Select>
         <Select
-          items={InvoiceCheckVerdictFilterOptions.map((option) => ({
+          items={verdictOptions.map((option) => ({
             label: option.label,
             value: option.id,
           }))}
@@ -156,7 +157,7 @@ export const AdminPayoutRequestsTable: FC = () => {
           </SelectTrigger>
           <SelectContent className="w-auto min-w-40">
             <SelectGroup>
-              {InvoiceCheckVerdictFilterOptions.map((option) => (
+              {verdictOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.label}
                 </SelectItem>
@@ -177,19 +178,19 @@ export const AdminPayoutRequestsTable: FC = () => {
             setDateFrom(value);
             resetPage();
           }}
-          placeholder="From date"
-          aria-label="From date"
+          placeholder={tc("fromDate")}
+          aria-label={tc("fromDate")}
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
-        <span className="text-xs text-zinc-400">to</span>
+        <span className="text-xs text-zinc-400">{tc("dateRangeTo")}</span>
         <DatePicker
           value={dateTo}
           onChange={(value) => {
             setDateTo(value);
             resetPage();
           }}
-          placeholder="To date"
-          aria-label="To date"
+          placeholder={tc("toDate")}
+          aria-label={tc("toDate")}
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
       </div>
@@ -199,7 +200,7 @@ export const AdminPayoutRequestsTable: FC = () => {
       ) : requestsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load payout requests</EmptyTitle>
+            <EmptyTitle>{t("loadError")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(requestsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -208,7 +209,7 @@ export const AdminPayoutRequestsTable: FC = () => {
               variant="outline"
               onClick={() => void requestsQuery.refetch()}
             >
-              Try again
+              {tc("tryAgain")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -220,13 +221,13 @@ export const AdminPayoutRequestsTable: FC = () => {
             </EmptyMedia>
             <EmptyTitle>
               {status === "PENDING_REVIEW" && !search && !storeId
-                ? "Nothing to review"
-                : "No payout requests found"}
+                ? t("emptyReview")
+                : t("emptyTitle")}
             </EmptyTitle>
             <EmptyDescription>
               {hasFilters
-                ? "No payout requests match your filters."
-                : "Stores haven't submitted any payout requests yet."}
+                ? t("emptyFiltered")
+                : t("emptyNone")}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -236,12 +237,12 @@ export const AdminPayoutRequestsTable: FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="px-4">Submitted</TableHead>
-                  <TableHead className="px-4">Store</TableHead>
-                  <TableHead className="px-4">Amount</TableHead>
-                  <TableHead className="px-4">Tips covered</TableHead>
-                  <TableHead className="px-4">Invoice check</TableHead>
-                  <TableHead className="px-4 text-right">Status</TableHead>
+                  <TableHead className="px-4">{t("columns.submitted")}</TableHead>
+                  <TableHead className="px-4">{t("columns.store")}</TableHead>
+                  <TableHead className="px-4">{t("columns.amount")}</TableHead>
+                  <TableHead className="px-4">{t("columns.tipsCovered")}</TableHead>
+                  <TableHead className="px-4">{t("columns.invoiceCheck")}</TableHead>
+                  <TableHead className="px-4 text-right">{t("columns.status")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -261,13 +262,13 @@ export const AdminPayoutRequestsTable: FC = () => {
                     <TableCell className="px-4 py-3.5 font-semibold text-ink-charcoal">
                       {request.store.name}
                       {request.invoice_number ? (
-                        <span className="mt-0.5 block text-[11px] font-medium text-zinc-500">
-                          Invoice {request.invoice_number}
+                        <span className="mt-0.5 block text-base font-medium text-zinc-500">
+                          {t("invoiceNumber", { number: request.invoice_number })}
                         </span>
                       ) : null}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 font-bold text-brand-700">
-                      {formatMoney(request.amount, request.currency)}
+                      {formatMoney(request.amount, request.currency, locale)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
                       {request.distribution_count} · {formatDate(request.period_from)} →{" "}
@@ -295,8 +296,11 @@ export const AdminPayoutRequestsTable: FC = () => {
           {pagination ? (
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-zinc-500">
-                {pagination.total} request{pagination.total === 1 ? "" : "s"} total
-                - page {pagination.page} of {Math.max(pagination.total_pages, 1)}
+                {t("pagination", {
+                  total: pagination.total,
+                  page: pagination.page,
+                  pages: Math.max(pagination.total_pages, 1),
+                })}
               </p>
               <div className="flex items-center gap-2">
                 <Button
@@ -306,7 +310,7 @@ export const AdminPayoutRequestsTable: FC = () => {
                   disabled={!pagination.has_prev}
                   onClick={() => setPage((current) => Math.max(1, current - 1))}
                 >
-                  Previous
+                  {tc("previous")}
                 </Button>
                 <Button
                   type="button"
@@ -315,7 +319,7 @@ export const AdminPayoutRequestsTable: FC = () => {
                   disabled={!pagination.has_next}
                   onClick={() => setPage((current) => current + 1)}
                 >
-                  Next
+                  {tc("next")}
                 </Button>
               </div>
             </div>

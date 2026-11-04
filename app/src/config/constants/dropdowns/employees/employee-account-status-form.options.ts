@@ -1,3 +1,4 @@
+
 export const EmployeeAccountStatuses = {
   ACTIVE: "active",
   INVITE_PENDING: "invite_pending",
@@ -8,10 +9,16 @@ export type EmployeeAccountStatus =
 
 export const EmployeeAccountStatusFormOptions: {
   id: EmployeeAccountStatus;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: EmployeeAccountStatuses.ACTIVE, label: "Active account" },
-  { id: EmployeeAccountStatuses.INVITE_PENDING, label: "Invite pending" },
+  {
+    id: EmployeeAccountStatuses.ACTIVE,
+    labelKey: "dashboard.enums.employeeAccountStatus.active",
+  },
+  {
+    id: EmployeeAccountStatuses.INVITE_PENDING,
+    labelKey: "dashboard.enums.employeeAccountStatus.invite_pending",
+  },
 ];
 
 export function getEmployeeAccountStatus(
@@ -20,14 +27,4 @@ export function getEmployeeAccountStatus(
   return registeredAt
     ? EmployeeAccountStatuses.ACTIVE
     : EmployeeAccountStatuses.INVITE_PENDING;
-}
-
-export function getEmployeeAccountStatusLabel(
-  registeredAt: string | null | undefined,
-): string {
-  const status = getEmployeeAccountStatus(registeredAt);
-  return (
-    EmployeeAccountStatusFormOptions.find((option) => option.id === status)
-      ?.label ?? status
-  );
 }

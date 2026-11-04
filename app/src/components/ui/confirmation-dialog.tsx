@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { TriangleAlert } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   AlertDialog,
@@ -51,12 +52,13 @@ export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
   state,
   title,
   description,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
+  confirmLabel,
+  cancelLabel,
   onConfirm,
   isPending = false,
   variant = "destructive",
 }) => {
+  const t = useTranslations("dashboard.shell.ui");
   const [error, setError] = useState<string | null>(null);
 
   // A failed confirm keeps the dialog open and reports the reason inline: a
@@ -67,7 +69,7 @@ export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
       await onConfirm();
       state.closeDialog();
     } catch (cause) {
-      setError(getErrorMessage(cause, "Something went wrong. Please try again."));
+      setError(getErrorMessage(cause, t("somethingWentWrong")));
     }
   };
 
@@ -94,7 +96,7 @@ export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
           </Alert>
         ) : null}
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>{cancelLabel}</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>{cancelLabel ?? t("cancel")}</AlertDialogCancel>
           <AlertDialogAction
             variant={variant === "destructive" ? "destructive" : "default"}
             disabled={isPending}
@@ -104,7 +106,7 @@ export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
             }}
           >
             {isPending ? <Spinner data-icon="inline-start" /> : null}
-            {confirmLabel}
+            {confirmLabel ?? t("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

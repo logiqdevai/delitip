@@ -8,18 +8,51 @@ import {
   type Locale,
 } from "./config";
 
-// Each dashboard area owns messages/dashboard/<area>.<locale>.json, exposed
-// as the `dashboard.<area>` namespace.
-const DASHBOARD_AREAS = [
-  "shell",
-  "analytics",
-  "access",
-  "team",
-  "money",
-  "engagement",
-  "settings",
-  "admin",
-] as const;
+// Every area owns messages/<file>.<locale>.json and is exposed under its
+// namespace, so no single message file grows unmanageable.
+//   dashboard.<area>  -> messages/dashboard/<area>.<locale>.json
+//   employee          -> messages/employee/employee.<locale>.json
+//   onboarding        -> messages/onboarding/onboarding.<locale>.json
+//   auth              -> messages/auth/auth.<locale>.json
+//   errors            -> messages/errors/errors.<locale>.json
+const MESSAGE_AREAS: ReadonlyArray<{ namespace: string[]; file: string }> = [
+  ...[
+    "shell",
+    "enums",
+    "analytics",
+    "access",
+    "team",
+    "money",
+    "engagement",
+    "settings",
+    "admin",
+    "adminSystem",
+  ].map((area) => ({ namespace: ["dashboard", area], file: `dashboard/${area}` })),
+  { namespace: ["employee"], file: "employee/employee" },
+  { namespace: ["onboarding"], file: "onboarding/onboarding" },
+  { namespace: ["auth"], file: "auth/auth" },
+  { namespace: ["errors"], file: "errors/errors" },
+];
+
+type MessageTree = { [key: string]: unknown };
+
+const loadMessages = async (locale: Locale): Promise<MessageTree> => {
+  const messages = structuredClone(
+    (await import(`../../messages/${locale}.json`)).default,
+  ) as MessageTree;
+
+  await Promise.all(
+    MESSAGE_AREAS.map(async ({ namespace, file }) => {
+      const area = (await import(`../../messages/${file}.${locale}.json`)).default;
+      let node = messages;
+      for (const key of namespace.slice(0, -1)) {
+        node = (node[key] ??= {}) as MessageTree;
+      }
+      node[namespace[namespace.length - 1]] = area;
+    }),
+  );
+  return messages;
+};
 
 const detectFromAcceptLanguage = (header: string | null): Locale | undefined => {
   if (!header) return undefined;
@@ -38,6 +71,6 @@ export default getRequestConfig(async () => {
 
   return {
     locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
+    messages: await loadMessages(locale),
   };
 });

@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, type FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { AlertTriangle } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
@@ -41,6 +42,7 @@ export const IbanPayoutAccountDialog: FC<IbanPayoutAccountDialogProps> = ({
   description,
   mutation,
 }) => {
+  const t = useTranslations("dashboard.money.payoutAccountDialogs");
   const [iban, setIban] = useState("");
   const [beneficiaryName, setBeneficiaryName] = useState("");
   const [touched, setTouched] = useState(false);
@@ -81,7 +83,7 @@ export const IbanPayoutAccountDialog: FC<IbanPayoutAccountDialogProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div className="space-y-1.5">
-            <Label htmlFor="payout-account-iban">IBAN</Label>
+            <Label htmlFor="payout-account-iban">{t("ibanLabel")}</Label>
             <Input
               id="payout-account-iban"
               placeholder="GR16 0110 1250 0000 0001 2300 695"
@@ -94,25 +96,25 @@ export const IbanPayoutAccountDialog: FC<IbanPayoutAccountDialogProps> = ({
             {touched && iban && !ibanValid ? (
               <p className="flex items-center gap-1.5 text-caption text-red-600">
                 <AlertTriangle className="size-3.5 shrink-0" strokeWidth={2} />
-                <span>That doesn&apos;t look like a valid IBAN.</span>
+                <span>{t("invalidIban")}</span>
               </p>
             ) : null}
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="payout-account-beneficiary-name">
-              Beneficiary name
+              {t("beneficiaryName")}
             </Label>
             <Input
               id="payout-account-beneficiary-name"
-              placeholder="Legal name on the bank account"
+              placeholder={t("beneficiaryPlaceholder")}
               value={beneficiaryName}
               onChange={(event) => setBeneficiaryName(event.target.value)}
               onBlur={() => setTouched(true)}
             />
             {touched && !beneficiaryName.trim() ? (
               <p className="text-caption text-red-600">
-                Beneficiary name is required.
+                {t("beneficiaryRequired")}
               </p>
             ) : null}
           </div>
@@ -131,14 +133,14 @@ export const IbanPayoutAccountDialog: FC<IbanPayoutAccountDialogProps> = ({
               disabled={mutation.isPending}
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <ActionButtonWithPending
               type="submit"
               isPending={mutation.isPending}
               disabled={!ibanValid || !beneficiaryName.trim()}
             >
-              Link account
+              {t("linkAccount")}
             </ActionButtonWithPending>
           </DialogFooter>
         </form>

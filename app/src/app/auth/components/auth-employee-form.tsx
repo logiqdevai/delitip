@@ -1,9 +1,10 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ArrowRight, Info } from "lucide-react";
 import {
   employeeSignInSchema,
@@ -19,6 +20,7 @@ const authFieldClassName =
   "h-12 rounded-2xl border-zinc-200 bg-zinc-50/70 px-4 text-sm shadow-none";
 
 export const AuthEmployeeForm: FC = () => {
+  const t = useTranslations("auth.employee");
   const loginEmployee = useLoginEmployee();
 
   const {
@@ -44,10 +46,10 @@ export const AuthEmployeeForm: FC = () => {
     <div className="auth-fade-enter flex flex-1 flex-col">
       <div className="mb-6 hidden lg:block">
         <h1 className="text-2xl font-bold tracking-tight text-ink-charcoal">
-          Employee Portal
+          {t("title")}
         </h1>
         <p className="mt-1 text-xs text-zinc-500">
-          Check your personal tip earnings, payouts, and customer reviews.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -57,13 +59,13 @@ export const AuthEmployeeForm: FC = () => {
             htmlFor="employee-email"
             className="mb-2 block text-sm font-bold text-ink-charcoal lg:mb-1.5 lg:text-xs lg:font-semibold lg:text-zinc-700"
           >
-            Email
+            {t("emailLabel")}
           </label>
           <Input
             id="employee-email"
             type="email"
             autoComplete="email"
-            placeholder="maria@artisancafe.com"
+            placeholder={t("emailPlaceholder")}
             aria-invalid={!!errors.email}
             className={`${authFieldClassName} lg:h-(--control-height-default) lg:rounded-xl lg:px-3.5`}
             {...register("email")}
@@ -81,13 +83,13 @@ export const AuthEmployeeForm: FC = () => {
               htmlFor="employee-password"
               className="text-sm font-bold text-ink-charcoal lg:text-xs lg:font-semibold lg:text-zinc-700"
             >
-              Password
+              {t("passwordLabel")}
             </label>
             <Link
               href={`${Routes.auth.forgot_password}?role=employee`}
               className="text-caption font-semibold text-brand-700 hover:underline"
             >
-              Forgot password?
+              {t("forgotPassword")}
             </Link>
           </div>
           <Controller
@@ -116,9 +118,7 @@ export const AuthEmployeeForm: FC = () => {
             className="mt-0.5 size-4 shrink-0 text-electric-lime"
             strokeWidth={2}
           />
-          <span>
-            Use the email and password from your invitation email.
-          </span>
+          <span>{t("invitationHint")}</span>
         </div>
 
         <ActionButtonWithPending
@@ -126,19 +126,19 @@ export const AuthEmployeeForm: FC = () => {
           isPending={isPending}
           className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal"
         >
-          Access My Tip Profile
+          {t("submit")}
           <ArrowRight data-icon="inline-end" className="size-3.5" />
         </ActionButtonWithPending>
       </form>
 
       <div className="mt-auto pt-8 text-center lg:mt-0 lg:pt-2">
         <p className="text-sm text-zinc-500 lg:text-xs">
-          Are you an employer?{" "}
+          {t("areYouEmployer")}{" "}
           <Link
             href={Routes.auth.sign_in}
             className="font-bold text-brand-800 hover:underline lg:text-brand-700"
           >
-            Business sign in
+            {t("businessSignIn")}
           </Link>
         </p>
       </div>

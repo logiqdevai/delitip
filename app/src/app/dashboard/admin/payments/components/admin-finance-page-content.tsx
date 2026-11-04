@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import { RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { useReconcilePayoutAccounts } from "@/features/payout-accounts/hooks/use
 import { useAdminPendingPayoutRequestCount } from "@/features/payout-requests/hooks/use-payout-requests";
 
 export const AdminFinancePageContent: FC = () => {
+  const t = useTranslations("dashboard.admin.finance");
   const reconcilePayments = useReconcilePayments();
   const reconcilePayoutAccounts = useReconcilePayoutAccounts();
   const pendingRequestsQuery = useAdminPendingPayoutRequestCount();
@@ -21,8 +23,8 @@ export const AdminFinancePageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="Payments & Payouts"
-        description="Every payment, payout and payout request across all delitip businesses."
+        title={t("title")}
+        description={t("description")}
         actions={
           <>
             <Button
@@ -31,12 +33,12 @@ export const AdminFinancePageContent: FC = () => {
               size="sm"
               disabled={reconcilePayoutAccounts.isPending}
               onClick={() => reconcilePayoutAccounts.mutate()}
-              className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-chip font-semibold"
+              className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-base font-semibold"
             >
               <RefreshCw data-icon="inline-start" className="size-3.5" />
               {reconcilePayoutAccounts.isPending
-                ? "Reconciling IBANs…"
-                : "Reconcile IBANs"}
+                ? t("reconcilingIbans")
+                : t("reconcileIbans")}
             </Button>
             <Button
               type="button"
@@ -44,12 +46,12 @@ export const AdminFinancePageContent: FC = () => {
               size="sm"
               disabled={reconcilePayments.isPending}
               onClick={() => reconcilePayments.mutate()}
-              className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-chip font-semibold"
+              className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-base font-semibold"
             >
               <RefreshCw data-icon="inline-start" className="size-3.5" />
               {reconcilePayments.isPending
-                ? "Reconciling payments…"
-                : "Reconcile payments"}
+                ? t("reconcilingPayments")
+                : t("reconcilePayments")}
             </Button>
           </>
         }
@@ -57,10 +59,10 @@ export const AdminFinancePageContent: FC = () => {
 
       <Tabs defaultValue={pendingRequests > 0 ? "requests" : "payments"}>
         <TabsList>
-          <TabsTrigger value="payments">Payments</TabsTrigger>
-          <TabsTrigger value="payouts">Payouts</TabsTrigger>
+          <TabsTrigger value="payments">{t("tabs.payments")}</TabsTrigger>
+          <TabsTrigger value="payouts">{t("tabs.payouts")}</TabsTrigger>
           <TabsTrigger value="requests">
-            Payout requests
+            {t("tabs.requests")}
             {pendingRequests > 0 ? (
               <span className="ml-1.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
                 {pendingRequests}

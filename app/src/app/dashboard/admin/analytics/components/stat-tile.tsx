@@ -39,7 +39,7 @@ export const StatTile: FC<StatTileProps> = ({
         {value}
       </div>
       {helpText ? (
-        <p className="mt-1 text-[11px] text-zinc-400">{helpText}</p>
+        <p className="mt-1 text-base text-zinc-400">{helpText}</p>
       ) : null}
     </div>
   );

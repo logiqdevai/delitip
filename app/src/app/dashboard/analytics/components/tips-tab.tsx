@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmployeeSelect } from "@/components/ui/employee-select";
@@ -21,18 +22,24 @@ import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { getErrorMessage } from "@/lib/api-error";
 
-const GROUP_BY_OPTIONS: { id: StoreTipsGroupBy; label: string }[] = [
-  { id: "day", label: "By day" },
-  { id: "week", label: "By week" },
-  { id: "month", label: "By month" },
-  { id: "employee", label: "By employee" },
-  { id: "store", label: "By store" },
+const GROUP_BY_IDS: StoreTipsGroupBy[] = [
+  "day",
+  "week",
+  "month",
+  "employee",
+  "store",
 ];
 
 export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
   storeId,
   currency,
 }) => {
+  const t = useTranslations("dashboard.analytics.tips");
+  const locale = useLocale();
+  const groupByOptions = GROUP_BY_IDS.map((id) => ({
+    id,
+    label: t(`groupBy.${id}`),
+  }));
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [employeeId, setEmployeeId] = useState("all");
@@ -59,21 +66,21 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
       <div className="flex flex-col gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
-          Filters
+          {t("filters")}
         </div>
         <DatePicker
           value={dateFrom}
           onChange={setDateFrom}
-          placeholder="From date"
-          aria-label="From date"
+          placeholder={t("fromDate")}
+          aria-label={t("fromDate")}
           className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
         />
-        <span className="hidden text-xs text-zinc-400 sm:inline">to</span>
+        <span className="hidden text-xs text-zinc-400 sm:inline">{t("to")}</span>
         <DatePicker
           value={dateTo}
           onChange={setDateTo}
-          placeholder="To date"
-          aria-label="To date"
+          placeholder={t("toDate")}
+          aria-label={t("toDate")}
           className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
         />
         <EmployeeSelect
@@ -82,11 +89,11 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
           onValueChange={setEmployeeId}
           includeAll
           triggerClassName="w-full rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto sm:min-w-36"
-          aria-label="Filter by employee"
+          aria-label={t("filterByEmployee")}
         />
         <Select
           items={[
-            { label: "All QR codes", value: "all" },
+            { label: t("allQrCodes"), value: "all" },
             ...qrCodes.map((qr) => ({ label: qr.label, value: qr.id })),
           ]}
           value={qrCodeId}
@@ -99,7 +106,7 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
           </SelectTrigger>
           <SelectContent align="start">
             <SelectGroup>
-              <SelectItem value="all">All QR codes</SelectItem>
+              <SelectItem value="all">{t("allQrCodes")}</SelectItem>
               {qrCodes.map((qr) => (
                 <SelectItem key={qr.id} value={qr.id}>
                   {qr.label}
@@ -109,7 +116,7 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
           </SelectContent>
         </Select>
         <Select
-          items={GROUP_BY_OPTIONS.map((option) => ({
+          items={groupByOptions.map((option) => ({
             label: option.label,
             value: option.id,
           }))}
@@ -123,7 +130,7 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
           </SelectTrigger>
           <SelectContent align="start">
             <SelectGroup>
-              {GROUP_BY_OPTIONS.map((option) => (
+              {groupByOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.label}
                 </SelectItem>
@@ -142,15 +149,15 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
               <span className="text-xs font-semibold text-zinc-500">
-                Total
+                {t("total")}
               </span>
               <div className="mt-1 text-xl font-extrabold text-ink-charcoal">
-                {formatMoney(data.total_amount, currency)}
+                {formatMoney(data.total_amount, currency, locale)}
               </div>
             </div>
             <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
               <span className="text-xs font-semibold text-zinc-500">
-                Count
+                {t("count")}
               </span>
               <div className="mt-1 text-xl font-extrabold text-ink-charcoal">
                 {data.count}
@@ -158,25 +165,25 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
             </div>
             <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
               <span className="text-xs font-semibold text-zinc-500">
-                Average
+                {t("average")}
               </span>
               <div className="mt-1 text-xl font-extrabold text-ink-charcoal">
-                {formatMoney(data.average_amount, currency)}
+                {formatMoney(data.average_amount, currency, locale)}
               </div>
             </div>
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-zinc-100 bg-zinc-50 text-caption font-semibold tracking-wider text-zinc-400 uppercase">
+              <thead className="border-b border-zinc-100 bg-zinc-50 text-base font-semibold tracking-wider text-zinc-400 uppercase">
                 <tr>
                   <th className="px-4 py-2.5">
                     {groupBy === "employee" || groupBy === "store"
-                      ? "Name"
-                      : "Period"}
+                      ? t("name")
+                      : t("period")}
                   </th>
-                  <th className="px-4 py-2.5">Amount</th>
-                  <th className="px-4 py-2.5">Count</th>
+                  <th className="px-4 py-2.5">{t("amount")}</th>
+                  <th className="px-4 py-2.5">{t("count")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-100">
@@ -186,7 +193,7 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
                       colSpan={3}
                       className="px-4 py-6 text-center text-xs text-zinc-400"
                     >
-                      No tips match these filters.
+                      {t("empty")}
                     </td>
                   </tr>
                 ) : (
@@ -196,7 +203,7 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
                         {"bucket" in row ? row.bucket : row.label}
                       </td>
                       <td className="px-4 py-2.5 font-bold text-brand-700">
-                        {formatMoney(row.amount, currency)}
+                        {formatMoney(row.amount, currency, locale)}
                       </td>
                       <td className="px-4 py-2.5 text-zinc-500">
                         {row.count}

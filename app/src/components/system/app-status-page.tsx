@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
@@ -23,6 +24,7 @@ export const AppStatusPage: FC<AppStatusPageProps> = ({
   digest,
 }) => {
   const router = useRouter();
+  const t = useTranslations("errors.page");
 
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-paper-offwhite text-ink-charcoal">
@@ -43,7 +45,7 @@ export const AppStatusPage: FC<AppStatusPageProps> = ({
           href={Routes.contact}
           className="text-xs font-semibold text-zinc-500 transition hover:text-ink-charcoal"
         >
-          Contact support
+          {t("contactSupport")}
         </Link>
       </header>
 
@@ -65,7 +67,7 @@ export const AppStatusPage: FC<AppStatusPageProps> = ({
             className="inline-flex items-center gap-2 rounded-xl bg-electric-lime px-5 py-3 text-sm font-bold text-ink-charcoal transition hover:scale-[1.03]"
           >
             <RefreshCw className="size-4" strokeWidth={2.25} />
-            Try again
+            {t("tryAgain")}
           </button>
           <button
             type="button"
@@ -73,13 +75,13 @@ export const AppStatusPage: FC<AppStatusPageProps> = ({
             className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-3 text-sm font-bold text-ink-charcoal shadow-xs transition hover:scale-[1.03] hover:bg-zinc-50"
           >
             <ArrowLeft className="size-4" strokeWidth={2.25} />
-            Go back
+            {t("goBack")}
           </button>
         </div>
 
         {digest ? (
           <p className="mt-8 font-mono text-caption text-zinc-400">
-            Ref {digest}
+            {t("reference", { digest })}
           </p>
         ) : null}
       </main>
@@ -88,14 +90,15 @@ export const AppStatusPage: FC<AppStatusPageProps> = ({
 };
 
 export const NotFoundStatusPage: FC = () => {
+  const t = useTranslations("errors.page");
   return (
     <AppStatusPage
       code="404"
-      title="Page not found"
-      description="That URL isn't on delitip. Try again, or go back to the previous page."
+      title={t("notFoundTitle")}
+      description={t("notFoundDescription")}
       onTryAgain={() => {
         window.location.reload();
       }}
     />
   );
-};
+};

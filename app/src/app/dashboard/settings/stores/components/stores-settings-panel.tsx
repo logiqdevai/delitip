@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Plus, Store as StoreIcon } from "lucide-react";
 import { AddStoreDialog } from "@/components/layout/sidebar/add-store-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,8 +11,9 @@ import {
   useConfirmationDialog,
 } from "@/components/ui/confirmation-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getStoreCurrencyLabel } from "@/config/constants/dropdowns/stores/store-currency-form.options";
-import { getStoreIndustryLabel } from "@/config/constants/dropdowns/stores/store-industry-form.options";
+import { StoreCurrencyFormOptions } from "@/config/constants/dropdowns/stores/store-currency-form.options";
+import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { OrganizationRoles } from "@/features/organizations/interfaces/organizations.interfaces";
 import { useDeleteStore, useStores } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
@@ -20,6 +22,8 @@ import { useWorkspaceStore } from "@/stores/workspace.store";
 import { getErrorMessage } from "@/lib/api-error";
 
 export const StoresSettingsPanel: FC = () => {
+  const t = useTranslations("dashboard.settings.stores");
+  const optionLabel = useDropdownLabel();
   const {
     organizationId,
     storeId: currentStoreId,
@@ -44,7 +48,7 @@ export const StoresSettingsPanel: FC = () => {
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <StoreIcon className="size-4 text-zinc-400" strokeWidth={2} />
-          <h2 className="text-sm font-bold text-ink-charcoal">Stores</h2>
+          <h2 className="text-sm font-bold text-ink-charcoal">{t("title")}</h2>
         </div>
         {isOwner ? (
           <Button
@@ -53,7 +57,7 @@ export const StoresSettingsPanel: FC = () => {
             onClick={() => setAddStoreOpen(true)}
           >
             <Plus className="size-4" strokeWidth={2} />
-            Add store
+            {t("add")}
           </Button>
         ) : null}
       </div>
@@ -95,22 +99,22 @@ export const StoresSettingsPanel: FC = () => {
                       </span>
                       {store.id === currentStoreId ? (
                         <span className="shrink-0 rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-semibold text-brand-800">
-                          Current
+                          {t("current")}
                         </span>
                       ) : null}
                       {!store.is_active ? (
                         <span className="shrink-0 rounded-full bg-neutral-fill px-2 py-0.5 text-[11px] font-semibold text-zinc-600">
-                          Inactive
+                          {t("inactive")}
                         </span>
                       ) : null}
                     </div>
                     <div className="truncate text-xs text-zinc-500">
-                      {[getStoreIndustryLabel(store.industry), location || null]
+                      {[optionLabel(StoreIndustryFormOptions, store.industry), location || null]
                         .filter(Boolean)
                         .join(" · ")}
                     </div>
                     <div className="truncate text-xs text-zinc-400">
-                      {getStoreCurrencyLabel(store.currency)} · {store.timezone}
+                      {optionLabel(StoreCurrencyFormOptions, store.currency)} · {store.timezone}
                     </div>
                   </div>
                 </div>
@@ -123,7 +127,7 @@ export const StoresSettingsPanel: FC = () => {
                       size="sm"
                       onClick={() => switchStore(store.id)}
                     >
-                      Switch
+                      {t("switch")}
                     </Button>
                   ) : null}
                   {isOwner ? (
@@ -133,17 +137,13 @@ export const StoresSettingsPanel: FC = () => {
                       size="sm"
                       className="text-red-600 hover:bg-red-50 hover:text-red-700"
                       disabled={isLastStore}
-                      title={
-                        isLastStore
-                          ? "Your business needs at least one store"
-                          : undefined
-                      }
+                      title={isLastStore ? t("lastStoreTitle") : undefined}
                       onClick={() => {
                         setPendingDelete(store);
                         deleteConfirm.openDialog();
                       }}
                     >
-                      Delete
+                      {t("delete")}
                     </Button>
                   ) : null}
                 </div>
@@ -155,8 +155,7 @@ export const StoresSettingsPanel: FC = () => {
 
       {isOwner && isLastStore && stores.length > 0 ? (
         <p className="text-xs text-zinc-500">
-          Your business needs at least one store, so the last one can&apos;t be
-          deleted.
+          {t("lastStoreNote")}
         </p>
       ) : null}
 
@@ -183,9 +182,13 @@ export const StoresSettingsPanel: FC = () => {
             if (!open) setPendingDelete(null);
           },
         }}
-        title={pendingDelete ? `Delete ${pendingDelete.name}?` : "Delete this store?"}
-        description="This permanently removes the store with its staff, QR codes, tip-sharing rules and settings. Stores that already have tips or reviews can't be deleted."
-        confirmLabel="Delete store"
+        title={
+          pendingDelete
+            ? t("deleteDialog.title", { name: pendingDelete.name })
+            : t("deleteDialog.titleFallback")
+        }
+        description={t("deleteDialog.description")}
+        confirmLabel={t("deleteDialog.confirm")}
         isPending={deleteStore.isPending}
         onConfirm={async () => {
           if (!pendingDelete) return;

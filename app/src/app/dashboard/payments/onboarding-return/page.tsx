@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Routes } from "@/routes/routes";
 import { useRefreshStorePayoutAccountStatus } from "@/features/payout-accounts/hooks/use-payout-accounts";
 
@@ -11,6 +12,7 @@ import { useRefreshStorePayoutAccountStatus } from "@/features/payout-accounts/h
 // shape: its only job is to trigger one status check, then bounce back into
 // the dashboard page that already owns rendering the account's real state.
 function OnboardingReturnInner() {
+  const t = useTranslations("dashboard.money.onboardingReturn");
   const router = useRouter();
   const searchParams = useSearchParams();
   const storeId = searchParams.get("storeId");
@@ -34,7 +36,7 @@ function OnboardingReturnInner() {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-paper-offwhite p-6 text-center">
       <Loader2 className="size-8 animate-spin text-zinc-400" strokeWidth={2} />
-      <p className="text-sm text-zinc-500">Finishing setup…</p>
+      <p className="text-sm text-zinc-500">{t("finishing")}</p>
     </main>
   );
 }

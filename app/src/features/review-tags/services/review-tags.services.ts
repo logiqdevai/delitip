@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -14,7 +15,7 @@ export const listReviewTags = async (storeId: string): Promise<ReviewTag[]> => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load review tags. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadReviewTags")));
   }
 };
 
@@ -29,7 +30,7 @@ export const createReviewTag = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't create review tag. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.createReviewTag")));
   }
 };
 
@@ -45,7 +46,7 @@ export const updateReviewTag = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't update review tag. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.updateReviewTag")));
   }
 };
 
@@ -56,6 +57,6 @@ export const deleteReviewTag = async (
   try {
     await axiosInstance.delete(ApiRoutes.stores.reviewTag(storeId, id));
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't delete review tag. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.deleteReviewTag")));
   }
 };

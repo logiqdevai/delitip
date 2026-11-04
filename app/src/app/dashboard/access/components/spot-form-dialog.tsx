@@ -2,7 +2,8 @@
 
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +33,7 @@ export const SpotFormDialog: FC<SpotFormDialogProps> = ({
   onOpenChange,
   storeId,
 }) => {
+  const t = useTranslations("dashboard.access.spotForm");
   const createSpot = useCreateSpot(storeId);
   const isPending = createSpot.isPending;
 
@@ -69,18 +71,18 @@ export const SpotFormDialog: FC<SpotFormDialogProps> = ({
     >
       <DialogContent className="sm:max-w-md" showCloseButton={!isPending}>
         <DialogHeader>
-          <DialogTitle>Create spot</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Add a table, room, or counter you can attach to QR codes.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={onSubmit} className="space-y-4" noValidate>
           <div className="space-y-1.5">
-            <Label htmlFor="spot-name">Name</Label>
+            <Label htmlFor="spot-name">{t("name")}</Label>
             <Input
               id="spot-name"
-              placeholder="e.g. Table 12"
+              placeholder={t("namePlaceholder")}
               aria-invalid={!!errors.name}
               {...register("name")}
             />
@@ -96,10 +98,10 @@ export const SpotFormDialog: FC<SpotFormDialogProps> = ({
               disabled={isPending}
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <ActionButtonWithPending type="submit" isPending={isPending}>
-              Create spot
+              {t("submit")}
             </ActionButtonWithPending>
           </DialogFooter>
         </form>

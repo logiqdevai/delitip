@@ -1,10 +1,11 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ArrowRight } from "lucide-react";
 import {
   resetPasswordSchema,
@@ -20,6 +21,7 @@ import { ActionButtonWithPending } from "@/components/ui/action-button-with-pend
 import { PasswordInput } from "@/components/ui/password-input";
 
 export const AuthAcceptInviteForm: FC = () => {
+  const t = useTranslations("auth.acceptInvite");
   const searchParams = useSearchParams();
   const token = searchParams.get("token")?.trim() ?? "";
   const acceptInvite = useAcceptInvite();
@@ -51,20 +53,17 @@ export const AuthAcceptInviteForm: FC = () => {
       <div className="auth-fade-enter space-y-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-ink-charcoal">
-            Invalid invite link
+            {t("invalidTitle")}
           </h1>
           <p className="mt-2 text-xs leading-relaxed text-zinc-500">
-            {token
-              ? "This invite link is invalid or has expired."
-              : "This invite link is missing a token."}{" "}
-            Ask your store owner to resend your invite.
+            {token ? t("invalidDescription") : t("missingTokenDescription")}
           </p>
         </div>
         <Link
           href={`${Routes.auth.sign_in}?role=employee`}
           className="inline-flex items-center gap-2 text-xs font-bold text-brand-700 hover:underline"
         >
-          Back to sign in
+          {t("backToSignIn")}
           <ArrowRight className="size-3.5" strokeWidth={2} />
         </Link>
       </div>
@@ -75,10 +74,10 @@ export const AuthAcceptInviteForm: FC = () => {
     <div className="auth-fade-enter space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-ink-charcoal">
-          Welcome to delitip
+          {t("title")}
         </h1>
         <p className="mt-1 text-xs text-zinc-500">
-          Set a password to activate your account and start receiving tips.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -88,13 +87,13 @@ export const AuthAcceptInviteForm: FC = () => {
             htmlFor="invite-email"
             className="mb-1.5 block text-xs font-semibold text-zinc-700"
           >
-            Email
+            {t("emailLabel")}
           </label>
           <Input
             id="invite-email"
             type="email"
             value={inviteInfo.data?.email ?? ""}
-            placeholder={inviteInfo.isPending ? "Loading…" : ""}
+            placeholder={inviteInfo.isPending ? t("loading") : ""}
             disabled
             readOnly
           />
@@ -105,7 +104,7 @@ export const AuthAcceptInviteForm: FC = () => {
             htmlFor="invite-password"
             className="mb-1.5 block text-xs font-semibold text-zinc-700"
           >
-            Password
+            {t("passwordLabel")}
           </label>
           <Controller
             name="password"
@@ -114,7 +113,7 @@ export const AuthAcceptInviteForm: FC = () => {
               <PasswordInput
                 id="invite-password"
                 autoComplete="new-password"
-                placeholder="At least 8 characters"
+                placeholder={t("passwordPlaceholder")}
                 aria-invalid={!!errors.password}
                 {...field}
               />
@@ -130,7 +129,7 @@ export const AuthAcceptInviteForm: FC = () => {
             htmlFor="invite-confirm-password"
             className="mb-1.5 block text-xs font-semibold text-zinc-700"
           >
-            Confirm password
+            {t("confirmLabel")}
           </label>
           <Controller
             name="confirmPassword"
@@ -139,7 +138,7 @@ export const AuthAcceptInviteForm: FC = () => {
               <PasswordInput
                 id="invite-confirm-password"
                 autoComplete="new-password"
-                placeholder="Repeat password"
+                placeholder={t("confirmPlaceholder")}
                 aria-invalid={!!errors.confirmPassword}
                 {...field}
               />
@@ -158,7 +157,7 @@ export const AuthAcceptInviteForm: FC = () => {
           size="lg"
           className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal"
         >
-          Activate account
+          {t("submit")}
           <ArrowRight data-icon="inline-end" className="size-3.5" />
         </ActionButtonWithPending>
       </form>
@@ -169,7 +168,7 @@ export const AuthAcceptInviteForm: FC = () => {
             href={`${Routes.auth.sign_in}?role=employee`}
             className="font-bold text-brand-700 hover:underline"
           >
-            Back to sign in
+            {t("backToSignIn")}
           </Link>
         </p>
       </div>

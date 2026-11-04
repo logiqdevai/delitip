@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartContainer,
@@ -30,12 +31,12 @@ import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { getErrorMessage } from "@/lib/api-error";
 
-const METRIC_META: Record<AdminTrendsMetric, { label: string; color: string }> = {
-  tips_revenue: { label: "Gross tips revenue", color: "#9FBF3E" },
-  platform_revenue: { label: "Platform net revenue", color: "#6366F1" },
-  employee_revenue: { label: "Employee net revenue", color: "#F59E0B" },
-  store_revenue: { label: "Store net revenue", color: "#0284C7" },
-  users: { label: "Users", color: "#9FBF3E" },
+const METRIC_META: Record<AdminTrendsMetric, { color: string }> = {
+  tips_revenue: { color: "#9FBF3E" },
+  platform_revenue: { color: "#6366F1" },
+  employee_revenue: { color: "#F59E0B" },
+  store_revenue: { color: "#0284C7" },
+  users: { color: "#9FBF3E" },
 };
 
 const REVENUE_METRIC_OPTIONS: AdminTrendsMetric[] = [
@@ -48,6 +49,9 @@ const REVENUE_METRIC_OPTIONS: AdminTrendsMetric[] = [
 const GRADIENT_ID = "admin-revenue-trend-fill";
 
 export const RevenueTrendChart: FC = () => {
+  const t = useTranslations("dashboard.adminSystem.analytics.revenueTrend");
+  const format = useFormatter();
+  const locale = useLocale();
   const [metric, setMetric] = useState<AdminTrendsMetric>("tips_revenue");
   const [period, setPeriod] = useState<TrendsPeriod>("30d");
   const [groupBy, setGroupBy] = useState<TrendsGroupBy>("day");
@@ -56,26 +60,29 @@ export const RevenueTrendChart: FC = () => {
   const data = trendsQuery.data?.data ?? [];
   const currency = (trendsQuery.data?.currency ?? "EUR") as Currency;
   const meta = METRIC_META[metric];
+  const metricLabel = t(`metrics.${metric}`);
   const total = data.reduce((sum, point) => sum + point.value, 0);
 
   const chartConfig: ChartConfig = {
-    value: { label: meta.label, color: meta.color },
+    value: { label: metricLabel, color: meta.color },
   };
 
   return (
     <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-sm font-bold text-ink-charcoal">Revenue</h2>
+          <h2 className="text-sm font-bold text-ink-charcoal">{t("title")}</h2>
           <p className="mt-0.5 text-xs text-zinc-500">
-            {formatMoney(total, currency)} · {meta.label.toLowerCase()} in this
-            range.
+            {t("summary", {
+              total: formatMoney(total, currency, locale),
+              metric: metricLabel.toLocaleLowerCase(locale),
+            })}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Select
             items={REVENUE_METRIC_OPTIONS.map((id) => ({
-              label: METRIC_META[id].label,
+              label: t(`metrics.${id}`),
               value: id,
             }))}
             value={metric}
@@ -90,7 +97,7 @@ export const RevenueTrendChart: FC = () => {
               <SelectGroup>
                 {REVENUE_METRIC_OPTIONS.map((id) => (
                   <SelectItem key={id} value={id}>
-                    {METRIC_META[id].label}
+                    {t(`metrics.${id}`)}
                   </SelectItem>
                 ))}
               </SelectGroup>
@@ -110,7 +117,7 @@ export const RevenueTrendChart: FC = () => {
           </p>
         ) : data.length === 0 ? (
           <p className="py-16 text-center text-xs text-zinc-400">
-            No revenue recorded in this range.
+            {t("empty")}
           </p>
         ) : (
           <ChartContainer config={chartConfig} className="aspect-auto h-64 w-full">
@@ -132,26 +139,32 @@ export const RevenueTrendChart: FC = () => {
                 axisLine={false}
                 tickMargin={8}
                 minTickGap={24}
-                tickFormatter={(value: string) => formatBucketLabel(value, groupBy)}
-                className="text-[11px]"
+                tickFormatter={(value: string) =>
+                  formatBucketLabel(value, groupBy, format)
+                }
+                className="text-base"
               />
               <YAxis
                 tickLine={false}
                 axisLine={false}
                 width={56}
-                tickFormatter={(value: number) => formatMoney(value, currency)}
-                className="text-[11px]"
+                tickFormatter={(value: number) =>
+                  formatMoney(value, currency, locale)
+                }
+                className="text-base"
               />
               <ChartTooltip
                 cursor={{ stroke: "var(--color-neutral-line)" }}
                 content={
                   <ChartTooltipContent
-                    labelFormatter={(value) => formatBucketLabel(String(value), groupBy)}
+                    labelFormatter={(value) =>
+                      formatBucketLabel(String(value), groupBy, format)
+                    }
                     formatter={(value) => (
                       <div className="flex flex-1 items-center justify-between gap-3 leading-none">
-                        <span className="text-muted-foreground">{meta.label}</span>
+                        <span className="text-muted-foreground">{metricLabel}</span>
                         <span className="font-mono font-medium text-foreground tabular-nums">
-                          {formatMoney(Number(value), currency)}
+                          {formatMoney(Number(value), currency, locale)}
                         </span>
                       </div>
                     )}

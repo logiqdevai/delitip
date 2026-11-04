@@ -2,6 +2,7 @@
 
 import { type FC, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import { OnboardingBusinessForm } from "@/app/onboarding/components/onboarding-business-form";
 import { OnboardingShell } from "@/app/onboarding/components/onboarding-shell";
@@ -43,6 +44,7 @@ const buildDefaults = (
 };
 
 const OnboardingPage: FC = () => {
+  const t = useTranslations("onboarding.page");
   const router = useRouter();
   const hydrated = useAuthHydrated();
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -73,7 +75,7 @@ const OnboardingPage: FC = () => {
       ) : organizationsQuery.isError ? (
         <div className="space-y-3">
           <h1 className="text-2xl font-bold tracking-tight text-ink-charcoal">
-            Could not load your business
+            {t("loadError")}
           </h1>
           <p className="text-sm text-zinc-500">
             {getErrorMessage(organizationsQuery.error)}

@@ -2,7 +2,8 @@
 
 import { type FC, useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
@@ -38,78 +39,29 @@ type TextField = Extract<
   | "platform_address"
 >;
 
+// Labels, hints and placeholders live in `dashboard.adminSystem.appConfig.fields.<name>`.
 interface NumericFieldDefinition {
   name: NumericField;
-  label: string;
-  hint: string;
   step: string;
 }
 
 interface TextFieldDefinition {
   name: TextField;
-  label: string;
-  hint: string;
-  placeholder: string;
 }
 
 const financeFields: NumericFieldDefinition[] = [
-  {
-    name: "tip_platform_commission_percentage",
-    label: "Platform commission (%)",
-    hint: "Taken from each tip. Snapshotted per transaction, so past tips are never recalculated.",
-    step: "0.01",
-  },
-  {
-    name: "tip_processor_fee_estimate_percentage",
-    label: "Processor fee estimate (%)",
-    hint: "Provisional percentage used for display until the real fee is settled.",
-    step: "0.01",
-  },
-  {
-    name: "tip_processor_fee_estimate_fixed_amount",
-    label: "Processor fee estimate, fixed (minor units)",
-    hint: "Added to the percentage estimate. 24 = €0.24.",
-    step: "1",
-  },
-  {
-    name: "vat_rate_percentage",
-    label: "VAT rate (%)",
-    hint: "Added on top of every tip at checkout. 0 means no VAT.",
-    step: "0.01",
-  },
-  {
-    name: "payout_hold_window_hours",
-    label: "Payout hold window (hours)",
-    hint: "How long a tip is held before it becomes payable.",
-    step: "1",
-  },
+  { name: "tip_platform_commission_percentage", step: "0.01" },
+  { name: "tip_processor_fee_estimate_percentage", step: "0.01" },
+  { name: "tip_processor_fee_estimate_fixed_amount", step: "1" },
+  { name: "vat_rate_percentage", step: "0.01" },
+  { name: "payout_hold_window_hours", step: "1" },
 ];
 
 const invoiceDetailFields: TextFieldDefinition[] = [
-  {
-    name: "platform_legal_name",
-    label: "Legal name",
-    hint: "The company name stores must put on the invoice.",
-    placeholder: "Delitip P.C.",
-  },
-  {
-    name: "platform_vat_number",
-    label: "VAT number",
-    hint: "Also used to check the invoice is addressed to the platform.",
-    placeholder: "EL123456789",
-  },
-  {
-    name: "platform_tax_office",
-    label: "Tax office",
-    hint: "Δ.Ο.Υ. for Greek invoices.",
-    placeholder: "Δ.Ο.Υ. Ηρακλείου",
-  },
-  {
-    name: "platform_address",
-    label: "Billing address",
-    hint: "Street, postal code, city, country.",
-    placeholder: "Pelasgon 32, 71202 Heraklion, Greece",
-  },
+  { name: "platform_legal_name" },
+  { name: "platform_vat_number" },
+  { name: "platform_tax_office" },
+  { name: "platform_address" },
 ];
 
 const FieldShell: FC<{
@@ -133,6 +85,7 @@ const FieldShell: FC<{
 );
 
 export const AdminAppConfigPageContent: FC = () => {
+  const t = useTranslations("dashboard.adminSystem.appConfig");
   const { data, isError, refetch } = useAppConfig();
   const updateConfig = useUpdateAppConfig();
 
@@ -193,15 +146,14 @@ export const AdminAppConfigPageContent: FC = () => {
     },
     (formErrors) => {
       const messages = Object.entries(formErrors).map(([name, error]) => {
-        const label =
-          [...financeFields, ...invoiceDetailFields].find(
-            (field) => field.name === name,
-          )?.label ?? name;
-        return `${label}: ${error?.message ?? "please check this value"}`;
+        const label = t.has(`fields.${name}.label`)
+          ? t(`fields.${name}.label`)
+          : name;
+        return `${label}: ${error?.message ?? t("errors.checkValue")}`;
       });
       toast.add({
-        title: "Nothing was saved",
-        description: messages.join(" · ") || "Some values need your attention. Please check them and try again.",
+        title: t("errors.nothingSaved"),
+        description: messages.join(" · ") || t("errors.needAttention"),
         type: "error",
       });
     },
@@ -210,39 +162,41 @@ export const AdminAppConfigPageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="App Config"
-        description="Platform-wide finance and payout settings. Changes apply to future tips and payouts only."
+        title={t("title")}
+        description={t("description")}
       />
       {isError ? (
         <div className="mt-4 flex max-w-xl items-center justify-between gap-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
-          <p className="text-sm text-red-700">Could not load the app config.</p>
+          <p className="text-sm text-red-700">{t("loadError")}</p>
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={() => void refetch()}
           >
-            Retry
+            {t("retry")}
           </Button>
         </div>
       ) : null}
       <form onSubmit={onSubmit} noValidate className="mt-4 max-w-xl space-y-6">
         <Tabs defaultValue="finance">
           <TabsList>
-            <TabsTrigger value="finance">Finance</TabsTrigger>
-            <TabsTrigger value="invoices">Payout invoices</TabsTrigger>
-            <TabsTrigger value="accounts">Payout accounts</TabsTrigger>
+            <TabsTrigger value="finance">{t("tabs.finance")}</TabsTrigger>
+            <TabsTrigger value="invoices">{t("tabs.invoices")}</TabsTrigger>
+            <TabsTrigger value="accounts">{t("tabs.accounts")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="finance" keepMounted className="mt-4">
             <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
-              <h2 className="text-sm font-bold text-ink-charcoal">Finance</h2>
-              {financeFields.map(({ name, label, hint, step }) => (
+              <h2 className="text-sm font-bold text-ink-charcoal">
+                {t("tabs.finance")}
+              </h2>
+              {financeFields.map(({ name, step }) => (
                 <FieldShell
                   key={name}
                   id={name}
-                  label={label}
-                  hint={hint}
+                  label={t(`fields.${name}.label`)}
+                  hint={t(`fields.${name}.hint`)}
                   error={errors[name]?.message}
                 >
                   <Input
@@ -262,12 +216,10 @@ export const AdminAppConfigPageContent: FC = () => {
             <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
               <div>
                 <h2 className="text-sm font-bold text-ink-charcoal">
-                  Payout invoices
+                  {t("invoices.title")}
                 </h2>
                 <p className="mt-0.5 text-xs text-zinc-500">
-                  When on, a store&apos;s own share is only paid after it
-                  uploads an invoice to the platform and an admin approves it.
-                  Staff paid directly to their own IBAN are not affected.
+                  {t("invoices.description")}
                 </p>
               </div>
 
@@ -278,18 +230,17 @@ export const AdminAppConfigPageContent: FC = () => {
                   <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
                     <span>
                       <span className="block text-sm font-semibold text-ink-charcoal">
-                        Require an invoice before paying stores
+                        {t("invoices.required.label")}
                       </span>
                       <span className="block text-xs text-zinc-500">
-                        Replaces &quot;Pay out now&quot; with &quot;Request
-                        payout&quot; for the store&apos;s money.
+                        {t("invoices.required.hint")}
                       </span>
                     </span>
                     <Switch
                       checked={field.value ?? false}
                       onCheckedChange={field.onChange}
                       disabled={updateConfig.isPending}
-                      aria-label="Require an invoice before paying stores"
+                      aria-label={t("invoices.required.label")}
                     />
                   </label>
                 )}
@@ -302,19 +253,17 @@ export const AdminAppConfigPageContent: FC = () => {
                   <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
                     <span>
                       <span className="block text-sm font-semibold text-ink-charcoal">
-                        Read invoices automatically
+                        {t("invoices.aiCheck.label")}
                       </span>
                       <span className="block text-xs text-zinc-500">
-                        Uses OpenAI to extract the total, VAT numbers and date
-                        and flag mismatches for the admin. Requires an OpenAI
-                        key on the API.
+                        {t("invoices.aiCheck.hint")}
                       </span>
                     </span>
                     <Switch
                       checked={field.value ?? false}
                       onCheckedChange={field.onChange}
                       disabled={updateConfig.isPending}
-                      aria-label="Read invoices automatically"
+                      aria-label={t("invoices.aiCheck.label")}
                     />
                   </label>
                 )}
@@ -322,25 +271,25 @@ export const AdminAppConfigPageContent: FC = () => {
 
               <div className={invoiceRequired ? undefined : "opacity-70"}>
                 <p className="mb-3 text-xs font-semibold text-zinc-700">
-                  Who stores invoice
+                  {t("invoices.whoStoresInvoice")}
                   <span className="ml-1 font-normal text-zinc-400">
-                    — shown to every store when it requests a payout
+                    {t("invoices.shownToStores")}
                   </span>
                 </p>
                 <div className="space-y-4">
                   {invoiceDetailFields.map(
-                    ({ name, label, hint, placeholder }) => (
+                    ({ name }) => (
                       <FieldShell
                         key={name}
                         id={name}
-                        label={label}
-                        hint={hint}
+                        label={t(`fields.${name}.label`)}
+                        hint={t(`fields.${name}.hint`)}
                         error={errors[name]?.message}
                       >
                         <Input
                           id={name}
                           type="text"
-                          placeholder={placeholder}
+                          placeholder={t(`fields.${name}.placeholder`)}
                           disabled={updateConfig.isPending}
                           aria-invalid={!!errors[name]}
                           {...register(name)}
@@ -350,8 +299,8 @@ export const AdminAppConfigPageContent: FC = () => {
                   )}
                   <FieldShell
                     id="payout_invoice_instructions"
-                    label="Instructions for stores"
-                    hint="Free text, e.g. where to also email the PDF or which invoice series to use."
+                    label={t("fields.payout_invoice_instructions.label")}
+                    hint={t("fields.payout_invoice_instructions.hint")}
                     error={errors.payout_invoice_instructions?.message}
                   >
                     <Textarea
@@ -370,7 +319,7 @@ export const AdminAppConfigPageContent: FC = () => {
           <TabsContent value="accounts" keepMounted className="mt-4">
             <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6">
               <h2 className="text-sm font-bold text-ink-charcoal">
-                Payout accounts
+                {t("accounts.title")}
               </h2>
               <Controller
                 control={control}
@@ -379,19 +328,17 @@ export const AdminAppConfigPageContent: FC = () => {
                   <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
                     <span>
                       <span className="block text-sm font-semibold text-ink-charcoal">
-                        Connected-account payouts (Viva)
+                        {t("accounts.connected.label")}
                       </span>
                       <span className="block text-xs text-zinc-500">
-                        Shows &quot;Connect with Viva&quot; to stores. Turn on
-                        only once real Viva platform credentials exist and a
-                        sandbox onboarding has been verified.
+                        {t("accounts.connected.hint")}
                       </span>
                     </span>
                     <Switch
                       checked={field.value ?? false}
                       onCheckedChange={field.onChange}
                       disabled={updateConfig.isPending}
-                      aria-label="Connected-account payouts"
+                      aria-label={t("accounts.connected.ariaLabel")}
                     />
                   </label>
                 )}
@@ -403,18 +350,17 @@ export const AdminAppConfigPageContent: FC = () => {
                   <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3">
                     <span>
                       <span className="block text-sm font-semibold text-ink-charcoal">
-                        Transfer tips to stores only
+                        {t("accounts.storeOnly.label")}
                       </span>
                       <span className="block text-xs text-zinc-500">
-                        Tips are paid to the store, which hands staff their
-                        share itself. Hides the direct staff payout actions.
+                        {t("accounts.storeOnly.hint")}
                       </span>
                     </span>
                     <Switch
                       checked={field.value ?? true}
                       onCheckedChange={field.onChange}
                       disabled={updateConfig.isPending}
-                      aria-label="Transfer tips to stores only"
+                      aria-label={t("accounts.storeOnly.label")}
                     />
                   </label>
                 )}
@@ -428,7 +374,7 @@ export const AdminAppConfigPageContent: FC = () => {
           isPending={updateConfig.isPending}
           disabled={!data || !isDirty}
         >
-          Save changes
+          {t("save")}
         </ActionButtonWithPending>
       </form>
     </>

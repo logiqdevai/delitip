@@ -1,6 +1,7 @@
 "use client";
 
 import type { FC, ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ColorPicker } from "@/components/ui/color-picker";
@@ -21,17 +22,21 @@ import type {
   TemplateTextAlign,
 } from "@/features/qr-templates/interfaces/qr-template-elements.interfaces";
 
-const FONT_WEIGHT_OPTIONS: { value: TemplateFontWeight; label: string }[] = [
-  { value: 500, label: "Regular" },
-  { value: 600, label: "Medium" },
-  { value: 700, label: "Bold" },
-  { value: 800, label: "Extra Bold" },
+const FONT_WEIGHT_OPTIONS: { value: TemplateFontWeight }[] = [
+  { value: 500 },
+  { value: 600 },
+  { value: 700 },
+  { value: 800 },
 ];
 
-const ALIGN_OPTIONS: { value: TemplateTextAlign; icon: typeof AlignLeft }[] = [
-  { value: "left", icon: AlignLeft },
-  { value: "center", icon: AlignCenter },
-  { value: "right", icon: AlignRight },
+const ALIGN_OPTIONS: {
+  value: TemplateTextAlign;
+  icon: typeof AlignLeft;
+  labelKey: string;
+}[] = [
+  { value: "left", icon: AlignLeft, labelKey: "alignLeft" },
+  { value: "center", icon: AlignCenter, labelKey: "alignCenter" },
+  { value: "right", icon: AlignRight, labelKey: "alignRight" },
 ];
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
@@ -44,13 +49,14 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 }
 
 function GeometryFields() {
+  const t = useTranslations("dashboard.access.templateEditor.inspector");
   const { selectedElement, updateElement } = useTemplateEditor();
   if (!selectedElement) return null;
   const el = selectedElement;
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      <Field label="X">
+      <Field label={t("x")}>
         <NumberPicker
           size="sm"
           value={Math.round(el.x)}
@@ -59,7 +65,7 @@ function GeometryFields() {
           onChange={(x) => updateElement(el.id, { x })}
         />
       </Field>
-      <Field label="Y">
+      <Field label={t("y")}>
         <NumberPicker
           size="sm"
           value={Math.round(el.y)}
@@ -68,7 +74,7 @@ function GeometryFields() {
           onChange={(y) => updateElement(el.id, { y })}
         />
       </Field>
-      <Field label="Width">
+      <Field label={t("width")}>
         <NumberPicker
           size="sm"
           value={Math.round(el.width)}
@@ -77,7 +83,7 @@ function GeometryFields() {
           onChange={(width) => updateElement(el.id, { width })}
         />
       </Field>
-      <Field label="Height">
+      <Field label={t("height")}>
         <NumberPicker
           size="sm"
           value={Math.round(el.height)}
@@ -91,6 +97,7 @@ function GeometryFields() {
 }
 
 export const TemplateInspectorPanel: FC = () => {
+  const t = useTranslations("dashboard.access.templateEditor.inspector");
   const {
     selectedElement,
     canvas,
@@ -103,15 +110,15 @@ export const TemplateInspectorPanel: FC = () => {
   if (!selectedElement) {
     return (
       <div className="space-y-4 p-4">
-        <h3 className="text-sm font-bold text-ink-charcoal">Background</h3>
+        <h3 className="text-sm font-bold text-ink-charcoal">{t("background")}</h3>
         <ColorPicker
-          label="Card background"
+          label={t("cardBackground")}
           value={canvas.backgroundColor}
           defaultValue={defaultCanvas.backgroundColor}
           onChange={(backgroundColor) => updateCanvas({ backgroundColor })}
         />
         <p className="text-xs text-zinc-400">
-          Select an element on the card to edit it.
+          {t("selectHint")}
         </p>
       </div>
     );
@@ -124,7 +131,7 @@ export const TemplateInspectorPanel: FC = () => {
     <div className="space-y-5 p-4">
       {el.kind === "text" ? (
         <>
-          <Field label="Text">
+          <Field label={t("text")}>
             <Textarea
               rows={3}
               value={el.content}
@@ -134,7 +141,7 @@ export const TemplateInspectorPanel: FC = () => {
             />
           </Field>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Font">
+            <Field label={t("font")}>
               <Select
                 value={el.fontFamily}
                 onValueChange={(value) =>
@@ -147,12 +154,12 @@ export const TemplateInspectorPanel: FC = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="sans">Sans</SelectItem>
-                  <SelectItem value="serif">Serif</SelectItem>
+                  <SelectItem value="sans">{t("sans")}</SelectItem>
+                  <SelectItem value="serif">{t("serif")}</SelectItem>
                 </SelectContent>
               </Select>
             </Field>
-            <Field label="Weight">
+            <Field label={t("weight")}>
               <Select
                 value={String(el.fontWeight)}
                 onValueChange={(value) =>
@@ -167,7 +174,7 @@ export const TemplateInspectorPanel: FC = () => {
                 <SelectContent>
                   {FONT_WEIGHT_OPTIONS.map((option) => (
                     <SelectItem key={option.value} value={String(option.value)}>
-                      {option.label}
+                      {t(`fontWeights.${option.value}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -175,7 +182,7 @@ export const TemplateInspectorPanel: FC = () => {
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Size">
+            <Field label={t("size")}>
               <NumberPicker
                 size="sm"
                 value={el.fontSize}
@@ -184,7 +191,7 @@ export const TemplateInspectorPanel: FC = () => {
                 onChange={(fontSize) => updateElement(el.id, { fontSize })}
               />
             </Field>
-            <Field label="Letter spacing">
+            <Field label={t("letterSpacing")}>
               <NumberPicker
                 size="sm"
                 value={el.letterSpacing}
@@ -197,14 +204,15 @@ export const TemplateInspectorPanel: FC = () => {
               />
             </Field>
           </div>
-          <Field label="Align">
+          <Field label={t("align")}>
             <div className="flex gap-1">
-              {ALIGN_OPTIONS.map(({ value, icon: Icon }) => (
+              {ALIGN_OPTIONS.map(({ value, icon: Icon, labelKey }) => (
                 <Button
                   key={value}
                   type="button"
                   size="icon-sm"
                   variant={el.align === value ? "secondary" : "outline"}
+                  aria-label={t(labelKey)}
                   onClick={() => updateElement(el.id, { align: value })}
                 >
                   <Icon className="size-3.5" />
@@ -213,7 +221,7 @@ export const TemplateInspectorPanel: FC = () => {
             </div>
           </Field>
           <ColorPicker
-            label="Color"
+            label={t("color")}
             value={el.color}
             defaultValue={
               defaultEl?.kind === "text" ? defaultEl.color : undefined
@@ -221,7 +229,7 @@ export const TemplateInspectorPanel: FC = () => {
             onChange={(color) => updateElement(el.id, { color })}
           />
           <div className="flex items-center justify-between">
-            <Label htmlFor="uppercase-switch">Uppercase</Label>
+            <Label htmlFor="uppercase-switch">{t("uppercase")}</Label>
             <Switch
               id="uppercase-switch"
               checked={el.uppercase}
@@ -235,7 +243,7 @@ export const TemplateInspectorPanel: FC = () => {
 
       {el.kind === "image" ? (
         <>
-          <Field label="Shape">
+          <Field label={t("shape")}>
             <Select
               value={el.shape}
               onValueChange={(value) =>
@@ -248,13 +256,13 @@ export const TemplateInspectorPanel: FC = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="circle">Circle</SelectItem>
-                <SelectItem value="square">Square</SelectItem>
+                <SelectItem value="circle">{t("circle")}</SelectItem>
+                <SelectItem value="square">{t("square")}</SelectItem>
               </SelectContent>
             </Select>
           </Field>
           <div className="flex items-center justify-between">
-            <Label htmlFor="backdrop-switch">White backdrop</Label>
+            <Label htmlFor="backdrop-switch">{t("whiteBackdrop")}</Label>
             <Switch
               id="backdrop-switch"
               checked={el.backdrop}
@@ -264,7 +272,7 @@ export const TemplateInspectorPanel: FC = () => {
             />
           </div>
           <ColorPicker
-            label="Fallback icon color"
+            label={t("fallbackIconColor")}
             value={el.iconColor}
             defaultValue={
               defaultEl?.kind === "image" ? defaultEl.iconColor : undefined
@@ -272,14 +280,14 @@ export const TemplateInspectorPanel: FC = () => {
             onChange={(iconColor) => updateElement(el.id, { iconColor })}
           />
           <p className="text-xs text-zinc-400">
-            Shown when this store has no logo uploaded.
+            {t("fallbackIconHint")}
           </p>
         </>
       ) : null}
 
       {el.kind === "qr" ? (
         <div className="flex items-center justify-between">
-          <Label htmlFor="qr-badge-switch">Show center badge</Label>
+          <Label htmlFor="qr-badge-switch">{t("showBadge")}</Label>
           <Switch
             id="qr-badge-switch"
             checked={el.showBadge}
@@ -293,14 +301,14 @@ export const TemplateInspectorPanel: FC = () => {
       {el.kind === "iconRow" ? (
         <>
           <ColorPicker
-            label="Color"
+            label={t("color")}
             value={el.color}
             defaultValue={
               defaultEl?.kind === "iconRow" ? defaultEl.color : undefined
             }
             onChange={(color) => updateElement(el.id, { color })}
           />
-          <Field label="Label size">
+          <Field label={t("labelSize")}>
             <NumberPicker
               size="sm"
               value={el.labelFontSize}
@@ -316,7 +324,7 @@ export const TemplateInspectorPanel: FC = () => {
 
       {el.kind === "band" ? (
         <ColorPicker
-          label="Color"
+          label={t("color")}
           value={el.color}
           defaultValue={
             defaultEl?.kind === "band" ? defaultEl.color : undefined
@@ -327,7 +335,7 @@ export const TemplateInspectorPanel: FC = () => {
 
       <div className="border-t border-zinc-100 pt-4">
         <p className="mb-2 text-xs font-semibold text-zinc-500">
-          Position &amp; size
+          {t("positionSize")}
         </p>
         <GeometryFields />
       </div>

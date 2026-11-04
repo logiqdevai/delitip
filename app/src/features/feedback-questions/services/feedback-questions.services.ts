@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -16,7 +17,7 @@ export const listFeedbackQuestions = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load feedback questions. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadFeedbackQuestions")));
   }
 };
 
@@ -31,7 +32,7 @@ export const createFeedbackQuestion = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't create feedback question. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.createFeedbackQuestion")));
   }
 };
 
@@ -47,7 +48,7 @@ export const updateFeedbackQuestion = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't update feedback question. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.updateFeedbackQuestion")));
   }
 };
 
@@ -58,6 +59,6 @@ export const deleteFeedbackQuestion = async (
   try {
     await axiosInstance.delete(ApiRoutes.stores.feedbackQuestion(storeId, id));
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't delete feedback question. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.deleteFeedbackQuestion")));
   }
 };

@@ -4,7 +4,7 @@ import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { type FC, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { useTranslations } from "next-intl";
 import { ArrowRight, Check } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";

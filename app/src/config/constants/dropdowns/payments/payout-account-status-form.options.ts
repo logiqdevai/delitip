@@ -5,19 +5,22 @@ import {
 
 export const PayoutAccountStatusFormOptions: {
   id: PayoutAccountStatus;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: PayoutAccountStatuses.PENDING, label: "Pending" },
-  { id: PayoutAccountStatuses.ACTIVE, label: "Active" },
-  { id: PayoutAccountStatuses.RESTRICTED, label: "Restricted" },
-  { id: PayoutAccountStatuses.DISABLED, label: "Disabled" },
+  {
+    id: PayoutAccountStatuses.PENDING,
+    labelKey: "dashboard.enums.payoutAccountStatus.PENDING",
+  },
+  {
+    id: PayoutAccountStatuses.ACTIVE,
+    labelKey: "dashboard.enums.payoutAccountStatus.ACTIVE",
+  },
+  {
+    id: PayoutAccountStatuses.RESTRICTED,
+    labelKey: "dashboard.enums.payoutAccountStatus.RESTRICTED",
+  },
+  {
+    id: PayoutAccountStatuses.DISABLED,
+    labelKey: "dashboard.enums.payoutAccountStatus.DISABLED",
+  },
 ];
-
-export function getPayoutAccountStatusLabel(
-  status: PayoutAccountStatus | string,
-): string {
-  return (
-    PayoutAccountStatusFormOptions.find((option) => option.id === status)
-      ?.label ?? status
-  );
-}

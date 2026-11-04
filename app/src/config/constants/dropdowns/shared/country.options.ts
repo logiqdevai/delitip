@@ -44,29 +44,27 @@ const SUPPORTED_COUNTRY_CODES = new Set([
   "CN",
 ]);
 
-const countryDisplayNames =
+// ISO codes are the source of truth. Display names are locale-aware: use
+// useCountryOptions() / useCountryName() from "@/hooks/use-country-options".
+export const CountryCodes: string[] = flagCountryCodes.filter(
+  (code) =>
+    /^[A-Z]{2}$/.test(code) &&
+    !NON_COUNTRY_CODES.has(code) &&
+    SUPPORTED_COUNTRY_CODES.has(code),
+);
+
+// Countries are persisted by their ENGLISH name (tax details / business profile
+// / onboarding store the name string, not the code). These helpers translate
+// between that stored name and the ISO code and must stay English - never show
+// them to people; use the locale-aware hook for display.
+const englishNames =
   typeof Intl !== "undefined" && "DisplayNames" in Intl
     ? new Intl.DisplayNames(["en"], { type: "region" })
     : null;
 
-function resolveCountryName(code: string): string {
-  return countryDisplayNames?.of(code) ?? code;
-}
-
-export interface CountryOption {
-  id: string;
-  label: string;
-}
-
-export const CountryOptions: CountryOption[] = flagCountryCodes
-  .filter((code) => /^[A-Z]{2}$/.test(code) && !NON_COUNTRY_CODES.has(code))
-  .filter((code) => SUPPORTED_COUNTRY_CODES.has(code))
-  .map((code) => ({ id: code, label: resolveCountryName(code) }))
-  .sort((a, b) => a.label.localeCompare(b.label));
-
-export function getCountryLabel(code: string | null | undefined): string {
+export function getCountryStorageName(code: string | null | undefined): string {
   if (!code) return "";
-  return CountryOptions.find((option) => option.id === code)?.label ?? code;
+  return englishNames?.of(code) ?? code;
 }
 
 export function getCountryCodeByName(
@@ -74,7 +72,7 @@ export function getCountryCodeByName(
 ): string | undefined {
   if (!name) return undefined;
   const normalized = name.trim().toLowerCase();
-  return CountryOptions.find(
-    (option) => option.label.toLowerCase() === normalized,
-  )?.id;
+  return CountryCodes.find(
+    (code) => getCountryStorageName(code).toLowerCase() === normalized,
+  );
 }

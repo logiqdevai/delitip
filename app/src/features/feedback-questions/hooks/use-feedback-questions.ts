@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   createFeedbackQuestion,
   deleteFeedbackQuestion,
@@ -28,6 +29,7 @@ export const useFeedbackQuestions = (storeId: string) => {
 };
 
 export const useCreateFeedbackQuestion = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.feedbackQuestions");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: CreateFeedbackQuestionPayload) =>
@@ -39,12 +41,13 @@ export const useCreateFeedbackQuestion = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not add question", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("addFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };
 
 export const useUpdateFeedbackQuestion = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.feedbackQuestions");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: UpdateFeedbackQuestionPayload }) =>
@@ -56,12 +59,13 @@ export const useUpdateFeedbackQuestion = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not update question", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("updateFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };
 
 export const useDeleteFeedbackQuestion = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.feedbackQuestions");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteFeedbackQuestion(storeId, id),
@@ -72,12 +76,13 @@ export const useDeleteFeedbackQuestion = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not delete question", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("deleteFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };
 
 export const useReorderFeedbackQuestions = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.feedbackQuestions");
   const queryClient = useQueryClient();
   const queryKey = feedbackQuestionsQueryKeys.list(storeId);
 
@@ -109,7 +114,7 @@ export const useReorderFeedbackQuestions = (storeId: string) => {
         queryClient.setQueryData(queryKey, context.previous);
       }
       toast.add({
-        title: "Could not reorder questions",
+        title: t("reorderFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

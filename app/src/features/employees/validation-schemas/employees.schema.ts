@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { vmsg } from "@/lib/validation-message";
 
 export const employeeFormSchema = z.object({
-  email: z.string().trim().email("Enter a valid email"),
+  email: z.string().trim().email(vmsg("invalidEmail")),
   position: z.string().trim().optional(),
 });
 

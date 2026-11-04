@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   BedDouble,
   Coffee,
@@ -106,6 +107,7 @@ export function TemplateQrBlock({
   size = 132,
   showBadge = true,
 }: TemplateQrBlockProps) {
+  const t = useTranslations("dashboard.access.templateEditor.content");
   return (
     <div
       style={{ width: size, height: size }}
@@ -113,7 +115,7 @@ export function TemplateQrBlock({
     >
       <img
         src={qrObjectUrl}
-        alt={`QR code for ${qrLabel}`}
+        alt={t("qrAlt", { label: qrLabel })}
         className="size-full object-contain"
       />
       {showBadge ? (
@@ -135,10 +137,11 @@ export function ScanTipReviewRow({
   color: string;
   labelFontSize?: number;
 }) {
+  const t = useTranslations("dashboard.access.templateEditor.content");
   const items = [
-    { icon: ScanQrCode, label: "Scan" },
-    { icon: HeartHandshake, label: "Tip" },
-    { icon: Star, label: "Review" },
+    { icon: ScanQrCode, label: t("scan") },
+    { icon: HeartHandshake, label: t("tip") },
+    { icon: Star, label: t("review") },
   ];
   return (
     <div className="flex items-center gap-5" style={{ color }}>

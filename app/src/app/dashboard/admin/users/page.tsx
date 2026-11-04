@@ -1,11 +1,12 @@
 import { type FC } from "react";
 import { type Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { PlatformAdminGuard } from "@/components/auth/platform-admin-guard";
 import { AllUsersPageContent } from "./components/all-users-page-content";
 
-export const metadata: Metadata = {
-  title: "All Users - delitip",
-  description: "Platform-wide directory of every registered delitip user.",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("dashboard.admin.meta.users");
+  return { title: t("title"), description: t("description") };
 };
 
 const AdminUsersPage: FC = () => {

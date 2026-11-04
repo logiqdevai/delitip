@@ -4,12 +4,23 @@ import type {
 } from "@/features/distribution/interfaces/distribution.interfaces";
 import { recipientPercentage } from "@/features/distribution/interfaces/distribution.interfaces";
 import { DistributionRecipientTypes } from "@/features/distribution/interfaces/distribution.interfaces";
+import { tr } from "@/lib/i18n-runtime";
+
+type SummaryKey = "noRecipients" | "business" | "employee";
+
+/**
+ * Pass `t` from `useTranslations("dashboard.team.distribution.summary")` when
+ * calling from a component; without it the runtime translator (`tr`) is used.
+ */
+const defaultTranslate = (key: SummaryKey): string =>
+  tr(`dashboard.team.distribution.summary.${key}`);
 
 export function formatRecipientSummary(
   recipients: DistributionRuleRecipient[],
+  t: (key: SummaryKey) => string = defaultTranslate,
 ): string {
   if (recipients.length === 0) {
-    return "No recipients";
+    return t("noRecipients");
   }
 
   const ordered = [...recipients].sort(
@@ -21,8 +32,8 @@ export function formatRecipientSummary(
       const pct = recipientPercentage(recipient.percentage);
       const label =
         recipient.recipient_type === DistributionRecipientTypes.STORE
-          ? "Business"
-          : (recipient.employee?.full_name ?? "Employee");
+          ? t("business")
+          : (recipient.employee?.full_name ?? t("employee"));
       return `${label} ${pct}%`;
     })
     .join(" · ");

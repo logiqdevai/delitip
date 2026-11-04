@@ -1,1 +1,298 @@
-{}
+{
+  "page": {
+    "noStoreTitle": "No store selected",
+    "noStoreDescription": "Finish business setup before creating customer QR codes.",
+    "title": "QR Codes",
+    "description": "Customer access and tip splitting for {storeName}.",
+    "tabQrCodes": "QR codes",
+    "tabDistribution": "Tip distribution"
+  },
+  "qrCodes": {
+    "title": "QR kits",
+    "subtitle": "Generate tip links and print QR codes for {storeName}.",
+    "create": "Create QR code",
+    "loadErrorTitle": "Could not load QR codes",
+    "retry": "Try again",
+    "emptyTitle": "No QR codes yet",
+    "emptyDescription": "Create your first table or counter QR so customers can tip and leave feedback.",
+    "deleteTitle": "Delete QR code?",
+    "deleteDescription": "\"{label}\" will be removed and its tip link will stop working. Printed copies will no longer open the tip page.",
+    "deleteDescriptionFallback": "This QR code will be removed.",
+    "deleteConfirm": "Delete"
+  },
+  "actions": {
+    "linkCopied": "Link copied",
+    "linkCopiedDescription": "Tip URL copied to clipboard.",
+    "copyFailed": "Could not copy",
+    "copyFailedDescription": "Please copy the link manually.",
+    "downloadFailed": "Could not download QR",
+    "printFailed": "Could not print QR",
+    "tryAgain": "Please try again."
+  },
+  "qrCard": {
+    "editAria": "Edit {label}",
+    "editTitle": "Edit QR code",
+    "copiedAria": "Copied tip URL",
+    "copyAria": "Copy tip URL",
+    "active": "Active",
+    "inactive": "Inactive",
+    "actionsAria": "Actions for {label}",
+    "edit": "Edit",
+    "copyLink": "Copy tip link",
+    "openTipPage": "Open tip page",
+    "delete": "Delete",
+    "editQrAria": "Edit QR code {label}",
+    "qrAlt": "QR code for {label}",
+    "scanToTip": "Scan to leave a tip",
+    "appliesTo": "Applies to",
+    "teamMembers": "Team members",
+    "employeesCount": "{count, plural, one {# employee} other {# employees}}",
+    "tips": "Tips",
+    "tipsCount": "{count, plural, one {# tip} other {# tips}}",
+    "reviews": "Reviews",
+    "reviewsCount": "{count, plural, one {# review} other {# reviews}}",
+    "preparing": "Preparing…",
+    "download": "Download",
+    "moreDownload": "More download options",
+    "downloadPng": "Download PNG",
+    "print": "Print",
+    "template": "Template"
+  },
+  "spots": {
+    "title": "Spots",
+    "description": "Tables, rooms, and counters you can attach to QR codes. Turn a spot off to hide it from new QR assignments without deleting it.",
+    "namePlaceholder": "e.g. Table 12",
+    "newNameAria": "New spot name",
+    "add": "Add spot",
+    "empty": "No spots yet. Add one above, then attach it when you create a QR code.",
+    "renameAria": "Rename {name}",
+    "saveNameAria": "Save name",
+    "cancelRenameAria": "Cancel rename",
+    "active": "Active",
+    "inactive": "Inactive",
+    "deactivateAria": "Deactivate {name}",
+    "activateAria": "Activate {name}",
+    "deleteAria": "Delete {name}",
+    "deleteTitle": "Delete spot?",
+    "deleteDescription": "\"{name}\" will be removed and unassigned from any QR codes using it.",
+    "deleteDescriptionFallback": "This spot will be removed.",
+    "deleteConfirm": "Delete"
+  },
+  "spotForm": {
+    "title": "Create spot",
+    "description": "Add a table, room, or counter you can attach to QR codes.",
+    "name": "Name",
+    "namePlaceholder": "e.g. Table 12",
+    "cancel": "Cancel",
+    "submit": "Create spot"
+  },
+  "templateEditor": {
+    "templateNames": {
+      "classic-card": "Classic Card",
+      "arched-band-card": "Arched Band",
+      "cta-band-card": "Bold CTA"
+    },
+    "downloadFailed": "Could not download template",
+    "tryAgain": "Please try again.",
+    "reset": "Reset",
+    "preparing": "Preparing…",
+    "downloadPdf": "Download PDF",
+    "saving": "Saving…",
+    "save": "Save",
+    "closeAria": "Close editor",
+    "switchTitle": "Discard unsaved changes?",
+    "switchDescription": "Switching templates will discard your unsaved edits to this design.",
+    "discardConfirm": "Discard changes",
+    "resetTitle": "Reset this design?",
+    "resetDescription": "This deletes your saved customization and reverts to the default layout. This can't be undone.",
+    "resetConfirm": "Reset to default",
+    "closeDescription": "Closing now will discard your unsaved edits to this design.",
+    "zoomOut": "Zoom out",
+    "zoomIn": "Zoom in",
+    "saved": "Design saved",
+    "saveFailed": "Could not save design",
+    "resetDone": "Design reset to default",
+    "resetFailed": "Could not reset design",
+    "assetsError": "Could not load the QR code image. Please try again.",
+    "elements": {
+      "brandMark": "Logo / Icon",
+      "storeName": "Store Name",
+      "industryLabel": "Category Label",
+      "headline": "Headline",
+      "qr": "QR Code",
+      "scanTipReviewCaption": "Caption",
+      "scanTipReview": "Scan / Tip / Review",
+      "footerWordmark": "Footer Text",
+      "footerBand": "Footer Band",
+      "tagline": "Tagline",
+      "scanCta": "Call To Action"
+    },
+    "inspector": {
+      "fontWeights": {
+        "500": "Regular",
+        "600": "Medium",
+        "700": "Bold",
+        "800": "Extra Bold"
+      },
+      "x": "X",
+      "y": "Y",
+      "width": "Width",
+      "height": "Height",
+      "background": "Background",
+      "cardBackground": "Card background",
+      "selectHint": "Select an element on the card to edit it.",
+      "text": "Text",
+      "font": "Font",
+      "sans": "Sans",
+      "serif": "Serif",
+      "weight": "Weight",
+      "size": "Size",
+      "letterSpacing": "Letter spacing",
+      "align": "Align",
+      "alignLeft": "Align left",
+      "alignCenter": "Align center",
+      "alignRight": "Align right",
+      "color": "Color",
+      "uppercase": "Uppercase",
+      "shape": "Shape",
+      "circle": "Circle",
+      "square": "Square",
+      "whiteBackdrop": "White backdrop",
+      "fallbackIconColor": "Fallback icon color",
+      "fallbackIconHint": "Shown when this store has no logo uploaded.",
+      "showBadge": "Show center badge",
+      "labelSize": "Label size",
+      "positionSize": "Position & size"
+    },
+    "content": {
+      "defaultHeadline": "Enjoying your experience? Thank our team with a tip or review.",
+      "scanTipReviewCaption": "Scan · Tip · Review",
+      "tagline": "Tip your favorite team member.",
+      "scanCta": "Scan to begin",
+      "scan": "Scan",
+      "tip": "Tip",
+      "review": "Review",
+      "qrAlt": "QR code for {label}"
+    }
+  },
+  "qrEditor": {
+    "page": {
+      "allQrCodes": "All QR codes",
+      "openTipPageAria": "Open tip page in a new tab",
+      "openTipPageTitle": "Open tip page",
+      "newQrCode": "New QR code",
+      "description": "Everything about this QR code and its tip page, with a live preview.",
+      "unsaved": "Unsaved changes",
+      "discard": "Discard",
+      "saveChanges": "Save changes",
+      "create": "Create QR code",
+      "previewAria": "Tip page preview",
+      "noStoreTitle": "No store selected",
+      "noStoreDescription": "Finish business setup before creating customer QR codes.",
+      "notFoundTitle": "QR code not found",
+      "notFoundDescription": "It may have been deleted, or it belongs to another store.",
+      "backToQrCodes": "Back to QR codes"
+    },
+    "sidebar": {
+      "navAria": "QR editor sections"
+    },
+    "section": {
+      "storeWide": "Applies to all QR codes in this store"
+    },
+    "details": {
+      "copiedAria": "Copied tip URL",
+      "copyAria": "Copy tip URL",
+      "tipUrl": "Tip URL",
+      "path": "Path: {path}",
+      "qrAlt": "QR code for {label}",
+      "preparing": "Preparing…",
+      "downloadPng": "Download PNG",
+      "print": "Print",
+      "label": "Label",
+      "labelPlaceholder": "e.g. Table 08, Bar, Counter",
+      "labelHint": "Only you see this. It helps you tell QR codes apart.",
+      "activeLabel": "Active (scannable)",
+      "activeHint": "Turn off to stop guests from tipping through this QR code.",
+      "afterSave": "The tip link and QR image are created when you save this QR code."
+    },
+    "recipients": {
+      "employees": "Employees",
+      "noEmployees": "No active employees yet. Add staff first, or leave empty for store-only tips.",
+      "employeesHint": "Assigned staff appear on this QR for customers. Leave empty for store-only tips.",
+      "createEmployee": "Create employee",
+      "selectionMode": "Selection mode",
+      "needsTwo": "Needs 2+ employees. With one person assigned, tips go to them directly.",
+      "selectTwoAbove": "Select 2 or more employees above to enable this mode.",
+      "modeHintEnabled": "Customers follow this mode when scanning the QR.",
+      "modeHintOne": "With one employee selected, only {chooseOne} is available.",
+      "modeHintNone": "Select 2 or more employees to unlock {chooseMany} and {entireTeam}.",
+      "spots": "Spots",
+      "optional": "(optional)",
+      "noSpots": "No spots yet. Create one below, or leave empty.",
+      "spotsHint": "Optional location tags like tables or counters for this QR.",
+      "createSpot": "Create spot",
+      "distributionRule": "Distribution rule",
+      "storeDefault": "Store default",
+      "ruleHint": "Store default follows the rule set on the Tipping step. If none is set, tips are recorded without a split.",
+      "createRule": "Create distribution rule"
+    },
+    "appearance": {
+      "imagesHint": "Logo and cover are saved as soon as you upload them."
+    },
+    "tipping": {
+      "manageAll": "Manage all →"
+    },
+    "reviews": {
+      "description": "Customers who rate you at or above this threshold are prompted to share feedback on an external site such as Google."
+    },
+    "print": {
+      "description": "Pick a printable card, tweak its layout and download it as a PDF. Card designs are saved separately from this form.",
+      "open": "Open card designer",
+      "saveFirst": "Save this QR code first, then come back to design a printable card."
+    },
+    "preview": {
+      "stepAria": "Preview step",
+      "languageAria": "Preview language",
+      "caption": "Live preview — nothing here creates a real tip.",
+      "steps": {
+        "amount": "Amount",
+        "select": "Recipient",
+        "review": "Review",
+        "done": "Done"
+      }
+    }
+  },
+  "toasts": {
+    "qrCodes": {
+      "created": "QR code created",
+      "createdDescription": "Print or share the tip link with customers.",
+      "createFailed": "Could not create QR code",
+      "updated": "QR code updated",
+      "updatedDescription": "Your changes were saved.",
+      "updateFailed": "Could not update QR code",
+      "deleted": "QR code deleted",
+      "deleteFailed": "Could not delete QR code"
+    },
+    "spots": {
+      "created": "Spot created",
+      "createFailed": "Could not create spot",
+      "activated": "Spot activated",
+      "deactivated": "Spot deactivated",
+      "renamed": "Spot renamed",
+      "updated": "Spot updated",
+      "updateFailed": "Could not update spot",
+      "removed": "Spot removed",
+      "removeFailed": "Could not remove spot"
+    },
+    "documents": {
+      "uploadFailed": "Could not upload the file",
+      "removeFailed": "Could not remove the file"
+    }
+  },
+  "utils": {
+    "imageLoadFailed": "We couldn't load the image. Please try again.",
+    "popupBlocked": "Pop-up blocked. Allow pop-ups to print the QR code.",
+    "printTitle": "{label} - QR",
+    "printAlt": "QR code"
+  }
+}

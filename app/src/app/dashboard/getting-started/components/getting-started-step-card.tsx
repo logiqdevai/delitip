@@ -3,6 +3,7 @@
 import { type FC } from "react";
 import Link from "next/link";
 import { CheckCircle2, Circle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { GettingStartedStep } from "@/hooks/use-getting-started-steps";
@@ -10,6 +11,7 @@ import type { GettingStartedStep } from "@/hooks/use-getting-started-steps";
 export const GettingStartedStepCard: FC<{ step: GettingStartedStep }> = ({
   step,
 }) => {
+  const t = useTranslations("dashboard.shell.gettingStarted");
   const Icon = step.icon;
 
   return (
@@ -45,7 +47,7 @@ export const GettingStartedStepCard: FC<{ step: GettingStartedStep }> = ({
         ) : (
           <Circle className="size-3.5" strokeWidth={2} />
         )}
-        {step.completed ? "Done" : (step.statusLabel ?? "Not started")}
+        {step.completed ? t("done") : (step.statusLabel ?? t("notStarted"))}
       </span>
     </Link>
   );

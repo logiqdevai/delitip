@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useTranslations } from "next-intl";
 import { CheckCircle2, ShieldCheck, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,11 +12,14 @@ import {
   useRefreshStorePayoutAccountStatus,
   useStorePayoutAccount,
 } from "@/features/payout-accounts/hooks/use-payout-accounts";
-import { getPayoutAccountStatusLabel } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { PayoutAccountStatusFormOptions } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { usePayoutPolicy } from "@/features/app-config/hooks/use-app-config";
 import { cn } from "@/lib/utils";
 
 export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
+  const t = useTranslations("dashboard.money.payoutAccountCard");
+  const dropdownLabel = useDropdownLabel();
   const accountQuery = useStorePayoutAccount(storeId);
   const createAccount = useCreateStorePayoutAccount(storeId);
   const refreshStatus = useRefreshStorePayoutAccountStatus(storeId);
@@ -32,7 +36,7 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
       <div className="flex items-center gap-2">
         <Wallet className="size-4 text-zinc-400" strokeWidth={2} />
         <h2 className="text-sm font-bold text-ink-charcoal">
-          Store payout account
+          {t("title")}
         </h2>
       </div>
 
@@ -41,12 +45,7 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
       ) : !account ? (
         <div className="mt-3 space-y-3">
           <p className="text-xs text-zinc-500">
-            Connect a payout account so your Store can receive its share of
-            tips - link a business IBAN directly
-            {connectedAccountsEnabled
-              ? ", or connect with Viva for hosted onboarding"
-              : ""}
-            .
+            {t(connectedAccountsEnabled ? "connectHintViva" : "connectHint")}
           </p>
           <div className="flex flex-wrap gap-2">
             <Button
@@ -54,7 +53,7 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
               onClick={() => setIbanDialogOpen(true)}
               className="rounded-xl bg-electric-lime text-ink-charcoal"
             >
-              Link payout account
+              {t("linkAccount")}
             </Button>
             {connectedAccountsEnabled ? (
               <Button
@@ -63,7 +62,7 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
                 onClick={() => setConnectedAccountDialogOpen(true)}
                 className="rounded-xl"
               >
-                Connect with Viva
+                {t("connectViva")}
               </Button>
             ) : null}
           </div>
@@ -88,8 +87,11 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
             )}
             <span>
               {isConnectedAccount
-                ? `${account.provider} · Connected account`
-                : `${account.provider} · IBAN ····${account.iban_last4 ?? "----"}`}
+                ? t("connectedAccount", { provider: account.provider })
+                : t("ibanAccount", {
+                    provider: account.provider,
+                    last4: account.iban_last4 ?? "----",
+                  })}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -101,7 +103,7 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
                   : "bg-amber-50 text-amber-700",
               )}
             >
-              {getPayoutAccountStatusLabel(account.status)}
+              {dropdownLabel(PayoutAccountStatusFormOptions, account.status)}
             </span>
             {account.status === "PENDING" && isConnectedAccount && account.onboarding_url ? (
               <Button
@@ -111,9 +113,9 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
                 onClick={() => {
                   window.location.href = account.onboarding_url!;
                 }}
-                className="h-7 rounded-lg px-2.5 text-caption"
+                className="h-7 rounded-lg px-2.5 text-base"
               >
-                Finish onboarding
+                {t("finishOnboarding")}
               </Button>
             ) : null}
             {account.status === "PENDING" ? (
@@ -123,9 +125,9 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
                 size="sm"
                 onClick={() => refreshStatus.mutate()}
                 disabled={refreshStatus.isPending}
-                className="h-7 rounded-lg px-2.5 text-caption"
+                className="h-7 rounded-lg px-2.5 text-base"
               >
-                {refreshStatus.isPending ? "Checking…" : "Check status"}
+                {refreshStatus.isPending ? t("checking") : t("checkStatus")}
               </Button>
             ) : null}
           </div>
@@ -135,16 +137,16 @@ export const PayoutAccountCard: FC<{ storeId: string }> = ({ storeId }) => {
       <IbanPayoutAccountDialog
         open={ibanDialogOpen}
         onOpenChange={setIbanDialogOpen}
-        title="Link store payout account"
-        description="Your Store's business IBAN - used to send your share of tips via bank transfer."
+        title={t("ibanDialogTitle")}
+        description={t("ibanDialogDescription")}
         mutation={createAccount}
       />
 
       <ConnectedAccountPayoutDialog
         open={connectedAccountDialogOpen}
         onOpenChange={setConnectedAccountDialogOpen}
-        title="Connect with Viva"
-        description="You'll be redirected to Viva's hosted onboarding to verify your Store before it can receive payouts."
+        title={t("vivaDialogTitle")}
+        description={t("vivaDialogDescription")}
         mutation={createAccount}
       />
     </div>

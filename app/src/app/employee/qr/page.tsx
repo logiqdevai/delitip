@@ -2,6 +2,7 @@
 
 import { type CSSProperties, type FC, useState } from "react";
 import { QrCode } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { QrImage } from "@/components/ui/qr-image";
@@ -46,6 +47,7 @@ const QrCodeTile: FC<QrCodeTileProps> = ({
   onCopy,
   style,
 }) => {
+  const t = useTranslations("employee.qr");
   const tipUrl = getAbsoluteTipUrl(storeSlug, qrCode.code);
 
   return (
@@ -87,7 +89,7 @@ const QrCodeTile: FC<QrCodeTileProps> = ({
       <div className="mx-auto flex size-40 items-center justify-center rounded-2xl bg-ink-charcoal p-2.5 shadow-inner">
         <QrImage
           value={tipUrl}
-          alt={`QR code for ${qrCode.label}`}
+          alt={t("qrAlt", { label: qrCode.label })}
           className="size-full rounded-xl bg-white object-contain p-1"
         />
       </div>
@@ -101,7 +103,7 @@ const QrCodeTile: FC<QrCodeTileProps> = ({
         onClick={onCopy}
         className="w-full rounded-xl bg-neutral-fill py-2.5 text-chip font-semibold text-zinc-800 transition hover:bg-zinc-200"
       >
-        {copied ? "Copied to Clipboard!" : "Copy Tip Link"}
+        {copied ? t("copied") : t("copyLink")}
       </button>
     </div>
   );
@@ -129,6 +131,7 @@ const QrCodesSkeleton: FC = () => (
 );
 
 const QrPage: FC = () => {
+  const t = useTranslations("employee.qr");
   const { employeeId, isPending: identityPending } = useCurrentEmployee();
   const qrCodeQuery = useEmployeeQrCode(employeeId ?? "");
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -136,10 +139,10 @@ const QrPage: FC = () => {
   const heading = (
     <div>
       <h1 className="text-xl font-bold text-ink-charcoal">
-        Your Personal Tip QR
+        {t("title")}
       </h1>
       <p className="mt-0.5 text-xs text-zinc-500">
-        Show one of these to guests, or save it to your Apple / Google Wallet.
+        {t("subtitle")}
       </p>
     </div>
   );
@@ -159,7 +162,7 @@ const QrPage: FC = () => {
         {heading}
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load your QR codes</EmptyTitle>
+            <EmptyTitle>{t("loadError")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(qrCodeQuery.error)}</EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -196,10 +199,9 @@ const QrPage: FC = () => {
             <EmptyMedia variant="icon">
               <QrCode />
             </EmptyMedia>
-            <EmptyTitle>No personal QR code yet</EmptyTitle>
+            <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>
-              Ask your manager to create a QR with you assigned in Customer
-              Access &amp; QR Kits to get your own, working link.
+              {t("emptyDescription")}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>

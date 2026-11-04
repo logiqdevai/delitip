@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { Minus, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface NumberPickerProps {
@@ -51,6 +52,7 @@ export const NumberPicker: FC<NumberPickerProps> = ({
   className,
   size = "default",
 }) => {
+  const t = useTranslations("dashboard.shell.ui");
   const generatedId = useId();
   const id = idProp ?? generatedId;
   const [draft, setDraft] = useState(String(value));
@@ -122,7 +124,7 @@ export const NumberPicker: FC<NumberPickerProps> = ({
         type="button"
         tabIndex={-1}
         disabled={disabled || atMin}
-        aria-label="Decrease"
+        aria-label={t("decrease")}
         onClick={() => nudge(-1)}
         className="flex aspect-square h-full shrink-0 items-center justify-center rounded-full text-zinc-500 transition hover:bg-zinc-50 hover:text-ink-charcoal disabled:pointer-events-none disabled:opacity-30"
       >
@@ -178,7 +180,7 @@ export const NumberPicker: FC<NumberPickerProps> = ({
         type="button"
         tabIndex={-1}
         disabled={disabled || atMax}
-        aria-label="Increase"
+        aria-label={t("increase")}
         onClick={() => nudge(1)}
         className="flex aspect-square h-full shrink-0 items-center justify-center rounded-full text-zinc-500 transition hover:bg-zinc-50 hover:text-ink-charcoal disabled:pointer-events-none disabled:opacity-30"
       >

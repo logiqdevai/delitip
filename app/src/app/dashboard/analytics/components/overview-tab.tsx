@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   useDashboardOverview,
@@ -17,6 +18,8 @@ export const OverviewTab: FC<{
   currency: Currency;
   period: DashboardPeriod;
 }> = ({ organizationId, storeId, currency, period }) => {
+  const t = useTranslations("dashboard.analytics.overview");
+  const locale = useLocale();
   const overviewQuery = useDashboardOverview(organizationId, {
     store_id: storeId,
     period,
@@ -48,14 +51,14 @@ export const OverviewTab: FC<{
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
-            <span className="text-xs font-semibold text-zinc-500">Tips</span>
+            <span className="text-xs font-semibold text-zinc-500">{t("tips")}</span>
             <div className="mt-1 text-xl font-extrabold text-ink-charcoal">
-              {formatMoney(overview?.tips_total_amount ?? 0, currency)}
+              {formatMoney(overview?.tips_total_amount ?? 0, currency, locale)}
             </div>
           </div>
           <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
             <span className="text-xs font-semibold text-zinc-500">
-              Transactions
+              {t("transactions")}
             </span>
             <div className="mt-1 text-xl font-extrabold text-ink-charcoal">
               {overview?.transactions_count ?? 0}
@@ -63,7 +66,7 @@ export const OverviewTab: FC<{
           </div>
           <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
             <span className="text-xs font-semibold text-zinc-500">
-              Avg Rating
+              {t("avgRating")}
             </span>
             <div className="mt-1 text-xl font-extrabold text-rating-amber">
               {overview?.average_rating
@@ -73,7 +76,7 @@ export const OverviewTab: FC<{
           </div>
           <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
             <span className="text-xs font-semibold text-zinc-500">
-              Employees Recognized
+              {t("employeesRecognized")}
             </span>
             <div className="mt-1 text-xl font-extrabold text-ink-charcoal">
               {overview?.employees_recognized ?? 0}
@@ -84,7 +87,7 @@ export const OverviewTab: FC<{
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="text-sm font-bold text-ink-charcoal">
-          Customer Experience Score
+          {t("experienceScore")}
         </h2>
         {scoreQuery.isPending ? (
           <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -108,16 +111,24 @@ export const OverviewTab: FC<{
             </div>
             <div className="space-y-2 text-xs text-zinc-600">
               <p>{score.explanation}</p>
-              <div className="flex flex-wrap gap-3 text-[11px] text-zinc-400">
+              <div className="flex flex-wrap gap-3 text-base text-zinc-400">
                 <span>
-                  Rating {score.breakdown.rating_component.toFixed(0)}%
+                  {t("rating", {
+                    value: score.breakdown.rating_component.toFixed(0),
+                  })}
                 </span>
                 <span>
-                  Tip activity {score.breakdown.tip_activity_component.toFixed(0)}%
+                  {t("tipActivity", {
+                    value: score.breakdown.tip_activity_component.toFixed(0),
+                  })}
                 </span>
                 <span>
-                  Positive reviews{" "}
-                  {score.breakdown.positive_review_ratio_component.toFixed(0)}%
+                  {t("positiveReviews", {
+                    value:
+                      score.breakdown.positive_review_ratio_component.toFixed(
+                        0,
+                      ),
+                  })}
                 </span>
               </div>
             </div>

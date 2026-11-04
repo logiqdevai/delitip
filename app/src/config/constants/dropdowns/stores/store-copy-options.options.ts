@@ -5,37 +5,37 @@ import {
 
 export const StoreCopyFormOptions: {
   id: StoreCopyOption;
-  label: string;
-  description: string;
+  labelKey: string;
+  descriptionKey: string;
 }[] = [
   {
     id: StoreCopyOptions.BRANDING,
-    label: "Branding",
-    description: "Logo, cover image and colors",
+    labelKey: "dashboard.enums.storeCopyOption.BRANDING",
+    descriptionKey: "dashboard.enums.storeCopyOptionDescription.BRANDING",
   },
   {
     id: StoreCopyOptions.MESSAGES,
-    label: "Customer messages",
-    description: "Welcome and thank-you messages",
+    labelKey: "dashboard.enums.storeCopyOption.MESSAGES",
+    descriptionKey: "dashboard.enums.storeCopyOptionDescription.MESSAGES",
   },
   {
     id: StoreCopyOptions.LOCALIZATION,
-    label: "Localization",
-    description: "Languages, currency and timezone",
+    labelKey: "dashboard.enums.storeCopyOption.LOCALIZATION",
+    descriptionKey: "dashboard.enums.storeCopyOptionDescription.LOCALIZATION",
   },
   {
     id: StoreCopyOptions.TIPPING,
-    label: "Tipping",
-    description: "Suggested amounts, custom amounts and VAT",
+    labelKey: "dashboard.enums.storeCopyOption.TIPPING",
+    descriptionKey: "dashboard.enums.storeCopyOptionDescription.TIPPING",
   },
   {
     id: StoreCopyOptions.REVIEWS,
-    label: "Reviews & feedback",
-    description: "Categories, tags, questions and rating threshold",
+    labelKey: "dashboard.enums.storeCopyOption.REVIEWS",
+    descriptionKey: "dashboard.enums.storeCopyOptionDescription.REVIEWS",
   },
   {
     id: StoreCopyOptions.QR_DESIGNS,
-    label: "QR designs",
-    description: "Customized QR code templates",
+    labelKey: "dashboard.enums.storeCopyOption.QR_DESIGNS",
+    descriptionKey: "dashboard.enums.storeCopyOptionDescription.QR_DESIGNS",
   },
 ];

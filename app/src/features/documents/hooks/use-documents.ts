@@ -6,10 +6,12 @@ import {
   uploadDocument,
 } from "@/features/documents/services/documents.services";
 import type { DocumentType } from "@/features/documents/interfaces/documents.interfaces";
+import { useTranslations } from "next-intl";
 import { toast } from "@/components/ui/toast";
 import { getErrorMessage } from "@/lib/api-error";
 
 export const useUploadDocument = () => {
+  const t = useTranslations("dashboard.access.toasts.documents");
   return useMutation({
     mutationFn: ({ file, type }: { file: File; type?: DocumentType }) =>
       uploadDocument(file, type),
@@ -18,7 +20,7 @@ export const useUploadDocument = () => {
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not upload the file",
+        title: t("uploadFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -27,6 +29,7 @@ export const useUploadDocument = () => {
 };
 
 export const useDeleteDocument = () => {
+  const t = useTranslations("dashboard.access.toasts.documents");
   return useMutation({
     mutationFn: (id: string) => deleteDocument(id),
     onSuccess: () => {
@@ -34,7 +37,7 @@ export const useDeleteDocument = () => {
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not remove the file",
+        title: t("removeFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

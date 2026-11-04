@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   ConfirmationDialog,
@@ -17,17 +18,17 @@ import {
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 
-const formatDateTime = (value?: string | null) => {
+const formatDateTime = (value: string | null | undefined, locale: string) => {
   if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
+  return new Date(value).toLocaleString(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   });
 };
 
-const formatDate = (value?: string | null) => {
+const formatDate = (value: string | null | undefined, locale: string) => {
   if (!value) return "-";
-  return new Date(value).toLocaleDateString(undefined, { dateStyle: "medium" });
+  return new Date(value).toLocaleDateString(locale, { dateStyle: "medium" });
 };
 
 interface PayoutSummaryCardProps {
@@ -41,6 +42,8 @@ export const PayoutSummaryCard: FC<PayoutSummaryCardProps> = ({
   storeId,
   currency,
 }) => {
+  const t = useTranslations("dashboard.money.payoutSummaryCard");
+  const locale = useLocale();
   const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
   const [requestDialogOpen, setRequestDialogOpen] = useState(false);
 
@@ -68,22 +71,22 @@ export const PayoutSummaryCard: FC<PayoutSummaryCardProps> = ({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-6">
           <div>
-            <p className="text-xs text-zinc-400">Pending payout</p>
+            <p className="text-xs text-zinc-400">{t("pendingPayout")}</p>
             <p className="text-lg font-bold text-ink-charcoal">
-              {formatMoney(summary?.pending_total_amount ?? 0, currency)}
+              {formatMoney(summary?.pending_total_amount ?? 0, currency, locale)}
             </p>
           </div>
           <div>
-            <p className="text-xs text-zinc-400">Eligible now</p>
+            <p className="text-xs text-zinc-400">{t("eligibleNow")}</p>
             <p className="text-lg font-bold text-brand-700">
-              {formatMoney(summary?.eligible_total_amount ?? 0, currency)}
+              {formatMoney(summary?.eligible_total_amount ?? 0, currency, locale)}
             </p>
           </div>
           {summary && summary.requested_total_amount > 0 ? (
             <div>
-              <p className="text-xs text-zinc-400">Under review</p>
+              <p className="text-xs text-zinc-400">{t("underReview")}</p>
               <p className="text-lg font-bold text-amber-700">
-                {formatMoney(summary.requested_total_amount, currency)}
+                {formatMoney(summary.requested_total_amount, currency, locale)}
               </p>
             </div>
           ) : null}
@@ -98,7 +101,7 @@ export const PayoutSummaryCard: FC<PayoutSummaryCardProps> = ({
                 disabled={!summary || summary.eligible_total_amount === 0}
                 className="rounded-xl"
               >
-                Pay out staff
+                {t("payOutStaff")}
               </Button>
             ) : null}
             <Button
@@ -111,7 +114,7 @@ export const PayoutSummaryCard: FC<PayoutSummaryCardProps> = ({
               }
               className="rounded-xl bg-electric-lime text-ink-charcoal"
             >
-              Request payout
+              {t("requestPayout")}
             </Button>
           </div>
         ) : (
@@ -121,30 +124,31 @@ export const PayoutSummaryCard: FC<PayoutSummaryCardProps> = ({
             disabled={!summary || summary.eligible_total_amount === 0}
             className="rounded-xl bg-electric-lime text-ink-charcoal"
           >
-            Pay out now
+            {t("payOutNow")}
           </Button>
         )}
       </div>
       {summary ? (
-        <p className="text-caption text-zinc-500">
-          Payouts are held for {summary.hold_window_hours}h after a tip is
-          paid, then released once Viva confirms the processing fee.
-          {summary.next_eligible_at
-            ? ` Next batch eligible ${formatDateTime(summary.next_eligible_at)}.`
-            : ""}
-          {invoiceRequired
-            ? " Tips are paid to your store after you upload an invoice for the amount and Delitip approves it."
-            : ""}
+        <p className="text-base text-zinc-500">
+          {t("holdNote", {
+            hours: summary.hold_window_hours,
+            hasNext: summary.next_eligible_at ? "true" : "false",
+            date: formatDateTime(summary.next_eligible_at, locale),
+            invoiceRequired: invoiceRequired ? "true" : "false",
+          })}
         </p>
       ) : null}
       {openRequest ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-amber-50/60 px-3.5 py-3 text-caption leading-snug text-amber-900">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-amber-50/60 px-3.5 py-3 text-base leading-snug text-amber-900">
           <span>
-            <strong>{formatMoney(openRequest.amount, currency)}</strong> requested{" "}
-            {formatDate(openRequest.created_at)} is awaiting Delitip&apos;s review.
-            {openRequest.failure_reason
-              ? " The last bank transfer attempt didn't go through, so it's back with us for review."
-              : ""}
+            {t.rich(
+              openRequest.failure_reason ? "openRequestFailed" : "openRequest",
+              {
+                amount: formatMoney(openRequest.amount, currency, locale),
+                date: formatDate(openRequest.created_at, locale),
+                b: (chunks) => <strong>{chunks}</strong>,
+              },
+            )}
           </span>
           <Button
             type="button"
@@ -153,7 +157,7 @@ export const PayoutSummaryCard: FC<PayoutSummaryCardProps> = ({
             className="h-7 rounded-full px-2.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
             onClick={cancelConfirm.openDialog}
           >
-            Cancel request
+            {t("cancelRequest")}
           </Button>
         </div>
       ) : null}
@@ -172,10 +176,10 @@ export const PayoutSummaryCard: FC<PayoutSummaryCardProps> = ({
       />
       <ConfirmationDialog
         state={cancelConfirm}
-        title="Cancel this payout request?"
-        description="Your tips are released immediately and you can submit a new request with a new invoice."
-        confirmLabel="Cancel request"
-        cancelLabel="Keep it"
+        title={t("cancelTitle")}
+        description={t("cancelDescription")}
+        confirmLabel={t("cancelRequest")}
+        cancelLabel={t("keepIt")}
         isPending={cancelRequest.isPending}
         onConfirm={async () => {
           if (!openRequest) return;

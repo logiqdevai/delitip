@@ -1,11 +1,14 @@
 import { type FC } from "react";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { AuthSignUpPanel } from "../components/auth-sign-up-panel";
 
-export const metadata: Metadata = {
-  title: "Create Account - delitip",
-  description:
-    "Register your business on delitip and start collecting tips and employee feedback in under 2 minutes.",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("auth.signUp");
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  };
 };
 
 const AuthSignUpPage: FC = () => {

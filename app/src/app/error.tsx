@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { AppStatusPage } from "@/components/system/app-status-page";
 
 interface ErrorPageProps {
@@ -9,6 +10,8 @@ interface ErrorPageProps {
 }
 
 const ErrorPage: FC<ErrorPageProps> = ({ error, reset }) => {
+  const t = useTranslations("errors.page");
+
   useEffect(() => {
     console.error(error);
   }, [error]);
@@ -16,8 +19,8 @@ const ErrorPage: FC<ErrorPageProps> = ({ error, reset }) => {
   return (
     <AppStatusPage
       code="500"
-      title="This page couldn't load"
-      description="Something went wrong on our side. Try again, or go back and continue from where you left off."
+      title={t("errorTitle")}
+      description={t("errorDescription")}
       onTryAgain={reset}
       digest={error.digest}
     />

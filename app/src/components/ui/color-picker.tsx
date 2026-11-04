@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useId } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,6 +37,7 @@ export const ColorPicker: FC<ColorPickerProps> = ({
   className,
   error,
 }) => {
+  const t = useTranslations("dashboard.shell.ui.colorPicker");
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const swatchId = `${inputId}-swatch`;
@@ -60,7 +62,7 @@ export const ColorPicker: FC<ColorPickerProps> = ({
             onClick={() => onChange(normalizedReset!)}
             className="h-auto px-1.5 py-0.5 text-xs text-zinc-500 hover:text-ink-charcoal"
           >
-            Reset
+            {t("reset")}
           </Button>
         ) : null}
       </div>
@@ -76,14 +78,14 @@ export const ColorPicker: FC<ColorPickerProps> = ({
             error && "border-red-300",
           )}
           style={{ backgroundColor: nativeValue }}
-          aria-label={`${label} swatch`}
+          aria-label={t("swatch", { label })}
         >
           <input
             id={swatchId}
             type="color"
             value={nativeValue}
             disabled={disabled}
-            aria-label={`${label} color picker`}
+            aria-label={t("picker", { label })}
             onChange={(event) => onChange(event.target.value)}
             className="absolute inset-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
           />

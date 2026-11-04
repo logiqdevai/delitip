@@ -3,6 +3,7 @@
 import { type FC } from "react";
 import Link from "next/link";
 import { format, parseISO, startOfDay, subDays } from "date-fns";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { Download, ListChecks, Plus, Star } from "lucide-react";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
@@ -28,24 +29,36 @@ const MetricCard: FC<{
   value: string;
   total?: string;
   hint?: string;
-}> = ({ label, value, total, hint }) => (
-  <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
-    <span className="text-xs font-semibold text-zinc-500">{label}</span>
-    <div className="mt-2 text-2xl font-extrabold text-ink-charcoal">
-      {value}
-    </div>
-    {total ? (
-      <div className="mt-1 text-[11px] text-zinc-500">
-        Total <span className="font-semibold text-zinc-700">{total}</span>
+}> = ({ label, value, total, hint }) => {
+  const t = useTranslations("dashboard.shell.overview");
+
+  return (
+    <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
+      <span className="text-xs font-semibold text-zinc-500">{label}</span>
+      <div className="mt-2 text-2xl font-extrabold text-ink-charcoal">
+        {value}
       </div>
-    ) : null}
-    {hint ? (
-      <div className="mt-1 text-[11px] text-zinc-400">{hint}</div>
-    ) : null}
-  </div>
-);
+      {total ? (
+        <div className="mt-1 text-base text-zinc-500">
+          {t.rich("total", {
+            value: total,
+            b: (chunks) => (
+              <span className="font-semibold text-zinc-700">{chunks}</span>
+            ),
+          })}
+        </div>
+      ) : null}
+      {hint ? (
+        <div className="mt-1 text-base text-zinc-400">{hint}</div>
+      ) : null}
+    </div>
+  );
+};
 
 export const OverviewPageContent: FC = () => {
+  const t = useTranslations("dashboard.shell.overview");
+  const locale = useLocale();
+  const intlFormat = useFormatter();
   const {
     storeId,
     store,
@@ -123,7 +136,7 @@ export const OverviewPageContent: FC = () => {
               )}
             >
               <Plus className="size-3.5" strokeWidth={2} />
-              Add Employee
+              {t("addEmployee")}
             </Link>
             <Link
               href={Routes.dashboard.accessDistribution}
@@ -133,7 +146,7 @@ export const OverviewPageContent: FC = () => {
               )}
             >
               <Download className="size-3.5" strokeWidth={2} />
-              Manage Tip Distribution
+              {t("manageDistribution")}
             </Link>
           </>
         }
@@ -151,11 +164,13 @@ export const OverviewPageContent: FC = () => {
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-bold text-ink-charcoal">
-              Finish setting up your business
+              {t("setupTitle")}
             </p>
             <p className="mt-0.5 text-xs text-zinc-500">
-              {gettingStarted.completedCount} of {gettingStarted.total}{" "}
-              setup steps done
+              {t("setupProgress", {
+                completed: gettingStarted.completedCount,
+                total: gettingStarted.total,
+              })}
             </p>
           </div>
           <span
@@ -164,7 +179,7 @@ export const OverviewPageContent: FC = () => {
               "w-full justify-center border-white bg-white text-brand-700 hover:bg-white/90 md:h-auto md:w-auto md:border-transparent md:bg-transparent md:px-0 md:py-0 md:text-xs md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
             )}
           >
-            View checklist →
+            {t("viewChecklist")}
           </span>
         </Link>
       ) : null}
@@ -177,36 +192,42 @@ export const OverviewPageContent: FC = () => {
         </div>
       ) : overviewQuery.isError ? (
         <div className="rounded-2xl border border-dashed border-red-200 bg-red-50 p-4 text-xs text-red-700">
-          Could not load today&apos;s metrics. {getErrorMessage(overviewQuery.error)}
+          {t("metricsError")} {getErrorMessage(overviewQuery.error)}
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <MetricCard
-            label="Tips Today"
-            value={formatMoney(overview?.tips_total_amount ?? 0, store.currency)}
+            label={t("tipsToday")}
+            value={formatMoney(
+              overview?.tips_total_amount ?? 0,
+              store.currency,
+              locale,
+            )}
             total={
               totals
-                ? formatMoney(totals.tips_total_amount, store.currency)
+                ? formatMoney(totals.tips_total_amount, store.currency, locale)
                 : undefined
             }
-            hint={`${overview?.employees_recognized ?? 0} employee${overview?.employees_recognized === 1 ? "" : "s"} recognized today`}
+            hint={t("recognizedHint", {
+              count: overview?.employees_recognized ?? 0,
+            })}
           />
           <MetricCard
-            label="Transactions Today"
+            label={t("transactionsToday")}
             value={String(overview?.transactions_count ?? 0)}
             total={
               totals ? String(totals.transactions_count) : undefined
             }
-            hint="Customer tips processed"
+            hint={t("transactionsHint")}
           />
           <MetricCard
-            label="Reviews Today"
+            label={t("reviewsToday")}
             value={String(overview?.reviews_count ?? 0)}
             total={totals ? String(totals.reviews_count) : undefined}
-            hint="Feedback submitted today"
+            hint={t("reviewsHint")}
           />
           <MetricCard
-            label="Avg Rating Today"
+            label={t("avgRatingToday")}
             value={overview?.average_rating ? `★ ${overview.average_rating.toFixed(2)}` : "-"}
             total={
               totals?.average_rating
@@ -215,7 +236,9 @@ export const OverviewPageContent: FC = () => {
                   ? "-"
                   : undefined
             }
-            hint={overview?.average_rating ? "Based on today's reviews" : "No reviews yet today"}
+            hint={
+              overview?.average_rating ? t("ratingHint") : t("noRatingHint")
+            }
           />
         </div>
       )}
@@ -225,17 +248,17 @@ export const OverviewPageContent: FC = () => {
           <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-ink-charcoal">
-                Tips (Past {TREND_DAYS} Days)
+                {t("tipsTrendTitle", { days: TREND_DAYS })}
               </h2>
               <p className="text-xs text-zinc-400">
-                Daily tip totals generated via QR codes
+                {t("tipsTrendSubtitle")}
               </p>
             </div>
             <Link
               href={Routes.dashboard.analytics.overview}
               className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold whitespace-nowrap text-brand-700 hover:underline"
             >
-              View Analytics
+              {t("viewAnalytics")}
               <span aria-hidden="true">→</span>
             </Link>
           </div>
@@ -259,12 +282,12 @@ export const OverviewPageContent: FC = () => {
                   >
                     <span
                       className={cn(
-                        "text-[10px] font-semibold text-zinc-400",
+                        "text-base font-semibold text-zinc-400",
                         isPeak && "font-bold text-brand-700",
                       )}
                     >
                       {point.value > 0
-                        ? formatMoney(point.value, store.currency)
+                        ? formatMoney(point.value, store.currency, locale)
                         : "-"}
                     </span>
                     <div
@@ -280,11 +303,13 @@ export const OverviewPageContent: FC = () => {
                     />
                     <span
                       className={cn(
-                        "text-[10px] font-medium text-zinc-500",
+                        "text-base font-medium text-zinc-500",
                         isPeak && "font-bold text-brand-800",
                       )}
                     >
-                      {format(parseISO(point.bucket), "EEE")}
+                      {intlFormat.dateTime(parseISO(point.bucket), {
+                        weekday: "short",
+                      })}
                     </span>
                   </div>
                 );
@@ -296,7 +321,7 @@ export const OverviewPageContent: FC = () => {
         <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-ink-charcoal">
-              Live Customer Feedback
+              {t("liveFeedback")}
             </h2>
             <span className="size-2 animate-pulse rounded-full bg-electric-lime" />
           </div>
@@ -309,7 +334,7 @@ export const OverviewPageContent: FC = () => {
             </div>
           ) : reviews.length === 0 ? (
             <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 p-4 text-center text-xs text-zinc-500">
-              No feedback yet.
+              {t("noFeedback")}
             </p>
           ) : (
             <div className="space-y-3">
@@ -318,9 +343,9 @@ export const OverviewPageContent: FC = () => {
                   key={review.id}
                   className="space-y-1.5 rounded-xl border border-zinc-100 bg-zinc-50 p-3"
                 >
-                  <div className="flex items-center justify-between text-[11px]">
+                  <div className="flex items-center justify-between text-base">
                     <span className="font-bold text-ink-charcoal">
-                      {review.employee?.full_name ?? "Store"}
+                      {review.employee?.full_name ?? t("storeFallback")}
                     </span>
                     <span className="flex items-center gap-0.5 font-bold text-rating-amber">
                       {Array.from({ length: review.rating }).map((_, i) => (
@@ -333,8 +358,16 @@ export const OverviewPageContent: FC = () => {
                       &ldquo;{review.comment}&rdquo;
                     </p>
                   ) : null}
-                  <div className="flex justify-between pt-1 text-[10px] text-zinc-400">
-                    <span>{format(new Date(review.created_at), "MMM d, HH:mm")}</span>
+                  <div className="flex justify-between pt-1 text-base text-zinc-400">
+                    <span>
+                      {intlFormat.dateTime(new Date(review.created_at), {
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                      })}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -348,7 +381,7 @@ export const OverviewPageContent: FC = () => {
               "w-full justify-center",
             )}
           >
-            See All Reviews
+            {t("seeAllReviews")}
           </Link>
         </div>
       </div>
@@ -356,16 +389,16 @@ export const OverviewPageContent: FC = () => {
       <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
           <div className="min-w-0">
-            <h2 className="text-sm font-bold text-ink-charcoal">Team</h2>
+            <h2 className="text-sm font-bold text-ink-charcoal">{t("team")}</h2>
             <p className="text-xs text-zinc-400">
-              Active staff who can receive tips
+              {t("teamSubtitle")}
             </p>
           </div>
           <Link
             href={Routes.dashboard.employees}
             className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold whitespace-nowrap text-brand-700 hover:underline"
           >
-            View All Staff
+            {t("viewAllStaff")}
             <span aria-hidden="true">→</span>
           </Link>
         </div>
@@ -374,7 +407,7 @@ export const OverviewPageContent: FC = () => {
           <Skeleton className="h-24 w-full rounded-xl" />
         ) : employees.length === 0 ? (
           <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 p-4 text-center text-xs text-zinc-500">
-            No active employees yet.
+            {t("noEmployees")}
           </p>
         ) : (
           <ul className="flex flex-wrap gap-2">
@@ -392,7 +425,7 @@ export const OverviewPageContent: FC = () => {
                   {employee.full_name}
                 </span>
                 {employee.position ? (
-                  <span className="text-[10px] text-zinc-400">
+                  <span className="text-base text-zinc-400">
                     {employee.position}
                   </span>
                 ) : null}

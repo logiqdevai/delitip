@@ -1,0 +1,307 @@
+{
+  "shell": {
+    "nav": {
+      "analytics": "Analytics",
+      "allUsers": "All Users",
+      "paymentsPayouts": "Payments & Payouts",
+      "webhookEvents": "Webhook Events",
+      "vatSimulator": "VAT Simulator",
+      "appConfig": "App Config",
+      "changelog": "Changelog"
+    }
+  },
+  "analytics": {
+    "metadata": {
+      "title": "Analytics - delitip",
+      "description": "Platform-wide usage and revenue overview for delitip staff."
+    },
+    "title": "Analytics",
+    "description": "Platform-wide usage and revenue, across every business on delitip.",
+    "periods": {
+      "today": "Today",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "last90Days": "Last 90 days"
+    },
+    "groupBy": {
+      "day": "By day",
+      "week": "By week",
+      "month": "By month"
+    },
+    "sections": {
+      "platform": "Platform",
+      "revenue": "Revenue · {currency}",
+      "distribution": "Distribution · {currency}"
+    },
+    "tiles": {
+      "totalUsers": "Total users",
+      "newUsers": "New users",
+      "totalStores": "Total stores",
+      "totalOrganizations": "Total organizations",
+      "grossTipsRevenue": "Gross tips revenue",
+      "averageTipAmount": "Average tip amount",
+      "platformNetRevenue": "Platform net revenue",
+      "processingFees": "Processing fees",
+      "employeeNetRevenue": "Employee net revenue",
+      "storeNetRevenue": "Store net revenue",
+      "payoutsCompleted": "Payouts completed",
+      "pendingPayoutAccounts": "Pending payout accounts"
+    },
+    "help": {
+      "newUsersInRange": "+{count} in this range",
+      "completedTips": "{count} completed tips",
+      "awaitingVerification": "Awaiting verification"
+    },
+    "otherCurrencies": "Also active in {currencies} - figures above show {currency} only, the platform's largest currency by tip volume in this range.",
+    "usersTrend": {
+      "title": "Users created",
+      "summary": "{count, plural, one {# new user} other {# new users}} in this range.",
+      "empty": "No users created in this range.",
+      "seriesLabel": "New users"
+    },
+    "revenueTrend": {
+      "title": "Revenue",
+      "summary": "{total} · {metric} in this range.",
+      "empty": "No revenue recorded in this range.",
+      "metrics": {
+        "tips_revenue": "Gross tips revenue",
+        "platform_revenue": "Platform net revenue",
+        "employee_revenue": "Employee net revenue",
+        "store_revenue": "Store net revenue",
+        "users": "Users"
+      }
+    },
+    "feeBreakdown": {
+      "title": "Fee breakdown",
+      "description": "How each completed tip splits between the platform, the payment processor, and what stores actually get to distribute.",
+      "rows": {
+        "totalTip": {
+          "label": "Total tip",
+          "explanation": "The full amount customers paid across completed tips in this range, before any fees are deducted."
+        },
+        "platformFee": {
+          "label": "Platform fee",
+          "explanation": "delitip's commission, taken as a percentage of each tip at checkout."
+        },
+        "platformFeePercent": {
+          "label": "Platform fee %",
+          "explanation": "Platform fee as a share of total tip revenue in this range (weighted by tip size, not averaged per tip)."
+        },
+        "paymentFee": {
+          "label": "Payment fee",
+          "explanation": "The card/payment processor's transaction fee, estimated at checkout and reconciled once the processor confirms it."
+        },
+        "paymentFeePercent": {
+          "label": "Payment fee %",
+          "explanation": "Payment processor fee as a share of total tip revenue in this range (weighted by tip size, not averaged per tip)."
+        },
+        "totalFee": {
+          "label": "Total fee",
+          "explanation": "Platform fee + payment fee combined - everything taken out of tips before stores and employees get paid."
+        },
+        "totalFeePercent": {
+          "label": "Total fee %",
+          "explanation": "Combined fee as a share of total tip revenue in this range (weighted by tip size, not averaged per tip)."
+        },
+        "storeAmountNet": {
+          "label": "Store amount net",
+          "explanation": "What's left after platform and payment fees are deducted - the pool each store then splits with its employees per its distribution rule."
+        }
+      }
+    },
+    "revenueSplit": {
+      "title": "Revenue split",
+      "description": "Where completed tip revenue ends up, in this range.",
+      "empty": "No distributed revenue in this range.",
+      "segments": {
+        "platform": "Platform",
+        "employee": "Employees",
+        "store": "Stores"
+      }
+    }
+  },
+  "vatSimulator": {
+    "metadata": {
+      "title": "VAT Simulator - delitip",
+      "description": "Simulate the tip → platform → store/employee accounting and VAT flow."
+    },
+    "title": "VAT Simulator",
+    "description": "Simulate invoices, VAT, and platform profit for a single tip.",
+    "inputs": {
+      "title": "Inputs",
+      "description": "Net tip amount (before VAT), plus the platform and processor fees taken out of it.",
+      "example": "Example",
+      "tipAmount": "Tip amount (net)",
+      "tipAmountHint": "What the customer tips, before VAT.",
+      "platformFee": "Platform fee",
+      "platformFeeHint": "% of the tip, taken out of it - not added on top. = {amount}",
+      "processorFee": "Payment processor fee",
+      "processorFeeHint": "e.g. Viva Wallet's cut - % of the tip plus a fixed amount per transaction. = {amount}",
+      "salesVat": "Sales VAT",
+      "storeVat": "Store VAT",
+      "processorVat": "Processor VAT",
+      "reverseCharge": "Customer is B2B with reverse charge",
+      "reverseChargeHint": "Platform's sale gets 0% VAT; the customer self-accounts for it.",
+      "storeNet": "Store/employee net (auto-calculated):"
+    },
+    "invalid": "The platform fee and processor fee together exceed the tip, so the store/employee net amount would be negative. Lower the fees or raise the tip before reading the results below.",
+    "documents": {
+      "title": "Invoices & receipts",
+      "description": "Every document this flow generates, net → VAT → total.",
+      "columns": {
+        "document": "Document",
+        "net": "Net",
+        "vat": "VAT",
+        "total": "Total"
+      },
+      "platformToCustomer": {
+        "title": "Platform → Customer",
+        "note": "Receipt/invoice for the tip"
+      },
+      "storeToPlatform": {
+        "title": "Store/Employee → Platform",
+        "note": "Invoice for the net amount owed to the store/employee"
+      },
+      "processorToPlatform": {
+        "title": "Processor → Platform",
+        "note": "Invoice for the payment processing fee"
+      }
+    },
+    "summary": {
+      "title": "Summary",
+      "description": "Platform profit and the VAT due to the state.",
+      "platformRevenueNet": "Platform revenue (net)",
+      "storeCostNet": "Store/employee cost (net)",
+      "processorCostNet": "Processor fee cost (net)",
+      "totalCostsNet": "Total costs (net)",
+      "platformPreTaxProfit": "Platform pre-tax profit",
+      "outputVat": "Output VAT (on sales)",
+      "inputVatFromStore": "Input VAT - from store",
+      "inputVatFromProcessor": "Input VAT - from processor",
+      "totalInputVat": "Total input VAT",
+      "vatPayable": "VAT payable to the state",
+      "vatCredit": "VAT credit"
+    },
+    "disclaimer": "This is a simplified simulation. Consult your accountant for real accounting."
+  },
+  "appConfig": {
+    "metadata": {
+      "title": "App Config - delitip",
+      "description": "Platform-wide commission, fee estimate and payout settings."
+    },
+    "title": "App Config",
+    "description": "Platform-wide finance and payout settings. Changes apply to future tips and payouts only.",
+    "loadError": "Could not load the app config.",
+    "retry": "Retry",
+    "save": "Save changes",
+    "tabs": {
+      "finance": "Finance",
+      "invoices": "Payout invoices",
+      "accounts": "Payout accounts"
+    },
+    "fields": {
+      "tip_platform_commission_percentage": {
+        "label": "Platform commission (%)",
+        "hint": "Taken from each tip. Snapshotted per transaction, so past tips are never recalculated."
+      },
+      "tip_processor_fee_estimate_percentage": {
+        "label": "Processor fee estimate (%)",
+        "hint": "Provisional percentage used for display until the real fee is settled."
+      },
+      "tip_processor_fee_estimate_fixed_amount": {
+        "label": "Processor fee estimate, fixed (minor units)",
+        "hint": "Added to the percentage estimate. 24 = €0.24."
+      },
+      "vat_rate_percentage": {
+        "label": "VAT rate (%)",
+        "hint": "Added on top of every tip at checkout. 0 means no VAT."
+      },
+      "payout_hold_window_hours": {
+        "label": "Payout hold window (hours)",
+        "hint": "How long a tip is held before it becomes payable."
+      },
+      "platform_legal_name": {
+        "label": "Legal name",
+        "hint": "The company name stores must put on the invoice.",
+        "placeholder": "Delitip P.C."
+      },
+      "platform_vat_number": {
+        "label": "VAT number",
+        "hint": "Also used to check the invoice is addressed to the platform.",
+        "placeholder": "EL123456789"
+      },
+      "platform_tax_office": {
+        "label": "Tax office",
+        "hint": "Δ.Ο.Υ. for Greek invoices.",
+        "placeholder": "Δ.Ο.Υ. Ηρακλείου"
+      },
+      "platform_address": {
+        "label": "Billing address",
+        "hint": "Street, postal code, city, country.",
+        "placeholder": "Pelasgon 32, 71202 Heraklion, Greece"
+      },
+      "payout_invoice_instructions": {
+        "label": "Instructions for stores",
+        "hint": "Free text, e.g. where to also email the PDF or which invoice series to use."
+      }
+    },
+    "invoices": {
+      "title": "Payout invoices",
+      "description": "When on, a store's own share is only paid after it uploads an invoice to the platform and an admin approves it. Staff paid directly to their own IBAN are not affected.",
+      "required": {
+        "label": "Require an invoice before paying stores",
+        "hint": "Replaces \"Pay out now\" with \"Request payout\" for the store's money."
+      },
+      "aiCheck": {
+        "label": "Read invoices automatically",
+        "hint": "Uses OpenAI to extract the total, VAT numbers and date and flag mismatches for the admin. Requires an OpenAI key on the API."
+      },
+      "whoStoresInvoice": "Who stores invoice",
+      "shownToStores": "- shown to every store when it requests a payout"
+    },
+    "accounts": {
+      "title": "Payout accounts",
+      "connected": {
+        "label": "Connected-account payouts (Viva)",
+        "ariaLabel": "Connected-account payouts",
+        "hint": "Shows \"Connect with Viva\" to stores. Turn on only once real Viva platform credentials exist and a sandbox onboarding has been verified."
+      },
+      "storeOnly": {
+        "label": "Transfer tips to stores only",
+        "hint": "Tips are paid to the store, which hands staff their share itself. Hides the direct staff payout actions."
+      }
+    },
+    "errors": {
+      "nothingSaved": "Nothing was saved",
+      "needAttention": "Some values need your attention. Please check them and try again.",
+      "checkValue": "please check this value"
+    },
+    "toasts": {
+      "savedTitle": "App config saved",
+      "savedDescription": "New values apply to future tips and payouts.",
+      "failedTitle": "Could not save app config",
+      "failedDescription": "Check the values and try again."
+    }
+  },
+  "changelog": {
+    "metadata": {
+      "title": "Changelog - delitip",
+      "description": "Everything shipped to delitip, newest first."
+    },
+    "title": "Changelog",
+    "description": "Everything shipped to delitip, newest first.",
+    "searchPlaceholder": "Search changes or commits",
+    "searchAria": "Search changelog",
+    "filterBySession": "Filter by session",
+    "fromDate": "From date",
+    "toDate": "To date",
+    "to": "to",
+    "clearDates": "Clear dates",
+    "empty": {
+      "title": "No changes found",
+      "search": "No entries match your search.",
+      "filters": "Nothing has been logged for these filters yet."
+    },
+    "aiBadge": "AI"
+  }
+}

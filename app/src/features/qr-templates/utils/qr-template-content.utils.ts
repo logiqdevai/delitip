@@ -1,10 +1,11 @@
 import { getReadableTextColor } from "@/lib/color";
+import { tr } from "@/lib/i18n-runtime";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 
-const DEFAULT_HEADLINE =
-  "Enjoying your experience? Thank our team with a tip or review.";
-
 export function resolveHeadline(store: Store): string {
+  const DEFAULT_HEADLINE = tr(
+    "dashboard.access.templateEditor.content.defaultHeadline",
+  );
   const messages = store.welcome_message;
   if (!messages) return DEFAULT_HEADLINE;
   const primary = messages[store.primary_language.toLowerCase()]?.trim();

@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import { Controller } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import { SectionCard } from "@/app/dashboard/access/qr/components/sections/section-card";
 import { useQrEditor } from "@/app/dashboard/access/qr/hooks/use-qr-editor";
 import {
@@ -12,6 +13,7 @@ import { BrandingImagePickers } from "@/app/dashboard/settings/branding/componen
 import { QrEditorSections } from "@/config/constants/dropdowns/qr-codes/qr-editor-section.options";
 
 export const AppearanceSection: FC = () => {
+  const t = useTranslations("dashboard.access.qrEditor.appearance");
   const { form, store } = useQrEditor();
   const {
     control,
@@ -29,8 +31,8 @@ export const AppearanceSection: FC = () => {
     <SectionCard section={QrEditorSections.APPEARANCE}>
       <div className="space-y-2">
         <BrandingImagePickers store={store} />
-        <p className="text-[11px] text-zinc-400">
-          Logo and cover are saved as soon as you upload them.
+        <p className="text-base text-zinc-400">
+          {t("imagesHint")}
         </p>
       </div>
 

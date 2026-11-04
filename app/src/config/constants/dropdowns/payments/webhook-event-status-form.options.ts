@@ -5,18 +5,18 @@ import {
 
 export const WebhookEventStatusFormOptions: {
   id: WebhookEventStatus;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: WebhookEventStatuses.PROCESSED, label: "Processed" },
-  { id: WebhookEventStatuses.FAILED, label: "Failed" },
-  { id: WebhookEventStatuses.PENDING, label: "Pending" },
+  {
+    id: WebhookEventStatuses.PROCESSED,
+    labelKey: "dashboard.enums.webhookEventStatus.PROCESSED",
+  },
+  {
+    id: WebhookEventStatuses.FAILED,
+    labelKey: "dashboard.enums.webhookEventStatus.FAILED",
+  },
+  {
+    id: WebhookEventStatuses.PENDING,
+    labelKey: "dashboard.enums.webhookEventStatus.PENDING",
+  },
 ];
-
-export function getWebhookEventStatusLabel(
-  status: WebhookEventStatus | string,
-): string {
-  return (
-    WebhookEventStatusFormOptions.find((option) => option.id === status)
-      ?.label ?? status
-  );
-}

@@ -3,24 +3,21 @@ import {
   type SessionMood,
 } from "@/interfaces/changelog.interfaces";
 
-export const SessionMoodFormOptions: {
-  id: SessionMood;
-  label: string;
-}[] = [
-  { id: SessionMoods.HAPPY, label: "Happy" },
-  { id: SessionMoods.FOCUSED, label: "Focused" },
-  { id: SessionMoods.RUSHED, label: "Rushed" },
-  { id: SessionMoods.EXPLANATORY, label: "Explanatory" },
-  { id: SessionMoods.EXPLORATORY, label: "Exploratory" },
-  { id: SessionMoods.FRUSTRATED, label: "Frustrated" },
-  { id: SessionMoods.BLUNT, label: "Blunt" },
+export const SessionMoodFormOptions: { id: SessionMood; labelKey: string }[] = [
+  { id: SessionMoods.HAPPY, labelKey: "dashboard.enums.sessionMood.HAPPY" },
+  { id: SessionMoods.FOCUSED, labelKey: "dashboard.enums.sessionMood.FOCUSED" },
+  { id: SessionMoods.RUSHED, labelKey: "dashboard.enums.sessionMood.RUSHED" },
+  {
+    id: SessionMoods.EXPLANATORY,
+    labelKey: "dashboard.enums.sessionMood.EXPLANATORY",
+  },
+  {
+    id: SessionMoods.EXPLORATORY,
+    labelKey: "dashboard.enums.sessionMood.EXPLORATORY",
+  },
+  {
+    id: SessionMoods.FRUSTRATED,
+    labelKey: "dashboard.enums.sessionMood.FRUSTRATED",
+  },
+  { id: SessionMoods.BLUNT, labelKey: "dashboard.enums.sessionMood.BLUNT" },
 ];
-
-export function getSessionMoodLabel(
-  mood: SessionMood | string | null | undefined,
-): string {
-  if (!mood) return "";
-  return (
-    SessionMoodFormOptions.find((option) => option.id === mood)?.label ?? mood
-  );
-}

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { format, parseISO } from "date-fns"
+import { useFormatter, useTranslations } from "next-intl"
 import { CalendarIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -29,12 +30,14 @@ function DatePicker({
   id,
   value,
   onChange,
-  placeholder = "Pick a date",
+  placeholder,
   size = "default",
   className,
   disabled,
   ...props
 }: DatePickerProps) {
+  const t = useTranslations("dashboard.shell.ui")
+  const intlFormat = useFormatter()
   const [open, setOpen] = React.useState(false)
   const selected = value ? parseISO(value) : undefined
 
@@ -58,7 +61,13 @@ function DatePicker({
         }
       >
         <CalendarIcon data-icon="inline-start" />
-        {selected ? format(selected, "MMM d, yyyy") : placeholder}
+        {selected
+          ? intlFormat.dateTime(selected, {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })
+          : (placeholder ?? t("pickDate"))}
       </PopoverTrigger>
       <PopoverContent
         className="w-auto max-w-[calc(100vw-2rem)] p-0"

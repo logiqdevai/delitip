@@ -1,8 +1,9 @@
 import { z } from "zod";
+import { vmsg } from "@/lib/validation-message";
 
 export const userProfileFormSchema = z.object({
-  first_name: z.string().trim().min(1, "First name is required"),
-  last_name: z.string().trim().min(1, "Last name is required"),
+  first_name: z.string().trim().min(1, vmsg("firstNameRequired")),
+  last_name: z.string().trim().min(1, vmsg("lastNameRequired")),
   phone: z.string().trim().optional(),
 });
 

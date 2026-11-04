@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Download, FileText, HandCoins, SlidersHorizontal, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -49,9 +50,9 @@ interface StaffBalancesTableProps {
   currency: Currency;
 }
 
-const formatDateTime = (value?: string | null) =>
+const formatDateTime = (value: string | null | undefined, locale: string) =>
   value
-    ? new Date(value).toLocaleString(undefined, {
+    ? new Date(value).toLocaleString(locale, {
         dateStyle: "medium",
         timeStyle: "short",
       })
@@ -62,6 +63,9 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
   storeName,
   currency,
 }) => {
+  const t = useTranslations("dashboard.money.staffBalances");
+  const tStatement = useTranslations("dashboard.money.statement");
+  const locale = useLocale();
   const [dateFrom, setDateFrom] = useState<string | undefined>(undefined);
   const [dateTo, setDateTo] = useState<string | undefined>(undefined);
   const [includeSettled, setIncludeSettled] = useState(false);
@@ -93,6 +97,8 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
         (settlement) => settlement.employee_id === balance.employee_id,
       ),
       currency,
+      locale,
+      t: tStatement,
     });
   };
 
@@ -100,15 +106,14 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200/80 bg-white px-4 py-3 shadow-xs">
         <div>
-          <p className="text-[11px] font-semibold text-zinc-500">
-            Owed to staff
+          <p className="text-base font-semibold text-zinc-500">
+            {t("owedToStaff")}
           </p>
           <p className="text-lg font-bold tabular-nums text-ink-charcoal">
-            {formatMoney(totalOutstanding, currency)}
+            {formatMoney(totalOutstanding, currency, locale)}
           </p>
-          <p className="mt-0.5 text-[11px] text-zinc-500">
-            Tips collected into your account under a &ldquo;paid by the
-            business&rdquo; rule, that you still need to hand over.
+          <p className="mt-0.5 text-base text-zinc-500">
+            {t("owedHint")}
           </p>
         </div>
         <Button
@@ -121,33 +126,33 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
           }
         >
           <Download data-icon="inline-start" className="size-3.5" />
-          Export CSV
+          {t("exportCsv")}
         </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
-          Filters
+          {t("filters")}
         </div>
         <DatePicker
           value={dateFrom}
           onChange={setDateFrom}
-          placeholder="From date"
-          aria-label="From date"
+          placeholder={t("fromDate")}
+          aria-label={t("fromDate")}
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
-        <span className="text-xs text-zinc-400">to</span>
+        <span className="text-xs text-zinc-400">{t("to")}</span>
         <DatePicker
           value={dateTo}
           onChange={setDateTo}
-          placeholder="To date"
-          aria-label="To date"
+          placeholder={t("toDate")}
+          aria-label={t("toDate")}
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
         <label className="ml-auto flex items-center gap-2 text-xs font-medium text-zinc-600">
           <Switch checked={includeSettled} onCheckedChange={setIncludeSettled} />
-          Show people who are square
+          {t("showSettled")}
         </label>
       </div>
 
@@ -156,7 +161,7 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
       ) : balancesQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load staff balances</EmptyTitle>
+            <EmptyTitle>{t("loadFailed")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(balancesQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -165,7 +170,7 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
               variant="outline"
               onClick={() => void balancesQuery.refetch()}
             >
-              Try again
+              {t("tryAgain")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -175,10 +180,9 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
             <EmptyMedia variant="icon">
               <HandCoins />
             </EmptyMedia>
-            <EmptyTitle>Nothing owed to staff</EmptyTitle>
+            <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>
-              Balances appear here once tips come in under a distribution rule
-              set to &ldquo;send everything to the business&rdquo;.
+              {t("emptyDescription")}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -187,11 +191,11 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Employee</TableHead>
-                <TableHead className="text-right">Earned</TableHead>
-                <TableHead className="text-right">Handed over</TableHead>
-                <TableHead className="text-right">Still owed</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>{t("columns.employee")}</TableHead>
+                <TableHead className="text-right">{t("columns.earned")}</TableHead>
+                <TableHead className="text-right">{t("columns.handedOver")}</TableHead>
+                <TableHead className="text-right">{t("columns.stillOwed")}</TableHead>
+                <TableHead className="text-right">{t("columns.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -201,19 +205,24 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
                     <span className="block text-xs font-semibold text-ink-charcoal">
                       {balance.name}
                     </span>
-                    <span className="mt-0.5 block text-[11px] text-zinc-500">
-                      {balance.owed_shares_count} unpaid{" "}
-                      {balance.owed_shares_count === 1 ? "tip" : "tips"}
+                    <span className="mt-0.5 block text-base text-zinc-500">
+                      {t("unpaidTips", { count: balance.owed_shares_count })}
                       {balance.pending_adjustments_amount !== 0
-                        ? ` · ${formatMoney(balance.pending_adjustments_amount, currency)} deduction pending`
+                        ? ` · ${t("deductionPending", {
+                            amount: formatMoney(
+                              balance.pending_adjustments_amount,
+                              currency,
+                              locale,
+                            ),
+                          })}`
                         : ""}
                     </span>
                   </TableCell>
                   <TableCell className="text-right text-xs tabular-nums text-zinc-600">
-                    {formatMoney(balance.earned_amount, currency)}
+                    {formatMoney(balance.earned_amount, currency, locale)}
                   </TableCell>
                   <TableCell className="text-right text-xs tabular-nums text-zinc-600">
-                    {formatMoney(balance.settled_amount, currency)}
+                    {formatMoney(balance.settled_amount, currency, locale)}
                   </TableCell>
                   <TableCell
                     className={cn(
@@ -223,7 +232,7 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
                         : "text-zinc-400",
                     )}
                   >
-                    {formatMoney(balance.outstanding_amount, currency)}
+                    {formatMoney(balance.outstanding_amount, currency, locale)}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
@@ -234,7 +243,7 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
                         onClick={() => handleStatement(balance)}
                       >
                         <FileText data-icon="inline-start" className="size-3.5" />
-                        Statement
+                        {t("statement")}
                       </Button>
                       <Button
                         type="button"
@@ -243,7 +252,7 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
                         disabled={balance.outstanding_amount <= 0}
                         onClick={() => setRecordingFor(balance)}
                       >
-                        Record payment
+                        {t("recordPayment")}
                       </Button>
                     </div>
                   </TableCell>
@@ -255,32 +264,32 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
       )}
 
       <div className="space-y-2">
-        <p className="text-sm font-bold text-ink-charcoal">Payments recorded</p>
+        <p className="text-sm font-bold text-ink-charcoal">{t("paymentsRecorded")}</p>
         {settlementsQuery.isPending ? (
           <TableSkeleton columns={4} />
         ) : settlements.length === 0 ? (
           <p className="rounded-xl border border-dashed border-zinc-200 bg-white px-4 py-8 text-center text-xs text-zinc-500">
-            Nothing recorded yet.
+            {t("nothingRecorded")}
           </p>
         ) : (
           <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>When</TableHead>
-                  <TableHead>Employee</TableHead>
-                  <TableHead>Confirmed</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t("recordedColumns.when")}</TableHead>
+                  <TableHead>{t("recordedColumns.employee")}</TableHead>
+                  <TableHead>{t("recordedColumns.confirmed")}</TableHead>
+                  <TableHead className="text-right">{t("recordedColumns.amount")}</TableHead>
+                  <TableHead className="text-right">{t("recordedColumns.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {settlements.map((settlement) => (
                   <TableRow key={settlement.id}>
                     <TableCell className="text-xs text-zinc-600">
-                      {formatDateTime(settlement.settled_at)}
+                      {formatDateTime(settlement.settled_at, locale)}
                       {settlement.reference ? (
-                        <span className="mt-0.5 block text-[11px] text-zinc-400">
+                        <span className="mt-0.5 block text-base text-zinc-400">
                           {settlement.reference}
                         </span>
                       ) : null}
@@ -300,10 +309,10 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
                         )}
                       >
                         {settlement.reversed_at
-                          ? "Reversed"
+                          ? t("reversed")
                           : settlement.confirmed_by_employee_at
-                            ? "Confirmed"
-                            : "Awaiting employee"}
+                            ? t("confirmed")
+                            : t("awaitingEmployee")}
                       </span>
                     </TableCell>
                     <TableCell
@@ -314,7 +323,7 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
                           : "text-ink-charcoal",
                       )}
                     >
-                      {formatMoney(settlement.amount, currency)}
+                      {formatMoney(settlement.amount, currency, locale)}
                     </TableCell>
                     <TableCell className="text-right">
                       {settlement.reversed_at ? null : (
@@ -328,7 +337,7 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
                           }}
                         >
                           <Undo2 data-icon="inline-start" className="size-3.5" />
-                          Reverse
+                          {t("reverse")}
                         </Button>
                       )}
                     </TableCell>
@@ -352,13 +361,16 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
 
       <ConfirmationDialog
         state={reverseDialog}
-        title="Reverse this payment?"
+        title={t("reverseTitle")}
         description={
           reversing
-            ? `${formatMoney(reversing.amount, currency)} to ${reversing.employee_name_snapshot} goes back to being owed. The record stays, marked as reversed.`
+            ? t("reverseDescription", {
+                amount: formatMoney(reversing.amount, currency, locale),
+                name: reversing.employee_name_snapshot,
+              })
             : ""
         }
-        confirmLabel="Reverse"
+        confirmLabel={t("reverse")}
         isPending={reverseSettlement.isPending}
         onConfirm={async () => {
           if (!reversing) return;

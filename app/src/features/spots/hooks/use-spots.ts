@@ -12,6 +12,7 @@ import type {
   SpotsQuery,
   UpdateSpotPayload,
 } from "@/features/spots/interfaces/spots.interfaces";
+import { useTranslations } from "next-intl";
 import { toast } from "@/components/ui/toast";
 import { getErrorMessage } from "@/lib/api-error";
 
@@ -30,6 +31,7 @@ export const useSpots = (storeId: string, query?: SpotsQuery) => {
 };
 
 export const useCreateSpot = (storeId: string) => {
+  const t = useTranslations("dashboard.access.toasts.spots");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -37,11 +39,11 @@ export const useCreateSpot = (storeId: string) => {
     onSuccess: () => {
       trackEvent(AnalyticsEvents.spotCreated, { store_id: storeId });
       void queryClient.invalidateQueries({ queryKey: spotsQueryKeys.root });
-      toast.add({ title: "Spot created", type: "success" });
+      toast.add({ title: t("created"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not create spot",
+        title: t("createFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -50,6 +52,7 @@ export const useCreateSpot = (storeId: string) => {
 };
 
 export const useUpdateSpot = () => {
+  const t = useTranslations("dashboard.access.toasts.spots");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -64,21 +67,21 @@ export const useUpdateSpot = () => {
       ) {
         toast.add({
           title: variables.payload.is_active
-            ? "Spot activated"
-            : "Spot deactivated",
+            ? t("activated")
+            : t("deactivated"),
           type: "success",
         });
         return;
       }
       if (variables.payload.name !== undefined) {
-        toast.add({ title: "Spot renamed", type: "success" });
+        toast.add({ title: t("renamed"), type: "success" });
         return;
       }
-      toast.add({ title: "Spot updated", type: "success" });
+      toast.add({ title: t("updated"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not update spot",
+        title: t("updateFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -87,6 +90,7 @@ export const useUpdateSpot = () => {
 };
 
 export const useDeleteSpot = () => {
+  const t = useTranslations("dashboard.access.toasts.spots");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -94,11 +98,11 @@ export const useDeleteSpot = () => {
     onSuccess: () => {
       trackEvent(AnalyticsEvents.spotDeleted);
       void queryClient.invalidateQueries({ queryKey: spotsQueryKeys.root });
-      toast.add({ title: "Spot removed", type: "success" });
+      toast.add({ title: t("removed"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not remove spot",
+        title: t("removeFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

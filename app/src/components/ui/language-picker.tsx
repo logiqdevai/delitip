@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useId } from "react";
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -44,13 +45,15 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
   labelSource = "admin",
   "aria-label": ariaLabel,
 }) => {
+  const t = useTranslations("dashboard.shell.ui");
+  const tRoot = useTranslations();
   const generatedId = useId();
   const id = idProp ?? generatedId;
   const options = languages
     ? StoreLanguageFormOptions.filter((option) => languages.includes(option.id))
     : StoreLanguageFormOptions;
   const labelFor = (option: (typeof options)[number]) =>
-    labelSource === "native" ? option.nativeLabel : option.label;
+    labelSource === "native" ? option.nativeLabel : tRoot(option.labelKey);
 
   return (
     <Select
@@ -68,7 +71,7 @@ export const LanguagePicker: FC<LanguagePickerProps> = ({
         id={id}
         size={size}
         aria-invalid={invalid || undefined}
-        aria-label={ariaLabel ?? (compact ? "Language" : undefined)}
+        aria-label={ariaLabel ?? (compact ? t("language") : undefined)}
         className={cn(
           compact && "h-8! w-auto gap-1 px-2",
           className,

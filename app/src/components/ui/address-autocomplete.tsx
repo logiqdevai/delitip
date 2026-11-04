@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import {
   Combobox,
@@ -146,6 +147,7 @@ export function AddressAutocomplete({
   ...rest
 }: AddressAutocompleteProps) {
   const apiKey = environments.googleMapsApiKey;
+  const t = useTranslations("dashboard.shell.ui.addressAutocomplete");
   const [suggestions, setSuggestions] = React.useState<SuggestionItem[]>([]);
   const [status, setStatus] = React.useState<"idle" | "loading" | "empty">("idle");
   const sessionTokenRef = React.useRef(crypto.randomUUID());
@@ -207,10 +209,10 @@ export function AddressAutocomplete({
   const queryTooShort = value.trim().length < MIN_QUERY_LENGTH;
   const items = queryTooShort ? [] : suggestions;
   const emptyMessage = queryTooShort
-    ? `Type at least ${MIN_QUERY_LENGTH} characters`
+    ? t("typeAtLeast", { count: MIN_QUERY_LENGTH })
     : status === "loading"
-      ? "Searching…"
-      : "No matches found";
+      ? t("searching")
+      : t("noMatches");
 
   return (
     <Combobox

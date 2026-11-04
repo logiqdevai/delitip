@@ -1,1 +1,350 @@
-{}
+{
+  "meta": {
+    "finance": {
+      "title": "Payments & Payouts - delitip",
+      "description": "Every payment and payout across all delitip businesses."
+    },
+    "payoutRequest": {
+      "title": "Payout request - delitip",
+      "description": "Review a store's invoice and approve or reject its payout."
+    },
+    "webhookEvents": {
+      "title": "Webhook Events - delitip",
+      "description": "Every payment-provider webhook delitip has received."
+    },
+    "users": {
+      "title": "All Users - delitip",
+      "description": "Platform-wide directory of every registered delitip user."
+    }
+  },
+  "common": {
+    "filters": "Filters",
+    "fromDate": "From date",
+    "toDate": "To date",
+    "dateRangeTo": "to",
+    "tryAgain": "Try again",
+    "previous": "Previous",
+    "next": "Next",
+    "store": "Store",
+    "employee": "Employee",
+    "amount": "Amount",
+    "status": "Status",
+    "summary": "Summary",
+    "provider": "Provider",
+    "anonymous": "Anonymous",
+    "unknownStore": "Unknown store",
+    "backToPayments": "Back to Payments",
+    "backToFinance": "Back to Payments & Payouts",
+    "tipAmount": "Tip amount",
+    "tipLabel": "Tip {amount}"
+  },
+  "finance": {
+    "title": "Payments & Payouts",
+    "description": "Every payment, payout and payout request across all delitip businesses.",
+    "reconcileIbans": "Reconcile IBANs",
+    "reconcilingIbans": "Reconciling IBANs…",
+    "reconcilePayments": "Reconcile payments",
+    "reconcilingPayments": "Reconciling payments…",
+    "tabs": {
+      "payments": "Payments",
+      "payouts": "Payouts",
+      "requests": "Payout requests"
+    }
+  },
+  "storeFilter": {
+    "placeholder": "All stores",
+    "aria": "Filter by store",
+    "empty": "No stores found"
+  },
+  "fees": {
+    "platform": "Platform {amount} ({percent})",
+    "payment": "Payment {amount}",
+    "paymentWithPercent": "Payment {amount} ({percent})",
+    "total": "Total {amount} ({percent})"
+  },
+  "chips": {
+    "paid": "Paid",
+    "transferFailed": "Transfer failed",
+    "checkStatus": {
+      "PENDING": "Checking…",
+      "COMPLETED": "Checked",
+      "FAILED": "Check failed",
+      "SKIPPED": "Not checked"
+    }
+  },
+  "payments": {
+    "searchPlaceholder": "Customer, store, owner contact, or any ID",
+    "searchAria": "Search payments",
+    "loadError": "Could not load payments",
+    "emptyTitle": "No payments found",
+    "emptyFiltered": "No payments match your filters.",
+    "emptyNone": "No one has paid a tip yet.",
+    "selectedSummary": "{count, plural, one {# payment} other {# payments}} selected - {payable} payable, total {total}",
+    "skippedBoth": "{skipped} will be skipped - {notCompleted} not completed, {feeUnconfirmed} fee not confirmed",
+    "skippedNotCompleted": "{skipped} will be skipped - {notCompleted} not completed",
+    "skippedFee": "{skipped} will be skipped - {feeUnconfirmed} fee not confirmed",
+    "skippedOnly": "{skipped} will be skipped",
+    "clear": "Clear",
+    "payOutSelected": "Pay out selected",
+    "selectAllAria": "Select all payments on this page",
+    "selectOneAria": "Select payment for payout",
+    "columns": {
+      "when": "When",
+      "store": "Store",
+      "customer": "Customer",
+      "employee": "Employee",
+      "tipAmount": "Tip amount",
+      "fees": "Fees",
+      "net": "Net",
+      "status": "Status"
+    },
+    "help": {
+      "tipAmount": "The full amount the customer paid, before any fees are deducted.",
+      "fees": "Platform commission and payment processor fee taken out of this tip, each shown with its share of the tip amount, plus the combined total.",
+      "net": "What's left after platform and payment fees are deducted - the pool the store then splits with its employees."
+    },
+    "storeFallback": "Store",
+    "pagination": "{total, plural, one {# payment} other {# payments}} total - page {page} of {pages}",
+    "confirmTitle": "Pay out {count, plural, one {# payment} other {# payments}} ({total}) now?",
+    "confirmDescription": "This sends real money to the recipients' bank accounts immediately, skipping the usual hold window. Payments already paid out are skipped too. This cannot be undone.",
+    "confirmDescriptionSkipped": "This sends real money to the recipients' bank accounts immediately, skipping the usual hold window. {skipped} of the {selected} selected will be skipped ({notCompleted} not completed, {feeUnconfirmed} fee not confirmed). Payments already paid out are skipped too. This cannot be undone.",
+    "confirmLabel": "Pay out now"
+  },
+  "payouts": {
+    "searchPlaceholder": "Store, employee, or payout ID",
+    "searchAria": "Search payouts",
+    "loadError": "Could not load payouts",
+    "emptyTitle": "No payouts found",
+    "emptyFiltered": "No payouts match your filters.",
+    "emptyNone": "No payouts have run yet.",
+    "columns": {
+      "when": "When",
+      "store": "Store",
+      "recipient": "Recipient",
+      "amount": "Amount",
+      "provider": "Provider",
+      "status": "Status"
+    },
+    "recipientEmployee": "Employee",
+    "recipientHouse": "Business (house)",
+    "pagination": "{total, plural, one {# payout} other {# payouts}} total - page {page} of {pages}"
+  },
+  "payoutRequests": {
+    "searchPlaceholder": "Store, invoice no., or request ID",
+    "searchAria": "Search payout requests",
+    "loadError": "Could not load payout requests",
+    "emptyReview": "Nothing to review",
+    "emptyTitle": "No payout requests found",
+    "emptyFiltered": "No payout requests match your filters.",
+    "emptyNone": "Stores haven't submitted any payout requests yet.",
+    "columns": {
+      "submitted": "Submitted",
+      "store": "Store",
+      "amount": "Amount",
+      "tipsCovered": "Tips covered",
+      "invoiceCheck": "Invoice check",
+      "status": "Status"
+    },
+    "invoiceNumber": "Invoice {number}",
+    "pagination": "{total, plural, one {# request} other {# requests}} total - page {page} of {pages}"
+  },
+  "paymentDetail": {
+    "loadError": "Could not load this payment",
+    "notFound": "The payment may not exist.",
+    "paidAt": "Paid at",
+    "createdAt": "Created at",
+    "qrCode": "QR code",
+    "distributionRule": "Distribution rule",
+    "storeDefault": "Store default",
+    "paymentProvider": "Payment provider",
+    "paymentReference": "Payment reference",
+    "customer": "Customer",
+    "financialBreakdown": "Financial breakdown",
+    "vat": "VAT",
+    "grossAmount": "Gross amount (charged)",
+    "processorFee": "Processor fee",
+    "estimated": "~{amount} (estimated)",
+    "notConfirmed": "Not yet confirmed",
+    "platformCommission": "Platform commission",
+    "netDistributable": "Net distributable",
+    "distribution": "Distribution",
+    "noDistribution": "No distribution recorded for this payment.",
+    "review": "Review",
+    "reviewLine": "★ {rating} - {comment}",
+    "noComment": "No comment left",
+    "refunds": "Refunds",
+    "noReason": "No reason given",
+    "employeeFallback": "Employee",
+    "storeLabel": "Store"
+  },
+  "payoutDetail": {
+    "loadError": "Could not load this payout",
+    "notFound": "The payout may not exist.",
+    "recipientType": "Recipient type",
+    "recipient": "Recipient",
+    "providerTransferId": "Provider transfer id",
+    "failureReason": "Failure reason",
+    "executedAt": "Executed at",
+    "createdAt": "Created at",
+    "payoutAccount": "Payout account",
+    "method": "Method",
+    "beneficiary": "Beneficiary",
+    "iban": "IBAN",
+    "distributionsIncluded": "Distributions included",
+    "noDistributions": "No distributions recorded for this payout.",
+    "employeeFallback": "Employee",
+    "houseLabel": "Business (house)"
+  },
+  "payoutRequestDetail": {
+    "loadError": "Could not load this payout request",
+    "notFound": "The request may not exist.",
+    "subtitle": "{store} · requested {date} by {person}",
+    "transferFailed": "<b>The last transfer attempt failed:</b> {reason}. The tips are still locked to this request — fix the cause and approve again.",
+    "stale": "<b>{stale}</b> of the {locked} locked tips changed since submission (likely a refund). The live amount is now {live}, not {amount}, so this invoice can't be paid as is.",
+    "cards": {
+      "invoice": "Invoice",
+      "autoCheck": "Automatic invoice check",
+      "request": "Request",
+      "issuer": "Issuer on file (Tax Details)",
+      "lockedTips": "Locked tips ({count})"
+    },
+    "invoice": {
+      "file": "File",
+      "invoiceNumberTyped": "Invoice number (typed)",
+      "noteFromStore": "Note from store",
+      "title": "Invoice",
+      "loadError": "Could not load the invoice.",
+      "openInNewTab": "Open in a new tab"
+    },
+    "check": {
+      "rerun": "Re-run check",
+      "pending": "The invoice is being read. This usually takes under a minute — refresh to see the result.",
+      "skipped": "Automatic checks are turned off in App Config (or no OpenAI key is configured). Review the invoice manually.",
+      "failed": "The check could not run. Review the invoice manually or re-run it.",
+      "failedWithError": "The check could not run: {error} Review the invoice manually or re-run it.",
+      "allMatch": "Everything on the invoice matches this request.",
+      "readerNote": "Reader's note: {note}",
+      "modelFallback": "model",
+      "columns": {
+        "check": "Check",
+        "expected": "Expected",
+        "onInvoice": "On invoice"
+      },
+      "rows": {
+        "amountBeforeVat": "Amount before VAT",
+        "currency": "Currency",
+        "issuerVat": "Issuer VAT (store)",
+        "recipientVat": "Recipient VAT (platform)",
+        "invoiceNumber": "Invoice number",
+        "invoiceDate": "Invoice date",
+        "netPlusVat": "Net + VAT"
+      },
+      "expected": {
+        "notOnFile": "not on file",
+        "configuredInAppConfig": "configured in App Config",
+        "notTyped": "not typed",
+        "afterDate": "after {date}",
+        "equalsTotal": "= invoice total"
+      }
+    },
+    "request": {
+      "ownShare": "Store's own share",
+      "heldForStaff": "Held for staff",
+      "tipsCovered": "Tips covered",
+      "holdCutoff": "Hold cutoff at submission",
+      "storePayoutAccount": "Store payout account",
+      "notLinked": "Not linked",
+      "reviewed": "Reviewed",
+      "reviewedBy": "{date} by {person}",
+      "adminNote": "Admin note",
+      "payout": "Payout"
+    },
+    "issuer": {
+      "legalName": "Legal name",
+      "vatNumber": "VAT number",
+      "notSet": "not set",
+      "taxOffice": "Tax office",
+      "address": "Address"
+    },
+    "locked": {
+      "none": "No distributions are locked to this request.",
+      "pooledStaffShare": "pooled staff share",
+      "meta": "{status} · paid {date}",
+      "metaStale": "{status} · paid {date} · changed since submission"
+    },
+    "actions": {
+      "blockedStale": "Some locked tips changed since submission — reject so the store can re-request the corrected amount.",
+      "blockedInactive": "The store's payout account is not active, so a transfer can't be sent yet.",
+      "hint": "Approving starts the Viva bank transfer immediately and notifies the store.",
+      "reject": "Reject",
+      "approve": "Approve & pay"
+    }
+  },
+  "reviewDialog": {
+    "rejectTitle": "Reject this payout request?",
+    "approveTitle": "Approve and pay?",
+    "rejectDescription": "{store}'s tips are released so it can submit a corrected invoice. Your note is sent to the store.",
+    "approveDescription": "This starts a bank transfer of {amount} to {store}'s linked account. It cannot be recalled once sent.",
+    "rejectLabel": "Reason for the store",
+    "approveLabel": "Note for the store",
+    "optional": "(optional)",
+    "rejectPlaceholder": "e.g. The invoice amount before VAT is €120.00 but the payout is €124.00.",
+    "approvePlaceholder": "Anything the store should know",
+    "cancel": "Cancel",
+    "rejectButton": "Reject request",
+    "approveButton": "Approve & pay",
+    "genericError": "Something went wrong. Please try again."
+  },
+  "webhookEvents": {
+    "title": "Webhook Events",
+    "description": "Every payment-provider webhook delitip has received, with how it was processed.",
+    "searchPlaceholder": "Message ID, transaction ID, order code, error",
+    "searchAria": "Search webhook events",
+    "eventTypeAria": "Filter by event type",
+    "statusAria": "Filter by status",
+    "clearFilters": "Clear filters",
+    "loadError": "Could not load webhook events",
+    "emptyTitle": "No webhook events found",
+    "emptyFiltered": "No events match your filters.",
+    "emptyNone": "No webhook has been received yet.",
+    "columns": {
+      "received": "Received",
+      "event": "Event",
+      "messageId": "Message ID",
+      "error": "Error",
+      "status": "Status"
+    },
+    "pagination": "{total, plural, one {# event} other {# events}} total - page {page} of {pages}",
+    "dialog": {
+      "description": "Event {type} - received {date}",
+      "messageId": "Message ID",
+      "processedAt": "Processed at",
+      "error": "Error"
+    }
+  },
+  "users": {
+    "title": "All Users",
+    "description": "Every account registered on delitip, across all businesses.",
+    "searchPlaceholder": "Search by name or email",
+    "searchAria": "Search users",
+    "loadError": "Could not load users",
+    "emptyTitle": "No users found",
+    "emptyFiltered": "No users match your search.",
+    "emptyNone": "No one has signed up yet.",
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "deleteAria": "Delete {name}",
+    "pagination": "{total, plural, one {# user} other {# users}} total - page {page} of {pages}",
+    "deleteTitle": "Delete {name}?",
+    "deleteTitleFallback": "Delete user?",
+    "deleteDescription": "This permanently removes {email}, any business they are the only member of (with its stores, tips and reviews), every uploaded file from Google Cloud, and archives their linked Viva bank accounts. This cannot be undone.",
+    "deleteDescriptionFallback": "This permanently removes this user, any business they are the only member of (with its stores, tips and reviews), every uploaded file from Google Cloud, and archives their linked Viva bank accounts. This cannot be undone.",
+    "deleteConfirm": "Delete user"
+  }
+}

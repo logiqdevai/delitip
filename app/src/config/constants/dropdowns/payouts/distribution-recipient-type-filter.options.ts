@@ -1,10 +1,18 @@
 import type { DistributionRecipientType } from "@/features/tips/interfaces/tips.interfaces";
+import type { DropdownOptionSource } from "@/hooks/use-dropdown-options";
 
-export const DistributionRecipientTypeFilterOptions: {
-  id: DistributionRecipientType | "all";
-  label: string;
-}[] = [
-  { id: "all", label: "All recipients" },
-  { id: "STORE", label: "Store" },
-  { id: "EMPLOYEE", label: "Employee" },
-];
+export const DistributionRecipientTypeFilterOptions: DropdownOptionSource<DistributionRecipientType>[] =
+  [
+    {
+      id: "all",
+      labelKey: "dashboard.enums.distributionRecipientTypeFilter.all",
+    },
+    {
+      id: "STORE",
+      labelKey: "dashboard.enums.distributionRecipientTypeFilter.STORE",
+    },
+    {
+      id: "EMPLOYEE",
+      labelKey: "dashboard.enums.distributionRecipientTypeFilter.EMPLOYEE",
+    },
+  ];

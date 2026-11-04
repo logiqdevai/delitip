@@ -10,8 +10,7 @@ import { Routes } from "@/routes/routes";
 
 export interface AnalyticsNavItem {
   href: string;
-  label: string;
-  description: string;
+  key: "overview" | "tips" | "employees" | "stores" | "insights";
   icon: LucideIcon;
   requiresMultipleStores?: boolean;
 }
@@ -19,35 +18,28 @@ export interface AnalyticsNavItem {
 export const analyticsNavItems: AnalyticsNavItem[] = [
   {
     href: Routes.dashboard.analytics.overview,
-    label: "Overview",
-    description:
-      "Tip totals, volume, and experience score for the selected period.",
+    key: "overview",
     icon: BarChart3,
   },
   {
     href: Routes.dashboard.analytics.tips,
-    label: "Tips",
-    description: "Break down tip volume by day, week, month, employee, or store.",
+    key: "tips",
     icon: HandCoins,
   },
   {
     href: Routes.dashboard.analytics.employees,
-    label: "Employees",
-    description: "Informational performance stats for your team - not a ranking.",
+    key: "employees",
     icon: Users,
   },
   {
     href: Routes.dashboard.analytics.stores,
-    label: "Stores",
-    description: "Compare tip performance across locations in your business.",
+    key: "stores",
     icon: Store,
     requiresMultipleStores: true,
   },
   {
     href: Routes.dashboard.analytics.insights,
-    label: "Insights",
-    description:
-      "Rule-based summaries of recent feedback computed from your data.",
+    key: "insights",
     icon: Lightbulb,
   },
 ];

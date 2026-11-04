@@ -5,68 +5,54 @@ import {
 
 export const InvoiceCheckIssueDescriptionOptions: {
   id: InvoiceCheckIssue;
-  description: string;
+  descriptionKey: string;
 }[] = [
   {
     id: InvoiceCheckIssues.NOT_AN_INVOICE,
-    description: "The uploaded file does not look like an invoice.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.NOT_AN_INVOICE",
   },
   {
     id: InvoiceCheckIssues.NET_MISSING,
-    description: "No amount before VAT could be read from the invoice.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.NET_MISSING",
   },
   {
     id: InvoiceCheckIssues.NET_MISMATCH,
-    description: "The invoice amount before VAT does not equal the requested payout amount.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.NET_MISMATCH",
   },
   {
     id: InvoiceCheckIssues.NET_ROUNDING,
-    description:
-      "The invoice amount before VAT differs from the payout amount by one cent — likely rounding in the scan.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.NET_ROUNDING",
   },
   {
     id: InvoiceCheckIssues.CURRENCY_MISMATCH,
-    description: "The invoice currency differs from the payout currency.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.CURRENCY_MISMATCH",
   },
   {
     id: InvoiceCheckIssues.ISSUER_VAT_MISMATCH,
-    description:
-      "The issuer's VAT number does not match the organization's VAT number on file.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.ISSUER_VAT_MISMATCH",
   },
   {
     id: InvoiceCheckIssues.ISSUER_VAT_MISSING,
-    description: "No issuer VAT number could be read from the invoice.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.ISSUER_VAT_MISSING",
   },
   {
     id: InvoiceCheckIssues.ORG_VAT_MISSING,
-    description:
-      "The organization has no VAT number in Tax Details, so the issuer could not be verified.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.ORG_VAT_MISSING",
   },
   {
     id: InvoiceCheckIssues.RECIPIENT_VAT_MISMATCH,
-    description: "The invoice is not addressed to the platform's VAT number.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.RECIPIENT_VAT_MISMATCH",
   },
   {
     id: InvoiceCheckIssues.INVOICE_NUMBER_MISMATCH,
-    description:
-      "The invoice number on the document differs from the one the store typed.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.INVOICE_NUMBER_MISMATCH",
   },
   {
     id: InvoiceCheckIssues.DATE_SUSPICIOUS,
-    description:
-      "The invoice date is before the covered period ended, or in the future.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.DATE_SUSPICIOUS",
   },
   {
     id: InvoiceCheckIssues.NET_PLUS_VAT_MISMATCH,
-    description: "Net amount plus VAT does not add up to the stated total.",
+    descriptionKey: "dashboard.enums.invoiceCheckIssue.NET_PLUS_VAT_MISMATCH",
   },
 ];
-
-export function getInvoiceCheckIssueDescription(
-  issue: InvoiceCheckIssue | string,
-): string {
-  return (
-    InvoiceCheckIssueDescriptionOptions.find((option) => option.id === issue)
-      ?.description ?? issue
-  );
-}

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { vmsg } from "@/lib/validation-message";
 import {
   Currencies,
   StoreCopyOptions,
@@ -42,12 +43,12 @@ export const parsedAddressSchema = z.object({
 });
 
 export const businessSetupSchema = z.object({
-  name: z.string().trim().min(1, "Business name is required"),
+  name: z.string().trim().min(1, vmsg("businessNameRequired")),
   industry: z.enum(storeIndustryValues),
   teamSize: z.enum(teamSizeValues),
-  timezone: z.string().trim().min(1, "Timezone is required"),
+  timezone: z.string().trim().min(1, vmsg("timezoneRequired")),
   currency: z.enum(currencyValues),
-  address_line: z.string().trim().min(1, "Location is required"),
+  address_line: z.string().trim().min(1, vmsg("locationRequired")),
   city: z.string().trim().optional(),
   country: z.string().trim().optional(),
   postal_code: z.string().trim().optional(),
@@ -58,7 +59,7 @@ export const businessSetupSchema = z.object({
 export type BusinessSetupFormData = z.infer<typeof businessSetupSchema>;
 
 export const storeProfileFormSchema = z.object({
-  name: z.string().trim().min(1, "Business name is required"),
+  name: z.string().trim().min(1, vmsg("businessNameRequired")),
   industry: z.enum(storeIndustryValues),
   address_line: z.string().trim().optional(),
   city: z.string().trim().optional(),
@@ -70,9 +71,9 @@ export const storeProfileFormSchema = z.object({
 export type StoreProfileFormData = z.infer<typeof storeProfileFormSchema>;
 
 export const createStoreFormSchema = z.object({
-  name: z.string().trim().min(1, "Store name is required"),
+  name: z.string().trim().min(1, vmsg("storeNameRequired")),
   industry: z.enum(storeIndustryValues),
-  address_line: z.string().trim().min(1, "Location is required"),
+  address_line: z.string().trim().min(1, vmsg("locationRequired")),
   city: z.string().trim().optional(),
   country: z.string().trim().optional(),
   postal_code: z.string().trim().optional(),

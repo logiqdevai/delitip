@@ -2,6 +2,7 @@
 
 import { type FC, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslations } from "next-intl";
 
 const TILE_COLUMNS = 14;
 const TILE_ROWS = 28;
@@ -60,6 +61,7 @@ const buildQrModules = (cycle: number) =>
   }).filter((module) => module !== null);
 
 export const SplashLoader: FC = () => {
+  const t = useTranslations("dashboard.shell.ui");
   const [isVisible, setIsVisible] = useState(true);
   const [cycle, setCycle] = useState(0);
   const qrModules = useMemo(() => buildQrModules(cycle), [cycle]);
@@ -109,7 +111,7 @@ export const SplashLoader: FC = () => {
           key="splash"
           className="fixed inset-0 z-[100] overflow-hidden"
           role="status"
-          aria-label="Loading"
+          aria-label={t("loading")}
         >
           <div
             className="grid"

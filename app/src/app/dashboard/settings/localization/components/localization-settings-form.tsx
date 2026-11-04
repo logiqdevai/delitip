@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,9 +14,12 @@ import { useUpdateStore } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import type { Language } from "@/features/stores/interfaces/stores.interfaces";
 import { StoreLanguageFormOptions } from "@/config/constants/dropdowns/stores/store-language-form.options";
+import { useDropdownOptions } from "@/hooks/use-dropdown-options";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const LocalizationSettingsForm: FC = () => {
+  const t = useTranslations("dashboard.settings");
+  const languageOptions = useDropdownOptions(StoreLanguageFormOptions);
   const { store, isPending } = useWorkspace();
   const updateStore = useUpdateStore();
 
@@ -81,14 +85,16 @@ export const LocalizationSettingsForm: FC = () => {
     <div className="@container max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
       <div className="flex items-center gap-2">
         <Globe className="size-4 text-zinc-400" strokeWidth={2} />
-        <h2 className="text-sm font-bold text-ink-charcoal">Localization</h2>
+        <h2 className="text-sm font-bold text-ink-charcoal">
+          {t("localization.title")}
+        </h2>
       </div>
       <p className="text-xs text-zinc-500">
-        The primary language is what you type your branding text in.
+        {t("localization.description")}
       </p>
 
       <div className="space-y-1.5">
-        <Label htmlFor="primary-language">Primary language</Label>
+        <Label htmlFor="primary-language">{t("localization.primaryLanguage")}</Label>
         <LanguagePicker
           id="primary-language"
           className="w-full"
@@ -98,9 +104,9 @@ export const LocalizationSettingsForm: FC = () => {
       </div>
 
       <div className="space-y-2">
-        <Label>Supported languages</Label>
+        <Label>{t("localization.supportedLanguages")}</Label>
         <div className="grid grid-cols-1 gap-2 @xs:grid-cols-2 @md:grid-cols-3">
-          {StoreLanguageFormOptions.map((option) => (
+          {StoreLanguageFormOptions.map((option, index) => (
             <label key={option.id} className="flex min-w-0 items-center gap-2 text-xs">
               <Checkbox
                 checked={supportedLanguages.includes(option.id)}
@@ -108,7 +114,7 @@ export const LocalizationSettingsForm: FC = () => {
                 disabled={option.id === primaryLanguage}
               />
               <CountryFlag countryCode={option.flagCountryCode} />
-              {option.label}
+              {languageOptions[index]?.label ?? option.id}
             </label>
           ))}
         </div>
@@ -120,9 +126,9 @@ export const LocalizationSettingsForm: FC = () => {
           type="button"
           onClick={handleSave}
           disabled={updateStore.isPending}
-          className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal"
+          className="rounded-xl bg-electric-lime px-4 text-base font-semibold text-ink-charcoal"
         >
-          {updateStore.isPending ? "Saving…" : "Save Changes"}
+          {updateStore.isPending ? t("common.saving") : t("common.saveChanges")}
         </Button>
       </div>
     </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { type FC } from "react";
-import { format } from "date-fns";
 import { Check, HandCoins } from "lucide-react";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -30,6 +30,9 @@ export const EmployeeStoreBalanceCard: FC<EmployeeStoreBalanceCardProps> = ({
   employeeId,
   currency,
 }) => {
+  const t = useTranslations("employee.storeBalance");
+  const locale = useLocale();
+  const formatter = useFormatter();
   const balanceQuery = useEmployeeSettlementBalance(employeeId);
   const settlementsQuery = useEmployeeSettlements(employeeId, { limit: 20 });
   const confirmSettlement = useConfirmSettlement();
@@ -52,11 +55,9 @@ export const EmployeeStoreBalanceCard: FC<EmployeeStoreBalanceCardProps> = ({
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-bold text-ink-charcoal">
-            Paid to you by your Store
+            {t("title")}
           </h2>
-          <p className="text-xs text-zinc-400">
-            Tips that go to your Store first, which then pays you directly
-          </p>
+          <p className="text-xs text-zinc-400">{t("subtitle")}</p>
         </div>
         <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700">
           <HandCoins className="size-4" />
@@ -65,28 +66,30 @@ export const EmployeeStoreBalanceCard: FC<EmployeeStoreBalanceCardProps> = ({
 
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-2xl bg-zinc-50 px-3 py-3">
-          <p className="text-[11px] font-semibold text-zinc-500">Still owed</p>
+          <p className="text-[11px] font-semibold text-zinc-500">
+            {t("stillOwed")}
+          </p>
           <p className="mt-1 text-2xl font-extrabold tabular-nums text-ink-charcoal">
-            {formatMoney(balance.outstanding_amount, currency)}
+            {formatMoney(balance.outstanding_amount, currency, locale)}
           </p>
         </div>
         <div className="rounded-2xl bg-zinc-50 px-3 py-3">
           <p className="text-[11px] font-semibold text-zinc-500">
-            Already received
+            {t("alreadyReceived")}
           </p>
           <p className="mt-1 text-2xl font-extrabold tabular-nums text-ink-charcoal">
-            {formatMoney(balance.settled_amount, currency)}
+            {formatMoney(balance.settled_amount, currency, locale)}
           </p>
         </div>
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-zinc-500">Payments</p>
+        <p className="text-xs font-semibold text-zinc-500">{t("payments")}</p>
         {settlementsQuery.isPending ? (
           <Skeleton className="h-20 w-full rounded-xl" />
         ) : settlements.length === 0 ? (
           <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500">
-            Nothing handed over yet.
+            {t("nothingYet")}
           </p>
         ) : (
           <div className="divide-y divide-zinc-100">
@@ -97,7 +100,11 @@ export const EmployeeStoreBalanceCard: FC<EmployeeStoreBalanceCardProps> = ({
               >
                 <div className="min-w-0">
                   <span className="block text-zinc-500">
-                    {format(new Date(settlement.settled_at), "MMM d, yyyy")}
+                    {formatter.dateTime(new Date(settlement.settled_at), {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </span>
                   {settlement.note || settlement.reference ? (
                     <span className="mt-0.5 block truncate text-[11px] text-zinc-400">
@@ -113,16 +120,20 @@ export const EmployeeStoreBalanceCard: FC<EmployeeStoreBalanceCardProps> = ({
                       : "text-ink-charcoal",
                   )}
                 >
-                  {formatMoney(settlement.amount, settlement.currency as Currency)}
+                  {formatMoney(
+                    settlement.amount,
+                    settlement.currency as Currency,
+                    locale,
+                  )}
                 </span>
                 {settlement.reversed_at ? (
                   <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-bold text-zinc-600">
-                    Reversed
+                    {t("reversed")}
                   </span>
                 ) : settlement.confirmed_by_employee_at ? (
                   <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-bold text-brand-700">
                     <Check className="size-3" />
-                    Confirmed
+                    {t("confirmed")}
                   </span>
                 ) : (
                   <ActionButtonWithPending
@@ -135,7 +146,7 @@ export const EmployeeStoreBalanceCard: FC<EmployeeStoreBalanceCardProps> = ({
                     }
                     onClick={() => confirmSettlement.mutate(settlement.id)}
                   >
-                    I received this
+                    {t("iReceivedThis")}
                   </ActionButtonWithPending>
                 )}
               </div>

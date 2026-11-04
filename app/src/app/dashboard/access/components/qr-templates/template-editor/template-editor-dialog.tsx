@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
   ConfirmationDialog,
@@ -64,6 +65,7 @@ const TemplateEditorDialogShell: FC<TemplateEditorDialogShellProps> = ({
   onOpenChange,
   canvasRef,
 }) => {
+  const t = useTranslations("dashboard.access.templateEditor");
   const { isDirty } = useTemplateEditor();
   const discardConfirm = useConfirmationDialog();
 
@@ -106,9 +108,9 @@ const TemplateEditorDialogShell: FC<TemplateEditorDialogShellProps> = ({
 
       <ConfirmationDialog
         state={discardConfirm}
-        title="Discard unsaved changes?"
-        description="Closing now will discard your unsaved edits to this design."
-        confirmLabel="Discard changes"
+        title={t("switchTitle")}
+        description={t("closeDescription")}
+        confirmLabel={t("discardConfirm")}
         variant="destructive"
         onConfirm={() => onOpenChange(false)}
       />

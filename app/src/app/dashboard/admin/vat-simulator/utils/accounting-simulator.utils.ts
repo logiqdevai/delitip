@@ -14,9 +14,8 @@ export interface AccountingSimulatorInputs {
 }
 
 export interface AccountingDocumentLine {
+  // Title/note are looked up in `dashboard.adminSystem.vatSimulator.documents.<key>`.
   key: "platformToCustomer" | "storeToPlatform" | "processorToPlatform";
-  title: string;
-  note: string;
   net: number;
   vatRate: number;
   vat: number;
@@ -98,8 +97,6 @@ export const calculateAccountingSimulation = (
   const documents: AccountingDocumentLine[] = [
     {
       key: "platformToCustomer",
-      title: "Platform → Customer",
-      note: "Receipt/invoice for the tip",
       net: fromCents(tipNetCents),
       vatRate: inputs.reverseCharge ? 0 : inputs.vatRateSales,
       vat: fromCents(salesVatCents),
@@ -107,8 +104,6 @@ export const calculateAccountingSimulation = (
     },
     {
       key: "storeToPlatform",
-      title: "Store/Employee → Platform",
-      note: "Invoice for the net amount owed to the store/employee",
       net: fromCents(storeNetCents),
       vatRate: inputs.vatRateStore,
       vat: fromCents(storeVatCents),
@@ -116,8 +111,6 @@ export const calculateAccountingSimulation = (
     },
     {
       key: "processorToPlatform",
-      title: "Processor → Platform",
-      note: "Invoice for the payment processing fee",
       net: fromCents(processorFeeNetCents),
       vatRate: inputs.vatRateProcessor,
       vat: fromCents(processorVatCents),
@@ -156,7 +149,12 @@ export const calculateAccountingSimulation = (
   };
 };
 
-export const formatEuro = (value: number): string =>
-  `€${value.toFixed(2)}`;
+export const formatEuro = (value: number, locale?: string): string =>
+  new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "EUR",
+    currencyDisplay: "narrowSymbol",
+  }).format(value);
 
-export const formatPercent = (value: number): string => `${value}%`;
+export const formatPercent = (value: number, locale?: string): string =>
+  `${new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value)}%`;

@@ -5,18 +5,18 @@ import {
 
 export const OrganizationRoleFormOptions: {
   id: OrganizationRole;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: OrganizationRoles.OWNER, label: "Owner" },
-  { id: OrganizationRoles.STORE_MANAGER, label: "Store manager" },
-  { id: OrganizationRoles.ACCOUNTANT, label: "Accountant" },
+  {
+    id: OrganizationRoles.OWNER,
+    labelKey: "dashboard.enums.organizationRole.OWNER",
+  },
+  {
+    id: OrganizationRoles.STORE_MANAGER,
+    labelKey: "dashboard.enums.organizationRole.STORE_MANAGER",
+  },
+  {
+    id: OrganizationRoles.ACCOUNTANT,
+    labelKey: "dashboard.enums.organizationRole.ACCOUNTANT",
+  },
 ];
-
-export function getOrganizationRoleLabel(
-  role: OrganizationRole | string,
-): string {
-  return (
-    OrganizationRoleFormOptions.find((option) => option.id === role)?.label ??
-    role
-  );
-}

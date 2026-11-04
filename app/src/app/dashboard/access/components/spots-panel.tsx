@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, type FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Check, MapPin, Pencil, Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,7 @@ import type { Spot } from "@/features/spots/interfaces/spots.interfaces";
 import { cn } from "@/lib/utils";
 
 export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
+  const t = useTranslations("dashboard.access.spots");
   const spotsQuery = useSpots(storeId, { limit: 100 });
   const createSpot = useCreateSpot(storeId);
   const updateSpot = useUpdateSpot();
@@ -75,11 +77,10 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
     <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
       <div className="flex items-center gap-2">
         <MapPin className="size-4 text-zinc-400" strokeWidth={2} />
-        <h2 className="text-sm font-bold text-ink-charcoal">Spots</h2>
+        <h2 className="text-sm font-bold text-ink-charcoal">{t("title")}</h2>
       </div>
       <p className="text-xs text-zinc-500">
-        Tables, rooms, and counters you can attach to QR codes. Turn a spot off
-        to hide it from new QR assignments without deleting it.
+        {t("description")}
       </p>
 
       <form
@@ -89,8 +90,8 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
         <Input
           value={name}
           onChange={(event) => setName(event.target.value)}
-          placeholder="e.g. Table 12"
-          aria-label="New spot name"
+          placeholder={t("namePlaceholder")}
+          aria-label={t("newNameAria")}
           className="min-w-0 flex-1"
         />
         <Button
@@ -99,7 +100,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
           className="w-full shrink-0 sm:w-auto"
         >
           <Plus data-icon="inline-start" />
-          Add spot
+          {t("add")}
         </Button>
       </form>
 
@@ -110,8 +111,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
         </div>
       ) : spots.length === 0 ? (
         <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-3 text-center text-xs text-zinc-500">
-          No spots yet. Add one above, then attach it when you create a QR
-          code.
+          {t("empty")}
         </p>
       ) : (
         <ul className="divide-y divide-zinc-100 rounded-xl border border-zinc-200/80">
@@ -139,7 +139,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
                     <Input
                       value={editName}
                       onChange={(event) => setEditName(event.target.value)}
-                      aria-label={`Rename ${spot.name}`}
+                      aria-label={t("renameAria", { name: spot.name })}
                       autoFocus
                       className="flex-1"
                     />
@@ -148,7 +148,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
                       size="sm"
                       variant="secondary"
                       disabled={isUpdating || !editName.trim()}
-                      aria-label="Save name"
+                      aria-label={t("saveNameAria")}
                       className="size-8 shrink-0 px-0"
                     >
                       <Check className="size-3.5" strokeWidth={2} />
@@ -159,7 +159,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
                       variant="ghost"
                       onClick={cancelEdit}
                       disabled={isUpdating}
-                      aria-label="Cancel rename"
+                      aria-label={t("cancelRenameAria")}
                       className="size-8 shrink-0 px-0"
                     >
                       <X className="size-3.5" strokeWidth={2} />
@@ -180,7 +180,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
                               : "bg-neutral-fill font-medium text-zinc-500",
                           )}
                         >
-                          {spot.is_active ? "Active" : "Inactive"}
+                          {spot.is_active ? t("active") : t("inactive")}
                         </span>
                       </div>
                     </div>
@@ -193,8 +193,8 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
                         onCheckedChange={() => toggleActive(spot)}
                         aria-label={
                           spot.is_active
-                            ? `Deactivate ${spot.name}`
-                            : `Activate ${spot.name}`
+                            ? t("deactivateAria", { name: spot.name })
+                            : t("activateAria", { name: spot.name })
                         }
                       />
                       <Button
@@ -203,7 +203,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
                         variant="ghost"
                         className="size-8 px-0"
                         onClick={() => startEdit(spot)}
-                        aria-label={`Rename ${spot.name}`}
+                        aria-label={t("renameAria", { name: spot.name })}
                       >
                         <Pencil className="size-3.5" strokeWidth={2} />
                       </Button>
@@ -216,7 +216,7 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
                           setPendingDelete(spot);
                           deleteConfirm.openDialog();
                         }}
-                        aria-label={`Delete ${spot.name}`}
+                        aria-label={t("deleteAria", { name: spot.name })}
                       >
                         <Trash2 className="size-3.5" strokeWidth={2} />
                       </Button>
@@ -237,13 +237,13 @@ export const SpotsPanel: FC<{ storeId: string }> = ({ storeId }) => {
             if (!open) setPendingDelete(null);
           },
         }}
-        title="Delete spot?"
+        title={t("deleteTitle")}
         description={
           pendingDelete
-            ? `"${pendingDelete.name}" will be removed and unassigned from any QR codes using it.`
-            : "This spot will be removed."
+            ? t("deleteDescription", { name: pendingDelete.name })
+            : t("deleteDescriptionFallback")
         }
-        confirmLabel="Delete"
+        confirmLabel={t("deleteConfirm")}
         isPending={deleteSpot.isPending}
         onConfirm={async () => {
           if (!pendingDelete) return;

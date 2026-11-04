@@ -1,8 +1,9 @@
 "use client";
 
 import { type FC, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import {
   AddressAutocomplete,
@@ -30,11 +31,14 @@ import {
 import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
 import {
   getCountryCodeByName,
-  getCountryLabel,
+  getCountryStorageName,
 } from "@/config/constants/dropdowns/shared/country.options";
+import { useDropdownOptions } from "@/hooks/use-dropdown-options";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const BusinessProfileSettingsForm: FC = () => {
+  const t = useTranslations("dashboard.settings");
+  const industryOptions = useDropdownOptions(StoreIndustryFormOptions);
   const { store, isPending } = useWorkspace();
   const updateStore = useUpdateStore();
 
@@ -103,18 +107,18 @@ export const BusinessProfileSettingsForm: FC = () => {
     >
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">
-          Business profile
+          {t("profile.title")}
         </h2>
         <p className="mt-0.5 text-xs text-zinc-500">
-          Core details customers and your team see across delitip.
+          {t("profile.description")}
         </p>
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="store-name">Business name</Label>
+        <Label htmlFor="store-name">{t("profile.businessName")}</Label>
         <Input
           id="store-name"
-          placeholder="e.g. Artisan Café & Bar"
+          placeholder={t("profile.businessNamePlaceholder")}
           aria-invalid={!!errors.name}
           {...register("name")}
         />
@@ -124,13 +128,13 @@ export const BusinessProfileSettingsForm: FC = () => {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="store-industry">Industry</Label>
+        <Label htmlFor="store-industry">{t("profile.industry")}</Label>
         <Controller
           name="industry"
           control={control}
           render={({ field }) => (
             <Select
-              items={StoreIndustryFormOptions.map((option) => ({
+              items={industryOptions.map((option) => ({
                 label: option.label,
                 value: option.id,
               }))}
@@ -142,7 +146,7 @@ export const BusinessProfileSettingsForm: FC = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {StoreIndustryFormOptions.map((option) => (
+                  {industryOptions.map((option) => (
                     <SelectItem key={option.id} value={option.id}>
                       {option.label}
                     </SelectItem>
@@ -155,14 +159,14 @@ export const BusinessProfileSettingsForm: FC = () => {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="store-address">Address</Label>
+        <Label htmlFor="store-address">{t("profile.address")}</Label>
         <Controller
           name="address_line"
           control={control}
           render={({ field }) => (
             <AddressAutocomplete
               id="store-address"
-              placeholder="Street address"
+              placeholder={t("profile.addressPlaceholder")}
               value={field.value ?? ""}
               onValueChange={field.onChange}
               onPlaceSelect={(address: ParsedAddress) => {
@@ -184,11 +188,15 @@ export const BusinessProfileSettingsForm: FC = () => {
 
       <div className="grid grid-cols-1 gap-4 @sm:grid-cols-2 @lg:grid-cols-3">
         <div className="min-w-0 space-y-1.5">
-          <Label htmlFor="store-city">City</Label>
-          <Input id="store-city" placeholder="City" {...register("city")} />
+          <Label htmlFor="store-city">{t("profile.city")}</Label>
+          <Input
+            id="store-city"
+            placeholder={t("profile.cityPlaceholder")}
+            {...register("city")}
+          />
         </div>
         <div className="min-w-0 space-y-1.5">
-          <Label htmlFor="store-country">Country</Label>
+          <Label htmlFor="store-country">{t("profile.country")}</Label>
           <Controller
             name="country"
             control={control}
@@ -198,17 +206,17 @@ export const BusinessProfileSettingsForm: FC = () => {
                 className="w-full"
                 value={getCountryCodeByName(field.value) ?? null}
                 onValueChange={(code) =>
-                  field.onChange(code ? getCountryLabel(code) : "")
+                  field.onChange(code ? getCountryStorageName(code) : "")
                 }
               />
             )}
           />
         </div>
         <div className="min-w-0 space-y-1.5 @sm:col-span-2 @lg:col-span-1">
-          <Label htmlFor="store-postal">Postal code</Label>
+          <Label htmlFor="store-postal">{t("profile.postalCode")}</Label>
           <Input
             id="store-postal"
-            placeholder="Postal code"
+            placeholder={t("profile.postalCodePlaceholder")}
             {...register("postal_code")}
           />
         </div>
@@ -217,7 +225,7 @@ export const BusinessProfileSettingsForm: FC = () => {
       <div className="flex flex-wrap items-center justify-between lg:justify-end gap-3 pt-2">
         <SettingsStepNav />
         <ActionButtonWithPending type="submit" isPending={updateStore.isPending}>
-          Save Changes
+          {t("common.saveChanges")}
         </ActionButtonWithPending>
       </div>
     </form>

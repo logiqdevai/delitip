@@ -2,7 +2,9 @@
 
 import { type FC, useState } from "react";
 import { ImagePlus, KeyRound, LogOut } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { AccountSwitcher } from "@/components/auth/account-switcher";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { Button } from "@/components/ui/button";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +15,7 @@ import { EmployeeChangePasswordDialog } from "../components/employee-change-pass
 import { EmployeePhotoDialog } from "../components/employee-photo-dialog";
 
 const ProfilePage: FC = () => {
+  const t = useTranslations("employee");
   const { employee, store, isPending } = useCurrentEmployee();
   const logout = useLogout();
   const [photoDialogOpen, setPhotoDialogOpen] = useState(false);
@@ -22,7 +25,7 @@ const ProfilePage: FC = () => {
   return (
     <div className="mx-auto w-full max-w-md space-y-4">
       <h1 className="text-lg font-extrabold tracking-tight text-ink-charcoal">
-        Profile
+        {t("profile.title")}
       </h1>
 
       <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
@@ -38,10 +41,10 @@ const ProfilePage: FC = () => {
           )}
           <div className="min-w-0">
             <div className="truncate text-base font-bold text-ink-charcoal">
-              {employee?.full_name ?? "Account"}
+              {employee?.full_name ?? t("userMenu.account")}
             </div>
             <div className="truncate text-xs font-medium text-zinc-400">
-              {store?.name ?? "Employee"}
+              {store?.name ?? t("userMenu.employee")}
             </div>
           </div>
         </div>
@@ -53,14 +56,14 @@ const ProfilePage: FC = () => {
             onClick={() => setPhotoDialogOpen(true)}
           >
             <ImagePlus className="size-4" />
-            Edit photo
+            {t("userMenu.editPhoto")}
           </Button>
           <Button
             variant="outline"
             onClick={() => setChangePasswordDialogOpen(true)}
           >
             <KeyRound className="size-4" />
-            Change password
+            {t("userMenu.changePassword")}
           </Button>
         </div>
       </div>
@@ -70,6 +73,10 @@ const ProfilePage: FC = () => {
         className="w-full max-w-none sm:max-w-none"
       />
 
+      <div className="flex justify-center">
+        <LanguageSwitcher tone="light" />
+      </div>
+
       <Button
         variant="outline"
         className="w-full text-red-600"
@@ -78,7 +85,7 @@ const ProfilePage: FC = () => {
         }
       >
         <LogOut className="size-4" />
-        Log out
+        {t("userMenu.logOut")}
       </Button>
 
       {employee ? (

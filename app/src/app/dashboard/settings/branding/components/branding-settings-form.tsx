@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SettingsStepNav } from "../../components/settings-step-nav";
@@ -16,6 +17,7 @@ import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const BrandingSettingsForm: FC = () => {
+  const t = useTranslations("dashboard.settings");
   const { store: workspaceStore, isPending } = useWorkspace();
   const storeDetailQuery = useStore(workspaceStore?.id ?? "");
   const store = storeDetailQuery.data ?? workspaceStore;
@@ -87,9 +89,11 @@ export const BrandingSettingsForm: FC = () => {
   return (
     <div className="@container max-w-2xl space-y-5 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
       <div>
-        <h2 className="text-sm font-bold text-ink-charcoal">Branding</h2>
+        <h2 className="text-sm font-bold text-ink-charcoal">
+          {t("branding.title")}
+        </h2>
         <p className="mt-0.5 text-xs text-zinc-500">
-          What customers see on your public tip page.
+          {t("branding.description")}
         </p>
       </div>
 
@@ -119,9 +123,9 @@ export const BrandingSettingsForm: FC = () => {
           type="button"
           onClick={() => void handleSave()}
           disabled={updateStore.isPending}
-          className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal"
+          className="rounded-xl bg-electric-lime px-4 text-base font-semibold text-ink-charcoal"
         >
-          {updateStore.isPending ? "Saving…" : "Save Changes"}
+          {updateStore.isPending ? t("common.saving") : t("common.saveChanges")}
         </Button>
       </div>
     </div>

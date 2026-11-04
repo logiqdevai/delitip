@@ -1,1 +1,350 @@
-{}
+{
+  "metadata": {
+    "title": "Dashboard - delitip",
+    "description": "Manage tips, employees, reviews, and QR access for your business."
+  },
+  "ui": {
+    "close": "Close",
+    "closeToast": "Close toast",
+    "toggleSidebar": "Toggle sidebar",
+    "sidebarTitle": "Sidebar",
+    "sidebarDescription": "Displays the mobile sidebar.",
+    "more": "More",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide",
+    "previous": "Previous",
+    "next": "Next",
+    "skip": "Skip",
+    "submit": "Submit",
+    "goToPreviousPage": "Go to previous page",
+    "goToNextPage": "Go to next page",
+    "paginationLabel": "Pagination",
+    "breadcrumbLabel": "Breadcrumb",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "commandTitle": "Command palette",
+    "commandDescription": "Search for a command to run...",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "decrease": "Decrease",
+    "increase": "Increase",
+    "selectCountry": "Select country",
+    "noCountries": "No countries found",
+    "pickDate": "Pick a date",
+    "language": "Language",
+    "allEmployees": "All employees",
+    "selectEmployee": "Select employee",
+    "addEmployee": "Add employee",
+    "scrollToEnd": "Scroll to end",
+    "scrollToStart": "Scroll to start",
+    "colorPicker": {
+      "reset": "Reset",
+      "swatch": "{label} swatch",
+      "picker": "{label} color picker"
+    },
+    "filePicker": {
+      "label": "File",
+      "replaceFile": "Replace file",
+      "chooseFile": "Choose file",
+      "removeFile": "Remove file",
+      "dropToAdd": "Drop to add",
+      "addInvoice": "Add your invoice",
+      "releaseToAdd": "Release to add this file",
+      "dropOrBrowse": "Drop a file here, or browse",
+      "replace": "Replace",
+      "browse": "Browse",
+      "uploading": "Uploading…",
+      "hint": "{types}",
+      "hintWithSize": "{types} · up to {size}",
+      "invalidType": "Please choose a {types} file.",
+      "tooLarge": "The file must be {size} or smaller."
+    },
+    "imagePicker": {
+      "modeLabel": {
+        "logo": "Logo",
+        "cover": "Cover image",
+        "image": "Image"
+      },
+      "modeHint": {
+        "logo": "Square PNG or SVG",
+        "cover": "Wide image recommended",
+        "image": "PNG or JPG"
+      },
+      "emptyTitle": {
+        "logo": "Add your logo",
+        "cover": "Add a cover image",
+        "image": "Add a photo"
+      },
+      "filledTitle": {
+        "logo": "Logo ready",
+        "cover": "Cover ready",
+        "image": "Photo ready"
+      },
+      "dropOrBrowse": "Drop a file here, or browse",
+      "dropToUpload": "Drop to upload",
+      "releaseToAdd": "Release to add this file",
+      "uploadSuccessful": "Upload successful",
+      "tapToReplace": "Tap to replace, or use an action below",
+      "uploading": "Uploading…",
+      "replace": "Replace",
+      "browse": "Browse",
+      "remove": "Remove"
+    },
+    "addressAutocomplete": {
+      "typeAtLeast": "Type at least {count} characters",
+      "searching": "Searching…",
+      "noMatches": "No matches found"
+    },
+    "questionnaire": {
+      "previous": "Previous",
+      "skip": "Skip",
+      "next": "Next",
+      "submit": "Submit"
+    },
+    "supportedLanguages": "Supported languages",
+    "back": "Back",
+    "addLanguages": "Add languages",
+    "morePages": "More pages",
+    "loading": "Loading",
+    "accountSwitcher": {
+      "label": "Switch account"
+    }
+  },
+  "sidebar": {
+    "businessPortal": "Business Portal",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "expand": "Expand sidebar",
+    "collapse": "Collapse sidebar",
+    "noStore": "No store selected",
+    "finishSetup": "Finish business setup to continue",
+    "switchStore": "Switch store",
+    "stores": "Stores",
+    "addStore": "Add store",
+    "nav": {
+      "admin": "Admin",
+      "gettingStarted": "Getting Started",
+      "overview": "Overview",
+      "employees": "Employees",
+      "tips": "Tips",
+      "qrCodes": "QR Codes",
+      "analytics": "Analytics",
+      "reviews": "Reviews",
+      "alerts": "Alerts",
+      "settings": "Settings"
+    },
+    "adminNav": {
+      "analytics": "Analytics",
+      "allUsers": "All Users",
+      "paymentsPayouts": "Payments & Payouts",
+      "webhookEvents": "Webhook Events",
+      "vatSimulator": "VAT Simulator",
+      "appConfig": "App Config",
+      "changelog": "Changelog"
+    }
+  },
+  "userMenu": {
+    "accountMenu": "Account menu",
+    "account": "Account",
+    "billing": "Billing",
+    "logout": "Log out",
+    "language": "Language"
+  },
+  "addStore": {
+    "step": "Step {current} of 2",
+    "titleDetails": "Add store",
+    "titleCopy": "Copy settings",
+    "descriptionDetails": "Add another venue to this business. It gets its own staff, QR codes, tips and reviews, and shares your billing.",
+    "descriptionCopy": "Start from one of your stores instead of setting everything up again.",
+    "name": "Store name",
+    "namePlaceholder": "e.g. Artisan Café — Kolonaki",
+    "businessType": "Business type",
+    "address": "Address",
+    "addressPlaceholder": "Street, city",
+    "city": "City",
+    "cityPlaceholder": "City",
+    "country": "Country",
+    "postalCode": "Postal code",
+    "postalCodePlaceholder": "Postal code",
+    "copyFrom": "Copy settings from",
+    "noCopy": "Don't copy, start fresh",
+    "neverCopied": "Staff, QR codes, tip-sharing rules, payout details and the public review link are never copied.",
+    "cancel": "Cancel",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Add store"
+  },
+  "overview": {
+    "title": "Overview",
+    "descriptionStore": "Tips, reviews, and staff for {store}.",
+    "descriptionDefault": "Understand and manage great service across your business.",
+    "addEmployee": "Add Employee",
+    "manageDistribution": "Manage Tip Distribution",
+    "setupTitle": "Finish setting up your business",
+    "setupProgress": "{completed} of {total} setup steps done",
+    "viewChecklist": "View checklist →",
+    "metricsError": "Could not load today's metrics.",
+    "tipsToday": "Tips Today",
+    "transactionsToday": "Transactions Today",
+    "reviewsToday": "Reviews Today",
+    "avgRatingToday": "Avg Rating Today",
+    "total": "Total <b>{value}</b>",
+    "recognizedHint": "{count, plural, one {# employee} other {# employees}} recognized today",
+    "transactionsHint": "Customer tips processed",
+    "reviewsHint": "Feedback submitted today",
+    "ratingHint": "Based on today's reviews",
+    "noRatingHint": "No reviews yet today",
+    "tipsTrendTitle": "Tips (Past {days} Days)",
+    "tipsTrendSubtitle": "Daily tip totals generated via QR codes",
+    "viewAnalytics": "View Analytics",
+    "liveFeedback": "Live Customer Feedback",
+    "noFeedback": "No feedback yet.",
+    "storeFallback": "Store",
+    "seeAllReviews": "See All Reviews",
+    "team": "Team",
+    "teamSubtitle": "Active staff who can receive tips",
+    "viewAllStaff": "View All Staff",
+    "noEmployees": "No active employees yet."
+  },
+  "gettingStarted": {
+    "title": "Getting Started",
+    "progress": "{completed} of {total} steps done for {store}.",
+    "noStoreTitle": "No store selected",
+    "noStoreDescription": "Finish business setup before viewing your checklist.",
+    "done": "Done",
+    "notStarted": "Not started",
+    "steps": {
+      "profile": {
+        "title": "Business profile",
+        "description": "Add your business name and address so customers know who they're tipping."
+      },
+      "branding": {
+        "title": "Branding",
+        "description": "Upload a logo so your tipping page and QR codes match your business."
+      },
+      "tipping": {
+        "title": "Tipping configuration",
+        "description": "Set suggested tip amounts customers can choose from."
+      },
+      "employees": {
+        "title": "Add employees",
+        "description": "Add your staff so tips can be attributed and distributed to them."
+      },
+      "qrCodes": {
+        "title": "Create QR codes",
+        "description": "Generate scannable QR codes customers use to leave a tip."
+      },
+      "payoutAccount": {
+        "title": "Connect payout account",
+        "description": "Link your business IBAN so your share of tips can be paid out."
+      },
+      "reviews": {
+        "title": "Reviews & feedback",
+        "description": "Set a redirect link so happy customers can leave a public review."
+      }
+    }
+  },
+  "badges": {
+    "superFast": "Super Fast",
+    "greatDrinks": "Great Drinks",
+    "friendlyVibe": "Friendly Vibe",
+    "onShift": "On Shift",
+    "offShift": "Off Shift"
+  },
+  "account": {
+    "title": "Account",
+    "description": "Your personal details across delitip.",
+    "profile": {
+      "title": "Personal details",
+      "description": "Your name and contact details tied to this login.",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "emailHelp": "Contact support to change the email on your login.",
+      "phone": "Phone",
+      "phonePlaceholder": "e.g. +306912345678",
+      "save": "Save Changes"
+    },
+    "password": {
+      "title": "Change password",
+      "description": "Update the password used to sign in to this login.",
+      "current": "Current password",
+      "currentPlaceholder": "Your current password",
+      "new": "New password",
+      "newPlaceholder": "At least 8 characters",
+      "confirm": "Confirm new password",
+      "confirmPlaceholder": "Repeat new password",
+      "submit": "Update password"
+    }
+  },
+  "toasts": {
+    "stores": {
+      "createdTitle": "Store created",
+      "createdDescription": "Your store was added successfully.",
+      "createFailed": "Could not create store",
+      "updatedTitle": "Store updated",
+      "updatedDescription": "Your changes were saved.",
+      "updateFailed": "Could not update store",
+      "deletedTitle": "Store deleted",
+      "deletedDescription": "The store was removed.",
+      "deleteFailed": "Could not delete store"
+    },
+    "members": {
+      "added": "Member added",
+      "addFailed": "Could not add member",
+      "updated": "Member updated",
+      "updateFailed": "Could not update member",
+      "removed": "Member removed",
+      "removeFailed": "Could not remove member"
+    },
+    "organizations": {
+      "billingSavedTitle": "Billing details saved",
+      "billingSavedDescription": "Your organization's billing details were updated.",
+      "billingFailed": "Could not save billing details",
+      "profileReadyTitle": "Business profile ready",
+      "profileReadyDescription": "You can continue setup from your dashboard.",
+      "profileFailed": "Could not save business profile"
+    },
+    "users": {
+      "updatedTitle": "Account updated",
+      "updatedDescription": "Your changes were saved.",
+      "updateFailed": "Could not update account",
+      "deletedTitle": "User deleted",
+      "deletedDescriptionDefault": "The user and all their related data were removed.",
+      "deleteFailed": "Could not delete user",
+      "leftoverFiles": "{count, plural, one {# Google Cloud file} other {# Google Cloud files}} could not be deleted",
+      "leftoverVivaBankAccounts": "{count, plural, one {# Viva bank account} other {# Viva bank accounts}} could not be archived",
+      "leftoverVivaConnectedAccounts": "{count, plural, one {# Viva connected account} other {# Viva connected accounts}} must be closed manually in Viva",
+      "deletedWithLeftovers": "The user was removed, but {details}."
+    },
+    "auth": {
+      "signedIn": "Signed in",
+      "welcomeBack": "Welcome back to delitip.",
+      "signInFailed": "Could not sign in",
+      "welcomeEmployee": "Welcome to your tip profile.",
+      "accountCreated": "Account created",
+      "accountCreatedDescription": "Finish a few details to open your dashboard.",
+      "signUpFailed": "Could not create account",
+      "resetEmailFailed": "Could not send reset email",
+      "passwordUpdated": "Password updated",
+      "passwordResetDescription": "You can sign in with your new password.",
+      "resetFailed": "Could not reset password",
+      "accountActivated": "Account activated",
+      "accountActivatedDescription": "You can now sign in with your new password.",
+      "activateFailed": "Could not activate account",
+      "passwordChangedDescription": "Your password has been changed.",
+      "changePasswordFailed": "Could not change password",
+      "signedOut": "Signed out",
+      "signedOutDescription": "You have been signed out of delitip."
+    },
+    "contact": {
+      "sendFailed": "Could not send message"
+    }
+  },
+  "planGate": {
+    "title": "{feature} needs the {plan} plan",
+    "description": "You're currently on the {currentPlan} plan. Upgrade in Settings → Billing to unlock this.",
+    "cta": "Go to Billing →"
+  }
+}

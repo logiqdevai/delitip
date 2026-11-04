@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -21,7 +22,6 @@ import type {
 } from "@/features/analytics/interfaces/analytics.interfaces";
 import { getErrorMessage } from "@/lib/api-error";
 
-const FAILED = "We couldn't load analytics. Please try again.";
 
 export const getDashboardOverview = async (
   organizationId: string,
@@ -34,7 +34,7 @@ export const getDashboardOverview = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, FAILED));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAnalytics")));
   }
 };
 
@@ -49,7 +49,7 @@ export const getDashboardTrends = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, FAILED));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAnalytics")));
   }
 };
 
@@ -64,7 +64,7 @@ export const getEmployeesPerformance = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, FAILED));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAnalytics")));
   }
 };
 
@@ -79,7 +79,7 @@ export const getStoresPerformance = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, FAILED));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAnalytics")));
   }
 };
 
@@ -94,7 +94,7 @@ export const getExperienceScore = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, FAILED));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAnalytics")));
   }
 };
 
@@ -109,7 +109,7 @@ export const getStoreTipsAnalytics = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, FAILED));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAnalytics")));
   }
 };
 
@@ -124,7 +124,7 @@ export const listInsights = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, FAILED));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAnalytics")));
   }
 };
 
@@ -138,7 +138,7 @@ export const getAdminOverview = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, FAILED));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAnalytics")));
   }
 };
 
@@ -152,7 +152,7 @@ export const getAdminTrends = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, FAILED));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAnalytics")));
   }
 };
 
@@ -167,6 +167,6 @@ export const generateInsight = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't generate insight. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.generateInsight")));
   }
 };

@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -16,7 +17,7 @@ export const getQrTemplateCustomization = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load the saved template design. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadTheSavedTemplateDesign")));
   }
 };
 
@@ -32,7 +33,7 @@ export const saveQrTemplateCustomization = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't save the template design. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.saveTheTemplateDesign")));
   }
 };
 
@@ -45,6 +46,6 @@ export const resetQrTemplateCustomization = async (
       ApiRoutes.stores.qrTemplateCustomization(storeId, templateId),
     );
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't reset the template design. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.resetTheTemplateDesign")));
   }
 };

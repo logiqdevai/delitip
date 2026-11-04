@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, type FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,7 @@ import { useAddOrganizationMember } from "@/features/organizations/hooks/use-org
 import { OrganizationRoles } from "@/features/organizations/interfaces/organizations.interfaces";
 import { OrganizationRoleFormOptions } from "@/config/constants/dropdowns/organizations/organization-role-form.options";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
+import { useDropdownOptions } from "@/hooks/use-dropdown-options";
 
 interface InviteMemberDialogProps {
   open: boolean;
@@ -39,6 +41,10 @@ export const InviteMemberDialog: FC<InviteMemberDialogProps> = ({
   organizationId,
   stores,
 }) => {
+  const t = useTranslations("dashboard.settings.members.inviteDialog");
+  const tMembers = useTranslations("dashboard.settings.members");
+  const tCommon = useTranslations("dashboard.settings.common");
+  const roleOptions = useDropdownOptions(OrganizationRoleFormOptions);
   const addMember = useAddOrganizationMember(organizationId);
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<string>(OrganizationRoles.STORE_MANAGER);
@@ -72,28 +78,28 @@ export const InviteMemberDialog: FC<InviteMemberDialogProps> = ({
     >
       <DialogContent showCloseButton={!addMember.isPending}>
         <DialogHeader>
-          <DialogTitle>Invite a member</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            They&apos;ll get access next time they sign in with this email.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div className="space-y-1.5">
-            <Label htmlFor="invite-email">Email</Label>
+            <Label htmlFor="invite-email">{t("email")}</Label>
             <Input
               id="invite-email"
               type="email"
               required
-              placeholder="name@business.com"
+              placeholder={t("emailPlaceholder")}
               value={email}
               onChange={(event) => setEmail(event.target.value)}
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="invite-role">Role</Label>
+            <Label htmlFor="invite-role">{t("role")}</Label>
             <Select
-              items={OrganizationRoleFormOptions.map((option) => ({
+              items={roleOptions.map((option) => ({
                 label: option.label,
                 value: option.id,
               }))}
@@ -107,7 +113,7 @@ export const InviteMemberDialog: FC<InviteMemberDialogProps> = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {OrganizationRoleFormOptions.map((option) => (
+                  {roleOptions.map((option) => (
                     <SelectItem key={option.id} value={option.id}>
                       {option.label}
                     </SelectItem>
@@ -118,12 +124,12 @@ export const InviteMemberDialog: FC<InviteMemberDialogProps> = ({
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="invite-store">
-              Store scope{" "}
-              <span className="font-normal text-zinc-400">(optional)</span>
+              {t("storeScope")}{" "}
+              <span className="font-normal text-zinc-400">{t("optional")}</span>
             </Label>
             <Select
               items={[
-                { label: "Organization-wide", value: "" },
+                { label: tMembers("organizationWide"), value: "" },
                 ...stores.map((store) => ({
                   label: store.name,
                   value: store.id,
@@ -137,7 +143,7 @@ export const InviteMemberDialog: FC<InviteMemberDialogProps> = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="">Organization-wide</SelectItem>
+                  <SelectItem value="">{tMembers("organizationWide")}</SelectItem>
                   {stores.map((store) => (
                     <SelectItem key={store.id} value={store.id}>
                       {store.name}
@@ -155,10 +161,10 @@ export const InviteMemberDialog: FC<InviteMemberDialogProps> = ({
               disabled={addMember.isPending}
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <ActionButtonWithPending type="submit" isPending={addMember.isPending}>
-              Invite
+              {t("submit")}
             </ActionButtonWithPending>
           </DialogFooter>
         </form>

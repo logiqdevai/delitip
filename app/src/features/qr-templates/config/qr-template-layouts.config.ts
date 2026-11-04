@@ -1,4 +1,5 @@
-import { getStoreIndustryLabel } from "@/config/constants/dropdowns/stores/store-industry-form.options";
+import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
+import { tr } from "@/lib/i18n-runtime";
 import {
   getCardPalette,
   resolveHeadline,
@@ -30,12 +31,18 @@ type ColorToken = keyof CardPalette;
 
 const CONTENT_BY_ROLE: Record<TextRole, (store: Store) => string> = {
   storeName: (store) => store.name,
-  industryLabel: (store) => getStoreIndustryLabel(store.industry),
+  industryLabel: (store) => {
+    const option = StoreIndustryFormOptions.find(
+      (item) => item.id === store.industry,
+    );
+    return option ? tr(option.labelKey) : "";
+  },
   headline: (store) => resolveHeadline(store),
-  scanTipReviewCaption: () => "Scan · Tip · Review",
+  scanTipReviewCaption: () =>
+    tr("dashboard.access.templateEditor.content.scanTipReviewCaption"),
   footerWordmark: () => "DelyTip",
-  tagline: () => "Tip your favorite team member.",
-  scanCta: () => "Scan to begin",
+  tagline: () => tr("dashboard.access.templateEditor.content.tagline"),
+  scanCta: () => tr("dashboard.access.templateEditor.content.scanCta"),
 };
 
 interface LayoutBase {

@@ -2,7 +2,8 @@
 
 import { type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ArrowRight } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import {
@@ -20,11 +21,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CountryPicker } from "@/components/ui/country-picker";
+import { useDropdownOptions } from "@/hooks/use-dropdown-options";
 import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
 import { TeamSizeFormOptions } from "@/config/constants/dropdowns/businesses/team-size-form.options";
 import {
   getCountryCodeByName,
-  getCountryLabel,
+  getCountryStorageName,
 } from "@/config/constants/dropdowns/shared/country.options";
 import type { BusinessSetupContext } from "@/features/organizations/hooks/use-organizations";
 import { useCompleteBusinessSetup } from "@/features/organizations/hooks/use-organizations";
@@ -45,6 +47,9 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
   context,
   onCompleted,
 }) => {
+  const t = useTranslations("onboarding.form");
+  const industryOptions = useDropdownOptions(StoreIndustryFormOptions);
+  const teamSizeOptions = useDropdownOptions(TeamSizeFormOptions);
   const completeSetup = useCompleteBusinessSetup();
 
   const {
@@ -72,24 +77,21 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
     <div className="space-y-6">
       <div>
         <p className="text-xs font-semibold tracking-wide text-brand-700 uppercase">
-          Business profile
+          {t("eyebrow")}
         </p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight text-ink-charcoal">
-          Set up your business
+          {t("title")}
         </h1>
-        <p className="mt-1 text-sm text-zinc-500">
-          Tell us about your venue so customers and staff land in the right
-          place.
-        </p>
+        <p className="mt-1 text-sm text-zinc-500">{t("subtitle")}</p>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
         <div className="space-y-1.5">
-          <Label htmlFor="onboarding-name">Business name</Label>
+          <Label htmlFor="onboarding-name">{t("nameLabel")}</Label>
           <Input
             id="onboarding-name"
             autoComplete="organization"
-            placeholder="e.g. Artisan Café & Bar"
+            placeholder={t("namePlaceholder")}
             aria-invalid={!!errors.name}
             {...register("name")}
           />
@@ -100,13 +102,13 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="onboarding-industry">Business type</Label>
+            <Label htmlFor="onboarding-industry">{t("industryLabel")}</Label>
             <Controller
               name="industry"
               control={control}
               render={({ field }) => (
                 <Select
-                  items={StoreIndustryFormOptions.map((option) => ({
+                  items={industryOptions.map((option) => ({
                     label: option.label,
                     value: option.id,
                   }))}
@@ -122,7 +124,7 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {StoreIndustryFormOptions.map((option) => (
+                      {industryOptions.map((option) => (
                         <SelectItem key={option.id} value={option.id}>
                           {option.label}
                         </SelectItem>
@@ -137,13 +139,13 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
             ) : null}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="onboarding-team-size">Estimated team size</Label>
+            <Label htmlFor="onboarding-team-size">{t("teamSizeLabel")}</Label>
             <Controller
               name="teamSize"
               control={control}
               render={({ field }) => (
                 <Select
-                  items={TeamSizeFormOptions.map((option) => ({
+                  items={teamSizeOptions.map((option) => ({
                     label: option.label,
                     value: option.id,
                   }))}
@@ -159,7 +161,7 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {TeamSizeFormOptions.map((option) => (
+                      {teamSizeOptions.map((option) => (
                         <SelectItem key={option.id} value={option.id}>
                           {option.label}
                         </SelectItem>
@@ -179,7 +181,7 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
         <input type="hidden" {...register("currency")} />
 
         <div className="space-y-1.5">
-          <Label htmlFor="onboarding-address">Address</Label>
+          <Label htmlFor="onboarding-address">{t("addressLabel")}</Label>
           <Controller
             name="address_line"
             control={control}
@@ -187,7 +189,7 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
               <AddressAutocomplete
                 id="onboarding-address"
                 autoComplete="street-address"
-                placeholder="Street, city"
+                placeholder={t("addressPlaceholder")}
                 aria-invalid={!!errors.address_line}
                 value={field.value ?? ""}
                 onValueChange={field.onChange}
@@ -213,11 +215,15 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="space-y-1.5">
-            <Label htmlFor="onboarding-city">City</Label>
-            <Input id="onboarding-city" placeholder="City" {...register("city")} />
+            <Label htmlFor="onboarding-city">{t("cityLabel")}</Label>
+            <Input
+              id="onboarding-city"
+              placeholder={t("cityPlaceholder")}
+              {...register("city")}
+            />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="onboarding-country">Country</Label>
+            <Label htmlFor="onboarding-country">{t("countryLabel")}</Label>
             <Controller
               name="country"
               control={control}
@@ -227,17 +233,17 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
                   className="w-full"
                   value={getCountryCodeByName(field.value) ?? null}
                   onValueChange={(code) =>
-                    field.onChange(code ? getCountryLabel(code) : "")
+                    field.onChange(code ? getCountryStorageName(code) : "")
                   }
                 />
               )}
             />
           </div>
           <div className="space-y-1.5 sm:col-span-1">
-            <Label htmlFor="onboarding-postal">Postal code</Label>
+            <Label htmlFor="onboarding-postal">{t("postalLabel")}</Label>
             <Input
               id="onboarding-postal"
-              placeholder="Postal code"
+              placeholder={t("postalPlaceholder")}
               {...register("postal_code")}
             />
           </div>
@@ -249,7 +255,7 @@ export const OnboardingBusinessForm: FC<OnboardingBusinessFormProps> = ({
             isPending={completeSetup.isPending}
             className="flex-1 rounded-xl bg-electric-lime text-ink-charcoal"
           >
-            Save and continue
+            {t("submit")}
             <ArrowRight data-icon="inline-end" className="size-3.5" />
           </ActionButtonWithPending>
         </div>

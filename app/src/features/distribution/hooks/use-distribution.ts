@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   createDistributionRule,
   deleteDistributionRule,
@@ -59,6 +60,7 @@ export const useDistributionRulePayoutModeImpact = (
 
 export const useCreateDistributionRule = (storeId: string) => {
   const queryClient = useQueryClient();
+  const t = useTranslations("dashboard.team.distribution.toast");
 
   return useMutation({
     mutationFn: (payload: CreateDistributionRulePayload) =>
@@ -69,14 +71,14 @@ export const useCreateDistributionRule = (storeId: string) => {
         queryKey: distributionQueryKeys.root,
       });
       toast.add({
-        title: "Distribution rule created",
-        description: "It can be set as the store default or assigned to QR codes.",
+        title: t("createdTitle"),
+        description: t("createdDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not create rule",
+        title: t("createFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -86,6 +88,7 @@ export const useCreateDistributionRule = (storeId: string) => {
 
 export const useUpdateDistributionRule = () => {
   const queryClient = useQueryClient();
+  const t = useTranslations("dashboard.team.distribution.toast");
 
   return useMutation({
     mutationFn: ({
@@ -107,17 +110,17 @@ export const useUpdateDistributionRule = () => {
       // leaving the owner to discover it on the next payout run.
       const rerouted = data?.rerouted_distributions_count ?? 0;
       toast.add({
-        title: "Distribution rule updated",
+        title: t("updatedTitle"),
         description:
           rerouted > 0
-            ? `Future tips will use the new split. ${rerouted} pending share${rerouted === 1 ? "" : "s"} moved to the new payout route.`
-            : "Future tips will use the new split.",
+            ? t("updatedReroutedDescription", { count: rerouted })
+            : t("updatedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not update rule",
+        title: t("updateFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -132,6 +135,7 @@ export const useDeleteDistributionRule = (options?: {
 }) => {
   const showErrorToast = options?.showErrorToast ?? true;
   const queryClient = useQueryClient();
+  const t = useTranslations("dashboard.team.distribution.toast");
 
   return useMutation({
     mutationFn: (id: string) => deleteDistributionRule(id),
@@ -141,14 +145,14 @@ export const useDeleteDistributionRule = (options?: {
         queryKey: distributionQueryKeys.root,
       });
       toast.add({
-        title: "Distribution rule deleted",
+        title: t("deletedTitle"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       if (!showErrorToast) return;
       toast.add({
-        title: "Could not delete rule",
+        title: t("deleteFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -158,6 +162,7 @@ export const useDeleteDistributionRule = (options?: {
 
 export const useSetDefaultDistributionRule = (storeId: string) => {
   const queryClient = useQueryClient();
+  const t = useTranslations("dashboard.team.distribution.toast");
 
   return useMutation({
     mutationFn: (payload: SetDefaultDistributionRulePayload) =>
@@ -170,14 +175,14 @@ export const useSetDefaultDistributionRule = (storeId: string) => {
       void queryClient.invalidateQueries({ queryKey: storesQueryKeys.root });
       void queryClient.invalidateQueries({ queryKey: usersQueryKeys.accounts });
       toast.add({
-        title: "Default rule updated",
-        description: "New tips will use this rule unless a QR overrides it.",
+        title: t("defaultUpdatedTitle"),
+        description: t("defaultUpdatedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not set default rule",
+        title: t("defaultFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

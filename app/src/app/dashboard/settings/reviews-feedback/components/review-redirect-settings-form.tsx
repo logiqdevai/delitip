@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, type FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SettingsStepNav } from "../../components/settings-step-nav";
@@ -10,6 +11,7 @@ import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const ReviewRedirectSettingsForm: FC = () => {
+  const t = useTranslations("dashboard.settings");
   const { store, isPending } = useWorkspace();
   const updateStore = useUpdateStore();
 
@@ -67,11 +69,10 @@ export const ReviewRedirectSettingsForm: FC = () => {
     >
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">
-          Public review redirect
+          {t("reviews.redirect.title")}
         </h2>
         <p className="mt-0.5 text-xs text-zinc-500">
-          Customers who rate you at or above this threshold are prompted to
-          share feedback on an external site such as Google.
+          {t("reviews.redirect.description")}
         </p>
       </div>
 
@@ -87,9 +88,9 @@ export const ReviewRedirectSettingsForm: FC = () => {
         <Button
           type="submit"
           disabled={updateStore.isPending}
-          className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal"
+          className="rounded-xl bg-electric-lime px-4 text-base font-semibold text-ink-charcoal"
         >
-          {updateStore.isPending ? "Saving…" : "Save Changes"}
+          {updateStore.isPending ? t("common.saving") : t("common.saveChanges")}
         </Button>
       </div>
     </form>

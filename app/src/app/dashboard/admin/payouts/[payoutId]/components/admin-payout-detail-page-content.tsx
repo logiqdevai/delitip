@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import Link from "next/link";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import {
@@ -11,23 +12,16 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { getDistributionRecipientTypeLabel } from "@/config/constants/dropdowns/distribution/distribution-recipient-type-form.options";
-import { getPayoutAccountStatusLabel } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
-import { getPayoutExecutionStatusLabel } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
-import { getPayoutStatusLabel } from "@/config/constants/dropdowns/tips/payout-status-form.options";
+import { DistributionRecipientTypeFormOptions } from "@/config/constants/dropdowns/distribution/distribution-recipient-type-form.options";
+import { PayoutAccountStatusFormOptions } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { PayoutExecutionStatusFormOptions } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
+import { PayoutStatusFormOptions } from "@/config/constants/dropdowns/tips/payout-status-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { useAdminPayout } from "@/features/payouts/hooks/use-payouts";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 import { getErrorMessage } from "@/lib/api-error";
-
-const formatDateTime = (value?: string | null) => {
-  if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-};
 
 const SummaryRow: FC<{ label: string; value: string }> = ({
   label,
@@ -42,6 +36,17 @@ const SummaryRow: FC<{ label: string; value: string }> = ({
 export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
   payoutId,
 }) => {
+  const t = useTranslations("dashboard.admin.payoutDetail");
+  const tc = useTranslations("dashboard.admin.common");
+  const locale = useLocale();
+  const format = useFormatter();
+  const formatDateTime = (value?: string | null) =>
+    value
+      ? format.dateTime(new Date(value), { dateStyle: "medium", timeStyle: "short" })
+      : "-";
+  const label = useDropdownLabel();
+  const money = (amount: number, currency: Parameters<typeof formatMoney>[1]) =>
+    formatMoney(amount, currency, locale);
   const payoutQuery = useAdminPayout(payoutId);
 
   if (payoutQuery.isPending) {
@@ -52,9 +57,9 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
     return (
       <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
         <EmptyHeader>
-          <EmptyTitle>Could not load this payout</EmptyTitle>
+          <EmptyTitle>{t("loadError")}</EmptyTitle>
           <EmptyDescription>
-            {getErrorMessage(payoutQuery.error, "The payout may not exist.")}
+            {getErrorMessage(payoutQuery.error, t("notFound"))}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
@@ -62,7 +67,7 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
             href={Routes.dashboard.admin.payments}
             className="text-xs font-semibold text-brand-700 hover:underline"
           >
-            Back to Payments & Payouts
+            {tc("backToFinance")}
           </Link>
         </EmptyContent>
       </Empty>
@@ -72,8 +77,8 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
   const payout = payoutQuery.data;
   const recipientLabel =
     payout.recipient_type === "EMPLOYEE"
-      ? (payout.employee?.full_name ?? "Employee")
-      : "Business (house)";
+      ? (payout.employee?.full_name ?? t("employeeFallback"))
+      : t("houseLabel");
 
   return (
     <div className="space-y-6">
@@ -82,16 +87,16 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
         className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-ink-charcoal"
       >
         <ArrowLeft className="size-3.5" strokeWidth={2} />
-        Back to Payments & Payouts
+        {tc("backToFinance")}
       </Link>
 
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold text-ink-charcoal">
-            {formatMoney(payout.amount, payout.currency)}
+            {money(payout.amount, payout.currency)}
           </h1>
           <p className="mt-0.5 text-xs text-zinc-500">
-            {payout.store?.name ?? "Unknown store"} · {recipientLabel}
+            {payout.store?.name ?? tc("unknownStore")} · {recipientLabel}
           </p>
         </div>
         <span
@@ -106,62 +111,62 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
                   : "bg-amber-50 text-amber-700",
           )}
         >
-          {getPayoutExecutionStatusLabel(payout.status)}
+          {label(PayoutExecutionStatusFormOptions, payout.status)}
         </span>
       </div>
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
-        <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Summary</h2>
-        <SummaryRow label="Store" value={payout.store?.name ?? "-"} />
+        <h2 className="mb-2 text-sm font-bold text-ink-charcoal">{tc("summary")}</h2>
+        <SummaryRow label={tc("store")} value={payout.store?.name ?? "-"} />
         <SummaryRow
-          label="Recipient type"
-          value={getDistributionRecipientTypeLabel(payout.recipient_type)}
+          label={t("recipientType")}
+          value={label(DistributionRecipientTypeFormOptions, payout.recipient_type)}
         />
-        <SummaryRow label="Recipient" value={recipientLabel} />
+        <SummaryRow label={t("recipient")} value={recipientLabel} />
         <SummaryRow
-          label="Amount"
-          value={formatMoney(payout.amount, payout.currency)}
+          label={tc("amount")}
+          value={money(payout.amount, payout.currency)}
         />
         <SummaryRow
-          label="Status"
-          value={getPayoutExecutionStatusLabel(payout.status)}
+          label={tc("status")}
+          value={label(PayoutExecutionStatusFormOptions, payout.status)}
         />
-        <SummaryRow label="Provider" value={payout.provider} />
+        <SummaryRow label={tc("provider")} value={payout.provider} />
         <SummaryRow
-          label="Provider transfer id"
+          label={t("providerTransferId")}
           value={payout.provider_transfer_id ?? "-"}
         />
         {payout.failure_reason ? (
-          <SummaryRow label="Failure reason" value={payout.failure_reason} />
+          <SummaryRow label={t("failureReason")} value={payout.failure_reason} />
         ) : null}
         <SummaryRow
-          label="Executed at"
+          label={t("executedAt")}
           value={formatDateTime(payout.executed_at)}
         />
         <SummaryRow
-          label="Created at"
+          label={t("createdAt")}
           value={formatDateTime(payout.created_at)}
         />
       </div>
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-2 text-sm font-bold text-ink-charcoal">
-          Payout account
+          {t("payoutAccount")}
         </h2>
         <SummaryRow
-          label="Status"
-          value={getPayoutAccountStatusLabel(payout.payout_account.status)}
+          label={tc("status")}
+          value={label(PayoutAccountStatusFormOptions, payout.payout_account.status)}
         />
         <SummaryRow
-          label="Method"
+          label={t("method")}
           value={payout.payout_account.payout_method}
         />
         <SummaryRow
-          label="Beneficiary"
+          label={t("beneficiary")}
           value={payout.payout_account.beneficiary_name ?? "-"}
         />
         <SummaryRow
-          label="IBAN"
+          label={t("iban")}
           value={
             payout.payout_account.iban_last4
               ? `•••• ${payout.payout_account.iban_last4}`
@@ -172,11 +177,11 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-3 text-sm font-bold text-ink-charcoal">
-          Distributions included
+          {t("distributionsIncluded")}
         </h2>
         {payout.distributions.length === 0 ? (
           <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500">
-            No distributions recorded for this payout.
+            {t("noDistributions")}
           </p>
         ) : (
           <div className="divide-y divide-zinc-100">
@@ -187,16 +192,18 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
               >
                 <div>
                   <div className="font-semibold text-ink-charcoal">
-                    Tip {formatMoney(distribution.tip.amount, distribution.tip.currency)}
+                    {tc("tipLabel", {
+                      amount: money(distribution.tip.amount, distribution.tip.currency),
+                    })}
                   </div>
                   <div className="text-xs text-zinc-400">
                     {distribution.percentage}% ·{" "}
-                    {getPayoutStatusLabel(distribution.payout_status)} ·{" "}
+                    {label(PayoutStatusFormOptions, distribution.payout_status)} ·{" "}
                     {formatDateTime(distribution.tip.paid_at)}
                   </div>
                 </div>
                 <div className="font-bold text-ink-charcoal">
-                  {formatMoney(distribution.amount, payout.currency)}
+                  {money(distribution.amount, payout.currency)}
                 </div>
               </div>
             ))}

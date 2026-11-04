@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   ConfirmationDialog,
@@ -32,6 +33,7 @@ export const EmployeePhotoDialog: FC<EmployeePhotoDialogProps> = ({
   onOpenChange,
   employee,
 }) => {
+  const t = useTranslations("employee.photoDialog");
   const uploadDocument = useUploadDocument();
   const updateEmployee = useUpdateEmployee();
   const removePhotoConfirm = useConfirmationDialog();
@@ -49,15 +51,15 @@ export const EmployeePhotoDialog: FC<EmployeePhotoDialogProps> = ({
     >
       <DialogContent className="sm:max-w-sm" showCloseButton={!isPending}>
         <DialogHeader>
-          <DialogTitle>Profile photo</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Shown to your team in the dashboard. Customers never see it.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
 
         <ImagePicker
           mode="image"
-          label="Photo"
+          label={t("photoLabel")}
           value={employee.photo_document?.url}
           isPending={isUploading}
           disabled={isPending}
@@ -107,16 +109,16 @@ export const EmployeePhotoDialog: FC<EmployeePhotoDialogProps> = ({
             disabled={isPending}
             onClick={() => onOpenChange(false)}
           >
-            Done
+            {t("done")}
           </Button>
         </DialogFooter>
       </DialogContent>
 
       <ConfirmationDialog
         state={removePhotoConfirm}
-        title="Remove photo?"
-        description="This photo will be removed from your profile right away."
-        confirmLabel="Remove"
+        title={t("removeTitle")}
+        description={t("removeDescription")}
+        confirmLabel={t("remove")}
         isPending={isPending}
         onConfirm={async () => {
           const previousId = employee.photo_document_id;

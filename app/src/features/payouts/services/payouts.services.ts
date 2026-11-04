@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -27,7 +28,7 @@ export const listStorePayouts = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load payouts. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPayouts")));
   }
 };
 
@@ -42,7 +43,7 @@ export const listEmployeePayouts = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load payouts. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPayouts")));
   }
 };
 
@@ -57,7 +58,7 @@ export const listStoreDistributions = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load distributions. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadDistributions")));
   }
 };
 
@@ -71,7 +72,7 @@ export const listAdminPayouts = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load payouts. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPayouts")));
   }
 };
 
@@ -82,7 +83,7 @@ export const getAdminPayout = async (id: string): Promise<PayoutDetail> => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load payout. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPayout")));
   }
 };
 
@@ -96,7 +97,7 @@ export const previewStorePayouts = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't load payout preview. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.loadPayoutPreview")),
     );
   }
 };
@@ -113,7 +114,7 @@ export const runStorePayouts = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't run payouts. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.runPayouts")),
     );
   }
 };
@@ -129,7 +130,7 @@ export const runManualPayouts = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't run the manual payout. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.runTheManualPayout")),
     );
   }
 };

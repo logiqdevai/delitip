@@ -1,10 +1,11 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import {
   forgotPasswordSchema,
@@ -16,6 +17,7 @@ import { ActionButtonWithPending } from "@/components/ui/action-button-with-pend
 import { Input } from "@/components/ui/input";
 
 export const AuthForgotPasswordForm: FC = () => {
+  const t = useTranslations("auth.forgotPassword");
   const searchParams = useSearchParams();
   const role = searchParams.get("role") === "employee" ? "employee" : undefined;
   const signInHref =
@@ -53,20 +55,22 @@ export const AuthForgotPasswordForm: FC = () => {
         </div>
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-ink-charcoal">
-            Check your email
+            {t("sentTitle")}
           </h1>
           <p className="mt-2 text-xs leading-relaxed text-zinc-500">
-            If an account exists for{" "}
-            <span className="font-semibold text-zinc-700">{submittedEmail}</span>
-            , we sent a link to reset your password. The link expires in one
-            hour.
+            {t.rich("sentDescription", {
+              b: (chunks) => (
+                <span className="font-semibold text-zinc-700">{chunks}</span>
+              ),
+              email: submittedEmail,
+            })}
           </p>
         </div>
         <Link
           href={signInHref}
           className="inline-flex items-center gap-2 text-xs font-bold text-brand-700 hover:underline"
         >
-          Back to sign in
+          {t("backToSignIn")}
           <ArrowRight className="size-3.5" strokeWidth={2} />
         </Link>
       </div>
@@ -77,11 +81,10 @@ export const AuthForgotPasswordForm: FC = () => {
     <div className="auth-fade-enter space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-ink-charcoal">
-          Forgot password
+          {t("title")}
         </h1>
         <p className="mt-1 text-xs text-zinc-500">
-          Enter your work email and we&apos;ll send a reset link if an account
-          exists.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -91,13 +94,13 @@ export const AuthForgotPasswordForm: FC = () => {
             htmlFor="forgot-email"
             className="mb-1.5 block text-xs font-semibold text-zinc-700"
           >
-            Email
+            {t("emailLabel")}
           </label>
           <Input
             id="forgot-email"
             type="email"
             autoComplete="email"
-            placeholder="manager@artisancafe.com"
+            placeholder={t("emailPlaceholder")}
             aria-invalid={!!errors.email}
             {...register("email")}
           />
@@ -112,19 +115,19 @@ export const AuthForgotPasswordForm: FC = () => {
           size="lg"
           className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal"
         >
-          Send reset link
+          {t("submit")}
           <ArrowRight data-icon="inline-end" className="size-3.5" />
         </ActionButtonWithPending>
       </form>
 
       <div className="pt-2 text-center">
         <p className="text-xs text-zinc-500">
-          Remembered it?{" "}
+          {t("remembered")}{" "}
           <Link
             href={signInHref}
             className="font-bold text-brand-700 hover:underline"
           >
-            Sign in
+            {t("signIn")}
           </Link>
         </p>
       </div>

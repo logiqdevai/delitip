@@ -1,10 +1,11 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ArrowRight } from "lucide-react";
 import {
   resetPasswordSchema,
@@ -16,6 +17,7 @@ import { ActionButtonWithPending } from "@/components/ui/action-button-with-pend
 import { PasswordInput } from "@/components/ui/password-input";
 
 export const AuthResetPasswordForm: FC = () => {
+  const t = useTranslations("auth.resetPassword");
   const searchParams = useSearchParams();
   const token = searchParams.get("token")?.trim() ?? "";
   const resetPassword = useResetPassword();
@@ -46,18 +48,17 @@ export const AuthResetPasswordForm: FC = () => {
       <div className="auth-fade-enter space-y-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-ink-charcoal">
-            Invalid reset link
+            {t("invalidTitle")}
           </h1>
           <p className="mt-2 text-xs leading-relaxed text-zinc-500">
-            This password reset link is missing a token. Request a new link from
-            the forgot password page.
+            {t("invalidDescription")}
           </p>
         </div>
         <Link
           href={Routes.auth.forgot_password}
           className="inline-flex items-center gap-2 text-xs font-bold text-brand-700 hover:underline"
         >
-          Request a new link
+          {t("requestNewLink")}
           <ArrowRight className="size-3.5" strokeWidth={2} />
         </Link>
       </div>
@@ -68,10 +69,10 @@ export const AuthResetPasswordForm: FC = () => {
     <div className="auth-fade-enter space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-ink-charcoal">
-          Set a new password
+          {t("title")}
         </h1>
         <p className="mt-1 text-xs text-zinc-500">
-          Choose a new password for your delitip account.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -81,7 +82,7 @@ export const AuthResetPasswordForm: FC = () => {
             htmlFor="reset-password"
             className="mb-1.5 block text-xs font-semibold text-zinc-700"
           >
-            New password
+            {t("passwordLabel")}
           </label>
           <Controller
             name="password"
@@ -90,7 +91,7 @@ export const AuthResetPasswordForm: FC = () => {
               <PasswordInput
                 id="reset-password"
                 autoComplete="new-password"
-                placeholder="At least 8 characters"
+                placeholder={t("passwordPlaceholder")}
                 aria-invalid={!!errors.password}
                 {...field}
               />
@@ -106,7 +107,7 @@ export const AuthResetPasswordForm: FC = () => {
             htmlFor="reset-confirm-password"
             className="mb-1.5 block text-xs font-semibold text-zinc-700"
           >
-            Confirm password
+            {t("confirmLabel")}
           </label>
           <Controller
             name="confirmPassword"
@@ -115,7 +116,7 @@ export const AuthResetPasswordForm: FC = () => {
               <PasswordInput
                 id="reset-confirm-password"
                 autoComplete="new-password"
-                placeholder="Repeat password"
+                placeholder={t("confirmPlaceholder")}
                 aria-invalid={!!errors.confirmPassword}
                 {...field}
               />
@@ -134,7 +135,7 @@ export const AuthResetPasswordForm: FC = () => {
           size="lg"
           className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal"
         >
-          Update password
+          {t("submit")}
           <ArrowRight data-icon="inline-end" className="size-3.5" />
         </ActionButtonWithPending>
       </form>
@@ -145,7 +146,7 @@ export const AuthResetPasswordForm: FC = () => {
             href={Routes.auth.sign_in}
             className="font-bold text-brand-700 hover:underline"
           >
-            Back to sign in
+            {t("backToSignIn")}
           </Link>
         </p>
       </div>

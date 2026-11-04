@@ -2,6 +2,7 @@
 
 import { type FC, Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Banknote, HandCoins, Receipt } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
@@ -27,6 +28,7 @@ const isTipsTab = (value: unknown): value is TipsTab =>
   value === TipsTabs.payouts;
 
 const TipsPageInner: FC = () => {
+  const t = useTranslations("dashboard.money.tipsPage");
   const { storeId, store, isPending: workspacePending, isReady } =
     useWorkspace();
   const router = useRouter();
@@ -61,9 +63,9 @@ const TipsPageInner: FC = () => {
           <EmptyMedia variant="icon">
             <Receipt />
           </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
+          <EmptyTitle>{t("noStoreTitle")}</EmptyTitle>
           <EmptyDescription>
-            Finish business setup before viewing tips.
+            {t("noStoreDescription")}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -73,8 +75,8 @@ const TipsPageInner: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="Tips"
-        description={`Tips, payouts, and staff balances for ${store.name}.`}
+        title={t("title")}
+        description={t("description", { store: store.name })}
       />
 
       <Tabs
@@ -85,15 +87,15 @@ const TipsPageInner: FC = () => {
         <TabsList>
           <TabsTrigger value={TipsTabs.ledger}>
             <Receipt />
-            Tips
+            {t("tabs.tips")}
           </TabsTrigger>
           <TabsTrigger value={TipsTabs.staffBalances}>
             <HandCoins />
-            Staff balances
+            {t("tabs.staffBalances")}
           </TabsTrigger>
           <TabsTrigger value={TipsTabs.payouts}>
             <Banknote />
-            Payouts
+            {t("tabs.payouts")}
           </TabsTrigger>
         </TabsList>
 

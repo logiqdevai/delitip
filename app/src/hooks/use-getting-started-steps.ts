@@ -10,12 +10,14 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
 import { useStorePayoutAccount } from "@/features/payout-accounts/hooks/use-payout-accounts";
-import { getPayoutAccountStatusLabel } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { PayoutAccountStatusFormOptions } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { Routes } from "@/routes/routes";
 
 export interface GettingStartedStep {
@@ -38,6 +40,8 @@ export interface GettingStartedState {
 }
 
 export const useGettingStartedSteps = (): GettingStartedState => {
+  const t = useTranslations("dashboard.shell.gettingStarted.steps");
+  const optionLabel = useDropdownLabel();
   const { store, storeId, isPending: workspacePending, isReady } =
     useWorkspace();
   const employeesQuery = useEmployees(storeId ?? "");
@@ -69,9 +73,8 @@ export const useGettingStartedSteps = (): GettingStartedState => {
   const steps: GettingStartedStep[] = [
     {
       id: "profile",
-      title: "Business profile",
-      description:
-        "Add your business name and address so customers know who they're tipping.",
+      title: t("profile.title"),
+      description: t("profile.description"),
       href: Routes.dashboard.settings.profile,
       icon: Building2,
       completed: Boolean(
@@ -80,56 +83,52 @@ export const useGettingStartedSteps = (): GettingStartedState => {
     },
     {
       id: "branding",
-      title: "Branding",
-      description:
-        "Upload a logo so your tipping page and QR codes match your business.",
+      title: t("branding.title"),
+      description: t("branding.description"),
       href: Routes.dashboard.settings.branding,
       icon: Palette,
       completed: Boolean(store.logo_document_id),
     },
     {
       id: "tipping",
-      title: "Tipping configuration",
-      description: "Set suggested tip amounts customers can choose from.",
+      title: t("tipping.title"),
+      description: t("tipping.description"),
       href: Routes.dashboard.settings.tipping,
       icon: DollarSign,
       completed: store.suggested_tip_amounts.length > 0,
     },
     {
       id: "employees",
-      title: "Add employees",
-      description:
-        "Add your staff so tips can be attributed and distributed to them.",
+      title: t("employees.title"),
+      description: t("employees.description"),
       href: Routes.dashboard.employees,
       icon: Users,
       completed: employeeCount > 0,
     },
     {
       id: "qr-codes",
-      title: "Create QR codes",
-      description: "Generate scannable QR codes customers use to leave a tip.",
+      title: t("qrCodes.title"),
+      description: t("qrCodes.description"),
       href: Routes.dashboard.access,
       icon: QrCodeIcon,
       completed: qrCodeCount > 0,
     },
     {
       id: "payout-account",
-      title: "Connect payout account",
-      description:
-        "Link your business IBAN so your share of tips can be paid out.",
+      title: t("payoutAccount.title"),
+      description: t("payoutAccount.description"),
       href: Routes.dashboard.tips,
       icon: Banknote,
       completed: account?.status === "ACTIVE",
       statusLabel:
         account && account.status !== "ACTIVE"
-          ? getPayoutAccountStatusLabel(account.status)
+          ? optionLabel(PayoutAccountStatusFormOptions, account.status)
           : undefined,
     },
     {
       id: "reviews",
-      title: "Reviews & feedback",
-      description:
-        "Set a redirect link so happy customers can leave a public review.",
+      title: t("reviews.title"),
+      description: t("reviews.description"),
       href: Routes.dashboard.settings.reviewsFeedback,
       icon: Star,
       completed: Boolean(store.public_review_redirect_url),

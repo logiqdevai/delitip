@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useTranslations } from "next-intl"
 import { Command as CommandPrimitive } from "cmdk"
 
 import { cn } from "@/lib/utils"
@@ -34,8 +35,8 @@ function Command({
 }
 
 function CommandDialog({
-  title = "Command Palette",
-  description = "Search for a command to run...",
+  title,
+  description,
   children,
   className,
   showCloseButton = false,
@@ -47,11 +48,15 @@ function CommandDialog({
   showCloseButton?: boolean
   children: React.ReactNode
 }) {
+  const t = useTranslations("dashboard.shell.ui")
+
   return (
     <Dialog {...props}>
       <DialogHeader className="sr-only">
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
+        <DialogTitle>{title ?? t("commandTitle")}</DialogTitle>
+        <DialogDescription>
+          {description ?? t("commandDescription")}
+        </DialogDescription>
       </DialogHeader>
       <DialogContent
         className={cn(

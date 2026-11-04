@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import { Store, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +23,7 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
   onSelectBusiness,
   onSelectEmployee,
 }) => {
+  const t = useTranslations("auth.roleSwitcher");
   const isBusiness = activeRole === AuthRoles.BUSINESS;
   const isEmployee = activeRole === AuthRoles.EMPLOYEE;
 
@@ -35,7 +37,7 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
       <button
         type="button"
         onClick={onSelectBusiness}
-        aria-label="Business Account"
+        aria-label={t("business")}
         className={cn(
           "relative flex min-w-0 flex-1 items-center justify-center gap-2 pb-3.5 text-sm transition",
           "lg:gap-1.5 lg:rounded-lg lg:px-3.5 lg:py-1.5 lg:pb-1.5 lg:text-xs lg:whitespace-nowrap",
@@ -51,7 +53,7 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
           )}
           strokeWidth={2.25}
         />
-        <span className="truncate">Business Account</span>
+        <span className="truncate">{t("business")}</span>
         {isBusiness ? (
           <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-electric-lime lg:hidden" />
         ) : null}
@@ -59,7 +61,7 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
       <button
         type="button"
         onClick={onSelectEmployee}
-        aria-label="Staff Access"
+        aria-label={t("staff")}
         className={cn(
           "relative flex min-w-0 flex-1 items-center justify-center gap-2 pb-3.5 text-sm transition",
           "lg:gap-1.5 lg:rounded-lg lg:px-3.5 lg:py-1.5 lg:pb-1.5 lg:text-xs lg:whitespace-nowrap",
@@ -75,7 +77,7 @@ export const AuthRoleSwitcher: FC<AuthRoleSwitcherProps> = ({
           )}
           strokeWidth={2.25}
         />
-        <span className="truncate">Staff Access</span>
+        <span className="truncate">{t("staff")}</span>
         {isEmployee ? (
           <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-electric-lime lg:hidden" />
         ) : null}

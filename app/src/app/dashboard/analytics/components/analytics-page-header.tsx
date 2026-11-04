@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { AnalyticsPeriodSelect } from "@/app/dashboard/analytics/components/analytics-period-select";
 import { useAnalyticsPeriod } from "@/app/dashboard/analytics/components/analytics-period-context";
@@ -16,6 +17,7 @@ const PERIOD_ROUTES = new Set<string>([
 ]);
 
 export const AnalyticsPageHeader: FC = () => {
+  const t = useTranslations("dashboard.analytics");
   const pathname = usePathname();
   const { store } = useWorkspace();
   const { period, setPeriod } = useAnalyticsPeriod();
@@ -24,13 +26,14 @@ export const AnalyticsPageHeader: FC = () => {
 
   const description =
     activeItem?.href === Routes.dashboard.analytics.overview && store
-      ? `Detailed intelligence on tipping and customer experience for ${store.name}.`
-      : (activeItem?.description ??
-        "Detailed intelligence on tipping and customer experience.");
+      ? t("overviewDescription", { storeName: store.name })
+      : activeItem
+        ? t(`nav.${activeItem.key}.description`)
+        : t("defaultDescription");
 
   return (
     <DashboardPageHeader
-      title={activeItem?.label ?? "Analytics & Insights"}
+      title={activeItem ? t(`nav.${activeItem.key}.label`) : t("title")}
       description={description}
       actions={
         showPeriod ? (

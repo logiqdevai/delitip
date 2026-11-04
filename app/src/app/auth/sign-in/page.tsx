@@ -1,11 +1,14 @@
 import { type FC, Suspense } from "react";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { AuthSignInPanel } from "../components/auth-sign-in-panel";
 
-export const metadata: Metadata = {
-  title: "Sign In - delitip",
-  description:
-    "Sign in to delitip to manage tips, team payouts, and live customer reviews.",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("auth.signIn");
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  };
 };
 
 const AuthSignInPage: FC = () => {

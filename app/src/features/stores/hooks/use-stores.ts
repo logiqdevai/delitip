@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   createStore,
   deleteStore,
@@ -63,6 +64,7 @@ export const usePublicStore = (slug: string, lang?: string) => {
 };
 
 export const useCreateStore = (organizationId: string) => {
+  const t = useTranslations("dashboard.shell.toasts.stores");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -81,14 +83,14 @@ export const useCreateStore = (organizationId: string) => {
         queryKey: usersQueryKeys.accounts,
       });
       toast.add({
-        title: "Store created",
-        description: "Your store was added successfully.",
+        title: t("createdTitle"),
+        description: t("createdDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not create store",
+        title: t("createFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -97,6 +99,7 @@ export const useCreateStore = (organizationId: string) => {
 };
 
 export const useUpdateStore = () => {
+  const t = useTranslations("dashboard.shell.toasts.stores");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -112,14 +115,14 @@ export const useUpdateStore = () => {
         queryKey: usersQueryKeys.accounts,
       });
       toast.add({
-        title: "Store updated",
-        description: "Your changes were saved.",
+        title: t("updatedTitle"),
+        description: t("updatedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not update store",
+        title: t("updateFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -128,6 +131,7 @@ export const useUpdateStore = () => {
 };
 
 export const useDeleteStore = () => {
+  const t = useTranslations("dashboard.shell.toasts.stores");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -142,14 +146,14 @@ export const useDeleteStore = () => {
         queryKey: usersQueryKeys.accounts,
       });
       toast.add({
-        title: "Store deleted",
-        description: "The store was removed.",
+        title: t("deletedTitle"),
+        description: t("deletedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not delete store",
+        title: t("deleteFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC } from "react";
-import { format } from "date-fns";
+import { useFormatter, useTranslations } from "next-intl";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,6 +14,8 @@ import { cn } from "@/lib/utils";
 import { getErrorMessage } from "@/lib/api-error";
 
 export const InsightsTab: FC<{ storeId: string }> = ({ storeId }) => {
+  const t = useTranslations("dashboard.analytics.insights");
+  const format = useFormatter();
   const insightsQuery = useInsights(storeId);
   const generateInsight = useGenerateInsight(storeId);
 
@@ -23,17 +25,16 @@ export const InsightsTab: FC<{ storeId: string }> = ({ storeId }) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <p className="text-xs text-zinc-500">
-          Rule-based summaries of the last period&apos;s feedback - no AI/LLM
-          call, purely computed from your data.
+          {t("note")}
         </p>
         <Button
           type="button"
           onClick={() => generateInsight.mutate({})}
           disabled={generateInsight.isPending}
-          className="rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal"
+          className="rounded-xl bg-electric-lime px-3.5 text-base font-semibold text-ink-charcoal"
         >
           <Sparkles data-icon="inline-start" className="size-3.5" />
-          {generateInsight.isPending ? "Generating…" : "Generate insight"}
+          {generateInsight.isPending ? t("generating") : t("generate")}
         </Button>
       </div>
 
@@ -51,10 +52,9 @@ export const InsightsTab: FC<{ storeId: string }> = ({ storeId }) => {
             <EmptyMedia variant="icon">
               <Sparkles />
             </EmptyMedia>
-            <EmptyTitle>No summaries yet</EmptyTitle>
+            <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>
-              Generate your first insight to see a summary of recent
-              customer feedback.
+              {t("emptyDescription")}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -67,8 +67,17 @@ export const InsightsTab: FC<{ storeId: string }> = ({ storeId }) => {
             >
               <div className="flex items-center justify-between text-xs text-zinc-400">
                 <span>
-                  {format(new Date(insight.period_start), "MMM d")} –{" "}
-                  {format(new Date(insight.period_end), "MMM d, yyyy")}
+                  {t("dateRange", {
+                    start: format.dateTime(new Date(insight.period_start), {
+                      month: "short",
+                      day: "numeric",
+                    }),
+                    end: format.dateTime(new Date(insight.period_end), {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    }),
+                  })}
                 </span>
                 {insight.satisfaction_change_percent !== null ? (
                   <span

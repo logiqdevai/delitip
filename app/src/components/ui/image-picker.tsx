@@ -3,6 +3,7 @@
 import { type DragEvent, type FC, useEffect, useId, useRef, useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Check, ImagePlus, Upload, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
@@ -23,36 +24,6 @@ const imagePickerPreviewVariants = cva(
     },
   },
 );
-
-const IMAGE_PICKER_MODE_LABELS = {
-  logo: "Logo",
-  cover: "Cover image",
-  image: "Image",
-} as const;
-
-const IMAGE_PICKER_MODE_HINTS = {
-  logo: "Square PNG or SVG",
-  cover: "Wide image recommended",
-  image: "PNG or JPG",
-} as const;
-
-const IMAGE_PICKER_MODE_ACTIONS = {
-  logo: {
-    emptyTitle: "Add your logo",
-    emptyBody: "Drop a file here, or browse",
-    filledTitle: "Logo ready",
-  },
-  cover: {
-    emptyTitle: "Add a cover image",
-    emptyBody: "Drop a file here, or browse",
-    filledTitle: "Cover ready",
-  },
-  image: {
-    emptyTitle: "Add a photo",
-    emptyBody: "Drop a file here, or browse",
-    filledTitle: "Photo ready",
-  },
-} as const;
 
 export type ImagePickerMode = NonNullable<
   VariantProps<typeof imagePickerPreviewVariants>["mode"]
@@ -93,6 +64,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({
   error,
   alt = "",
 }) => {
+  const t = useTranslations("dashboard.shell.ui.imagePicker");
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const labelId = `${inputId}-label`;
@@ -102,10 +74,14 @@ export const ImagePicker: FC<ImagePickerProps> = ({
   const wasPendingRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const resolvedLabel = label ?? IMAGE_PICKER_MODE_LABELS[mode];
+  const resolvedLabel = label ?? t(`modeLabel.${mode}`);
   const resolvedHint =
-    hint === null ? null : (hint ?? IMAGE_PICKER_MODE_HINTS[mode]);
-  const copy = IMAGE_PICKER_MODE_ACTIONS[mode];
+    hint === null ? null : (hint ?? t(`modeHint.${mode}`));
+  const copy = {
+    emptyTitle: t(`emptyTitle.${mode}`),
+    emptyBody: t("dropOrBrowse"),
+    filledTitle: t(`filledTitle.${mode}`),
+  };
   const isDisabled = disabled || isPending;
   const hasValue = Boolean(value);
 
@@ -248,21 +224,21 @@ export const ImagePicker: FC<ImagePickerProps> = ({
                 {showSuccess ? (
                   <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-brand-700">
                     <Check className="size-3.5 shrink-0" strokeWidth={2.5} />
-                    Upload successful
+                    {t("uploadSuccessful")}
                   </p>
                 ) : (
                   <p className="mt-0.5 text-xs text-zinc-500">
-                    Tap to replace, or use an action below
+                    {t("tapToReplace")}
                   </p>
                 )}
               </>
             ) : (
               <>
                 <p className="text-sm font-semibold text-ink-charcoal">
-                  {isDragging ? "Drop to upload" : copy.emptyTitle}
+                  {isDragging ? t("dropToUpload") : copy.emptyTitle}
                 </p>
                 <p className="mt-0.5 text-xs text-zinc-500">
-                  {isDragging ? "Release to add this file" : copy.emptyBody}
+                  {isDragging ? t("releaseToAdd") : copy.emptyBody}
                 </p>
               </>
             )}
@@ -289,7 +265,11 @@ export const ImagePicker: FC<ImagePickerProps> = ({
             onClick={openFileDialog}
           >
             <Upload data-icon="inline-start" />
-            {isPending ? "Uploading…" : hasValue ? "Replace" : "Browse"}
+            {isPending
+              ? t("uploading")
+              : hasValue
+                ? t("replace")
+                : t("browse")}
           </Button>
           {hasValue && onClear ? (
             <Button
@@ -301,7 +281,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({
               onClick={onClear}
             >
               <X data-icon="inline-start" />
-              Remove
+              {t("remove")}
             </Button>
           ) : null}
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { tr } from "@/lib/i18n-runtime";
 import {
   fetchImageAsObjectUrl,
   renderQrDataUrl,
@@ -51,7 +52,7 @@ export function useQrTemplateAssets(
       if (cancelled) return;
 
       if (qrResult.status === "rejected") {
-        setError("Could not load the QR code image. Please try again.");
+        setError(tr("dashboard.access.templateEditor.assetsError"));
         setIsLoading(false);
         return;
       }

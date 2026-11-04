@@ -49,7 +49,11 @@
     "loadErrorTitle": "Could not load reviews",
     "emptyTitle": "No reviews yet",
     "emptyDescription": "Once customers leave feedback after tipping, it will show up here.",
-    "customerNotes": "Customer notes"
+    "customerNotes": "Customer notes",
+    "updatedToast": "Review updated",
+    "updateErrorToast": "Could not update review",
+    "deletedToast": "Review deleted",
+    "deleteErrorToast": "Could not delete review"
   },
   "reviewDetail": {
     "title": "Review",
@@ -91,6 +95,10 @@
     "allTypes": "All types",
     "loadErrorTitle": "Could not load alerts",
     "emptyTitle": "No alerts",
-    "emptyDescription": "You'll see performance and feedback notices here as they happen."
+    "emptyDescription": "You'll see performance and feedback notices here as they happen.",
+    "allReadToast": "All alerts marked as read",
+    "markAllReadErrorToast": "Could not mark alerts as read",
+    "preferenceSavedToast": "Alert preference saved",
+    "preferenceErrorToast": "Could not save alert preference"
   }
 }

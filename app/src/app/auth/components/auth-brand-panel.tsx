@@ -2,30 +2,32 @@
 
 import { type FC, useEffect, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { BrandMark } from "@/components/brand/brand-mark";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 
 const TIPS = [
   {
     name: "Maria S.",
-    role: "Server",
+    role: "server",
     tip: "+€8",
     avatar:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80",
   },
   {
     name: "Giorgos K.",
-    role: "Bartender",
+    role: "bartender",
     tip: "+€12",
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=80",
   },
   {
     name: "Katerina L.",
-    role: "Barista",
+    role: "barista",
     tip: "+€6.50",
     avatar:
       "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=80",
@@ -36,6 +38,7 @@ const SLIDE_MS = 5000;
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export const AuthBrandPanel: FC = () => {
+  const t = useTranslations("auth.brand");
   const [activeIndex, setActiveIndex] = useState(0);
   const active = TIPS[activeIndex] ?? TIPS[0];
 
@@ -63,12 +66,15 @@ export const AuthBrandPanel: FC = () => {
             <BrandMark size="sm" className="size-8" />
             <span className="text-sm font-bold tracking-tight">delitip</span>
           </Link>
-          <Link
-            href={Routes.contact}
-            className="text-xs font-semibold text-zinc-400 transition hover:text-white"
-          >
-            Contact Support
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href={Routes.contact}
+              className="text-xs font-semibold text-zinc-400 transition hover:text-white"
+            >
+              {t("contactSupport")}
+            </Link>
+            <LanguageSwitcher tone="dark" />
+          </div>
         </motion.div>
 
         <motion.div
@@ -77,9 +83,12 @@ export const AuthBrandPanel: FC = () => {
           transition={{ duration: 0.6, ease, delay: 0.08 }}
           className="mt-0 hidden lg:mt-14 lg:block"
         >
-          <h2 className="max-w-[12ch] text-[1.85rem] leading-[1.1] font-extrabold tracking-[-0.035em] xl:text-[2.05rem]">
-            Service that
-            <span className="text-electric-lime"> deserves</span> a tip.
+          <h2 className="max-w-[14ch] text-[1.85rem] leading-[1.1] font-extrabold tracking-[-0.035em] xl:text-[2.05rem]">
+            {t.rich("headline", {
+              accent: (chunks) => (
+                <span className="text-electric-lime">{chunks}</span>
+              ),
+            })}
           </h2>
         </motion.div>
       </div>
@@ -105,7 +114,7 @@ export const AuthBrandPanel: FC = () => {
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-bold">{active.name}</div>
                 <div className="truncate text-[0.7rem] text-zinc-500">
-                  {active.role}
+                  {t(`roles.${active.role}`)}
                 </div>
               </div>
               <span className="shrink-0 text-sm font-extrabold text-electric-lime">
@@ -120,7 +129,7 @@ export const AuthBrandPanel: FC = () => {
             <button
               key={item.name}
               type="button"
-              aria-label={`Show tip from ${item.name}`}
+              aria-label={t("showTipFrom", { name: item.name })}
               aria-current={index === activeIndex}
               onClick={() => setActiveIndex(index)}
               className={cn(

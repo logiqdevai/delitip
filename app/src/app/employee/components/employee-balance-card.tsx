@@ -2,10 +2,12 @@
 
 import { type FC } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEmployeeCashOut } from "./employee-cash-out-provider";
 
 export const EmployeeBalanceCard: FC = () => {
+  const t = useTranslations("employee.balance");
   const { formattedBalance, isBalancePending } = useEmployeeCashOut();
 
   return (
@@ -16,7 +18,7 @@ export const EmployeeBalanceCard: FC = () => {
       />
       <div className="relative z-10">
         <div className="flex items-center justify-between text-xs font-medium text-zinc-400">
-          <span>Pending Balance</span>
+          <span>{t("pendingBalance")}</span>
         </div>
         <div className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">
           {isBalancePending ? (
@@ -26,7 +28,7 @@ export const EmployeeBalanceCard: FC = () => {
           )}
         </div>
         <p className="mt-1 text-[11px] text-zinc-400">
-          From unpaid tip distributions
+          {t("fromUnpaid")}
         </p>
       </div>
     </div>
@@ -34,10 +36,12 @@ export const EmployeeBalanceCard: FC = () => {
 };
 
 export const EmployeeDepositNotice: FC = () => {
+  const t = useTranslations("employee.balance");
+
   return (
     <div className="flex items-center gap-1.5 rounded-2xl border border-brand-200/60 bg-brand-50/70 px-4 py-3.5 text-sm font-bold leading-snug text-brand-900">
       <CheckCircle2 className="size-4 shrink-0 text-brand-700" strokeWidth={2} />
-      <span>Payouts follow your Store&apos;s schedule</span>
+      <span>{t("depositNotice")}</span>
     </div>
   );
 };

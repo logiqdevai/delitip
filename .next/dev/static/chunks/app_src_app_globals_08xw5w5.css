@@ -642,6 +642,10 @@
     pointer-events: none;
   }
 
+  .collapse {
+    visibility: collapse;
+  }
+
   .invisible {
     visibility: hidden;
   }
@@ -2016,6 +2020,10 @@
 
   .max-w-\[12ch\] {
     max-width: 12ch;
+  }
+
+  .max-w-\[14ch\] {
+    max-width: 14ch;
   }
 
   .max-w-\[60\%\] {
@@ -9958,6 +9966,11 @@
     .md\:text-5xl {
       font-size: var(--text-5xl);
       line-height: var(--tw-leading, var(--text-5xl--line-height));
+    }
+
+    .md\:text-base {
+      font-size: var(--text-base);
+      line-height: var(--tw-leading, var(--text-base--line-height));
     }
 
     .md\:text-sm {

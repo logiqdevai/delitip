@@ -3,6 +3,7 @@
 import { type FC } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   PanelLeftClose,
   PanelLeftOpen,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import { AccountSwitcher } from "@/components/auth/account-switcher";
 import { BrandMark } from "@/components/brand/brand-mark";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -33,19 +35,19 @@ import { EmployeeUserMenu } from "./employee-user-menu";
 const navItems = [
   {
     href: Routes.employee.root,
-    label: "Earnings & Tips",
+    labelKey: "earningsAndTips",
     icon: Wallet,
     match: (path: string) => path === Routes.employee.root,
   },
   {
     href: Routes.employee.reviews,
-    label: "Reviews & Badges",
+    labelKey: "reviewsAndBadges",
     icon: Star,
     match: (path: string) => path.startsWith(Routes.employee.reviews),
   },
   {
     href: Routes.employee.qr,
-    label: "My QR & Link",
+    labelKey: "qrAndLink",
     icon: QrCode,
     match: (path: string) => path.startsWith(Routes.employee.qr),
   },
@@ -53,6 +55,7 @@ const navItems = [
 
 export const EmployeeSidebar: FC = () => {
   const pathname = usePathname();
+  const t = useTranslations("employee");
   const { state, isMobile, toggleSidebar, setOpenMobile } = useSidebar();
   const collapsed = !isMobile && state === "collapsed";
 
@@ -73,10 +76,11 @@ export const EmployeeSidebar: FC = () => {
               delitip
             </div>
             <span className="text-[10px] font-medium tracking-wider text-zinc-400 uppercase">
-              Employee Portal
+              {t("shell.portalName")}
             </span>
           </div>
         </Link>
+        <LanguageSwitcher tone="light" />
       </div>
 
       <Sidebar collapsible="icon" className="border-zinc-200 bg-white">
@@ -95,7 +99,7 @@ export const EmployeeSidebar: FC = () => {
                   delitip
                 </div>
                 <span className="text-[10px] font-medium tracking-wider text-zinc-400 uppercase">
-                  Employee Portal
+                  {t("shell.portalName")}
                 </span>
               </div>
             </Link>
@@ -105,10 +109,10 @@ export const EmployeeSidebar: FC = () => {
               onClick={toggleSidebar}
               aria-label={
                 isMobile
-                  ? "Close navigation menu"
+                  ? t("nav.closeMenu")
                   : collapsed
-                    ? "Expand sidebar"
-                    : "Collapse sidebar"
+                    ? t("nav.expandSidebar")
+                    : t("nav.collapseSidebar")
               }
               className="shrink-0"
             >
@@ -142,7 +146,7 @@ export const EmployeeSidebar: FC = () => {
                     <SidebarMenuItem key={item.href}>
                       <SidebarMenuButton
                         isActive={active}
-                        tooltip={item.label}
+                        tooltip={t(`nav.${item.labelKey}`)}
                         render={
                           <Link href={item.href} onClick={closeMobileNav} />
                         }
@@ -158,18 +162,18 @@ export const EmployeeSidebar: FC = () => {
                             "size-4 group-data-[collapsible=icon]:size-5",
                             active
                               ? "text-electric-lime"
-                              : item.label === "Reviews & Badges"
+                              : item.href === Routes.employee.reviews
                                 ? "text-rating-amber"
                                 : "text-zinc-400",
                           )}
                           strokeWidth={2}
                           fill={
-                            item.label === "Reviews & Badges" && !active
+                            item.href === Routes.employee.reviews && !active
                               ? "currentColor"
                               : "none"
                           }
                         />
-                        <span>{item.label}</span>
+                        <span>{t(`nav.${item.labelKey}`)}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
@@ -180,6 +184,9 @@ export const EmployeeSidebar: FC = () => {
         </SidebarContent>
 
         <SidebarFooter className="border-t border-zinc-100 p-2">
+          <div className="px-1 pb-1 group-data-[collapsible=icon]:hidden">
+            <LanguageSwitcher tone="light" />
+          </div>
           <EmployeeUserMenu onNavigate={closeMobileNav} />
         </SidebarFooter>
       </Sidebar>

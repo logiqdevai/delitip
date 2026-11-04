@@ -1,9 +1,10 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ArrowRight } from "lucide-react";
 import {
   businessSignInSchema,
@@ -20,6 +21,7 @@ const authFieldClassName =
   "h-12 rounded-2xl border-zinc-200 bg-zinc-50/70 px-4 text-sm shadow-none";
 
 export const AuthSignInForm: FC = () => {
+  const t = useTranslations("auth.signIn");
   const loginBusiness = useLoginBusiness();
 
   const {
@@ -45,10 +47,10 @@ export const AuthSignInForm: FC = () => {
     <div className="auth-fade-enter flex flex-1 flex-col">
       <div className="mb-6 hidden lg:block">
         <h1 className="text-3xl font-extrabold tracking-[-0.03em] text-ink-charcoal">
-          Welcome back
+          {t("title")}
         </h1>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-zinc-500">
-          Sign in to manage your team, tips, and live customer reviews.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -58,13 +60,13 @@ export const AuthSignInForm: FC = () => {
             htmlFor="sign-in-email"
             className="mb-2 block text-sm font-bold text-ink-charcoal lg:mb-1.5 lg:text-xs lg:font-semibold lg:text-zinc-700"
           >
-            Business Email
+            {t("emailLabel")}
           </label>
           <Input
             id="sign-in-email"
             type="email"
             autoComplete="email"
-            placeholder="manager@artisancafe.com"
+            placeholder={t("emailPlaceholder")}
             aria-invalid={!!errors.email}
             className={cn(authFieldClassName, "lg:h-(--control-height-default) lg:rounded-xl lg:px-3.5")}
             {...register("email")}
@@ -82,13 +84,13 @@ export const AuthSignInForm: FC = () => {
               htmlFor="sign-in-password"
               className="text-sm font-bold text-ink-charcoal lg:text-xs lg:font-semibold lg:text-zinc-700"
             >
-              Password
+              {t("passwordLabel")}
             </label>
             <Link
               href={Routes.auth.forgot_password}
               className="text-caption font-semibold text-brand-700 hover:underline"
             >
-              Forgot password?
+              {t("forgotPassword")}
             </Link>
           </div>
           <Controller
@@ -120,19 +122,19 @@ export const AuthSignInForm: FC = () => {
           isPending={isPending}
           className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal"
         >
-          Sign in to delitip
+          {t("submit")}
           <ArrowRight data-icon="inline-end" className="size-3.5" />
         </ActionButtonWithPending>
       </form>
 
       <div className="mt-auto pt-8 text-center lg:mt-0 lg:pt-2">
         <p className="text-sm text-zinc-500 lg:text-xs">
-          New to delitip?{" "}
+          {t("newHere")}{" "}
           <Link
             href={Routes.auth.sign_up}
             className="font-bold text-brand-800 hover:underline lg:text-brand-700"
           >
-            Create a business account
+            {t("createAccount")}
           </Link>
         </p>
       </div>

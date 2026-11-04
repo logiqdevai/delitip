@@ -7,38 +7,42 @@ import {
 
 export const InvoiceCheckVerdictFormOptions: {
   id: InvoiceCheckVerdict;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: InvoiceCheckVerdicts.MATCH, label: "Looks correct" },
-  { id: InvoiceCheckVerdicts.MISMATCH, label: "Mismatch found" },
-  { id: InvoiceCheckVerdicts.UNREADABLE, label: "Could not read" },
+  {
+    id: InvoiceCheckVerdicts.MATCH,
+    labelKey: "dashboard.enums.invoiceCheckVerdict.MATCH",
+  },
+  {
+    id: InvoiceCheckVerdicts.MISMATCH,
+    labelKey: "dashboard.enums.invoiceCheckVerdict.MISMATCH",
+  },
+  {
+    id: InvoiceCheckVerdicts.UNREADABLE,
+    labelKey: "dashboard.enums.invoiceCheckVerdict.UNREADABLE",
+  },
 ];
 
-export function getInvoiceCheckVerdictLabel(
-  verdict: InvoiceCheckVerdict | string,
-): string {
-  return (
-    InvoiceCheckVerdictFormOptions.find((option) => option.id === verdict)
-      ?.label ?? verdict
-  );
-}
-
-// What to show while there is no verdict yet (or never will be).
-export const InvoiceCheckStatusLabels: Record<InvoiceCheckStatus, string> = {
-  [InvoiceCheckStatuses.PENDING]: "Checking…",
-  [InvoiceCheckStatuses.COMPLETED]: "Checked",
-  [InvoiceCheckStatuses.FAILED]: "Check failed",
-  [InvoiceCheckStatuses.SKIPPED]: "Not checked",
-};
-
-// One label for the chip: the verdict when the check finished, otherwise the
-// state of the check itself.
-export function getInvoiceCheckLabel(
-  status: InvoiceCheckStatus,
-  verdict: InvoiceCheckVerdict | null,
-): string {
-  if (status === InvoiceCheckStatuses.COMPLETED && verdict) {
-    return getInvoiceCheckVerdictLabel(verdict);
-  }
-  return InvoiceCheckStatusLabels[status] ?? status;
-}
+// What to show while there is no verdict yet (or never will be). The chip shows
+// the verdict when status is COMPLETED and a verdict exists, otherwise the status.
+export const InvoiceCheckStatusOptions: {
+  id: InvoiceCheckStatus;
+  labelKey: string;
+}[] = [
+  {
+    id: InvoiceCheckStatuses.PENDING,
+    labelKey: "dashboard.enums.invoiceCheckStatus.PENDING",
+  },
+  {
+    id: InvoiceCheckStatuses.COMPLETED,
+    labelKey: "dashboard.enums.invoiceCheckStatus.COMPLETED",
+  },
+  {
+    id: InvoiceCheckStatuses.FAILED,
+    labelKey: "dashboard.enums.invoiceCheckStatus.FAILED",
+  },
+  {
+    id: InvoiceCheckStatuses.SKIPPED,
+    labelKey: "dashboard.enums.invoiceCheckStatus.SKIPPED",
+  },
+];

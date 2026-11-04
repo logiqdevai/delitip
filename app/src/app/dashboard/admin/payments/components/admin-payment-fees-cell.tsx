@@ -1,4 +1,5 @@
 import { type FC } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import type { PaymentTransaction } from "@/features/tips/interfaces/tips.interfaces";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney, formatPercent } from "@/lib/money";
@@ -20,6 +21,8 @@ export const AdminPaymentFeesCell: FC<AdminPaymentFeesCellProps> = ({
   paymentTransaction,
   currency,
 }) => {
+  const t = useTranslations("dashboard.admin.fees");
+  const locale = useLocale();
   if (!paymentTransaction) {
     return <span className="text-zinc-300">-</span>;
   }
@@ -34,19 +37,26 @@ export const AdminPaymentFeesCell: FC<AdminPaymentFeesCellProps> = ({
       : 0);
 
   return (
-    <div className="flex flex-col gap-0.5 text-[11px] leading-tight text-zinc-400">
+    <div className="flex flex-col gap-0.5 text-base leading-tight text-zinc-400">
       <span>
-        Platform {formatMoney(platformFee, currency)} (
-        {formatPercent(paymentTransaction.platform_fee_percentage)})
+        {t("platform", {
+          amount: formatMoney(platformFee, currency, locale),
+          percent: formatPercent(paymentTransaction.platform_fee_percentage, locale),
+        })}
       </span>
       <span>
-        Payment {formatMoney(paymentFee, currency)}
         {paymentTransaction.payment_fee_percentage != null
-          ? ` (${formatPercent(paymentTransaction.payment_fee_percentage)})`
-          : ""}
+          ? t("paymentWithPercent", {
+              amount: formatMoney(paymentFee, currency, locale),
+              percent: formatPercent(paymentTransaction.payment_fee_percentage, locale),
+            })
+          : t("payment", { amount: formatMoney(paymentFee, currency, locale) })}
       </span>
       <span className="font-bold text-ink-charcoal">
-        Total {formatMoney(totalFee, currency)} ({formatPercent(totalFeePercentage)})
+        {t("total", {
+          amount: formatMoney(totalFee, currency, locale),
+          percent: formatPercent(totalFeePercentage, locale),
+        })}
       </span>
     </div>
   );

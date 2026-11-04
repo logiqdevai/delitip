@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import Link from "next/link";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { ArrowLeft, Receipt } from "lucide-react";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import {
@@ -11,22 +12,15 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { getRefundStatusLabel } from "@/config/constants/dropdowns/refunds/refund-status-form.options";
-import { getTipStatusLabel } from "@/config/constants/dropdowns/tips/tip-status-form.options";
-import { getPayoutStatusLabel } from "@/config/constants/dropdowns/tips/payout-status-form.options";
+import { RefundStatusFormOptions } from "@/config/constants/dropdowns/refunds/refund-status-form.options";
+import { TipStatusFormOptions } from "@/config/constants/dropdowns/tips/tip-status-form.options";
+import { PayoutStatusFormOptions } from "@/config/constants/dropdowns/tips/payout-status-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { useTip } from "@/features/tips/hooks/use-tips";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 import { getErrorMessage } from "@/lib/api-error";
-
-const formatDateTime = (value?: string | null) => {
-  if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-};
 
 const SummaryRow: FC<{ label: string; value: string }> = ({
   label,
@@ -41,6 +35,17 @@ const SummaryRow: FC<{ label: string; value: string }> = ({
 export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
   paymentId,
 }) => {
+  const t = useTranslations("dashboard.admin.paymentDetail");
+  const tc = useTranslations("dashboard.admin.common");
+  const locale = useLocale();
+  const format = useFormatter();
+  const formatDateTime = (value?: string | null) =>
+    value
+      ? format.dateTime(new Date(value), { dateStyle: "medium", timeStyle: "short" })
+      : "-";
+  const label = useDropdownLabel();
+  const money = (amount: number, currency: Parameters<typeof formatMoney>[1]) =>
+    formatMoney(amount, currency, locale);
   const tipQuery = useTip(paymentId);
 
   if (tipQuery.isPending) {
@@ -51,9 +56,9 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
     return (
       <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
         <EmptyHeader>
-          <EmptyTitle>Could not load this payment</EmptyTitle>
+          <EmptyTitle>{t("loadError")}</EmptyTitle>
           <EmptyDescription>
-            {getErrorMessage(tipQuery.error, "The payment may not exist.")}
+            {getErrorMessage(tipQuery.error, t("notFound"))}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
@@ -61,7 +66,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
             href={Routes.dashboard.admin.payments}
             className="text-xs font-semibold text-brand-700 hover:underline"
           >
-            Back to Payments
+            {tc("backToPayments")}
           </Link>
         </EmptyContent>
       </Empty>
@@ -77,17 +82,17 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
         className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-ink-charcoal"
       >
         <ArrowLeft className="size-3.5" strokeWidth={2} />
-        Back to Payments
+        {tc("backToPayments")}
       </Link>
 
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold text-ink-charcoal">
-            {formatMoney(tip.amount, tip.currency)}
+            {money(tip.amount, tip.currency)}
           </h1>
           <p className="mt-0.5 text-xs text-zinc-500">
-            {tip.store?.name ?? "Unknown store"} ·{" "}
-            {tip.employee?.full_name ?? "Store"}
+            {tip.store?.name ?? tc("unknownStore")} ·{" "}
+            {tip.employee?.full_name ?? t("storeLabel")}
           </p>
         </div>
         <span
@@ -102,69 +107,71 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
                   : "bg-amber-50 text-amber-700",
           )}
         >
-          {getTipStatusLabel(tip.status)}
+          {label(TipStatusFormOptions, tip.status)}
         </span>
       </div>
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
-        <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Summary</h2>
-        <SummaryRow label="Store" value={tip.store?.name ?? "-"} />
+        <h2 className="mb-2 text-sm font-bold text-ink-charcoal">{tc("summary")}</h2>
+        <SummaryRow label={tc("store")} value={tip.store?.name ?? "-"} />
         <SummaryRow
-          label="Amount"
-          value={formatMoney(tip.amount, tip.currency)}
+          label={tc("amount")}
+          value={money(tip.amount, tip.currency)}
         />
-        <SummaryRow label="Status" value={getTipStatusLabel(tip.status)} />
-        <SummaryRow label="Paid at" value={formatDateTime(tip.paid_at)} />
-        <SummaryRow label="Created at" value={formatDateTime(tip.created_at)} />
-        <SummaryRow label="QR code" value={tip.qr_code?.label ?? "-"} />
+        <SummaryRow label={tc("status")} value={label(TipStatusFormOptions, tip.status)} />
+        <SummaryRow label={t("paidAt")} value={formatDateTime(tip.paid_at)} />
+        <SummaryRow label={t("createdAt")} value={formatDateTime(tip.created_at)} />
+        <SummaryRow label={t("qrCode")} value={tip.qr_code?.label ?? "-"} />
         <SummaryRow
-          label="Distribution rule"
-          value={tip.distribution_rule?.name ?? "Store default"}
+          label={t("distributionRule")}
+          value={tip.distribution_rule?.name ?? t("storeDefault")}
         />
         <SummaryRow
-          label="Payment provider"
+          label={t("paymentProvider")}
           value={tip.payment_provider ?? "-"}
         />
         <SummaryRow
-          label="Payment reference"
+          label={t("paymentReference")}
           value={tip.payment_reference ?? "-"}
         />
         <SummaryRow
-          label="Customer"
-          value={tip.customer_name ?? tip.customer_email ?? "Anonymous"}
+          label={t("customer")}
+          value={tip.customer_name ?? tip.customer_email ?? tc("anonymous")}
         />
       </div>
 
       {tip.payment_transaction ? (
         <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
           <h2 className="mb-2 text-sm font-bold text-ink-charcoal">
-            Financial breakdown
+            {t("financialBreakdown")}
           </h2>
           <SummaryRow
-            label="Tip amount"
-            value={formatMoney(tip.payment_transaction.tip_amount, tip.currency)}
+            label={tc("tipAmount")}
+            value={money(tip.payment_transaction.tip_amount, tip.currency)}
           />
           {tip.payment_transaction.vat_amount ? (
             <SummaryRow
-              label="VAT"
-              value={`${formatMoney(tip.payment_transaction.vat_amount, tip.currency)} (${tip.payment_transaction.vat_rate_percentage}%)`}
+              label={t("vat")}
+              value={`${money(tip.payment_transaction.vat_amount, tip.currency)} (${tip.payment_transaction.vat_rate_percentage}%)`}
             />
           ) : null}
           <SummaryRow
-            label="Gross amount (charged)"
-            value={formatMoney(tip.payment_transaction.gross_amount, tip.currency)}
+            label={t("grossAmount")}
+            value={money(tip.payment_transaction.gross_amount, tip.currency)}
           />
           <SummaryRow
-            label="Processor fee"
+            label={t("processorFee")}
             value={`${
               tip.payment_transaction.processor_fee_confirmed
-                ? formatMoney(
+                ? money(
                     tip.payment_transaction.processor_fee_confirmed_amount ?? 0,
                     tip.currency,
                   )
                 : tip.payment_transaction.processor_fee_estimated != null
-                  ? `~${formatMoney(tip.payment_transaction.processor_fee_estimated, tip.currency)} (estimated)`
-                  : "Not yet confirmed"
+                  ? t("estimated", {
+                      amount: money(tip.payment_transaction.processor_fee_estimated, tip.currency),
+                    })
+                  : t("notConfirmed")
             }${
               tip.payment_transaction.processor_fee_percentage_used != null
                 ? ` (${tip.payment_transaction.processor_fee_percentage_used}%)`
@@ -172,14 +179,14 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
             }`}
           />
           <SummaryRow
-            label="Platform commission"
-            value={`${formatMoney(tip.payment_transaction.commission_amount, tip.currency)} (${tip.payment_transaction.commission_percentage_used}%)`}
+            label={t("platformCommission")}
+            value={`${money(tip.payment_transaction.commission_amount, tip.currency)} (${tip.payment_transaction.commission_percentage_used}%)`}
           />
           <SummaryRow
-            label="Net distributable"
+            label={t("netDistributable")}
             value={
               tip.payment_transaction.net_distributable_amount != null
-                ? formatMoney(tip.payment_transaction.net_distributable_amount, tip.currency)
+                ? money(tip.payment_transaction.net_distributable_amount, tip.currency)
                 : "-"
             }
           />
@@ -188,11 +195,11 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
 
       <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-3 text-sm font-bold text-ink-charcoal">
-          Distribution
+          {t("distribution")}
         </h2>
         {!tip.distributions || tip.distributions.length === 0 ? (
           <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500">
-            No distribution recorded for this payment.
+            {t("noDistribution")}
           </p>
         ) : (
           <div className="divide-y divide-zinc-100">
@@ -204,16 +211,16 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
                 <div>
                   <div className="font-semibold text-ink-charcoal">
                     {distribution.recipient_type === "EMPLOYEE"
-                      ? (distribution.employee?.full_name ?? "Employee")
-                      : "Store"}
+                      ? (distribution.employee?.full_name ?? t("employeeFallback"))
+                      : t("storeLabel")}
                   </div>
                   <div className="text-xs text-zinc-400">
                     {distribution.percentage}% ·{" "}
-                    {getPayoutStatusLabel(distribution.payout_status)}
+                    {label(PayoutStatusFormOptions, distribution.payout_status)}
                   </div>
                 </div>
                 <div className="font-bold text-ink-charcoal">
-                  {formatMoney(distribution.amount, tip.currency)}
+                  {money(distribution.amount, tip.currency)}
                 </div>
               </div>
             ))}
@@ -223,9 +230,12 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
 
       {tip.review ? (
         <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
-          <h2 className="mb-2 text-sm font-bold text-ink-charcoal">Review</h2>
+          <h2 className="mb-2 text-sm font-bold text-ink-charcoal">{t("review")}</h2>
           <p className="text-sm text-zinc-600">
-            ★ {tip.review.rating} - {tip.review.comment || "No comment left"}
+            {t("reviewLine", {
+              rating: tip.review.rating,
+              comment: tip.review.comment || t("noComment"),
+            })}
           </p>
         </div>
       ) : null}
@@ -234,7 +244,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
         <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
           <h2 className="mb-2 flex items-center gap-2 text-sm font-bold text-ink-charcoal">
             <Receipt className="size-4" strokeWidth={2} />
-            Refunds
+            {t("refunds")}
           </h2>
           <div className="divide-y divide-zinc-100">
             {tip.refunds.map((refund) => (
@@ -243,11 +253,11 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
                 className="flex items-center justify-between py-2 text-sm"
               >
                 <span className="text-zinc-500">
-                  {refund.reason || "No reason given"}
+                  {refund.reason || t("noReason")}
                 </span>
                 <span className="font-semibold text-ink-charcoal">
-                  {formatMoney(refund.amount, tip.currency)} (
-                  {getRefundStatusLabel(refund.status)})
+                  {money(refund.amount, tip.currency)} (
+                  {label(RefundStatusFormOptions, refund.status)})
                 </span>
               </div>
             ))}

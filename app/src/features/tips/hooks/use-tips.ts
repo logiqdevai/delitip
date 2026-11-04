@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   createPublicTip,
   exportStoreTipsCsv,
@@ -48,6 +49,7 @@ export const useStoreTips = (storeId: string, query?: TipsQuery) => {
 };
 
 export const useExportStoreTipsCsv = () => {
+  const t = useTranslations("dashboard.money.toasts");
   return useMutation({
     mutationFn: ({
       storeId,
@@ -59,14 +61,14 @@ export const useExportStoreTipsCsv = () => {
     onSuccess: () => {
       trackEvent(AnalyticsEvents.tipsExported);
       toast.add({
-        title: "Tips exported",
-        description: "Your CSV download has started.",
+        title: t("tips.exportedTitle"),
+        description: t("tips.exportedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not export tips",
+        title: t("tips.exportFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -98,6 +100,7 @@ export const useAdminTips = (query?: AdminTipsQuery) => {
 };
 
 export const useReconcilePayments = () => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -106,17 +109,17 @@ export const useReconcilePayments = () => {
       trackEvent(AnalyticsEvents.adminPaymentsReconciled, { corrected });
       void queryClient.invalidateQueries({ queryKey: tipsQueryKeys.root });
       toast.add({
-        title: "Payments reconciled",
+        title: t("tips.reconciledTitle"),
         description:
           corrected > 0
-            ? `${corrected} stuck payment${corrected === 1 ? "" : "s"} corrected against Viva.`
-            : "No stuck payments found - everything's up to date.",
+            ? t("tips.reconciledCorrected", { count: corrected })
+            : t("tips.reconciledNone"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not reconcile payments",
+        title: t("tips.reconcileFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { vmsg } from "@/lib/validation-message";
 import { QrCodeSelectionModes } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 
 const selectionModeValues = Object.values(QrCodeSelectionModes) as [
@@ -7,7 +8,7 @@ const selectionModeValues = Object.values(QrCodeSelectionModes) as [
 ];
 
 export const qrCodeFormSchema = z.object({
-  label: z.string().trim().min(1, "Label is required"),
+  label: z.string().trim().min(1, vmsg("labelRequired")),
   selection_mode: z.enum(selectionModeValues),
   employee_ids: z.array(z.string()),
   spot_ids: z.array(z.string()),

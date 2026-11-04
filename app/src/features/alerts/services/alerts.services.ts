@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -19,7 +20,7 @@ export const listAlerts = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load alerts. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAlerts")));
   }
 };
 
@@ -30,7 +31,7 @@ export const markAlertRead = async (id: string): Promise<Alert> => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't mark alert as read. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.markAlertAsRead")));
   }
 };
 
@@ -44,7 +45,7 @@ export const markAllAlertsRead = async (
     }>(ApiRoutes.stores.alertsReadAll(storeId));
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't mark alerts as read. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.markAlertsAsRead")));
   }
 };
 
@@ -57,7 +58,7 @@ export const listAlertPreferences = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load alert preferences. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadAlertPreferences")));
   }
 };
 
@@ -73,6 +74,6 @@ export const updateAlertPreference = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't update alert preference. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.updateAlertPreference")));
   }
 };

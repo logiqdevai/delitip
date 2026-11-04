@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   getAppConfig,
   getPayoutPolicy,
@@ -38,6 +39,7 @@ export const usePayoutPolicy = () => {
 };
 
 export const useUpdateAppConfig = () => {
+  const t = useTranslations("dashboard.adminSystem.appConfig.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -52,15 +54,15 @@ export const useUpdateAppConfig = () => {
         queryKey: appConfigQueryKeys.payoutPolicy,
       });
       toast.add({
-        title: "App config saved",
-        description: "New values apply to future tips and payouts.",
+        title: t("savedTitle"),
+        description: t("savedDescription"),
         type: "success",
       });
     },
     onError: () => {
       toast.add({
-        title: "Could not save app config",
-        description: "Check the values and try again.",
+        title: t("failedTitle"),
+        description: t("failedDescription"),
         type: "error",
       });
     },

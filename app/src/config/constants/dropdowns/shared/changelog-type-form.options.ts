@@ -5,19 +5,16 @@ import {
 
 export const ChangelogTypeFormOptions: {
   id: ChangelogType;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: ChangelogTypes.FEATURE, label: "New feature" },
-  { id: ChangelogTypes.IMPROVEMENT, label: "Improvement" },
-  { id: ChangelogTypes.FIX, label: "Bug fix" },
-  { id: ChangelogTypes.CHORE, label: "Maintenance" },
+  {
+    id: ChangelogTypes.FEATURE,
+    labelKey: "dashboard.enums.changelogType.FEATURE",
+  },
+  {
+    id: ChangelogTypes.IMPROVEMENT,
+    labelKey: "dashboard.enums.changelogType.IMPROVEMENT",
+  },
+  { id: ChangelogTypes.FIX, labelKey: "dashboard.enums.changelogType.FIX" },
+  { id: ChangelogTypes.CHORE, labelKey: "dashboard.enums.changelogType.CHORE" },
 ];
-
-export function getChangelogTypeLabel(
-  type: ChangelogType | string | null | undefined,
-): string {
-  if (!type) return "Maintenance";
-  return (
-    ChangelogTypeFormOptions.find((option) => option.id === type)?.label ?? type
-  );
-}

@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { format } from "date-fns";
+import { useFormatter, useTranslations } from "next-intl";
 import { Bell, CheckCheck, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
@@ -28,12 +28,20 @@ import {
   useMarkAllAlertsRead,
 } from "@/features/alerts/hooks/use-alerts";
 import type { AlertType } from "@/features/alerts/interfaces/alerts.interfaces";
-import { AlertTypeFormOptions, getAlertTypeLabel } from "@/config/constants/dropdowns/alerts/alert-type-form.options";
+import { AlertTypeFormOptions } from "@/config/constants/dropdowns/alerts/alert-type-form.options";
+import {
+  useDropdownLabel,
+  useDropdownOptions,
+} from "@/hooks/use-dropdown-options";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { cn } from "@/lib/utils";
 import { getErrorMessage } from "@/lib/api-error";
 
 export const AlertsPageContent: FC = () => {
+  const t = useTranslations("dashboard.engagement");
+  const format = useFormatter();
+  const label = useDropdownLabel();
+  const alertTypeOptions = useDropdownOptions(AlertTypeFormOptions);
   const { storeId, isPending: workspacePending, isReady } = useWorkspace();
   const [type, setType] = useState<AlertType | "all">("all");
   const [readFilter, setReadFilter] = useState<"all" | "unread" | "read">(
@@ -59,10 +67,8 @@ export const AlertsPageContent: FC = () => {
           <EmptyMedia variant="icon">
             <Bell />
           </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
-          <EmptyDescription>
-            Finish business setup before viewing alerts.
-          </EmptyDescription>
+          <EmptyTitle>{t("common.noStoreTitle")}</EmptyTitle>
+          <EmptyDescription>{t("alerts.noStoreDescription")}</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -74,18 +80,18 @@ export const AlertsPageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="Alerts"
-        description="Automatic notices about performance changes and customer feedback."
+        title={t("alerts.title")}
+        description={t("alerts.description")}
         actions={
           <Button
             type="button"
             variant="outline"
             disabled={!hasUnread || markAllRead.isPending}
             onClick={() => markAllRead.mutate()}
-            className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-chip font-semibold"
+            className="h-(--control-height-default) max-sm:h-11 rounded-xl px-3.5 text-base font-semibold"
           >
             <CheckCheck data-icon="inline-start" className="size-3.5" />
-            Mark all read
+            {t("alerts.markAllRead")}
           </Button>
         }
       />
@@ -93,13 +99,13 @@ export const AlertsPageContent: FC = () => {
       <div className="flex flex-col gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
-          Filters
+          {t("common.filters")}
         </div>
         <Select
           items={[
-            { label: "All", value: "all" },
-            { label: "Unread", value: "unread" },
-            { label: "Read", value: "read" },
+            { label: t("alerts.filterAll"), value: "all" },
+            { label: t("alerts.filterUnread"), value: "unread" },
+            { label: t("alerts.filterRead"), value: "read" },
           ]}
           value={readFilter}
           onValueChange={(value) => {
@@ -111,16 +117,16 @@ export const AlertsPageContent: FC = () => {
           </SelectTrigger>
           <SelectContent align="start">
             <SelectGroup>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="unread">Unread</SelectItem>
-              <SelectItem value="read">Read</SelectItem>
+              <SelectItem value="all">{t("alerts.filterAll")}</SelectItem>
+              <SelectItem value="unread">{t("alerts.filterUnread")}</SelectItem>
+              <SelectItem value="read">{t("alerts.filterRead")}</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
         <Select
           items={[
-            { label: "All types", value: "all" },
-            ...AlertTypeFormOptions.map((option) => ({
+            { label: t("alerts.allTypes"), value: "all" },
+            ...alertTypeOptions.map((option) => ({
               label: option.label,
               value: option.id,
             })),
@@ -135,8 +141,8 @@ export const AlertsPageContent: FC = () => {
           </SelectTrigger>
           <SelectContent align="start">
             <SelectGroup>
-              <SelectItem value="all">All types</SelectItem>
-              {AlertTypeFormOptions.map((option) => (
+              <SelectItem value="all">{t("alerts.allTypes")}</SelectItem>
+              {alertTypeOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.label}
                 </SelectItem>
@@ -151,7 +157,7 @@ export const AlertsPageContent: FC = () => {
       ) : alertsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load alerts</EmptyTitle>
+            <EmptyTitle>{t("alerts.loadErrorTitle")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(alertsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -160,7 +166,7 @@ export const AlertsPageContent: FC = () => {
               variant="outline"
               onClick={() => void alertsQuery.refetch()}
             >
-              Try again
+              {t("common.tryAgain")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -170,11 +176,8 @@ export const AlertsPageContent: FC = () => {
             <EmptyMedia variant="icon">
               <Bell />
             </EmptyMedia>
-            <EmptyTitle>No alerts</EmptyTitle>
-            <EmptyDescription>
-              You&apos;ll see performance and feedback notices here as they
-              happen.
-            </EmptyDescription>
+            <EmptyTitle>{t("alerts.emptyTitle")}</EmptyTitle>
+            <EmptyDescription>{t("alerts.emptyDescription")}</EmptyDescription>
           </EmptyHeader>
         </Empty>
       ) : (
@@ -201,14 +204,17 @@ export const AlertsPageContent: FC = () => {
                       {alert.title}
                     </span>
                     <span className="rounded-full bg-neutral-fill px-2 py-0.5 text-[10px] font-medium text-zinc-500">
-                      {getAlertTypeLabel(alert.type)}
+                      {label(AlertTypeFormOptions, alert.type)}
                     </span>
                   </div>
                   <p className="mt-0.5 text-xs text-zinc-600">
                     {alert.message}
                   </p>
-                  <p className="mt-1 text-[10px] text-zinc-400">
-                    {format(new Date(alert.created_at), "MMM d, yyyy HH:mm")}
+                  <p className="mt-1 text-base text-zinc-400">
+                    {format.dateTime(new Date(alert.created_at), {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
                   </p>
                 </div>
               </div>
@@ -220,7 +226,7 @@ export const AlertsPageContent: FC = () => {
                   onClick={() => markRead.mutate(alert.id)}
                   disabled={markRead.isPending}
                 >
-                  Mark read
+                  {t("alerts.markRead")}
                 </Button>
               ) : null}
             </div>

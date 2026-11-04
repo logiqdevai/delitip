@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
@@ -30,7 +31,7 @@ export const getStoreSettlementBalances = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load staff balances. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadStaffBalances")));
   }
 };
 
@@ -44,7 +45,7 @@ export const listOwedDistributions = async (
     >(ApiRoutes.stores.settlementOwedDistributions(storeId), { params: query });
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load what's owed. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadWhatsOwed")));
   }
 };
 
@@ -59,7 +60,7 @@ export const listProposedAdjustments = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load deductions. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadDeductions")));
   }
 };
 
@@ -74,7 +75,7 @@ export const listStoreSettlements = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load handovers. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadHandovers")));
   }
 };
 
@@ -89,7 +90,7 @@ export const listEmployeeSettlements = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load your payments. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadYourPayments")));
   }
 };
 
@@ -102,7 +103,7 @@ export const getEmployeeSettlementBalance = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load your balance. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadYourBalance")));
   }
 };
 
@@ -118,7 +119,7 @@ export const createSettlement = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't record the payment. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.recordThePayment")),
     );
   }
 };
@@ -131,7 +132,7 @@ export const reverseSettlement = async (id: string): Promise<Settlement> => {
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't reverse the payment. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.reverseThePayment")),
     );
   }
 };
@@ -144,7 +145,7 @@ export const confirmSettlement = async (id: string): Promise<Settlement> => {
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't confirm. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.confirm")),
     );
   }
 };
@@ -185,7 +186,7 @@ export const exportStoreSettlementsCsv = async (
     // message has to be read back out of it.
     let message = getApiErrorMessage(
       error,
-      "We couldn't export staff balances. Please try again.",
+      tr("errors.services.exportStaffBalances"),
     );
     if (isAxiosError(error) && error.response?.data instanceof Blob) {
       try {

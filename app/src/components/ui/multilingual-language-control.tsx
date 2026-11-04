@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Check, ChevronLeft, Plus } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CountryFlag } from "@/components/ui/country-flag";
@@ -38,6 +39,8 @@ export const MultilingualLanguageControl: FC<
   onActiveLanguageChange,
   className,
 }) => {
+  const t = useTranslations("dashboard.shell.ui");
+  const tRoot = useTranslations();
   const updateStore = useUpdateStore();
   const [open, setOpen] = useState(false);
   const [managing, setManaging] = useState(false);
@@ -73,7 +76,7 @@ export const MultilingualLanguageControl: FC<
           "inline-flex size-(--control-height-xs) shrink-0 items-center justify-center rounded-[min(var(--radius-md),10px)] text-zinc-500 outline-none transition-colors hover:bg-muted hover:text-zinc-700 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50",
           className,
         )}
-        aria-label="Language"
+        aria-label={t("language")}
       >
         {activeOption ? (
           <CountryFlag
@@ -86,7 +89,7 @@ export const MultilingualLanguageControl: FC<
         {managing ? (
           <>
             <p className="flex items-center gap-1.5 px-1.5 pt-1 pb-1.5 text-[11px] font-semibold text-zinc-500">
-              Supported languages
+              {t("supportedLanguages")}
               {updateStore.isPending ? (
                 <Spinner className="size-3 text-zinc-400" />
               ) : null}
@@ -112,7 +115,7 @@ export const MultilingualLanguageControl: FC<
                     />
                   )}
                   <CountryFlag countryCode={option.flagCountryCode} />
-                  {option.label}
+                  {tRoot(option.labelKey)}
                 </label>
               ))}
             </div>
@@ -122,7 +125,7 @@ export const MultilingualLanguageControl: FC<
               onClick={() => setManaging(false)}
             >
               <ChevronLeft className="size-3.5" />
-              Back
+              {t("back")}
             </button>
           </>
         ) : (
@@ -147,7 +150,7 @@ export const MultilingualLanguageControl: FC<
                     )}
                   >
                     <CountryFlag countryCode={option.flagCountryCode} />
-                    {option.label}
+                    {tRoot(option.labelKey)}
                     {language === activeLanguage ? (
                       <Check className="ml-auto size-3.5" />
                     ) : null}
@@ -161,7 +164,7 @@ export const MultilingualLanguageControl: FC<
               onClick={() => setManaging(true)}
             >
               <Plus className="size-3.5" />
-              Add languages
+              {t("addLanguages")}
             </button>
           </>
         )}

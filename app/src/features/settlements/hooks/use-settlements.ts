@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   confirmSettlement,
   createSettlement,
@@ -106,6 +107,7 @@ export const useEmployeeSettlementBalance = (employeeId: string) => {
 };
 
 export const useCreateSettlement = (storeId: string) => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -119,14 +121,14 @@ export const useCreateSettlement = (storeId: string) => {
       // The shares are no longer owed, so the distributions view is stale too.
       void queryClient.invalidateQueries({ queryKey: payoutsQueryKeys.root });
       toast.add({
-        title: "Payment recorded",
-        description: "The employee can see it and confirm they received it.",
+        title: t("settlements.recordedTitle"),
+        description: t("settlements.recordedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not record the payment",
+        title: t("settlements.recordFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -138,6 +140,7 @@ export const useCreateSettlement = (storeId: string) => {
 // as a confirmation dialog whose overlay would cover the toast.
 export const useReverseSettlement = (options?: { showErrorToast?: boolean }) => {
   const showErrorToast = options?.showErrorToast ?? true;
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -149,15 +152,15 @@ export const useReverseSettlement = (options?: { showErrorToast?: boolean }) => 
       });
       void queryClient.invalidateQueries({ queryKey: payoutsQueryKeys.root });
       toast.add({
-        title: "Payment reversed",
-        description: "Those shares are owed again.",
+        title: t("settlements.reversedTitle"),
+        description: t("settlements.reversedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       if (!showErrorToast) return;
       toast.add({
-        title: "Could not reverse the payment",
+        title: t("settlements.reverseFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -166,6 +169,7 @@ export const useReverseSettlement = (options?: { showErrorToast?: boolean }) => 
 };
 
 export const useConfirmSettlement = () => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -176,14 +180,14 @@ export const useConfirmSettlement = () => {
         queryKey: settlementsQueryKeys.root,
       });
       toast.add({
-        title: "Confirmed",
-        description: "Thanks — your business can see you received it.",
+        title: t("settlements.confirmedTitle"),
+        description: t("settlements.confirmedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not confirm",
+        title: t("settlements.confirmFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -192,16 +196,17 @@ export const useConfirmSettlement = () => {
 };
 
 export const useExportStoreSettlementsCsv = (storeId: string) => {
+  const t = useTranslations("dashboard.money.toasts");
   return useMutation({
     mutationFn: (query?: SettlementsExportQuery) =>
       exportStoreSettlementsCsv(storeId, query),
     onSuccess: () => {
       trackEvent(AnalyticsEvents.settlementsExported, { store_id: storeId });
-      toast.add({ title: "Export ready", type: "success" });
+      toast.add({ title: t("settlements.exportReady"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not export",
+        title: t("settlements.exportFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

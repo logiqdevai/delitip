@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -24,7 +25,7 @@ export const loginWithEmail = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "We couldn't sign you in. Please check your email and password.",
+        tr("errors.services.signIn"),
       ),
     );
   }
@@ -43,7 +44,7 @@ export const registerWithEmail = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "We couldn't create account. Please try again.",
+        tr("errors.services.createAccount"),
       ),
     );
   }
@@ -60,7 +61,7 @@ export const joinWaitlist = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't join waitlist. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.joinWaitlist")),
     );
   }
 };
@@ -78,7 +79,7 @@ export const forgotPassword = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "We couldn't request password reset. Please try again.",
+        tr("errors.services.requestPasswordReset"),
       ),
     );
   }
@@ -95,7 +96,7 @@ export const resetPassword = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't reset password. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.resetPassword")),
     );
   }
 };
@@ -111,7 +112,7 @@ export const getResetTokenInfo = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "This link is invalid or has expired."),
+      getApiErrorMessage(error, tr("errors.services.linkExpired")),
     );
   }
 };
@@ -129,7 +130,7 @@ export const changePassword = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "We couldn't change password. Please try again.",
+        tr("errors.services.changePassword"),
       ),
     );
   }

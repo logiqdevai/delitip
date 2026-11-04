@@ -5,30 +5,19 @@ import {
 
 export const QrCodeSelectionModeDescriptionOptions: {
   id: QrCodeSelectionMode;
-  description: string;
+  descriptionKey: string;
 }[] = [
   {
     id: QrCodeSelectionModes.CHOOSE_ONE,
-    description:
-      "Customer picks exactly one person from the staff assigned to this QR.",
+    descriptionKey: "dashboard.enums.qrCodeSelectionModeDescription.CHOOSE_ONE",
   },
   {
     id: QrCodeSelectionModes.CHOOSE_MANY,
-    description:
-      "Customer can thank one or more of the assigned staff in a single tip.",
+    descriptionKey:
+      "dashboard.enums.qrCodeSelectionModeDescription.CHOOSE_MANY",
   },
   {
     id: QrCodeSelectionModes.TEAM,
-    description:
-      "Everyone assigned is included automatically - the customer skips picking.",
+    descriptionKey: "dashboard.enums.qrCodeSelectionModeDescription.TEAM",
   },
 ];
-
-export function getQrCodeSelectionModeDescription(
-  mode: QrCodeSelectionMode | string,
-): string {
-  return (
-    QrCodeSelectionModeDescriptionOptions.find((option) => option.id === mode)
-      ?.description ?? ""
-  );
-}

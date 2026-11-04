@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Building2,
   CheckCircle2,
@@ -45,14 +46,14 @@ import { getErrorMessage } from "@/lib/api-error";
 
 type Step = "overview" | "invoice" | "done";
 
-const formatDate = (value?: string | null) => {
+const formatDate = (value: string | null | undefined, locale: string) => {
   if (!value) return "-";
-  return new Date(value).toLocaleDateString(undefined, { dateStyle: "medium" });
+  return new Date(value).toLocaleDateString(locale, { dateStyle: "medium" });
 };
 
-const formatDateTime = (value?: string | null) => {
+const formatDateTime = (value: string | null | undefined, locale: string) => {
   if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
+  return new Date(value).toLocaleString(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   });
@@ -80,6 +81,7 @@ const CopyRow: FC<{ label: string; value: string | null }> = ({
   label,
   value,
 }) => {
+  const t = useTranslations("dashboard.money.payoutRequestDialog");
   if (!value) return null;
   return (
     <div className="flex items-center justify-between gap-3 border-b border-zinc-100 py-2 text-sm last:border-0">
@@ -91,11 +93,11 @@ const CopyRow: FC<{ label: string; value: string | null }> = ({
         type="button"
         variant="ghost"
         size="sm"
-        aria-label={`Copy ${label}`}
+        aria-label={t("copyAria", { label })}
         className="size-8 shrink-0 rounded-full px-0 text-zinc-500 hover:text-ink-charcoal"
         onClick={() => {
           void navigator.clipboard?.writeText(value).then(() =>
-            toast.add({ title: `${label} copied`, type: "success" }),
+            toast.add({ title: t("copied", { label }), type: "success" }),
           );
         }}
       >
@@ -108,67 +110,65 @@ const CopyRow: FC<{ label: string; value: string | null }> = ({
 const OverviewStep: FC<{ preview: PayoutRequestPreview; currency: Currency }> = ({
   preview,
   currency,
-}) => (
+}) => {
+  const t = useTranslations("dashboard.money.payoutRequestDialog");
+  const locale = useLocale();
+  return (
   <div className="space-y-4">
     <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-4">
       <Figure
-        label="You will be paid"
-        value={formatMoney(preview.amount, currency)}
+        label={t("youWillBePaid")}
+        value={formatMoney(preview.amount, currency, locale)}
         emphasis
       />
       <div className="mt-3 grid grid-cols-2 gap-3">
         <Figure
-          label="Your share"
-          value={formatMoney(preview.own_share_amount, currency)}
+          label={t("yourShare")}
+          value={formatMoney(preview.own_share_amount, currency, locale)}
         />
         <Figure
-          label="Held for staff"
-          value={formatMoney(preview.held_for_staff_amount, currency)}
+          label={t("heldForStaff")}
+          value={formatMoney(preview.held_for_staff_amount, currency, locale)}
         />
       </div>
     </div>
 
     <div className="divide-y divide-zinc-100 rounded-2xl border border-zinc-200/80 bg-white px-4">
       <div className="flex items-center justify-between py-2.5 text-sm">
-        <span className="text-zinc-500">Tips covered</span>
+        <span className="text-zinc-500">{t("tipsCovered")}</span>
         <span className="font-semibold text-ink-charcoal">
-          {preview.distribution_count} · {formatDate(preview.period_from)} →{" "}
-          {formatDate(preview.period_to)}
+          {preview.distribution_count} · {formatDate(preview.period_from, locale)} →{" "}
+          {formatDate(preview.period_to, locale)}
         </span>
       </div>
       <div className="flex items-center justify-between py-2.5 text-sm">
-        <span className="text-zinc-500">Already paid to date</span>
+        <span className="text-zinc-500">{t("alreadyPaid")}</span>
         <span className="font-semibold text-ink-charcoal">
-          {formatMoney(preview.already_paid_total_amount, currency)}
+          {formatMoney(preview.already_paid_total_amount, currency, locale)}
           {preview.last_paid_out_at ? (
             <span className="ml-1 text-xs font-medium text-zinc-400">
-              · last {formatDate(preview.last_paid_out_at)}
+              · {t("lastPaid", { date: formatDate(preview.last_paid_out_at, locale) })}
             </span>
           ) : null}
         </span>
       </div>
     </div>
 
-    <p className="text-caption leading-snug text-zinc-500">
-      Only tips paid more than {preview.hold_window_hours}h ago and confirmed
-      by Viva are included. Newer tips roll into your next request.
-      {preview.held_for_staff_amount > 0
-        ? " The staff portion is money you'll be holding for your team — track it under Staff balances."
-        : ""}
+    <p className="text-base leading-snug text-zinc-500">
+      {t(preview.held_for_staff_amount > 0 ? "holdNoteStaff" : "holdNote", {
+        hours: preview.hold_window_hours,
+      })}
     </p>
 
     {preview.payout_account_status !== "ACTIVE" ? (
-      <div className="flex gap-2.5 rounded-xl bg-amber-50/60 px-3.5 py-3 text-caption leading-snug text-amber-900">
+      <div className="flex gap-2.5 rounded-xl bg-amber-50/60 px-3.5 py-3 text-base leading-snug text-amber-900">
         <TriangleAlert className="mt-0.5 size-3.5 shrink-0" strokeWidth={2} />
-        <span>
-          Your store payout account is not active yet. You can still submit the
-          request, but the transfer can only be sent once it is linked and
-          verified.
-        </span>
+        <span>{t("accountInactive")}</span>
       </div>
     ) : null}
   </div>
-);
+  );
+};
 
 const InvoiceStep: FC<{
   preview: PayoutRequestPreview;
@@ -191,6 +191,8 @@ const InvoiceStep: FC<{
   onNoteChange,
   isUploading,
 }) => {
+  const t = useTranslations("dashboard.money.payoutRequestDialog");
+  const locale = useLocale();
   const hasInvoiceDetails =
     preview.invoice_to.legal_name ||
     preview.invoice_to.vat_number ||
@@ -201,41 +203,40 @@ const InvoiceStep: FC<{
       <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-3">
         <div className="mb-1 flex items-center gap-2 text-xs font-semibold text-zinc-500">
           <ReceiptText className="size-3.5" strokeWidth={2} />
-          Issue an invoice to
+          {t("issueInvoiceTo")}
         </div>
         {hasInvoiceDetails ? (
           <>
-            <CopyRow label="Legal name" value={preview.invoice_to.legal_name} />
-            <CopyRow label="VAT number" value={preview.invoice_to.vat_number} />
-            <CopyRow label="Tax office" value={preview.invoice_to.tax_office} />
-            <CopyRow label="Address" value={preview.invoice_to.address} />
+            <CopyRow label={t("legalName")} value={preview.invoice_to.legal_name} />
+            <CopyRow label={t("vatNumber")} value={preview.invoice_to.vat_number} />
+            <CopyRow label={t("taxOffice")} value={preview.invoice_to.tax_office} />
+            <CopyRow label={t("address")} value={preview.invoice_to.address} />
           </>
         ) : (
           <p className="py-2 text-sm text-zinc-500">
-            Invoice details will be shared with you by Delitip.
+            {t("invoiceDetailsPending")}
           </p>
         )}
         <CopyRow
-          label="Invoice amount (before VAT)"
-          value={formatMoney(preview.amount, currency)}
+          label={t("invoiceAmount")}
+          value={formatMoney(preview.amount, currency, locale)}
         />
-        <p className="pt-2 text-caption leading-snug text-zinc-500">
-          The amount before VAT on the invoice must be exactly{" "}
-          <strong className="text-ink-charcoal">
-            {formatMoney(preview.amount, currency)}
-          </strong>
-          . Add your VAT on top, as you normally would.
+        <p className="pt-2 text-base leading-snug text-zinc-500">
+          {t.rich("invoiceAmountNote", {
+            amount: formatMoney(preview.amount, currency, locale),
+            b: (chunks) => <strong className="text-ink-charcoal">{chunks}</strong>,
+          })}
         </p>
       </div>
 
       {preview.instructions ? (
-        <div className="rounded-xl bg-brand-50/60 px-3.5 py-3 text-caption leading-snug text-brand-900">
+        <div className="rounded-xl bg-brand-50/60 px-3.5 py-3 text-base leading-snug text-brand-900">
           {preview.instructions}
         </div>
       ) : null}
 
       <FilePicker
-        label="Invoice file"
+        label={t("invoiceFile")}
         value={file}
         onChange={onFileChange}
         accept={INVOICE_ACCEPTED_MIME_TYPES}
@@ -246,21 +247,21 @@ const InvoiceStep: FC<{
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="payout-request-invoice-number">
-            Invoice number{" "}
-            <span className="font-normal text-zinc-400">(optional)</span>
+            {t("invoiceNumber")}{" "}
+            <span className="font-normal text-zinc-400">{t("optional")}</span>
           </Label>
           <Input
             id="payout-request-invoice-number"
             value={invoiceNumber}
             onChange={(event) => onInvoiceNumberChange(event.target.value)}
-            placeholder="e.g. A-0042"
+            placeholder={t("invoiceNumberPlaceholder")}
             maxLength={80}
           />
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="payout-request-note">
-            Note for Delitip{" "}
-            <span className="font-normal text-zinc-400">(optional)</span>
+            {t("noteForDelitip")}{" "}
+            <span className="font-normal text-zinc-400">{t("optional")}</span>
           </Label>
           <Textarea
             id="payout-request-note"
@@ -268,7 +269,7 @@ const InvoiceStep: FC<{
             onChange={(event) => onNoteChange(event.target.value)}
             rows={2}
             maxLength={1000}
-            placeholder="Anything the reviewer should know"
+            placeholder={t("notePlaceholder")}
           />
         </div>
       </div>
@@ -279,50 +280,43 @@ const InvoiceStep: FC<{
 const DoneStep: FC<{ amount: number; currency: Currency }> = ({
   amount,
   currency,
-}) => (
+}) => {
+  const t = useTranslations("dashboard.money.payoutRequestDialog");
+  const locale = useLocale();
+  const steps = [
+    { icon: Sparkles, key: "read" },
+    { icon: FileText, key: "review" },
+    { icon: Wallet, key: "transfer" },
+  ] as const;
+  return (
   <div className="space-y-4">
     <div className="flex items-center gap-3 rounded-2xl border border-brand-200 bg-brand-50/40 px-4 py-3">
       <CheckCircle2 className="size-5 shrink-0 text-brand-700" strokeWidth={2} />
       <div>
         <p className="text-sm font-semibold text-ink-charcoal">
-          Request for {formatMoney(amount, currency)} submitted
+          {t("submittedTitle", { amount: formatMoney(amount, currency, locale) })}
         </p>
-        <p className="text-caption text-zinc-500">
-          Submitted {formatDateTime(new Date().toISOString())}
+        <p className="text-base text-zinc-500">
+          {t("submittedAt", { date: formatDateTime(new Date().toISOString(), locale) })}
         </p>
       </div>
     </div>
     <ol className="space-y-2.5 text-sm">
-      {[
-        {
-          icon: Sparkles,
-          title: "We read your invoice",
-          body: "An automatic check compares it with the amount above in about a minute.",
-        },
-        {
-          icon: FileText,
-          title: "Delitip reviews it",
-          body: "An admin approves it or sends it back with a note if something is off.",
-        },
-        {
-          icon: Wallet,
-          title: "The transfer is sent",
-          body: "On approval the bank transfer starts; you'll get an alert and an email.",
-        },
-      ].map(({ icon: Icon, title, body }) => (
-        <li key={title} className="flex gap-3">
+      {steps.map(({ icon: Icon, key }) => (
+        <li key={key} className="flex gap-3">
           <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-500">
             <Icon className="size-3.5" strokeWidth={2} />
           </span>
           <div>
-            <p className="font-semibold text-ink-charcoal">{title}</p>
-            <p className="text-caption text-zinc-500">{body}</p>
+            <p className="font-semibold text-ink-charcoal">{t(`steps.${key}.title`)}</p>
+            <p className="text-base text-zinc-500">{t(`steps.${key}.body`)}</p>
           </div>
         </li>
       ))}
     </ol>
   </div>
-);
+  );
+};
 
 export const PayoutRequestDialog: FC<{
   open: boolean;
@@ -330,6 +324,8 @@ export const PayoutRequestDialog: FC<{
   storeId: string;
   currency: Currency;
 }> = ({ open, onOpenChange, storeId, currency }) => {
+  const t = useTranslations("dashboard.money.payoutRequestDialog");
+  const locale = useLocale();
   const [step, setStep] = useState<Step>("overview");
   const [file, setFile] = useState<File | null>(null);
   const [invoiceNumber, setInvoiceNumber] = useState("");
@@ -378,16 +374,16 @@ export const PayoutRequestDialog: FC<{
 
   const title =
     step === "overview"
-      ? "Request a payout"
+      ? t("titles.overview")
       : step === "invoice"
-        ? "Upload your invoice"
-        : "Payout request submitted";
+        ? t("titles.invoice")
+        : t("titles.done");
   const description =
     step === "overview"
-      ? "Here's what you'll be paid and the tips it covers. Next you'll issue an invoice for exactly this amount."
+      ? t("descriptions.overview")
       : step === "invoice"
-        ? "Issue the invoice to the details below, then upload it as a PDF or photo."
-        : "We'll take it from here.";
+        ? t("descriptions.invoice")
+        : t("descriptions.done");
 
   return (
     <Dialog
@@ -413,23 +409,22 @@ export const PayoutRequestDialog: FC<{
             <Skeleton className="h-14 w-full rounded-2xl" />
           </div>
         ) : step !== "done" && (previewQuery.isError || !preview) ? (
-          <p className="text-caption text-red-600">
-            {getErrorMessage(previewQuery.error, "Could not load the payout preview.")}
+          <p className="text-base text-red-600">
+            {getErrorMessage(previewQuery.error, t("loadFailed"))}
           </p>
         ) : step === "overview" && preview ? (
           preview.open_request ? (
-            <div className="flex gap-2.5 rounded-xl bg-amber-50/60 px-3.5 py-3 text-caption leading-snug text-amber-900">
+            <div className="flex gap-2.5 rounded-xl bg-amber-50/60 px-3.5 py-3 text-base leading-snug text-amber-900">
               <Building2 className="mt-0.5 size-3.5 shrink-0" strokeWidth={2} />
               <span>
-                You already have a request for{" "}
-                {formatMoney(preview.open_request.amount, resolvedCurrency)}{" "}
-                awaiting review. Cancel it from the Payouts tab if you need to
-                start over.
+                {t("openRequest", {
+                  amount: formatMoney(preview.open_request.amount, resolvedCurrency, locale),
+                })}
               </span>
             </div>
           ) : preview.amount === 0 ? (
-            <p className="text-caption text-zinc-500">
-              Nothing is payable to your store right now.
+            <p className="text-base text-zinc-500">
+              {t("nothingPayable")}
             </p>
           ) : (
             <OverviewStep preview={preview} currency={resolvedCurrency} />
@@ -459,7 +454,7 @@ export const PayoutRequestDialog: FC<{
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                {t("cancel")}
               </Button>
               <Button
                 type="button"
@@ -467,7 +462,7 @@ export const PayoutRequestDialog: FC<{
                 onClick={() => setStep("invoice")}
                 className="bg-electric-lime text-ink-charcoal"
               >
-                Continue to invoice
+                {t("continue")}
               </Button>
             </>
           ) : step === "invoice" ? (
@@ -478,7 +473,7 @@ export const PayoutRequestDialog: FC<{
                 disabled={isSubmitting}
                 onClick={() => setStep("overview")}
               >
-                Back
+                {t("back")}
               </Button>
               <ActionButtonWithPending
                 type="button"
@@ -487,12 +482,12 @@ export const PayoutRequestDialog: FC<{
                 onClick={() => void handleSubmit()}
                 className="bg-electric-lime text-ink-charcoal"
               >
-                Submit request
+                {t("submit")}
               </ActionButtonWithPending>
             </>
           ) : (
             <Button type="button" onClick={() => onOpenChange(false)}>
-              Done
+              {t("done")}
             </Button>
           )}
         </DialogFooter>

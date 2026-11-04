@@ -1,0 +1,106 @@
+{
+  "shell": {
+    "footer": "© 2026 delitip · Φιλοδώρημα. Εκτίμηση. Σύνδεση."
+  },
+  "brand": {
+    "contactSupport": "Υποστήριξη",
+    "headline": "Η εξυπηρέτηση που <accent>αξίζει</accent> φιλοδώρημα.",
+    "showTipFrom": "Εμφάνιση φιλοδωρήματος από {name}",
+    "roles": {
+      "server": "Σερβιτόρα",
+      "bartender": "Bartender",
+      "barista": "Barista"
+    }
+  },
+  "roleSwitcher": {
+    "business": "Επιχείρηση",
+    "staff": "Προσωπικό"
+  },
+  "signIn": {
+    "metaTitle": "Σύνδεση - delitip",
+    "metaDescription": "Συνδεθείτε στο delitip για να διαχειρίζεστε φιλοδωρήματα, πληρωμές ομάδας και κριτικές πελατών σε πραγματικό χρόνο.",
+    "title": "Καλώς ήρθατε ξανά",
+    "subtitle": "Συνδεθείτε για να διαχειριστείτε την ομάδα σας, τα φιλοδωρήματα και τις κριτικές πελατών σε πραγματικό χρόνο.",
+    "emailLabel": "Email επιχείρησης",
+    "emailPlaceholder": "manager@artisancafe.com",
+    "passwordLabel": "Κωδικός",
+    "forgotPassword": "Ξεχάσατε τον κωδικό;",
+    "submit": "Σύνδεση στο delitip",
+    "newHere": "Είστε νέοι στο delitip;",
+    "createAccount": "Δημιουργία λογαριασμού επιχείρησης"
+  },
+  "employee": {
+    "title": "Πύλη εργαζομένων",
+    "subtitle": "Δείτε τα προσωπικά σας φιλοδωρήματα, τις πληρωμές και τις κριτικές πελατών.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "maria@artisancafe.com",
+    "passwordLabel": "Κωδικός",
+    "forgotPassword": "Ξεχάσατε τον κωδικό;",
+    "invitationHint": "Χρησιμοποιήστε το email και τον κωδικό από το email πρόσκλησής σας.",
+    "submit": "Πρόσβαση στο προφίλ μου",
+    "areYouEmployer": "Είστε εργοδότης;",
+    "businessSignIn": "Σύνδεση επιχείρησης"
+  },
+  "signUp": {
+    "metaTitle": "Δημιουργία λογαριασμού - delitip",
+    "metaDescription": "Εγγράψτε την επιχείρησή σας στο delitip και ξεκινήστε να συλλέγετε φιλοδωρήματα και σχόλια για την ομάδα σας σε λιγότερο από 2 λεπτά.",
+    "title": "Εγγραφή επιχείρησης",
+    "subtitle": "Ξεκινήστε να συλλέγετε φιλοδωρήματα και σχόλια για την ομάδα σας σε λιγότερο από 2 λεπτά.",
+    "fullNameLabel": "Ονοματεπώνυμο",
+    "fullNamePlaceholder": "Γιώργος Παπαδάκης",
+    "emailLabel": "Email",
+    "emailPlaceholder": "john@artisancafe.com",
+    "passwordLabel": "Δημιουργία κωδικού",
+    "passwordPlaceholder": "Τουλάχιστον 8 χαρακτήρες",
+    "consent": "Με την εγγραφή σας, αποδέχεστε τους <terms>Όρους χρήσης</terms> και την <privacy>Πολιτική απορρήτου</privacy> του delitip.",
+    "submit": "Δημιουργία λογαριασμού",
+    "alreadyRegistered": "Έχετε ήδη λογαριασμό;",
+    "signInInstead": "Συνδεθείτε"
+  },
+  "forgotPassword": {
+    "metaTitle": "Ξεχάσατε τον κωδικό - delitip",
+    "metaDescription": "Ζητήστε σύνδεσμο επαναφοράς κωδικού για τον λογαριασμό σας στο delitip.",
+    "sentTitle": "Ελέγξτε το email σας",
+    "sentDescription": "Αν υπάρχει λογαριασμός για το <b>{email}</b>, στείλαμε έναν σύνδεσμο για την επαναφορά του κωδικού σας. Ο σύνδεσμος λήγει σε μία ώρα.",
+    "backToSignIn": "Επιστροφή στη σύνδεση",
+    "title": "Ξεχάσατε τον κωδικό",
+    "subtitle": "Εισαγάγετε το email σας και, αν υπάρχει λογαριασμός, θα σας στείλουμε σύνδεσμο επαναφοράς.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "manager@artisancafe.com",
+    "submit": "Αποστολή συνδέσμου",
+    "remembered": "Τον θυμηθήκατε;",
+    "signIn": "Σύνδεση"
+  },
+  "resetPassword": {
+    "metaTitle": "Επαναφορά κωδικού - delitip",
+    "metaDescription": "Ορίστε νέο κωδικό για τον λογαριασμό σας στο delitip.",
+    "invalidTitle": "Μη έγκυρος σύνδεσμος επαναφοράς",
+    "invalidDescription": "Στον σύνδεσμο επαναφοράς κωδικού λείπει το αναγνωριστικό. Ζητήστε νέο σύνδεσμο από τη σελίδα «Ξεχάσατε τον κωδικό».",
+    "requestNewLink": "Αίτημα νέου συνδέσμου",
+    "title": "Ορίστε νέο κωδικό",
+    "subtitle": "Επιλέξτε νέο κωδικό για τον λογαριασμό σας στο delitip.",
+    "passwordLabel": "Νέος κωδικός",
+    "passwordPlaceholder": "Τουλάχιστον 8 χαρακτήρες",
+    "confirmLabel": "Επιβεβαίωση κωδικού",
+    "confirmPlaceholder": "Επαναλάβετε τον κωδικό",
+    "submit": "Ενημέρωση κωδικού",
+    "backToSignIn": "Επιστροφή στη σύνδεση"
+  },
+  "acceptInvite": {
+    "metaTitle": "Ρύθμιση λογαριασμού - delitip",
+    "metaDescription": "Ενεργοποιήστε τον λογαριασμό προσωπικού σας στο delitip.",
+    "invalidTitle": "Μη έγκυρος σύνδεσμος πρόσκλησης",
+    "invalidDescription": "Ο σύνδεσμος πρόσκλησης δεν είναι έγκυρος ή έχει λήξει. Ζητήστε από τον ιδιοκτήτη του καταστήματος να σας στείλει ξανά την πρόσκληση.",
+    "missingTokenDescription": "Στον σύνδεσμο πρόσκλησης λείπει το αναγνωριστικό. Ζητήστε από τον ιδιοκτήτη του καταστήματος να σας στείλει ξανά την πρόσκληση.",
+    "backToSignIn": "Επιστροφή στη σύνδεση",
+    "title": "Καλώς ήρθατε στο delitip",
+    "subtitle": "Ορίστε έναν κωδικό για να ενεργοποιήσετε τον λογαριασμό σας και να ξεκινήσετε να λαμβάνετε φιλοδωρήματα.",
+    "emailLabel": "Email",
+    "loading": "Φόρτωση…",
+    "passwordLabel": "Κωδικός",
+    "passwordPlaceholder": "Τουλάχιστον 8 χαρακτήρες",
+    "confirmLabel": "Επιβεβαίωση κωδικού",
+    "confirmPlaceholder": "Επαναλάβετε τον κωδικό",
+    "submit": "Ενεργοποίηση λογαριασμού"
+  }
+}

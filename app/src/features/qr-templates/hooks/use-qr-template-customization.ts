@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "@/components/ui/toast";
 import {
   getQrTemplateCustomization,
@@ -32,6 +33,7 @@ export const useSaveQrTemplateCustomization = (
   storeId: string,
   templateId: QrTemplateId,
 ) => {
+  const t = useTranslations("dashboard.access.templateEditor");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -42,11 +44,11 @@ export const useSaveQrTemplateCustomization = (
       void queryClient.invalidateQueries({
         queryKey: qrTemplateCustomizationQueryKeys.detail(storeId, templateId),
       });
-      toast.add({ title: "Design saved", type: "success" });
+      toast.add({ title: t("saved"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not save design",
+        title: t("saveFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -58,6 +60,7 @@ export const useResetQrTemplateCustomization = (
   storeId: string,
   templateId: QrTemplateId,
 ) => {
+  const t = useTranslations("dashboard.access.templateEditor");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -67,11 +70,11 @@ export const useResetQrTemplateCustomization = (
       void queryClient.invalidateQueries({
         queryKey: qrTemplateCustomizationQueryKeys.detail(storeId, templateId),
       });
-      toast.add({ title: "Design reset to default", type: "success" });
+      toast.add({ title: t("resetDone"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not reset design",
+        title: t("resetFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

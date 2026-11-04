@@ -2,6 +2,8 @@
 
 import { type FC, useMemo, useState } from "react";
 import { History, Search, X } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
+import { useDropdownOptions } from "@/hooks/use-dropdown-options";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,11 +37,6 @@ import { ChangelogEntryCard } from "./changelog-entry-card";
 type ChangelogTypeFilter = ChangelogType | "all";
 type SessionMoodFilter = SessionMood | "all";
 
-const formatDate = (value: string) =>
-  new Date(value).toLocaleDateString(undefined, {
-    dateStyle: "medium",
-  });
-
 const matchesSearch = (entry: ChangelogEntry, term: string) =>
   [
     entry.title,
@@ -54,6 +51,12 @@ const matchesSearch = (entry: ChangelogEntry, term: string) =>
     .some((field) => field!.toLowerCase().includes(term));
 
 export const AdminChangelogPageContent: FC = () => {
+  const t = useTranslations("dashboard.adminSystem.changelog");
+  const format = useFormatter();
+  const typeOptions = useDropdownOptions(ChangelogTypeFilterOptions);
+  const moodOptions = useDropdownOptions(SessionMoodFilterOptions);
+  const formatDate = (value: string) =>
+    format.dateTime(new Date(value), { dateStyle: "medium", timeZone: "UTC" });
   const [type, setType] = useState<ChangelogTypeFilter>("all");
   const [mood, setMood] = useState<SessionMoodFilter>("all");
   const [dateFrom, setDateFrom] = useState("");
@@ -100,16 +103,16 @@ export const AdminChangelogPageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="Changelog"
-        description="Everything shipped to delitip, newest first."
+        title={t("title")}
+        description={t("description")}
         actions={
           <div className="relative w-full sm:w-72">
             <Search className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-zinc-400" />
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search changes or commits"
-              aria-label="Search changelog"
+              placeholder={t("searchPlaceholder")}
+              aria-label={t("searchAria")}
               className="rounded-xl border-zinc-200 bg-white pl-9 font-medium text-ink-charcoal shadow-xs"
             />
           </div>
@@ -125,10 +128,10 @@ export const AdminChangelogPageContent: FC = () => {
           <TabsList
             className="h-auto max-w-full flex-wrap justify-start gap-y-1 *:data-[slot=tabs-trigger]:flex-none"
           >
-            {ChangelogTypeFilterOptions.map((option) => (
+            {typeOptions.map((option) => (
               <TabsTrigger key={option.id} value={option.id}>
                 {option.label}
-                <span className="text-caption font-semibold text-zinc-400">
+                <span className="text-base font-semibold text-zinc-400">
                   {option.id === "all"
                     ? ChangelogEntries.length
                     : (countsByType[option.id] ?? 0)}
@@ -140,7 +143,7 @@ export const AdminChangelogPageContent: FC = () => {
 
         <div className="flex flex-wrap items-center gap-2">
           <Select
-            items={SessionMoodFilterOptions.map((option) => ({
+            items={moodOptions.map((option) => ({
               label: option.label,
               value: option.id,
             }))}
@@ -150,14 +153,14 @@ export const AdminChangelogPageContent: FC = () => {
             }}
           >
             <SelectTrigger
-              aria-label="Filter by session"
+              aria-label={t("filterBySession")}
               className="min-w-36 rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs"
             >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {SessionMoodFilterOptions.map((option) => (
+                {moodOptions.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.label}
                   </SelectItem>
@@ -169,16 +172,16 @@ export const AdminChangelogPageContent: FC = () => {
           <DatePicker
             value={dateFrom}
             onChange={setDateFrom}
-            placeholder="From date"
-            aria-label="From date"
+            placeholder={t("fromDate")}
+            aria-label={t("fromDate")}
             className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
           />
-          <span className="text-xs text-zinc-400">to</span>
+          <span className="text-xs text-zinc-400">{t("to")}</span>
           <DatePicker
             value={dateTo}
             onChange={setDateTo}
-            placeholder="To date"
-            aria-label="To date"
+            placeholder={t("toDate")}
+            aria-label={t("toDate")}
             className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
           />
 
@@ -191,10 +194,10 @@ export const AdminChangelogPageContent: FC = () => {
                 setDateFrom("");
                 setDateTo("");
               }}
-              className="rounded-xl text-chip font-semibold text-zinc-500"
+              className="rounded-xl text-base font-semibold text-zinc-500"
             >
               <X data-icon="inline-start" className="size-3.5" />
-              Clear dates
+              {t("clearDates")}
             </Button>
           ) : null}
         </div>
@@ -206,11 +209,9 @@ export const AdminChangelogPageContent: FC = () => {
             <EmptyMedia variant="icon">
               <History />
             </EmptyMedia>
-            <EmptyTitle>No changes found</EmptyTitle>
+            <EmptyTitle>{t("empty.title")}</EmptyTitle>
             <EmptyDescription>
-              {search
-                ? "No entries match your search."
-                : "Nothing has been logged for these filters yet."}
+              {search ? t("empty.search") : t("empty.filters")}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -218,7 +219,7 @@ export const AdminChangelogPageContent: FC = () => {
         <div className="space-y-7">
           {groups.map(([date, entries]) => (
             <section key={date}>
-              <h2 className="text-caption font-bold tracking-wide text-zinc-400 uppercase">
+              <h2 className="text-base font-bold tracking-wide text-zinc-400 uppercase">
                 {formatDate(date)}
               </h2>
               <ul className="mt-2 list-none">

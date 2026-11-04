@@ -2,6 +2,7 @@
 
 import { type FC, useEffect, useState } from "react";
 import { Controller, useWatch } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import { User, Users, UsersRound } from "lucide-react";
 import { InFlowSelect } from "@/app/dashboard/access/components/in-flow-select";
 import { SpotFormDialog } from "@/app/dashboard/access/components/spot-form-dialog";
@@ -15,7 +16,7 @@ import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getQrCodeSelectionModeDescription } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-description.options";
+import { QrCodeSelectionModeDescriptionOptions } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-description.options";
 import { QrCodeSelectionModeFormOptions } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
 import { QrEditorSections } from "@/config/constants/dropdowns/qr-codes/qr-editor-section.options";
 import { useDistributionRules } from "@/features/distribution/hooks/use-distribution";
@@ -25,6 +26,10 @@ import {
   type QrCodeSelectionMode,
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { useSpots } from "@/features/spots/hooks/use-spots";
+import {
+  useDropdownDescription,
+  useDropdownLabel,
+} from "@/hooks/use-dropdown-options";
 import { cn } from "@/lib/utils";
 
 const selectionModeIcons: Record<QrCodeSelectionMode, typeof User> = {
@@ -39,6 +44,9 @@ const MULTI_EMPLOYEE_SELECTION_MODES = new Set<QrCodeSelectionMode>([
 ]);
 
 export const RecipientsSection: FC = () => {
+  const t = useTranslations("dashboard.access.qrEditor.recipients");
+  const modeLabel = useDropdownLabel();
+  const modeDescription = useDropdownDescription();
   const { form, store } = useQrEditor();
   const { control, setValue } = form;
   const storeId = store.id;
@@ -72,7 +80,7 @@ export const RecipientsSection: FC = () => {
   return (
     <SectionCard section={QrEditorSections.RECIPIENTS}>
       <div className="space-y-2">
-        <Label>Employees</Label>
+        <Label>{t("employees")}</Label>
         <div className="flex max-h-56 min-w-0 flex-col gap-1 overflow-y-auto overflow-x-hidden rounded-xl border border-zinc-200 p-2">
           {employeesQuery.isPending ? (
             <div className="flex flex-col gap-2 p-1">
@@ -82,8 +90,7 @@ export const RecipientsSection: FC = () => {
             </div>
           ) : employees.length === 0 ? (
             <p className="px-1.5 py-2 text-xs text-zinc-500">
-              No active employees yet. Add staff first, or leave empty for
-              store-only tips.
+              {t("noEmployees")}
             </p>
           ) : (
             <Controller
@@ -134,9 +141,8 @@ export const RecipientsSection: FC = () => {
             />
           )}
         </div>
-        <p className="text-[11px] text-zinc-400">
-          Assigned staff appear on this QR for customers. Leave empty for
-          store-only tips.
+        <p className="text-base text-zinc-400">
+          {t("employeesHint")}
         </p>
         <Button
           type="button"
@@ -144,12 +150,12 @@ export const RecipientsSection: FC = () => {
           className="h-auto px-0 text-xs font-semibold text-brand-700 decoration-brand-700/40 hover:decoration-brand-700"
           onClick={() => setEmployeeFormOpen(true)}
         >
-          Create employee
+          {t("createEmployee")}
         </Button>
       </div>
 
       <div className="space-y-2">
-        <Label id="qr-mode-label">Selection mode</Label>
+        <Label id="qr-mode-label">{t("selectionMode")}</Label>
         <Controller
           name="qr.selection_mode"
           control={control}
@@ -192,14 +198,17 @@ export const RecipientsSection: FC = () => {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-sm font-semibold text-ink-charcoal">
-                        {option.label}
+                        {modeLabel(QrCodeSelectionModeFormOptions, option.id)}
                       </span>
                       <span className="mt-0.5 block text-xs leading-relaxed text-zinc-500">
                         {disabled
                           ? selectedEmployeeCount === 1
-                            ? "Needs 2+ employees. With one person assigned, tips go to them directly."
-                            : "Select 2 or more employees above to enable this mode."
-                          : getQrCodeSelectionModeDescription(option.id)}
+                            ? t("needsTwo")
+                            : t("selectTwoAbove")
+                          : modeDescription(
+                              QrCodeSelectionModeDescriptionOptions,
+                              option.id,
+                            )}
                       </span>
                     </span>
                   </label>
@@ -208,18 +217,33 @@ export const RecipientsSection: FC = () => {
             </RadioGroup>
           )}
         />
-        <p className="text-[11px] text-zinc-400">
+        <p className="text-base text-zinc-400">
           {multiEmployeeModesEnabled
-            ? "Customers follow this mode when scanning the QR."
+            ? t("modeHintEnabled")
             : selectedEmployeeCount === 1
-              ? "With one employee selected, only Choose one is available."
-              : "Select 2 or more employees to unlock Choose many and Entire team."}
+              ? t("modeHintOne", {
+                  chooseOne: modeLabel(
+                    QrCodeSelectionModeFormOptions,
+                    QrCodeSelectionModes.CHOOSE_ONE,
+                  ),
+                })
+              : t("modeHintNone", {
+                  chooseMany: modeLabel(
+                    QrCodeSelectionModeFormOptions,
+                    QrCodeSelectionModes.CHOOSE_MANY,
+                  ),
+                  entireTeam: modeLabel(
+                    QrCodeSelectionModeFormOptions,
+                    QrCodeSelectionModes.TEAM,
+                  ),
+                })}
         </p>
       </div>
 
       <div className="space-y-2">
         <Label>
-          Spots <span className="font-normal text-zinc-400">(optional)</span>
+          {t("spots")}{" "}
+          <span className="font-normal text-zinc-400">{t("optional")}</span>
         </Label>
         <div className="flex max-h-40 min-w-0 flex-col gap-1 overflow-y-auto overflow-x-hidden rounded-xl border border-zinc-200 p-2">
           {spotsQuery.isPending ? (
@@ -230,7 +254,7 @@ export const RecipientsSection: FC = () => {
             </div>
           ) : spots.length === 0 ? (
             <p className="px-1.5 py-2 text-xs text-zinc-500">
-              No spots yet. Create one below, or leave empty.
+              {t("noSpots")}
             </p>
           ) : (
             <Controller
@@ -269,8 +293,8 @@ export const RecipientsSection: FC = () => {
             />
           )}
         </div>
-        <p className="text-[11px] text-zinc-400">
-          Optional location tags like tables or counters for this QR.
+        <p className="text-base text-zinc-400">
+          {t("spotsHint")}
         </p>
         <Button
           type="button"
@@ -278,14 +302,14 @@ export const RecipientsSection: FC = () => {
           className="h-auto px-0 text-xs font-semibold text-brand-700 decoration-brand-700/40 hover:decoration-brand-700"
           onClick={() => setSpotFormOpen(true)}
         >
-          Create spot
+          {t("createSpot")}
         </Button>
       </div>
 
       <div className="space-y-1.5">
         <Label htmlFor="qr-rule">
-          Distribution rule{" "}
-          <span className="font-normal text-zinc-400">(optional)</span>
+          {t("distributionRule")}{" "}
+          <span className="font-normal text-zinc-400">{t("optional")}</span>
         </Label>
         <Controller
           name="qr.distribution_rule_id"
@@ -296,15 +320,14 @@ export const RecipientsSection: FC = () => {
               value={field.value ?? ""}
               onValueChange={field.onChange}
               options={[
-                { value: "", label: "Store default" },
+                { value: "", label: t("storeDefault") },
                 ...rules.map((rule) => ({ value: rule.id, label: rule.name })),
               ]}
             />
           )}
         />
-        <p className="text-[11px] text-zinc-400">
-          Store default follows the rule set on the Tipping step. If none is
-          set, tips are recorded without a split.
+        <p className="text-base text-zinc-400">
+          {t("ruleHint")}
         </p>
         <Button
           type="button"
@@ -312,7 +335,7 @@ export const RecipientsSection: FC = () => {
           className="h-auto px-0 text-xs font-semibold text-brand-700 decoration-brand-700/40 hover:decoration-brand-700"
           onClick={() => setRuleFormOpen(true)}
         >
-          Create distribution rule
+          {t("createRule")}
         </Button>
       </div>
 

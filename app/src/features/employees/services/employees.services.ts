@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -22,7 +23,7 @@ export const listEmployees = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load employees. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadEmployees")));
   }
 };
 
@@ -33,7 +34,7 @@ export const getEmployee = async (id: string): Promise<Employee> => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load employee. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadEmployee")));
   }
 };
 
@@ -48,7 +49,7 @@ export const createEmployee = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't create employee. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.createEmployee")));
   }
 };
 
@@ -63,7 +64,7 @@ export const updateEmployee = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't update employee. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.updateEmployee")));
   }
 };
 
@@ -71,7 +72,7 @@ export const deleteEmployee = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.employees.byId(id));
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't delete employee. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.deleteEmployee")));
   }
 };
 
@@ -83,7 +84,7 @@ export const resendEmployeeInvite = async (id: string): Promise<Employee> => {
     return response.data;
   } catch (error) {
     throw new Error(
-      getErrorMessage(error, "We couldn't resend the invite. Please try again."),
+      getErrorMessage(error, tr("errors.services.resendTheInvite")),
     );
   }
 };
@@ -97,7 +98,7 @@ export const getEmployeeDashboard = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load employee dashboard. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadEmployeeDashboard")));
   }
 };
 
@@ -110,6 +111,6 @@ export const getEmployeeQrCode = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load your QR code. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadYourQRCode")));
   }
 };

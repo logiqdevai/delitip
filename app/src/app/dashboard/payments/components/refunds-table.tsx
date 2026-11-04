@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { RefreshCcw, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -41,7 +42,8 @@ import type {
   RefundsQuery,
 } from "@/features/refunds/interfaces/refunds.interfaces";
 import { RefundStatusFilterOptions } from "@/config/constants/dropdowns/refunds/refund-status-filter.options";
-import { getRefundStatusLabel } from "@/config/constants/dropdowns/refunds/refund-status-form.options";
+import { RefundStatusFormOptions } from "@/config/constants/dropdowns/refunds/refund-status-form.options";
+import { useDropdownLabel, useDropdownOptions } from "@/hooks/use-dropdown-options";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
@@ -54,9 +56,9 @@ const statusChipClass: Record<RefundStatus, string> = {
   COMPLETED: "bg-zinc-100 text-zinc-600",
 };
 
-const formatDate = (value?: string | null) => {
+const formatDate = (value: string | null | undefined, locale: string) => {
   if (!value) return "-";
-  return new Date(value).toLocaleDateString(undefined, { dateStyle: "medium" });
+  return new Date(value).toLocaleDateString(locale, { dateStyle: "medium" });
 };
 
 const userLabel = (
@@ -71,6 +73,10 @@ export const RefundsTable: FC<{
   storeId: string;
   currency: Currency;
 }> = ({ storeId, currency }) => {
+  const t = useTranslations("dashboard.money.refundsTable");
+  const locale = useLocale();
+  const statusFilterOptions = useDropdownOptions(RefundStatusFilterOptions);
+  const dropdownLabel = useDropdownLabel();
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<RefundStatus | "all">("all");
   const [dateFrom, setDateFrom] = useState("");
@@ -97,10 +103,10 @@ export const RefundsTable: FC<{
       <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
-          Filters
+          {t("filters")}
         </div>
         <Select
-          items={RefundStatusFilterOptions.map((option) => ({
+          items={statusFilterOptions.map((option) => ({
             label: option.label,
             value: option.id,
           }))}
@@ -117,7 +123,7 @@ export const RefundsTable: FC<{
           </SelectTrigger>
           <SelectContent className="w-auto min-w-40">
             <SelectGroup>
-              {RefundStatusFilterOptions.map((option) => (
+              {statusFilterOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.label}
                 </SelectItem>
@@ -131,19 +137,19 @@ export const RefundsTable: FC<{
             setDateFrom(value);
             setPage(1);
           }}
-          placeholder="From date"
-          aria-label="From date"
+          placeholder={t("fromDate")}
+          aria-label={t("fromDate")}
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
-        <span className="text-xs text-zinc-400">to</span>
+        <span className="text-xs text-zinc-400">{t("to")}</span>
         <DatePicker
           value={dateTo}
           onChange={(value) => {
             setDateTo(value);
             setPage(1);
           }}
-          placeholder="To date"
-          aria-label="To date"
+          placeholder={t("toDate")}
+          aria-label={t("toDate")}
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
       </div>
@@ -153,7 +159,7 @@ export const RefundsTable: FC<{
       ) : refundsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load refunds</EmptyTitle>
+            <EmptyTitle>{t("loadFailed")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(refundsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -162,7 +168,7 @@ export const RefundsTable: FC<{
               variant="outline"
               onClick={() => void refundsQuery.refetch()}
             >
-              Try again
+              {t("tryAgain")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -172,9 +178,9 @@ export const RefundsTable: FC<{
             <EmptyMedia variant="icon">
               <RefreshCcw />
             </EmptyMedia>
-            <EmptyTitle>No refund requests here</EmptyTitle>
+            <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>
-              Nothing matches these filters right now.
+              {t("emptyDescription")}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -184,26 +190,26 @@ export const RefundsTable: FC<{
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="px-4">When</TableHead>
-                  <TableHead className="px-4">Amount</TableHead>
-                  <TableHead className="px-4">Reason</TableHead>
-                  <TableHead className="px-4">Status</TableHead>
-                  <TableHead className="px-4">Requested by</TableHead>
-                  <TableHead className="px-4">Processed by</TableHead>
-                  <TableHead className="px-4 text-right">Actions</TableHead>
+                  <TableHead className="px-4">{t("columns.when")}</TableHead>
+                  <TableHead className="px-4">{t("columns.amount")}</TableHead>
+                  <TableHead className="px-4">{t("columns.reason")}</TableHead>
+                  <TableHead className="px-4">{t("columns.status")}</TableHead>
+                  <TableHead className="px-4">{t("columns.requestedBy")}</TableHead>
+                  <TableHead className="px-4">{t("columns.processedBy")}</TableHead>
+                  <TableHead className="px-4 text-right">{t("columns.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {refunds.map((refund) => (
                   <TableRow key={refund.id}>
                     <TableCell className="px-4 py-3.5 whitespace-nowrap text-zinc-500">
-                      {formatDate(refund.created_at)}
+                      {formatDate(refund.created_at, locale)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 font-bold text-ink-charcoal">
-                      {formatMoney(refund.amount, currency)}
+                      {formatMoney(refund.amount, currency, locale)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
-                      {refund.reason || "No reason given"}
+                      {refund.reason || t("noReason")}
                     </TableCell>
                     <TableCell className="px-4 py-3.5">
                       <div className="flex flex-wrap items-center gap-1.5">
@@ -213,14 +219,14 @@ export const RefundsTable: FC<{
                             statusChipClass[refund.status],
                           )}
                         >
-                          {getRefundStatusLabel(refund.status)}
+                          {dropdownLabel(RefundStatusFormOptions, refund.status)}
                         </span>
                         {refund.requires_manual_reconciliation ? (
                           <span
                             className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700"
-                            title="Some of this tip's distributions were already paid out - IBAN transfers can't be clawed back automatically."
+                            title={t("reconciliationHint")}
                           >
-                            Needs reconciliation
+                            {t("needsReconciliation")}
                           </span>
                         ) : null}
                       </div>
@@ -246,7 +252,7 @@ export const RefundsTable: FC<{
                               }
                               disabled={updateRefund.isPending}
                             >
-                              Approve
+                              {t("approve")}
                             </Button>
                             <Button
                               type="button"
@@ -258,7 +264,7 @@ export const RefundsTable: FC<{
                               }}
                               disabled={updateRefund.isPending}
                             >
-                              Reject
+                              {t("reject")}
                             </Button>
                           </>
                         ) : null}
@@ -274,7 +280,7 @@ export const RefundsTable: FC<{
                             }
                             disabled={updateRefund.isPending}
                           >
-                            Mark completed
+                            {t("markCompleted")}
                           </Button>
                         ) : null}
                       </div>
@@ -300,13 +306,15 @@ export const RefundsTable: FC<{
             if (!open) setPendingReject(null);
           },
         }}
-        title="Reject this refund request?"
+        title={t("rejectTitle")}
         description={
           pendingReject
-            ? `${formatMoney(pendingReject.amount, currency)} will not be refunded. This can't be undone.`
-            : "This refund request will be rejected."
+            ? t("rejectDescription", {
+                amount: formatMoney(pendingReject.amount, currency, locale),
+              })
+            : t("rejectFallback")
         }
-        confirmLabel="Reject"
+        confirmLabel={t("rejectConfirm")}
         isPending={updateRefund.isPending}
         onConfirm={async () => {
           if (!pendingReject) return;

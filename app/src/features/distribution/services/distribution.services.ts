@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -18,7 +19,7 @@ export const listDistributionRules = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load distribution rules. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadDistributionRules")));
   }
 };
 
@@ -31,7 +32,7 @@ export const getDistributionRule = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load distribution rule. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadDistributionRule")));
   }
 };
 
@@ -44,7 +45,7 @@ export const getDistributionRulePayoutModeImpact = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't check what this change affects. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.checkWhatThisChangeAffects")));
   }
 };
 
@@ -60,7 +61,7 @@ export const createDistributionRule = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't create distribution rule. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.createDistributionRule")),
     );
   }
 };
@@ -77,7 +78,7 @@ export const updateDistributionRule = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't update distribution rule. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.updateDistributionRule")),
     );
   }
 };
@@ -87,7 +88,7 @@ export const deleteDistributionRule = async (id: string): Promise<void> => {
     await axiosInstance.delete(ApiRoutes.distributionRules.byId(id));
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't delete distribution rule. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.deleteDistributionRule")),
     );
   }
 };
@@ -103,7 +104,7 @@ export const setDefaultDistributionRule = async (
     );
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't set default distribution rule. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.setDefaultDistributionRule")),
     );
   }
 };

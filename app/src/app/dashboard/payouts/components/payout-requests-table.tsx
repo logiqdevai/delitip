@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { FileText, ReceiptText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
@@ -33,10 +34,11 @@ import {
   type PayoutRequest,
   type PayoutRequestStatus,
 } from "@/features/payout-requests/interfaces/payout-requests.interfaces";
-import { getPayoutRequestStatusLabel } from "@/config/constants/dropdowns/payouts/payout-request-status-form.options";
+import { PayoutRequestStatusFormOptions } from "@/config/constants/dropdowns/payouts/payout-request-status-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
-import { getErrorMessage, TRANSFER_FAILED_MESSAGE } from "@/lib/api-error";
+import { getErrorMessage, getTransferFailedMessage } from "@/lib/api-error";
 
 const statusChipClass: Record<PayoutRequestStatus, string> = {
   PENDING_REVIEW: "bg-amber-50 text-amber-700",
@@ -45,14 +47,14 @@ const statusChipClass: Record<PayoutRequestStatus, string> = {
   CANCELLED: "bg-zinc-100 text-zinc-600",
 };
 
-const formatDate = (value?: string | null) => {
+const formatDate = (value: string | null | undefined, locale: string) => {
   if (!value) return "-";
-  return new Date(value).toLocaleDateString(undefined, { dateStyle: "medium" });
+  return new Date(value).toLocaleDateString(locale, { dateStyle: "medium" });
 };
 
-const formatDateTime = (value?: string | null) => {
+const formatDateTime = (value: string | null | undefined, locale: string) => {
   if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
+  return new Date(value).toLocaleString(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   });
@@ -60,15 +62,19 @@ const formatDateTime = (value?: string | null) => {
 
 // An approved request whose payout completed is simply "Paid" to the store;
 // the request status itself never changes (the webhook owns the payout).
-const resolveStatus = (request: PayoutRequest) => {
+const resolveStatus = (
+  request: PayoutRequest,
+  paidLabel: string,
+  statusLabel: (status: PayoutRequestStatus) => string,
+) => {
   if (
     request.status === PayoutRequestStatuses.APPROVED &&
     request.payout?.status === "COMPLETED"
   ) {
-    return { label: "Paid", className: "bg-brand-50 text-brand-700" };
+    return { label: paidLabel, className: "bg-brand-50 text-brand-700" };
   }
   return {
-    label: getPayoutRequestStatusLabel(request.status),
+    label: statusLabel(request.status),
     className: statusChipClass[request.status],
   };
 };
@@ -77,6 +83,9 @@ export const PayoutRequestsTable: FC<{
   storeId: string;
   canCancel: boolean;
 }> = ({ storeId, canCancel }) => {
+  const t = useTranslations("dashboard.money.payoutRequestsTable");
+  const locale = useLocale();
+  const dropdownLabel = useDropdownLabel();
   const requestsQuery = useStorePayoutRequests(storeId, { limit: 20 });
   const cancelRequest = useCancelPayoutRequest(storeId);
   const openInvoice = useOpenStorePayoutRequestInvoice(storeId);
@@ -88,10 +97,9 @@ export const PayoutRequestsTable: FC<{
   return (
     <div className="space-y-3">
       <div>
-        <h2 className="text-sm font-bold text-ink-charcoal">Payout requests</h2>
+        <h2 className="text-sm font-bold text-ink-charcoal">{t("title")}</h2>
         <p className="mt-0.5 text-xs text-zinc-500">
-          Invoices you submitted to be paid your tips, and how each was
-          reviewed.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -100,7 +108,7 @@ export const PayoutRequestsTable: FC<{
       ) : requestsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white py-12">
           <EmptyHeader>
-            <EmptyTitle>Could not load payout requests</EmptyTitle>
+            <EmptyTitle>{t("loadFailed")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(requestsQuery.error)}</EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -110,10 +118,9 @@ export const PayoutRequestsTable: FC<{
             <EmptyMedia variant="icon">
               <ReceiptText />
             </EmptyMedia>
-            <EmptyTitle>No payout requests yet</EmptyTitle>
+            <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>
-              Press Request payout on the Tips tab once you have eligible
-              tips.
+              {t("emptyDescription")}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -122,36 +129,43 @@ export const PayoutRequestsTable: FC<{
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="px-4">Submitted</TableHead>
-                <TableHead className="px-4">Amount</TableHead>
-                <TableHead className="px-4">Tips covered</TableHead>
-                <TableHead className="px-4">Status</TableHead>
-                <TableHead className="px-4 text-right">Invoice</TableHead>
+                <TableHead className="px-4">{t("columns.submitted")}</TableHead>
+                <TableHead className="px-4">{t("columns.amount")}</TableHead>
+                <TableHead className="px-4">{t("columns.tipsCovered")}</TableHead>
+                <TableHead className="px-4">{t("columns.status")}</TableHead>
+                <TableHead className="px-4 text-right">{t("columns.invoice")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {requests.map((request) => {
-                const status = resolveStatus(request);
+                const status = resolveStatus(request, t("paid"), (value) =>
+                  dropdownLabel(PayoutRequestStatusFormOptions, value),
+                );
                 const note =
                   request.admin_note ??
-                  (request.failure_reason ? TRANSFER_FAILED_MESSAGE : null);
+                  (request.failure_reason ? getTransferFailedMessage() : null);
                 return (
                   <TableRow key={request.id}>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
-                      {formatDateTime(request.created_at)}
+                      {formatDateTime(request.created_at, locale)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 font-bold text-ink-charcoal">
-                      {formatMoney(request.amount, request.currency)}
+                      {formatMoney(request.amount, request.currency, locale)}
                       {request.held_for_staff_amount > 0 ? (
-                        <span className="mt-0.5 block text-[11px] font-medium text-zinc-500">
-                          {formatMoney(request.held_for_staff_amount, request.currency)}{" "}
-                          held for staff
+                        <span className="mt-0.5 block text-base font-medium text-zinc-500">
+                          {t("heldForStaff", {
+                            amount: formatMoney(
+                              request.held_for_staff_amount,
+                              request.currency,
+                              locale,
+                            ),
+                          })}
                         </span>
                       ) : null}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
-                      {request.distribution_count} · {formatDate(request.period_from)}{" "}
-                      → {formatDate(request.period_to)}
+                      {request.distribution_count} · {formatDate(request.period_from, locale)}{" "}
+                      → {formatDate(request.period_to, locale)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5">
                       <span
@@ -163,7 +177,7 @@ export const PayoutRequestsTable: FC<{
                         {status.label}
                       </span>
                       {note ? (
-                        <p className="mt-1 max-w-xs text-[11px] leading-snug text-zinc-500">
+                        <p className="mt-1 max-w-xs text-base leading-snug text-zinc-500">
                           {note}
                         </p>
                       ) : null}
@@ -179,7 +193,7 @@ export const PayoutRequestsTable: FC<{
                           onClick={() => openInvoice.mutate(request.id)}
                         >
                           <FileText data-icon="inline-start" className="size-3.5" />
-                          View
+                          {t("view")}
                         </Button>
                         {canCancel &&
                         request.status === PayoutRequestStatuses.PENDING_REVIEW ? (
@@ -193,7 +207,7 @@ export const PayoutRequestsTable: FC<{
                               cancelConfirm.openDialog();
                             }}
                           >
-                            Cancel
+                            {t("cancel")}
                           </Button>
                         ) : null}
                       </div>
@@ -208,10 +222,10 @@ export const PayoutRequestsTable: FC<{
 
       <ConfirmationDialog
         state={cancelConfirm}
-        title="Cancel this payout request?"
-        description="Your tips are released immediately and you can submit a new request with a new invoice."
-        confirmLabel="Cancel request"
-        cancelLabel="Keep it"
+        title={t("cancelTitle")}
+        description={t("cancelDescription")}
+        confirmLabel={t("cancelConfirm")}
+        cancelLabel={t("keepIt")}
         isPending={cancelRequest.isPending}
         onConfirm={async () => {
           if (!cancellingId) return;

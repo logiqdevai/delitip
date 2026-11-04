@@ -1,11 +1,14 @@
-import { type FC, type ReactNode } from "react";
+import { type ReactNode } from "react";
+import { getTranslations } from "next-intl/server";
 import { AuthBrandPanel } from "./auth-brand-panel";
 
 interface AuthShellProps {
   children: ReactNode;
 }
 
-export const AuthShell: FC<AuthShellProps> = ({ children }) => {
+export const AuthShell = async ({ children }: AuthShellProps) => {
+  const t = await getTranslations("auth.shell");
+
   return (
     <div className="relative flex min-h-dvh flex-col overflow-x-hidden bg-ink-charcoal antialiased lg:items-center lg:justify-center lg:bg-paper-offwhite lg:px-8 lg:py-10 lg:text-ink-charcoal">
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
@@ -24,7 +27,7 @@ export const AuthShell: FC<AuthShellProps> = ({ children }) => {
       </div>
 
       <footer className="relative z-10 mx-auto hidden w-full max-w-5xl pt-6 text-caption text-zinc-400 lg:block">
-        © 2026 delitip · Tip. Appreciate. Connect.
+        {t("footer")}
       </footer>
     </div>
   );

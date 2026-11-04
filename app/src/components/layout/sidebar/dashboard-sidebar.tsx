@@ -3,6 +3,7 @@
 import { type FC, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   BarChart3,
   Bell,
@@ -51,19 +52,31 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { adminNavItems } from "@/app/dashboard/admin/components/admin-nav-items";
-import { getStoreIndustryLabel } from "@/config/constants/dropdowns/stores/store-industry-form.options";
+import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
 import { useUnreadAlertsCount } from "@/features/alerts/hooks/use-alerts";
 import { OrganizationRoles } from "@/features/organizations/interfaces/organizations.interfaces";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { usePlatformRole } from "@/hooks/use-platform-role";
 import { useWorkspaceStore } from "@/stores/workspace.store";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
 
+// Admin sub-items carry English labels (admin-nav-items.ts); map them to keys.
+const ADMIN_NAV_KEYS: Record<string, string> = {
+  Analytics: "analytics",
+  "All Users": "allUsers",
+  "Payments & Payouts": "paymentsPayouts",
+  "Webhook Events": "webhookEvents",
+  "VAT Simulator": "vatSimulator",
+  "App Config": "appConfig",
+  Changelog: "changelog",
+};
+
 const navItems = [
   {
     href: Routes.dashboard.admin.root,
-    label: "Admin",
+    labelKey: "admin",
     icon: ShieldCheck,
     requiresPlatformAdmin: true,
     match: (path: string) => path.startsWith(Routes.dashboard.admin.root),
@@ -71,59 +84,59 @@ const navItems = [
   },
   {
     href: Routes.dashboard.gettingStarted,
-    label: "Getting Started",
+    labelKey: "gettingStarted",
     icon: ListChecks,
     hideForAccountant: true,
     match: (path: string) => path.startsWith(Routes.dashboard.gettingStarted),
   },
   {
     href: Routes.dashboard.root,
-    label: "Overview",
+    labelKey: "overview",
     icon: LayoutGrid,
     match: (path: string) => path === Routes.dashboard.root,
   },
   {
     href: Routes.dashboard.employees,
-    label: "Employees",
+    labelKey: "employees",
     icon: Users,
     hideForAccountant: true,
     match: (path: string) => path.startsWith(Routes.dashboard.employees),
   },
   {
     href: Routes.dashboard.tips,
-    label: "Tips",
+    labelKey: "tips",
     icon: Wallet,
     match: (path: string) => path.startsWith(Routes.dashboard.tips),
   },
   {
     href: Routes.dashboard.access,
-    label: "QR Codes",
+    labelKey: "qrCodes",
     icon: QrCode,
     hideForAccountant: true,
     match: (path: string) => path.startsWith(Routes.dashboard.access),
   },
   {
     href: Routes.dashboard.analytics.overview,
-    label: "Analytics",
+    labelKey: "analytics",
     icon: BarChart3,
     match: (path: string) => path.startsWith(Routes.dashboard.analytics.root),
   },
   {
     href: Routes.dashboard.reviews,
-    label: "Reviews",
+    labelKey: "reviews",
     icon: Star,
     match: (path: string) => path.startsWith(Routes.dashboard.reviews),
   },
   {
     href: Routes.dashboard.alerts,
-    label: "Alerts",
+    labelKey: "alerts",
     icon: Bell,
     showUnreadBadge: true,
     match: (path: string) => path.startsWith(Routes.dashboard.alerts),
   },
   {
     href: Routes.dashboard.settings.profile,
-    label: "Settings",
+    labelKey: "settings",
     icon: Settings,
     match: (path: string) => path.startsWith(Routes.dashboard.settings.root),
   },
@@ -162,6 +175,9 @@ const StoreLogo: FC<{
 };
 
 export const DashboardSidebar: FC = () => {
+  const t = useTranslations("dashboard.shell.sidebar");
+  const tRoot = useTranslations();
+  const optionLabel = useDropdownLabel();
   const pathname = usePathname();
   const router = useRouter();
   const { state, isMobile, toggleSidebar, setOpenMobile } = useSidebar();
@@ -194,12 +210,18 @@ export const DashboardSidebar: FC = () => {
   );
 
   const metaParts = [
-    store ? getStoreIndustryLabel(store.industry) : null,
+    store ? optionLabel(StoreIndustryFormOptions, store.industry) : null,
     store?.city?.trim() || null,
   ].filter(Boolean);
 
   const closeMobileNav = () => {
     if (isMobile) setOpenMobile(false);
+  };
+
+  const adminSubItemLabel = (subItem: { label?: string; labelKey?: string }) => {
+    if (subItem.labelKey) return tRoot(subItem.labelKey);
+    const key = subItem.label ? ADMIN_NAV_KEYS[subItem.label] : undefined;
+    return key ? t(`adminNav.${key}`) : (subItem.label ?? "");
   };
 
   return (
@@ -211,16 +233,13 @@ export const DashboardSidebar: FC = () => {
             <div className="text-sm leading-none font-bold tracking-tight text-ink-charcoal">
               delitip
             </div>
-            <span className="text-[10px] font-medium tracking-wider text-zinc-400 uppercase">
-              Business Portal
-            </span>
           </div>
         </Link>
         <Button
           variant="ghost"
           size="icon-sm"
           onClick={toggleSidebar}
-          aria-label="Open navigation menu"
+          aria-label={t("openMenu")}
         >
           <Menu className="size-5" />
         </Button>
@@ -238,9 +257,6 @@ export const DashboardSidebar: FC = () => {
                 <div className="truncate text-sm leading-none font-bold tracking-tight text-ink-charcoal">
                   delitip
                 </div>
-                <span className="text-[10px] font-medium tracking-wider text-zinc-400 uppercase">
-                  Business Portal
-                </span>
               </div>
             </Link>
             <Button
@@ -249,10 +265,10 @@ export const DashboardSidebar: FC = () => {
               onClick={toggleSidebar}
               aria-label={
                 isMobile
-                  ? "Close navigation menu"
+                  ? t("closeMenu")
                   : collapsed
-                    ? "Expand sidebar"
-                    : "Collapse sidebar"
+                    ? t("expand")
+                    : t("collapse")
               }
               className="shrink-0"
             >
@@ -284,10 +300,10 @@ export const DashboardSidebar: FC = () => {
               ) : isError || !store ? (
                 <div className="min-w-0 px-0.5">
                   <div className="truncate text-xs font-bold text-ink-charcoal">
-                    No store selected
+                    {t("noStore")}
                   </div>
-                  <div className="text-[10px] font-medium text-zinc-400">
-                    Finish business setup to continue
+                  <div className="text-base font-medium text-zinc-400">
+                    {t("finishSetup")}
                   </div>
                 </div>
               ) : (
@@ -301,7 +317,7 @@ export const DashboardSidebar: FC = () => {
                     {showStoreMenu ? (
                       <DropdownMenu>
                         <DropdownMenuTrigger
-                          aria-label="Switch store"
+                          aria-label={t("switchStore")}
                           className="group flex w-full min-w-0 cursor-pointer items-center gap-1 text-left text-xs font-bold text-ink-charcoal outline-none"
                         >
                           <span className="truncate">{store.name}</span>
@@ -312,14 +328,14 @@ export const DashboardSidebar: FC = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" sideOffset={8} className="w-56">
                           <DropdownMenuGroup>
-                            <DropdownMenuLabel>Stores</DropdownMenuLabel>
+                            <DropdownMenuLabel>{t("stores")}</DropdownMenuLabel>
                             {storeList.map((item) => {
                               const selected = item.id === storeId;
                               return (
                                 <DropdownMenuItem
                                   key={item.id}
                                   className={cn(
-                                    "cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-chip",
+                                    "cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-base",
                                     selected
                                       ? "bg-brand-50 font-semibold text-brand-800 focus:bg-brand-50 focus:text-brand-800"
                                       : "font-medium text-zinc-600",
@@ -341,11 +357,11 @@ export const DashboardSidebar: FC = () => {
                             <>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
-                                className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-chip font-medium text-zinc-600"
+                                className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-base font-medium text-zinc-600"
                                 onClick={() => setAddStoreOpen(true)}
                               >
                                 <Plus className="size-4 text-zinc-400" strokeWidth={2} />
-                                Add store
+                                {t("addStore")}
                               </DropdownMenuItem>
                             </>
                           ) : null}
@@ -356,7 +372,7 @@ export const DashboardSidebar: FC = () => {
                         {store.name}
                       </div>
                     )}
-                    <div className="truncate text-[10px] font-medium text-zinc-400">
+                    <div className="truncate text-base font-medium text-zinc-400">
                       {metaParts.length > 0 ? metaParts.join(" • ") : store.currency}
                     </div>
                   </div>
@@ -385,10 +401,14 @@ export const DashboardSidebar: FC = () => {
 
         <SidebarContent className="px-2 py-3">
           <SidebarGroup className="p-0">
+            <p className="px-3 pb-2 text-base font-medium tracking-wider text-zinc-400 uppercase group-data-[collapsible=icon]:hidden">
+              {t("businessPortal")}
+            </p>
             <SidebarGroupContent>
               <SidebarMenu className="gap-1">
                 {visibleNavItems.map((item) => {
                   const Icon = item.icon;
+                  const itemLabel = t(`nav.${item.labelKey}`);
                   const active = item.match(pathname);
                   const badge =
                     "showUnreadBadge" in item &&
@@ -398,7 +418,7 @@ export const DashboardSidebar: FC = () => {
                       : undefined;
 
                   const menuButtonClassName = cn(
-                    "h-auto gap-3 rounded-xl px-3 py-2 text-chip group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5!",
+                    "h-auto gap-3 rounded-xl px-3 py-2 text-base group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5!",
                     active
                       ? "bg-brand-50 font-semibold text-brand-800"
                       : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
@@ -412,7 +432,7 @@ export const DashboardSidebar: FC = () => {
                             render={
                               <SidebarMenuButton
                                 isActive={active}
-                                tooltip={item.label}
+                                tooltip={itemLabel}
                                 className={menuButtonClassName}
                               />
                             }
@@ -424,7 +444,7 @@ export const DashboardSidebar: FC = () => {
                               )}
                               strokeWidth={2}
                             />
-                            <span>{item.label}</span>
+                            <span>{itemLabel}</span>
                             <ChevronDown
                               className="ml-auto size-3.5 shrink-0 text-zinc-400 transition-transform duration-200 group-data-popup-open:rotate-180 group-data-[collapsible=icon]:hidden"
                               strokeWidth={2}
@@ -444,7 +464,7 @@ export const DashboardSidebar: FC = () => {
                                 <DropdownMenuItem
                                   key={subItem.href}
                                   className={cn(
-                                    "cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-chip",
+                                    "cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-base",
                                     subActive
                                       ? "bg-brand-50 font-semibold text-brand-800 focus:bg-brand-50 focus:text-brand-800"
                                       : "font-medium text-zinc-600",
@@ -461,7 +481,7 @@ export const DashboardSidebar: FC = () => {
                                     )}
                                     strokeWidth={2}
                                   />
-                                  {subItem.label}
+                                  {adminSubItemLabel(subItem)}
                                 </DropdownMenuItem>
                               );
                             })}
@@ -475,7 +495,7 @@ export const DashboardSidebar: FC = () => {
                     <SidebarMenuItem key={item.href}>
                       <SidebarMenuButton
                         isActive={active}
-                        tooltip={item.label}
+                        tooltip={itemLabel}
                         render={<Link href={item.href} onClick={closeMobileNav} />}
                         className={menuButtonClassName}
                       >
@@ -486,7 +506,7 @@ export const DashboardSidebar: FC = () => {
                           )}
                           strokeWidth={2}
                         />
-                        <span>{item.label}</span>
+                        <span>{itemLabel}</span>
                         {badge ? (
                           <span className="ml-auto rounded-full bg-neutral-fill px-1.5 py-0.5 text-caption font-semibold text-zinc-600 group-data-[collapsible=icon]:hidden">
                             {badge}

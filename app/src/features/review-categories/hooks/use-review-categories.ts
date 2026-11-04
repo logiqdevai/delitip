@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   createReviewCategory,
   deleteReviewCategory,
@@ -28,6 +29,7 @@ export const useReviewCategories = (storeId: string) => {
 };
 
 export const useCreateReviewCategory = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.reviewCategories");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: CreateReviewCategoryPayload) =>
@@ -39,12 +41,13 @@ export const useCreateReviewCategory = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not add category", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("addFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };
 
 export const useUpdateReviewCategory = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.reviewCategories");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: UpdateReviewCategoryPayload }) =>
@@ -56,12 +59,13 @@ export const useUpdateReviewCategory = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not update category", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("updateFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };
 
 export const useDeleteReviewCategory = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.reviewCategories");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteReviewCategory(storeId, id),
@@ -72,12 +76,13 @@ export const useDeleteReviewCategory = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not delete category", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("deleteFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };
 
 export const useReorderReviewCategories = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.reviewCategories");
   const queryClient = useQueryClient();
   const queryKey = reviewCategoriesQueryKeys.list(storeId);
 
@@ -109,7 +114,7 @@ export const useReorderReviewCategories = (storeId: string) => {
         queryClient.setQueryData(queryKey, context.previous);
       }
       toast.add({
-        title: "Could not reorder categories",
+        title: t("reorderFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

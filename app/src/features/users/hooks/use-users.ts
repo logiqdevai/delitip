@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   deleteUser,
   getMe,
@@ -28,6 +29,7 @@ export const useMe = (enabled = true) => {
 };
 
 export const useUpdateMe = () => {
+  const t = useTranslations("dashboard.shell.toasts.users");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -36,14 +38,14 @@ export const useUpdateMe = () => {
       trackEvent(AnalyticsEvents.profileUpdated);
       void queryClient.invalidateQueries({ queryKey: usersQueryKeys.root });
       toast.add({
-        title: "Account updated",
-        description: "Your changes were saved.",
+        title: t("updatedTitle"),
+        description: t("updatedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not update account",
+        title: t("updateFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -61,6 +63,7 @@ export const useMyAccounts = (enabled = true) => {
 };
 
 export const useDeleteUser = () => {
+  const t = useTranslations("dashboard.shell.toasts.users");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -71,33 +74,35 @@ export const useDeleteUser = () => {
 
       const leftovers: string[] = [];
       if (result.files_failed > 0) {
-        leftovers.push(
-          `${result.files_failed} Google Cloud file${result.files_failed === 1 ? "" : "s"} could not be deleted`,
-        );
+        leftovers.push(t("leftoverFiles", { count: result.files_failed }));
       }
       if (result.viva_bank_accounts_failed > 0) {
         leftovers.push(
-          `${result.viva_bank_accounts_failed} Viva bank account${result.viva_bank_accounts_failed === 1 ? "" : "s"} could not be archived`,
+          t("leftoverVivaBankAccounts", {
+            count: result.viva_bank_accounts_failed,
+          }),
         );
       }
       if (result.viva_connected_accounts_remaining > 0) {
         leftovers.push(
-          `${result.viva_connected_accounts_remaining} Viva connected account${result.viva_connected_accounts_remaining === 1 ? "" : "s"} must be closed manually in Viva`,
+          t("leftoverVivaConnectedAccounts", {
+            count: result.viva_connected_accounts_remaining,
+          }),
         );
       }
 
       toast.add({
-        title: "User deleted",
+        title: t("deletedTitle"),
         description:
           leftovers.length > 0
-            ? `The user was removed, but ${leftovers.join("; ")}.`
-            : "The user and all their related data were removed.",
+            ? t("deletedWithLeftovers", { details: leftovers.join("; ") })
+            : t("deletedDescriptionDefault"),
         type: leftovers.length > 0 ? "warning" : "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not delete user",
+        title: t("deleteFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { Search, Trash2, Users } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   ConfirmationDialog,
@@ -26,7 +27,8 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
-import { getUserPlatformRoleLabel } from "@/config/constants/dropdowns/users/user-platform-role-form.options";
+import { UserPlatformRoleFormOptions } from "@/config/constants/dropdowns/users/user-platform-role-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { PlatformAuthRoles } from "@/features/auth/interfaces/auth.interfaces";
 import {
   useDeleteUser,
@@ -45,11 +47,6 @@ const roleChipClass: Record<string, string> = {
   USER: "bg-neutral-fill text-zinc-600",
 };
 
-const formatDate = (value: string) =>
-  new Date(value).toLocaleDateString(undefined, {
-    dateStyle: "medium",
-  });
-
 const userDisplayName = (user: UserProfile) => {
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
   return name || "-";
@@ -58,6 +55,12 @@ const userDisplayName = (user: UserProfile) => {
 const PAGE_LIMIT = 20;
 
 export const AllUsersPageContent: FC = () => {
+  const t = useTranslations("dashboard.admin.users");
+  const tc = useTranslations("dashboard.admin.common");
+  const format = useFormatter();
+  const roleLabel = useDropdownLabel();
+  const formatDate = (value: string) =>
+    format.dateTime(new Date(value), { dateStyle: "medium" });
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [userToDelete, setUserToDelete] = useState<UserProfile | null>(null);
@@ -86,8 +89,8 @@ export const AllUsersPageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="All Users"
-        description="Every account registered on delitip, across all businesses."
+        title={t("title")}
+        description={t("description")}
       />
 
       <div className="relative max-w-sm">
@@ -98,8 +101,8 @@ export const AllUsersPageContent: FC = () => {
             setSearch(event.target.value);
             setPage(1);
           }}
-          placeholder="Search by name or email"
-          aria-label="Search users"
+          placeholder={t("searchPlaceholder")}
+          aria-label={t("searchAria")}
           className="rounded-xl border-zinc-200 bg-white pl-9 font-medium text-ink-charcoal shadow-xs"
         />
       </div>
@@ -109,7 +112,7 @@ export const AllUsersPageContent: FC = () => {
       ) : usersQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load users</EmptyTitle>
+            <EmptyTitle>{t("loadError")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(usersQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -118,7 +121,7 @@ export const AllUsersPageContent: FC = () => {
               variant="outline"
               onClick={() => void usersQuery.refetch()}
             >
-              Try again
+              {tc("tryAgain")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -128,11 +131,11 @@ export const AllUsersPageContent: FC = () => {
             <EmptyMedia variant="icon">
               <Users />
             </EmptyMedia>
-            <EmptyTitle>No users found</EmptyTitle>
+            <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>
               {search
-                ? "No users match your search."
-                : "No one has signed up yet."}
+                ? t("emptyFiltered")
+                : t("emptyNone")}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -142,13 +145,13 @@ export const AllUsersPageContent: FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="px-4">Name</TableHead>
-                  <TableHead className="px-4">Email</TableHead>
-                  <TableHead className="px-4">Phone</TableHead>
-                  <TableHead className="px-4">Role</TableHead>
-                  <TableHead className="px-4 text-right">Joined</TableHead>
+                  <TableHead className="px-4">{t("columns.name")}</TableHead>
+                  <TableHead className="px-4">{t("columns.email")}</TableHead>
+                  <TableHead className="px-4">{t("columns.phone")}</TableHead>
+                  <TableHead className="px-4">{t("columns.role")}</TableHead>
+                  <TableHead className="px-4 text-right">{t("columns.joined")}</TableHead>
                   <TableHead className="w-12 px-4">
-                    <span className="sr-only">Actions</span>
+                    <span className="sr-only">{t("columns.actions")}</span>
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -172,7 +175,7 @@ export const AllUsersPageContent: FC = () => {
                             roleChipClass.USER,
                         )}
                       >
-                        {getUserPlatformRoleLabel(user.role)}
+                        {roleLabel(UserPlatformRoleFormOptions, user.role ?? "USER")}
                       </span>
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-right text-zinc-500">
@@ -184,7 +187,7 @@ export const AllUsersPageContent: FC = () => {
                           type="button"
                           variant="ghost"
                           size="icon-sm"
-                          aria-label={`Delete ${userDisplayName(user)}`}
+                          aria-label={t("deleteAria", { name: userDisplayName(user) })}
                           className="text-zinc-400 hover:text-destructive"
                           onClick={() => {
                             setUserToDelete(user);
@@ -204,9 +207,11 @@ export const AllUsersPageContent: FC = () => {
           {pagination ? (
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-zinc-500">
-                {pagination.total} user{pagination.total === 1 ? "" : "s"}{" "}
-                total - page {pagination.page} of{" "}
-                {Math.max(pagination.total_pages, 1)}
+                {t("pagination", {
+                  total: pagination.total,
+                  page: pagination.page,
+                  pages: Math.max(pagination.total_pages, 1),
+                })}
               </p>
               <div className="flex items-center gap-2">
                 <Button
@@ -216,7 +221,7 @@ export const AllUsersPageContent: FC = () => {
                   disabled={!pagination.has_prev}
                   onClick={() => setPage((current) => Math.max(1, current - 1))}
                 >
-                  Previous
+                  {tc("previous")}
                 </Button>
                 <Button
                   type="button"
@@ -225,7 +230,7 @@ export const AllUsersPageContent: FC = () => {
                   disabled={!pagination.has_next}
                   onClick={() => setPage((current) => current + 1)}
                 >
-                  Next
+                  {tc("next")}
                 </Button>
               </div>
             </div>
@@ -235,9 +240,17 @@ export const AllUsersPageContent: FC = () => {
 
       <ConfirmationDialog
         state={deleteConfirm}
-        title={`Delete ${userToDelete ? userDisplayName(userToDelete) : "user"}?`}
-        description={`This permanently removes ${userToDelete?.email ?? "this user"}, any business they are the only member of (with its stores, tips and reviews), every uploaded file from Google Cloud, and archives their linked Viva bank accounts. This cannot be undone.`}
-        confirmLabel="Delete user"
+        title={
+          userToDelete
+            ? t("deleteTitle", { name: userDisplayName(userToDelete) })
+            : t("deleteTitleFallback")
+        }
+        description={
+          userToDelete?.email
+            ? t("deleteDescription", { email: userToDelete.email })
+            : t("deleteDescriptionFallback")
+        }
+        confirmLabel={t("deleteConfirm")}
         isPending={deleteUser.isPending}
         onConfirm={async () => {
           if (!userToDelete) return;

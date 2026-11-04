@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import { Controller } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import { Check, Copy, Download, Printer } from "lucide-react";
 import { useQrCodeActions } from "@/app/dashboard/access/hooks/use-qr-code-actions";
 import { SectionCard } from "@/app/dashboard/access/qr/components/sections/section-card";
@@ -24,6 +25,7 @@ const TipLinkPanel: FC<{ store: Store; qr: QrCode; label: string }> = ({
   qr,
   label,
 }) => {
+  const t = useTranslations("dashboard.access.qrEditor.details");
   const tipUrl = getAbsoluteTipUrl(store.slug, qr.code);
   const { busy, copied, copy, download, print } = useQrCodeActions({
     tipUrl,
@@ -34,7 +36,7 @@ const TipLinkPanel: FC<{ store: Store; qr: QrCode; label: string }> = ({
   return (
     <div className="space-y-4">
       <div className="rounded-xl bg-zinc-50 px-4 py-3 text-left text-xs text-zinc-500">
-        <div className="font-semibold text-ink-charcoal">Tip URL</div>
+        <div className="font-semibold text-ink-charcoal">{t("tipUrl")}</div>
         <div className="mt-1 flex items-start gap-1">
           <p className="min-w-0 flex-1 break-all">{tipUrl}</p>
           <Button
@@ -43,7 +45,7 @@ const TipLinkPanel: FC<{ store: Store; qr: QrCode; label: string }> = ({
             size="sm"
             className="size-7 shrink-0 px-0 text-zinc-400 hover:text-ink-charcoal"
             onClick={() => void copy()}
-            aria-label={copied ? "Copied tip URL" : "Copy tip URL"}
+            aria-label={copied ? t("copiedAria") : t("copyAria")}
           >
             {copied ? (
               <Check className="size-3.5 text-brand-700" strokeWidth={2} />
@@ -52,8 +54,8 @@ const TipLinkPanel: FC<{ store: Store; qr: QrCode; label: string }> = ({
             )}
           </Button>
         </div>
-        <p className="mt-1 text-[11px] text-zinc-400">
-          Path: {getTipPath(store.slug, qr.code)}
+        <p className="mt-1 text-base text-zinc-400">
+          {t("path", { path: getTipPath(store.slug, qr.code) })}
         </p>
       </div>
 
@@ -61,7 +63,7 @@ const TipLinkPanel: FC<{ store: Store; qr: QrCode; label: string }> = ({
         <div className="flex size-36 shrink-0 items-center justify-center rounded-2xl bg-ink-charcoal p-2.5 shadow-inner">
           <QrImage
             value={tipUrl}
-            alt={`QR code for ${label || qr.label}`}
+            alt={t("qrAlt", { label: label || qr.label })}
             className="size-full rounded-xl bg-white object-contain p-1"
           />
         </div>
@@ -74,7 +76,7 @@ const TipLinkPanel: FC<{ store: Store; qr: QrCode; label: string }> = ({
             onClick={() => void download()}
           >
             <Download data-icon="inline-start" className="size-3.5" />
-            {busy === "download" ? "Preparing…" : "Download PNG"}
+            {busy === "download" ? t("preparing") : t("downloadPng")}
           </Button>
           <Button
             type="button"
@@ -84,7 +86,7 @@ const TipLinkPanel: FC<{ store: Store; qr: QrCode; label: string }> = ({
             onClick={() => void print()}
           >
             <Printer data-icon="inline-start" className="size-3.5" />
-            Print
+            {t("print")}
           </Button>
         </div>
       </div>
@@ -93,6 +95,7 @@ const TipLinkPanel: FC<{ store: Store; qr: QrCode; label: string }> = ({
 };
 
 export const DetailsSection: FC = () => {
+  const t = useTranslations("dashboard.access.qrEditor.details");
   const { form, store, qr, isEdit } = useQrEditor();
   const {
     register,
@@ -106,18 +109,18 @@ export const DetailsSection: FC = () => {
   return (
     <SectionCard section={QrEditorSections.DETAILS}>
       <div className="space-y-1.5">
-        <Label htmlFor="qr-label">Label</Label>
+        <Label htmlFor="qr-label">{t("label")}</Label>
         <Input
           id="qr-label"
-          placeholder="e.g. Table 08, Bar, Counter"
+          placeholder={t("labelPlaceholder")}
           aria-invalid={!!errors.qr?.label}
           {...register("qr.label")}
         />
         {errors.qr?.label ? (
           <p className="text-xs text-red-600">{errors.qr.label.message}</p>
         ) : (
-          <p className="text-[11px] text-zinc-400">
-            Only you see this. It helps you tell QR codes apart.
+          <p className="text-base text-zinc-400">
+            {t("labelHint")}
           </p>
         )}
       </div>
@@ -126,10 +129,10 @@ export const DetailsSection: FC = () => {
         <div className="flex items-center justify-between gap-4 rounded-2xl border border-zinc-100 bg-zinc-50/60 px-4 py-3.5">
           <div className="min-w-0">
             <Label htmlFor="qr-active" className="text-xs font-semibold">
-              Active (scannable)
+              {t("activeLabel")}
             </Label>
-            <p className="mt-0.5 text-[14px] text-zinc-500">
-              Turn off to stop guests from tipping through this QR code.
+            <p className="mt-0.5 text-base text-zinc-500">
+              {t("activeHint")}
             </p>
           </div>
           <Controller
@@ -150,7 +153,7 @@ export const DetailsSection: FC = () => {
         <TipLinkPanel store={store} qr={qr} label={label} />
       ) : (
         <p className="rounded-xl bg-zinc-50 px-4 py-3 text-xs text-zinc-500">
-          The tip link and QR image are created when you save this QR code.
+          {t("afterSave")}
         </p>
       )}
     </SectionCard>

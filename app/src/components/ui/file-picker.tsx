@@ -2,6 +2,7 @@
 
 import { type DragEvent, type FC, useId, useRef, useState } from "react";
 import { FileText, ImageIcon, Upload, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
@@ -42,7 +43,7 @@ const describeAccept = (accept: readonly string[]) =>
     .join(", ");
 
 export const FilePicker: FC<FilePickerProps> = ({
-  label = "File",
+  label: labelProp,
   hint,
   value,
   onChange,
@@ -54,8 +55,10 @@ export const FilePicker: FC<FilePickerProps> = ({
   className,
   error,
 }) => {
+  const t = useTranslations("dashboard.shell.ui.filePicker");
   const generatedId = useId();
   const inputId = id ?? generatedId;
+  const label = labelProp ?? t("label");
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -64,7 +67,12 @@ export const FilePicker: FC<FilePickerProps> = ({
     hint === null
       ? null
       : (hint ??
-        `${describeAccept(accept)}${maxSizeBytes ? ` · up to ${formatBytes(maxSizeBytes)}` : ""}`);
+        (maxSizeBytes
+          ? t("hintWithSize", {
+              types: describeAccept(accept),
+              size: formatBytes(maxSizeBytes),
+            })
+          : t("hint", { types: describeAccept(accept) })));
   const shownError = error ?? localError;
 
   const openFileDialog = () => {
@@ -75,11 +83,11 @@ export const FilePicker: FC<FilePickerProps> = ({
   const applyFile = (file: File | undefined) => {
     if (!file) return;
     if (!accept.includes(file.type)) {
-      setLocalError(`Please choose a ${describeAccept(accept)} file.`);
+      setLocalError(t("invalidType", { types: describeAccept(accept) }));
       return;
     }
     if (maxSizeBytes && file.size > maxSizeBytes) {
-      setLocalError(`The file must be ${formatBytes(maxSizeBytes)} or smaller.`);
+      setLocalError(t("tooLarge", { size: formatBytes(maxSizeBytes) }));
       return;
     }
     setLocalError(null);
@@ -137,7 +145,7 @@ export const FilePicker: FC<FilePickerProps> = ({
           type="button"
           disabled={isDisabled}
           onClick={openFileDialog}
-          aria-label={value ? "Replace file" : "Choose file"}
+          aria-label={value ? t("replaceFile") : t("chooseFile")}
           className={cn(
             "relative flex size-12 shrink-0 items-center justify-center rounded-xl outline-none transition-colors focus-visible:ring-2 focus-visible:ring-electric-lime focus-visible:ring-offset-2",
             isDisabled ? "cursor-not-allowed" : "cursor-pointer",
@@ -167,16 +175,16 @@ export const FilePicker: FC<FilePickerProps> = ({
               </p>
               <p className="mt-0.5 text-xs text-zinc-500">
                 {formatBytes(value.size)}
-                {isPending ? " · Uploading…" : ""}
+                {isPending ? ` · ${t("uploading")}` : ""}
               </p>
             </>
           ) : (
             <>
               <p className="text-sm font-semibold text-ink-charcoal">
-                {isDragging ? "Drop to add" : "Add your invoice"}
+                {isDragging ? t("dropToAdd") : t("addInvoice")}
               </p>
               <p className="mt-0.5 text-xs text-zinc-500">
-                {isDragging ? "Release to add this file" : "Drop a file here, or browse"}
+                {isDragging ? t("releaseToAdd") : t("dropOrBrowse")}
               </p>
             </>
           )}
@@ -195,7 +203,7 @@ export const FilePicker: FC<FilePickerProps> = ({
             onClick={openFileDialog}
           >
             <Upload data-icon="inline-start" />
-            {value ? "Replace" : "Browse"}
+            {value ? t("replace") : t("browse")}
           </Button>
           {value ? (
             <Button
@@ -203,7 +211,7 @@ export const FilePicker: FC<FilePickerProps> = ({
               variant="ghost"
               size="sm"
               disabled={isDisabled}
-              aria-label="Remove file"
+              aria-label={t("removeFile")}
               className="size-8 rounded-full px-0 text-zinc-600 hover:bg-zinc-100 hover:text-red-700"
               onClick={() => {
                 setLocalError(null);

@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   getAdminPayout,
   listAdminPayouts,
@@ -21,7 +22,6 @@ import type {
 import { tipsQueryKeys } from "@/features/tips/hooks/use-tips";
 import { toast } from "@/components/ui/toast";
 import { describePayoutFailure } from "@/features/payouts/utils/payout-failure.utils";
-import { getManualPayoutSkipLabel } from "@/config/constants/dropdowns/payouts/manual-payout-skip.options";
 import { getErrorMessage } from "@/lib/api-error";
 
 export const payoutsQueryKeys = {
@@ -98,6 +98,7 @@ export const useStorePayoutsPreview = (storeId: string, enabled: boolean) => {
 };
 
 export const useRunStorePayouts = (storeId: string) => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -113,25 +114,25 @@ export const useRunStorePayouts = (storeId: string) => {
 
       if (paidCount === 0 && skippedCount === 0) {
         toast.add({
-          title: "Nothing to pay out",
-          description: "No distributions are eligible right now.",
+          title: t("payouts.nothingTitle"),
+          description: t("payouts.nothingDescription"),
           type: "success",
         });
         return;
       }
 
       toast.add({
-        title: `${paidCount} payout${paidCount === 1 ? "" : "s"} started`,
+        title: t("payouts.started", { count: paidCount }),
         description:
           skippedCount > 0
-            ? `${skippedCount} recipient${skippedCount === 1 ? "" : "s"} skipped - see details below.`
+            ? t("payouts.skipped", { count: skippedCount })
             : undefined,
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not run payouts",
+        title: t("payouts.runFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -140,6 +141,8 @@ export const useRunStorePayouts = (storeId: string) => {
 };
 
 export const useRunManualPayouts = () => {
+  const t = useTranslations("dashboard.money.toasts");
+  const tm = useTranslations("dashboard.money.manualPayoutSkip");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -150,6 +153,8 @@ export const useRunManualPayouts = () => {
       void queryClient.invalidateQueries({ queryKey: distributionsQueryKeys.root });
       void queryClient.invalidateQueries({ queryKey: tipsQueryKeys.root });
 
+      const skipLabel = (reason: string) =>
+        tm.has(reason) ? tm(reason) : reason;
       const failedPayouts = result.payouts.filter((p) => p.status === "FAILED");
       const started = result.payouts.length - failedPayouts.length;
       const failures = Array.from(
@@ -160,14 +165,16 @@ export const useRunManualPayouts = () => {
         ),
       );
       const notes = [
-        ...result.skipped_tips.map((tip) => getManualPayoutSkipLabel(tip.reason)),
+        ...result.skipped_tips.map((tip) => skipLabel(tip.reason)),
         ...result.skipped_recipients
           .filter((recipient) => recipient.reason !== "TRANSFER_FAILED")
-          .map((recipient) => getManualPayoutSkipLabel(recipient.reason)),
+          .map((recipient) => skipLabel(recipient.reason)),
       ];
       const details = [
         ...failures,
-        notes.length > 0 ? `Skipped: ${Array.from(new Set(notes)).join("; ")}.` : null,
+        notes.length > 0
+          ? t("payouts.skippedNote", { items: Array.from(new Set(notes)).join("; ") })
+          : null,
       ]
         .filter(Boolean)
         .join(" ");
@@ -176,18 +183,18 @@ export const useRunManualPayouts = () => {
         title:
           failedPayouts.length > 0
             ? started > 0
-              ? `${started} payout${started === 1 ? "" : "s"} started, ${failedPayouts.length} failed`
-              : `Payout failed`
+              ? t("payouts.startedWithFailed", { started, failed: failedPayouts.length })
+              : t("payouts.payoutFailed")
             : started > 0
-              ? `${started} payout${started === 1 ? "" : "s"} started`
-              : "Nothing was paid out",
+              ? t("payouts.started", { count: started })
+              : t("payouts.nothingPaid"),
         description: details || undefined,
         type: started > 0 && failedPayouts.length === 0 ? "success" : "error",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not run the manual payout",
+        title: t("payouts.manualFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   approvePayoutRequest,
   cancelPayoutRequest,
@@ -74,6 +75,7 @@ export const useStorePayoutRequests = (
 };
 
 export const useCreatePayoutRequest = (storeId: string) => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -83,15 +85,14 @@ export const useCreatePayoutRequest = (storeId: string) => {
       trackEvent(AnalyticsEvents.payoutRequestCreated, { store_id: storeId });
       invalidateMoneyViews(queryClient);
       toast.add({
-        title: "Payout request submitted",
-        description:
-          "We'll check the invoice and let you know once it's reviewed.",
+        title: t("payoutRequests.submittedTitle"),
+        description: t("payoutRequests.submittedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not submit the payout request",
+        title: t("payoutRequests.submitFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -100,6 +101,7 @@ export const useCreatePayoutRequest = (storeId: string) => {
 };
 
 export const useCancelPayoutRequest = (storeId: string) => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -108,14 +110,14 @@ export const useCancelPayoutRequest = (storeId: string) => {
       trackEvent(AnalyticsEvents.payoutRequestCancelled, { store_id: storeId });
       invalidateMoneyViews(queryClient);
       toast.add({
-        title: "Payout request cancelled",
-        description: "Your tips are available to request again.",
+        title: t("payoutRequests.cancelledTitle"),
+        description: t("payoutRequests.cancelledDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not cancel the payout request",
+        title: t("payoutRequests.cancelFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -126,6 +128,7 @@ export const useCancelPayoutRequest = (storeId: string) => {
 // Opens the invoice in a new tab. A mutation (not a query) because the
 // signed URL is fetched on demand, when the person actually clicks.
 export const useOpenStorePayoutRequestInvoice = (storeId: string) => {
+  const t = useTranslations("dashboard.money.toasts");
   return useMutation({
     mutationFn: async (id: string) => {
       const { url } = await getStorePayoutRequestInvoiceUrl(storeId, id);
@@ -133,7 +136,7 @@ export const useOpenStorePayoutRequestInvoice = (storeId: string) => {
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not open the invoice",
+        title: t("payoutRequests.openInvoiceFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -174,6 +177,7 @@ export const useAdminPayoutRequestInvoiceUrl = (id: string) => {
 };
 
 export const useApprovePayoutRequest = (id: string) => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -185,21 +189,21 @@ export const useApprovePayoutRequest = (id: string) => {
       invalidateMoneyViews(queryClient);
       if (data.failure_reason && data.status === "PENDING_REVIEW") {
         toast.add({
-          title: "Bank transfer failed",
+          title: t("payoutRequests.transferFailed"),
           description: data.failure_reason,
           type: "error",
         });
         return;
       }
       toast.add({
-        title: "Payout approved",
-        description: "The bank transfer has started and the store was notified.",
+        title: t("payoutRequests.approvedTitle"),
+        description: t("payoutRequests.approvedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not approve the payout request",
+        title: t("payoutRequests.approveFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -208,6 +212,7 @@ export const useApprovePayoutRequest = (id: string) => {
 };
 
 export const useRejectPayoutRequest = (id: string) => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -218,14 +223,14 @@ export const useRejectPayoutRequest = (id: string) => {
       queryClient.setQueryData(payoutRequestsQueryKeys.adminDetail(id), data);
       invalidateMoneyViews(queryClient);
       toast.add({
-        title: "Payout request rejected",
-        description: "The store was notified and can submit a corrected invoice.",
+        title: t("payoutRequests.rejectedTitle"),
+        description: t("payoutRequests.rejectedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not reject the payout request",
+        title: t("payoutRequests.rejectFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -234,6 +239,7 @@ export const useRejectPayoutRequest = (id: string) => {
 };
 
 export const useRecheckPayoutRequest = (id: string) => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -243,17 +249,17 @@ export const useRecheckPayoutRequest = (id: string) => {
       queryClient.setQueryData(payoutRequestsQueryKeys.adminDetail(id), data);
       void queryClient.invalidateQueries({ queryKey: payoutRequestsQueryKeys.root });
       toast.add({
-        title: "Invoice re-checked",
+        title: t("payoutRequests.recheckedTitle"),
         description:
           data.check_status === "FAILED"
-            ? "The automatic check failed again — review the invoice manually."
-            : "The automatic check finished.",
+            ? t("payoutRequests.recheckFailedAgain")
+            : t("payoutRequests.recheckDone"),
         type: data.check_status === "FAILED" ? "error" : "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not re-run the check",
+        title: t("payoutRequests.recheckFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

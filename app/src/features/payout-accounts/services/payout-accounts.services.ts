@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
@@ -17,7 +18,7 @@ export const getMyPayoutAccount = async (): Promise<PayoutAccount | null> => {
     if (isAxiosError(error) && error.response?.status === 404) {
       return null;
     }
-    throw new Error(getApiErrorMessage(error, "We couldn't load payout account. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPayoutAccount")));
   }
 };
 
@@ -32,7 +33,7 @@ export const createMyPayoutAccount = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't link payout account. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.linkPayoutAccount")),
     );
   }
 };
@@ -49,7 +50,7 @@ export const getStorePayoutAccount = async (
     if (isAxiosError(error) && error.response?.status === 404) {
       return null;
     }
-    throw new Error(getApiErrorMessage(error, "We couldn't load payout account. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPayoutAccount")));
   }
 };
 
@@ -65,7 +66,7 @@ export const createStorePayoutAccount = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't link payout account. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.linkPayoutAccount")),
     );
   }
 };
@@ -78,7 +79,7 @@ export const refreshMyPayoutAccountStatus = async (): Promise<PayoutAccount> => 
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't check payout account status. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.checkPayoutAccountStatus")),
     );
   }
 };
@@ -93,7 +94,7 @@ export const refreshStorePayoutAccountStatus = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't check payout account status. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.checkPayoutAccountStatus")),
     );
   }
 };
@@ -109,7 +110,7 @@ export const reconcilePayoutAccounts = async (): Promise<{
     }>(ApiRoutes.admin.payoutAccounts.reconcile);
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't reconcile payout accounts. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.reconcilePayoutAccounts")));
   }
 };
 
@@ -125,7 +126,7 @@ export const getEmployeePayoutAccount = async (
     if (isAxiosError(error) && error.response?.status === 404) {
       return null;
     }
-    throw new Error(getApiErrorMessage(error, "We couldn't load payout account. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPayoutAccount")));
   }
 };
 
@@ -141,7 +142,7 @@ export const createEmployeePayoutAccount = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't link payout account. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.linkPayoutAccount")),
     );
   }
 };
@@ -156,7 +157,7 @@ export const refreshEmployeePayoutAccountStatus = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't check payout account status. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.checkPayoutAccountStatus")),
     );
   }
 };

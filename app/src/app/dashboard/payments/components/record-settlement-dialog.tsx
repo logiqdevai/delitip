@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { AlertTriangle, Clock } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
@@ -35,8 +36,8 @@ interface RecordSettlementDialogProps {
   balance: EmployeeBalance | null;
 }
 
-const formatDate = (value: string) =>
-  new Date(value).toLocaleDateString(undefined, { dateStyle: "medium" });
+const formatDate = (value: string, locale: string) =>
+  new Date(value).toLocaleDateString(locale, { dateStyle: "medium" });
 
 export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
   open,
@@ -45,6 +46,8 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
   currency,
   balance,
 }) => {
+  const t = useTranslations("dashboard.money.recordSettlement");
+  const locale = useLocale();
   const employeeId = balance?.employee_id ?? "";
   const createSettlement = useCreateSettlement(storeId);
 
@@ -151,10 +154,11 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
         showCloseButton={!createSettlement.isPending}
       >
         <DialogHeader className="shrink-0 border-b border-zinc-100 px-4 py-4 sm:px-6">
-          <DialogTitle>Record a payment to {balance?.name ?? "employee"}</DialogTitle>
+          <DialogTitle>
+            {t("title", { name: balance?.name ?? t("employeeFallback") })}
+          </DialogTitle>
           <DialogDescription>
-            Pick the tips this payment covers. The amount comes from the tips
-            themselves, so every cent traces back to one.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -167,12 +171,12 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
             </div>
           ) : shares.length === 0 ? (
             <p className="rounded-xl border border-dashed border-zinc-200 px-4 py-8 text-center text-sm text-zinc-500">
-              Nothing is owed to {balance?.name ?? "this employee"} right now.
+              {t("nothingOwed", { name: balance?.name ?? t("thisEmployeeFallback") })}
             </p>
           ) : (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Tips this covers</Label>
+                <Label>{t("tipsCovered")}</Label>
                 <Button
                   type="button"
                   variant="ghost"
@@ -181,7 +185,7 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
                     setSelectedShareIds(allSelected ? [] : shares.map((share) => share.id))
                   }
                 >
-                  {allSelected ? "Clear all" : "Select all"}
+                  {allSelected ? t("clearAll") : t("selectAll")}
                 </Button>
               </div>
 
@@ -202,21 +206,21 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
                       />
                       <span className="min-w-0 flex-1">
                         <span className="block text-xs font-semibold text-ink-charcoal">
-                          {formatDate(share.created_at)}
+                          {formatDate(share.created_at, locale)}
                         </span>
-                        <span className="mt-0.5 flex items-center gap-1 text-[11px] text-zinc-500">
+                        <span className="mt-0.5 flex items-center gap-1 text-base text-zinc-500">
                           {share.received_by_store ? (
-                            "In your account"
+                            t("inYourAccount")
                           ) : (
                             <>
                               <Clock className="size-3" />
-                              Not paid out to you yet
+                              {t("notPaidYet")}
                             </>
                           )}
                         </span>
                       </span>
                       <span className="shrink-0 text-xs font-bold tabular-nums text-ink-charcoal">
-                        {formatMoney(share.amount, currency)}
+                        {formatMoney(share.amount, currency, locale)}
                       </span>
                     </label>
                   );
@@ -224,12 +228,12 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
               </div>
 
               {notYetReceived > 0 ? (
-                <p className="flex items-start gap-1.5 rounded-lg bg-amber-50 px-3 py-2 text-[11px] leading-snug text-amber-900">
+                <p className="flex items-start gap-1.5 rounded-lg bg-amber-50 px-3 py-2 text-base leading-snug text-amber-900">
                   <AlertTriangle className="mt-px size-3.5 shrink-0" />
                   <span>
-                    {formatMoney(notYetReceived, currency)} of this hasn&apos;t reached
-                    your account yet. You can still pay it now — you&apos;d be
-                    fronting it until our transfer lands.
+                    {t("notReceivedWarning", {
+                      amount: formatMoney(notYetReceived, currency, locale),
+                    })}
                   </span>
                 </p>
               ) : null}
@@ -238,7 +242,7 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
 
           {adjustments.length > 0 ? (
             <div className="space-y-2">
-              <Label>Deductions</Label>
+              <Label>{t("deductions")}</Label>
               <div className="overflow-hidden rounded-xl border border-zinc-200/80">
                 {adjustments.map((adjustment) => {
                   const selected = selectedAdjustmentIds.includes(adjustment.id);
@@ -254,11 +258,11 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
                         checked={selected}
                         onCheckedChange={() => toggleAdjustment(adjustment.id)}
                       />
-                      <span className="min-w-0 flex-1 text-[11px] leading-snug text-zinc-600">
+                      <span className="min-w-0 flex-1 text-base leading-snug text-zinc-600">
                         {adjustment.reason}
                       </span>
                       <span className="shrink-0 text-xs font-bold tabular-nums text-red-600">
-                        {formatMoney(adjustment.amount, currency)}
+                        {formatMoney(adjustment.amount, currency, locale)}
                       </span>
                     </label>
                   );
@@ -269,19 +273,19 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="settlement-date">Date paid</Label>
+              <Label htmlFor="settlement-date">{t("datePaid")}</Label>
               <DatePicker
                 value={settledAt}
                 onChange={setSettledAt}
-                placeholder="Today"
-                aria-label="Date paid"
+                placeholder={t("today")}
+                aria-label={t("datePaid")}
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="settlement-reference">Reference (optional)</Label>
+              <Label htmlFor="settlement-reference">{t("reference")}</Label>
               <Input
                 id="settlement-reference"
-                placeholder="e.g. payroll week 38"
+                placeholder={t("referencePlaceholder")}
                 value={reference}
                 onChange={(event) => setReference(event.target.value)}
               />
@@ -289,11 +293,11 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="settlement-note">Note (optional)</Label>
+            <Label htmlFor="settlement-note">{t("note")}</Label>
             <Textarea
               id="settlement-note"
               rows={2}
-              placeholder="Anything you want on the record"
+              placeholder={t("notePlaceholder")}
               value={note}
               onChange={(event) => setNote(event.target.value)}
             />
@@ -302,15 +306,16 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
 
         <DialogFooter className="m-0 shrink-0 flex-col gap-3 border-t border-zinc-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="text-left">
-            <p className="text-[11px] font-semibold text-zinc-500">Total to hand over</p>
+            <p className="text-base font-semibold text-zinc-500">{t("totalToHandOver")}</p>
             <p className="text-lg font-bold tabular-nums text-ink-charcoal">
-              {formatMoney(Math.max(total, 0), currency)}
+              {formatMoney(Math.max(total, 0), currency, locale)}
             </p>
             {adjustmentsTotal !== 0 ? (
-              <p className="text-[11px] text-zinc-500">
-                {formatMoney(sharesTotal, currency)} in tips
-                {" − "}
-                {formatMoney(Math.abs(adjustmentsTotal), currency)} deducted
+              <p className="text-base text-zinc-500">
+                {t("breakdown", {
+                  tips: formatMoney(sharesTotal, currency, locale),
+                  deducted: formatMoney(Math.abs(adjustmentsTotal), currency, locale),
+                })}
               </p>
             ) : null}
           </div>
@@ -321,7 +326,7 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
               disabled={createSettlement.isPending}
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <ActionButtonWithPending
               type="button"
@@ -329,7 +334,7 @@ export const RecordSettlementDialog: FC<RecordSettlementDialogProps> = ({
               disabled={!canSubmit}
               onClick={() => void handleSubmit()}
             >
-              Record payment
+              {t("recordPayment")}
             </ActionButtonWithPending>
           </div>
         </DialogFooter>

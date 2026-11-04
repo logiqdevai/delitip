@@ -2,11 +2,13 @@
 
 import { type FC, type ReactNode } from "react";
 import { Lock } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSubscription } from "@/features/subscriptions/hooks/use-subscriptions";
 import type { SubscriptionPlan } from "@/features/subscriptions/interfaces/subscriptions.interfaces";
-import { getSubscriptionPlanLabel } from "@/config/constants/dropdowns/subscriptions/subscription-plan-form.options";
+import { SubscriptionPlanFormOptions } from "@/config/constants/dropdowns/subscriptions/subscription-plan-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { hasPlanAccess } from "@/lib/plan-gate";
 import { Routes } from "@/routes/routes";
 
@@ -25,6 +27,8 @@ export const PlanGate: FC<PlanGateProps> = ({
   featureName,
   children,
 }) => {
+  const t = useTranslations("dashboard.shell.planGate");
+  const planLabel = useDropdownLabel();
   const subscriptionQuery = useSubscription(organizationId);
 
   if (subscriptionQuery.isPending) {
@@ -50,9 +54,19 @@ export const PlanGate: FC<PlanGateProps> = ({
         <EmptyMedia variant="icon">
           <Lock />
         </EmptyMedia>
-        <EmptyTitle>{featureName} needs the {getSubscriptionPlanLabel(requiredPlan)} plan</EmptyTitle>
+        <EmptyTitle>
+          {t("title", {
+            feature: featureName,
+            plan: planLabel(SubscriptionPlanFormOptions, requiredPlan),
+          })}
+        </EmptyTitle>
         <EmptyDescription>
-          {`You're currently on the ${subscriptionQuery.data ? getSubscriptionPlanLabel(subscriptionQuery.data.plan) : "Starter"} plan. Upgrade in Settings → Billing to unlock this.`}
+          {t("description", {
+            currentPlan: planLabel(
+              SubscriptionPlanFormOptions,
+              subscriptionQuery.data?.plan ?? "STARTER",
+            ),
+          })}
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
@@ -64,7 +78,7 @@ export const PlanGate: FC<PlanGateProps> = ({
           }}
           className="text-xs font-semibold text-brand-700 hover:underline"
         >
-          Go to Billing →
+          {t("cta")}
         </a>
       </EmptyContent>
     </Empty>

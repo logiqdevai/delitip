@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -28,6 +29,7 @@ export const AccountSwitcher: FC<AccountSwitcherProps> = ({
   size = "sm",
 }) => {
   const router = useRouter();
+  const t = useTranslations("dashboard.shell.ui.accountSwitcher");
   const pathname = usePathname();
   const hydrated = useAuthHydrated();
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -94,7 +96,7 @@ export const AccountSwitcher: FC<AccountSwitcherProps> = ({
     >
       <SelectTrigger
         size={size}
-        aria-label="Switch account"
+        aria-label={t("label")}
         className={cn("max-w-[9.5rem] sm:max-w-[14rem]", className)}
       >
         <SelectValue />

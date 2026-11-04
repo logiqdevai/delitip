@@ -1,0 +1,27 @@
+{
+  "shell": {
+    "contactSupport": "Επικοινωνία με την υποστήριξη",
+    "secureSetup": "Ασφαλής ρύθμιση επιχείρησης",
+    "footer": "© 2026 <brand>delitip</brand>. Φιλοδώρησε. Εκτίμησε. Συνδέσου."
+  },
+  "page": {
+    "loadError": "Δεν ήταν δυνατή η φόρτωση της επιχείρησής σας"
+  },
+  "form": {
+    "eyebrow": "Προφίλ επιχείρησης",
+    "title": "Ρυθμίστε την επιχείρησή σας",
+    "subtitle": "Πείτε μας για το κατάστημά σας, ώστε πελάτες και προσωπικό να βρίσκονται στο σωστό σημείο.",
+    "nameLabel": "Επωνυμία επιχείρησης",
+    "namePlaceholder": "π.χ. Artisan Café & Bar",
+    "industryLabel": "Τύπος επιχείρησης",
+    "teamSizeLabel": "Εκτιμώμενο μέγεθος ομάδας",
+    "addressLabel": "Διεύθυνση",
+    "addressPlaceholder": "Οδός, πόλη",
+    "cityLabel": "Πόλη",
+    "cityPlaceholder": "Πόλη",
+    "countryLabel": "Χώρα",
+    "postalLabel": "Ταχυδρομικός κώδικας",
+    "postalPlaceholder": "Τ.Κ.",
+    "submit": "Αποθήκευση και συνέχεια"
+  }
+}

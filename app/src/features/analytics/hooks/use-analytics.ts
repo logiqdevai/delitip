@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   generateInsight,
   getAdminOverview,
@@ -134,6 +135,7 @@ export const useInsights = (storeId: string) => {
 };
 
 export const useGenerateInsight = (storeId: string) => {
+  const t = useTranslations("dashboard.analytics.insights");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -145,13 +147,13 @@ export const useGenerateInsight = (storeId: string) => {
         queryKey: analyticsQueryKeys.insights(storeId),
       });
       toast.add({
-        title: "Insight generated",
+        title: t("generatedToast"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not generate insight",
+        title: t("generateErrorToast"),
         description: getErrorMessage(error),
         type: "error",
       });

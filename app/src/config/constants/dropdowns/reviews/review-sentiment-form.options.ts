@@ -5,18 +5,18 @@ import {
 
 export const ReviewSentimentFormOptions: {
   id: ReviewSentiment;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: ReviewSentiments.POSITIVE, label: "Positive" },
-  { id: ReviewSentiments.NEUTRAL, label: "Neutral" },
-  { id: ReviewSentiments.NEGATIVE, label: "Negative" },
+  {
+    id: ReviewSentiments.POSITIVE,
+    labelKey: "dashboard.enums.reviewSentiment.POSITIVE",
+  },
+  {
+    id: ReviewSentiments.NEUTRAL,
+    labelKey: "dashboard.enums.reviewSentiment.NEUTRAL",
+  },
+  {
+    id: ReviewSentiments.NEGATIVE,
+    labelKey: "dashboard.enums.reviewSentiment.NEGATIVE",
+  },
 ];
-
-export function getReviewSentimentLabel(
-  sentiment: ReviewSentiment | string,
-): string {
-  return (
-    ReviewSentimentFormOptions.find((option) => option.id === sentiment)
-      ?.label ?? sentiment
-  );
-}

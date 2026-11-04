@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { Banknote, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -33,7 +34,8 @@ import {
 } from "@/components/ui/empty";
 import { DistributionRecipientTypeFilterOptions } from "@/config/constants/dropdowns/distribution/distribution-recipient-type-filter.options";
 import { PayoutExecutionStatusFilterOptions } from "@/config/constants/dropdowns/payments/payout-execution-status-filter.options";
-import { getPayoutExecutionStatusLabel } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
+import { PayoutExecutionStatusFormOptions } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
+import { useDropdownLabel, useDropdownOptions } from "@/hooks/use-dropdown-options";
 import { useAdminPayouts } from "@/features/payouts/hooks/use-payouts";
 import type { PayoutExecutionStatus } from "@/features/payouts/interfaces/payouts.interfaces";
 import type { DistributionRecipientType } from "@/features/tips/interfaces/tips.interfaces";
@@ -50,18 +52,21 @@ const statusChipClass: Record<PayoutExecutionStatus, string> = {
   CANCELLED: "bg-zinc-100 text-zinc-600",
 };
 
-const formatDateTime = (value?: string | null) => {
-  if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-};
-
 const PAGE_LIMIT = 20;
 
 export const AdminPayoutsTable: FC = () => {
   const router = useRouter();
+  const t = useTranslations("dashboard.admin.payouts");
+  const tc = useTranslations("dashboard.admin.common");
+  const locale = useLocale();
+  const format = useFormatter();
+  const formatDateTime = (value?: string | null) =>
+    value
+      ? format.dateTime(new Date(value), { dateStyle: "medium", timeStyle: "short" })
+      : "-";
+  const statusOptions = useDropdownOptions(PayoutExecutionStatusFilterOptions);
+  const recipientTypeOptions = useDropdownOptions(DistributionRecipientTypeFilterOptions);
+  const statusLabel = useDropdownLabel();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<PayoutExecutionStatus | "all">("all");
   const [recipientType, setRecipientType] = useState<
@@ -94,7 +99,7 @@ export const AdminPayoutsTable: FC = () => {
       <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
-          Filters
+          {tc("filters")}
         </div>
         <div className="relative">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-zinc-400" />
@@ -104,13 +109,13 @@ export const AdminPayoutsTable: FC = () => {
               setSearch(event.target.value);
               resetPage();
             }}
-            placeholder="Store, employee, or payout ID"
-            aria-label="Search payouts"
+            placeholder={t("searchPlaceholder")}
+            aria-label={t("searchAria")}
             className="w-48 rounded-xl border-zinc-200 bg-white pl-8 font-medium text-ink-charcoal shadow-xs"
           />
         </div>
         <Select
-          items={PayoutExecutionStatusFilterOptions.map((option) => ({
+          items={statusOptions.map((option) => ({
             label: option.label,
             value: option.id,
           }))}
@@ -127,7 +132,7 @@ export const AdminPayoutsTable: FC = () => {
           </SelectTrigger>
           <SelectContent className="w-auto min-w-40">
             <SelectGroup>
-              {PayoutExecutionStatusFilterOptions.map((option) => (
+              {statusOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.label}
                 </SelectItem>
@@ -136,7 +141,7 @@ export const AdminPayoutsTable: FC = () => {
           </SelectContent>
         </Select>
         <Select
-          items={DistributionRecipientTypeFilterOptions.map((option) => ({
+          items={recipientTypeOptions.map((option) => ({
             label: option.label,
             value: option.id,
           }))}
@@ -153,7 +158,7 @@ export const AdminPayoutsTable: FC = () => {
           </SelectTrigger>
           <SelectContent className="w-auto min-w-40">
             <SelectGroup>
-              {DistributionRecipientTypeFilterOptions.map((option) => (
+              {recipientTypeOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.label}
                 </SelectItem>
@@ -174,19 +179,19 @@ export const AdminPayoutsTable: FC = () => {
             setDateFrom(value);
             resetPage();
           }}
-          placeholder="From date"
-          aria-label="From date"
+          placeholder={tc("fromDate")}
+          aria-label={tc("fromDate")}
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
-        <span className="text-xs text-zinc-400">to</span>
+        <span className="text-xs text-zinc-400">{tc("dateRangeTo")}</span>
         <DatePicker
           value={dateTo}
           onChange={(value) => {
             setDateTo(value);
             resetPage();
           }}
-          placeholder="To date"
-          aria-label="To date"
+          placeholder={tc("toDate")}
+          aria-label={tc("toDate")}
           className="rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
         />
       </div>
@@ -196,7 +201,7 @@ export const AdminPayoutsTable: FC = () => {
       ) : payoutsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load payouts</EmptyTitle>
+            <EmptyTitle>{t("loadError")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(payoutsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -205,7 +210,7 @@ export const AdminPayoutsTable: FC = () => {
               variant="outline"
               onClick={() => void payoutsQuery.refetch()}
             >
-              Try again
+              {tc("tryAgain")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -215,7 +220,7 @@ export const AdminPayoutsTable: FC = () => {
             <EmptyMedia variant="icon">
               <Banknote />
             </EmptyMedia>
-            <EmptyTitle>No payouts found</EmptyTitle>
+            <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>
               {search ||
               status !== "all" ||
@@ -223,8 +228,8 @@ export const AdminPayoutsTable: FC = () => {
               storeId ||
               dateFrom ||
               dateTo
-                ? "No payouts match your filters."
-                : "No payouts have run yet."}
+                ? t("emptyFiltered")
+                : t("emptyNone")}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -234,12 +239,12 @@ export const AdminPayoutsTable: FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="px-4">When</TableHead>
-                  <TableHead className="px-4">Store</TableHead>
-                  <TableHead className="px-4">Recipient</TableHead>
-                  <TableHead className="px-4">Amount</TableHead>
-                  <TableHead className="px-4">Provider</TableHead>
-                  <TableHead className="px-4 text-right">Status</TableHead>
+                  <TableHead className="px-4">{t("columns.when")}</TableHead>
+                  <TableHead className="px-4">{t("columns.store")}</TableHead>
+                  <TableHead className="px-4">{t("columns.recipient")}</TableHead>
+                  <TableHead className="px-4">{t("columns.amount")}</TableHead>
+                  <TableHead className="px-4">{t("columns.provider")}</TableHead>
+                  <TableHead className="px-4 text-right">{t("columns.status")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -259,11 +264,11 @@ export const AdminPayoutsTable: FC = () => {
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
                       {payout.recipient_type === "EMPLOYEE"
-                        ? (payout.employee?.full_name ?? "Employee")
-                        : "Business (house)"}
+                        ? (payout.employee?.full_name ?? t("recipientEmployee"))
+                        : t("recipientHouse")}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 font-bold text-brand-700">
-                      {formatMoney(payout.amount, payout.currency)}
+                      {formatMoney(payout.amount, payout.currency, locale)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-zinc-500">
                       {payout.provider}
@@ -275,7 +280,7 @@ export const AdminPayoutsTable: FC = () => {
                           statusChipClass[payout.status],
                         )}
                       >
-                        {getPayoutExecutionStatusLabel(payout.status)}
+                        {statusLabel(PayoutExecutionStatusFormOptions, payout.status)}
                       </span>
                     </TableCell>
                   </TableRow>
@@ -287,9 +292,11 @@ export const AdminPayoutsTable: FC = () => {
           {pagination ? (
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs text-zinc-500">
-                {pagination.total} payout{pagination.total === 1 ? "" : "s"}{" "}
-                total - page {pagination.page} of{" "}
-                {Math.max(pagination.total_pages, 1)}
+                {t("pagination", {
+                  total: pagination.total,
+                  page: pagination.page,
+                  pages: Math.max(pagination.total_pages, 1),
+                })}
               </p>
               <div className="flex items-center gap-2">
                 <Button
@@ -299,7 +306,7 @@ export const AdminPayoutsTable: FC = () => {
                   disabled={!pagination.has_prev}
                   onClick={() => setPage((current) => Math.max(1, current - 1))}
                 >
-                  Previous
+                  {tc("previous")}
                 </Button>
                 <Button
                   type="button"
@@ -308,7 +315,7 @@ export const AdminPayoutsTable: FC = () => {
                   disabled={!pagination.has_next}
                   onClick={() => setPage((current) => current + 1)}
                 >
-                  Next
+                  {tc("next")}
                 </Button>
               </div>
             </div>

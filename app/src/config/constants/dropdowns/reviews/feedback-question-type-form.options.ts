@@ -5,8 +5,14 @@ import {
 
 export const FeedbackQuestionTypeFormOptions: {
   id: FeedbackQuestionType;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: FeedbackQuestionTypes.RATING, label: "Rating" },
-  { id: FeedbackQuestionTypes.TEXT, label: "Text" },
+  {
+    id: FeedbackQuestionTypes.RATING,
+    labelKey: "dashboard.enums.feedbackQuestionType.RATING",
+  },
+  {
+    id: FeedbackQuestionTypes.TEXT,
+    labelKey: "dashboard.enums.feedbackQuestionType.TEXT",
+  },
 ];

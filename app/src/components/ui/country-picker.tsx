@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useId } from "react";
+import { useTranslations } from "next-intl";
 import {
   Combobox,
   ComboboxContent,
@@ -12,11 +13,9 @@ import {
 import { InputGroupAddon } from "@/components/ui/input-group";
 import { CountryFlag } from "@/components/ui/country-flag";
 import {
-  CountryOptions,
-  getCountryLabel,
-} from "@/config/constants/dropdowns/shared/country.options";
-
-const countryCodes: string[] = CountryOptions.map((option) => option.id);
+  useCountryName,
+  useCountryOptions,
+} from "@/hooks/use-country-options";
 
 interface CountryPickerProps {
   value: string | null | undefined;
@@ -32,13 +31,17 @@ interface CountryPickerProps {
 export const CountryPicker: FC<CountryPickerProps> = ({
   value,
   onValueChange,
-  placeholder = "Select country",
+  placeholder,
   disabled = false,
   invalid = false,
   id: idProp,
   className,
   "aria-label": ariaLabel,
 }) => {
+  const t = useTranslations("dashboard.shell.ui");
+  const countryOptions = useCountryOptions();
+  const countryName = useCountryName();
+  const countryCodes = countryOptions.map((option) => option.id);
   const generatedId = useId();
   const id = idProp ?? generatedId;
 
@@ -47,12 +50,12 @@ export const CountryPicker: FC<CountryPickerProps> = ({
       items={countryCodes}
       value={value ?? null}
       onValueChange={(next) => onValueChange((next as string | null) ?? null)}
-      itemToStringLabel={(code: string) => getCountryLabel(code)}
+      itemToStringLabel={(code: string) => countryName(code)}
       disabled={disabled}
     >
       <ComboboxInput
         id={id}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t("selectCountry")}
         disabled={disabled}
         aria-label={ariaLabel}
         aria-invalid={invalid || undefined}
@@ -69,11 +72,11 @@ export const CountryPicker: FC<CountryPickerProps> = ({
           {(code: string) => (
             <ComboboxItem key={code} value={code}>
               <CountryFlag countryCode={code} />
-              {getCountryLabel(code)}
+              {countryName(code)}
             </ComboboxItem>
           )}
         </ComboboxList>
-        <ComboboxEmpty>No countries found</ComboboxEmpty>
+        <ComboboxEmpty>{t("noCountries")}</ComboboxEmpty>
       </ComboboxContent>
     </Combobox>
   );

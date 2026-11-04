@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -16,7 +17,7 @@ export const listAdminStores = async (): Promise<AdminStoreOption[]> => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load stores. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadStores")));
   }
 };
 
@@ -29,7 +30,7 @@ export const listStores = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load stores. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadStores")));
   }
 };
 
@@ -38,7 +39,7 @@ export const getStore = async (id: string): Promise<Store> => {
     const response = await axiosInstance.get<Store>(ApiRoutes.stores.byId(id));
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load store. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadStore")));
   }
 };
 
@@ -53,7 +54,7 @@ export const createStore = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't create store. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.createStore")));
   }
 };
 
@@ -68,7 +69,7 @@ export const updateStore = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't update store. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.updateStore")));
   }
 };
 
@@ -78,7 +79,7 @@ export const deleteStore = async (id: string): Promise<void> => {
   } catch (error) {
     // Surface the API's reason (last store, or a store with tips/reviews).
     throw new Error(
-      getErrorMessage(error, "We couldn't delete this store. Please try again."),
+      getErrorMessage(error, tr("errors.services.deleteThisStore")),
     );
   }
 };
@@ -94,6 +95,6 @@ export const getPublicStore = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load store. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadStore")));
   }
 };

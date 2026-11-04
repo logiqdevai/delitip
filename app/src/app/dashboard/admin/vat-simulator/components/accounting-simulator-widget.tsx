@@ -2,6 +2,7 @@
 
 import { type FC, useEffect, useMemo, useState } from "react";
 import { Info, Sparkles } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Field, FieldContent, FieldLabel, FieldDescription } from "@/components/ui/field";
 import {
@@ -27,8 +28,8 @@ import { useAppConfig } from "@/features/app-config/hooks/use-app-config";
 import {
   calculateAccountingSimulation,
   EXAMPLE_ACCOUNTING_SIMULATOR_INPUTS,
-  formatEuro,
-  formatPercent,
+  formatEuro as formatEuroInLocale,
+  formatPercent as formatPercentInLocale,
   type AccountingSimulatorInputs,
 } from "../utils/accounting-simulator.utils";
 
@@ -40,6 +41,10 @@ const parseNumberInput = (raw: string): number => {
 };
 
 export const AccountingSimulatorWidget: FC = () => {
+  const t = useTranslations("dashboard.adminSystem.vatSimulator");
+  const locale = useLocale();
+  const formatEuro = (value: number) => formatEuroInLocale(value, locale);
+  const formatPercent = (value: number) => formatPercentInLocale(value, locale);
   const { data: appConfig } = useAppConfig();
   // The platform's own sales VAT rate comes from AppConfig; the store and
   // processor rates are third parties' and stay as example values.
@@ -76,11 +81,8 @@ export const AccountingSimulatorWidget: FC = () => {
         <CardHeader>
           <div className="flex items-start justify-between gap-2">
             <div>
-              <CardTitle>Inputs</CardTitle>
-              <CardDescription>
-                Net tip amount (before VAT), plus the platform and processor
-                fees taken out of it.
-              </CardDescription>
+              <CardTitle>{t("inputs.title")}</CardTitle>
+              <CardDescription>{t("inputs.description")}</CardDescription>
             </div>
             <Button
               type="button"
@@ -90,13 +92,13 @@ export const AccountingSimulatorWidget: FC = () => {
               className="shrink-0"
             >
               <Sparkles data-icon="inline-start" className="size-3.5" />
-              Example
+              {t("inputs.example")}
             </Button>
           </div>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <Field>
-            <FieldLabel htmlFor="tip-net">Tip amount (net)</FieldLabel>
+            <FieldLabel htmlFor="tip-net">{t("inputs.tipAmount")}</FieldLabel>
             <InputGroup>
               <InputGroupAddon>
                 <InputGroupText>€</InputGroupText>
@@ -113,14 +115,12 @@ export const AccountingSimulatorWidget: FC = () => {
                 }
               />
             </InputGroup>
-            <FieldDescription>
-              What the customer tips, before VAT.
-            </FieldDescription>
+            <FieldDescription>{t("inputs.tipAmountHint")}</FieldDescription>
           </Field>
 
           <Field>
             <FieldLabel htmlFor="platform-fee-percent">
-              Platform fee
+              {t("inputs.platformFee")}
             </FieldLabel>
             <InputGroup>
               <InputGroupInput
@@ -143,14 +143,15 @@ export const AccountingSimulatorWidget: FC = () => {
               </InputGroupAddon>
             </InputGroup>
             <FieldDescription>
-              % of the tip, taken out of it - not added on top. ={" "}
-              {formatEuro(result.platformFeeNet)}
+              {t("inputs.platformFeeHint", {
+                amount: formatEuro(result.platformFeeNet),
+              })}
             </FieldDescription>
           </Field>
 
           <Field>
             <FieldLabel htmlFor="processor-fee-percent">
-              Payment processor fee
+              {t("inputs.processorFee")}
             </FieldLabel>
             <div className="grid grid-cols-2 gap-2">
               <InputGroup>
@@ -194,14 +195,15 @@ export const AccountingSimulatorWidget: FC = () => {
               </InputGroup>
             </div>
             <FieldDescription>
-              e.g. Viva Wallet&apos;s cut - % of the tip plus a fixed amount
-              per transaction. = {formatEuro(result.processorFeeNet)}
+              {t("inputs.processorFeeHint", {
+                amount: formatEuro(result.processorFeeNet),
+              })}
             </FieldDescription>
           </Field>
 
           <div className="grid grid-cols-3 gap-2">
             <Field>
-              <FieldLabel htmlFor="vat-sales">Sales VAT</FieldLabel>
+              <FieldLabel htmlFor="vat-sales">{t("inputs.salesVat")}</FieldLabel>
               <InputGroup>
                 <InputGroupInput
                   id="vat-sales"
@@ -225,7 +227,7 @@ export const AccountingSimulatorWidget: FC = () => {
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="vat-store">Store VAT</FieldLabel>
+              <FieldLabel htmlFor="vat-store">{t("inputs.storeVat")}</FieldLabel>
               <InputGroup>
                 <InputGroupInput
                   id="vat-store"
@@ -249,7 +251,9 @@ export const AccountingSimulatorWidget: FC = () => {
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="vat-processor">Processor VAT</FieldLabel>
+              <FieldLabel htmlFor="vat-processor">
+                {t("inputs.processorVat")}
+              </FieldLabel>
               <InputGroup>
                 <InputGroupInput
                   id="vat-processor"
@@ -276,12 +280,9 @@ export const AccountingSimulatorWidget: FC = () => {
           <Field orientation="horizontal">
             <FieldContent>
               <FieldLabel htmlFor="reverse-charge">
-                Customer is B2B with reverse charge
+                {t("inputs.reverseCharge")}
               </FieldLabel>
-              <FieldDescription>
-                Platform&apos;s sale gets 0% VAT; the customer self-accounts
-                for it.
-              </FieldDescription>
+              <FieldDescription>{t("inputs.reverseChargeHint")}</FieldDescription>
             </FieldContent>
             <Switch
               id="reverse-charge"
@@ -294,7 +295,7 @@ export const AccountingSimulatorWidget: FC = () => {
 
           <div className="rounded-lg bg-muted/50 px-3 py-2 text-sm">
             <span className="text-muted-foreground">
-              Store/employee net (auto-calculated):{" "}
+              {t("inputs.storeNet")}{" "}
             </span>
             <span
               className={cn(
@@ -312,38 +313,40 @@ export const AccountingSimulatorWidget: FC = () => {
         {!result.isValid ? (
           <Alert variant="destructive">
             <Info />
-            <AlertDescription>
-              The platform fee and processor fee together exceed the tip, so
-              the store/employee net amount would be negative. Lower the fees
-              or raise the tip before reading the results below.
-            </AlertDescription>
+            <AlertDescription>{t("invalid")}</AlertDescription>
           </Alert>
         ) : (
           <>
             <Card>
               <CardHeader>
-                <CardTitle>Invoices &amp; receipts</CardTitle>
-                <CardDescription>
-                  Every document this flow generates, net → VAT → total.
-                </CardDescription>
+                <CardTitle>{t("documents.title")}</CardTitle>
+                <CardDescription>{t("documents.description")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Document</TableHead>
-                      <TableHead className="text-right">Net</TableHead>
-                      <TableHead className="text-right">VAT</TableHead>
-                      <TableHead className="text-right">Total</TableHead>
+                      <TableHead>{t("documents.columns.document")}</TableHead>
+                      <TableHead className="text-right">
+                        {t("documents.columns.net")}
+                      </TableHead>
+                      <TableHead className="text-right">
+                        {t("documents.columns.vat")}
+                      </TableHead>
+                      <TableHead className="text-right">
+                        {t("documents.columns.total")}
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {result.documents.map((doc) => (
                       <TableRow key={doc.key}>
                         <TableCell className="whitespace-normal">
-                          <div className="font-medium">{doc.title}</div>
+                          <div className="font-medium">
+                            {t(`documents.${doc.key}.title`)}
+                          </div>
                           <div className="text-xs text-muted-foreground">
-                            {doc.note}
+                            {t(`documents.${doc.key}.note`)}
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
@@ -367,30 +370,28 @@ export const AccountingSimulatorWidget: FC = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>Summary</CardTitle>
-                <CardDescription>
-                  Platform profit and the VAT due to the state.
-                </CardDescription>
+                <CardTitle>{t("summary.title")}</CardTitle>
+                <CardDescription>{t("summary.description")}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-1.5 text-sm">
                 <SummaryRow
-                  label="Platform revenue (net)"
+                  label={t("summary.platformRevenueNet")}
                   value={formatEuro(result.summary.platformRevenueNet)}
                 />
                 <SummaryRow
-                  label="Store/employee cost (net)"
+                  label={t("summary.storeCostNet")}
                   value={formatEuro(result.summary.storeCostNet)}
                 />
                 <SummaryRow
-                  label="Processor fee cost (net)"
+                  label={t("summary.processorCostNet")}
                   value={formatEuro(result.summary.processorCostNet)}
                 />
                 <SummaryRow
-                  label="Total costs (net)"
+                  label={t("summary.totalCostsNet")}
                   value={formatEuro(result.summary.totalCostsNet)}
                 />
                 <SummaryRow
-                  label="Platform pre-tax profit"
+                  label={t("summary.platformPreTaxProfit")}
                   value={formatEuro(result.summary.platformPreTaxProfit)}
                   emphasis
                 />
@@ -398,19 +399,19 @@ export const AccountingSimulatorWidget: FC = () => {
                 <div className="my-1 border-t" />
 
                 <SummaryRow
-                  label="Output VAT (on sales)"
+                  label={t("summary.outputVat")}
                   value={formatEuro(result.summary.outputVat)}
                 />
                 <SummaryRow
-                  label="Input VAT - from store"
+                  label={t("summary.inputVatFromStore")}
                   value={formatEuro(result.summary.inputVatFromStore)}
                 />
                 <SummaryRow
-                  label="Input VAT - from processor"
+                  label={t("summary.inputVatFromProcessor")}
                   value={formatEuro(result.summary.inputVatFromProcessor)}
                 />
                 <SummaryRow
-                  label="Total input VAT"
+                  label={t("summary.totalInputVat")}
                   value={formatEuro(result.summary.totalInputVat)}
                 />
 
@@ -419,8 +420,8 @@ export const AccountingSimulatorWidget: FC = () => {
                 <div className="flex items-center justify-between gap-2 pt-1">
                   <span className="font-medium">
                     {result.summary.vatPayable >= 0
-                      ? "VAT payable to the state"
-                      : "VAT credit"}
+                      ? t("summary.vatPayable")
+                      : t("summary.vatCredit")}
                   </span>
                   <Badge
                     variant={
@@ -440,10 +441,7 @@ export const AccountingSimulatorWidget: FC = () => {
 
         <Alert>
           <Info />
-          <AlertDescription>
-            This is a simplified simulation. Consult your accountant for real
-            accounting.
-          </AlertDescription>
+          <AlertDescription>{t("disclaimer")}</AlertDescription>
         </Alert>
       </div>
     </div>

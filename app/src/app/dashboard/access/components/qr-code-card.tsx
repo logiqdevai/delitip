@@ -20,6 +20,7 @@ import {
   UsersRound,
   type LucideIcon,
 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -29,7 +30,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getQrCodeSelectionModeLabel } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
+import { QrCodeSelectionModeFormOptions } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { useQrCodeActions } from "@/app/dashboard/access/hooks/use-qr-code-actions";
 import { TemplateEditorDialog } from "@/app/dashboard/access/components/qr-templates/template-editor/template-editor-dialog";
 import { QR_TEMPLATES } from "@/features/qr-templates/config/qr-templates.config";
@@ -84,6 +86,9 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const t = useTranslations("dashboard.access.qrCard");
+  const locale = useLocale();
+  const dropdownLabel = useDropdownLabel();
   const [templateOpen, setTemplateOpen] = useState(false);
   const statsQuery = useQrCodeStats(qr.id);
   const stats = statsQuery.data;
@@ -121,8 +126,8 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
             <button
               type="button"
               onClick={() => onEdit(qr)}
-              aria-label={`Edit ${qr.label}`}
-              title="Edit QR code"
+              aria-label={t("editAria", { label: qr.label })}
+              title={t("editTitle")}
               className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-zinc-400 outline-none transition hover:bg-zinc-100 hover:text-ink-charcoal focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               <Pencil className="size-3.5" strokeWidth={2} />
@@ -140,7 +145,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
             <button
               type="button"
               onClick={() => void handleCopy()}
-              aria-label={copied ? "Copied tip URL" : "Copy tip URL"}
+              aria-label={copied ? t("copiedAria") : t("copyAria")}
               className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-zinc-400 outline-none transition hover:bg-zinc-100 hover:text-ink-charcoal focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               {copied ? (
@@ -168,7 +173,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
                 qr.is_active ? "bg-brand-700" : "bg-zinc-400",
               )}
             />
-            {qr.is_active ? "Active" : "Inactive"}
+            {qr.is_active ? t("active") : t("inactive")}
           </span>
 
           <DropdownMenu>
@@ -177,18 +182,18 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
                 buttonVariants({ variant: "ghost", size: "icon-sm" }),
                 "text-zinc-500 hover:text-ink-charcoal",
               )}
-              aria-label={`Actions for ${qr.label}`}
+              aria-label={t("actionsAria", { label: qr.label })}
             >
               <MoreHorizontal className="size-4" strokeWidth={2} />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-48">
               <DropdownMenuItem onClick={() => onEdit(qr)}>
                 <Pencil />
-                Edit
+                {t("edit")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => void handleCopy()}>
                 <Copy />
-                Copy tip link
+                {t("copyLink")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
@@ -196,7 +201,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
                 }
               >
                 <ExternalLink />
-                Open tip page
+                {t("openTipPage")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -204,7 +209,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
                 onClick={() => onDelete(qr)}
               >
                 <Trash2 />
-                Delete
+                {t("delete")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -216,41 +221,40 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
           <button
             type="button"
             onClick={() => onEdit(qr)}
-            aria-label={`Edit QR code ${qr.label}`}
-            title="Edit QR code"
+            aria-label={t("editQrAria", { label: qr.label })}
+            title={t("editTitle")}
             className="flex size-44 cursor-pointer items-center justify-center rounded-3xl border border-zinc-200 bg-white p-3 shadow-md outline-none transition duration-200 ease-out hover:scale-105 hover:shadow-lg focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-100 motion-reduce:transition-none motion-reduce:hover:scale-100"
           >
             <QrImage
               value={tipUrl}
-              alt={`QR code for ${qr.label}`}
+              alt={t("qrAlt", { label: qr.label })}
               className="size-full object-contain"
             />
           </button>
           <span className="pointer-events-none absolute bottom-0 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-brand-100 px-3 py-1 text-[11px] font-semibold whitespace-nowrap text-brand-900 shadow-xs">
             <Smartphone className="size-3" strokeWidth={2} />
-            Scan to leave a tip
+            {t("scanToTip")}
           </span>
         </div>
 
         <div className="grid w-full min-w-0 flex-1 grid-cols-2 gap-x-4 gap-y-4 @md:grid-cols-1">
-          <StatRow icon={Users} label="Applies to">
-            {getQrCodeSelectionModeLabel(qr.selection_mode)}
+          <StatRow icon={Users} label={t("appliesTo")}>
+            {dropdownLabel(QrCodeSelectionModeFormOptions, qr.selection_mode)}
           </StatRow>
-          <StatRow icon={UsersRound} label="Team members">
-            {employeeCount} {employeeCount === 1 ? "employee" : "employees"}
+          <StatRow icon={UsersRound} label={t("teamMembers")}>
+            {t("employeesCount", { count: employeeCount })}
           </StatRow>
           {stats ? (
             <>
-              <StatRow icon={Coins} label="Tips">
-                {stats.tips_count} {stats.tips_count === 1 ? "tip" : "tips"}
+              <StatRow icon={Coins} label={t("tips")}>
+                {t("tipsCount", { count: stats.tips_count })}
                 <span aria-hidden className="mx-1.5 text-zinc-300">
                   ·
                 </span>
-                {formatMoney(stats.tips_total_amount, store.currency)}
+                {formatMoney(stats.tips_total_amount, store.currency, locale)}
               </StatRow>
-              <StatRow icon={Star} label="Reviews">
-                {stats.reviews_count}{" "}
-                {stats.reviews_count === 1 ? "review" : "reviews"}
+              <StatRow icon={Star} label={t("reviews")}>
+                {t("reviewsCount", { count: stats.reviews_count })}
               </StatRow>
             </>
           ) : (
@@ -271,7 +275,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
             onClick={() => void handleDownload()}
           >
             <Download data-icon="inline-start" className="size-4" />
-            {busy === "download" ? "Preparing…" : "Download"}
+            {busy === "download" ? t("preparing") : t("download")}
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger
@@ -279,7 +283,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
                 buttonVariants({ variant: "default" }),
                 "h-11 rounded-l-none rounded-r-xl border-l border-ink-charcoal/10 bg-electric-lime px-3 text-ink-charcoal shadow-sm",
               )}
-              aria-label="More download options"
+              aria-label={t("moreDownload")}
             >
               <ChevronDown className="size-4" strokeWidth={2} />
             </DropdownMenuTrigger>
@@ -289,18 +293,18 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
                 onClick={() => void handleDownload()}
               >
                 <Download />
-                Download PNG
+                {t("downloadPng")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 disabled={busy !== null}
                 onClick={() => void handlePrint()}
               >
                 <Printer />
-                Print
+                {t("print")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => void handleCopy()}>
                 <Copy />
-                Copy tip link
+                {t("copyLink")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -313,7 +317,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
           onClick={() => setTemplateOpen(true)}
         >
           <LayoutTemplate data-icon="inline-start" className="size-4" />
-          Template
+          {t("template")}
         </Button>
       </div>
 

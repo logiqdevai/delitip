@@ -1,25 +1,26 @@
 import { z } from "zod";
+import { vmsg } from "@/lib/validation-message";
 
 const percentage = z
-  .number({ invalid_type_error: "Enter a number" })
-  .min(0, "Must be at least 0")
-  .max(100, "Must be at most 100");
+  .number({ invalid_type_error: vmsg("enterNumber") })
+  .min(0, vmsg("minValue", { min: 0 }))
+  .max(100, vmsg("maxValue", { max: 100 }));
 
 const optionalText = (max: number) =>
-  z.string().trim().max(max, `Must be at most ${max} characters`);
+  z.string().trim().max(max, vmsg("maxChars", { max }));
 
 export const appConfigSchema = z.object({
   tip_platform_commission_percentage: percentage,
   tip_processor_fee_estimate_percentage: percentage,
   vat_rate_percentage: percentage,
   tip_processor_fee_estimate_fixed_amount: z
-    .number({ invalid_type_error: "Enter a number" })
-    .int("Must be a whole number")
-    .min(0, "Must be at least 0"),
+    .number({ invalid_type_error: vmsg("enterNumber") })
+    .int(vmsg("wholeNumber"))
+    .min(0, vmsg("minValue", { min: 0 })),
   payout_hold_window_hours: z
-    .number({ invalid_type_error: "Enter a number" })
-    .int("Must be a whole number")
-    .min(0, "Must be at least 0"),
+    .number({ invalid_type_error: vmsg("enterNumber") })
+    .int(vmsg("wholeNumber"))
+    .min(0, vmsg("minValue", { min: 0 })),
   payout_invoice_required: z.boolean(),
   payout_invoice_ai_check_enabled: z.boolean(),
   connected_account_payouts_enabled: z.boolean(),

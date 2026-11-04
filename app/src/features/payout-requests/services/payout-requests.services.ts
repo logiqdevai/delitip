@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -26,7 +27,7 @@ export const getPayoutRequestPreview = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load the payout preview. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadThePayoutPreview")));
   }
 };
 
@@ -41,7 +42,7 @@ export const createPayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't submit the payout request. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.submitThePayoutRequest")));
   }
 };
 
@@ -56,7 +57,7 @@ export const listStorePayoutRequests = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load payout requests. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPayoutRequests")));
   }
 };
 
@@ -70,7 +71,7 @@ export const getStorePayoutRequestInvoiceUrl = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't open the invoice. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.openTheInvoice")));
   }
 };
 
@@ -84,7 +85,7 @@ export const cancelPayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't cancel the payout request. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.cancelThePayoutRequest")));
   }
 };
 
@@ -98,7 +99,7 @@ export const listAdminPayoutRequests = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load payout requests. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPayoutRequests")));
   }
 };
 
@@ -109,7 +110,7 @@ export const getAdminPendingPayoutRequestCount = async (): Promise<number> => {
     );
     return response.data.count;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load the pending request count."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPendingRequestCount")));
   }
 };
 
@@ -122,7 +123,7 @@ export const getAdminPayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load this payout request. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadThisPayoutRequest")));
   }
 };
 
@@ -135,7 +136,7 @@ export const getAdminPayoutRequestInvoiceUrl = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't open the invoice. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.openTheInvoice")));
   }
 };
 
@@ -150,7 +151,7 @@ export const approvePayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't approve the payout request. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.approveThePayoutRequest")));
   }
 };
 
@@ -165,7 +166,7 @@ export const rejectPayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't reject the payout request. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.rejectThePayoutRequest")));
   }
 };
 
@@ -178,6 +179,6 @@ export const recheckPayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't re-run the invoice check. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.reRunTheInvoiceCheck")));
   }
 };

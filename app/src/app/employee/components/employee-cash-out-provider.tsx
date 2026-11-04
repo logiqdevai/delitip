@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   ConfirmationDialog,
   useConfirmationDialog,
@@ -20,7 +21,8 @@ import {
   useMyPayoutAccount,
   useRefreshMyPayoutAccountStatus,
 } from "@/features/payout-accounts/hooks/use-payout-accounts";
-import { getPayoutAccountStatusLabel } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { PayoutAccountStatusFormOptions } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { formatMoney } from "@/lib/money";
 
 const BALANCE_QUERY = { limit: 200 };
@@ -52,6 +54,9 @@ interface EmployeeCashOutProviderProps {
 export const EmployeeCashOutProvider: FC<EmployeeCashOutProviderProps> = ({
   children,
 }) => {
+  const t = useTranslations("employee.cashOut");
+  const locale = useLocale();
+  const dropdownLabel = useDropdownLabel();
   const { employeeId, store } = useCurrentEmployee();
   const tipsQuery = useEmployeeTips(employeeId ?? "", BALANCE_QUERY);
   const payoutAccountQuery = useMyPayoutAccount(!!employeeId);
@@ -64,7 +69,7 @@ export const EmployeeCashOutProvider: FC<EmployeeCashOutProviderProps> = ({
   const balanceMinor = (tipsQuery.data?.data ?? [])
     .filter((distribution) => distribution.payout_status === "PENDING")
     .reduce((sum, distribution) => sum + distribution.amount, 0);
-  const formattedBalance = formatMoney(balanceMinor, currency);
+  const formattedBalance = formatMoney(balanceMinor, currency, locale);
 
   const account = payoutAccountQuery.data;
   const isPayoutActive = account?.status === "ACTIVE";
@@ -93,14 +98,19 @@ export const EmployeeCashOutProvider: FC<EmployeeCashOutProviderProps> = ({
       <ConfirmationDialog
         state={infoDialog}
         variant="default"
-        title={isPayoutActive ? "Cash-out balance" : "Payout account status"}
+        title={isPayoutActive ? t("balanceTitle") : t("statusTitle")}
         description={
           isPayoutActive
-            ? `You have ${formattedBalance} pending from unpaid tip distributions. Your Store's owner releases payouts - you'll see them appear here once paid.`
-            : `Your personal IBAN is linked but ${account ? getPayoutAccountStatusLabel(account.status).toLowerCase() : "pending"}. You'll be able to receive payouts once it's active.`
+            ? t("balanceDescription", { amount: formattedBalance })
+            : t("statusDescription", {
+                status: dropdownLabel(
+                  PayoutAccountStatusFormOptions,
+                  account?.status ?? "PENDING",
+                ),
+              })
         }
-        confirmLabel={isPayoutPending ? "Check status" : "Got it"}
-        cancelLabel="Close"
+        confirmLabel={isPayoutPending ? t("checkStatus") : t("gotIt")}
+        cancelLabel={t("close")}
         isPending={refreshStatus.isPending}
         onConfirm={async () => {
           if (isPayoutPending) {
@@ -112,8 +122,8 @@ export const EmployeeCashOutProvider: FC<EmployeeCashOutProviderProps> = ({
       <IbanPayoutAccountDialog
         open={formOpen}
         onOpenChange={setFormOpen}
-        title="Link your personal payout account"
-        description="This is your own personal IBAN, separate from the Store's business account - used to send you your share of tips."
+        title={t("linkTitle")}
+        description={t("linkDescription")}
         mutation={createPayoutAccount}
       />
     </EmployeeCashOutContext.Provider>

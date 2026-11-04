@@ -1,1 +1,302 @@
-{}
+{
+  "common": {
+    "saving": "Saving…",
+    "saveChanges": "Save changes",
+    "unsavedChanges": "Unsaved changes",
+    "cancel": "Cancel",
+    "save": "Save",
+    "add": "Add",
+    "previous": "Previous",
+    "next": "Next",
+    "remove": "Remove",
+    "delete": "Delete"
+  },
+  "nav": {
+    "defaultTitle": "Settings",
+    "defaultDescription": "Manage business profile, bank account connections, and preferences.",
+    "profile": {
+      "label": "Business profile",
+      "description": "Core details customers and your team see across delitip."
+    },
+    "stores": {
+      "label": "Stores",
+      "description": "All the venues in your business."
+    },
+    "branding": {
+      "label": "Branding",
+      "description": "What customers see on your public tip page."
+    },
+    "tipping": {
+      "label": "Tipping",
+      "description": "Presets shown on the tip flow, and whether guests can enter a custom amount."
+    },
+    "localization": {
+      "label": "Localization",
+      "description": "The primary language is what you type your branding text in."
+    },
+    "reviews": {
+      "label": "Reviews",
+      "description": "What customers see on the review step after tipping, and where high ratings are sent."
+    },
+    "alerts": {
+      "label": "Alert preferences",
+      "description": "Choose which automatic alerts your team receives in the Alerts inbox."
+    },
+    "members": {
+      "label": "Members & access",
+      "description": "Invite teammates and manage their role-based access."
+    },
+    "billing": {
+      "label": "Billing",
+      "description": "Manage your subscription plan."
+    },
+    "taxDetails": {
+      "label": "Tax details",
+      "description": "Billing identity and address used to issue invoices."
+    }
+  },
+  "alerts": {
+    "title": "Alert preferences",
+    "description": "Choose which automatic alerts your team receives in the Alerts inbox."
+  },
+  "billing": {
+    "title": "Billing",
+    "ownerOnly": "Only the business owner can manage the subscription plan.",
+    "noProvider": "No real billing provider is connected yet - plan changes take effect immediately and for free.",
+    "noSubscription": "No subscription found.",
+    "renews": "Renews {date}",
+    "status": {
+      "TRIALING": "Trial",
+      "ACTIVE": "Active",
+      "PAST_DUE": "Past due",
+      "CANCELED": "Canceled"
+    },
+    "cancelButton": "Cancel subscription",
+    "cancelDialog": {
+      "title": "Cancel subscription?",
+      "description": "Your organization will lose access to plan-gated features at the end of the current period.",
+      "confirm": "Cancel subscription"
+    }
+  },
+  "branding": {
+    "title": "Branding",
+    "description": "What customers see on your public tip page.",
+    "primaryColor": "Primary color",
+    "secondaryColor": "Secondary color",
+    "welcomeMessage": "Welcome message",
+    "welcomePlaceholder": "Welcome to {storeName}. Leave a tip for great service.",
+    "thankYouMessage": "Thank-you message",
+    "thankYouPlaceholder": "Thank you! Your tip means a lot to our team."
+  },
+  "localization": {
+    "title": "Localization",
+    "description": "The primary language is what you type your branding text in.",
+    "primaryLanguage": "Primary language",
+    "supportedLanguages": "Supported languages"
+  },
+  "members": {
+    "title": "Members & access",
+    "invite": "Invite member",
+    "empty": "No members yet.",
+    "unknownMember": "Unknown",
+    "organizationWide": "Organization-wide",
+    "remove": "Remove",
+    "removeDialog": {
+      "title": "Remove this member?",
+      "description": "{member} will lose access to this organization.",
+      "descriptionFallback": "This member will be removed.",
+      "descriptionUnknown": "This member will lose access to this organization.",
+      "confirm": "Remove"
+    },
+    "inviteDialog": {
+      "title": "Invite a member",
+      "description": "They'll get access next time they sign in with this email.",
+      "email": "Email",
+      "emailPlaceholder": "name@business.com",
+      "role": "Role",
+      "storeScope": "Store scope",
+      "optional": "(optional)",
+      "submit": "Invite"
+    }
+  },
+  "profile": {
+    "title": "Business profile",
+    "description": "Core details customers and your team see across delitip.",
+    "businessName": "Business name",
+    "businessNamePlaceholder": "e.g. Artisan Café & Bar",
+    "industry": "Industry",
+    "address": "Address",
+    "addressPlaceholder": "Street address",
+    "city": "City",
+    "cityPlaceholder": "City",
+    "country": "Country",
+    "postalCode": "Postal code",
+    "postalCodePlaceholder": "Postal code"
+  },
+  "stores": {
+    "title": "Stores",
+    "add": "Add store",
+    "current": "Current",
+    "inactive": "Inactive",
+    "switch": "Switch",
+    "delete": "Delete",
+    "lastStoreTitle": "Your business needs at least one store",
+    "lastStoreNote": "Your business needs at least one store, so the last one can't be deleted.",
+    "deleteDialog": {
+      "title": "Delete {name}?",
+      "titleFallback": "Delete this store?",
+      "description": "This permanently removes the store with its staff, QR codes, tip-sharing rules and settings. Stores that already have tips or reviews can't be deleted.",
+      "confirm": "Delete store"
+    }
+  },
+  "taxDetails": {
+    "title": "Tax details",
+    "description": "Billing identity used on invoices for your organization.",
+    "legalName": "Legal name",
+    "legalNamePlaceholder": "Registered legal entity name",
+    "vatNumber": "VAT number",
+    "vatNumberPlaceholder": "e.g. EL123456789",
+    "profession": "Profession / business activity",
+    "professionPlaceholder": "e.g. Restaurant",
+    "vatRate": "VAT rate (%)",
+    "vatRatePlaceholder": "Not set",
+    "vatRateHelp": "Added on top of the tip amount at checkout.",
+    "billingAddress": "Billing address",
+    "addressPlaceholder": "Street address",
+    "city": "City",
+    "cityPlaceholder": "City",
+    "country": "Country",
+    "postalCode": "Postal code",
+    "postalCodePlaceholder": "Postal code",
+    "taxOffice": "Tax office (Δ.Ο.Υ.)",
+    "taxOfficePlaceholder": "e.g. Δ.Ο.Υ. Αθηνών"
+  },
+  "tipping": {
+    "title": "Tip presets",
+    "description": "Guests see these as quick-pick amounts on the tip step.",
+    "manageAll": "Manage all →",
+    "suggestedAmounts": "Suggested amounts",
+    "emptyTitle": "No presets yet",
+    "emptyDescription": "Add at least one amount guests can tap.",
+    "addPreset": "Add preset",
+    "addShort": "Add",
+    "amountAria": "Suggested tip amount {number}",
+    "removeAria": "Remove amount {number}",
+    "allowCustom": "Allow custom amount",
+    "allowCustomHelp": "Guests can type any tip instead of only presets.",
+    "defaultRule": "Default distribution rule",
+    "defaultRuleHelp": "Used when a QR code does not override the split.",
+    "noRules": "No rules yet - create one",
+    "selectRule": "Select a default rule",
+    "createRule": "Create distribution rule"
+  },
+  "reviews": {
+    "title": "Reviews & feedback config",
+    "description": "What customers see on the review step after tipping.",
+    "shown": "Shown",
+    "hidden": "Hidden",
+    "dragHint": "Drag to reorder. Switch off to hide from the review step without deleting.",
+    "dragAria": "Drag to reorder",
+    "hideAria": "Hide {name}",
+    "showAria": "Show {name}",
+    "editAria": "Edit {name}",
+    "deleteAria": "Delete {name}",
+    "categories": {
+      "title": "Rating categories",
+      "placeholder": "e.g. Friendliness",
+      "empty": "No categories yet.",
+      "editTitle": "Edit rating category",
+      "nameLabel": "Name",
+      "deleteTitle": "Delete this rating category?",
+      "deleteDescription": "\"{name}\" will no longer appear on the review step."
+    },
+    "questions": {
+      "title": "Feedback questions",
+      "placeholder": "e.g. How was the food?",
+      "empty": "No feedback questions yet.",
+      "editTitle": "Edit feedback question",
+      "questionLabel": "Question",
+      "answerType": "Answer type",
+      "typeAria": "{label} question",
+      "deleteTitle": "Delete this feedback question?",
+      "deleteDescription": "\"{name}\" will no longer appear on the review step."
+    },
+    "tags": {
+      "title": "Compliment / feedback tags",
+      "hint": "Switch off to hide a tag from the review step without deleting it.",
+      "placeholder": "e.g. Friendly service",
+      "empty": "No tags yet.",
+      "editTitle": "Edit tag",
+      "nameLabel": "Name",
+      "sentiment": "Sentiment",
+      "sentimentAria": "{label} tag",
+      "deleteTitle": "Delete this tag?",
+      "deleteDescription": "\"{name}\" will no longer be available to tag reviews."
+    },
+    "redirect": {
+      "title": "Public review redirect",
+      "description": "Customers who rate you at or above this threshold are prompted to share feedback on an external site such as Google.",
+      "threshold": "Public prompt threshold",
+      "stars": "{count}+ stars",
+      "url": "Public review link (e.g. Google Business Profile)",
+      "urlPlaceholder": "https://g.page/r/your-business/review",
+      "urlHelp": "Leave blank to skip the public redirect - high-rated customers still see a thank-you, just without an outbound link."
+    }
+  },
+  "toasts": {
+    "subscriptions": {
+      "planUpdated": "Plan updated",
+      "planFailed": "Could not change plan",
+      "canceled": "Subscription canceled",
+      "cancelFailed": "Could not cancel subscription"
+    },
+    "feedbackQuestions": {
+      "addFailed": "Could not add question",
+      "updateFailed": "Could not update question",
+      "deleteFailed": "Could not delete question",
+      "reorderFailed": "Could not reorder questions"
+    },
+    "reviewCategories": {
+      "addFailed": "Could not add category",
+      "updateFailed": "Could not update category",
+      "deleteFailed": "Could not delete category",
+      "reorderFailed": "Could not reorder categories"
+    },
+    "reviewTags": {
+      "addFailed": "Could not add tag",
+      "updateFailed": "Could not update tag",
+      "deleteFailed": "Could not delete tag"
+    },
+    "payoutAccounts": {
+      "active": {
+        "title": "Payout account active",
+        "description": "It's ready to receive payouts."
+      },
+      "pending": {
+        "title": "Still pending",
+        "description": "Viva hasn't confirmed this account yet - check back shortly."
+      },
+      "reconciled": {
+        "title": "IBANs reconciled",
+        "promoted": "{promoted} of {checked} pending {checked, plural, one {account} other {accounts}} promoted to active.",
+        "none": "Checked {checked} pending {checked, plural, one {account} other {accounts}} - none newly verified.",
+        "failed": "Could not reconcile IBANs"
+      },
+      "myConnected": {
+        "title": "Payout account connected",
+        "description": "You're ready to receive cash-outs."
+      },
+      "storeConnected": {
+        "title": "Payout account connected",
+        "description": "Your store is ready to receive payouts."
+      },
+      "employeeLinked": {
+        "title": "Payout account linked",
+        "description": "This employee is ready to receive payouts."
+      },
+      "refreshFailed": "Could not check payout account status",
+      "connectFailed": "Could not connect payout account",
+      "linkFailed": "Could not link payout account"
+    }
+  }
+}

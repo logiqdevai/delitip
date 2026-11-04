@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import {
   InvoiceCheckStatuses,
   PayoutRequestStatuses,
@@ -9,8 +10,9 @@ import {
   type PayoutRequestStatus,
 } from "@/features/payout-requests/interfaces/payout-requests.interfaces";
 import type { PayoutExecutionStatus } from "@/features/payouts/interfaces/payouts.interfaces";
-import { getPayoutRequestStatusLabel } from "@/config/constants/dropdowns/payouts/payout-request-status-form.options";
-import { getInvoiceCheckLabel } from "@/config/constants/dropdowns/payouts/invoice-check-verdict-form.options";
+import { PayoutRequestStatusFormOptions } from "@/config/constants/dropdowns/payouts/payout-request-status-form.options";
+import { InvoiceCheckVerdictFormOptions } from "@/config/constants/dropdowns/payouts/invoice-check-verdict-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { cn } from "@/lib/utils";
 
 // Chip colour maps stay with the component; the text comes from dropdowns.
@@ -40,6 +42,8 @@ export const PayoutRequestStatusChip: FC<{
   failureReason?: string | null;
   size?: "sm" | "md";
 }> = ({ status, payoutStatus, failureReason, size = "sm" }) => {
+  const t = useTranslations("dashboard.admin.chips");
+  const label = useDropdownLabel();
   // APPROVED + payout COMPLETED reads as "Paid"; a PENDING_REVIEW request
   // with a failure_reason had a transfer bounce and needs a retry.
   const paid =
@@ -59,7 +63,11 @@ export const PayoutRequestStatusChip: FC<{
             : statusChipClass[status],
       )}
     >
-      {paid ? "Paid" : retry ? "Transfer failed" : getPayoutRequestStatusLabel(status)}
+      {paid
+        ? t("paid")
+        : retry
+          ? t("transferFailed")
+          : label(PayoutRequestStatusFormOptions, status)}
     </span>
   );
 };
@@ -69,6 +77,8 @@ export const InvoiceCheckChip: FC<{
   verdict: InvoiceCheckVerdict | null;
   size?: "sm" | "md";
 }> = ({ status, verdict, size = "sm" }) => {
+  const t = useTranslations("dashboard.admin.chips");
+  const label = useDropdownLabel();
   const className =
     status === InvoiceCheckStatuses.COMPLETED && verdict
       ? verdictChipClass[verdict]
@@ -82,7 +92,9 @@ export const InvoiceCheckChip: FC<{
         className,
       )}
     >
-      {getInvoiceCheckLabel(status, verdict)}
+      {status === InvoiceCheckStatuses.COMPLETED && verdict
+        ? label(InvoiceCheckVerdictFormOptions, verdict)
+        : t(`checkStatus.${status}`)}
     </span>
   );
 };

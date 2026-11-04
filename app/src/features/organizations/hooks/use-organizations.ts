@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import {
@@ -65,6 +66,7 @@ export const useCreateOrganization = () => {
 };
 
 export const useUpdateOrganization = () => {
+  const t = useTranslations("dashboard.shell.toasts.organizations");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -85,14 +87,14 @@ export const useUpdateOrganization = () => {
       });
       void queryClient.invalidateQueries({ queryKey: usersQueryKeys.accounts });
       toast.add({
-        title: "Billing details saved",
-        description: "Your organization's billing details were updated.",
+        title: t("billingSavedTitle"),
+        description: t("billingSavedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not save billing details",
+        title: t("billingFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -101,6 +103,7 @@ export const useUpdateOrganization = () => {
 };
 
 export const useCompleteBusinessSetup = () => {
+  const t = useTranslations("dashboard.shell.toasts.organizations");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -182,14 +185,14 @@ export const useCompleteBusinessSetup = () => {
       void queryClient.invalidateQueries({ queryKey: storesQueryKeys.root });
       void queryClient.invalidateQueries({ queryKey: usersQueryKeys.accounts });
       toast.add({
-        title: "Business profile ready",
-        description: "You can continue setup from your dashboard.",
+        title: t("profileReadyTitle"),
+        description: t("profileReadyDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not save business profile",
+        title: t("profileFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

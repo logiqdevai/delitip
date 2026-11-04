@@ -1,8 +1,8 @@
 "use client";
 
 import { type FC } from "react";
-import { format } from "date-fns";
 import { MessageSquareText, Star, ThumbsUp } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
@@ -26,6 +26,8 @@ const StatCard: FC<{
 );
 
 const ReviewsPage: FC = () => {
+  const t = useTranslations("employee.reviews");
+  const formatter = useFormatter();
   const { employeeId, isPending: identityPending } = useCurrentEmployee();
   const dashboardQuery = useEmployeeDashboard(employeeId ?? "");
   const reviewsQuery = useEmployeeReviews(employeeId ?? "", { limit: 20 });
@@ -48,7 +50,7 @@ const ReviewsPage: FC = () => {
     return (
       <Empty className="border border-dashed border-zinc-200 bg-white py-16">
         <EmptyHeader>
-          <EmptyTitle>Could not load your reviews</EmptyTitle>
+          <EmptyTitle>{t("loadError")}</EmptyTitle>
           <EmptyDescription>
             {getErrorMessage(dashboardQuery.error ?? reviewsQuery.error)}
           </EmptyDescription>
@@ -64,10 +66,10 @@ const ReviewsPage: FC = () => {
     <div className="auth-fade-enter space-y-6">
       <div>
         <h1 className="text-xl font-bold text-ink-charcoal">
-          Customer Compliments & Reviews
+          {t("title")}
         </h1>
         <p className="mt-0.5 text-xs text-zinc-500">
-          Real feedback left by guests after tipping you on delitip.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -75,28 +77,27 @@ const ReviewsPage: FC = () => {
         <StatCard
           icon={Star}
           value={dashboard?.average_rating ? dashboard.average_rating.toFixed(2) : "-"}
-          label="Average Rating"
+          label={t("averageRating")}
         />
         <StatCard
           icon={MessageSquareText}
           value={String(dashboard?.reviews_count ?? 0)}
-          label="Total Reviews"
+          label={t("totalReviews")}
         />
         <StatCard
           icon={ThumbsUp}
           value={`${dashboard?.customer_recognition_count ?? 0}x`}
-          label="Recognitions"
+          label={t("recognitions")}
         />
       </div>
 
       <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
         <h2 className="text-sm font-bold text-ink-charcoal">
-          Customer Love Notes
+          {t("notesTitle")}
         </h2>
         {reviews.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 py-8 text-center text-xs text-zinc-500">
-            No reviews yet - they&apos;ll show up here once customers rate you
-            after tipping.
+            {t("empty")}
           </p>
         ) : (
           <div className="space-y-3">
@@ -120,7 +121,11 @@ const ReviewsPage: FC = () => {
                     ))}
                   </span>
                   <span className="text-[10px] text-zinc-400">
-                    {format(new Date(review.created_at), "MMM d, yyyy")}
+                    {formatter.dateTime(new Date(review.created_at), {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </span>
                 </div>
                 {review.comment ? (
@@ -128,7 +133,9 @@ const ReviewsPage: FC = () => {
                     &ldquo;{review.comment}&rdquo;
                   </p>
                 ) : (
-                  <p className="text-xs text-zinc-400 italic">No comment left</p>
+                  <p className="text-xs text-zinc-400 italic">
+                    {t("noComment")}
+                  </p>
                 )}
               </div>
             ))}

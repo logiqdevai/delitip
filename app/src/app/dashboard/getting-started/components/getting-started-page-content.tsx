@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import { ListChecks } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Empty,
   EmptyDescription,
@@ -15,6 +16,7 @@ import { GettingStartedSkeleton } from "@/app/dashboard/getting-started/componen
 import { useGettingStartedSteps } from "@/hooks/use-getting-started-steps";
 
 export const GettingStartedPageContent: FC = () => {
+  const t = useTranslations("dashboard.shell.gettingStarted");
   const { store, steps, completedCount, total, isPending, isReady } =
     useGettingStartedSteps();
 
@@ -29,9 +31,9 @@ export const GettingStartedPageContent: FC = () => {
           <EmptyMedia variant="icon">
             <ListChecks />
           </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
+          <EmptyTitle>{t("noStoreTitle")}</EmptyTitle>
           <EmptyDescription>
-            Finish business setup before viewing your checklist.
+            {t("noStoreDescription")}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -43,8 +45,12 @@ export const GettingStartedPageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="Getting Started"
-        description={`${completedCount} of ${total} steps done for ${store.name}.`}
+        title={t("title")}
+        description={t("progress", {
+          completed: completedCount,
+          total,
+          store: store.name,
+        })}
       />
 
       <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-fill">

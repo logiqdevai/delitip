@@ -1,3 +1,4 @@
+
 export const EmployeeStatuses = {
   ACTIVE: "active",
   INACTIVE: "inactive",
@@ -8,12 +9,18 @@ export type EmployeeStatus =
 
 export const EmployeeStatusFormOptions: {
   id: EmployeeStatus;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: EmployeeStatuses.ACTIVE, label: "Active" },
-  { id: EmployeeStatuses.INACTIVE, label: "Inactive" },
+  {
+    id: EmployeeStatuses.ACTIVE,
+    labelKey: "dashboard.enums.employeeStatus.active",
+  },
+  {
+    id: EmployeeStatuses.INACTIVE,
+    labelKey: "dashboard.enums.employeeStatus.inactive",
+  },
 ];
 
-export function getEmployeeStatusLabel(isActive: boolean): string {
-  return isActive ? "Active" : "Inactive";
+export function getEmployeeStatus(isActive: boolean): EmployeeStatus {
+  return isActive ? EmployeeStatuses.ACTIVE : EmployeeStatuses.INACTIVE;
 }

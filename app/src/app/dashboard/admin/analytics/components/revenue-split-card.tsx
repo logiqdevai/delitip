@@ -1,14 +1,15 @@
 "use client";
 
 import { type FC } from "react";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 
 const SEGMENTS = [
-  { key: "platform", label: "Platform", color: "#6366F1" },
-  { key: "employee", label: "Employees", color: "#F59E0B" },
-  { key: "store", label: "Stores", color: "#0284C7" },
+  { key: "platform", color: "#6366F1" },
+  { key: "employee", color: "#F59E0B" },
+  { key: "store", color: "#0284C7" },
 ] as const;
 
 interface RevenueSplitCardProps {
@@ -24,20 +25,19 @@ export const RevenueSplitCard: FC<RevenueSplitCardProps> = ({
   store,
   currency,
 }) => {
+  const t = useTranslations("dashboard.adminSystem.analytics.revenueSplit");
+  const locale = useLocale();
+  const format = useFormatter();
   const values = { platform, employee, store };
   const total = platform + employee + store;
 
   return (
     <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
-      <h2 className="text-sm font-bold text-ink-charcoal">Revenue split</h2>
-      <p className="mt-0.5 text-xs text-zinc-500">
-        Where completed tip revenue ends up, in this range.
-      </p>
+      <h2 className="text-sm font-bold text-ink-charcoal">{t("title")}</h2>
+      <p className="mt-0.5 text-xs text-zinc-500">{t("description")}</p>
 
       {total <= 0 ? (
-        <p className="py-10 text-center text-xs text-zinc-400">
-          No distributed revenue in this range.
-        </p>
+        <p className="py-10 text-center text-xs text-zinc-400">{t("empty")}</p>
       ) : (
         <>
           <div className="mt-4 flex h-3 w-full overflow-hidden rounded-full bg-neutral-fill">
@@ -66,12 +66,14 @@ export const RevenueSplitCard: FC<RevenueSplitCardProps> = ({
                     style={{ backgroundColor: segment.color }}
                   />
                   <span className="text-xs font-medium text-zinc-600">
-                    {segment.label}
+                    {t(`segments.${segment.key}`)}
                   </span>
                   <span className="text-xs font-bold text-ink-charcoal">
-                    {formatMoney(value, currency)}
+                    {formatMoney(value, currency, locale)}
                   </span>
-                  <span className="text-[11px] text-zinc-400">({share}%)</span>
+                  <span className="text-base text-zinc-400">
+                    ({format.number(share)}%)
+                  </span>
                 </div>
               );
             })}

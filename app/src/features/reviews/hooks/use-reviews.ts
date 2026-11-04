@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import {
@@ -64,6 +65,7 @@ export const usePublicReviewConfig = (slug: string) => {
 };
 
 export const useUpdateReview = () => {
+  const t = useTranslations("dashboard.engagement.reviews");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -77,11 +79,11 @@ export const useUpdateReview = () => {
     onSuccess: () => {
       trackEvent(AnalyticsEvents.reviewUpdated);
       void queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.root });
-      toast.add({ title: "Review updated", type: "success" });
+      toast.add({ title: t("updatedToast"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not update review",
+        title: t("updateErrorToast"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -90,6 +92,7 @@ export const useUpdateReview = () => {
 };
 
 export const useDeleteReview = () => {
+  const t = useTranslations("dashboard.engagement.reviews");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -97,11 +100,11 @@ export const useDeleteReview = () => {
     onSuccess: () => {
       trackEvent(AnalyticsEvents.reviewDeleted);
       void queryClient.invalidateQueries({ queryKey: reviewsQueryKeys.root });
-      toast.add({ title: "Review deleted", type: "success" });
+      toast.add({ title: t("deletedToast"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not delete review",
+        title: t("deleteErrorToast"),
         description: getErrorMessage(error),
         type: "error",
       });

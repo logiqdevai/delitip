@@ -5,26 +5,15 @@ import {
 
 export const DistributionPayoutModeDescriptionOptions: {
   id: DistributionPayoutMode;
-  label: string;
+  descriptionKey: string;
 }[] = [
   {
     id: DistributionPayoutModes.DIRECT,
-    label:
-      "Each employee is paid their share straight to their own bank account. They need a payout account set up before anything can reach them.",
+    descriptionKey: "dashboard.enums.distributionPayoutModeDescription.DIRECT",
   },
   {
     id: DistributionPayoutModes.VIA_STORE,
-    label:
-      "The whole tip lands in your business account. We keep track of what each employee earned so you can hand it over yourself — cash, transfer, payroll — and record it here.",
+    descriptionKey:
+      "dashboard.enums.distributionPayoutModeDescription.VIA_STORE",
   },
 ];
-
-export function getDistributionPayoutModeDescription(
-  mode: DistributionPayoutMode | string,
-): string {
-  return (
-    DistributionPayoutModeDescriptionOptions.find(
-      (option) => option.id === mode,
-    )?.label ?? ""
-  );
-}

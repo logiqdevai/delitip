@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -21,7 +22,7 @@ export const listRefunds = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load refunds. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadRefunds")));
   }
 };
 
@@ -30,7 +31,7 @@ export const getRefund = async (id: string): Promise<Refund> => {
     const response = await axiosInstance.get<Refund>(ApiRoutes.refunds.byId(id));
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load refund. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadRefund")));
   }
 };
 
@@ -45,7 +46,7 @@ export const createRefund = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't request refund. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.requestRefund")),
     );
   }
 };
@@ -62,7 +63,7 @@ export const createPublicRefundRequest = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't request a refund. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.requestARefund")),
     );
   }
 };
@@ -79,7 +80,7 @@ export const updateRefund = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't update refund. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.updateRefund")),
     );
   }
 };

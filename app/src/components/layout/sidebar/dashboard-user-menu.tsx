@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   BadgeCheck,
   ChevronsUpDown,
@@ -23,22 +24,26 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { useLogout } from "@/features/auth/hooks/use-auth";
 import { useMe } from "@/features/users/hooks/use-users";
 import { Routes } from "@/routes/routes";
 import { useAuthStore } from "@/stores/auth.store";
 import { cn } from "@/lib/utils";
 
-const displayNameFromProfile = (profile: {
-  first_name?: string | null;
-  last_name?: string | null;
-  email?: string | null;
-}) => {
+const displayNameFromProfile = (
+  profile: {
+    first_name?: string | null;
+    last_name?: string | null;
+    email?: string | null;
+  },
+  fallback: string,
+) => {
   const name = [profile.first_name, profile.last_name]
     .map((part) => part?.trim())
     .filter(Boolean)
     .join(" ");
-  return name || profile.email?.trim() || "Account";
+  return name || profile.email?.trim() || fallback;
 };
 
 const initialsFromProfile = (profile: {
@@ -68,6 +73,7 @@ interface DashboardUserMenuProps {
 export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
   onNavigate,
 }) => {
+  const t = useTranslations("dashboard.shell.userMenu");
   const { isMobile } = useSidebar();
   const logout = useLogout();
   const authUser = useAuthStore((state) => state.user);
@@ -78,7 +84,7 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
     last_name: null,
     email: authUser?.email ?? null,
   };
-  const displayName = displayNameFromProfile(profile);
+  const displayName = displayNameFromProfile(profile, t("account"));
   const email = profile.email?.trim() || authUser?.email || "";
   const initials = initialsFromProfile(profile);
 
@@ -108,14 +114,14 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
               "flex w-full items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50 p-3 text-left outline-none transition hover:bg-neutral-fill focus-visible:ring-2 focus-visible:ring-ring/50 aria-expanded:bg-neutral-fill",
               "group-data-[collapsible=icon]:size-10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:hover:bg-neutral-fill",
             )}
-            aria-label="Account menu"
+            aria-label={t("accountMenu")}
           >
             <UserAvatar initials={initials} />
             <div className="grid min-w-0 flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
               <span className="truncate text-xs font-bold text-ink-charcoal">
                 {displayName}
               </span>
-              <span className="truncate text-[10px] font-medium text-zinc-400">
+              <span className="truncate text-base font-medium text-zinc-400">
                 {email || "-"}
               </span>
             </div>
@@ -135,7 +141,7 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
                     <span className="truncate text-xs font-bold text-ink-charcoal">
                       {displayName}
                     </span>
-                    <span className="truncate text-[10px] font-medium text-zinc-400">
+                    <span className="truncate text-base font-medium text-zinc-400">
                       {email || "-"}
                     </span>
                   </div>
@@ -145,7 +151,7 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
             <DropdownMenuSeparator className="bg-zinc-100" />
             <DropdownMenuGroup>
               <DropdownMenuItem
-                className="gap-2 rounded-lg px-2 py-1.5 text-chip font-medium text-zinc-700 focus:bg-neutral-fill focus:text-ink-charcoal"
+                className="gap-2 rounded-lg px-2 py-1.5 text-base font-medium text-zinc-700 focus:bg-neutral-fill focus:text-ink-charcoal"
                 render={
                   <Link
                     href={Routes.dashboard.account}
@@ -154,10 +160,10 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
                 }
               >
                 <BadgeCheck className="size-4 text-zinc-400" />
-                Account
+                {t("account")}
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="hidden gap-2 rounded-lg px-2 py-1.5 text-chip font-medium text-zinc-700 focus:bg-neutral-fill focus:text-ink-charcoal"
+                className="hidden gap-2 rounded-lg px-2 py-1.5 text-base font-medium text-zinc-700 focus:bg-neutral-fill focus:text-ink-charcoal"
                 render={
                   <Link
                     href={Routes.dashboard.settings.billing}
@@ -166,17 +172,24 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
                 }
               >
                 <CreditCard className="size-4 text-zinc-400" />
-                Billing
+                {t("billing")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator className="bg-zinc-100" />
+            <div className="flex items-center justify-between gap-2 px-2 py-1.5">
+              <span className="text-base font-medium text-zinc-700">
+                {t("language")}
+              </span>
+              <LanguageSwitcher tone="light" />
+            </div>
+            <DropdownMenuSeparator className="bg-zinc-100" />
             <DropdownMenuItem
               variant="destructive"
-              className="gap-2 rounded-lg px-2 py-1.5 text-chip font-medium"
+              className="gap-2 rounded-lg px-2 py-1.5 text-base font-medium"
               onClick={handleLogout}
             >
               <LogOut className="size-4" />
-              Log out
+              {t("logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

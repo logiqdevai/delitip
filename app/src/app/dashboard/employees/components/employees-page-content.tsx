@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Plus, Users } from "lucide-react";
 import {
   ConfirmationDialog,
@@ -32,6 +33,7 @@ import { getErrorMessage } from "@/lib/api-error";
 
 export const EmployeesPageContent: FC = () => {
   const router = useRouter();
+  const t = useTranslations("dashboard.team.employees.page");
   const { storeId, store, isPending: workspacePending, isReady } =
     useWorkspace();
   const employeesQuery = useEmployees(storeId ?? "", { limit: 100 });
@@ -102,9 +104,9 @@ export const EmployeesPageContent: FC = () => {
           <EmptyMedia variant="icon">
             <Users />
           </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
+          <EmptyTitle>{t("noStoreTitle")}</EmptyTitle>
           <EmptyDescription>
-            Finish business setup before managing employees.
+            {t("noStoreDescription")}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -114,20 +116,20 @@ export const EmployeesPageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="Employees"
+        title={t("title")}
         description={
           store
-            ? `Manage team members for ${store.name}.`
-            : "Manage team members, assigned QR codes, and performance metrics."
+            ? t("descriptionWithStore", { store: store.name })
+            : t("descriptionDefault")
         }
         actions={
           <Button
             type="button"
-            className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal shadow-sm"
+            className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-base font-semibold text-ink-charcoal shadow-sm"
             onClick={openCreate}
           >
             <Plus data-icon="inline-start" className="size-3.5" />
-            Add New Employee
+            {t("addNew")}
           </Button>
         }
       />
@@ -137,7 +139,7 @@ export const EmployeesPageContent: FC = () => {
       ) : employeesQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load employees</EmptyTitle>
+            <EmptyTitle>{t("loadErrorTitle")}</EmptyTitle>
             <EmptyDescription>
               {getErrorMessage(employeesQuery.error)}
             </EmptyDescription>
@@ -148,7 +150,7 @@ export const EmployeesPageContent: FC = () => {
               variant="outline"
               onClick={() => void employeesQuery.refetch()}
             >
-              Try again
+              {t("tryAgain")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -158,10 +160,9 @@ export const EmployeesPageContent: FC = () => {
             <EmptyMedia variant="icon">
               <Users />
             </EmptyMedia>
-            <EmptyTitle>No employees yet</EmptyTitle>
+            <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>
-              Add your first team member so customers can tip and leave
-              feedback.
+              {t("emptyDescription")}
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -171,7 +172,7 @@ export const EmployeesPageContent: FC = () => {
               onClick={openCreate}
             >
               <Plus data-icon="inline-start" className="size-3.5" />
-              Add New Employee
+              {t("addNew")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -208,13 +209,13 @@ export const EmployeesPageContent: FC = () => {
             }
           },
         }}
-        title="Deactivate employee?"
+        title={t("deactivateTitle")}
         description={
           pendingToggle
-            ? `${pendingToggle.full_name} will be marked inactive and hidden from active staff lists.`
-            : "This employee will be marked inactive."
+            ? t("deactivateDescription", { name: pendingToggle.full_name })
+            : t("deactivateDescriptionFallback")
         }
-        confirmLabel="Deactivate"
+        confirmLabel={t("deactivateConfirm")}
         onConfirm={confirmDeactivate}
         isPending={updateEmployee.isPending}
       />

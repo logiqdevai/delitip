@@ -1,0 +1,27 @@
+{
+  "shell": {
+    "contactSupport": "Contact Support",
+    "secureSetup": "Secure business setup",
+    "footer": "© 2026 <brand>delitip</brand>. Tip. Appreciate. Connect."
+  },
+  "page": {
+    "loadError": "Could not load your business"
+  },
+  "form": {
+    "eyebrow": "Business profile",
+    "title": "Set up your business",
+    "subtitle": "Tell us about your venue so customers and staff land in the right place.",
+    "nameLabel": "Business name",
+    "namePlaceholder": "e.g. Artisan Café & Bar",
+    "industryLabel": "Business type",
+    "teamSizeLabel": "Estimated team size",
+    "addressLabel": "Address",
+    "addressPlaceholder": "Street, city",
+    "cityLabel": "City",
+    "cityPlaceholder": "City",
+    "countryLabel": "Country",
+    "postalLabel": "Postal code",
+    "postalPlaceholder": "Postal code",
+    "submit": "Save and continue"
+  }
+}

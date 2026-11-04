@@ -2,8 +2,9 @@
 
 import { type FC, useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import {
   AddressAutocomplete,
@@ -32,11 +33,16 @@ import {
 } from "@/components/ui/select";
 import {
   getCountryCodeByName,
-  getCountryLabel,
+  getCountryStorageName,
 } from "@/config/constants/dropdowns/shared/country.options";
 import { StoreCopyFormOptions } from "@/config/constants/dropdowns/stores/store-copy-options.options";
 import { StoreIndustryFormOptions } from "@/config/constants/dropdowns/stores/store-industry-form.options";
 import { getBrowserTimezone } from "@/config/constants/dropdowns/stores/store-timezone-form.options";
+import {
+  useDropdownDescription,
+  useDropdownLabel,
+  useDropdownOptions,
+} from "@/hooks/use-dropdown-options";
 import { useCreateStore } from "@/features/stores/hooks/use-stores";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 import {
@@ -91,6 +97,10 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
   currentStore,
   onCreated,
 }) => {
+  const t = useTranslations("dashboard.shell.addStore");
+  const industryOptions = useDropdownOptions(StoreIndustryFormOptions);
+  const optionLabel = useDropdownLabel();
+  const optionDescription = useDropdownDescription();
   const createStore = useCreateStore(organizationId);
   const isPending = createStore.isPending;
 
@@ -151,7 +161,7 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
   });
 
   const copySourceItems = [
-    { label: "Don't copy, start fresh", value: NO_COPY_SOURCE },
+    { label: t("noCopy"), value: NO_COPY_SOURCE },
     ...stores.map((item) => ({ label: item.name, value: item.id })),
   ];
 
@@ -169,15 +179,15 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
       >
         <DialogHeader>
           <p className="text-xs font-semibold tracking-wide text-brand-700 uppercase">
-            Step {step === "details" ? 1 : 2} of 2
+            {t("step", { current: step === "details" ? 1 : 2 })}
           </p>
           <DialogTitle>
-            {step === "details" ? "Add store" : "Copy settings"}
+            {step === "details" ? t("titleDetails") : t("titleCopy")}
           </DialogTitle>
           <DialogDescription>
             {step === "details"
-              ? "Add another venue to this business. It gets its own staff, QR codes, tips and reviews, and shares your billing."
-              : "Start from one of your stores instead of setting everything up again."}
+              ? t("descriptionDetails")
+              : t("descriptionCopy")}
           </DialogDescription>
         </DialogHeader>
 
@@ -193,10 +203,10 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
           {step === "details" ? (
             <>
               <div className="space-y-1.5">
-                <Label htmlFor="add-store-name">Store name</Label>
+                <Label htmlFor="add-store-name">{t("name")}</Label>
                 <Input
                   id="add-store-name"
-                  placeholder="e.g. Artisan Café — Kolonaki"
+                  placeholder={t("namePlaceholder")}
                   aria-invalid={!!errors.name}
                   {...register("name")}
                 />
@@ -206,13 +216,13 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="add-store-industry">Business type</Label>
+                <Label htmlFor="add-store-industry">{t("businessType")}</Label>
                 <Controller
                   name="industry"
                   control={control}
                   render={({ field }) => (
                     <Select
-                      items={StoreIndustryFormOptions.map((option) => ({
+                      items={industryOptions.map((option) => ({
                         label: option.label,
                         value: option.id,
                       }))}
@@ -228,7 +238,7 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          {StoreIndustryFormOptions.map((option) => (
+                          {industryOptions.map((option) => (
                             <SelectItem key={option.id} value={option.id}>
                               {option.label}
                             </SelectItem>
@@ -244,7 +254,7 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="add-store-address">Address</Label>
+                <Label htmlFor="add-store-address">{t("address")}</Label>
                 <Controller
                   name="address_line"
                   control={control}
@@ -252,7 +262,7 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
                     <AddressAutocomplete
                       id="add-store-address"
                       autoComplete="street-address"
-                      placeholder="Street, city"
+                      placeholder={t("addressPlaceholder")}
                       aria-invalid={!!errors.address_line}
                       value={field.value ?? ""}
                       onValueChange={field.onChange}
@@ -278,11 +288,15 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="add-store-city">City</Label>
-                  <Input id="add-store-city" placeholder="City" {...register("city")} />
+                  <Label htmlFor="add-store-city">{t("city")}</Label>
+                  <Input
+                    id="add-store-city"
+                    placeholder={t("cityPlaceholder")}
+                    {...register("city")}
+                  />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="add-store-country">Country</Label>
+                  <Label htmlFor="add-store-country">{t("country")}</Label>
                   <Controller
                     name="country"
                     control={control}
@@ -292,17 +306,17 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
                         className="w-full"
                         value={getCountryCodeByName(field.value) ?? null}
                         onValueChange={(code) =>
-                          field.onChange(code ? getCountryLabel(code) : "")
+                          field.onChange(code ? getCountryStorageName(code) : "")
                         }
                       />
                     )}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="add-store-postal">Postal code</Label>
+                  <Label htmlFor="add-store-postal">{t("postalCode")}</Label>
                   <Input
                     id="add-store-postal"
-                    placeholder="Postal code"
+                    placeholder={t("postalCodePlaceholder")}
                     {...register("postal_code")}
                   />
                 </div>
@@ -311,7 +325,7 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
           ) : (
             <div className="space-y-3">
               <div className="space-y-1.5">
-                <Label htmlFor="add-store-copy-source">Copy settings from</Label>
+                <Label htmlFor="add-store-copy-source">{t("copyFrom")}</Label>
                 <Controller
                   name="copy_from_store_id"
                   control={control}
@@ -363,10 +377,13 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
                             />
                             <span className="min-w-0">
                               <span className="block text-sm font-medium text-ink-charcoal">
-                                {option.label}
+                                {optionLabel(StoreCopyFormOptions, option.id)}
                               </span>
                               <span className="block text-xs text-zinc-500">
-                                {option.description}
+                                {optionDescription(
+                                  StoreCopyFormOptions,
+                                  option.id,
+                                )}
                               </span>
                             </span>
                           </label>
@@ -375,8 +392,7 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
                     )}
                   />
                   <p className="text-xs text-zinc-500">
-                    Staff, QR codes, tip-sharing rules, payout details and the
-                    public review link are never copied.
+                    {t("neverCopied")}
                   </p>
                 </>
               ) : null}
@@ -391,10 +407,10 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
                   variant="outline"
                   onClick={() => handleOpenChange(false)}
                 >
-                  Cancel
+                  {t("cancel")}
                 </Button>
                 <Button type="submit">
-                  Next
+                  {t("next")}
                   <ArrowRight data-icon="inline-end" className="size-3.5" />
                 </Button>
               </>
@@ -407,10 +423,10 @@ export const AddStoreDialog: FC<AddStoreDialogProps> = ({
                   onClick={() => setStep("details")}
                 >
                   <ArrowLeft data-icon="inline-start" className="size-3.5" />
-                  Back
+                  {t("back")}
                 </Button>
                 <ActionButtonWithPending type="submit" isPending={isPending}>
-                  Add store
+                  {t("submit")}
                 </ActionButtonWithPending>
               </>
             )}

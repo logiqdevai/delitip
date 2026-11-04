@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, type FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 import { MessageSquareText, Minus, Pencil, Plus, Star, Tag, ThumbsDown, ThumbsUp, Trash2, Type } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,10 +51,11 @@ import {
 import { ReviewTagSentiments } from "@/features/review-tags/interfaces/review-tags.interfaces";
 import { PlatformAuthRoles } from "@/features/auth/interfaces/auth.interfaces";
 import { FeedbackQuestionTypeFormOptions } from "@/config/constants/dropdowns/reviews/feedback-question-type-form.options";
+import { ReviewSentimentFormOptions } from "@/config/constants/dropdowns/reviews/review-sentiment-form.options";
 import {
-  ReviewSentimentFormOptions,
-  getReviewSentimentLabel,
-} from "@/config/constants/dropdowns/reviews/review-sentiment-form.options";
+  useDropdownLabel,
+  useDropdownOptions,
+} from "@/hooks/use-dropdown-options";
 import { useMe } from "@/features/users/hooks/use-users";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import type { Language } from "@/features/stores/interfaces/stores.interfaces";
@@ -61,24 +63,30 @@ import { useAuthStore } from "@/stores/auth.store";
 import { resolvePrimaryText } from "@/lib/translated-text";
 import { cn } from "@/lib/utils";
 
-const VisibilityBadge: FC<{ isActive: boolean }> = ({ isActive }) => (
-  <span
-    className={cn(
-      "ml-1.5 inline-block w-fit max-w-fit shrink-0 self-start align-middle rounded-full px-2 py-0.5 text-[14px] font-bold",
-      isActive
-        ? "bg-brand-50 text-brand-700"
-        : "bg-neutral-fill font-medium text-zinc-500",
-    )}
-  >
-    {isActive ? "Shown" : "Hidden"}
-  </span>
-);
+const VisibilityBadge: FC<{ isActive: boolean }> = ({ isActive }) => {
+  const t = useTranslations("dashboard.settings.reviews");
+
+  return (
+    <span
+      className={cn(
+        "ml-1.5 inline-block w-fit max-w-fit shrink-0 self-start align-middle rounded-full px-2 py-0.5 text-[14px] font-bold",
+        isActive
+          ? "bg-brand-50 text-brand-700"
+          : "bg-neutral-fill font-medium text-zinc-500",
+      )}
+    >
+      {isActive ? t("shown") : t("hidden")}
+    </span>
+  );
+};
 
 const TagSentimentIcon: FC<{
   sentiment: string;
   isActive: boolean;
 }> = ({ sentiment, isActive }) => {
-  const label = getReviewSentimentLabel(sentiment);
+  const t = useTranslations("dashboard.settings.reviews.tags");
+  const optionLabel = useDropdownLabel();
+  const label = optionLabel(ReviewSentimentFormOptions, sentiment);
   const Icon =
     sentiment === ReviewTagSentiments.POSITIVE
       ? ThumbsUp
@@ -93,7 +101,7 @@ const TagSentimentIcon: FC<{
         isActive ? "bg-zinc-100 text-zinc-500" : "bg-zinc-50 text-zinc-300",
       )}
       title={label}
-      aria-label={`${label} tag`}
+      aria-label={t("sentimentAria", { label })}
     >
       <Icon className="size-3" />
     </span>
@@ -110,6 +118,8 @@ const CategoriesSection: FC<{
   primaryLanguage?: string;
   languageConfig: LanguageConfig;
 }> = ({ storeId, primaryLanguage, languageConfig }) => {
+  const t = useTranslations("dashboard.settings.reviews");
+  const tCommon = useTranslations("dashboard.settings.common");
   const query = useReviewCategories(storeId);
   const create = useCreateReviewCategory(storeId);
   const update = useUpdateReviewCategory(storeId);
@@ -135,27 +145,29 @@ const CategoriesSection: FC<{
     <div className="space-y-2">
       <div className="flex items-center gap-2 text-xs font-semibold text-zinc-700">
         <Star className="size-3.5 text-zinc-400" />
-        Rating categories
+        {t("categories.title")}
       </div>
-      <p className="text-[14px] text-zinc-400">
-        Drag to reorder. Switch off to hide from the review step without deleting.
+      <p className="text-base text-zinc-400">
+        {t("dragHint")}
       </p>
       <form onSubmit={handleAdd} className="flex gap-2">
         <Input
           value={name}
           onChange={(event) => setName(event.target.value)}
-          placeholder="e.g. Friendliness"
+          placeholder={t("categories.placeholder")}
           className="flex-1"
         />
         <Button type="submit" disabled={create.isPending || !name.trim()}>
           <Plus data-icon="inline-start" />
-          Add
+          {tCommon("add")}
         </Button>
       </form>
       {query.isPending ? (
         <Skeleton className="h-10 w-full rounded-lg" />
       ) : items.length === 0 ? (
-        <p className="text-[11px] text-zinc-400">No categories yet.</p>
+        <p className="text-base text-zinc-400">
+          {t("categories.empty")}
+        </p>
       ) : (
         <SortableConfigList
           itemIds={items.map((item) => item.id)}
@@ -197,14 +209,16 @@ const CategoriesSection: FC<{
                         })
                       }
                       aria-label={
-                        item.is_active ? `Hide ${label}` : `Show ${label}`
+                        item.is_active
+                          ? t("hideAria", { name: label })
+                          : t("showAria", { name: label })
                       }
                     />
                     <button
                       type="button"
                       className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
                       onClick={() => setEditing(item)}
-                      aria-label={`Edit ${label}`}
+                      aria-label={t("editAria", { name: label })}
                     >
                       <Pencil className="size-3" />
                     </button>
@@ -215,7 +229,7 @@ const CategoriesSection: FC<{
                         setPendingDelete(item);
                         deleteConfirm.openDialog();
                       }}
-                      aria-label={`Delete ${label}`}
+                      aria-label={t("deleteAria", { name: label })}
                     >
                       <Trash2 className="size-3" />
                     </button>
@@ -229,8 +243,8 @@ const CategoriesSection: FC<{
       {editing ? (
         <ReviewConfigItemEditDialog
           key={editing.id}
-          title="Edit rating category"
-          textLabel="Name"
+          title={t("categories.editTitle")}
+          textLabel={t("categories.nameLabel")}
           multilingual={{
             storeId,
             primaryLanguage: languageConfig.primary,
@@ -249,13 +263,15 @@ const CategoriesSection: FC<{
       ) : null}
       <ConfirmationDialog
         state={deleteConfirm}
-        title="Delete this rating category?"
+        title={t("categories.deleteTitle")}
         description={
           pendingDelete
-            ? `"${resolvePrimaryText(pendingDelete.name, primaryLanguage)}" will no longer appear on the review step.`
+            ? t("categories.deleteDescription", {
+                name: resolvePrimaryText(pendingDelete.name, primaryLanguage),
+              })
             : undefined
         }
-        confirmLabel="Delete"
+        confirmLabel={tCommon("delete")}
         isPending={remove.isPending}
         onConfirm={async () => {
           if (!pendingDelete) return;
@@ -272,6 +288,10 @@ const QuestionsSection: FC<{
   primaryLanguage?: string;
   languageConfig: LanguageConfig;
 }> = ({ storeId, primaryLanguage, languageConfig }) => {
+  const t = useTranslations("dashboard.settings.reviews");
+  const tCommon = useTranslations("dashboard.settings.common");
+  const optionLabel = useDropdownLabel();
+  const questionTypeOptions = useDropdownOptions(FeedbackQuestionTypeFormOptions);
   const query = useFeedbackQuestions(storeId);
   const create = useCreateFeedbackQuestion(storeId);
   const update = useUpdateFeedbackQuestion(storeId);
@@ -305,24 +325,24 @@ const QuestionsSection: FC<{
     <div className="space-y-2 border-t border-zinc-100 pt-4">
       <div className="flex items-center gap-2 text-xs font-semibold text-zinc-700">
         <MessageSquareText className="size-3.5 text-zinc-400" />
-        Feedback questions
+        {t("questions.title")}
       </div>
-      <p className="text-[14px] text-zinc-400">
-        Drag to reorder. Switch off to hide from the review step without deleting.
+      <p className="text-base text-zinc-400">
+        {t("dragHint")}
       </p>
       <form onSubmit={handleAdd} className="flex flex-col gap-2 sm:flex-row">
         <Input
           value={question}
           onChange={(event) => setQuestion(event.target.value)}
-          placeholder="e.g. How was the food?"
+          placeholder={t("questions.placeholder")}
           className="w-full sm:flex-1"
         />
         <div className="flex items-center gap-2">
           <Select
-            items={[
-              { label: "Rating", value: FeedbackQuestionTypes.RATING },
-              { label: "Text", value: FeedbackQuestionTypes.TEXT },
-            ]}
+            items={questionTypeOptions.map((option) => ({
+              label: option.label,
+              value: option.id,
+            }))}
             value={type}
             onValueChange={(value) => {
               if (value) setType(value);
@@ -333,8 +353,11 @@ const QuestionsSection: FC<{
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value={FeedbackQuestionTypes.RATING}>Rating</SelectItem>
-                <SelectItem value={FeedbackQuestionTypes.TEXT}>Text</SelectItem>
+                {questionTypeOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -344,14 +367,16 @@ const QuestionsSection: FC<{
             className="shrink-0"
           >
             <Plus data-icon="inline-start" />
-            Add
+            {tCommon("add")}
           </Button>
         </div>
       </form>
       {query.isPending ? (
         <Skeleton className="h-10 w-full rounded-lg" />
       ) : items.length === 0 ? (
-        <p className="text-[11px] text-zinc-400">No feedback questions yet.</p>
+        <p className="text-base text-zinc-400">
+          {t("questions.empty")}
+        </p>
       ) : (
         <SortableConfigList
           itemIds={items.map((item) => item.id)}
@@ -380,16 +405,16 @@ const QuestionsSection: FC<{
                           ? "bg-zinc-100 text-zinc-500"
                           : "bg-zinc-50 text-zinc-300",
                       )}
-                      title={
-                        item.type === FeedbackQuestionTypes.RATING
-                          ? "Rating"
-                          : "Text"
-                      }
-                      aria-label={
-                        item.type === FeedbackQuestionTypes.RATING
-                          ? "Rating question"
-                          : "Text question"
-                      }
+                      title={optionLabel(
+                        FeedbackQuestionTypeFormOptions,
+                        item.type,
+                      )}
+                      aria-label={t("questions.typeAria", {
+                        label: optionLabel(
+                          FeedbackQuestionTypeFormOptions,
+                          item.type,
+                        ),
+                      })}
                     >
                       {item.type === FeedbackQuestionTypes.RATING ? (
                         <Star className="size-3" />
@@ -419,14 +444,16 @@ const QuestionsSection: FC<{
                         })
                       }
                       aria-label={
-                        item.is_active ? `Hide ${label}` : `Show ${label}`
+                        item.is_active
+                          ? t("hideAria", { name: label })
+                          : t("showAria", { name: label })
                       }
                     />
                     <button
                       type="button"
                       className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
                       onClick={() => setEditing(item)}
-                      aria-label={`Edit ${label}`}
+                      aria-label={t("editAria", { name: label })}
                     >
                       <Pencil className="size-3" />
                     </button>
@@ -437,7 +464,7 @@ const QuestionsSection: FC<{
                         setPendingDelete(item);
                         deleteConfirm.openDialog();
                       }}
-                      aria-label={`Delete ${label}`}
+                      aria-label={t("deleteAria", { name: label })}
                     >
                       <Trash2 className="size-3" />
                     </button>
@@ -451,17 +478,17 @@ const QuestionsSection: FC<{
       {editing ? (
         <ReviewConfigItemEditDialog
           key={editing.id}
-          title="Edit feedback question"
-          textLabel="Question"
+          title={t("questions.editTitle")}
+          textLabel={t("questions.questionLabel")}
           multilingual={{
             storeId,
             primaryLanguage: languageConfig.primary,
             languages: languageConfig.supported,
             initialTranslations: editing.question,
           }}
-          choiceLabel="Answer type"
+          choiceLabel={t("questions.answerType")}
           initialChoice={editing.type}
-          choiceOptions={FeedbackQuestionTypeFormOptions}
+          choiceOptions={questionTypeOptions}
           isPending={update.isPending}
           onClose={() => setEditing(null)}
           onSave={({ translations, choice }) =>
@@ -480,13 +507,15 @@ const QuestionsSection: FC<{
       ) : null}
       <ConfirmationDialog
         state={deleteConfirm}
-        title="Delete this feedback question?"
+        title={t("questions.deleteTitle")}
         description={
           pendingDelete
-            ? `"${resolvePrimaryText(pendingDelete.question, primaryLanguage)}" will no longer appear on the review step.`
+            ? t("questions.deleteDescription", {
+                name: resolvePrimaryText(pendingDelete.question, primaryLanguage),
+              })
             : undefined
         }
-        confirmLabel="Delete"
+        confirmLabel={tCommon("delete")}
         isPending={remove.isPending}
         onConfirm={async () => {
           if (!pendingDelete) return;
@@ -499,6 +528,9 @@ const QuestionsSection: FC<{
 };
 
 const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
+  const t = useTranslations("dashboard.settings.reviews");
+  const tCommon = useTranslations("dashboard.settings.common");
+  const sentimentOptions = useDropdownOptions(ReviewSentimentFormOptions);
   const query = useReviewTags(storeId);
   const create = useCreateReviewTag(storeId);
   const update = useUpdateReviewTag(storeId);
@@ -525,25 +557,24 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
     <div className="space-y-2 border-t border-zinc-100 pt-4">
       <div className="flex items-center gap-2 text-xs font-semibold text-zinc-700">
         <Tag className="size-3.5 text-zinc-400" />
-        Compliment / feedback tags
+        {t("tags.title")}
       </div>
-      <p className="text-[11px] text-zinc-400">
-        Switch off to hide a tag from the review step without deleting it.
+      <p className="text-base text-zinc-400">
+        {t("tags.hint")}
       </p>
       <form onSubmit={handleAdd} className="flex flex-col gap-2 sm:flex-row">
         <Input
           value={name}
           onChange={(event) => setName(event.target.value)}
-          placeholder="e.g. Friendly service"
+          placeholder={t("tags.placeholder")}
           className="w-full sm:flex-1"
         />
         <div className="flex items-center gap-2">
           <Select
-            items={[
-              { label: "Positive", value: ReviewTagSentiments.POSITIVE },
-              { label: "Neutral", value: ReviewTagSentiments.NEUTRAL },
-              { label: "Negative", value: ReviewTagSentiments.NEGATIVE },
-            ]}
+            items={sentimentOptions.map((option) => ({
+              label: option.label,
+              value: option.id,
+            }))}
             value={sentiment}
             onValueChange={(value) => {
               if (value) setSentiment(value);
@@ -554,9 +585,11 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value={ReviewTagSentiments.POSITIVE}>Positive</SelectItem>
-                <SelectItem value={ReviewTagSentiments.NEUTRAL}>Neutral</SelectItem>
-                <SelectItem value={ReviewTagSentiments.NEGATIVE}>Negative</SelectItem>
+                {sentimentOptions.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -566,14 +599,14 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
             className="shrink-0"
           >
             <Plus data-icon="inline-start" />
-            Add
+            {tCommon("add")}
           </Button>
         </div>
       </form>
       {query.isPending ? (
         <Skeleton className="h-10 w-full rounded-lg" />
       ) : items.length === 0 ? (
-        <p className="text-[11px] text-zinc-400">No tags yet.</p>
+        <p className="text-base text-zinc-400">{t("tags.empty")}</p>
       ) : (
         <ul className="divide-y divide-zinc-100 rounded-xl border border-zinc-200/80">
           {items.map((item) => {
@@ -619,15 +652,15 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
                       }
                       aria-label={
                         item.is_active
-                          ? `Hide ${item.name}`
-                          : `Show ${item.name}`
+                          ? t("hideAria", { name: item.name })
+                          : t("showAria", { name: item.name })
                       }
                     />
                     <button
                       type="button"
                       className="flex size-5 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
                       onClick={() => setEditing(item)}
-                      aria-label={`Edit ${item.name}`}
+                      aria-label={t("editAria", { name: item.name })}
                     >
                       <Pencil className="size-3" />
                     </button>
@@ -638,7 +671,7 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
                         setPendingDelete(item);
                         deleteConfirm.openDialog();
                       }}
-                      aria-label={`Delete ${item.name}`}
+                      aria-label={t("deleteAria", { name: item.name })}
                     >
                       <Trash2 className="size-3" />
                     </button>
@@ -652,12 +685,12 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
       {editing ? (
         <ReviewConfigItemEditDialog
           key={editing.id}
-          title="Edit tag"
-          textLabel="Name"
+          title={t("tags.editTitle")}
+          textLabel={t("tags.nameLabel")}
           initialText={editing.name}
-          choiceLabel="Sentiment"
+          choiceLabel={t("tags.sentiment")}
           initialChoice={editing.sentiment ?? ReviewTagSentiments.NEUTRAL}
-          choiceOptions={ReviewSentimentFormOptions}
+          choiceOptions={sentimentOptions}
           isPending={update.isPending}
           onClose={() => setEditing(null)}
           onSave={({ text, choice }) =>
@@ -676,13 +709,13 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
       ) : null}
       <ConfirmationDialog
         state={deleteConfirm}
-        title="Delete this tag?"
+        title={t("tags.deleteTitle")}
         description={
           pendingDelete
-            ? `"${pendingDelete.name}" will no longer be available to tag reviews.`
+            ? t("tags.deleteDescription", { name: pendingDelete.name })
             : undefined
         }
-        confirmLabel="Delete"
+        confirmLabel={tCommon("delete")}
         isPending={remove.isPending}
         onConfirm={async () => {
           if (!pendingDelete) return;
@@ -695,6 +728,7 @@ const TagsSection: FC<{ storeId: string }> = ({ storeId }) => {
 };
 
 export const ReviewsFeedbackSettingsPanel: FC = () => {
+  const t = useTranslations("dashboard.settings.reviews");
   const { store, storeId } = useWorkspace();
   const authUser = useAuthStore((state) => state.user);
   const meQuery = useMe();
@@ -716,10 +750,10 @@ export const ReviewsFeedbackSettingsPanel: FC = () => {
     <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">
-          Reviews & feedback config
+          {t("title")}
         </h2>
         <p className="mt-0.5 text-xs text-zinc-500">
-          What customers see on the review step after tipping.
+          {t("description")}
         </p>
       </div>
 

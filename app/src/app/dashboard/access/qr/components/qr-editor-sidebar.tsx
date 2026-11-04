@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import {
   type LucideIcon,
   Palette,
@@ -15,6 +16,7 @@ import {
   QrEditorSections,
   type QrEditorSection,
 } from "@/config/constants/dropdowns/qr-codes/qr-editor-section.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { cn } from "@/lib/utils";
 
 const SECTION_ICONS: Record<QrEditorSection, LucideIcon> = {
@@ -35,9 +37,11 @@ export const QrEditorSidebar: FC<QrEditorSidebarProps> = ({
   active,
   onSelect,
 }) => {
+  const t = useTranslations("dashboard.access.qrEditor.sidebar");
+  const label = useDropdownLabel();
   return (
     <nav
-      aria-label="QR editor sections"
+      aria-label={t("navAria")}
       className="w-full shrink-0 self-start rounded-2xl border border-zinc-200/80 bg-white p-2 shadow-xs lg:sticky lg:top-6 lg:w-48"
     >
       <ul className="flex gap-1 overflow-x-auto lg:flex-col lg:gap-0.5 lg:overflow-visible">
@@ -52,7 +56,7 @@ export const QrEditorSidebar: FC<QrEditorSidebarProps> = ({
                 aria-current={isActive ? "page" : undefined}
                 onClick={() => onSelect(option.id)}
                 className={cn(
-                  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-chip transition",
+                  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-base transition",
                   isActive
                     ? "bg-brand-50 font-semibold text-brand-800"
                     : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
@@ -65,7 +69,7 @@ export const QrEditorSidebar: FC<QrEditorSidebarProps> = ({
                   )}
                   strokeWidth={2}
                 />
-                <span className="whitespace-nowrap">{option.label}</span>
+                <span className="whitespace-nowrap">{label(QrEditorSectionOptions, option.id)}</span>
               </button>
             </li>
           );

@@ -3,18 +3,21 @@ import {
   type TipStatus,
 } from "@/features/tips/interfaces/tips.interfaces";
 
-export const TipStatusFormOptions: { id: TipStatus; label: string }[] = [
-  { id: TipStatuses.CREATED, label: "Created" },
-  { id: TipStatuses.PROCESSING, label: "Processing" },
-  { id: TipStatuses.COMPLETED, label: "Completed" },
-  { id: TipStatuses.FAILED, label: "Failed" },
-  { id: TipStatuses.CANCELLED, label: "Cancelled" },
-  { id: TipStatuses.REFUNDED, label: "Refunded" },
-  { id: TipStatuses.PENDING, label: "Pending" },
+export const TipStatusFormOptions: { id: TipStatus; labelKey: string }[] = [
+  { id: TipStatuses.CREATED, labelKey: "dashboard.enums.tipStatus.CREATED" },
+  {
+    id: TipStatuses.PROCESSING,
+    labelKey: "dashboard.enums.tipStatus.PROCESSING",
+  },
+  {
+    id: TipStatuses.COMPLETED,
+    labelKey: "dashboard.enums.tipStatus.COMPLETED",
+  },
+  { id: TipStatuses.FAILED, labelKey: "dashboard.enums.tipStatus.FAILED" },
+  {
+    id: TipStatuses.CANCELLED,
+    labelKey: "dashboard.enums.tipStatus.CANCELLED",
+  },
+  { id: TipStatuses.REFUNDED, labelKey: "dashboard.enums.tipStatus.REFUNDED" },
+  { id: TipStatuses.PENDING, labelKey: "dashboard.enums.tipStatus.PENDING" },
 ];
-
-export function getTipStatusLabel(status: TipStatus | string): string {
-  return (
-    TipStatusFormOptions.find((option) => option.id === status)?.label ?? status
-  );
-}

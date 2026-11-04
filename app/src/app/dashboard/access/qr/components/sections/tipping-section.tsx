@@ -3,6 +3,7 @@
 import { type FC } from "react";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import { SectionCard } from "@/app/dashboard/access/qr/components/sections/section-card";
 import { useQrEditor } from "@/app/dashboard/access/qr/hooks/use-qr-editor";
 import {
@@ -16,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 
 export const TippingSection: FC = () => {
+  const t = useTranslations("dashboard.access.qrEditor.tipping");
   const { form, store } = useQrEditor();
   const {
     control,
@@ -64,10 +66,10 @@ export const TippingSection: FC = () => {
                 rel="noopener noreferrer"
                 className={cn(
                   buttonVariants({ variant: "secondary", size: "default" }),
-                  "w-full justify-center text-brand-700 md:h-auto md:w-auto md:bg-transparent md:px-0 md:py-0 md:text-[15px] md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
+                  "w-full justify-center text-brand-700 md:h-auto md:w-auto md:bg-transparent md:px-0 md:py-0 md:text-base md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
                 )}
               >
-                Manage all →
+                {t("manageAll")}
               </Link>
             }
           />

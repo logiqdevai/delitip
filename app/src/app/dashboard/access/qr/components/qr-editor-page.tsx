@@ -3,6 +3,7 @@
 import { type FC, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowLeft, ExternalLink, QrCode } from "lucide-react";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { QrEditorProvider } from "@/app/dashboard/access/qr/components/qr-editor-provider";
@@ -67,6 +68,7 @@ const EditorSkeleton: FC = () => (
 );
 
 const QrEditorLayout: FC = () => {
+  const t = useTranslations("dashboard.access.qrEditor.page");
   const { form, store, isEdit, isDirty, isSaving, save, discard, qr } =
     useQrEditor();
   const router = useRouter();
@@ -99,7 +101,7 @@ const QrEditorLayout: FC = () => {
         className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 transition hover:text-ink-charcoal"
       >
         <ArrowLeft className="size-3.5" strokeWidth={2} />
-        All QR codes
+        {t("allQrCodes")}
       </Link>
 
       <div className="sticky -top-4 z-20 -mx-4 bg-zinc-50 px-4 pt-7 pb-3 sm:-top-6 sm:-mx-6 sm:px-6 sm:pt-9 lg:-top-8 lg:-mx-8 lg:px-8 lg:pt-11">
@@ -112,23 +114,23 @@ const QrEditorLayout: FC = () => {
                   href={Routes.tip(store.slug, qr.code)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Open tip page in a new tab"
-                  title="Open tip page"
+                  aria-label={t("openTipPageAria")}
+                  title={t("openTipPageTitle")}
                   className="flex size-7 items-center justify-center rounded-full text-zinc-400 transition hover:bg-brand-50 hover:text-brand-700 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
                 >
                   <ExternalLink className="size-4" strokeWidth={2} />
                 </Link>
               </span>
             ) : (
-              "New QR code"
+              t("newQrCode")
             )
           }
-          description="Everything about this QR code and its tip page, with a live preview."
+          description={t("description")}
           actions={
             <>
               {isDirty ? (
-                <span className="text-[11px] font-medium text-zinc-400">
-                  Unsaved changes
+                <span className="text-base font-medium text-zinc-400">
+                  {t("unsaved")}
                 </span>
               ) : null}
               <Button
@@ -137,7 +139,7 @@ const QrEditorLayout: FC = () => {
                 disabled={!isDirty || isSaving}
                 onClick={discard}
               >
-                Discard
+                {t("discard")}
               </Button>
               <ActionButtonWithPending
                 type="button"
@@ -145,7 +147,7 @@ const QrEditorLayout: FC = () => {
                 disabled={(isEdit && !isDirty) || hasErrors}
                 onClick={() => void save()}
               >
-                {isEdit ? "Save changes" : "Create QR code"}
+                {isEdit ? t("saveChanges") : t("create")}
               </ActionButtonWithPending>
             </>
           }
@@ -160,7 +162,7 @@ const QrEditorLayout: FC = () => {
         </div>
 
         <aside
-          aria-label="Tip page preview"
+          aria-label={t("previewAria")}
           className={cn(
             "w-full shrink-0 lg:sticky lg:top-6 lg:w-[360px]",
           )}
@@ -173,6 +175,7 @@ const QrEditorLayout: FC = () => {
 };
 
 const QrEditorLoader: FC<QrEditorPageProps> = ({ qrId }) => {
+  const t = useTranslations("dashboard.access.qrEditor.page");
   const { store: workspaceStore, isPending, isReady } = useWorkspace();
   const storeQuery = useStore(workspaceStore?.id ?? "");
   const qrQuery = useQrCode(qrId ?? "");
@@ -190,9 +193,9 @@ const QrEditorLoader: FC<QrEditorPageProps> = ({ qrId }) => {
           <EmptyMedia variant="icon">
             <QrCode />
           </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
+          <EmptyTitle>{t("noStoreTitle")}</EmptyTitle>
           <EmptyDescription>
-            Finish business setup before creating customer QR codes.
+            {t("noStoreDescription")}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -206,16 +209,16 @@ const QrEditorLoader: FC<QrEditorPageProps> = ({ qrId }) => {
           <EmptyMedia variant="icon">
             <QrCode />
           </EmptyMedia>
-          <EmptyTitle>QR code not found</EmptyTitle>
+          <EmptyTitle>{t("notFoundTitle")}</EmptyTitle>
           <EmptyDescription>
-            It may have been deleted, or it belongs to another store.
+            {t("notFoundDescription")}
           </EmptyDescription>
         </EmptyHeader>
         <Link
           href={Routes.dashboard.access}
           className={buttonVariants({ variant: "outline" })}
         >
-          Back to QR codes
+          {t("backToQrCodes")}
         </Link>
       </Empty>
     );

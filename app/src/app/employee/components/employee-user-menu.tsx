@@ -7,6 +7,7 @@ import {
   KeyRound,
   LogOut,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,6 +35,7 @@ interface EmployeeUserMenuProps {
 }
 
 export const EmployeeUserMenu: FC<EmployeeUserMenuProps> = ({ onNavigate }) => {
+  const t = useTranslations("employee.userMenu");
   const { isMobile } = useSidebar();
   const { employee, store } = useCurrentEmployee();
   const logout = useLogout();
@@ -58,7 +60,7 @@ export const EmployeeUserMenu: FC<EmployeeUserMenuProps> = ({ onNavigate }) => {
                 "flex w-full items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50 p-3 text-left outline-none transition hover:bg-neutral-fill focus-visible:ring-2 focus-visible:ring-ring/50 aria-expanded:bg-neutral-fill",
                 "group-data-[collapsible=icon]:size-10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:hover:bg-neutral-fill",
               )}
-              aria-label="Account menu"
+              aria-label={t("accountMenu")}
             >
               <EmployeeAvatar
                 name={employee?.full_name ?? "?"}
@@ -68,10 +70,10 @@ export const EmployeeUserMenu: FC<EmployeeUserMenuProps> = ({ onNavigate }) => {
               />
               <div className="grid min-w-0 flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
                 <span className="truncate text-xs font-bold text-ink-charcoal">
-                  {employee?.full_name ?? "Account"}
+                  {employee?.full_name ?? t("account")}
                 </span>
                 <span className="truncate text-[10px] font-medium text-zinc-400">
-                  {store?.name ?? "Employee"}
+                  {store?.name ?? t("employee")}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4 shrink-0 text-zinc-400 group-data-[collapsible=icon]:hidden" />
@@ -93,10 +95,10 @@ export const EmployeeUserMenu: FC<EmployeeUserMenuProps> = ({ onNavigate }) => {
                     />
                     <div className="grid min-w-0 flex-1 text-left leading-tight">
                       <span className="truncate text-xs font-bold text-ink-charcoal">
-                        {employee?.full_name ?? "Account"}
+                        {employee?.full_name ?? t("account")}
                       </span>
                       <span className="truncate text-[10px] font-medium text-zinc-400">
-                        {store?.name ?? "Employee"}
+                        {store?.name ?? t("employee")}
                       </span>
                     </div>
                   </div>
@@ -109,14 +111,14 @@ export const EmployeeUserMenu: FC<EmployeeUserMenuProps> = ({ onNavigate }) => {
                 onClick={() => setPhotoDialogOpen(true)}
               >
                 <ImagePlus className="size-4 text-zinc-400" />
-                Edit photo
+                {t("editPhoto")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="gap-2 rounded-lg px-2 py-1.5 text-chip font-medium text-zinc-700 focus:bg-neutral-fill focus:text-ink-charcoal"
                 onClick={() => setChangePasswordDialogOpen(true)}
               >
                 <KeyRound className="size-4 text-zinc-400" />
-                Change password
+                {t("changePassword")}
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-zinc-100" />
               <DropdownMenuItem
@@ -125,7 +127,7 @@ export const EmployeeUserMenu: FC<EmployeeUserMenuProps> = ({ onNavigate }) => {
                 onClick={handleLogout}
               >
                 <LogOut className="size-4" />
-                Log out
+                {t("logOut")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

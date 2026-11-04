@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   addOrganizationMember,
   listOrganizationMembers,
@@ -28,6 +29,7 @@ export const useOrganizationMembers = (organizationId: string) => {
 };
 
 export const useAddOrganizationMember = (organizationId: string) => {
+  const t = useTranslations("dashboard.shell.toasts.members");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -38,11 +40,11 @@ export const useAddOrganizationMember = (organizationId: string) => {
       void queryClient.invalidateQueries({
         queryKey: organizationMembersQueryKeys.list(organizationId),
       });
-      toast.add({ title: "Member added", type: "success" });
+      toast.add({ title: t("added"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not add member",
+        title: t("addFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -51,6 +53,7 @@ export const useAddOrganizationMember = (organizationId: string) => {
 };
 
 export const useUpdateOrganizationMember = (organizationId: string) => {
+  const t = useTranslations("dashboard.shell.toasts.members");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -66,11 +69,11 @@ export const useUpdateOrganizationMember = (organizationId: string) => {
       void queryClient.invalidateQueries({
         queryKey: organizationMembersQueryKeys.list(organizationId),
       });
-      toast.add({ title: "Member updated", type: "success" });
+      toast.add({ title: t("updated"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not update member",
+        title: t("updateFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -79,6 +82,7 @@ export const useUpdateOrganizationMember = (organizationId: string) => {
 };
 
 export const useRemoveOrganizationMember = (organizationId: string) => {
+  const t = useTranslations("dashboard.shell.toasts.members");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -89,11 +93,11 @@ export const useRemoveOrganizationMember = (organizationId: string) => {
       void queryClient.invalidateQueries({
         queryKey: organizationMembersQueryKeys.list(organizationId),
       });
-      toast.add({ title: "Member removed", type: "success" });
+      toast.add({ title: t("removed"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not remove member",
+        title: t("removeFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

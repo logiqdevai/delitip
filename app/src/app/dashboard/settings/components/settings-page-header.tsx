@@ -2,19 +2,21 @@
 
 import { type FC } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
-import { settingsNavItems } from "./settings-nav-items";
+import { useSettingsNavItems } from "./settings-nav-items";
 
 export const SettingsPageHeader: FC = () => {
   const pathname = usePathname();
+  const t = useTranslations("dashboard.settings.nav");
+  const settingsNavItems = useSettingsNavItems();
   const activeItem = settingsNavItems.find((item) => item.href === pathname);
 
   return (
     <DashboardPageHeader
-      title={activeItem?.label ?? "Settings"}
+      title={activeItem?.label ?? t("defaultTitle")}
       description={
-        activeItem?.description ??
-        "Manage business profile, bank account connections, and preferences."
+        activeItem?.description ?? t("defaultDescription")
       }
     />
   );

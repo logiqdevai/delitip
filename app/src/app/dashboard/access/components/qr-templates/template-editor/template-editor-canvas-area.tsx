@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, type Ref, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Minus, Plus } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -21,6 +22,7 @@ interface TemplateEditorCanvasAreaProps {
 export const TemplateEditorCanvasArea: FC<TemplateEditorCanvasAreaProps> = ({
   canvasRef,
 }) => {
+  const t = useTranslations("dashboard.access.templateEditor");
   const [zoom, setZoom] = useState(1.3);
   const {
     elements,
@@ -80,7 +82,7 @@ export const TemplateEditorCanvasArea: FC<TemplateEditorCanvasAreaProps> = ({
       <div className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-2 py-1 text-xs text-zinc-500 shadow-xs">
         <button
           type="button"
-          aria-label="Zoom out"
+          aria-label={t("zoomOut")}
           className="flex size-6 items-center justify-center rounded-full hover:bg-zinc-50"
           onClick={() => setZoom((z) => Math.max(MIN_ZOOM, Number((z - 0.2).toFixed(2))))}
         >
@@ -91,7 +93,7 @@ export const TemplateEditorCanvasArea: FC<TemplateEditorCanvasAreaProps> = ({
         </span>
         <button
           type="button"
-          aria-label="Zoom in"
+          aria-label={t("zoomIn")}
           className="flex size-6 items-center justify-center rounded-full hover:bg-zinc-50"
           onClick={() => setZoom((z) => Math.min(MAX_ZOOM, Number((z + 0.2).toFixed(2))))}
         >

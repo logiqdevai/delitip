@@ -1,5 +1,6 @@
 import { environments } from "@/config/environments";
 import { Routes } from "@/routes/routes";
+import { tr } from "@/lib/i18n-runtime";
 
 export function getTipPath(storeSlug: string, code: string): string {
   return Routes.tip(storeSlug, code);
@@ -31,7 +32,7 @@ export async function renderQrDataUrl(
 export async function fetchImageAsObjectUrl(url: string): Promise<string> {
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error("We couldn't load the image. Please try again.");
+    throw new Error(tr("dashboard.access.utils.imageLoadFailed"));
   }
   const blob = await response.blob();
   return URL.createObjectURL(blob);
@@ -54,13 +55,13 @@ export async function printQrCode(tipUrl: string, label: string): Promise<void> 
   // Open synchronously so the pop-up keeps the click's user activation.
   const popup = window.open("", "_blank", "width=480,height=640");
   if (!popup) {
-    throw new Error("Pop-up blocked. Allow pop-ups to print the QR code.");
+    throw new Error(tr("dashboard.access.utils.popupBlocked"));
   }
   const imageUrl = await renderQrDataUrl(tipUrl, 400);
   popup.document.write(`<!doctype html>
 <html>
   <head>
-    <title>${label} - QR</title>
+    <title>${tr("dashboard.access.utils.printTitle", { label })}</title>
     <style>
       body { font-family: system-ui, sans-serif; text-align: center; padding: 24px; color: #18181b; }
       img { width: 280px; height: 280px; }
@@ -70,7 +71,7 @@ export async function printQrCode(tipUrl: string, label: string): Promise<void> 
   </head>
   <body>
     <h1>${label.replaceAll("<", "&lt;")}</h1>
-    <img src="${imageUrl}" alt="QR code" />
+    <img src="${imageUrl}" alt="${tr("dashboard.access.utils.printAlt")}" />
     <p>${tipUrl.replaceAll("<", "&lt;")}</p>
     <script>window.onload = () => { window.print(); };</script>
   </body>

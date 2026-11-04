@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -15,7 +16,7 @@ export const getMe = async (): Promise<UserProfile> => {
     const response = await axiosInstance.get<UserProfile>(ApiRoutes.users.me);
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load your profile. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadYourProfile")));
   }
 };
 
@@ -29,7 +30,7 @@ export const updateMe = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't update your profile. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.updateYourProfile")));
   }
 };
 
@@ -43,7 +44,7 @@ export const listUsers = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load users. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadUsers")));
   }
 };
 
@@ -57,7 +58,7 @@ export const deleteUser = async (id: string): Promise<DeleteUserResult> => {
     // The API explains why a delete is refused (own account, protected role,
     // payout invoice in use), so surface its message instead of a generic one.
     throw new Error(
-      getErrorMessage(error, "We couldn't delete this user. Please try again."),
+      getErrorMessage(error, tr("errors.services.deleteThisUser")),
     );
   }
 };
@@ -69,6 +70,6 @@ export const getMyAccounts = async (): Promise<UserAccounts> => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load your accounts. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadYourAccounts")));
   }
 };

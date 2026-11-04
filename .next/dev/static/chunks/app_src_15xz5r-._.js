@@ -28,19 +28,19 @@ var _s = __turbopack_context__.k.signature();
 const TIPS = [
     {
         name: "Maria S.",
-        role: "Server",
+        role: "server",
         tip: "+€8",
         avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80"
     },
     {
         name: "Giorgos K.",
-        role: "Bartender",
+        role: "bartender",
         tip: "+€12",
         avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=80"
     },
     {
         name: "Katerina L.",
-        role: "Barista",
+        role: "barista",
         tip: "+€6.50",
         avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=80"
     }
@@ -102,7 +102,7 @@ const AuthBrandPanel = ()=>{
                                         className: "size-8"
                                     }, void 0, false, {
                                         fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                        lineNumber: 63,
+                                        lineNumber: 65,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -110,13 +110,13 @@ const AuthBrandPanel = ()=>{
                                         children: "delitip"
                                     }, void 0, false, {
                                         fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                        lineNumber: 64,
+                                        lineNumber: 66,
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                lineNumber: 59,
+                                lineNumber: 61,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -125,13 +125,13 @@ const AuthBrandPanel = ()=>{
                                 children: "Contact Support"
                             }, void 0, false, {
                                 fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                lineNumber: 66,
+                                lineNumber: 68,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                        lineNumber: 53,
+                        lineNumber: 55,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$motion$2f$dist$2f$es$2f$react$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["motion"].div, {
@@ -150,7 +150,7 @@ const AuthBrandPanel = ()=>{
                         },
                         className: "mt-0 hidden lg:mt-14 lg:block",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                            className: "max-w-[12ch] text-[1.85rem] leading-[1.1] font-extrabold tracking-[-0.035em] xl:text-[2.05rem]",
+                            className: "max-w-[14ch] text-[1.85rem] leading-[1.1] font-extrabold tracking-[-0.035em] xl:text-[2.05rem]",
                             children: [
                                 "Service that",
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -158,25 +158,25 @@ const AuthBrandPanel = ()=>{
                                     children: " deserves"
                                 }, void 0, false, {
                                     fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                    lineNumber: 82,
+                                    lineNumber: 84,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 " a tip."
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                            lineNumber: 80,
+                            lineNumber: 82,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                        lineNumber: 74,
+                        lineNumber: 76,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                lineNumber: 52,
+                lineNumber: 54,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -214,7 +214,7 @@ const AuthBrandPanel = ()=>{
                                         className: "size-10 shrink-0 rounded-full object-cover"
                                     }, void 0, false, {
                                         fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                        lineNumber: 98,
+                                        lineNumber: 100,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -225,7 +225,7 @@ const AuthBrandPanel = ()=>{
                                                 children: active.name
                                             }, void 0, false, {
                                                 fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                                lineNumber: 106,
+                                                lineNumber: 108,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -233,13 +233,13 @@ const AuthBrandPanel = ()=>{
                                                 children: active.role
                                             }, void 0, false, {
                                                 fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                                lineNumber: 107,
+                                                lineNumber: 109,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                        lineNumber: 105,
+                                        lineNumber: 107,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -247,53 +247,55 @@ const AuthBrandPanel = ()=>{
                                         children: active.tip
                                     }, void 0, false, {
                                         fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                        lineNumber: 111,
+                                        lineNumber: 113,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, active.name, true, {
                                 fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                lineNumber: 90,
+                                lineNumber: 92,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                            lineNumber: 89,
+                            lineNumber: 91,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                        lineNumber: 88,
+                        lineNumber: 90,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "mt-5 flex items-center gap-1.5",
                         children: TIPS.map((item, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 type: "button",
-                                "aria-label": `Show tip from ${item.name}`,
+                                "aria-label": t("showTipFrom", {
+                                    name: item.name
+                                }),
                                 "aria-current": index === activeIndex,
                                 onClick: ()=>setActiveIndex(index),
                                 className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("h-1 rounded-full transition-all duration-500", index === activeIndex ? "w-5 bg-electric-lime" : "w-1 bg-white/25 hover:bg-white/45")
                             }, item.name, false, {
                                 fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                                lineNumber: 120,
+                                lineNumber: 122,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)))
                     }, void 0, false, {
                         fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                        lineNumber: 118,
+                        lineNumber: 120,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-                lineNumber: 87,
+                lineNumber: 89,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/app/src/app/auth/components/auth-brand-panel.tsx",
-        lineNumber: 51,
+        lineNumber: 53,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

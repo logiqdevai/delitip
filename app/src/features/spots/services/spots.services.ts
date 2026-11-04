@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -20,7 +21,7 @@ export const listSpots = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load spots. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadSpots")));
   }
 };
 
@@ -35,7 +36,7 @@ export const createSpot = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't create spot. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.createSpot")));
   }
 };
 
@@ -50,7 +51,7 @@ export const updateSpot = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't update spot. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.updateSpot")));
   }
 };
 
@@ -58,6 +59,6 @@ export const deleteSpot = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.spots.byId(id));
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't delete spot. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.deleteSpot")));
   }
 };

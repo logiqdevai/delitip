@@ -1,11 +1,14 @@
 import { type FC, type ReactNode } from "react";
 import { type Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { DashboardAuthShell } from "./components/dashboard-auth-shell";
 
-export const metadata: Metadata = {
-  title: "Dashboard - delitip",
-  description:
-    "Manage tips, employees, reviews, and QR access for your business.",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("dashboard.shell.metadata");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
 };
 
 interface DashboardLayoutProps {

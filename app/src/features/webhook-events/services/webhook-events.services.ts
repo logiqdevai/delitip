@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -17,6 +18,6 @@ export const listAdminWebhookEvents = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load webhook events. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadWebhookEvents")));
   }
 };

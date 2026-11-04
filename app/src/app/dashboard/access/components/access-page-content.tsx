@@ -2,6 +2,7 @@
 
 import { type FC, Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { QrCode, Scale } from "lucide-react";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import {
@@ -23,6 +24,7 @@ const isAccessTab = (value: unknown): value is AccessTab =>
   value === AccessTabs.qrCodes || value === AccessTabs.distribution;
 
 const AccessPageInner: FC = () => {
+  const t = useTranslations("dashboard.access.page");
   const { storeId, store, isPending: workspacePending, isReady } =
     useWorkspace();
   const router = useRouter();
@@ -62,9 +64,9 @@ const AccessPageInner: FC = () => {
           <EmptyMedia variant="icon">
             <QrCode />
           </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
+          <EmptyTitle>{t("noStoreTitle")}</EmptyTitle>
           <EmptyDescription>
-            Finish business setup before creating customer QR codes.
+            {t("noStoreDescription")}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -74,8 +76,8 @@ const AccessPageInner: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="QR Codes"
-        description={`Customer access and tip splitting for ${store.name}.`}
+        title={t("title")}
+        description={t("description", { storeName: store.name })}
       />
 
       <Tabs
@@ -86,11 +88,11 @@ const AccessPageInner: FC = () => {
         <TabsList>
           <TabsTrigger value={AccessTabs.qrCodes}>
             <QrCode />
-            QR codes
+            {t("tabQrCodes")}
           </TabsTrigger>
           <TabsTrigger value={AccessTabs.distribution}>
             <Scale />
-            Tip distribution
+            {t("tabDistribution")}
           </TabsTrigger>
         </TabsList>
 

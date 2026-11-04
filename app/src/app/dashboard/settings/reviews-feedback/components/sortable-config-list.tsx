@@ -24,6 +24,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 export const SortableConfigRow: FC<{
@@ -31,6 +32,7 @@ export const SortableConfigRow: FC<{
   children: ReactNode;
   className?: string;
 }> = ({ id, children, className }) => {
+  const t = useTranslations("dashboard.settings.reviews");
   const {
     attributes,
     listeners,
@@ -58,7 +60,7 @@ export const SortableConfigRow: FC<{
       <button
         type="button"
         className="mt-0.5 flex size-5 shrink-0 cursor-grab items-center justify-center rounded text-zinc-400 hover:text-zinc-600 active:cursor-grabbing sm:mt-0"
-        aria-label="Drag to reorder"
+        aria-label={t("dragAria")}
         {...attributes}
         {...listeners}
       >

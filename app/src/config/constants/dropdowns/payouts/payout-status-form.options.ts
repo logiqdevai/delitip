@@ -3,17 +3,23 @@ import {
   type PayoutStatus,
 } from "@/features/tips/interfaces/tips.interfaces";
 
-export const PayoutStatusFormOptions: { id: PayoutStatus; label: string }[] = [
-  { id: PayoutStatuses.PENDING, label: "Pending" },
-  { id: PayoutStatuses.PROCESSING, label: "Processing" },
-  { id: PayoutStatuses.PAID, label: "Paid" },
-  { id: PayoutStatuses.FAILED, label: "Failed" },
-  { id: PayoutStatuses.CANCELLED, label: "Cancelled" },
-];
-
-export function getPayoutStatusLabel(status: PayoutStatus | string): string {
-  return (
-    PayoutStatusFormOptions.find((option) => option.id === status)?.label ??
-    status
-  );
-}
+export const PayoutStatusFormOptions: { id: PayoutStatus; labelKey: string }[] =
+  [
+    {
+      id: PayoutStatuses.PENDING,
+      labelKey: "dashboard.enums.payoutStatus.PENDING",
+    },
+    {
+      id: PayoutStatuses.PROCESSING,
+      labelKey: "dashboard.enums.payoutStatus.PROCESSING",
+    },
+    { id: PayoutStatuses.PAID, labelKey: "dashboard.enums.payoutStatus.PAID" },
+    {
+      id: PayoutStatuses.FAILED,
+      labelKey: "dashboard.enums.payoutStatus.FAILED",
+    },
+    {
+      id: PayoutStatuses.CANCELLED,
+      labelKey: "dashboard.enums.payoutStatus.CANCELLED",
+    },
+  ];

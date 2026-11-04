@@ -1,8 +1,9 @@
 "use client";
 
 import { type FC } from "react";
-import { format, isSameDay, startOfDay, subDays } from "date-fns";
+import { isSameDay, startOfDay, subDays } from "date-fns";
 import { Star } from "lucide-react";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { formatMoney } from "@/lib/money";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -29,6 +30,9 @@ const TREND_DAYS = 7;
 const TIPS_QUERY = { limit: 200 };
 
 const EarningsPage: FC = () => {
+  const t = useTranslations("employee.earnings");
+  const locale = useLocale();
+  const formatter = useFormatter();
   const { employeeId, store, isPending: identityPending } =
     useCurrentEmployee();
   const dashboardQuery = useEmployeeDashboard(employeeId ?? "");
@@ -57,7 +61,7 @@ const EarningsPage: FC = () => {
     return (
       <Empty className="border border-dashed border-zinc-200 bg-white py-16">
         <EmptyHeader>
-          <EmptyTitle>Could not load your earnings</EmptyTitle>
+          <EmptyTitle>{t("loadError")}</EmptyTitle>
           <EmptyDescription>
             {getErrorMessage(dashboardQuery.error ?? tipsQuery.error)}
           </EmptyDescription>
@@ -104,20 +108,23 @@ const EarningsPage: FC = () => {
         <div className="flex flex-col justify-between rounded-3xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs sm:p-6">
           <div>
             <div className="flex items-center justify-between text-xs font-semibold text-zinc-500">
-              <span>This Month&apos;s Tips</span>
+              <span>{t("thisMonthTitle")}</span>
             </div>
             <div className="mt-3 text-3xl font-extrabold text-ink-charcoal">
-              {formatMoney(dashboard?.tips_this_month.total_amount ?? 0, currency)}
+              {formatMoney(
+                dashboard?.tips_this_month.total_amount ?? 0,
+                currency,
+                locale,
+              )}
             </div>
             <p className="mt-1 text-[11px] text-zinc-400">
-              {monthDistributions.length} recent tips this month
+              {t("recentTipsThisMonth", { count: monthDistributions.length })}
             </p>
           </div>
           <div className="flex items-center justify-between border-t border-zinc-100 pt-4 text-xs">
-            <span className="text-zinc-500">Today</span>
+            <span className="text-zinc-500">{t("today")}</span>
             <span className="font-bold text-ink-charcoal">
-              {todayDistributions.length} tip
-              {todayDistributions.length === 1 ? "" : "s"}
+              {t("tipsCount", { count: todayDistributions.length })}
             </span>
           </div>
         </div>
@@ -125,20 +132,22 @@ const EarningsPage: FC = () => {
         <div className="flex flex-col justify-between rounded-3xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs sm:p-6">
           <div>
             <div className="flex items-center justify-between text-xs font-semibold text-zinc-500">
-              <span>Customer Satisfaction</span>
+              <span>{t("satisfactionTitle")}</span>
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-1.5 text-3xl font-extrabold text-rating-amber">
               {dashboard?.average_rating
                 ? `★ ${dashboard.average_rating.toFixed(2)}`
                 : "-"}{" "}
-              <span className="text-xs font-normal text-zinc-400">/ 5.0</span>
+              <span className="text-xs font-normal text-zinc-400">
+                {t("outOf")}
+              </span>
             </div>
             <p className="mt-1 text-[11px] text-zinc-400">
-              {dashboard?.reviews_count ?? 0} verified ratings
+              {t("verifiedRatings", { count: dashboard?.reviews_count ?? 0 })}
             </p>
           </div>
           <div className="flex items-center justify-between gap-2 border-t border-zinc-100 pt-4 text-xs">
-            <span className="min-w-0 text-zinc-500">Recognized by customers</span>
+            <span className="min-w-0 text-zinc-500">{t("recognized")}</span>
             <span className="shrink-0 font-bold text-ink-charcoal">
               {dashboard?.customer_recognition_count ?? 0}x
             </span>
@@ -151,20 +160,20 @@ const EarningsPage: FC = () => {
           <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-ink-charcoal">
-                Today&apos;s Tips
+                {t("todayTitle")}
               </h2>
               <p className="text-xs text-zinc-400">
-                Tips directly rewarded to you today
+                {t("todaySubtitle")}
               </p>
             </div>
             <span className="shrink-0 rounded-lg bg-brand-50 px-2.5 py-1 text-chip font-bold whitespace-nowrap text-brand-700">
-              {todayDistributions.length} tips today
+              {t("tipsTodayBadge", { count: todayDistributions.length })}
             </span>
           </div>
 
           {todayDistributions.length === 0 ? (
             <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 py-8 text-center text-xs text-zinc-500">
-              No tips yet today.
+              {t("noTipsToday")}
             </p>
           ) : (
             <div className="divide-y divide-zinc-100">
@@ -179,19 +188,27 @@ const EarningsPage: FC = () => {
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs font-bold text-ink-charcoal">
-                        {format(new Date(distribution.created_at), "HH:mm")}
+                        {formatter.dateTime(new Date(distribution.created_at), {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hourCycle: "h23",
+                        })}
                       </div>
                       {/* Which promise this tip is under: a transfer coming to
                           the employee's own bank, or their Store handing it over. */}
                       <div className="text-[11px] text-zinc-400">
                         {distribution.payout_mode === "VIA_STORE"
-                          ? "Paid by your Store"
-                          : "Paid to your bank"}
+                          ? t("paidByStore")
+                          : t("paidToBank")}
                       </div>
                     </div>
                   </div>
                   <div className="shrink-0 text-right text-xs font-extrabold text-ink-charcoal">
-                    {formatMoney(distribution.amount, distribution.tip.currency)}
+                    {formatMoney(
+                      distribution.amount,
+                      distribution.tip.currency,
+                      locale,
+                    )}
                   </div>
                 </div>
               ))}
@@ -202,9 +219,9 @@ const EarningsPage: FC = () => {
         <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs sm:p-6">
           <div className="min-w-0">
             <h2 className="text-sm font-bold text-ink-charcoal">
-              My Daily Earnings ({TREND_DAYS}d)
+              {t("dailyTitle", { days: TREND_DAYS })}
             </h2>
-            <p className="text-xs text-zinc-400">Daily breakdown</p>
+            <p className="text-xs text-zinc-400">{t("dailySubtitle")}</p>
           </div>
 
           <div className="grid h-64 grid-cols-7 items-end gap-3 border-b border-zinc-100 pt-4 pb-2 sm:h-80 sm:gap-8 sm:pt-6">
@@ -225,7 +242,7 @@ const EarningsPage: FC = () => {
                       isPeak && "font-bold text-brand-700",
                     )}
                   >
-                    {entry.total > 0 ? formatMoney(entry.total, currency) : "-"}
+                    {entry.total > 0 ? formatMoney(entry.total, currency, locale) : "-"}
                   </span>
                   <div
                     className={cn(
@@ -244,8 +261,12 @@ const EarningsPage: FC = () => {
                       isPeak && "text-brand-800 sm:font-bold",
                     )}
                   >
-                    <span className="sm:hidden">{format(entry.day, "EEEEE")}</span>
-                    <span className="hidden sm:inline">{format(entry.day, "EEE")}</span>
+                    <span className="sm:hidden">
+                      {formatter.dateTime(entry.day, { weekday: "narrow" })}
+                    </span>
+                    <span className="hidden sm:inline">
+                      {formatter.dateTime(entry.day, { weekday: "short" })}
+                    </span>
                   </span>
                 </div>
               );
@@ -265,7 +286,7 @@ const EarningsPage: FC = () => {
       {dashboard?.recent_feedback.length ? (
         <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs sm:p-6">
           <h2 className="text-sm font-bold text-ink-charcoal">
-            Recent Feedback
+            {t("recentFeedback")}
           </h2>
           <div className="space-y-3">
             {dashboard.recent_feedback.map((feedback, index) => (
@@ -284,7 +305,10 @@ const EarningsPage: FC = () => {
                   </p>
                 ) : null}
                 <p className="text-[10px] text-zinc-400">
-                  {format(new Date(feedback.created_at), "MMM d")}
+                  {formatter.dateTime(new Date(feedback.created_at), {
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </p>
               </div>
             ))}

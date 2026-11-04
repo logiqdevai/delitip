@@ -1,9 +1,10 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ArrowRight } from "lucide-react";
 import {
   businessSignUpSchema,
@@ -16,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 
 export const AuthSignUpForm: FC = () => {
+  const t = useTranslations("auth.signUp");
   const registerBusiness = useRegisterBusiness();
 
   const {
@@ -42,10 +44,10 @@ export const AuthSignUpForm: FC = () => {
     <div className="auth-fade-enter space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-ink-charcoal">
-          Register your business
+          {t("title")}
         </h1>
         <p className="mt-1 text-xs text-zinc-500">
-          Start collecting tips and employee feedback in under 2 minutes.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -56,13 +58,13 @@ export const AuthSignUpForm: FC = () => {
               htmlFor="sign-up-name"
               className="mb-1.5 block text-xs font-semibold text-zinc-700"
             >
-              Your Full Name
+              {t("fullNameLabel")}
             </label>
             <Input
               id="sign-up-name"
               type="text"
               autoComplete="name"
-              placeholder="Giorgos Papadakis"
+              placeholder={t("fullNamePlaceholder")}
               aria-invalid={!!errors.fullName}
               {...register("fullName")}
             />
@@ -75,13 +77,13 @@ export const AuthSignUpForm: FC = () => {
               htmlFor="sign-up-email"
               className="mb-1.5 block text-xs font-semibold text-zinc-700"
             >
-              Email
+              {t("emailLabel")}
             </label>
             <Input
               id="sign-up-email"
               type="email"
               autoComplete="email"
-              placeholder="john@artisancafe.com"
+              placeholder={t("emailPlaceholder")}
               aria-invalid={!!errors.email}
               {...register("email")}
             />
@@ -96,7 +98,7 @@ export const AuthSignUpForm: FC = () => {
             htmlFor="sign-up-password"
             className="mb-1.5 block text-xs font-semibold text-zinc-700"
           >
-            Create Password
+            {t("passwordLabel")}
           </label>
           <Controller
             name="password"
@@ -105,7 +107,7 @@ export const AuthSignUpForm: FC = () => {
               <PasswordInput
                 id="sign-up-password"
                 autoComplete="new-password"
-                placeholder="At least 8 characters"
+                placeholder={t("passwordPlaceholder")}
                 aria-invalid={!!errors.password}
                 {...field}
               />
@@ -117,21 +119,24 @@ export const AuthSignUpForm: FC = () => {
         </div>
 
         <p className="text-xs leading-relaxed text-zinc-400">
-          By registering, you agree to delitip’s{" "}
-          <Link
-            href={Routes.legal.terms}
-            className="font-medium text-zinc-700 underline"
-          >
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link
-            href={Routes.legal.privacy}
-            className="font-medium text-zinc-700 underline"
-          >
-            Privacy Policy
-          </Link>
-          .
+          {t.rich("consent", {
+            terms: (chunks) => (
+              <Link
+                href={Routes.legal.terms}
+                className="font-medium text-zinc-700 underline"
+              >
+                {chunks}
+              </Link>
+            ),
+            privacy: (chunks) => (
+              <Link
+                href={Routes.legal.privacy}
+                className="font-medium text-zinc-700 underline"
+              >
+                {chunks}
+              </Link>
+            ),
+          })}
         </p>
 
         <ActionButtonWithPending
@@ -139,19 +144,19 @@ export const AuthSignUpForm: FC = () => {
           isPending={isPending}
           className="w-full rounded-xl bg-electric-lime font-bold text-ink-charcoal"
         >
-          Create Business Account
+          {t("submit")}
           <ArrowRight data-icon="inline-end" className="size-3.5" />
         </ActionButtonWithPending>
       </form>
 
       <div className="pt-2 text-center">
         <p className="text-xs text-zinc-500">
-          Already registered?{" "}
+          {t("alreadyRegistered")}{" "}
           <Link
             href={Routes.auth.sign_in}
             className="font-bold text-brand-700 hover:underline"
           >
-            Sign in instead
+            {t("signInInstead")}
           </Link>
         </p>
       </div>

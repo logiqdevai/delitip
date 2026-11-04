@@ -5,19 +5,22 @@ import {
 
 export const PayoutExecutionStatusFormOptions: {
   id: PayoutExecutionStatus;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: PayoutExecutionStatuses.PROCESSING, label: "Processing" },
-  { id: PayoutExecutionStatuses.COMPLETED, label: "Completed" },
-  { id: PayoutExecutionStatuses.FAILED, label: "Failed" },
-  { id: PayoutExecutionStatuses.CANCELLED, label: "Cancelled" },
+  {
+    id: PayoutExecutionStatuses.PROCESSING,
+    labelKey: "dashboard.enums.payoutExecutionStatus.PROCESSING",
+  },
+  {
+    id: PayoutExecutionStatuses.COMPLETED,
+    labelKey: "dashboard.enums.payoutExecutionStatus.COMPLETED",
+  },
+  {
+    id: PayoutExecutionStatuses.FAILED,
+    labelKey: "dashboard.enums.payoutExecutionStatus.FAILED",
+  },
+  {
+    id: PayoutExecutionStatuses.CANCELLED,
+    labelKey: "dashboard.enums.payoutExecutionStatus.CANCELLED",
+  },
 ];
-
-export function getPayoutExecutionStatusLabel(
-  status: PayoutExecutionStatus | string,
-): string {
-  return (
-    PayoutExecutionStatusFormOptions.find((option) => option.id === status)
-      ?.label ?? status
-  );
-}

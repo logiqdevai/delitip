@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import { Star } from "lucide-react";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
   Sheet,
   SheetContent,
@@ -10,9 +11,10 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getPayoutStatusLabel } from "@/config/constants/dropdowns/tips/payout-status-form.options";
-import { getRefundStatusLabel } from "@/config/constants/dropdowns/refunds/refund-status-form.options";
-import { getTipStatusLabel } from "@/config/constants/dropdowns/tips/tip-status-form.options";
+import { PayoutStatusFormOptions } from "@/config/constants/dropdowns/tips/payout-status-form.options";
+import { RefundStatusFormOptions } from "@/config/constants/dropdowns/refunds/refund-status-form.options";
+import { TipStatusFormOptions } from "@/config/constants/dropdowns/tips/tip-status-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { useReview } from "@/features/reviews/hooks/use-reviews";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { useTip } from "@/features/tips/hooks/use-tips";
@@ -27,13 +29,6 @@ interface ReviewDetailSheetProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const formatDateTime = (value?: string | null) => {
-  if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-};
 
 const SummaryRow: FC<{ label: string; value: string }> = ({
   label,
@@ -48,6 +43,7 @@ const SummaryRow: FC<{ label: string; value: string }> = ({
 );
 
 const LinkedTipSection: FC<{ tipId: string }> = ({ tipId }) => {
+  const t = useTranslations("dashboard.engagement.reviewDetail");
   const tipQuery = useTip(tipId);
 
   if (tipQuery.isPending) {
@@ -63,7 +59,7 @@ const LinkedTipSection: FC<{ tipId: string }> = ({ tipId }) => {
   if (tipQuery.isError || !tipQuery.data) {
     return (
       <p className="text-xs text-red-600">
-        {getErrorMessage(tipQuery.error, "Could not load the linked tip.")}
+        {getErrorMessage(tipQuery.error, t("linkedTipLoadError"))}
       </p>
     );
   }
@@ -72,16 +68,32 @@ const LinkedTipSection: FC<{ tipId: string }> = ({ tipId }) => {
 };
 
 const TipDetails: FC<{ tip: Tip }> = ({ tip }) => {
+  const t = useTranslations("dashboard.engagement.reviewDetail");
+  const tCommon = useTranslations("dashboard.engagement.common");
+  const locale = useLocale();
+  const format = useFormatter();
+  const label = useDropdownLabel();
+  const formatDateTime = (value?: string | null) => {
+    if (!value) return tCommon("none");
+    return format.dateTime(new Date(value), {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="text-xs font-semibold text-zinc-500">Linked tip</div>
-          <div className="mt-0.5 text-base font-bold text-ink-charcoal">
-            {formatMoney(tip.amount, tip.currency)}
+          <div className="text-xs font-semibold text-zinc-500">
+            {t("linkedTip")}
           </div>
-          <div className="mt-0.5 text-[11px] text-zinc-500">
-            {tip.employee?.full_name ?? "Store"} · {tip.qr_code?.label ?? "-"}
+          <div className="mt-0.5 text-base font-bold text-ink-charcoal">
+            {formatMoney(tip.amount, tip.currency, locale)}
+          </div>
+          <div className="mt-0.5 text-base text-zinc-500">
+            {tip.employee?.full_name ?? tCommon("store")} ·{" "}
+            {tip.qr_code?.label ?? tCommon("none")}
           </div>
         </div>
         <span
@@ -96,44 +108,53 @@ const TipDetails: FC<{ tip: Tip }> = ({ tip }) => {
                   : "bg-amber-50 text-amber-700",
           )}
         >
-          {getTipStatusLabel(tip.status)}
+          {label(TipStatusFormOptions, tip.status)}
         </span>
       </div>
 
       <div className="rounded-xl border border-zinc-100 bg-zinc-50/80 px-4">
         <SummaryRow
-          label="Amount"
-          value={formatMoney(tip.amount, tip.currency)}
-        />
-        <SummaryRow label="Status" value={getTipStatusLabel(tip.status)} />
-        <SummaryRow label="Paid at" value={formatDateTime(tip.paid_at)} />
-        <SummaryRow label="Created at" value={formatDateTime(tip.created_at)} />
-        <SummaryRow label="QR code" value={tip.qr_code?.label ?? "-"} />
-        <SummaryRow
-          label="Distribution rule"
-          value={tip.distribution_rule?.name ?? "Store default"}
+          label={t("amount")}
+          value={formatMoney(tip.amount, tip.currency, locale)}
         />
         <SummaryRow
-          label="Payment provider"
-          value={tip.payment_provider ?? "-"}
+          label={t("status")}
+          value={label(TipStatusFormOptions, tip.status)}
+        />
+        <SummaryRow label={t("paidAt")} value={formatDateTime(tip.paid_at)} />
+        <SummaryRow
+          label={t("createdAt")}
+          value={formatDateTime(tip.created_at)}
         />
         <SummaryRow
-          label="Payment reference"
-          value={tip.payment_reference ?? "-"}
+          label={t("qrCode")}
+          value={tip.qr_code?.label ?? tCommon("none")}
         />
         <SummaryRow
-          label="Customer"
-          value={tip.customer_name ?? tip.customer_email ?? "-"}
+          label={t("distributionRule")}
+          value={tip.distribution_rule?.name ?? t("storeDefault")}
+        />
+        <SummaryRow
+          label={t("paymentProvider")}
+          value={tip.payment_provider ?? tCommon("none")}
+        />
+        <SummaryRow
+          label={t("paymentReference")}
+          value={tip.payment_reference ?? tCommon("none")}
+        />
+        <SummaryRow
+          label={t("customer")}
+          value={tip.customer_name ?? tip.customer_email ?? tCommon("none")}
         />
       </div>
 
       <div>
         <div className="mb-2 text-xs font-semibold text-zinc-500">
-          Distribution
+          {t("distribution")}
         </div>
         {!tip.distributions || tip.distributions.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 py-4 text-center text-[11px] text-zinc-500">
-            No distribution recorded for this tip.
+          <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 py-4 text-center text-base text-zinc-500">
+            {t("noDistribution")}
           </p>
         ) : (
           <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-100 bg-zinc-50/80 px-4">
@@ -145,16 +166,17 @@ const TipDetails: FC<{ tip: Tip }> = ({ tip }) => {
                 <div>
                   <div className="font-semibold text-ink-charcoal">
                     {distribution.recipient_type === "EMPLOYEE"
-                      ? (distribution.employee?.full_name ?? "Employee")
-                      : "Store"}
+                      ? (distribution.employee?.full_name ??
+                        t("employeeFallback"))
+                      : tCommon("store")}
                   </div>
-                  <div className="text-[11px] text-zinc-400">
+                  <div className="text-base text-zinc-400">
                     {distribution.percentage}% ·{" "}
-                    {getPayoutStatusLabel(distribution.payout_status)}
+                    {label(PayoutStatusFormOptions, distribution.payout_status)}
                   </div>
                 </div>
                 <div className="font-bold text-ink-charcoal">
-                  {formatMoney(distribution.amount, tip.currency)}
+                  {formatMoney(distribution.amount, tip.currency, locale)}
                 </div>
               </div>
             ))}
@@ -165,7 +187,7 @@ const TipDetails: FC<{ tip: Tip }> = ({ tip }) => {
       {tip.refunds && tip.refunds.length > 0 ? (
         <div>
           <div className="mb-2 text-xs font-semibold text-zinc-500">
-            Refunds
+            {t("refunds")}
           </div>
           <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-100 bg-zinc-50/80 px-4">
             {tip.refunds.map((refund) => (
@@ -174,11 +196,11 @@ const TipDetails: FC<{ tip: Tip }> = ({ tip }) => {
                 className="flex items-center justify-between gap-3 py-2.5 text-xs"
               >
                 <span className="text-zinc-500">
-                  {refund.reason || "No reason given"}
+                  {refund.reason || t("noReason")}
                 </span>
                 <span className="font-semibold text-ink-charcoal">
-                  {formatMoney(refund.amount, tip.currency)} (
-                  {getRefundStatusLabel(refund.status)})
+                  {formatMoney(refund.amount, tip.currency, locale)} (
+                  {label(RefundStatusFormOptions, refund.status)})
                 </span>
               </div>
             ))}
@@ -193,6 +215,9 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
   reviewId,
   onOpenChange,
 }) => {
+  const t = useTranslations("dashboard.engagement.reviewDetail");
+  const tCommon = useTranslations("dashboard.engagement.common");
+  const format = useFormatter();
   const { store } = useWorkspace();
   const reviewQuery = useReview(reviewId ?? "");
   const primaryLanguage = store?.primary_language?.toLowerCase();
@@ -201,10 +226,8 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
     <Sheet open={!!reviewId} onOpenChange={onOpenChange}>
       <SheetContent side="right">
         <SheetHeader>
-          <SheetTitle>Review</SheetTitle>
-          <SheetDescription>
-            Full feedback left after a customer tip.
-          </SheetDescription>
+          <SheetTitle>{t("title")}</SheetTitle>
+          <SheetDescription>{t("description")}</SheetDescription>
         </SheetHeader>
 
         <div className="space-y-4 overflow-y-auto px-4 pb-6">
@@ -216,7 +239,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
             </div>
           ) : reviewQuery.isError || !reviewQuery.data ? (
             <p className="text-sm text-red-600">
-              {getErrorMessage(reviewQuery.error, "Could not load this review.")}
+              {getErrorMessage(reviewQuery.error, t("loadError"))}
             </p>
           ) : (
             (() => {
@@ -241,17 +264,17 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
 
                   <div className="space-y-1 text-sm">
                     <div className="text-xs font-semibold text-zinc-500">
-                      Employee
+                      {t("employee")}
                     </div>
                     <div className="font-semibold text-ink-charcoal">
-                      {review.employee?.full_name ?? "Store"}
+                      {review.employee?.full_name ?? tCommon("store")}
                     </div>
                   </div>
 
                   {review.comment ? (
                     <div className="space-y-1">
                       <div className="text-xs font-semibold text-zinc-500">
-                        Comment
+                        {t("comment")}
                       </div>
                       <p className="rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
                         &ldquo;{review.comment}&rdquo;
@@ -262,7 +285,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
                   {review.category_ratings?.length ? (
                     <div className="space-y-1">
                       <div className="text-xs font-semibold text-zinc-500">
-                        Category ratings
+                        {t("categoryRatings")}
                       </div>
                       <div className="space-y-1">
                         {review.category_ratings.map((rating, index) => (
@@ -274,7 +297,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
                               {resolvePrimaryText(
                                 rating.review_category?.name,
                                 primaryLanguage,
-                              ) || "Category"}
+                              ) || t("category")}
                             </span>
                             <span className="font-semibold text-ink-charcoal">
                               ★ {rating.rating}
@@ -288,7 +311,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
                   {review.feedback_responses?.length ? (
                     <div className="space-y-1">
                       <div className="text-xs font-semibold text-zinc-500">
-                        Feedback questions
+                        {t("feedbackQuestions")}
                       </div>
                       <div className="space-y-2">
                         {review.feedback_responses.map((response) => {
@@ -296,7 +319,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
                             resolvePrimaryText(
                               response.feedback_question?.question,
                               primaryLanguage,
-                            ) || "Question";
+                            ) || t("question");
                           const answer =
                             response.rating_value != null
                               ? `★ ${response.rating_value}`
@@ -334,7 +357,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
                   ) : null}
 
                   <div className="text-xs text-zinc-400">
-                    {new Date(review.created_at).toLocaleString(undefined, {
+                    {format.dateTime(new Date(review.created_at), {
                       dateStyle: "medium",
                       timeStyle: "short",
                     })}

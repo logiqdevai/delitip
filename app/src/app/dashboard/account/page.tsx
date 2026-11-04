@@ -1,14 +1,16 @@
-import { type FC } from "react";
+import { getTranslations } from "next-intl/server";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { AccountSettingsForm } from "./components/account-settings-form";
 import { ChangePasswordForm } from "./components/change-password-form";
 
-const AccountPage: FC = () => {
+const AccountPage = async () => {
+  const t = await getTranslations("dashboard.shell.account");
+
   return (
     <div className="flex flex-col gap-6">
       <DashboardPageHeader
-        title="Account"
-        description="Your personal details across delitip."
+        title={t("title")}
+        description={t("description")}
       />
       <AccountSettingsForm />
       <ChangePasswordForm />

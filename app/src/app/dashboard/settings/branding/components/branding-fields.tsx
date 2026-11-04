@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import { ColorPicker } from "@/components/ui/color-picker";
 import { Label } from "@/components/ui/label";
 import { MultilingualTextarea } from "@/components/ui/multilingual-textarea";
@@ -25,28 +26,32 @@ export const BrandingColorFields: FC<BrandingColorFieldsProps> = ({
   onSecondaryChange,
   primaryError,
   secondaryError,
-}) => (
-  <div className="grid grid-cols-1 gap-4 @md:grid-cols-2">
-    <ColorPicker
-      id="primary-color"
-      label="Primary color"
-      value={primary}
-      defaultValue={DEFAULT_PRIMARY_COLOR}
-      placeholder={DEFAULT_PRIMARY_COLOR}
-      onChange={onPrimaryChange}
-      error={primaryError}
-    />
-    <ColorPicker
-      id="secondary-color"
-      label="Secondary color"
-      value={secondary}
-      defaultValue={DEFAULT_SECONDARY_COLOR}
-      placeholder={DEFAULT_SECONDARY_COLOR}
-      onChange={onSecondaryChange}
-      error={secondaryError}
-    />
-  </div>
-);
+}) => {
+  const t = useTranslations("dashboard.settings.branding");
+
+  return (
+    <div className="grid grid-cols-1 gap-4 @md:grid-cols-2">
+      <ColorPicker
+        id="primary-color"
+        label={t("primaryColor")}
+        value={primary}
+        defaultValue={DEFAULT_PRIMARY_COLOR}
+        placeholder={DEFAULT_PRIMARY_COLOR}
+        onChange={onPrimaryChange}
+        error={primaryError}
+      />
+      <ColorPicker
+        id="secondary-color"
+        label={t("secondaryColor")}
+        value={secondary}
+        defaultValue={DEFAULT_SECONDARY_COLOR}
+        placeholder={DEFAULT_SECONDARY_COLOR}
+        onChange={onSecondaryChange}
+        error={secondaryError}
+      />
+    </div>
+  );
+};
 
 interface BrandingMessageFieldsProps {
   storeId: string;
@@ -68,34 +73,38 @@ export const BrandingMessageFields: FC<BrandingMessageFieldsProps> = ({
   thankYou,
   onWelcomeChange,
   onThankYouChange,
-}) => (
-  <>
-    <div className="space-y-1.5">
-      <Label htmlFor="welcome-message">Welcome message</Label>
-      <MultilingualTextarea
-        id="welcome-message"
-        storeId={storeId}
-        rows={2}
-        languages={languages}
-        primaryLanguage={primaryLanguage}
-        value={welcome}
-        onValueChange={onWelcomeChange}
-        placeholder={`Welcome to ${storeName}. Leave a tip for great service.`}
-      />
-    </div>
+}) => {
+  const t = useTranslations("dashboard.settings.branding");
 
-    <div className="space-y-1.5">
-      <Label htmlFor="thank-you-message">Thank-you message</Label>
-      <MultilingualTextarea
-        id="thank-you-message"
-        storeId={storeId}
-        rows={2}
-        languages={languages}
-        primaryLanguage={primaryLanguage}
-        value={thankYou}
-        onValueChange={onThankYouChange}
-        placeholder="Thank you! Your tip means a lot to our team."
-      />
-    </div>
-  </>
-);
+  return (
+    <>
+      <div className="space-y-1.5">
+        <Label htmlFor="welcome-message">{t("welcomeMessage")}</Label>
+        <MultilingualTextarea
+          id="welcome-message"
+          storeId={storeId}
+          rows={2}
+          languages={languages}
+          primaryLanguage={primaryLanguage}
+          value={welcome}
+          onValueChange={onWelcomeChange}
+          placeholder={t("welcomePlaceholder", { storeName })}
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="thank-you-message">{t("thankYouMessage")}</Label>
+        <MultilingualTextarea
+          id="thank-you-message"
+          storeId={storeId}
+          rows={2}
+          languages={languages}
+          primaryLanguage={primaryLanguage}
+          value={thankYou}
+          onValueChange={onThankYouChange}
+          placeholder={t("thankYouPlaceholder")}
+        />
+      </div>
+    </>
+  );
+};

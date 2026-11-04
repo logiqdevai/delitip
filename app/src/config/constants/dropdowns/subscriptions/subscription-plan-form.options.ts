@@ -3,15 +3,20 @@ import {
   type SubscriptionPlan,
 } from "@/features/subscriptions/interfaces/subscriptions.interfaces";
 
-export const SubscriptionPlanFormOptions: { id: SubscriptionPlan; label: string }[] = [
-  { id: SubscriptionPlans.STARTER, label: "Starter" },
-  { id: SubscriptionPlans.PROFESSIONAL, label: "Professional" },
-  { id: SubscriptionPlans.ENTERPRISE, label: "Enterprise" },
+export const SubscriptionPlanFormOptions: {
+  id: SubscriptionPlan;
+  labelKey: string;
+}[] = [
+  {
+    id: SubscriptionPlans.STARTER,
+    labelKey: "dashboard.enums.subscriptionPlan.STARTER",
+  },
+  {
+    id: SubscriptionPlans.PROFESSIONAL,
+    labelKey: "dashboard.enums.subscriptionPlan.PROFESSIONAL",
+  },
+  {
+    id: SubscriptionPlans.ENTERPRISE,
+    labelKey: "dashboard.enums.subscriptionPlan.ENTERPRISE",
+  },
 ];
-
-export function getSubscriptionPlanLabel(plan: SubscriptionPlan | string): string {
-  return (
-    SubscriptionPlanFormOptions.find((option) => option.id === plan)?.label ??
-    plan
-  );
-}

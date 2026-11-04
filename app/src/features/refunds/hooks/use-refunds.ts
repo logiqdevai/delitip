@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   createPublicRefundRequest,
   createRefund,
@@ -41,6 +42,7 @@ export const useRefund = (id: string) => {
 };
 
 export const useCreateRefund = () => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -49,14 +51,14 @@ export const useCreateRefund = () => {
       trackEvent(AnalyticsEvents.refundCreated);
       void queryClient.invalidateQueries({ queryKey: refundsQueryKeys.root });
       toast.add({
-        title: "Refund requested",
-        description: "A manager can approve it from the Payments hub.",
+        title: t("refunds.requestedTitle"),
+        description: t("refunds.requestedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not request refund",
+        title: t("refunds.requestFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -83,6 +85,7 @@ export const useCreatePublicRefundRequest = () => {
 };
 
 export const useUpdateRefund = () => {
+  const t = useTranslations("dashboard.money.toasts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -91,11 +94,11 @@ export const useUpdateRefund = () => {
     onSuccess: () => {
       trackEvent(AnalyticsEvents.refundUpdated);
       void queryClient.invalidateQueries({ queryKey: refundsQueryKeys.root });
-      toast.add({ title: "Refund updated", type: "success" });
+      toast.add({ title: t("refunds.updated"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not update refund",
+        title: t("refunds.updateFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

@@ -1,11 +1,12 @@
 "use client";
 
 import { type FC } from "react";
-import { format } from "date-fns";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEmployeePayouts } from "@/features/payouts/hooks/use-payouts";
 import type { PayoutExecutionStatus } from "@/features/payouts/interfaces/payouts.interfaces";
-import { getPayoutExecutionStatusLabel } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
+import { PayoutExecutionStatusFormOptions } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 
@@ -19,24 +20,25 @@ const statusChipClass: Record<PayoutExecutionStatus, string> = {
 export const EmployeePayoutHistoryCard: FC<{ employeeId: string }> = ({
   employeeId,
 }) => {
+  const t = useTranslations("employee.payoutHistory");
+  const locale = useLocale();
+  const formatter = useFormatter();
+  const statusLabel = useDropdownLabel();
   const payoutsQuery = useEmployeePayouts(employeeId, { limit: 20 });
   const payouts = payoutsQuery.data?.data ?? [];
 
   return (
     <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs sm:p-6">
       <div>
-        <h2 className="text-sm font-bold text-ink-charcoal">Payout history</h2>
-        <p className="text-xs text-zinc-400">
-          Bank transfers your Store has sent you
-        </p>
+        <h2 className="text-sm font-bold text-ink-charcoal">{t("title")}</h2>
+        <p className="text-xs text-zinc-400">{t("subtitle")}</p>
       </div>
 
       {payoutsQuery.isPending ? (
         <Skeleton className="h-24 w-full rounded-xl" />
       ) : payouts.length === 0 ? (
         <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500 sm:px-6">
-          No payouts yet - your pending balance is paid out on your Store
-          owner&apos;s schedule.
+          {t("empty")}
         </p>
       ) : (
         <div className="divide-y divide-zinc-100">
@@ -46,13 +48,13 @@ export const EmployeePayoutHistoryCard: FC<{ employeeId: string }> = ({
               className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 py-2.5 text-xs sm:flex-nowrap"
             >
               <span className="text-zinc-500">
-                {format(
+                {formatter.dateTime(
                   new Date(payout.executed_at ?? payout.created_at),
-                  "MMM d, yyyy",
+                  { month: "short", day: "numeric", year: "numeric" },
                 )}
               </span>
               <span className="font-bold text-ink-charcoal tabular-nums">
-                {formatMoney(payout.amount, payout.currency)}
+                {formatMoney(payout.amount, payout.currency, locale)}
               </span>
               <span
                 className={cn(
@@ -60,7 +62,7 @@ export const EmployeePayoutHistoryCard: FC<{ employeeId: string }> = ({
                   statusChipClass[payout.status],
                 )}
               >
-                {getPayoutExecutionStatusLabel(payout.status)}
+                {statusLabel(PayoutExecutionStatusFormOptions, payout.status)}
               </span>
             </div>
           ))}

@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -11,20 +12,22 @@ import {
 } from "@/components/ui/select";
 import type { AdminOverviewPeriod } from "@/features/analytics/interfaces/analytics.interfaces";
 
-const PERIOD_OPTIONS: { id: AdminOverviewPeriod; label: string }[] = [
-  { id: "today", label: "Today" },
-  { id: "7d", label: "Last 7 days" },
-  { id: "30d", label: "Last 30 days" },
-  { id: "90d", label: "Last 90 days" },
+const PERIOD_OPTIONS: { id: AdminOverviewPeriod; labelKey: string }[] = [
+  { id: "today", labelKey: "today" },
+  { id: "7d", labelKey: "last7Days" },
+  { id: "30d", labelKey: "last30Days" },
+  { id: "90d", labelKey: "last90Days" },
 ];
 
 export const AdminAnalyticsPeriodSelect: FC<{
   value: AdminOverviewPeriod;
   onChange: (value: AdminOverviewPeriod) => void;
-}> = ({ value, onChange }) => (
+}> = ({ value, onChange }) => {
+  const t = useTranslations("dashboard.adminSystem.analytics.periods");
+  return (
   <Select
     items={PERIOD_OPTIONS.map((option) => ({
-      label: option.label,
+      label: t(option.labelKey),
       value: option.id,
     }))}
     value={value}
@@ -39,10 +42,11 @@ export const AdminAnalyticsPeriodSelect: FC<{
       <SelectGroup>
         {PERIOD_OPTIONS.map((option) => (
           <SelectItem key={option.id} value={option.id}>
-            {option.label}
+            {t(option.labelKey)}
           </SelectItem>
         ))}
       </SelectGroup>
     </SelectContent>
   </Select>
-);
+  );
+};

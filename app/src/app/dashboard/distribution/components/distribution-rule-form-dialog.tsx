@@ -2,7 +2,8 @@
 
 import { type FC, useEffect, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { Building2, Landmark, Plus, Trash2, User, Wallet } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
@@ -23,7 +24,11 @@ import { EmployeeFormDialog } from "@/app/dashboard/employees/components/employe
 import { DistributionRecipientTypeFormOptions } from "@/config/constants/dropdowns/distribution/distribution-recipient-type-form.options";
 import { DistributionPayoutModeFormOptions } from "@/config/constants/dropdowns/distribution/distribution-payout-mode-form.options";
 import { usePayoutPolicy } from "@/features/app-config/hooks/use-app-config";
-import { getDistributionPayoutModeDescription } from "@/config/constants/dropdowns/distribution/distribution-payout-mode-description.options";
+import { DistributionPayoutModeDescriptionOptions } from "@/config/constants/dropdowns/distribution/distribution-payout-mode-description.options";
+import {
+  useDropdownDescription,
+  useDropdownLabel,
+} from "@/hooks/use-dropdown-options";
 import {
   useCreateDistributionRule,
   useDistributionRulePayoutModeImpact,
@@ -80,6 +85,9 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
   rule,
   onCreated,
 }) => {
+  const t = useTranslations("dashboard.team.distribution.form");
+  const dropdownLabel = useDropdownLabel();
+  const dropdownDescription = useDropdownDescription();
   const isEdit = !!rule;
   const createRule = useCreateDistributionRule(storeId);
   const updateRule = useUpdateDistributionRule();
@@ -279,11 +287,10 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
       >
         <DialogHeader className="shrink-0 border-b border-zinc-100 px-4 py-4 sm:px-6">
           <DialogTitle>
-            {isEdit ? "Edit distribution rule" : "Create distribution rule"}
+            {isEdit ? t("editTitle") : t("createTitle")}
           </DialogTitle>
           <DialogDescription>
-            Define how each tip splits. Percentages must total 100%; the first
-            recipient absorbs rounding remainders.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -295,10 +302,10 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
         >
           <div className="flex-1 space-y-5 overflow-y-auto px-4 py-5 sm:px-6">
           <div className="space-y-1.5">
-            <Label htmlFor="rule-name">Rule name</Label>
+            <Label htmlFor="rule-name">{t("ruleName")}</Label>
             <Input
               id="rule-name"
-              placeholder="e.g. 100% to tipped employee"
+              placeholder={t("ruleNamePlaceholder")}
               aria-invalid={!!errors.name}
               {...register("name")}
             />
@@ -308,7 +315,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
           </div>
 
           <div className="space-y-2">
-            <Label>Who pays the employees</Label>
+            <Label>{t("whoPays")}</Label>
             <Controller
               control={control}
               name="payout_mode"
@@ -316,7 +323,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                 <div
                   className="grid gap-2"
                   role="radiogroup"
-                  aria-label="Who pays the employees"
+                  aria-label={t("whoPays")}
                 >
                   {visiblePayoutModeOptions.map((option) => {
                     const selected = field.value === option.id;
@@ -343,10 +350,10 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                       >
                         <span className="flex items-center gap-1.5 text-xs font-bold text-ink-charcoal">
                           <Icon className="size-3.5 shrink-0" strokeWidth={2} />
-                          {option.label}
+                          {dropdownLabel(DistributionPayoutModeFormOptions, option.id)}
                         </span>
-                        <span className="mt-1 block text-[11px] leading-snug text-zinc-500">
-                          {getDistributionPayoutModeDescription(option.id)}
+                        <span className="mt-1 block text-base leading-snug text-zinc-500">
+                          {dropdownDescription(DistributionPayoutModeDescriptionOptions, option.id)}
                         </span>
                       </button>
                     );
@@ -355,12 +362,12 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
               )}
             />
             {payoutModeChanged ? (
-              <p className="rounded-lg bg-amber-50 px-3 py-2 text-[11px] leading-snug text-amber-900">
+              <p className="rounded-lg bg-amber-50 px-3 py-2 text-base leading-snug text-amber-900">
                 {payoutModeImpact.isPending
-                  ? "Checking what this affects…"
+                  ? t("checkingImpact")
                   : affectedShares > 0
-                    ? `Saving moves ${affectedShares} pending share${affectedShares === 1 ? "" : "s"} onto the new route. Shares already paid out or already handed over stay as they are.`
-                    : "Nothing is pending under this rule, so only future tips are affected."}
+                    ? t("impactPending", { count: affectedShares })
+                    : t("impactNone")}
               </p>
             ) : null}
           </div>
@@ -368,10 +375,9 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
           <div className="space-y-3">
             <div className="flex items-end justify-between gap-3">
               <div>
-                <p className="text-sm font-bold text-ink-charcoal">Split</p>
-                <p className="mt-0.5 text-[11px] text-zinc-500">
-                  {fields.length}{" "}
-                  {fields.length === 1 ? "recipient" : "recipients"}
+                <p className="text-sm font-bold text-ink-charcoal">{t("split")}</p>
+                <p className="mt-0.5 text-base text-zinc-500">
+                  {t("recipientCount", { count: fields.length })}
                 </p>
               </div>
               <span
@@ -382,7 +388,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                     : "bg-signal-red/10 text-signal-red",
                 )}
               >
-                {percentageSum.toFixed(0)}% / 100%
+                {t("percentTotal", { sum: percentageSum.toFixed(0) })}
               </span>
             </div>
 
@@ -425,10 +431,10 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                 const pct = Number(recipients[index]?.percentage) || 0;
                 const isStore = type === DistributionRecipientTypes.STORE;
                 const label = isStore
-                  ? "Business"
+                  ? t("business")
                   : (employeeNameById.get(
                       recipients[index]?.employee_id ?? "",
-                    ) ?? "Employee");
+                    ) ?? t("employee"));
                 const isHighlighted = highlightedRecipientId === field.id;
 
                 return (
@@ -483,7 +489,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                       <div
                         className="relative flex min-w-0 flex-1 rounded-lg bg-zinc-100 p-1"
                         role="group"
-                        aria-label={`Recipient ${index + 1} type`}
+                        aria-label={t("recipientTypeAria", { number: index + 1 })}
                       >
                         {DistributionRecipientTypeFormOptions.map((option) => {
                           const selected = type === option.id;
@@ -497,7 +503,10 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                               type="button"
                               disabled={isPending}
                               onClick={() =>
-                                setRecipientType(index, option.id)
+                                setRecipientType(
+                                  index,
+                                  option.id as DistributionRecipientType,
+                                )
                               }
                               className={cn(
                                 "relative flex min-w-0 flex-1 items-center justify-center gap-1 rounded-md px-1.5 py-1.5 text-xs font-semibold transition-colors",
@@ -534,8 +543,8 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                                 </motion.span>
                                 <span className="truncate">
                                   {option.id === DistributionRecipientTypes.STORE
-                                    ? "Business"
-                                    : "Employee"}
+                                    ? t("business")
+                                    : t("employee")}
                                 </span>
                               </span>
                             </button>
@@ -557,9 +566,9 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                                 duration: 0.22,
                                 ease: RECIPIENT_MOTION_EASE,
                               }}
-                              className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50/80 px-3 py-2.5 text-[11px] leading-5 text-zinc-500"
+                              className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50/80 px-3 py-2.5 text-base leading-5 text-zinc-500"
                             >
-                              {pct}% stays with the business house account.
+                              {t("storeStays", { pct })}
                             </motion.p>
                           ) : (
                             <motion.div
@@ -582,16 +591,16 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                                     value={employeeField.value ?? ""}
                                     onValueChange={employeeField.onChange}
                                     emptyValue=""
-                                    emptyLabel="Select employee"
-                                    placeholder="Select employee"
+                                    emptyLabel={t("selectEmployee")}
+                                    placeholder={t("selectEmployee")}
                                     showPosition
                                     invalid={!!recipientError?.employee_id}
-                                    aria-label={`Employee for recipient ${index + 1}`}
+                                    aria-label={t("employeeForRecipient", { number: index + 1 })}
                                     className="w-full"
                                     onCreateNew={() =>
                                       setCreateEmployeeForIndex(index)
                                     }
-                                    createNewLabel="Add employee"
+                                    createNewLabel={t("addEmployee")}
                                   />
                                 )}
                               />
@@ -615,7 +624,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                               suffix="%"
                               disabled={isPending}
                               invalid={!!recipientError?.percentage}
-                              aria-label={`${label} percentage`}
+                              aria-label={t("percentageAria", { label })}
                             />
                           )}
                         />
@@ -625,7 +634,7 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                           size="icon-sm"
                           disabled={fields.length <= 1 || isPending}
                           onClick={() => remove(index)}
-                          aria-label={`Remove ${label}`}
+                          aria-label={t("removeAria", { label })}
                           className="size-8 shrink-0 text-zinc-500 hover:bg-signal-red/10 hover:text-signal-red"
                         >
                           <Trash2 className="size-3.5" />
@@ -677,14 +686,14 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
               className="flex w-full items-center justify-center gap-1.5 rounded-2xl border border-dashed border-zinc-300 bg-zinc-50/60 py-3 text-xs font-semibold text-zinc-500 transition-colors hover:border-electric-lime hover:bg-brand-50/50 hover:text-brand-800 disabled:opacity-50"
             >
               <Plus className="size-3.5" strokeWidth={2} />
-              Add recipient
+              {t("addRecipient")}
             </motion.button>
           </div>
           </div>
 
           <DialogFooter className="mx-0 mb-0 shrink-0 gap-2 border-t border-zinc-100 px-4 py-4 sm:justify-between sm:px-6">
-            <p className="hidden text-[11px] text-zinc-400 sm:block">
-              Applies to future tips only.
+            <p className="hidden text-base text-zinc-400 sm:block">
+              {t("futureOnly")}
             </p>
             <div className="flex w-full gap-2 sm:w-auto">
               <Button
@@ -694,14 +703,14 @@ export const DistributionRuleFormDialog: FC<DistributionRuleFormDialogProps> = (
                 className="flex-1 sm:flex-none"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                {t("cancel")}
               </Button>
               <ActionButtonWithPending
                 type="submit"
                 isPending={isPending}
                 className="flex-1 sm:flex-none"
               >
-                {isEdit ? "Save changes" : "Create rule"}
+                {isEdit ? t("saveChanges") : t("submitCreate")}
               </ActionButtonWithPending>
             </div>
           </DialogFooter>

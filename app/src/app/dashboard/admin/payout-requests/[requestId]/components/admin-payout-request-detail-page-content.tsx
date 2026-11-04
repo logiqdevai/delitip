@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
   ArrowLeft,
   Check,
@@ -20,10 +21,11 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { getPayoutAccountStatusLabel } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
-import { getPayoutExecutionStatusLabel } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
-import { getPayoutStatusLabel } from "@/config/constants/dropdowns/tips/payout-status-form.options";
-import { getInvoiceCheckIssueDescription } from "@/config/constants/dropdowns/payouts/invoice-check-issue-description.options";
+import { PayoutAccountStatusFormOptions } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { PayoutExecutionStatusFormOptions } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
+import { PayoutStatusFormOptions } from "@/config/constants/dropdowns/tips/payout-status-form.options";
+import { InvoiceCheckIssueDescriptionOptions } from "@/config/constants/dropdowns/payouts/invoice-check-issue-description.options";
+import { useDropdownDescription, useDropdownLabel } from "@/hooks/use-dropdown-options";
 import {
   useAdminPayoutRequest,
   useAdminPayoutRequestInvoiceUrl,
@@ -53,22 +55,24 @@ import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 import { getErrorMessage } from "@/lib/api-error";
 
-const formatDate = (value?: string | null) => {
-  if (!value) return "-";
-  return new Date(value).toLocaleDateString(undefined, { dateStyle: "medium" });
-};
-
-const formatDateTime = (value?: string | null) => {
-  if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-};
-
 const personName = (
   user: { first_name: string | null; last_name: string | null; email: string } | null,
 ) => (user ? [user.first_name, user.last_name].filter(Boolean).join(" ") || user.email : "-");
+
+const useFormatters = () => {
+  const format = useFormatter();
+  const locale = useLocale();
+  return {
+    formatDate: (value?: string | null) =>
+      value ? format.dateTime(new Date(value), { dateStyle: "medium" }) : "-",
+    formatDateTime: (value?: string | null) =>
+      value
+        ? format.dateTime(new Date(value), { dateStyle: "medium", timeStyle: "short" })
+        : "-",
+    money: (amount: number, currency: string) =>
+      formatMoney(amount, currency as never, locale),
+  };
+};
 
 const SummaryRow: FC<{ label: string; value: string; muted?: boolean }> = ({
   label,
@@ -100,57 +104,58 @@ const Card: FC<{ title: string; children: React.ReactNode; action?: React.ReactN
 const isExtraction = (value: AdminPayoutRequestDetail["check_extracted"]): value is InvoiceExtraction =>
   !!value && typeof value === "object" && "is_invoice" in value;
 
-const majorToLabel = (value: number | null | undefined, currency: string) =>
-  value === null || value === undefined ? "—" : formatMoney(Math.round(value * 100), currency as never);
-
 // Expected vs. on-invoice, one line per thing the automatic check compares.
 const ChecksTable: FC<{ request: AdminPayoutRequestDetail }> = ({ request }) => {
+  const t = useTranslations("dashboard.admin.payoutRequestDetail.check");
+  const { formatDate, money } = useFormatters();
+  const majorToLabel = (value: number | null | undefined, currency: string) =>
+    value === null || value === undefined ? "—" : money(Math.round(value * 100), currency);
   const extracted = isExtraction(request.check_extracted) ? request.check_extracted : null;
   const issues = new Set<InvoiceCheckIssue>(request.check_issues ?? []);
   const has = (...codes: InvoiceCheckIssue[]) => codes.some((code) => issues.has(code));
 
   const rows: { label: string; expected: string; found: string; ok: boolean | null }[] = [
     {
-      label: "Amount before VAT",
-      expected: formatMoney(request.amount, request.currency),
+      label: t("rows.amountBeforeVat"),
+      expected: money(request.amount, request.currency),
       found: extracted ? majorToLabel(extracted.net_amount ?? (extracted.total_amount !== null && extracted.vat_amount !== null ? extracted.total_amount - extracted.vat_amount : null), request.currency) : "—",
       ok: extracted ? !has(InvoiceCheckIssues.NET_MISMATCH, InvoiceCheckIssues.NET_MISSING) : null,
     },
     {
-      label: "Currency",
+      label: t("rows.currency"),
       expected: request.currency,
       found: extracted?.currency ?? "—",
       ok: extracted ? !has(InvoiceCheckIssues.CURRENCY_MISMATCH) : null,
     },
     {
-      label: "Issuer VAT (store)",
-      expected: request.store.organization.vat_number ?? "not on file",
+      label: t("rows.issuerVat"),
+      expected: request.store.organization.vat_number ?? t("expected.notOnFile"),
       found: extracted?.issuer_vat_number ?? "—",
       ok: extracted
         ? !has(InvoiceCheckIssues.ISSUER_VAT_MISMATCH, InvoiceCheckIssues.ISSUER_VAT_MISSING, InvoiceCheckIssues.ORG_VAT_MISSING)
         : null,
     },
     {
-      label: "Recipient VAT (platform)",
-      expected: "configured in App Config",
+      label: t("rows.recipientVat"),
+      expected: t("expected.configuredInAppConfig"),
       found: extracted?.recipient_vat_number ?? "—",
       ok: extracted ? !has(InvoiceCheckIssues.RECIPIENT_VAT_MISMATCH) : null,
     },
     {
-      label: "Invoice number",
-      expected: request.invoice_number ?? "not typed",
+      label: t("rows.invoiceNumber"),
+      expected: request.invoice_number ?? t("expected.notTyped"),
       found: extracted?.invoice_number ?? "—",
       ok: extracted ? !has(InvoiceCheckIssues.INVOICE_NUMBER_MISMATCH) : null,
     },
     {
-      label: "Invoice date",
-      expected: `after ${formatDate(request.period_to)}`,
+      label: t("rows.invoiceDate"),
+      expected: t("expected.afterDate", { date: formatDate(request.period_to) }),
       found: extracted?.invoice_date ?? "—",
       ok: extracted ? !has(InvoiceCheckIssues.DATE_SUSPICIOUS) : null,
     },
     {
-      label: "Net + VAT",
-      expected: "= invoice total",
+      label: t("rows.netPlusVat"),
+      expected: t("expected.equalsTotal"),
       found: extracted
         ? `${majorToLabel(extracted.net_amount, request.currency)} + ${majorToLabel(extracted.vat_amount, request.currency)}${extracted.vat_rate_percentage !== null ? ` (${extracted.vat_rate_percentage}%)` : ""}`
         : "—",
@@ -163,9 +168,9 @@ const ChecksTable: FC<{ request: AdminPayoutRequestDetail }> = ({ request }) => 
       <table className="w-full text-sm">
         <thead className="bg-zinc-50/80 text-left text-xs font-semibold text-zinc-500">
           <tr>
-            <th className="px-3 py-2">Check</th>
-            <th className="px-3 py-2">Expected</th>
-            <th className="px-3 py-2">On invoice</th>
+            <th className="px-3 py-2">{t("columns.check")}</th>
+            <th className="px-3 py-2">{t("columns.expected")}</th>
+            <th className="px-3 py-2">{t("columns.onInvoice")}</th>
             <th className="w-10 px-3 py-2" />
           </tr>
         </thead>
@@ -191,13 +196,14 @@ const ChecksTable: FC<{ request: AdminPayoutRequestDetail }> = ({ request }) => 
 };
 
 const InvoicePreview: FC<{ requestId: string; mimetype: string }> = ({ requestId, mimetype }) => {
+  const t = useTranslations("dashboard.admin.payoutRequestDetail.invoice");
   const urlQuery = useAdminPayoutRequestInvoiceUrl(requestId);
 
   if (urlQuery.isPending) return <Skeleton className="h-[520px] w-full rounded-xl" />;
   if (urlQuery.isError || !urlQuery.data) {
     return (
       <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-10 text-center text-xs text-zinc-500">
-        {getErrorMessage(urlQuery.error, "Could not load the invoice.")}
+        {getErrorMessage(urlQuery.error, t("loadError"))}
       </p>
     );
   }
@@ -207,10 +213,10 @@ const InvoicePreview: FC<{ requestId: string; mimetype: string }> = ({ requestId
     <div className="space-y-2">
       <div className="overflow-hidden rounded-xl border border-zinc-200/80 bg-zinc-50">
         {mimetype === "application/pdf" ? (
-          <iframe src={url} title="Invoice" className="h-[520px] w-full" />
+          <iframe src={url} title={t("title")} className="h-[520px] w-full" />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={url} alt="Invoice" className="max-h-[520px] w-full object-contain" />
+          <img src={url} alt={t("title")} className="max-h-[520px] w-full object-contain" />
         )}
       </div>
       <a
@@ -220,7 +226,7 @@ const InvoicePreview: FC<{ requestId: string; mimetype: string }> = ({ requestId
         className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-700 hover:underline"
       >
         <ExternalLink className="size-3.5" strokeWidth={2} />
-        Open in a new tab
+        {t("openInNewTab")}
       </a>
     </div>
   );
@@ -232,6 +238,11 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
   const reject = useRejectPayoutRequest(requestId);
   const recheck = useRecheckPayoutRequest(requestId);
   const [reviewAction, setReviewAction] = useState<ReviewAction | null>(null);
+  const t = useTranslations("dashboard.admin.payoutRequestDetail");
+  const tc = useTranslations("dashboard.admin.common");
+  const { formatDate, formatDateTime, money } = useFormatters();
+  const label = useDropdownLabel();
+  const describe = useDropdownDescription();
 
   if (requestQuery.isPending) {
     return <DetailSkeleton fieldCount={8} />;
@@ -241,9 +252,9 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
     return (
       <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
         <EmptyHeader>
-          <EmptyTitle>Could not load this payout request</EmptyTitle>
+          <EmptyTitle>{t("loadError")}</EmptyTitle>
           <EmptyDescription>
-            {getErrorMessage(requestQuery.error, "The request may not exist.")}
+            {getErrorMessage(requestQuery.error, t("notFound"))}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
@@ -251,7 +262,7 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
             href={Routes.dashboard.admin.payments}
             className="text-xs font-semibold text-brand-700 hover:underline"
           >
-            Back to Payments & Payouts
+            {tc("backToFinance")}
           </Link>
         </EmptyContent>
       </Empty>
@@ -272,9 +283,9 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
   const approveBlockedReason = !isPendingReview
     ? null
     : request.integrity.is_stale
-      ? "Some locked tips changed since submission — reject so the store can re-request the corrected amount."
+      ? t("actions.blockedStale")
       : !accountActive
-        ? "The store's payout account is not active, so a transfer can't be sent yet."
+        ? t("actions.blockedInactive")
         : null;
 
   const handleReview = async (action: ReviewAction, note: string) => {
@@ -292,17 +303,20 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
         className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-ink-charcoal"
       >
         <ArrowLeft className="size-3.5" strokeWidth={2} />
-        Back to Payments & Payouts
+        {tc("backToFinance")}
       </Link>
 
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold text-ink-charcoal">
-            {formatMoney(request.amount, request.currency)}
+            {money(request.amount, request.currency)}
           </h1>
           <p className="mt-0.5 text-xs text-zinc-500">
-            {request.store.name} · requested {formatDateTime(request.created_at)} by{" "}
-            {personName(request.requested_by)}
+            {t("subtitle", {
+              store: request.store.name,
+              date: formatDateTime(request.created_at),
+              person: personName(request.requested_by),
+            })}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -320,8 +334,10 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
         <div className="flex gap-2.5 rounded-xl border border-red-200 bg-red-50/60 px-4 py-3 text-sm text-red-900">
           <TriangleAlert className="mt-0.5 size-4 shrink-0" strokeWidth={2} />
           <span>
-            <strong>The last transfer attempt failed:</strong> {request.failure_reason}. The tips
-            are still locked to this request — fix the cause and approve again.
+            {t.rich("transferFailed", {
+              b: (chunks) => <strong>{chunks}</strong>,
+              reason: request.failure_reason,
+            })}
           </span>
         </div>
       ) : null}
@@ -330,28 +346,30 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
         <div className="flex gap-2.5 rounded-xl border border-amber-200 bg-amber-50/60 px-4 py-3 text-sm text-amber-900">
           <TriangleAlert className="mt-0.5 size-4 shrink-0" strokeWidth={2} />
           <span>
-            <strong>{request.integrity.stale_count}</strong> of the{" "}
-            {request.integrity.locked_count} locked tips changed since submission (likely a refund).
-            The live amount is now {formatMoney(request.integrity.live_amount, request.currency)}, not{" "}
-            {formatMoney(request.amount, request.currency)}, so this invoice can&apos;t be paid as
-            is.
+            {t.rich("stale", {
+              b: (chunks) => <strong>{chunks}</strong>,
+              stale: request.integrity.stale_count,
+              locked: request.integrity.locked_count,
+              live: money(request.integrity.live_amount, request.currency),
+              amount: money(request.amount, request.currency),
+            })}
           </span>
         </div>
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card title="Invoice">
+        <Card title={t("cards.invoice")}>
           <InvoicePreview requestId={request.id} mimetype={request.invoice_document.mimetype} />
           <div className="mt-3">
-            <SummaryRow label="File" value={request.invoice_document.filename.split("/").pop() ?? "-"} />
-            <SummaryRow label="Invoice number (typed)" value={request.invoice_number ?? "-"} />
-            {request.store_note ? <SummaryRow label="Note from store" value={request.store_note} /> : null}
+            <SummaryRow label={t("invoice.file")} value={request.invoice_document.filename.split("/").pop() ?? "-"} />
+            <SummaryRow label={t("invoice.invoiceNumberTyped")} value={request.invoice_number ?? "-"} />
+            {request.store_note ? <SummaryRow label={t("invoice.noteFromStore")} value={request.store_note} /> : null}
           </div>
         </Card>
 
         <div className="space-y-6">
           <Card
-            title="Automatic invoice check"
+            title={t("cards.autoCheck")}
             action={
               <Button
                 type="button"
@@ -365,23 +383,23 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
                   data-icon="inline-start"
                   className={cn("size-3.5", recheck.isPending && "animate-spin")}
                 />
-                Re-run check
+                {t("check.rerun")}
               </Button>
             }
           >
             {request.check_status === InvoiceCheckStatuses.PENDING ? (
               <p className="text-xs text-zinc-500">
-                The invoice is being read. This usually takes under a minute — refresh to see the result.
+                {t("check.pending")}
               </p>
             ) : request.check_status === InvoiceCheckStatuses.SKIPPED ? (
               <p className="text-xs text-zinc-500">
-                Automatic checks are turned off in App Config (or no OpenAI key is configured). Review
-                the invoice manually.
+                {t("check.skipped")}
               </p>
             ) : request.check_status === InvoiceCheckStatuses.FAILED ? (
               <p className="text-xs text-red-700">
-                The check could not run{extractionError ? `: ${extractionError}` : "."} Review the
-                invoice manually or re-run it.
+                {extractionError
+                  ? t("check.failedWithError", { error: extractionError })
+                  : t("check.failed")}
               </p>
             ) : null}
 
@@ -393,31 +411,31 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
                     {hardIssues.map((issue) => (
                       <li key={issue} className="flex gap-2 text-xs text-red-700">
                         <X className="mt-0.5 size-3.5 shrink-0" strokeWidth={2.5} />
-                        {getInvoiceCheckIssueDescription(issue)}
+                        {describe(InvoiceCheckIssueDescriptionOptions, issue)}
                       </li>
                     ))}
                     {softIssues.map((issue) => (
                       <li key={issue} className="flex gap-2 text-xs text-amber-800">
                         <TriangleAlert className="mt-0.5 size-3.5 shrink-0" strokeWidth={2} />
-                        {getInvoiceCheckIssueDescription(issue)}
+                        {describe(InvoiceCheckIssueDescriptionOptions, issue)}
                       </li>
                     ))}
                   </ul>
                 ) : (
                   <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-brand-700">
                     <Check className="size-3.5" strokeWidth={2.5} />
-                    Everything on the invoice matches this request.
+                    {t("check.allMatch")}
                   </p>
                 )}
                 {extractedNotes ? (
-                  <p className="mt-2 text-xs text-zinc-500">Reader&apos;s note: {extractedNotes}</p>
+                  <p className="mt-2 text-xs text-zinc-500">{t("check.readerNote", { note: extractedNotes })}</p>
                 ) : null}
               </>
             ) : null}
 
             {request.checked_at ? (
-              <p className="mt-3 text-[11px] text-zinc-400">
-                {request.check_model ?? "model"} · {formatDateTime(request.checked_at)}
+              <p className="mt-3 text-base text-zinc-400">
+                {request.check_model ?? t("check.modelFallback")} · {formatDateTime(request.checked_at)}
                 {request.check_cost_usd !== null
                   ? ` · $${Number(request.check_cost_usd).toFixed(4)}`
                   : ""}
@@ -425,51 +443,54 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
             ) : null}
           </Card>
 
-          <Card title="Request">
-            <SummaryRow label="Store's own share" value={formatMoney(request.own_share_amount, request.currency)} />
-            <SummaryRow label="Held for staff" value={formatMoney(request.held_for_staff_amount, request.currency)} />
+          <Card title={t("cards.request")}>
+            <SummaryRow label={t("request.ownShare")} value={money(request.own_share_amount, request.currency)} />
+            <SummaryRow label={t("request.heldForStaff")} value={money(request.held_for_staff_amount, request.currency)} />
             <SummaryRow
-              label="Tips covered"
+              label={t("request.tipsCovered")}
               value={`${request.distribution_count} · ${formatDate(request.period_from)} → ${formatDate(request.period_to)}`}
             />
-            <SummaryRow label="Hold cutoff at submission" value={formatDateTime(request.hold_cutoff_at)} />
+            <SummaryRow label={t("request.holdCutoff")} value={formatDateTime(request.hold_cutoff_at)} />
             <SummaryRow
-              label="Store payout account"
+              label={t("request.storePayoutAccount")}
               value={
                 request.store.payout_account
-                  ? `${getPayoutAccountStatusLabel(request.store.payout_account.status)}${request.store.payout_account.iban_last4 ? ` · •••• ${request.store.payout_account.iban_last4}` : ""}`
-                  : "Not linked"
+                  ? `${label(PayoutAccountStatusFormOptions, request.store.payout_account.status)}${request.store.payout_account.iban_last4 ? ` · •••• ${request.store.payout_account.iban_last4}` : ""}`
+                  : t("request.notLinked")
               }
             />
             {request.reviewed_at ? (
               <>
                 <SummaryRow
-                  label="Reviewed"
-                  value={`${formatDateTime(request.reviewed_at)} by ${personName(request.reviewed_by)}`}
+                  label={t("request.reviewed")}
+                  value={t("request.reviewedBy", {
+                    date: formatDateTime(request.reviewed_at),
+                    person: personName(request.reviewed_by),
+                  })}
                 />
-                {request.admin_note ? <SummaryRow label="Admin note" value={request.admin_note} /> : null}
+                {request.admin_note ? <SummaryRow label={t("request.adminNote")} value={request.admin_note} /> : null}
               </>
             ) : null}
             {request.payout ? (
               <div className="flex items-center justify-between border-b border-zinc-100 py-2.5 text-sm last:border-0">
-                <span className="text-zinc-500">Payout</span>
+                <span className="text-zinc-500">{t("request.payout")}</span>
                 <Link
                   href={Routes.dashboard.admin.payoutDetail(request.payout.id)}
                   className="font-semibold text-brand-700 hover:underline"
                 >
-                  {getPayoutExecutionStatusLabel(request.payout.status)}
+                  {label(PayoutExecutionStatusFormOptions, request.payout.status)}
                   {request.payout.executed_at ? ` · ${formatDateTime(request.payout.executed_at)}` : ""}
                 </Link>
               </div>
             ) : null}
           </Card>
 
-          <Card title="Issuer on file (Tax Details)">
-            <SummaryRow label="Legal name" value={organization.legal_name ?? organization.name} />
-            <SummaryRow label="VAT number" value={organization.vat_number ?? "not set"} muted={!organization.vat_number} />
-            <SummaryRow label="Tax office" value={organization.doy ?? "-"} muted={!organization.doy} />
+          <Card title={t("cards.issuer")}>
+            <SummaryRow label={t("issuer.legalName")} value={organization.legal_name ?? organization.name} />
+            <SummaryRow label={t("issuer.vatNumber")} value={organization.vat_number ?? t("issuer.notSet")} muted={!organization.vat_number} />
+            <SummaryRow label={t("issuer.taxOffice")} value={organization.doy ?? "-"} muted={!organization.doy} />
             <SummaryRow
-              label="Address"
+              label={t("issuer.address")}
               value={
                 [organization.address_line, organization.postal_code, organization.city, organization.country]
                   .filter(Boolean)
@@ -480,10 +501,10 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
         </div>
       </div>
 
-      <Card title={`Locked tips (${request.distributions.length})`}>
+      <Card title={t("cards.lockedTips", { count: request.distributions.length })}>
         {request.distributions.length === 0 ? (
           <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-6 text-center text-xs text-zinc-500">
-            No distributions are locked to this request.
+            {t("locked.none")}
           </p>
         ) : (
           <div className="divide-y divide-zinc-100">
@@ -498,19 +519,24 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
                 >
                   <div>
                     <div className="font-semibold text-ink-charcoal">
-                      Tip {formatMoney(distribution.tip.amount, distribution.tip.currency)}
+                      {tc("tipLabel", {
+                        amount: money(distribution.tip.amount, distribution.tip.currency),
+                      })}
                       {distribution.recipient_type === "EMPLOYEE" ? (
-                        <span className="ml-1.5 text-xs font-medium text-zinc-400">pooled staff share</span>
+                        <span className="ml-1.5 text-xs font-medium text-zinc-400">
+                          {t("locked.pooledStaffShare")}
+                        </span>
                       ) : null}
                     </div>
                     <div className="text-xs text-zinc-400">
-                      {getPayoutStatusLabel(distribution.payout_status)} · paid{" "}
-                      {formatDateTime(distribution.tip.paid_at)}
-                      {stale ? " · changed since submission" : ""}
+                      {t(stale ? "locked.metaStale" : "locked.meta", {
+                        status: label(PayoutStatusFormOptions, distribution.payout_status),
+                        date: formatDateTime(distribution.tip.paid_at),
+                      })}
                     </div>
                   </div>
                   <div className={cn("font-bold text-ink-charcoal", stale && "line-through")}>
-                    {formatMoney(distribution.amount, request.currency)}
+                    {money(distribution.amount, request.currency)}
                   </div>
                 </div>
               );
@@ -522,8 +548,7 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
       {isPendingReview ? (
         <div className="sticky bottom-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200/80 bg-white/95 px-4 py-3 shadow-lg backdrop-blur">
           <p className="text-xs text-zinc-500">
-            {approveBlockedReason ??
-              "Approving starts the Viva bank transfer immediately and notifies the store."}
+            {approveBlockedReason ?? t("actions.hint")}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -533,7 +558,7 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
               onClick={() => setReviewAction("reject")}
               className="rounded-xl"
             >
-              Reject
+              {t("actions.reject")}
             </Button>
             <Button
               type="button"
@@ -541,7 +566,7 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
               onClick={() => setReviewAction("approve")}
               className="rounded-xl bg-electric-lime text-ink-charcoal"
             >
-              Approve & pay
+              {t("actions.approve")}
             </Button>
           </div>
         </div>
@@ -550,7 +575,7 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
       <ReviewPayoutRequestDialog
         action={reviewAction}
         onClose={() => setReviewAction(null)}
-        amountLabel={formatMoney(request.amount, request.currency)}
+        amountLabel={money(request.amount, request.currency)}
         storeName={request.store.name}
         isPending={approve.isPending || reject.isPending}
         onConfirm={handleReview}

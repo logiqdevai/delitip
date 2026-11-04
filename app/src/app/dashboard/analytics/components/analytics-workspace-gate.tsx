@@ -2,6 +2,7 @@
 
 import { type FC, type ReactNode } from "react";
 import { BarChart3 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import { PlanGate } from "@/components/billing/plan-gate";
 import {
@@ -20,6 +21,7 @@ interface AnalyticsWorkspaceGateProps {
 export const AnalyticsWorkspaceGate: FC<AnalyticsWorkspaceGateProps> = ({
   children,
 }) => {
+  const t = useTranslations("dashboard.analytics");
   const {
     store,
     storeId,
@@ -39,10 +41,8 @@ export const AnalyticsWorkspaceGate: FC<AnalyticsWorkspaceGateProps> = ({
           <EmptyMedia variant="icon">
             <BarChart3 />
           </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
-          <EmptyDescription>
-            Finish business setup before viewing analytics.
-          </EmptyDescription>
+          <EmptyTitle>{t("gate.noStoreTitle")}</EmptyTitle>
+          <EmptyDescription>{t("gate.noStoreDescription")}</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -52,7 +52,7 @@ export const AnalyticsWorkspaceGate: FC<AnalyticsWorkspaceGateProps> = ({
     <PlanGate
       organizationId={organizationId}
       requiredPlan="PROFESSIONAL"
-      featureName="Analytics & Insights"
+      featureName={t("title")}
     >
       {children}
     </PlanGate>

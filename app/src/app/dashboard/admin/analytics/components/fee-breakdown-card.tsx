@@ -2,6 +2,7 @@
 
 import { type FC } from "react";
 import { Info } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Tooltip,
   TooltipContent,
@@ -29,8 +30,6 @@ interface FeeBreakdownCardProps {
   totalFeePercentage: number;
   netDistributable: number;
 }
-
-const percent = formatPercent;
 
 const LabelWithTooltip: FC<{ label: string; explanation: string }> = ({
   label,
@@ -74,58 +73,58 @@ export const FeeBreakdownCard: FC<FeeBreakdownCardProps> = ({
   totalFeePercentage,
   netDistributable,
 }) => {
-  const money = (value: number) => formatMoney(value, currency);
+  const t = useTranslations("dashboard.adminSystem.analytics.feeBreakdown");
+  const locale = useLocale();
+  const money = (value: number) => formatMoney(value, currency, locale);
+  const percent = (value: number) => formatPercent(value, locale);
 
   return (
     <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
-      <h2 className="text-sm font-bold text-ink-charcoal">Fee breakdown</h2>
-      <p className="mt-0.5 text-xs text-zinc-500">
-        How each completed tip splits between the platform, the payment
-        processor, and what stores actually get to distribute.
-      </p>
+      <h2 className="text-sm font-bold text-ink-charcoal">{t("title")}</h2>
+      <p className="mt-0.5 text-xs text-zinc-500">{t("description")}</p>
 
       <div className="mt-3 grid grid-cols-1 gap-x-8 divide-y divide-zinc-100 sm:grid-cols-2 sm:divide-y-0">
         <div className="divide-y divide-zinc-100 sm:pr-4">
           <Row
-            label="Total tip"
-            explanation="The full amount customers paid across completed tips in this range, before any fees are deducted."
+            label={t("rows.totalTip.label")}
+            explanation={t("rows.totalTip.explanation")}
             value={money(tipsGrossRevenue)}
           />
           <Row
-            label="Platform fee"
-            explanation="delitip's commission, taken as a percentage of each tip at checkout."
+            label={t("rows.platformFee.label")}
+            explanation={t("rows.platformFee.explanation")}
             value={money(platformFee)}
           />
           <Row
-            label="Platform fee %"
-            explanation="Platform fee as a share of total tip revenue in this range (weighted by tip size, not averaged per tip)."
+            label={t("rows.platformFeePercent.label")}
+            explanation={t("rows.platformFeePercent.explanation")}
             value={percent(platformFeePercentage)}
           />
           <Row
-            label="Payment fee"
-            explanation="The card/payment processor's transaction fee, estimated at checkout and reconciled once the processor confirms it."
+            label={t("rows.paymentFee.label")}
+            explanation={t("rows.paymentFee.explanation")}
             value={money(paymentFee)}
           />
         </div>
         <div className="divide-y divide-zinc-100 sm:pl-4">
           <Row
-            label="Payment fee %"
-            explanation="Payment processor fee as a share of total tip revenue in this range (weighted by tip size, not averaged per tip)."
+            label={t("rows.paymentFeePercent.label")}
+            explanation={t("rows.paymentFeePercent.explanation")}
             value={percent(paymentFeePercentage)}
           />
           <Row
-            label="Total fee"
-            explanation="Platform fee + payment fee combined - everything taken out of tips before stores and employees get paid."
+            label={t("rows.totalFee.label")}
+            explanation={t("rows.totalFee.explanation")}
             value={money(totalFee)}
           />
           <Row
-            label="Total fee %"
-            explanation="Combined fee as a share of total tip revenue in this range (weighted by tip size, not averaged per tip)."
+            label={t("rows.totalFeePercent.label")}
+            explanation={t("rows.totalFeePercent.explanation")}
             value={percent(totalFeePercentage)}
           />
           <Row
-            label="Store amount net"
-            explanation="What's left after platform and payment fees are deducted - the pool each store then splits with its employees per its distribution rule."
+            label={t("rows.storeAmountNet.label")}
+            explanation={t("rows.storeAmountNet.explanation")}
             value={money(netDistributable)}
             emphasis
           />

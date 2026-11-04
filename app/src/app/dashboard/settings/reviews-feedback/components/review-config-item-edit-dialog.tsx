@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, type FormEvent, useId, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -61,6 +62,7 @@ export const ReviewConfigItemEditDialog: FC<ReviewConfigItemEditDialogProps> = (
   onClose,
   onSave,
 }) => {
+  const t = useTranslations("dashboard.settings.common");
   const textId = useId();
   const [text, setText] = useState(initialText);
   const [translations, setTranslations] = useState(
@@ -158,11 +160,11 @@ export const ReviewConfigItemEditDialog: FC<ReviewConfigItemEditDialogProps> = (
               disabled={isPending}
               onClick={onClose}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button type="submit" disabled={isPending || !trimmed || !hasChanges}>
               {isPending ? <Spinner data-icon="inline-start" /> : null}
-              Save
+              {t("save")}
             </Button>
           </DialogFooter>
         </form>

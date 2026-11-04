@@ -15,6 +15,7 @@ import type {
   QrCodesQuery,
   UpdateQrCodePayload,
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
+import { useTranslations } from "next-intl";
 import { toast } from "@/components/ui/toast";
 import { getErrorMessage } from "@/lib/api-error";
 
@@ -60,6 +61,7 @@ export const usePublicQrCode = (code: string, lang?: string) => {
 };
 
 export const useCreateQrCode = (storeId: string) => {
+  const t = useTranslations("dashboard.access.toasts.qrCodes");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -69,14 +71,14 @@ export const useCreateQrCode = (storeId: string) => {
       trackEvent(AnalyticsEvents.qrCodeCreated, { store_id: storeId });
       void queryClient.invalidateQueries({ queryKey: qrCodesQueryKeys.root });
       toast.add({
-        title: "QR code created",
-        description: "Print or share the tip link with customers.",
+        title: t("created"),
+        description: t("createdDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not create QR code",
+        title: t("createFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -85,6 +87,7 @@ export const useCreateQrCode = (storeId: string) => {
 };
 
 export const useUpdateQrCode = () => {
+  const t = useTranslations("dashboard.access.toasts.qrCodes");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -102,14 +105,14 @@ export const useUpdateQrCode = () => {
         queryKey: qrCodesQueryKeys.detail(variables.id),
       });
       toast.add({
-        title: "QR code updated",
-        description: "Your changes were saved.",
+        title: t("updated"),
+        description: t("updatedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not update QR code",
+        title: t("updateFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -118,6 +121,7 @@ export const useUpdateQrCode = () => {
 };
 
 export const useDeleteQrCode = () => {
+  const t = useTranslations("dashboard.access.toasts.qrCodes");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -126,13 +130,13 @@ export const useDeleteQrCode = () => {
       trackEvent(AnalyticsEvents.qrCodeDeleted);
       void queryClient.invalidateQueries({ queryKey: qrCodesQueryKeys.root });
       toast.add({
-        title: "QR code deleted",
+        title: t("deleted"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not delete QR code",
+        title: t("deleteFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

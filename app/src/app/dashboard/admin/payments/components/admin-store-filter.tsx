@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import {
   Combobox,
   ComboboxContent,
@@ -20,6 +21,7 @@ export const AdminStoreFilter: FC<AdminStoreFilterProps> = ({
   value,
   onValueChange,
 }) => {
+  const t = useTranslations("dashboard.admin.storeFilter");
   const storesQuery = useAdminStores();
   const stores = storesQuery.data ?? [];
   const storeIds = stores.map((store) => store.id);
@@ -33,8 +35,8 @@ export const AdminStoreFilter: FC<AdminStoreFilterProps> = ({
       itemToStringLabel={(id: string) => storeNameById.get(id) ?? id}
     >
       <ComboboxInput
-        placeholder="All stores"
-        aria-label="Filter by store"
+        placeholder={t("placeholder")}
+        aria-label={t("aria")}
         showClear
         className="w-44 rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs"
       />
@@ -46,7 +48,7 @@ export const AdminStoreFilter: FC<AdminStoreFilterProps> = ({
             </ComboboxItem>
           )}
         </ComboboxList>
-        <ComboboxEmpty>No stores found</ComboboxEmpty>
+        <ComboboxEmpty>{t("empty")}</ComboboxEmpty>
       </ComboboxContent>
     </Combobox>
   );

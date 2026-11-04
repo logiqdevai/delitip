@@ -1,3 +1,4 @@
+
 export const TeamSizes = {
   SMALL: "SMALL",
   MEDIUM: "MEDIUM",
@@ -7,15 +8,9 @@ export const TeamSizes = {
 
 export type TeamSize = (typeof TeamSizes)[keyof typeof TeamSizes];
 
-export const TeamSizeFormOptions: { id: TeamSize; label: string }[] = [
-  { id: TeamSizes.SMALL, label: "1 - 5 employees" },
-  { id: TeamSizes.MEDIUM, label: "6 - 20 employees" },
-  { id: TeamSizes.LARGE, label: "21 - 50 employees" },
-  { id: TeamSizes.ENTERPRISE, label: "50+ employees" },
+export const TeamSizeFormOptions: { id: TeamSize; labelKey: string }[] = [
+  { id: TeamSizes.SMALL, labelKey: "dashboard.enums.teamSize.SMALL" },
+  { id: TeamSizes.MEDIUM, labelKey: "dashboard.enums.teamSize.MEDIUM" },
+  { id: TeamSizes.LARGE, labelKey: "dashboard.enums.teamSize.LARGE" },
+  { id: TeamSizes.ENTERPRISE, labelKey: "dashboard.enums.teamSize.ENTERPRISE" },
 ];
-
-export function getTeamSizeLabel(size: TeamSize | string): string {
-  return (
-    TeamSizeFormOptions.find((option) => option.id === size)?.label ?? size
-  );
-}

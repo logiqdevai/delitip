@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   Mail,
   MoreHorizontal,
@@ -19,8 +20,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { EmployeeQrCodesDialog } from "@/app/dashboard/employees/components/employee-qr-codes-dialog";
-import { getEmployeeStatusLabel } from "@/config/constants/dropdowns/employees/employee-status-form.options";
-import { getEmployeeAccountStatusLabel } from "@/config/constants/dropdowns/employees/employee-account-status-form.options";
 import { useResendEmployeeInvite } from "@/features/employees/hooks/use-employees";
 import type { Employee } from "@/features/employees/interfaces/employees.interfaces";
 import { Routes } from "@/routes/routes";
@@ -37,7 +36,8 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
   onEdit,
   onToggleActive,
 }) => {
-  const position = employee.position?.trim() || "Team member";
+  const t = useTranslations("dashboard.team.employees");
+  const position = employee.position?.trim() || t("card.defaultPosition");
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const isSignedUp = !!employee.user?.registered_at;
   const resendInvite = useResendEmployeeInvite();
@@ -72,11 +72,11 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
                     : "bg-neutral-fill font-medium text-zinc-500",
                 )}
               >
-                {getEmployeeStatusLabel(employee.is_active)}
+                {employee.is_active ? t("status.active") : t("status.inactive")}
               </span>
               {!isSignedUp ? (
                 <span className="inline-flex shrink-0 items-center rounded-full bg-amber-50 px-2 py-0.5 text-caption font-bold text-amber-700">
-                  {getEmployeeAccountStatusLabel(employee.user?.registered_at)}
+                  {t("status.accountInvitePending")}
                 </span>
               ) : null}
             </div>
@@ -95,18 +95,18 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
             buttonVariants({ variant: "ghost", size: "icon-sm" }),
             "-mr-1.5 shrink-0 text-zinc-500 hover:text-ink-charcoal",
           )}
-          aria-label={`Actions for ${employee.full_name}`}
+          aria-label={t("card.actionsFor", { name: employee.full_name })}
         >
           <MoreHorizontal className="size-4" strokeWidth={2} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-44">
           <DropdownMenuItem onClick={() => onEdit(employee)}>
             <Pencil />
-            Edit
+            {t("card.edit")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setQrDialogOpen(true)}>
             <QrCode />
-            QR codes
+            {t("card.qrCodes")}
           </DropdownMenuItem>
           {!isSignedUp ? (
             <DropdownMenuItem
@@ -114,7 +114,7 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
               disabled={resendInvite.isPending}
             >
               <Mail />
-              Resend invite
+              {t("card.resendInvite")}
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuItem
@@ -122,7 +122,7 @@ export const EmployeeCard: FC<EmployeeCardProps> = ({
             onClick={() => onToggleActive(employee)}
           >
             {employee.is_active ? <UserRoundX /> : <UserCheck />}
-            {employee.is_active ? "Deactivate" : "Activate"}
+            {employee.is_active ? t("card.deactivate") : t("card.activate")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -2,7 +2,8 @@
 
 import { type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
+import { useTranslations } from "next-intl";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -14,6 +15,7 @@ import {
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const ChangePasswordForm: FC = () => {
+  const t = useTranslations("dashboard.shell.account.password");
   const changePassword = useChangePassword();
 
   const {
@@ -52,15 +54,15 @@ export const ChangePasswordForm: FC = () => {
     >
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">
-          Change password
+          {t("title")}
         </h2>
         <p className="mt-0.5 text-xs text-zinc-500">
-          Update the password used to sign in to this login.
+          {t("description")}
         </p>
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="account-current-password">Current password</Label>
+        <Label htmlFor="account-current-password">{t("current")}</Label>
         <Controller
           name="current_password"
           control={control}
@@ -68,7 +70,7 @@ export const ChangePasswordForm: FC = () => {
             <PasswordInput
               id="account-current-password"
               autoComplete="current-password"
-              placeholder="Your current password"
+              placeholder={t("currentPlaceholder")}
               aria-invalid={!!errors.current_password}
               {...field}
             />
@@ -83,7 +85,7 @@ export const ChangePasswordForm: FC = () => {
 
       <div className="grid grid-cols-1 gap-4 @sm:grid-cols-2">
         <div className="min-w-0 space-y-1.5">
-          <Label htmlFor="account-new-password">New password</Label>
+          <Label htmlFor="account-new-password">{t("new")}</Label>
           <Controller
             name="password"
             control={control}
@@ -91,7 +93,7 @@ export const ChangePasswordForm: FC = () => {
               <PasswordInput
                 id="account-new-password"
                 autoComplete="new-password"
-                placeholder="At least 8 characters"
+                placeholder={t("newPlaceholder")}
                 aria-invalid={!!errors.password}
                 {...field}
               />
@@ -103,7 +105,7 @@ export const ChangePasswordForm: FC = () => {
         </div>
         <div className="min-w-0 space-y-1.5">
           <Label htmlFor="account-confirm-password">
-            Confirm new password
+            {t("confirm")}
           </Label>
           <Controller
             name="confirmPassword"
@@ -112,7 +114,7 @@ export const ChangePasswordForm: FC = () => {
               <PasswordInput
                 id="account-confirm-password"
                 autoComplete="new-password"
-                placeholder="Repeat new password"
+                placeholder={t("confirmPlaceholder")}
                 aria-invalid={!!errors.confirmPassword}
                 {...field}
               />
@@ -131,7 +133,7 @@ export const ChangePasswordForm: FC = () => {
           type="submit"
           isPending={changePassword.isPending}
         >
-          Update password
+          {t("submit")}
         </ActionButtonWithPending>
       </div>
     </form>

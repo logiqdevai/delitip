@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, type RefObject, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Download, RotateCcw, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +34,7 @@ export const TemplateEditorToolbar: FC<TemplateEditorToolbarProps> = ({
     resetToDefault,
     qrLabel,
   } = useTemplateEditor();
+  const t = useTranslations("dashboard.access.templateEditor");
   const [downloading, setDownloading] = useState(false);
   const [pendingTemplateId, setPendingTemplateId] =
     useState<QrTemplateId | null>(null);
@@ -59,8 +61,8 @@ export const TemplateEditorToolbar: FC<TemplateEditorToolbarProps> = ({
       );
     } catch (err) {
       toast.add({
-        title: "Could not download template",
-        description: getErrorMessage(err, "Please try again."),
+        title: t("downloadFailed"),
+        description: getErrorMessage(err, t("tryAgain")),
         type: "error",
       });
     } finally {
@@ -80,7 +82,7 @@ export const TemplateEditorToolbar: FC<TemplateEditorToolbarProps> = ({
             className="rounded-full"
             onClick={() => requestSwitch(option.id)}
           >
-            {option.name}
+            {t(`templateNames.${option.id}`)}
           </Button>
         ))}
       </div>
@@ -94,7 +96,7 @@ export const TemplateEditorToolbar: FC<TemplateEditorToolbarProps> = ({
           onClick={resetConfirm.openDialog}
         >
           <RotateCcw data-icon="inline-start" className="size-3.5" />
-          Reset
+          {t("reset")}
         </Button>
         <Button
           type="button"
@@ -104,7 +106,7 @@ export const TemplateEditorToolbar: FC<TemplateEditorToolbarProps> = ({
           onClick={() => void handleDownload()}
         >
           <Download data-icon="inline-start" className="size-3.5" />
-          {downloading ? "Preparing…" : "Download PDF"}
+          {downloading ? t("preparing") : t("downloadPdf")}
         </Button>
         <Button
           type="button"
@@ -112,14 +114,14 @@ export const TemplateEditorToolbar: FC<TemplateEditorToolbarProps> = ({
           disabled={!isDirty || isSaving}
           onClick={() => void save()}
         >
-          {isSaving ? "Saving…" : "Save"}
+          {isSaving ? t("saving") : t("save")}
         </Button>
         <Button
           type="button"
           variant="ghost"
           size="icon-sm"
           onClick={onRequestClose}
-          aria-label="Close editor"
+          aria-label={t("closeAria")}
         >
           <X className="size-4" />
         </Button>
@@ -127,9 +129,9 @@ export const TemplateEditorToolbar: FC<TemplateEditorToolbarProps> = ({
 
       <ConfirmationDialog
         state={switchConfirm}
-        title="Discard unsaved changes?"
-        description="Switching templates will discard your unsaved edits to this design."
-        confirmLabel="Discard changes"
+        title={t("switchTitle")}
+        description={t("switchDescription")}
+        confirmLabel={t("discardConfirm")}
         variant="destructive"
         onConfirm={() => {
           if (pendingTemplateId) setTemplateId(pendingTemplateId);
@@ -138,9 +140,9 @@ export const TemplateEditorToolbar: FC<TemplateEditorToolbarProps> = ({
       />
       <ConfirmationDialog
         state={resetConfirm}
-        title="Reset this design?"
-        description="This deletes your saved customization and reverts to the default layout. This can't be undone."
-        confirmLabel="Reset to default"
+        title={t("resetTitle")}
+        description={t("resetDescription")}
+        confirmLabel={t("resetConfirm")}
         variant="destructive"
         isPending={isResetting}
         onConfirm={() => resetToDefault()}

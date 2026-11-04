@@ -2,7 +2,8 @@
 
 import { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Button } from "@/components/ui/button";
 import {
@@ -51,6 +52,7 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
   employee,
   onCreated,
 }) => {
+  const t = useTranslations("dashboard.team.employees.form");
   const isEdit = !!employee;
   const { store } = useWorkspace();
   const createEmployee = useCreateEmployee(storeId);
@@ -156,7 +158,7 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
     const primaryKey = primaryLanguage.toLowerCase();
     const fullName = fullNameTranslations[primaryKey]?.trim() ?? "";
     if (!fullName) {
-      setFullNameError("Full name is required");
+      setFullNameError(t("fullNameRequired"));
       return;
     }
     setFullNameError(null);
@@ -199,19 +201,19 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
     >
       <DialogContent className="sm:max-w-md" showCloseButton={!isPending}>
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit employee" : "Add employee"}</DialogTitle>
+          <DialogTitle>{isEdit ? t("editTitle") : t("addTitle")}</DialogTitle>
           <DialogDescription>
             {isEdit
-              ? "Update their profile details for tipping and QR assignment."
-              : "Add a team member so customers can tip and review them."}
+              ? t("editDescription")
+              : t("addDescription")}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={onSubmit} className="space-y-4" noValidate>
           <ImagePicker
             mode="image"
-            label="Photo"
-            hint="Optional"
+            label={t("photo")}
+            hint={t("photoHint")}
             value={photoUrl ?? undefined}
             isPending={isUploadingPhoto}
             disabled={isPending}
@@ -242,13 +244,13 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
           />
 
           <div className="space-y-1.5">
-            <Label htmlFor="employee-full-name">Full name</Label>
+            <Label htmlFor="employee-full-name">{t("fullName")}</Label>
             <MultilingualInput
               key={employee?.id ?? "new"}
               storeId={storeId}
               id="employee-full-name"
               autoComplete="name"
-              placeholder="Maria Papadopoulou"
+              placeholder={t("fullNamePlaceholder")}
               languages={isEdit ? fieldLanguages : [primaryLanguage]}
               primaryLanguage={primaryLanguage}
               value={fullNameTranslations}
@@ -261,12 +263,12 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="employee-email">Email</Label>
+            <Label htmlFor="employee-email">{t("email")}</Label>
             <Input
               id="employee-email"
               type="email"
               autoComplete="email"
-              placeholder="maria@example.com"
+              placeholder={t("emailPlaceholder")}
               aria-invalid={!!errors.email}
               {...register("email")}
             />
@@ -277,12 +279,12 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
 
           <div className="space-y-1.5">
             <Label htmlFor="employee-position">
-              Position{" "}
-              <span className="font-normal text-zinc-400">(optional)</span>
+              {t("position")}{" "}
+              <span className="font-normal text-zinc-400">{t("optional")}</span>
             </Label>
             <Input
               id="employee-position"
-              placeholder="Server, barista…"
+              placeholder={t("positionPlaceholder")}
               aria-invalid={!!errors.position}
               {...register("position")}
             />
@@ -298,10 +300,10 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
               disabled={isPending}
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <ActionButtonWithPending type="submit" isPending={isPending}>
-              {isEdit ? "Save changes" : "Add employee"}
+              {isEdit ? t("saveChanges") : t("submitAdd")}
             </ActionButtonWithPending>
           </DialogFooter>
         </form>
@@ -309,13 +311,13 @@ export const EmployeeFormDialog: FC<EmployeeFormDialogProps> = ({
 
       <ConfirmationDialog
         state={removePhotoConfirm}
-        title="Remove photo?"
+        title={t("removePhotoTitle")}
         description={
           isEdit
-            ? "This photo will be removed from the employee profile right away."
-            : "This photo will be discarded."
+            ? t("removePhotoDescriptionEdit")
+            : t("removePhotoDescriptionNew")
         }
-        confirmLabel="Remove"
+        confirmLabel={t("removePhotoConfirm")}
         isPending={isUploadingPhoto}
         onConfirm={async () => {
           setIsUploadingPhoto(true);

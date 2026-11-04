@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Wallet } from "lucide-react";
 import { SettingsStepNav } from "../../components/settings-step-nav";
@@ -19,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const TippingConfigSettingsForm: FC = () => {
+  const t = useTranslations("dashboard.settings");
   const { store, isPending } = useWorkspace();
   const updateStore = useUpdateStore();
   const setDefault = useSetDefaultDistributionRule(store?.id ?? "");
@@ -82,9 +84,11 @@ export const TippingConfigSettingsForm: FC = () => {
           <Wallet className="size-4" strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-sm font-bold text-ink-charcoal">Tip presets</h2>
+          <h2 className="text-sm font-bold text-ink-charcoal">
+            {t("tipping.title")}
+          </h2>
           <p className="mt-0.5 text-xs text-zinc-500">
-            Guests see these as quick-pick amounts on the tip step.
+            {t("tipping.description")}
           </p>
         </div>
       </div>
@@ -110,10 +114,10 @@ export const TippingConfigSettingsForm: FC = () => {
             href={Routes.dashboard.accessDistribution}
             className={cn(
               buttonVariants({ variant: "secondary", size: "default" }),
-              "w-full justify-center text-brand-700 md:h-auto md:w-auto md:bg-transparent md:px-0 md:py-0 md:text-[15px] md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
+              "w-full justify-center text-brand-700 md:h-auto md:w-auto md:bg-transparent md:px-0 md:py-0 md:text-base md:font-semibold md:shadow-none md:hover:bg-transparent md:hover:underline",
             )}
           >
-            Manage all →
+            {t("tipping.manageAll")}
           </Link>
         }
       />
@@ -125,13 +129,13 @@ export const TippingConfigSettingsForm: FC = () => {
             type="button"
             onClick={handleSave}
             disabled={updateStore.isPending || !hasChanges}
-            className="rounded-xl bg-electric-lime px-4 text-chip font-semibold text-ink-charcoal disabled:opacity-40"
+            className="rounded-xl bg-electric-lime px-4 text-base font-semibold text-ink-charcoal disabled:opacity-40"
           >
-            {updateStore.isPending ? "Saving…" : "Save Changes"}
+            {updateStore.isPending ? t("common.saving") : t("common.saveChanges")}
           </Button>
           {hasChanges ? (
-            <span className="text-[11px] font-medium text-zinc-400">
-              Unsaved changes
+            <span className="text-base font-medium text-zinc-400">
+              {t("common.unsavedChanges")}
             </span>
           ) : null}
         </div>

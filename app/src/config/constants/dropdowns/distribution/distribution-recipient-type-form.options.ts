@@ -5,17 +5,14 @@ import {
 
 export const DistributionRecipientTypeFormOptions: {
   id: DistributionRecipientType;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: DistributionRecipientTypes.EMPLOYEE, label: "Employee" },
-  { id: DistributionRecipientTypes.STORE, label: "Business (house)" },
+  {
+    id: DistributionRecipientTypes.EMPLOYEE,
+    labelKey: "dashboard.enums.distributionRecipientType.EMPLOYEE",
+  },
+  {
+    id: DistributionRecipientTypes.STORE,
+    labelKey: "dashboard.enums.distributionRecipientType.STORE",
+  },
 ];
-
-export function getDistributionRecipientTypeLabel(
-  type: DistributionRecipientType | string,
-): string {
-  return (
-    DistributionRecipientTypeFormOptions.find((option) => option.id === type)
-      ?.label ?? type
-  );
-}

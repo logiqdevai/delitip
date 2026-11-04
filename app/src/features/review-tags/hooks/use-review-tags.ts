@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   createReviewTag,
   deleteReviewTag,
@@ -27,6 +28,7 @@ export const useReviewTags = (storeId: string) => {
 };
 
 export const useCreateReviewTag = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.reviewTags");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: CreateReviewTagPayload) =>
@@ -38,12 +40,13 @@ export const useCreateReviewTag = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not add tag", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("addFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };
 
 export const useUpdateReviewTag = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.reviewTags");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: UpdateReviewTagPayload }) =>
@@ -55,12 +58,13 @@ export const useUpdateReviewTag = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not update tag", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("updateFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };
 
 export const useDeleteReviewTag = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.reviewTags");
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteReviewTag(storeId, id),
@@ -71,7 +75,7 @@ export const useDeleteReviewTag = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not delete tag", description: getErrorMessage(error), type: "error" });
+      toast.add({ title: t("deleteFailed"), description: getErrorMessage(error), type: "error" });
     },
   });
 };

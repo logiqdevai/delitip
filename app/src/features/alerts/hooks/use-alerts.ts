@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   listAlertPreferences,
   listAlerts,
@@ -49,6 +50,7 @@ export const useMarkAlertRead = (storeId: string) => {
 };
 
 export const useMarkAllAlertsRead = (storeId: string) => {
+  const t = useTranslations("dashboard.engagement.alerts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -56,11 +58,11 @@ export const useMarkAllAlertsRead = (storeId: string) => {
     onSuccess: () => {
       trackEvent(AnalyticsEvents.alertsAllRead, { store_id: storeId });
       void queryClient.invalidateQueries({ queryKey: ["alerts", storeId] });
-      toast.add({ title: "All alerts marked as read", type: "success" });
+      toast.add({ title: t("allReadToast"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not mark alerts as read",
+        title: t("markAllReadErrorToast"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -77,6 +79,7 @@ export const useAlertPreferences = (storeId: string) => {
 };
 
 export const useUpdateAlertPreference = (storeId: string) => {
+  const t = useTranslations("dashboard.engagement.alerts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -92,11 +95,11 @@ export const useUpdateAlertPreference = (storeId: string) => {
       void queryClient.invalidateQueries({
         queryKey: alertsQueryKeys.preferences(storeId),
       });
-      toast.add({ title: "Alert preference saved", type: "success" });
+      toast.add({ title: t("preferenceSavedToast"), type: "success" });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not save alert preference",
+        title: t("preferenceErrorToast"),
         description: getErrorMessage(error),
         type: "error",
       });

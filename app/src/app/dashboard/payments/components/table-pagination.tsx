@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import {
   Pagination,
   PaginationContent,
@@ -38,6 +39,7 @@ export const TablePagination: FC<{
   totalPages: number;
   onPageChange: (page: number) => void;
 }> = ({ page, totalPages, onPageChange }) => {
+  const t = useTranslations("dashboard.money.tablePagination");
   if (totalPages <= 1) return null;
 
   const goTo = (target: number) => (event: React.MouseEvent) => {
@@ -53,6 +55,7 @@ export const TablePagination: FC<{
         <PaginationItem>
           <PaginationPrevious
             href="#"
+            text={t("previous")}
             aria-disabled={page <= 1}
             className={page <= 1 ? "pointer-events-none opacity-50" : undefined}
             onClick={goTo(page - 1)}
@@ -74,6 +77,7 @@ export const TablePagination: FC<{
         <PaginationItem>
           <PaginationNext
             href="#"
+            text={t("next")}
             aria-disabled={page >= totalPages}
             className={page >= totalPages ? "pointer-events-none opacity-50" : undefined}
             onClick={goTo(page + 1)}

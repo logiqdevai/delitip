@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -16,7 +17,7 @@ export const listReviewCategories = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load review categories. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadReviewCategories")));
   }
 };
 
@@ -31,7 +32,7 @@ export const createReviewCategory = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't create review category. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.createReviewCategory")));
   }
 };
 
@@ -47,7 +48,7 @@ export const updateReviewCategory = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't update review category. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.updateReviewCategory")));
   }
 };
 
@@ -58,6 +59,6 @@ export const deleteReviewCategory = async (
   try {
     await axiosInstance.delete(ApiRoutes.stores.reviewCategory(storeId, id));
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't delete review category. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.deleteReviewCategory")));
   }
 };

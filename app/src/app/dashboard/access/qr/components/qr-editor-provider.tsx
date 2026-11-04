@@ -3,7 +3,7 @@
 import { type FC, type ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
 import {
   buildEditorDefaults,
   buildStorePayload,

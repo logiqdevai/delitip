@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Building2, CheckCircle2, User, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
@@ -65,6 +65,7 @@ const RecipientRow: FC<{
   outcome?: RecipientOutcome;
 }> = ({ recipient, outcome }) => {
   const t = useTranslations("dashboard.money.payOutNow");
+  const locale = useLocale();
   return (
     <div className="flex items-center justify-between gap-3 px-4 py-2.5">
       <div className="flex min-w-0 items-center gap-2.5">
@@ -80,19 +81,20 @@ const RecipientRow: FC<{
             {recipient.name}
           </p>
           {outcome?.kind === "will_skip" ? (
-            <p className="text-caption text-zinc-400">
+            <p className="text-base text-zinc-400">
               {outcome.reason ? t(`skip.${outcome.reason}`) : t("held")}
             </p>
           ) : outcome?.kind === "failed" ? (
-            <p className="text-caption text-red-600">
+            <p className="text-base text-red-600">
               {t("skip.TRANSFER_FAILED")}
             </p>
           ) : recipient.held_for_staff_amount > 0 ? (
-            <p className="text-caption text-zinc-400">
+            <p className="text-base text-zinc-400">
               {t("includesOwedToStaff", {
                 amount: formatMoney(
                   recipient.held_for_staff_amount,
                   recipient.currency,
+                  locale,
                 ),
               })}
             </p>
@@ -108,7 +110,7 @@ const RecipientRow: FC<{
               : "text-ink-charcoal",
           )}
         >
-          {formatMoney(recipient.amount, recipient.currency)}
+          {formatMoney(recipient.amount, recipient.currency, locale)}
         </span>
         {outcome?.kind === "sent" ? (
           <CheckCircle2 className="size-4 text-brand-600" strokeWidth={2} />
@@ -127,6 +129,7 @@ export const PayOutNowDialog: FC<{
   currency: Currency;
 }> = ({ open, onOpenChange, storeId, currency }) => {
   const t = useTranslations("dashboard.money.payOutNow");
+  const locale = useLocale();
   const [result, setResult] = useState<RunPayoutResponse | null>(null);
   const previewQuery = useStorePayoutsPreview(storeId, open);
   const runPayouts = useRunStorePayouts(storeId);
@@ -195,7 +198,7 @@ export const PayOutNowDialog: FC<{
             <Skeleton className="h-14 w-full rounded-xl" />
           </div>
         ) : previewQuery.isError ? (
-          <p className="text-caption text-red-600">
+          <p className="text-base text-red-600">
             {getErrorMessage(previewQuery.error)}
           </p>
         ) : preview && preview.recipients.length > 0 ? (
@@ -226,22 +229,24 @@ export const PayOutNowDialog: FC<{
                         .reduce((sum, p) => sum + p.amount, 0) ?? 0)
                     : (preview.total_amount ?? 0),
                   currency,
+                  locale,
                 )}
               </span>
             </div>
             {!result && preview.total_held_for_staff_amount > 0 ? (
-              <p className="border-t border-zinc-100 bg-amber-50/60 px-4 py-2.5 text-caption leading-snug text-amber-900">
+              <p className="border-t border-zinc-100 bg-amber-50/60 px-4 py-2.5 text-base leading-snug text-amber-900">
                 {t("staffMoneyNote", {
                   amount: formatMoney(
                     preview.total_held_for_staff_amount,
                     currency,
+                    locale,
                   ),
                 })}
               </p>
             ) : null}
           </div>
         ) : (
-          <p className="text-caption text-zinc-500">
+          <p className="text-base text-zinc-500">
             {t("nothingEligible")}
           </p>
         )}

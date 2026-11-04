@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -27,18 +28,21 @@ export const ReviewRedirectFields: FC<ReviewRedirectFieldsProps> = ({
   redirectUrl,
   onRedirectUrlChange,
   urlError,
-}) => (
+}) => {
+  const t = useTranslations("dashboard.settings.reviews.redirect");
+
+  return (
   <>
     <div>
       <label
         htmlFor="rating-threshold"
         className="mb-1 block text-xs font-semibold text-zinc-700"
       >
-        Public prompt threshold
+        {t("threshold")}
       </label>
       <Select
         items={RATING_OPTIONS.map((rating) => ({
-          label: `${rating}+ stars`,
+          label: t("stars", { count: rating }),
           value: String(rating),
         }))}
         value={String(threshold)}
@@ -51,7 +55,7 @@ export const ReviewRedirectFields: FC<ReviewRedirectFieldsProps> = ({
           <SelectGroup>
             {RATING_OPTIONS.map((rating) => (
               <SelectItem key={rating} value={String(rating)}>
-                {rating}+ stars
+                {t("stars", { count: rating })}
               </SelectItem>
             ))}
           </SelectGroup>
@@ -64,12 +68,12 @@ export const ReviewRedirectFields: FC<ReviewRedirectFieldsProps> = ({
         htmlFor="redirect-url"
         className="mb-1 block text-xs font-semibold text-zinc-700"
       >
-        Public review link (e.g. Google Business Profile)
+        {t("url")}
       </label>
       <Input
         id="redirect-url"
         type="url"
-        placeholder="https://g.page/r/your-business/review"
+        placeholder={t("urlPlaceholder")}
         aria-invalid={!!urlError}
         value={redirectUrl}
         onChange={(event) => onRedirectUrlChange(event.target.value)}
@@ -77,11 +81,11 @@ export const ReviewRedirectFields: FC<ReviewRedirectFieldsProps> = ({
       {urlError ? (
         <p className="mt-1 text-xs text-red-600">{urlError}</p>
       ) : (
-        <p className="mt-1 text-[14px] text-zinc-400">
-          Leave blank to skip the public redirect - high-rated customers still
-          see a thank-you, just without an outbound link.
+        <p className="mt-1 text-base text-zinc-400">
+          {t("urlHelp")}
         </p>
       )}
     </div>
   </>
-);
+  );
+};

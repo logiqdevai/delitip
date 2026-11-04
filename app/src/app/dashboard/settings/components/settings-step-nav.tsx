@@ -3,6 +3,7 @@
 import { type FC } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -17,6 +18,7 @@ interface SettingsStepNavProps {
 // Hidden from `lg` up, where the settings sidebar already handles navigation.
 export const SettingsStepNav: FC<SettingsStepNavProps> = ({ className }) => {
   const pathname = usePathname();
+  const t = useTranslations("dashboard.settings.common");
   const steps = settingsNavItems.filter((item) => !item.hidden);
   const currentIndex = steps.findIndex((item) => item.href === pathname);
 
@@ -35,7 +37,7 @@ export const SettingsStepNav: FC<SettingsStepNavProps> = ({ className }) => {
           className={cn(buttonVariants({ variant: "outline", size: "default" }), "gap-1.5")}
         >
           <ArrowLeft className="size-3.5" strokeWidth={2} />
-          Previous
+          {t("previous")}
         </Link>
       ) : null}
       {next ? (
@@ -43,7 +45,7 @@ export const SettingsStepNav: FC<SettingsStepNavProps> = ({ className }) => {
           href={next.href}
           className={cn(buttonVariants({ variant: "outline", size: "default" }), "gap-1.5")}
         >
-          Next
+          {t("next")}
           <ArrowRight className="size-3.5" strokeWidth={2} />
         </Link>
       ) : null}

@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { CheckCircle2, UserX, Wallet } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IbanPayoutAccountDialog } from "@/components/payments/iban-payout-account-dialog";
@@ -10,7 +11,8 @@ import {
   useEmployeePayoutAccount,
   useRefreshEmployeePayoutAccountStatus,
 } from "@/features/payout-accounts/hooks/use-payout-accounts";
-import { getPayoutAccountStatusLabel } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { PayoutAccountStatusFormOptions } from "@/config/constants/dropdowns/payments/payout-account-status-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +20,8 @@ export const EmployeePayoutAccountCard: FC<{
   employeeId: string;
   hasLinkedUser: boolean;
 }> = ({ employeeId, hasLinkedUser }) => {
+  const t = useTranslations("dashboard.team.employees.payoutAccount");
+  const dropdownLabel = useDropdownLabel();
   const { role } = useWorkspace();
   const isOwner = role === "OWNER";
 
@@ -35,7 +39,7 @@ export const EmployeePayoutAccountCard: FC<{
       <div className="flex items-center gap-2">
         <Wallet className="size-4 text-zinc-400" strokeWidth={2} />
         <h2 className="text-sm font-bold text-ink-charcoal">
-          Payout account
+          {t("title")}
         </h2>
       </div>
 
@@ -43,8 +47,7 @@ export const EmployeePayoutAccountCard: FC<{
         <div className="mt-3 flex items-start gap-2 rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-3 text-xs text-zinc-500">
           <UserX className="mt-0.5 size-3.5 shrink-0" strokeWidth={2} />
           <span>
-            This employee needs to sign in at least once before a payout
-            account can be added for them.
+            {t("needsSignIn")}
           </span>
         </div>
       ) : accountQuery.isPending ? (
@@ -52,15 +55,14 @@ export const EmployeePayoutAccountCard: FC<{
       ) : !account ? (
         <div className="mt-3 space-y-3">
           <p className="text-xs text-zinc-500">
-            Link this employee&apos;s personal IBAN on their behalf so they
-            can receive their share of tips via bank transfer.
+            {t("linkDescription")}
           </p>
           <Button
             type="button"
             onClick={() => setDialogOpen(true)}
             className="rounded-xl bg-electric-lime text-ink-charcoal"
           >
-            Link payout account
+            {t("link")}
           </Button>
         </div>
       ) : (
@@ -73,7 +75,7 @@ export const EmployeePayoutAccountCard: FC<{
               )}
             />
             <span>
-              {account.provider} · IBAN ····{account.iban_last4 ?? "----"}
+              {t("ibanLine", { provider: account.provider, last4: account.iban_last4 ?? "----" })}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -85,7 +87,7 @@ export const EmployeePayoutAccountCard: FC<{
                   : "bg-amber-50 text-amber-700",
               )}
             >
-              {getPayoutAccountStatusLabel(account.status)}
+              {dropdownLabel(PayoutAccountStatusFormOptions, account.status)}
             </span>
             {account.status === "PENDING" ? (
               <Button
@@ -94,9 +96,9 @@ export const EmployeePayoutAccountCard: FC<{
                 size="sm"
                 onClick={() => refreshStatus.mutate()}
                 disabled={refreshStatus.isPending}
-                className="h-7 rounded-lg px-2.5 text-caption"
+                className="h-7 rounded-lg px-2.5 text-base"
               >
-                {refreshStatus.isPending ? "Checking…" : "Check status"}
+                {refreshStatus.isPending ? t("checking") : t("checkStatus")}
               </Button>
             ) : null}
           </div>
@@ -106,8 +108,8 @@ export const EmployeePayoutAccountCard: FC<{
       <IbanPayoutAccountDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        title="Link employee payout account"
-        description="This employee's personal IBAN - used to send their share of tips via bank transfer."
+        title={t("dialogTitle")}
+        description={t("dialogDescription")}
         mutation={createAccount}
       />
     </div>

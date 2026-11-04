@@ -1,12 +1,13 @@
 import { type FC } from "react";
 import { type Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { PlatformAdminGuard } from "@/components/auth/platform-admin-guard";
 import { AdminAppConfigPageContent } from "./components/admin-app-config-page-content";
 
-export const metadata: Metadata = {
-  title: "App Config - delitip",
-  description: "Platform-wide commission, fee estimate and payout settings.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("dashboard.adminSystem.appConfig.metadata");
+  return { title: t("title"), description: t("description") };
+}
 
 const AdminAppConfigPage: FC = () => {
   return (

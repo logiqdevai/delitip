@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -32,7 +33,7 @@ export const listQrCodes = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load QR codes. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadQRCodes")));
   }
 };
 
@@ -43,7 +44,7 @@ export const getQrCode = async (id: string): Promise<QrCode> => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load QR code. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadQRCode")));
   }
 };
 
@@ -58,7 +59,7 @@ export const createQrCode = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't create QR code. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.createQRCode")));
   }
 };
 
@@ -73,7 +74,7 @@ export const updateQrCode = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't update QR code. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.updateQRCode")));
   }
 };
 
@@ -81,7 +82,7 @@ export const deleteQrCode = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.qrCodes.byId(id));
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't delete QR code. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.deleteQRCode")));
   }
 };
 
@@ -92,7 +93,7 @@ export const getQrCodeStats = async (id: string): Promise<QrCodeStats> => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "We couldn't load QR code stats. Please try again."));
+    throw new Error(getErrorMessage(error, tr("errors.services.loadQRCodeStats")));
   }
 };
 
@@ -110,7 +111,7 @@ export const getPublicQrCode = async (
     throw new Error(
       getErrorMessage(
         error,
-        "We couldn't open this QR code. Please try scanning it again.",
+        tr("errors.services.openQrCode"),
       ),
     );
   }

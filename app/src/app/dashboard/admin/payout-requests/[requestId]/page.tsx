@@ -1,11 +1,12 @@
 import { type FC } from "react";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { PlatformAdminGuard } from "@/components/auth/platform-admin-guard";
 import { AdminPayoutRequestDetailPageContent } from "./components/admin-payout-request-detail-page-content";
 
-export const metadata: Metadata = {
-  title: "Payout request - delitip",
-  description: "Review a store's invoice and approve or reject its payout.",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("dashboard.admin.meta.payoutRequest");
+  return { title: t("title"), description: t("description") };
 };
 
 const AdminPayoutRequestDetailPage: FC<{

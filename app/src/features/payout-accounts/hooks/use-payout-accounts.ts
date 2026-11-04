@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   createEmployeePayoutAccount,
   createMyPayoutAccount,
@@ -20,12 +21,19 @@ import type {
 import { toast } from "@/components/ui/toast";
 import { getErrorMessage } from "@/lib/api-error";
 
-const describeRefreshResult = (account: PayoutAccount) =>
+const describeRefreshResult = (
+  account: PayoutAccount,
+  t: (key: string) => string,
+) =>
   account.status === "ACTIVE"
-    ? { title: "Payout account active", description: "It's ready to receive payouts.", type: "success" as const }
+    ? {
+        title: t("active.title"),
+        description: t("active.description"),
+        type: "success" as const,
+      }
     : {
-        title: "Still pending",
-        description: "Viva hasn't confirmed this account yet - check back shortly.",
+        title: t("pending.title"),
+        description: t("pending.description"),
         type: "success" as const,
       };
 
@@ -37,6 +45,7 @@ export const payoutAccountsQueryKeys = {
 };
 
 export const useReconcilePayoutAccounts = () => {
+  const t = useTranslations("dashboard.settings.toasts.payoutAccounts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -47,17 +56,17 @@ export const useReconcilePayoutAccounts = () => {
         predicate: (query) => query.queryKey[0] === "payout-account",
       });
       toast.add({
-        title: "IBANs reconciled",
+        title: t("reconciled.title"),
         description:
           promoted > 0
-            ? `${promoted} of ${checked} pending account${checked === 1 ? "" : "s"} promoted to active.`
-            : `Checked ${checked} pending account${checked === 1 ? "" : "s"} - none newly verified.`,
+            ? t("reconciled.promoted", { promoted, checked })
+            : t("reconciled.none", { checked }),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not reconcile IBANs",
+        title: t("reconciled.failed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -74,6 +83,7 @@ export const useMyPayoutAccount = (enabled = true) => {
 };
 
 export const useCreateMyPayoutAccount = () => {
+  const t = useTranslations("dashboard.settings.toasts.payoutAccounts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -85,14 +95,14 @@ export const useCreateMyPayoutAccount = () => {
         queryKey: payoutAccountsQueryKeys.mine,
       });
       toast.add({
-        title: "Payout account connected",
-        description: "You're ready to receive cash-outs.",
+        title: t("myConnected.title"),
+        description: t("myConnected.description"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not connect payout account",
+        title: t("connectFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -101,6 +111,7 @@ export const useCreateMyPayoutAccount = () => {
 };
 
 export const useRefreshMyPayoutAccountStatus = () => {
+  const t = useTranslations("dashboard.settings.toasts.payoutAccounts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -108,11 +119,11 @@ export const useRefreshMyPayoutAccountStatus = () => {
     onSuccess: (account) => {
       trackEvent(AnalyticsEvents.payoutAccountStatusRefreshed, { scope: "me" });
       queryClient.setQueryData(payoutAccountsQueryKeys.mine, account);
-      toast.add(describeRefreshResult(account));
+      toast.add(describeRefreshResult(account, t));
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not check payout account status",
+        title: t("refreshFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -129,6 +140,7 @@ export const useStorePayoutAccount = (storeId: string) => {
 };
 
 export const useCreateStorePayoutAccount = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.payoutAccounts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -140,14 +152,14 @@ export const useCreateStorePayoutAccount = (storeId: string) => {
         queryKey: payoutAccountsQueryKeys.store(storeId),
       });
       toast.add({
-        title: "Payout account connected",
-        description: "Your store is ready to receive payouts.",
+        title: t("storeConnected.title"),
+        description: t("storeConnected.description"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not connect payout account",
+        title: t("connectFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -156,6 +168,7 @@ export const useCreateStorePayoutAccount = (storeId: string) => {
 };
 
 export const useRefreshStorePayoutAccountStatus = (storeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.payoutAccounts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -163,11 +176,11 @@ export const useRefreshStorePayoutAccountStatus = (storeId: string) => {
     onSuccess: (account) => {
       trackEvent(AnalyticsEvents.payoutAccountStatusRefreshed, { scope: "store", store_id: storeId });
       queryClient.setQueryData(payoutAccountsQueryKeys.store(storeId), account);
-      toast.add(describeRefreshResult(account));
+      toast.add(describeRefreshResult(account, t));
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not check payout account status",
+        title: t("refreshFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -184,6 +197,7 @@ export const useEmployeePayoutAccount = (employeeId: string, enabled = true) => 
 };
 
 export const useCreateEmployeePayoutAccount = (employeeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.payoutAccounts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -195,14 +209,14 @@ export const useCreateEmployeePayoutAccount = (employeeId: string) => {
         queryKey: payoutAccountsQueryKeys.employee(employeeId),
       });
       toast.add({
-        title: "Payout account linked",
-        description: "This employee is ready to receive payouts.",
+        title: t("employeeLinked.title"),
+        description: t("employeeLinked.description"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not link payout account",
+        title: t("linkFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -211,6 +225,7 @@ export const useCreateEmployeePayoutAccount = (employeeId: string) => {
 };
 
 export const useRefreshEmployeePayoutAccountStatus = (employeeId: string) => {
+  const t = useTranslations("dashboard.settings.toasts.payoutAccounts");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -218,11 +233,11 @@ export const useRefreshEmployeePayoutAccountStatus = (employeeId: string) => {
     onSuccess: (account) => {
       trackEvent(AnalyticsEvents.payoutAccountStatusRefreshed, { scope: "employee" });
       queryClient.setQueryData(payoutAccountsQueryKeys.employee(employeeId), account);
-      toast.add(describeRefreshResult(account));
+      toast.add(describeRefreshResult(account, t));
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not check payout account status",
+        title: t("refreshFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

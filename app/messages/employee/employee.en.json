@@ -1,0 +1,128 @@
+{
+  "metadata": {
+    "title": "Employee Portal - delitip",
+    "description": "View tips, customer reviews, and your personal QR code as a delitip employee."
+  },
+  "shell": {
+    "footer": "© 2026 <brand>delitip</brand> • Transparent Direct Tipping for Service Staff",
+    "portalName": "Employee Portal",
+    "navAria": "Employee navigation"
+  },
+  "nav": {
+    "earnings": "Earnings",
+    "reviews": "Reviews",
+    "qr": "My QR",
+    "profile": "Profile",
+    "earningsAndTips": "Earnings & Tips",
+    "reviewsAndBadges": "Reviews & Badges",
+    "qrAndLink": "My QR & Link",
+    "closeMenu": "Close navigation menu",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar"
+  },
+  "userMenu": {
+    "accountMenu": "Account menu",
+    "account": "Account",
+    "employee": "Employee",
+    "editPhoto": "Edit photo",
+    "changePassword": "Change password",
+    "logOut": "Log out"
+  },
+  "profile": {
+    "title": "Profile"
+  },
+  "earnings": {
+    "loadError": "Could not load your earnings",
+    "thisMonthTitle": "This Month's Tips",
+    "recentTipsThisMonth": "{count, plural, one {# recent tip this month} other {# recent tips this month}}",
+    "today": "Today",
+    "tipsCount": "{count, plural, one {# tip} other {# tips}}",
+    "satisfactionTitle": "Customer Satisfaction",
+    "outOf": "/ 5.0",
+    "verifiedRatings": "{count, plural, one {# verified rating} other {# verified ratings}}",
+    "recognized": "Recognized by customers",
+    "todayTitle": "Today's Tips",
+    "todaySubtitle": "Tips directly rewarded to you today",
+    "tipsTodayBadge": "{count, plural, one {# tip today} other {# tips today}}",
+    "noTipsToday": "No tips yet today.",
+    "paidByStore": "Paid by your Store",
+    "paidToBank": "Paid to your bank",
+    "dailyTitle": "My Daily Earnings ({days}d)",
+    "dailySubtitle": "Daily breakdown",
+    "recentFeedback": "Recent Feedback"
+  },
+  "balance": {
+    "pendingBalance": "Pending Balance",
+    "fromUnpaid": "From unpaid tip distributions",
+    "depositNotice": "Payouts follow your Store's schedule"
+  },
+  "storeBalance": {
+    "title": "Paid to you by your Store",
+    "subtitle": "Tips that go to your Store first, which then pays you directly",
+    "stillOwed": "Still owed",
+    "alreadyReceived": "Already received",
+    "payments": "Payments",
+    "nothingYet": "Nothing handed over yet.",
+    "reversed": "Reversed",
+    "confirmed": "Confirmed",
+    "iReceivedThis": "I received this"
+  },
+  "payoutHistory": {
+    "title": "Payout history",
+    "subtitle": "Bank transfers your Store has sent you",
+    "empty": "No payouts yet - your pending balance is paid out on your Store owner's schedule."
+  },
+  "cashOut": {
+    "balanceTitle": "Cash-out balance",
+    "statusTitle": "Payout account status",
+    "balanceDescription": "You have {amount} pending from unpaid tip distributions. Your Store's owner releases payouts - you'll see them appear here once paid.",
+    "statusDescription": "Your personal IBAN is linked, but its status is: {status}. You'll be able to receive payouts once it's active.",
+    "checkStatus": "Check status",
+    "gotIt": "Got it",
+    "close": "Close",
+    "linkTitle": "Link your personal payout account",
+    "linkDescription": "This is your own personal IBAN, separate from the Store's business account - used to send you your share of tips."
+  },
+  "photoDialog": {
+    "title": "Profile photo",
+    "description": "Shown to your team in the dashboard. Customers never see it.",
+    "photoLabel": "Photo",
+    "done": "Done",
+    "removeTitle": "Remove photo?",
+    "removeDescription": "This photo will be removed from your profile right away.",
+    "remove": "Remove"
+  },
+  "changePassword": {
+    "title": "Change password",
+    "description": "Update the password used to sign in to your tip profile.",
+    "currentLabel": "Current password",
+    "currentPlaceholder": "Your current password",
+    "newLabel": "New password",
+    "newPlaceholder": "At least 8 characters",
+    "confirmLabel": "Confirm new password",
+    "confirmPlaceholder": "Repeat new password",
+    "cancel": "Cancel",
+    "submit": "Update password"
+  },
+  "qr": {
+    "title": "Your Personal Tip QR",
+    "subtitle": "Show one of these to guests, or save it to your Apple / Google Wallet.",
+    "loadError": "Could not load your QR codes",
+    "emptyTitle": "No personal QR code yet",
+    "emptyDescription": "Ask your manager to create a QR with you assigned in Customer Access & QR Kits to get your own, working link.",
+    "qrAlt": "QR code for {label}",
+    "copied": "Copied to Clipboard!",
+    "copyLink": "Copy Tip Link"
+  },
+  "reviews": {
+    "loadError": "Could not load your reviews",
+    "title": "Customer Compliments & Reviews",
+    "subtitle": "Real feedback left by guests after tipping you on delitip.",
+    "averageRating": "Average Rating",
+    "totalReviews": "Total Reviews",
+    "recognitions": "Recognitions",
+    "notesTitle": "Customer Love Notes",
+    "empty": "No reviews yet - they'll show up here once customers rate you after tipping.",
+    "noComment": "No comment left"
+  }
+}

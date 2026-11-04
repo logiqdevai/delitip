@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { vmsg } from "@/lib/validation-message";
 import {
   DistributionPayoutModes,
   DistributionRecipientTypes,
@@ -18,7 +19,7 @@ const recipientSchema = z
   .object({
     recipient_type: z.enum(recipientTypeValues),
     employee_id: z.string().optional(),
-    percentage: z.coerce.number().min(0, "Min 0%").max(100, "Max 100%"),
+    percentage: z.coerce.number().min(0, vmsg("minValue", { min: 0 })).max(100, vmsg("maxValue", { max: 100 })),
   })
   .superRefine((recipient, ctx) => {
     if (
@@ -27,7 +28,7 @@ const recipientSchema = z
     ) {
       ctx.addIssue({
         code: "custom",
-        message: "Select an employee",
+        message: vmsg("selectEmployee"),
         path: ["employee_id"],
       });
     }
@@ -35,11 +36,11 @@ const recipientSchema = z
 
 export const distributionRuleFormSchema = z
   .object({
-    name: z.string().trim().min(1, "Rule name is required"),
+    name: z.string().trim().min(1, vmsg("ruleNameRequired")),
     payout_mode: z.enum(payoutModeValues),
     recipients: z
       .array(recipientSchema)
-      .min(1, "Add at least one recipient"),
+      .min(1, vmsg("addRecipient")),
   })
   .superRefine((data, ctx) => {
     const sum = data.recipients.reduce(
@@ -49,7 +50,7 @@ export const distributionRuleFormSchema = z
     if (Math.abs(sum - 100) > 0.01) {
       ctx.addIssue({
         code: "custom",
-        message: `Percentages must sum to 100% (currently ${sum.toFixed(1)}%)`,
+        message: vmsg("percentagesSum", { sum: sum.toFixed(1) }),
         path: ["recipients"],
       });
     }

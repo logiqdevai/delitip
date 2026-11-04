@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   changePassword,
   forgotPassword,
@@ -65,6 +66,7 @@ export const useLoginWithEmail = () => {
 };
 
 export const useLoginBusiness = () => {
+  const t = useTranslations("dashboard.shell.toasts.auth");
   const setSession = useAuthStore((state) => state.setSession);
   const router = useRouter();
 
@@ -74,15 +76,15 @@ export const useLoginBusiness = () => {
       setSession({ accessToken: data.access_token, user: data.user });
       trackEvent(AnalyticsEvents.loginCompleted, { method: "email", account_type: "business" });
       toast.add({
-        title: "Signed in",
-        description: "Welcome back to delitip.",
+        title: t("signedIn"),
+        description: t("welcomeBack"),
         type: "success",
       });
       router.push(Routes.dashboard.root);
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not sign in",
+        title: t("signInFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -91,6 +93,7 @@ export const useLoginBusiness = () => {
 };
 
 export const useLoginEmployee = () => {
+  const t = useTranslations("dashboard.shell.toasts.auth");
   const setSession = useAuthStore((state) => state.setSession);
   const router = useRouter();
 
@@ -100,15 +103,15 @@ export const useLoginEmployee = () => {
       setSession({ accessToken: data.access_token, user: data.user });
       trackEvent(AnalyticsEvents.loginCompleted, { method: "email", account_type: "employee" });
       toast.add({
-        title: "Signed in",
-        description: "Welcome to your tip profile.",
+        title: t("signedIn"),
+        description: t("welcomeEmployee"),
         type: "success",
       });
       router.push(Routes.employee.root);
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not sign in",
+        title: t("signInFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -129,6 +132,7 @@ export const useRegisterWithEmail = () => {
 };
 
 export const useRegisterBusiness = () => {
+  const t = useTranslations("dashboard.shell.toasts.auth");
   const setSession = useAuthStore((state) => state.setSession);
   const router = useRouter();
 
@@ -153,15 +157,15 @@ export const useRegisterBusiness = () => {
     onSuccess: () => {
       trackEvent(AnalyticsEvents.signUpCompleted, { method: "email", account_type: "business" });
       toast.add({
-        title: "Account created",
-        description: "Finish a few details to open your dashboard.",
+        title: t("accountCreated"),
+        description: t("accountCreatedDescription"),
         type: "success",
       });
       router.push(Routes.onboarding);
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not create account",
+        title: t("signUpFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -170,6 +174,7 @@ export const useRegisterBusiness = () => {
 };
 
 export const useForgotPassword = () => {
+  const t = useTranslations("dashboard.shell.toasts.auth");
   return useMutation({
     mutationFn: (payload: ForgotPasswordPayload & { role?: "employee" }) => {
       if (payload.role === "employee") rememberAuthRoleHint("employee");
@@ -180,7 +185,7 @@ export const useForgotPassword = () => {
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not send reset email",
+        title: t("resetEmailFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -189,6 +194,7 @@ export const useForgotPassword = () => {
 };
 
 export const useResetPassword = () => {
+  const t = useTranslations("dashboard.shell.toasts.auth");
   const router = useRouter();
 
   return useMutation({
@@ -196,8 +202,8 @@ export const useResetPassword = () => {
     onSuccess: () => {
       trackEvent(AnalyticsEvents.passwordResetCompleted);
       toast.add({
-        title: "Password updated",
-        description: "You can sign in with your new password.",
+        title: t("passwordUpdated"),
+        description: t("passwordResetDescription"),
         type: "success",
       });
       const roleHint = consumeAuthRoleHint();
@@ -209,7 +215,7 @@ export const useResetPassword = () => {
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not reset password",
+        title: t("resetFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -227,6 +233,7 @@ export const useInviteInfo = (token: string) => {
 };
 
 export const useAcceptInvite = () => {
+  const t = useTranslations("dashboard.shell.toasts.auth");
   const router = useRouter();
 
   return useMutation({
@@ -234,15 +241,15 @@ export const useAcceptInvite = () => {
     onSuccess: () => {
       trackEvent(AnalyticsEvents.inviteAccepted);
       toast.add({
-        title: "Account activated",
-        description: "You can now sign in with your new password.",
+        title: t("accountActivated"),
+        description: t("accountActivatedDescription"),
         type: "success",
       });
       router.push(`${Routes.auth.sign_in}?role=employee`);
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not activate account",
+        title: t("activateFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -251,19 +258,20 @@ export const useAcceptInvite = () => {
 };
 
 export const useChangePassword = () => {
+  const t = useTranslations("dashboard.shell.toasts.auth");
   return useMutation({
     mutationFn: (payload: ChangePasswordPayload) => changePassword(payload),
     onSuccess: () => {
       trackEvent(AnalyticsEvents.passwordChanged);
       toast.add({
-        title: "Password updated",
-        description: "Your password has been changed.",
+        title: t("passwordUpdated"),
+        description: t("passwordChangedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not change password",
+        title: t("changePasswordFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -272,6 +280,7 @@ export const useChangePassword = () => {
 };
 
 export const useLogout = () => {
+  const t = useTranslations("dashboard.shell.toasts.auth");
   const router = useRouter();
   const queryClient = useQueryClient();
   const clearSession = useAuthStore((state) => state.clearSession);
@@ -281,8 +290,8 @@ export const useLogout = () => {
     clearSession();
     queryClient.clear();
     toast.add({
-      title: "Signed out",
-      description: "You have been signed out of delitip.",
+      title: t("signedOut"),
+      description: t("signedOutDescription"),
       type: "success",
     });
     router.replace(options?.redirectTo ?? Routes.auth.sign_in);

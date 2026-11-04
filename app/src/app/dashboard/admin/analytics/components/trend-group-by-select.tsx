@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -11,19 +12,21 @@ import {
 } from "@/components/ui/select";
 import type { TrendsGroupBy } from "@/features/analytics/interfaces/analytics.interfaces";
 
-const GROUP_BY_OPTIONS: { id: TrendsGroupBy; label: string }[] = [
-  { id: "day", label: "By day" },
-  { id: "week", label: "By week" },
-  { id: "month", label: "By month" },
+const GROUP_BY_OPTIONS: { id: TrendsGroupBy }[] = [
+  { id: "day" },
+  { id: "week" },
+  { id: "month" },
 ];
 
 export const TrendGroupBySelect: FC<{
   value: TrendsGroupBy;
   onChange: (value: TrendsGroupBy) => void;
-}> = ({ value, onChange }) => (
+}> = ({ value, onChange }) => {
+  const t = useTranslations("dashboard.adminSystem.analytics.groupBy");
+  return (
   <Select
     items={GROUP_BY_OPTIONS.map((option) => ({
-      label: option.label,
+      label: t(option.id),
       value: option.id,
     }))}
     value={value}
@@ -38,10 +41,11 @@ export const TrendGroupBySelect: FC<{
       <SelectGroup>
         {GROUP_BY_OPTIONS.map((option) => (
           <SelectItem key={option.id} value={option.id}>
-            {option.label}
+            {t(option.id)}
           </SelectItem>
         ))}
       </SelectGroup>
     </SelectContent>
   </Select>
-);
+  );
+};

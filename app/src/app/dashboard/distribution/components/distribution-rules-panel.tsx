@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowRight, Plus, Scale } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -41,6 +42,8 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
   storeId,
   store,
 }) => {
+  const t = useTranslations("dashboard.team.distribution.panel");
+  const tSummary = useTranslations("dashboard.team.distribution.summary");
   const rulesQuery = useDistributionRules(storeId);
   const setDefault = useSetDefaultDistributionRule(storeId);
   const deleteRule = useDeleteDistributionRule({ showErrorToast: false });
@@ -80,19 +83,19 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>
           <h2 className="text-sm font-bold text-ink-charcoal">
-            Distribution rules
+            {t("title")}
           </h2>
           <p className="mt-0.5 text-xs text-zinc-500">
-            How tips split for {store.name}. Changes apply to future tips only.
+            {t("description", { store: store.name })}
           </p>
         </div>
         <Button
           type="button"
-          className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal shadow-sm"
+          className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-base font-semibold text-ink-charcoal shadow-sm"
           onClick={openCreate}
         >
           <Plus data-icon="inline-start" className="size-3.5" />
-          Create rule
+          {t("createRule")}
         </Button>
       </div>
 
@@ -100,7 +103,7 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
         <div className="flex flex-col gap-4 lg:col-span-1">
           <div className="flex h-5 items-center">
             <h3 className="text-sm font-bold text-ink-charcoal">
-              Store default
+              {t("storeDefault")}
             </h3>
           </div>
           <div className="space-y-2 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
@@ -115,16 +118,15 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
                   {defaultRule.name}
                 </p>
                 <p className="text-xs leading-relaxed text-zinc-500">
-                  {formatRecipientSummary(defaultRule.recipients)}
+                  {formatRecipientSummary(defaultRule.recipients, tSummary)}
                 </p>
-                <p className="text-[11px] text-zinc-400">
-                  Used when a QR code does not override the rule.
+                <p className="text-base text-zinc-400">
+                  {t("defaultHint")}
                 </p>
               </>
             ) : (
               <p className="text-xs text-zinc-500">
-                No default rule yet. Create a rule and set it as the store
-                default.
+                {t("noDefault")}
               </p>
             )}
             {rulesQuery.isPending ? null : (
@@ -132,10 +134,10 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
                 href={Routes.dashboard.settings.tipping}
                 className={cn(
                   buttonVariants({ variant: "outline", size: "default" }),
-                  "mt-3 w-full justify-center gap-1.5 rounded-xl text-chip font-semibold",
+                  "mt-3 w-full justify-center gap-1.5 rounded-xl text-base font-semibold",
                 )}
               >
-                {defaultRule ? "Change default" : "Set default"}
+                {defaultRule ? t("changeDefault") : t("setDefault")}
                 <ArrowRight className="size-3.5" strokeWidth={2} />
               </Link>
             )}
@@ -145,10 +147,10 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
         <div className="flex flex-col gap-4 lg:col-span-2">
           <div className="flex h-5 items-center justify-between gap-2">
             <h3 className="text-sm font-bold text-ink-charcoal">
-              Rules library
+              {t("library")}
             </h3>
             <span className="text-xs text-zinc-400">
-              {rules.length} {rules.length === 1 ? "rule" : "rules"}
+              {t("ruleCount", { count: rules.length })}
             </span>
           </div>
 
@@ -157,7 +159,7 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
           ) : rulesQuery.isError ? (
             <Empty className="border border-dashed border-zinc-200 bg-white py-12">
               <EmptyHeader>
-                <EmptyTitle>Could not load rules</EmptyTitle>
+                <EmptyTitle>{t("loadErrorTitle")}</EmptyTitle>
                 <EmptyDescription>{getErrorMessage(rulesQuery.error)}</EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
@@ -166,7 +168,7 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
                   variant="outline"
                   onClick={() => void rulesQuery.refetch()}
                 >
-                  Try again
+                  {t("tryAgain")}
                 </Button>
               </EmptyContent>
             </Empty>
@@ -176,10 +178,9 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
                 <EmptyMedia variant="icon">
                   <Scale />
                 </EmptyMedia>
-                <EmptyTitle>No distribution rules yet</EmptyTitle>
+                <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
                 <EmptyDescription>
-                  Create a standard rule such as 100% to the tipped employee,
-                  then set it as the store default.
+                  {t("emptyDescription")}
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
@@ -189,7 +190,7 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
                   onClick={openCreate}
                 >
                   <Plus data-icon="inline-start" className="size-3.5" />
-                  Create rule
+                  {t("createRule")}
                 </Button>
               </EmptyContent>
             </Empty>
@@ -226,13 +227,13 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
             if (!open) setPendingDelete(null);
           },
         }}
-        title="Delete distribution rule?"
+        title={t("deleteTitle")}
         description={
           pendingDelete
-            ? `"${pendingDelete.name}" will be permanently removed. Rules already used for past tips, set as the store default, or assigned to a QR code can't be deleted.`
-            : "This rule will be permanently removed."
+            ? t("deleteDescription", { name: pendingDelete.name })
+            : t("deleteDescriptionFallback")
         }
-        confirmLabel="Delete"
+        confirmLabel={t("deleteConfirm")}
         isPending={deleteRule.isPending}
         onConfirm={async () => {
           if (!pendingDelete) return;

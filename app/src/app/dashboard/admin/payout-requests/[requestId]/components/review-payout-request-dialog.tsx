@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { TriangleAlert } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -30,6 +31,7 @@ export const ReviewPayoutRequestDialog: FC<{
   isPending: boolean;
   onConfirm: (action: ReviewAction, note: string) => Promise<void>;
 }> = ({ action, onClose, amountLabel, storeName, isPending, onConfirm }) => {
+  const t = useTranslations("dashboard.admin.reviewDialog");
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
   const open = action !== null;
@@ -53,7 +55,7 @@ export const ReviewPayoutRequestDialog: FC<{
       await onConfirm(action, note.trim());
       onClose();
     } catch (cause) {
-      setError(getErrorMessage(cause, "Something went wrong. Please try again."));
+      setError(getErrorMessage(cause, t("genericError")));
     }
   };
 
@@ -68,20 +70,20 @@ export const ReviewPayoutRequestDialog: FC<{
       <DialogContent showCloseButton={!isPending} className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {isReject ? "Reject this payout request?" : "Approve and pay?"}
+            {isReject ? t("rejectTitle") : t("approveTitle")}
           </DialogTitle>
           <DialogDescription>
             {isReject
-              ? `${storeName}'s tips are released so it can submit a corrected invoice. Your note is sent to the store.`
-              : `This starts a bank transfer of ${amountLabel} to ${storeName}'s linked account. It cannot be recalled once sent.`}
+              ? t("rejectDescription", { store: storeName })
+              : t("approveDescription", { amount: amountLabel, store: storeName })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="review-note">
-            {isReject ? "Reason for the store" : "Note for the store"}
+            {isReject ? t("rejectLabel") : t("approveLabel")}
             {isReject ? null : (
-              <span className="font-normal text-zinc-400"> (optional)</span>
+              <span className="ml-1 font-normal text-zinc-400">{t("optional")}</span>
             )}
           </Label>
           <Textarea
@@ -92,8 +94,8 @@ export const ReviewPayoutRequestDialog: FC<{
             maxLength={1000}
             placeholder={
               isReject
-                ? "e.g. The invoice amount before VAT is €120.00 but the payout is €124.00."
-                : "Anything the store should know"
+                ? t("rejectPlaceholder")
+                : t("approvePlaceholder")
             }
           />
         </div>
@@ -107,7 +109,7 @@ export const ReviewPayoutRequestDialog: FC<{
 
         <DialogFooter>
           <Button type="button" variant="outline" disabled={isPending} onClick={onClose}>
-            Cancel
+            {t("cancel")}
           </Button>
           <ActionButtonWithPending
             type="button"
@@ -119,7 +121,7 @@ export const ReviewPayoutRequestDialog: FC<{
               isReject ? undefined : "bg-electric-lime text-ink-charcoal"
             }
           >
-            {isReject ? "Reject request" : "Approve & pay"}
+            {isReject ? t("rejectButton") : t("approveButton")}
           </ActionButtonWithPending>
         </DialogFooter>
       </DialogContent>

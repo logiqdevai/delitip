@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Plus, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,6 +35,7 @@ interface QrCodesPanelProps {
 }
 
 export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
+  const t = useTranslations("dashboard.access.qrCodes");
   const qrCodesQuery = useQrCodes(storeId, { limit: 100 });
   const router = useRouter();
   const [pendingDelete, setPendingDelete] = useState<QrCodeModel | null>(null);
@@ -59,18 +61,18 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>
-          <h2 className="text-sm font-bold text-ink-charcoal">QR kits</h2>
+          <h2 className="text-sm font-bold text-ink-charcoal">{t("title")}</h2>
           <p className="mt-0.5 text-xs text-zinc-500">
-            Generate tip links and print QR codes for {store.name}.
+            {t("subtitle", { storeName: store.name })}
           </p>
         </div>
         <Button
           type="button"
-          className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-chip font-semibold text-ink-charcoal shadow-sm"
+          className="h-(--control-height-default) max-sm:h-11 rounded-xl bg-electric-lime px-3.5 text-base font-semibold text-ink-charcoal shadow-sm"
           onClick={openCreate}
         >
           <Plus data-icon="inline-start" className="size-3.5" />
-          Create QR code
+          {t("create")}
         </Button>
       </div>
 
@@ -79,7 +81,7 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
       ) : qrCodesQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load QR codes</EmptyTitle>
+            <EmptyTitle>{t("loadErrorTitle")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(qrCodesQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -88,7 +90,7 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
               variant="outline"
               onClick={() => void qrCodesQuery.refetch()}
             >
-              Try again
+              {t("retry")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -98,10 +100,9 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
             <EmptyMedia variant="icon">
               <QrCode />
             </EmptyMedia>
-            <EmptyTitle>No QR codes yet</EmptyTitle>
+            <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>
-              Create your first table or counter QR so customers can tip and
-              leave feedback.
+              {t("emptyDescription")}
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -111,7 +112,7 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
               onClick={openCreate}
             >
               <Plus data-icon="inline-start" className="size-3.5" />
-              Create QR code
+              {t("create")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -139,13 +140,13 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
             if (!open) setPendingDelete(null);
           },
         }}
-        title="Delete QR code?"
+        title={t("deleteTitle")}
         description={
           pendingDelete
-            ? `"${pendingDelete.label}" will be removed and its tip link will stop working. Printed copies will no longer open the tip page.`
-            : "This QR code will be removed."
+            ? t("deleteDescription", { label: pendingDelete.label })
+            : t("deleteDescriptionFallback")
         }
-        confirmLabel="Delete"
+        confirmLabel={t("deleteConfirm")}
         isPending={deleteQrCode.isPending}
         onConfirm={async () => {
           if (!pendingDelete) return;

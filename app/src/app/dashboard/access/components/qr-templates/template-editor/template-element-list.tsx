@@ -1,25 +1,12 @@
 "use client";
 
 import type { FC } from "react";
+import { useTranslations } from "next-intl";
 import { useTemplateEditor } from "@/app/dashboard/access/components/qr-templates/template-editor/template-editor-provider";
 import { cn } from "@/lib/utils";
 
-// Friendlier labels for the element-id slugs defined in qr-template-layouts.config.ts.
-const ELEMENT_LABELS: Record<string, string> = {
-  brandMark: "Logo / Icon",
-  storeName: "Store Name",
-  industryLabel: "Category Label",
-  headline: "Headline",
-  qr: "QR Code",
-  scanTipReviewCaption: "Caption",
-  scanTipReview: "Scan / Tip / Review",
-  footerWordmark: "Footer Text",
-  footerBand: "Footer Band",
-  tagline: "Tagline",
-  scanCta: "Call To Action",
-};
-
 export const TemplateElementList: FC = () => {
+  const t = useTranslations("dashboard.access.templateEditor.elements");
   const { elements, selectedElementId, selectElement } = useTemplateEditor();
 
   return (
@@ -36,7 +23,7 @@ export const TemplateElementList: FC = () => {
               : "border-transparent text-zinc-600 hover:bg-zinc-50",
           )}
         >
-          {ELEMENT_LABELS[element.id] ?? element.id}
+          {t.has(element.id) ? t(element.id) : element.id}
         </button>
       ))}
     </div>

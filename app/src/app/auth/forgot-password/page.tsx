@@ -1,10 +1,14 @@
 import { type FC, Suspense } from "react";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { AuthForgotPasswordForm } from "../components/auth-forgot-password-form";
 
-export const metadata: Metadata = {
-  title: "Forgot Password - delitip",
-  description: "Request a password reset link for your delitip account.",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("auth.forgotPassword");
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  };
 };
 
 const ForgotPasswordPage: FC = () => {

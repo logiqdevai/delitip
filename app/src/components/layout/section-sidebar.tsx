@@ -3,6 +3,7 @@
 import { type FC } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ChevronDown, type LucideIcon } from "lucide-react";
 import {
   DropdownMenu,
@@ -14,7 +15,10 @@ import { cn } from "@/lib/utils";
 
 export interface SectionSidebarItem {
   href: string;
-  label: string;
+  /** Plain text label. Use `labelKey` instead for a translated label. */
+  label?: string;
+  /** Full message key (e.g. "dashboard.settings.nav.profile"), translated on render. */
+  labelKey?: string;
   icon: LucideIcon;
 }
 
@@ -25,6 +29,9 @@ interface SectionSidebarProps {
 export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations();
+  const labelOf = (item: SectionSidebarItem) =>
+    item.labelKey ? t(item.labelKey) : (item.label ?? "");
   const activeItem =
     items.find((item) => pathname === item.href) ?? items[0] ?? null;
   const ActiveIcon = activeItem?.icon;
@@ -36,7 +43,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
-                "group flex w-full items-center gap-3 rounded-2xl border border-zinc-200/80 bg-white px-3 py-2.5 text-chip shadow-xs outline-none transition",
+                "group flex w-full items-center gap-3 rounded-2xl border border-zinc-200/80 bg-white px-3 py-2.5 text-base shadow-xs outline-none transition",
                 "font-semibold text-brand-800",
                 "hover:bg-brand-50/60 focus-visible:ring-2 focus-visible:ring-electric-lime/40",
               )}
@@ -46,7 +53,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
                 strokeWidth={2}
               />
               <span className="min-w-0 flex-1 truncate text-left">
-                {activeItem.label}
+                {labelOf(activeItem)}
               </span>
               <ChevronDown
                 className="size-4 shrink-0 text-zinc-400 transition-transform duration-200 group-data-popup-open:rotate-180"
@@ -66,7 +73,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
                   <DropdownMenuItem
                     key={item.href}
                     className={cn(
-                      "cursor-pointer gap-3 rounded-xl px-3 py-2.5 text-chip",
+                      "cursor-pointer gap-3 rounded-xl px-3 py-2.5 text-base",
                       active
                         ? "bg-brand-50 font-semibold text-brand-800 focus:bg-brand-50 focus:text-brand-800"
                         : "font-medium text-zinc-600",
@@ -80,7 +87,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
                       )}
                       strokeWidth={2}
                     />
-                    {item.label}
+                    {labelOf(item)}
                   </DropdownMenuItem>
                 );
               })}
@@ -100,7 +107,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-chip transition",
+                  "flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-base transition",
                   active
                     ? "bg-brand-50 font-semibold text-brand-800"
                     : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
@@ -113,7 +120,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
                   )}
                   strokeWidth={2}
                 />
-                <span className="whitespace-nowrap">{item.label}</span>
+                <span className="whitespace-nowrap">{labelOf(item)}</span>
               </Link>
             );
           })}
@@ -131,7 +138,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-chip transition",
+                    "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-base transition",
                     active
                       ? "bg-brand-50 font-semibold text-brand-800"
                       : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
@@ -144,7 +151,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
                     )}
                     strokeWidth={2}
                   />
-                  <span>{item.label}</span>
+                  <span>{labelOf(item)}</span>
                 </Link>
               </li>
             );

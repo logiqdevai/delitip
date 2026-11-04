@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useFormatter, useTranslations } from "next-intl";
 import { MessageSquareText, SlidersHorizontal, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -50,12 +51,9 @@ const StarRating: FC<{ rating: number }> = ({ rating }) => (
   </span>
 );
 
-const formatDate = (value: string) =>
-  new Date(value).toLocaleDateString(undefined, {
-    dateStyle: "medium",
-  });
-
 export const ReviewsPageContent: FC = () => {
+  const t = useTranslations("dashboard.engagement");
+  const format = useFormatter();
   const { storeId, isPending: workspacePending, isReady } = useWorkspace();
   const [minRating, setMinRating] = useState<number | "all">("all");
   const [employeeId, setEmployeeId] = useState<string>("all");
@@ -88,10 +86,8 @@ export const ReviewsPageContent: FC = () => {
           <EmptyMedia variant="icon">
             <MessageSquareText />
           </EmptyMedia>
-          <EmptyTitle>No store selected</EmptyTitle>
-          <EmptyDescription>
-            Finish business setup before viewing reviews.
-          </EmptyDescription>
+          <EmptyTitle>{t("common.noStoreTitle")}</EmptyTitle>
+          <EmptyDescription>{t("reviews.noStoreDescription")}</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -103,20 +99,20 @@ export const ReviewsPageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="Reviews"
-        description="Direct customer sentiment, compliments, and ratings tied to employees."
+        title={t("reviews.title")}
+        description={t("reviews.description")}
       />
 
       <div className="flex flex-col gap-2.5 rounded-2xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-2.5 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="flex items-center gap-1.5 pl-1 text-xs font-semibold text-zinc-500">
           <SlidersHorizontal className="size-3.5" />
-          Filters
+          {t("common.filters")}
         </div>
         <Select
           items={[
-            { label: "Any rating", value: "all" },
+            { label: t("reviews.anyRating"), value: "all" },
             ...RATING_OPTIONS.map((rating) => ({
-              label: `${rating}+ stars`,
+              label: t("reviews.ratingPlus", { rating }),
               value: String(rating),
             })),
           ]}
@@ -132,10 +128,10 @@ export const ReviewsPageContent: FC = () => {
           </SelectTrigger>
           <SelectContent align="start">
             <SelectGroup>
-              <SelectItem value="all">Any rating</SelectItem>
+              <SelectItem value="all">{t("reviews.anyRating")}</SelectItem>
               {RATING_OPTIONS.map((rating) => (
                 <SelectItem key={rating} value={String(rating)}>
-                  {rating}+ stars
+                  {t("reviews.ratingPlus", { rating })}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -148,23 +144,23 @@ export const ReviewsPageContent: FC = () => {
           onValueChange={setEmployeeId}
           includeAll
           triggerClassName="w-full rounded-xl border-zinc-200 bg-white px-3.5 font-medium text-ink-charcoal shadow-xs sm:w-auto sm:min-w-36"
-          aria-label="Filter by employee"
+          aria-label={t("reviews.filterEmployee")}
         />
 
         <div className="flex items-center gap-2.5">
           <DatePicker
             value={dateFrom}
             onChange={setDateFrom}
-            placeholder="From date"
-            aria-label="From date"
+            placeholder={t("reviews.fromDate")}
+            aria-label={t("reviews.fromDate")}
             className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
           />
-          <span className="text-xs text-zinc-400">to</span>
+          <span className="text-xs text-zinc-400">{t("reviews.to")}</span>
           <DatePicker
             value={dateTo}
             onChange={setDateTo}
-            placeholder="To date"
-            aria-label="To date"
+            placeholder={t("reviews.toDate")}
+            aria-label={t("reviews.toDate")}
             className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
           />
         </div>
@@ -175,7 +171,7 @@ export const ReviewsPageContent: FC = () => {
       ) : reviewsQuery.isError ? (
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
-            <EmptyTitle>Could not load reviews</EmptyTitle>
+            <EmptyTitle>{t("reviews.loadErrorTitle")}</EmptyTitle>
             <EmptyDescription>{getErrorMessage(reviewsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -184,7 +180,7 @@ export const ReviewsPageContent: FC = () => {
               variant="outline"
               onClick={() => void reviewsQuery.refetch()}
             >
-              Try again
+              {t("common.tryAgain")}
             </Button>
           </EmptyContent>
         </Empty>
@@ -194,17 +190,14 @@ export const ReviewsPageContent: FC = () => {
             <EmptyMedia variant="icon">
               <MessageSquareText />
             </EmptyMedia>
-            <EmptyTitle>No reviews yet</EmptyTitle>
-            <EmptyDescription>
-              Once customers leave feedback after tipping, it will show up
-              here.
-            </EmptyDescription>
+            <EmptyTitle>{t("reviews.emptyTitle")}</EmptyTitle>
+            <EmptyDescription>{t("reviews.emptyDescription")}</EmptyDescription>
           </EmptyHeader>
         </Empty>
       ) : (
         <div className="space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
           <h2 className="text-sm font-bold text-ink-charcoal">
-            Customer notes
+            {t("reviews.customerNotes")}
           </h2>
           <div className="space-y-3">
             {reviews.map((review) => (
@@ -223,7 +216,7 @@ export const ReviewsPageContent: FC = () => {
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-bold text-ink-charcoal">
-                      {review.employee?.full_name ?? "Store"}
+                      {review.employee?.full_name ?? t("common.store")}
                     </span>
                     <StarRating rating={review.rating} />
                     {review.tags?.map((assignment) => (
@@ -241,8 +234,10 @@ export const ReviewsPageContent: FC = () => {
                     </p>
                   ) : null}
                 </div>
-                <span className="shrink-0 text-[10px] text-zinc-400">
-                  {formatDate(review.created_at)}
+                <span className="shrink-0 text-base text-zinc-400">
+                  {format.dateTime(new Date(review.created_at), {
+                    dateStyle: "medium",
+                  })}
                 </span>
               </div>
             ))}

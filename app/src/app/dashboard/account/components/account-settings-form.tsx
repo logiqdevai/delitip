@@ -2,7 +2,8 @@
 
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@/lib/i18n-zod-resolver";
+import { useTranslations } from "next-intl";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +16,7 @@ import {
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 
 export const AccountSettingsForm: FC = () => {
+  const t = useTranslations("dashboard.shell.account.profile");
   const { data: profile, isPending } = useMe();
   const updateMe = useUpdateMe();
 
@@ -65,19 +67,19 @@ export const AccountSettingsForm: FC = () => {
     >
       <div>
         <h2 className="text-sm font-bold text-ink-charcoal">
-          Personal details
+          {t("title")}
         </h2>
         <p className="mt-0.5 text-xs text-zinc-500">
-          Your name and contact details tied to this login.
+          {t("description")}
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 @sm:grid-cols-2">
         <div className="min-w-0 space-y-1.5">
-          <Label htmlFor="account-first-name">First name</Label>
+          <Label htmlFor="account-first-name">{t("firstName")}</Label>
           <Input
             id="account-first-name"
-            placeholder="First name"
+            placeholder={t("firstName")}
             aria-invalid={!!errors.first_name}
             {...register("first_name")}
           />
@@ -88,10 +90,10 @@ export const AccountSettingsForm: FC = () => {
           ) : null}
         </div>
         <div className="min-w-0 space-y-1.5">
-          <Label htmlFor="account-last-name">Last name</Label>
+          <Label htmlFor="account-last-name">{t("lastName")}</Label>
           <Input
             id="account-last-name"
-            placeholder="Last name"
+            placeholder={t("lastName")}
             aria-invalid={!!errors.last_name}
             {...register("last_name")}
           />
@@ -102,7 +104,7 @@ export const AccountSettingsForm: FC = () => {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="account-email">Email</Label>
+        <Label htmlFor="account-email">{t("email")}</Label>
         <Input
           id="account-email"
           value={profile.email ?? ""}
@@ -110,15 +112,15 @@ export const AccountSettingsForm: FC = () => {
           readOnly
         />
         <p className="text-xs text-zinc-500">
-          Contact support to change the email on your login.
+          {t("emailHelp")}
         </p>
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="account-phone">Phone</Label>
+        <Label htmlFor="account-phone">{t("phone")}</Label>
         <Input
           id="account-phone"
-          placeholder="e.g. +306912345678"
+          placeholder={t("phonePlaceholder")}
           aria-invalid={!!errors.phone}
           {...register("phone")}
         />
@@ -129,7 +131,7 @@ export const AccountSettingsForm: FC = () => {
 
       <div className="pt-2">
         <ActionButtonWithPending type="submit" isPending={updateMe.isPending}>
-          Save Changes
+          {t("save")}
         </ActionButtonWithPending>
       </div>
     </form>

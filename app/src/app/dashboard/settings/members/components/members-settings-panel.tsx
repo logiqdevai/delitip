@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Users2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,7 +16,11 @@ import {
   useUpdateOrganizationMember,
 } from "@/features/organizations/hooks/use-organization-members";
 import type { OrganizationMemberWithRefs } from "@/features/organizations/interfaces/organizations.interfaces";
-import { OrganizationRoleFormOptions, getOrganizationRoleLabel } from "@/config/constants/dropdowns/organizations/organization-role-form.options";
+import { OrganizationRoleFormOptions } from "@/config/constants/dropdowns/organizations/organization-role-form.options";
+import {
+  useDropdownLabel,
+  useDropdownOptions,
+} from "@/hooks/use-dropdown-options";
 import {
   Select,
   SelectContent,
@@ -29,6 +34,9 @@ import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { getErrorMessage } from "@/lib/api-error";
 
 export const MembersSettingsPanel: FC = () => {
+  const t = useTranslations("dashboard.settings.members");
+  const roleOptions = useDropdownOptions(OrganizationRoleFormOptions);
+  const roleLabel = useDropdownLabel();
   const { organizationId, role: currentUserRole } = useWorkspace();
   const membersQuery = useOrganizationMembers(organizationId ?? "");
   const storesQuery = useStores(organizationId ?? "");
@@ -50,7 +58,7 @@ export const MembersSettingsPanel: FC = () => {
         <div className="flex items-center gap-2">
           <Users2 className="size-4 text-zinc-400" strokeWidth={2} />
           <h2 className="text-sm font-bold text-ink-charcoal">
-            Members & access
+            {t("title")}
           </h2>
         </div>
         {isOwner ? (
@@ -60,7 +68,7 @@ export const MembersSettingsPanel: FC = () => {
             onClick={() => setInviteOpen(true)}
             className="rounded-xl bg-electric-lime text-ink-charcoal"
           >
-            Invite member
+            {t("invite")}
           </Button>
         ) : null}
       </div>
@@ -71,7 +79,7 @@ export const MembersSettingsPanel: FC = () => {
         <p className="text-xs text-red-600">{getErrorMessage(membersQuery.error)}</p>
       ) : members.length === 0 ? (
         <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 py-6 text-center text-xs text-zinc-500">
-          No members yet.
+          {t("empty")}
         </p>
       ) : (
         <div className="divide-y divide-zinc-100">
@@ -84,17 +92,17 @@ export const MembersSettingsPanel: FC = () => {
                 <div className="font-semibold text-ink-charcoal">
                   {member.user?.first_name || member.user?.last_name
                     ? `${member.user?.first_name ?? ""} ${member.user?.last_name ?? ""}`.trim()
-                    : (member.user?.email ?? "Unknown")}
+                    : (member.user?.email ?? t("unknownMember"))}
                 </div>
                 <div className="text-xs text-zinc-400">
                   {member.user?.email}
-                  {member.store ? ` · ${member.store.name}` : " · Organization-wide"}
+                  {` · ${member.store ? member.store.name : t("organizationWide")}`}
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 {isOwner ? (
                   <Select
-                    items={OrganizationRoleFormOptions.map((option) => ({
+                    items={roleOptions.map((option) => ({
                       label: option.label,
                       value: option.id,
                     }))}
@@ -113,7 +121,7 @@ export const MembersSettingsPanel: FC = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        {OrganizationRoleFormOptions.map((option) => (
+                        {roleOptions.map((option) => (
                           <SelectItem key={option.id} value={option.id}>
                             {option.label}
                           </SelectItem>
@@ -123,7 +131,7 @@ export const MembersSettingsPanel: FC = () => {
                   </Select>
                 ) : (
                   <span className="rounded-full bg-neutral-fill px-2 py-0.5 text-[11px] font-semibold text-zinc-600">
-                    {getOrganizationRoleLabel(member.role)}
+                    {roleLabel(OrganizationRoleFormOptions, member.role)}
                   </span>
                 )}
                 {isOwner ? (
@@ -136,7 +144,7 @@ export const MembersSettingsPanel: FC = () => {
                       removeConfirm.openDialog();
                     }}
                   >
-                    Remove
+                    {t("remove")}
                   </Button>
                 ) : null}
               </div>
@@ -162,13 +170,17 @@ export const MembersSettingsPanel: FC = () => {
             if (!open) setPendingRemove(null);
           },
         }}
-        title="Remove this member?"
+        title={t("removeDialog.title")}
         description={
           pendingRemove
-            ? `${pendingRemove.user?.email ?? "This member"} will lose access to this organization.`
-            : "This member will be removed."
+            ? pendingRemove.user?.email
+              ? t("removeDialog.description", {
+                  member: pendingRemove.user.email,
+                })
+              : t("removeDialog.descriptionUnknown")
+            : t("removeDialog.descriptionFallback")
         }
-        confirmLabel="Remove"
+        confirmLabel={t("removeDialog.confirm")}
         isPending={removeMember.isPending}
         onConfirm={async () => {
           if (!pendingRemove) return;

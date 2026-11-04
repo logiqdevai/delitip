@@ -2,6 +2,7 @@
 
 import { type ComponentProps, type FC, useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   InputGroup,
@@ -20,6 +21,7 @@ export const PasswordInput: FC<PasswordInputProps> = ({
   groupClassName,
   ...props
 }) => {
+  const t = useTranslations("dashboard.shell.ui");
   const [visible, setVisible] = useState(false);
 
   return (
@@ -30,7 +32,7 @@ export const PasswordInput: FC<PasswordInputProps> = ({
           type="button"
           variant="ghost"
           size="icon-sm"
-          aria-label={visible ? "Hide password" : "Show password"}
+          aria-label={visible ? t("hidePassword") : t("showPassword")}
           onClick={() => setVisible((current) => !current)}
         >
           {visible ? <EyeOffIcon /> : <EyeIcon />}

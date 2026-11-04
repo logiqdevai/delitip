@@ -1,0 +1,106 @@
+{
+  "shell": {
+    "footer": "© 2026 delitip · Tip. Appreciate. Connect."
+  },
+  "brand": {
+    "contactSupport": "Contact Support",
+    "headline": "Service that <accent>deserves</accent> a tip.",
+    "showTipFrom": "Show tip from {name}",
+    "roles": {
+      "server": "Server",
+      "bartender": "Bartender",
+      "barista": "Barista"
+    }
+  },
+  "roleSwitcher": {
+    "business": "Business Account",
+    "staff": "Staff Access"
+  },
+  "signIn": {
+    "metaTitle": "Sign In - delitip",
+    "metaDescription": "Sign in to delitip to manage tips, team payouts, and live customer reviews.",
+    "title": "Welcome back",
+    "subtitle": "Sign in to manage your team, tips, and live customer reviews.",
+    "emailLabel": "Business Email",
+    "emailPlaceholder": "manager@artisancafe.com",
+    "passwordLabel": "Password",
+    "forgotPassword": "Forgot password?",
+    "submit": "Sign in to delitip",
+    "newHere": "New to delitip?",
+    "createAccount": "Create a business account"
+  },
+  "employee": {
+    "title": "Employee Portal",
+    "subtitle": "Check your personal tip earnings, payouts, and customer reviews.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "maria@artisancafe.com",
+    "passwordLabel": "Password",
+    "forgotPassword": "Forgot password?",
+    "invitationHint": "Use the email and password from your invitation email.",
+    "submit": "Access My Tip Profile",
+    "areYouEmployer": "Are you an employer?",
+    "businessSignIn": "Business sign in"
+  },
+  "signUp": {
+    "metaTitle": "Create Account - delitip",
+    "metaDescription": "Register your business on delitip and start collecting tips and employee feedback in under 2 minutes.",
+    "title": "Register your business",
+    "subtitle": "Start collecting tips and employee feedback in under 2 minutes.",
+    "fullNameLabel": "Your Full Name",
+    "fullNamePlaceholder": "Giorgos Papadakis",
+    "emailLabel": "Email",
+    "emailPlaceholder": "john@artisancafe.com",
+    "passwordLabel": "Create Password",
+    "passwordPlaceholder": "At least 8 characters",
+    "consent": "By registering, you agree to delitip’s <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>.",
+    "submit": "Create Business Account",
+    "alreadyRegistered": "Already registered?",
+    "signInInstead": "Sign in instead"
+  },
+  "forgotPassword": {
+    "metaTitle": "Forgot Password - delitip",
+    "metaDescription": "Request a password reset link for your delitip account.",
+    "sentTitle": "Check your email",
+    "sentDescription": "If an account exists for <b>{email}</b>, we sent a link to reset your password. The link expires in one hour.",
+    "backToSignIn": "Back to sign in",
+    "title": "Forgot password",
+    "subtitle": "Enter your work email and we''ll send a reset link if an account exists.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "manager@artisancafe.com",
+    "submit": "Send reset link",
+    "remembered": "Remembered it?",
+    "signIn": "Sign in"
+  },
+  "resetPassword": {
+    "metaTitle": "Reset Password - delitip",
+    "metaDescription": "Set a new password for your delitip account.",
+    "invalidTitle": "Invalid reset link",
+    "invalidDescription": "This password reset link is missing a token. Request a new link from the forgot password page.",
+    "requestNewLink": "Request a new link",
+    "title": "Set a new password",
+    "subtitle": "Choose a new password for your delitip account.",
+    "passwordLabel": "New password",
+    "passwordPlaceholder": "At least 8 characters",
+    "confirmLabel": "Confirm password",
+    "confirmPlaceholder": "Repeat password",
+    "submit": "Update password",
+    "backToSignIn": "Back to sign in"
+  },
+  "acceptInvite": {
+    "metaTitle": "Set Up Your Account - delitip",
+    "metaDescription": "Activate your delitip staff account.",
+    "invalidTitle": "Invalid invite link",
+    "invalidDescription": "This invite link is invalid or has expired. Ask your store owner to resend your invite.",
+    "missingTokenDescription": "This invite link is missing a token. Ask your store owner to resend your invite.",
+    "backToSignIn": "Back to sign in",
+    "title": "Welcome to delitip",
+    "subtitle": "Set a password to activate your account and start receiving tips.",
+    "emailLabel": "Email",
+    "loading": "Loading…",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "At least 8 characters",
+    "confirmLabel": "Confirm password",
+    "confirmPlaceholder": "Repeat password",
+    "submit": "Activate account"
+  }
+}

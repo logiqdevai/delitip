@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useFormatter, useTranslations } from "next-intl";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartContainer,
@@ -22,11 +23,12 @@ import { getErrorMessage } from "@/lib/api-error";
 const USERS_COLOR = "#9FBF3E";
 const GRADIENT_ID = "admin-users-trend-fill";
 
-const chartConfig: ChartConfig = {
-  value: { label: "New users", color: USERS_COLOR },
-};
-
 export const UsersTrendChart: FC = () => {
+  const t = useTranslations("dashboard.adminSystem.analytics.usersTrend");
+  const format = useFormatter();
+  const chartConfig: ChartConfig = {
+    value: { label: t("seriesLabel"), color: USERS_COLOR },
+  };
   const [period, setPeriod] = useState<TrendsPeriod>("30d");
   const [groupBy, setGroupBy] = useState<TrendsGroupBy>("day");
 
@@ -43,11 +45,10 @@ export const UsersTrendChart: FC = () => {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-bold text-ink-charcoal">
-            Users created
+            {t("title")}
           </h2>
           <p className="mt-0.5 text-xs text-zinc-500">
-            {total.toLocaleString()} new user{total === 1 ? "" : "s"} in this
-            range.
+            {t("summary", { count: total })}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -65,7 +66,7 @@ export const UsersTrendChart: FC = () => {
           </p>
         ) : data.length === 0 ? (
           <p className="py-16 text-center text-xs text-zinc-400">
-            No users created in this range.
+            {t("empty")}
           </p>
         ) : (
           <ChartContainer config={chartConfig} className="aspect-auto h-64 w-full">
@@ -87,8 +88,10 @@ export const UsersTrendChart: FC = () => {
                 axisLine={false}
                 tickMargin={8}
                 minTickGap={24}
-                tickFormatter={(value: string) => formatBucketLabel(value, groupBy)}
-                className="text-[11px]"
+                tickFormatter={(value: string) =>
+                  formatBucketLabel(value, groupBy, format)
+                }
+                className="text-base"
               />
               <YAxis
                 tickLine={false}
@@ -96,15 +99,17 @@ export const UsersTrendChart: FC = () => {
                 width={32}
                 allowDecimals={false}
                 tickFormatter={(value: number) =>
-                  new Intl.NumberFormat(undefined, { notation: "compact" }).format(value)
+                  format.number(value, { notation: "compact" })
                 }
-                className="text-[11px]"
+                className="text-base"
               />
               <ChartTooltip
                 cursor={{ stroke: "var(--color-neutral-line)" }}
                 content={
                   <ChartTooltipContent
-                    labelFormatter={(value) => formatBucketLabel(String(value), groupBy)}
+                    labelFormatter={(value) =>
+                      formatBucketLabel(String(value), groupBy, format)
+                    }
                   />
                 }
               />

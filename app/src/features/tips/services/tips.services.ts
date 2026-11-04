@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
@@ -29,7 +30,7 @@ export const listStoreTips = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load tips. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadTips")));
   }
 };
 
@@ -67,7 +68,7 @@ export const exportStoreTipsCsv = async (
   } catch (error) {
     let message = getApiErrorMessage(
       error,
-      "We couldn't export tips. Please try again.",
+      tr("errors.services.exportTips"),
     );
     if (isAxiosError(error) && error.response?.data instanceof Blob) {
       try {
@@ -92,7 +93,7 @@ export const listAdminTips = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load payments. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadPayments")));
   }
 };
 
@@ -103,7 +104,7 @@ export const reconcilePayments = async (): Promise<{ corrected: number }> => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't reconcile payments. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.reconcilePayments")));
   }
 };
 
@@ -112,7 +113,7 @@ export const getTip = async (id: string): Promise<Tip> => {
     const response = await axiosInstance.get<Tip>(ApiRoutes.tips.byId(id));
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load tip. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadTip")));
   }
 };
 
@@ -126,7 +127,7 @@ export const listEmployeeTips = async (
     >(ApiRoutes.employees.tips(employeeId), { params: query });
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "We couldn't load employee tips. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.loadEmployeeTips")));
   }
 };
 
@@ -141,7 +142,7 @@ export const createPublicTip = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't submit tip. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.submitTip")),
     );
   }
 };
@@ -167,6 +168,6 @@ export const getPublicTipByOrderCode = async (
     if (isAxiosError(error) && error.response?.status === 404) {
       return null;
     }
-    throw new Error(getApiErrorMessage(error, "We couldn't resolve this checkout. Please try again."));
+    throw new Error(getApiErrorMessage(error, tr("errors.services.resolveThisCheckout")));
   }
 };

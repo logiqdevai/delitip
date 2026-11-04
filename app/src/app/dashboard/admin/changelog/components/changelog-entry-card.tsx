@@ -14,8 +14,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { getChangelogCommitUrl } from "@/config/changelog";
-import { getChangelogTypeLabel } from "@/config/constants/dropdowns/shared/changelog-type-form.options";
-import { getSessionMoodLabel } from "@/config/constants/dropdowns/shared/session-mood-form.options";
+import { ChangelogTypeFormOptions } from "@/config/constants/dropdowns/shared/changelog-type-form.options";
+import { SessionMoodFormOptions } from "@/config/constants/dropdowns/shared/session-mood-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
+import { useTranslations } from "next-intl";
 import type {
   ChangelogEntry,
   ChangelogType,
@@ -62,6 +64,8 @@ interface ChangelogEntryCardProps {
 }
 
 export const ChangelogEntryCard: FC<ChangelogEntryCardProps> = ({ entry }) => {
+  const t = useTranslations("dashboard.adminSystem.changelog");
+  const label = useDropdownLabel();
   const MoodIcon = entry.sessionMood ? moodIcon[entry.sessionMood] : null;
 
   return (
@@ -85,9 +89,9 @@ export const ChangelogEntryCard: FC<ChangelogEntryCardProps> = ({ entry }) => {
                 typeChipClass[entry.type] ?? typeChipClass.CHORE,
               )}
             >
-              {getChangelogTypeLabel(entry.type)}
+              {label(ChangelogTypeFormOptions, entry.type)}
             </span>
-            <h3 className="min-w-0 text-chip font-semibold text-ink-charcoal">
+            <h3 className="min-w-0 text-base font-semibold text-ink-charcoal">
               {entry.title}
             </h3>
           </div>
@@ -99,7 +103,7 @@ export const ChangelogEntryCard: FC<ChangelogEntryCardProps> = ({ entry }) => {
           ) : null}
 
           {entry.sessionMood && MoodIcon ? (
-            <p className="mt-2 flex items-start gap-1.5 text-caption text-zinc-500">
+            <p className="mt-2 flex items-start gap-1.5 text-base text-zinc-500">
               <MoodIcon
                 className={cn(
                   "mt-px size-3.5 shrink-0",
@@ -109,7 +113,7 @@ export const ChangelogEntryCard: FC<ChangelogEntryCardProps> = ({ entry }) => {
               />
               <span>
                 <span className="font-semibold text-zinc-600">
-                  {getSessionMoodLabel(entry.sessionMood)}
+                  {label(SessionMoodFormOptions, entry.sessionMood)}
                 </span>
                 {entry.sessionNote ? (
                   <>
@@ -121,13 +125,13 @@ export const ChangelogEntryCard: FC<ChangelogEntryCardProps> = ({ entry }) => {
             </p>
           ) : null}
 
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-caption text-zinc-500">
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-base text-zinc-500">
             <span className="font-medium text-zinc-600">{entry.author}</span>
 
             {entry.agent ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-neutral-fill px-2 py-0.5 font-semibold text-zinc-600">
                 <Bot className="size-3" strokeWidth={2} />
-                AI
+                {t("aiBadge")}
               </span>
             ) : null}
 

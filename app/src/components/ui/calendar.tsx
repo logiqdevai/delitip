@@ -1,12 +1,14 @@
 "use client"
 
 import * as React from "react"
+import { useLocale } from "next-intl"
 import {
   DayPicker,
   getDefaultClassNames,
   type DayButton,
   type Locale,
 } from "react-day-picker"
+import { el as greekLocale } from "react-day-picker/locale"
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -26,6 +28,9 @@ function Calendar({
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
 }) {
   const defaultClassNames = getDefaultClassNames()
+  const activeLocale = useLocale()
+  const resolvedLocale =
+    locale ?? (activeLocale === "el" ? greekLocale : undefined)
 
   return (
     <DayPicker
@@ -37,10 +42,12 @@ function Calendar({
         className
       )}
       captionLayout={captionLayout}
-      locale={locale}
+      locale={resolvedLocale}
       formatters={{
         formatMonthDropdown: (date) =>
-          date.toLocaleString(locale?.code, { month: "short" }),
+          date.toLocaleString(resolvedLocale?.code ?? activeLocale, {
+            month: "short",
+          }),
         ...formatters,
       }}
       classNames={{

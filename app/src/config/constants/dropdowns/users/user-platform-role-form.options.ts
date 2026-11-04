@@ -5,20 +5,22 @@ import {
 
 export const UserPlatformRoleFormOptions: {
   id: PlatformAuthRole;
-  label: string;
+  labelKey: string;
 }[] = [
-  { id: PlatformAuthRoles.USER, label: "User" },
-  { id: PlatformAuthRoles.SUPPORT, label: "Support" },
-  { id: PlatformAuthRoles.ADMIN, label: "Admin" },
-  { id: PlatformAuthRoles.SUPER_ADMIN, label: "Super Admin" },
+  {
+    id: PlatformAuthRoles.USER,
+    labelKey: "dashboard.enums.userPlatformRole.USER",
+  },
+  {
+    id: PlatformAuthRoles.SUPPORT,
+    labelKey: "dashboard.enums.userPlatformRole.SUPPORT",
+  },
+  {
+    id: PlatformAuthRoles.ADMIN,
+    labelKey: "dashboard.enums.userPlatformRole.ADMIN",
+  },
+  {
+    id: PlatformAuthRoles.SUPER_ADMIN,
+    labelKey: "dashboard.enums.userPlatformRole.SUPER_ADMIN",
+  },
 ];
-
-export function getUserPlatformRoleLabel(
-  role: PlatformAuthRole | string | null | undefined,
-): string {
-  if (!role) return "User";
-  return (
-    UserPlatformRoleFormOptions.find((option) => option.id === role)
-      ?.label ?? role
-  );
-}

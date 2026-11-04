@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -29,7 +30,7 @@ export const createOrganization = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "We couldn't create your business. Please try again.",
+        tr("errors.services.createYourBusiness"),
       ),
     );
   }
@@ -47,7 +48,7 @@ export const listMyOrganizations = async (): Promise<
     throw new Error(
       getApiErrorMessage(
         error,
-        "We couldn't load organizations. Please try again.",
+        tr("errors.services.loadOrganizations"),
       ),
     );
   }
@@ -63,7 +64,7 @@ export const getOrganization = async (id: string): Promise<Organization> => {
     throw new Error(
       getApiErrorMessage(
         error,
-        "We couldn't load organization. Please try again.",
+        tr("errors.services.loadOrganization"),
       ),
     );
   }
@@ -83,7 +84,7 @@ export const updateOrganization = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "We couldn't update organization. Please try again.",
+        tr("errors.services.updateOrganization"),
       ),
     );
   }
@@ -99,7 +100,7 @@ export const listOrganizationMembers = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't load members. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.loadMembers")),
     );
   }
 };
@@ -116,7 +117,7 @@ export const addOrganizationMember = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't add member. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.addMember")),
     );
   }
 };
@@ -134,7 +135,7 @@ export const updateOrganizationMember = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't update member. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.updateMember")),
     );
   }
 };
@@ -149,7 +150,7 @@ export const removeOrganizationMember = async (
     );
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't remove member. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.removeMember")),
     );
   }
 };

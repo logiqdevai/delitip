@@ -11,12 +11,13 @@ import {
   Wallet,
   type LucideIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Routes } from "@/routes/routes";
 
 export interface SettingsNavItem {
   href: string;
-  label: string;
-  description: string;
+  labelKey: string;
+  descriptionKey: string;
   icon: LucideIcon;
   requiresPlatformAdmin?: boolean;
   hidden?: boolean;
@@ -25,71 +26,81 @@ export interface SettingsNavItem {
 export const settingsNavItems: SettingsNavItem[] = [
   {
     href: Routes.dashboard.settings.profile,
-    label: "Business Profile",
-    description: "Core details customers and your team see across delitip.",
+    labelKey: "dashboard.settings.nav.profile.label",
+    descriptionKey: "dashboard.settings.nav.profile.description",
     icon: Building2,
   },
   {
     href: Routes.dashboard.settings.stores,
-    label: "Stores",
-    description: "All the venues in your business.",
+    labelKey: "dashboard.settings.nav.stores.label",
+    descriptionKey: "dashboard.settings.nav.stores.description",
     icon: Store,
   },
   {
     href: Routes.dashboard.settings.branding,
-    label: "Branding",
-    description: "What customers see on your public tip page.",
+    labelKey: "dashboard.settings.nav.branding.label",
+    descriptionKey: "dashboard.settings.nav.branding.description",
     icon: Palette,
   },
   {
     href: Routes.dashboard.settings.tipping,
-    label: "Tipping",
-    description:
-      "Presets shown on the tip flow, and whether guests can enter a custom amount.",
+    labelKey: "dashboard.settings.nav.tipping.label",
+    descriptionKey: "dashboard.settings.nav.tipping.description",
     icon: Wallet,
   },
   {
     href: Routes.dashboard.settings.localization,
-    label: "Localization",
-    description:
-      "The primary language is what you type your branding text in.",
+    labelKey: "dashboard.settings.nav.localization.label",
+    descriptionKey: "dashboard.settings.nav.localization.description",
     icon: Globe,
   },
   {
     href: Routes.dashboard.settings.reviewsFeedback,
-    label: "Reviews",
-    description:
-      "What customers see on the review step after tipping, and where high ratings are sent.",
+    labelKey: "dashboard.settings.nav.reviews.label",
+    descriptionKey: "dashboard.settings.nav.reviews.description",
     icon: MessageSquare,
   },
   {
     href: Routes.dashboard.settings.alerts,
-    label: "Alert Preferences",
-    description:
-      "Choose which automatic alerts your team receives in the Alerts inbox.",
+    labelKey: "dashboard.settings.nav.alerts.label",
+    descriptionKey: "dashboard.settings.nav.alerts.description",
     icon: Bell,
     hidden: true,
   },
   {
     href: Routes.dashboard.settings.members,
-    label: "Members & Access",
-    description: "Invite teammates and manage their role-based access.",
+    labelKey: "dashboard.settings.nav.members.label",
+    descriptionKey: "dashboard.settings.nav.members.description",
     icon: Users2,
     requiresPlatformAdmin: true,
     hidden: true,
   },
   {
     href: Routes.dashboard.settings.billing,
-    label: "Billing",
-    description: "Manage your subscription plan.",
+    labelKey: "dashboard.settings.nav.billing.label",
+    descriptionKey: "dashboard.settings.nav.billing.description",
     icon: CreditCard,
     hidden: true,
   },
   {
     href: Routes.dashboard.settings.taxDetails,
-    label: "Tax Details",
-    description: "Billing identity and address used to issue invoices.",
+    labelKey: "dashboard.settings.nav.taxDetails.label",
+    descriptionKey: "dashboard.settings.nav.taxDetails.description",
     icon: FileText,
     requiresPlatformAdmin: true,
   },
 ];
+
+export interface TranslatedSettingsNavItem extends SettingsNavItem {
+  label: string;
+  description: string;
+}
+
+export const useSettingsNavItems = (): TranslatedSettingsNavItem[] => {
+  const t = useTranslations();
+  return settingsNavItems.map((item) => ({
+    ...item,
+    label: t(item.labelKey),
+    description: t(item.descriptionKey),
+  }));
+};

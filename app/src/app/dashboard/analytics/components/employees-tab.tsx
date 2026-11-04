@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useMemo } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { EmployeeAvatar } from "@/components/ui/employee-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEmployeesPerformance } from "@/features/analytics/hooks/use-analytics";
@@ -16,6 +17,8 @@ export const EmployeesTab: FC<{
   currency: Currency;
   period: DashboardPeriod;
 }> = ({ organizationId, storeId, currency, period }) => {
+  const t = useTranslations("dashboard.analytics.employees");
+  const locale = useLocale();
   const performanceQuery = useEmployeesPerformance(organizationId, {
     store_id: storeId,
     period,
@@ -34,9 +37,7 @@ export const EmployeesTab: FC<{
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-xs text-zinc-500">
-        Informational stats for your team - not a ranking.
-      </p>
+      <p className="text-xs text-zinc-500">{t("note")}</p>
 
       {performanceQuery.isPending ? (
         <Skeleton className="h-64 w-full rounded-2xl" />
@@ -45,12 +46,12 @@ export const EmployeesTab: FC<{
       ) : (
         <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-zinc-100 bg-zinc-50 text-caption font-semibold tracking-wider text-zinc-400 uppercase">
+            <thead className="border-b border-zinc-100 bg-zinc-50 text-base font-semibold tracking-wider text-zinc-400 uppercase">
               <tr>
-                <th className="px-4 py-2.5">Employee</th>
-                <th className="px-4 py-2.5">Tips</th>
-                <th className="px-4 py-2.5">Rating</th>
-                <th className="px-4 py-2.5">Reviews</th>
+                <th className="px-4 py-2.5">{t("employee")}</th>
+                <th className="px-4 py-2.5">{t("tips")}</th>
+                <th className="px-4 py-2.5">{t("rating")}</th>
+                <th className="px-4 py-2.5">{t("reviews")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100">
@@ -60,7 +61,7 @@ export const EmployeesTab: FC<{
                     colSpan={4}
                     className="px-4 py-6 text-center text-xs text-zinc-400"
                   >
-                    No active employees for this period.
+                    {t("empty")}
                   </td>
                 </tr>
               ) : (
@@ -77,7 +78,7 @@ export const EmployeesTab: FC<{
                       </span>
                     </td>
                     <td className="px-4 py-2.5 font-bold text-brand-700">
-                      {formatMoney(row.tips_total, currency)}
+                      {formatMoney(row.tips_total, currency, locale)}
                     </td>
                     <td className="px-4 py-2.5 text-rating-amber">
                       {row.average_rating

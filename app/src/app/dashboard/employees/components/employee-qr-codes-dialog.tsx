@@ -2,6 +2,7 @@
 
 import { type FC, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   Check,
   Copy,
@@ -31,7 +32,8 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { toast } from "@/components/ui/toast";
-import { getQrCodeSelectionModeLabel } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
+import { QrCodeSelectionModeFormOptions } from "@/config/constants/dropdowns/qr-codes/qr-code-selection-mode-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
 import {
   getQrCodeEmployeeCount,
@@ -66,6 +68,8 @@ export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => 
   storeSlug,
   onEdit,
 }) => {
+  const t = useTranslations("dashboard.team.employees.qr");
+  const dropdownLabel = useDropdownLabel();
   const [copied, setCopied] = useState(false);
   const tipUrl = getAbsoluteTipUrl(storeSlug, qr.code);
   const employeeCount = getQrCodeEmployeeCount(qr);
@@ -78,8 +82,8 @@ export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => 
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       toast.add({
-        title: "Could not copy",
-        description: "Please copy the link manually.",
+        title: t("copyFailedTitle"),
+        description: t("copyFailedDescription"),
         type: "error",
       });
     }
@@ -101,7 +105,7 @@ export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => 
                   : "bg-neutral-fill font-medium text-zinc-500",
               )}
             >
-              {qr.is_active ? "Active" : "Inactive"}
+              {qr.is_active ? t("active") : t("inactive")}
             </span>
           </div>
           <div className="space-y-1">
@@ -111,7 +115,7 @@ export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => 
                 strokeWidth={2}
               />
               <span className="min-w-0 break-words">
-                {getQrCodeSelectionModeLabel(qr.selection_mode)}
+                {dropdownLabel(QrCodeSelectionModeFormOptions, qr.selection_mode)}
               </span>
             </p>
             <p className="flex items-start gap-1.5 text-xs text-zinc-500">
@@ -120,8 +124,7 @@ export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => 
                 strokeWidth={2}
               />
               <span className="min-w-0 break-words">
-                {employeeCount}{" "}
-                {employeeCount === 1 ? "employee" : "employees"} assigned
+                {t("employeesAssigned", { count: employeeCount })}
               </span>
             </p>
             <p className="flex items-start gap-1.5 text-xs text-zinc-500">
@@ -131,8 +134,8 @@ export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => 
               />
               <span className="min-w-0 break-words">
                 {qr.distribution_rule
-                  ? `Split by "${qr.distribution_rule.name}"`
-                  : "Uses store's default split rule"}
+                  ? t("splitByRule", { name: qr.distribution_rule.name })
+                  : t("defaultSplit")}
               </span>
             </p>
           </div>
@@ -144,7 +147,7 @@ export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => 
             size="icon-sm"
             className="text-zinc-500 hover:text-ink-charcoal"
             onClick={() => void handleCopy()}
-            aria-label={copied ? "Copied tip URL" : "Copy tip URL"}
+            aria-label={copied ? t("copiedUrl") : t("copyUrl")}
           >
             {copied ? (
               <Check className="size-3.5 text-brand-700" strokeWidth={2} />
@@ -158,7 +161,7 @@ export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => 
             size="icon-sm"
             className="text-zinc-500 hover:text-ink-charcoal"
             onClick={() => onEdit(qr)}
-            aria-label={`Edit ${qr.label}`}
+            aria-label={t("editQr", { name: qr.label })}
           >
             <Pencil className="size-3.5" strokeWidth={2} />
           </Button>
@@ -169,7 +172,7 @@ export const QrRow: FC<{ qr: QrCode; storeSlug: string; onEdit: (qr: QrCode) => 
           href={tipUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="block truncate font-mono text-[11px] leading-relaxed text-zinc-400 underline-offset-2 hover:text-brand-700 hover:underline"
+          className="block truncate font-mono text-base leading-relaxed text-zinc-400 underline-offset-2 hover:text-brand-700 hover:underline"
           title={tipUrl}
         >
           {tipUrl}
@@ -184,6 +187,7 @@ export const EmployeeQrCodesDialog: FC<EmployeeQrCodesDialogProps> = ({
   onOpenChange,
   employee,
 }) => {
+  const t = useTranslations("dashboard.team.employees.qr");
   const { storeId, store } = useWorkspace();
   const router = useRouter();
 
@@ -208,10 +212,10 @@ export const EmployeeQrCodesDialog: FC<EmployeeQrCodesDialogProps> = ({
         <DialogContent className="min-w-0 grid-cols-[minmax(0,1fr)] gap-5 overflow-x-hidden px-4 py-5 sm:max-w-xl sm:gap-6 sm:p-6">
           <DialogHeader className="min-w-0">
             <DialogTitle className="pr-2 text-balance break-words">
-              QR codes for {employee.full_name}
+              {t("dialogTitle", { name: employee.full_name })}
             </DialogTitle>
             <DialogDescription className="text-pretty break-words">
-              Every QR code this employee is currently assigned to.
+              {t("dialogDescription")}
             </DialogDescription>
           </DialogHeader>
 
@@ -223,7 +227,7 @@ export const EmployeeQrCodesDialog: FC<EmployeeQrCodesDialogProps> = ({
           ) : qrCodesQuery.isError ? (
             <Empty className="min-w-0 border border-dashed border-zinc-200 bg-zinc-50 py-8">
               <EmptyHeader>
-                <EmptyTitle>Could not load QR codes</EmptyTitle>
+                <EmptyTitle>{t("loadErrorTitle")}</EmptyTitle>
                 <EmptyDescription>{getErrorMessage(qrCodesQuery.error)}</EmptyDescription>
               </EmptyHeader>
             </Empty>
@@ -233,16 +237,16 @@ export const EmployeeQrCodesDialog: FC<EmployeeQrCodesDialogProps> = ({
                 <EmptyMedia variant="icon">
                   <QrCodeIcon />
                 </EmptyMedia>
-                <EmptyTitle>No QR codes yet</EmptyTitle>
+                <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
                 <EmptyDescription>
-                  This employee isn&apos;t assigned to any QR code.
+                  {t("emptyDescription")}
                 </EmptyDescription>
               </EmptyHeader>
               {storeId && store ? (
                 <EmptyContent>
                   <Button type="button" variant="outline" size="default" onClick={openCreate}>
                     <Plus data-icon="inline-start" className="size-3.5" />
-                    Create QR code
+                    {t("create")}
                   </Button>
                 </EmptyContent>
               ) : null}
@@ -268,7 +272,7 @@ export const EmployeeQrCodesDialog: FC<EmployeeQrCodesDialogProps> = ({
                   onClick={openCreate}
                 >
                   <Plus data-icon="inline-start" className="size-3.5" />
-                  <span className="truncate">Create another QR code</span>
+                  <span className="truncate">{t("createAnother")}</span>
                 </Button>
               ) : null}
             </div>

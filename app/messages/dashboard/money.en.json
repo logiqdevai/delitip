@@ -1,1 +1,452 @@
-{}
+{
+  "payoutAccountDialogs": {
+    "cancel": "Cancel",
+    "continueToViva": "Continue to Viva",
+    "ibanLabel": "IBAN",
+    "invalidIban": "That doesn't look like a valid IBAN.",
+    "beneficiaryName": "Beneficiary name",
+    "beneficiaryPlaceholder": "Legal name on the bank account",
+    "beneficiaryRequired": "Beneficiary name is required.",
+    "linkAccount": "Link account"
+  },
+  "payoutAccountCard": {
+    "title": "Store payout account",
+    "connectHint": "Connect a payout account so your Store can receive its share of tips - link a business IBAN directly.",
+    "connectHintViva": "Connect a payout account so your Store can receive its share of tips - link a business IBAN directly, or connect with Viva for hosted onboarding.",
+    "linkAccount": "Link payout account",
+    "connectViva": "Connect with Viva",
+    "connectedAccount": "{provider} · Connected account",
+    "ibanAccount": "{provider} · IBAN ····{last4}",
+    "finishOnboarding": "Finish onboarding",
+    "checking": "Checking…",
+    "checkStatus": "Check status",
+    "ibanDialogTitle": "Link store payout account",
+    "ibanDialogDescription": "Your Store's business IBAN - used to send your share of tips via bank transfer.",
+    "vivaDialogTitle": "Connect with Viva",
+    "vivaDialogDescription": "You'll be redirected to Viva's hosted onboarding to verify your Store before it can receive payouts."
+  },
+  "onboardingReturn": {
+    "finishing": "Finishing setup…"
+  },
+  "tablePagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "refundsTable": {
+    "filters": "Filters",
+    "fromDate": "From date",
+    "toDate": "To date",
+    "to": "to",
+    "loadFailed": "Could not load refunds",
+    "tryAgain": "Try again",
+    "emptyTitle": "No refund requests here",
+    "emptyDescription": "Nothing matches these filters right now.",
+    "columns": {
+      "when": "When",
+      "amount": "Amount",
+      "reason": "Reason",
+      "status": "Status",
+      "requestedBy": "Requested by",
+      "processedBy": "Processed by",
+      "actions": "Actions"
+    },
+    "noReason": "No reason given",
+    "needsReconciliation": "Needs reconciliation",
+    "reconciliationHint": "Some of this tip's distributions were already paid out - IBAN transfers can't be clawed back automatically.",
+    "approve": "Approve",
+    "reject": "Reject",
+    "markCompleted": "Mark completed",
+    "rejectTitle": "Reject this refund request?",
+    "rejectDescription": "{amount} will not be refunded. This can't be undone.",
+    "rejectFallback": "This refund request will be rejected.",
+    "rejectConfirm": "Reject"
+  },
+  "recordSettlement": {
+    "title": "Record a payment to {name}",
+    "employeeFallback": "employee",
+    "description": "Pick the tips this payment covers. The amount comes from the tips themselves, so every cent traces back to one.",
+    "nothingOwed": "Nothing is owed to {name} right now.",
+    "thisEmployeeFallback": "this employee",
+    "tipsCovered": "Tips this covers",
+    "clearAll": "Clear all",
+    "selectAll": "Select all",
+    "inYourAccount": "In your account",
+    "notPaidYet": "Not paid out to you yet",
+    "notReceivedWarning": "{amount} of this hasn't reached your account yet. You can still pay it now — you'd be fronting it until our transfer lands.",
+    "deductions": "Deductions",
+    "datePaid": "Date paid",
+    "today": "Today",
+    "reference": "Reference (optional)",
+    "referencePlaceholder": "e.g. payroll week 38",
+    "note": "Note (optional)",
+    "notePlaceholder": "Anything you want on the record",
+    "totalToHandOver": "Total to hand over",
+    "breakdown": "{tips} in tips − {deducted} deducted",
+    "cancel": "Cancel",
+    "recordPayment": "Record payment"
+  },
+  "payOutNow": {
+    "held": "Held",
+    "skip": {
+      "NO_PAYOUT_ACCOUNT": "No payout account",
+      "ACCOUNT_NOT_ACTIVE": "Payout account not active",
+      "NO_LINKED_USER": "Employee has no linked user",
+      "TRANSFER_FAILED": "Transfer failed",
+      "INVOICE_REQUIRED": "Store payouts need an invoice-backed request"
+    },
+    "includesOwedToStaff": "Includes {amount} owed to staff",
+    "resultsTitle": "Payout results",
+    "confirmTitle": "Pay out now?",
+    "resultsSummary": "{sent, plural, one {# payout started} other {# payouts started}}, {failed} failed, {held} held.",
+    "confirmDescription": "Eligible amounts are sent by bank transfer to each recipient's payout account.",
+    "totalSent": "Total sent",
+    "total": "Total",
+    "staffMoneyNote": "{amount} of this is money owed to your staff. It goes to your store account, and you are responsible for paying it on to them.",
+    "nothingEligible": "Nothing is eligible for payout right now.",
+    "done": "Done",
+    "cancel": "Cancel",
+    "payOutNow": "Pay out now"
+  },
+  "payoutRequestDialog": {
+    "youWillBePaid": "You will be paid",
+    "yourShare": "Your share",
+    "heldForStaff": "Held for staff",
+    "tipsCovered": "Tips covered",
+    "alreadyPaid": "Already paid to date",
+    "lastPaid": "last {date}",
+    "holdNote": "Only tips paid more than {hours}h ago and confirmed by Viva are included. Newer tips roll into your next request.",
+    "holdNoteStaff": "Only tips paid more than {hours}h ago and confirmed by Viva are included. Newer tips roll into your next request. The staff portion is money you'll be holding for your team — track it under Staff balances.",
+    "accountInactive": "Your store payout account is not active yet. You can still submit the request, but the transfer can only be sent once it is linked and verified.",
+    "issueInvoiceTo": "Issue an invoice to",
+    "legalName": "Legal name",
+    "vatNumber": "VAT number",
+    "taxOffice": "Tax office",
+    "address": "Address",
+    "invoiceAmount": "Invoice amount (before VAT)",
+    "invoiceDetailsPending": "Invoice details will be shared with you by Delitip.",
+    "invoiceAmountNote": "The amount before VAT on the invoice must be exactly <b>{amount}</b>. Add your VAT on top, as you normally would.",
+    "invoiceFile": "Invoice file",
+    "invoiceNumber": "Invoice number",
+    "optional": "(optional)",
+    "invoiceNumberPlaceholder": "e.g. A-0042",
+    "noteForDelitip": "Note for Delitip",
+    "notePlaceholder": "Anything the reviewer should know",
+    "copyAria": "Copy {label}",
+    "copied": "{label} copied",
+    "submittedTitle": "Request for {amount} submitted",
+    "submittedAt": "Submitted {date}",
+    "steps": {
+      "read": {
+        "title": "We read your invoice",
+        "body": "An automatic check compares it with the amount above in about a minute."
+      },
+      "review": {
+        "title": "Delitip reviews it",
+        "body": "An admin approves it or sends it back with a note if something is off."
+      },
+      "transfer": {
+        "title": "The transfer is sent",
+        "body": "On approval the bank transfer starts; you'll get an alert and an email."
+      }
+    },
+    "openRequest": "You already have a request for {amount} awaiting review. Cancel it from the Payouts tab if you need to start over.",
+    "nothingPayable": "Nothing is payable to your store right now.",
+    "loadFailed": "Could not load the payout preview.",
+    "titles": {
+      "overview": "Request a payout",
+      "invoice": "Upload your invoice",
+      "done": "Payout request submitted"
+    },
+    "descriptions": {
+      "overview": "Here's what you'll be paid and the tips it covers. Next you'll issue an invoice for exactly this amount.",
+      "invoice": "Issue the invoice to the details below, then upload it as a PDF or photo.",
+      "done": "We'll take it from here."
+    },
+    "cancel": "Cancel",
+    "continue": "Continue to invoice",
+    "back": "Back",
+    "submit": "Submit request",
+    "done": "Done"
+  },
+  "payoutRequestsTable": {
+    "title": "Payout requests",
+    "subtitle": "Invoices you submitted to be paid your tips, and how each was reviewed.",
+    "paid": "Paid",
+    "loadFailed": "Could not load payout requests",
+    "emptyTitle": "No payout requests yet",
+    "emptyDescription": "Press Request payout on the Tips tab once you have eligible tips.",
+    "columns": {
+      "submitted": "Submitted",
+      "amount": "Amount",
+      "tipsCovered": "Tips covered",
+      "status": "Status",
+      "invoice": "Invoice"
+    },
+    "heldForStaff": "{amount} held for staff",
+    "view": "View",
+    "cancel": "Cancel",
+    "cancelTitle": "Cancel this payout request?",
+    "cancelDescription": "Your tips are released immediately and you can submit a new request with a new invoice.",
+    "cancelConfirm": "Cancel request",
+    "keepIt": "Keep it"
+  },
+  "payoutsPage": {
+    "historyTitle": "Payout history",
+    "historySubtitle": "Bank transfers executed for your store and its employees. Trigger a new payout from the Tips tab.",
+    "loadFailed": "Could not load payouts",
+    "tryAgain": "Try again",
+    "emptyTitle": "No payouts yet",
+    "emptyDescription": "Once you run a payout from the Tips tab, executed bank transfers will show up here.",
+    "columns": {
+      "when": "When",
+      "recipient": "Recipient",
+      "amount": "Amount",
+      "reference": "Reference",
+      "status": "Status"
+    },
+    "employee": "Employee",
+    "store": "Store",
+    "split": "{own} yours · {held} held for staff"
+  },
+  "staffBalances": {
+    "owedToStaff": "Owed to staff",
+    "owedHint": "Tips collected into your account under a “paid by the business” rule, that you still need to hand over.",
+    "exportCsv": "Export CSV",
+    "filters": "Filters",
+    "fromDate": "From date",
+    "toDate": "To date",
+    "to": "to",
+    "showSettled": "Show people who are square",
+    "loadFailed": "Could not load staff balances",
+    "tryAgain": "Try again",
+    "emptyTitle": "Nothing owed to staff",
+    "emptyDescription": "Balances appear here once tips come in under a distribution rule set to “send everything to the business”.",
+    "columns": {
+      "employee": "Employee",
+      "earned": "Earned",
+      "handedOver": "Handed over",
+      "stillOwed": "Still owed",
+      "actions": "Actions"
+    },
+    "unpaidTips": "{count, plural, one {# unpaid tip} other {# unpaid tips}}",
+    "deductionPending": "{amount} deduction pending",
+    "statement": "Statement",
+    "recordPayment": "Record payment",
+    "paymentsRecorded": "Payments recorded",
+    "nothingRecorded": "Nothing recorded yet.",
+    "recordedColumns": {
+      "when": "When",
+      "employee": "Employee",
+      "confirmed": "Confirmed",
+      "amount": "Amount",
+      "actions": "Actions"
+    },
+    "reversed": "Reversed",
+    "confirmed": "Confirmed",
+    "awaitingEmployee": "Awaiting employee",
+    "reverse": "Reverse",
+    "reverseTitle": "Reverse this payment?",
+    "reverseDescription": "{amount} to {name} goes back to being owed. The record stays, marked as reversed."
+  },
+  "statement": {
+    "title": "Tip statement",
+    "generated": "{business} · generated {date}",
+    "earned": "Earned in tips",
+    "handedOver": "Already handed over",
+    "deductionsPending": "Deductions pending",
+    "stillOwed": "Still owed",
+    "reachedBusiness": "Of what is owed, {amount} has reached the business account so far.",
+    "paymentsRecorded": "Payments recorded",
+    "date": "Date",
+    "reference": "Reference",
+    "confirmed": "Confirmed",
+    "amount": "Amount",
+    "yes": "Yes",
+    "notYet": "Not yet",
+    "receivedBy": "Received by",
+    "paidBy": "Paid by",
+    "filePrefix": "tip-statement",
+    "fileFallback": "employee"
+  },
+  "requestRefund": {
+    "title": "Request refund",
+    "description": "Up to {amount}. A manager will need to approve it before it's marked complete.",
+    "amount": "Amount",
+    "reason": "Reason",
+    "optional": "(optional)",
+    "reasonPlaceholder": "e.g. Order was cancelled after tipping",
+    "cancel": "Cancel",
+    "submit": "Request refund"
+  },
+  "tipDetail": {
+    "loadFailedTitle": "Could not load this tip",
+    "loadFailedFallback": "The tip may not exist.",
+    "backToTips": "Back to Tips",
+    "store": "Store",
+    "employee": "Employee",
+    "summary": {
+      "title": "Summary",
+      "amount": "Amount",
+      "status": "Status",
+      "paidAt": "Paid at",
+      "createdAt": "Created at",
+      "qrCode": "QR code",
+      "distributionRule": "Distribution rule",
+      "storeDefault": "Store default",
+      "paymentProvider": "Payment provider",
+      "paymentReference": "Payment reference",
+      "customer": "Customer"
+    },
+    "financial": {
+      "title": "Financial breakdown",
+      "tipAmount": "Tip amount",
+      "vat": "VAT",
+      "gross": "Gross amount (charged)",
+      "processorFee": "Processor fee",
+      "estimated": "~{amount} (estimated)",
+      "notConfirmed": "Not yet confirmed",
+      "commission": "Platform commission",
+      "net": "Net distributable"
+    },
+    "distribution": {
+      "title": "Distribution",
+      "empty": "No distribution recorded for this tip."
+    },
+    "review": {
+      "title": "Review",
+      "noComment": "No comment left"
+    },
+    "refunds": {
+      "title": "Refunds",
+      "request": "Request refund",
+      "noReason": "No reason given"
+    }
+  },
+  "payoutSummaryCard": {
+    "pendingPayout": "Pending payout",
+    "eligibleNow": "Eligible now",
+    "underReview": "Under review",
+    "payOutStaff": "Pay out staff",
+    "requestPayout": "Request payout",
+    "payOutNow": "Pay out now",
+    "holdNote": "Payouts are held for {hours}h after a tip is paid, then released once Viva confirms the processing fee.{hasNext, select, true { Next batch eligible {date}.} other {}}{invoiceRequired, select, true { Tips are paid to your store after you upload an invoice for the amount and Delitip approves it.} other {}}",
+    "openRequest": "<b>{amount}</b> requested {date} is awaiting Delitip's review.",
+    "openRequestFailed": "<b>{amount}</b> requested {date} is awaiting Delitip's review. The last bank transfer attempt didn't go through, so it's back with us for review.",
+    "cancelRequest": "Cancel request",
+    "cancelTitle": "Cancel this payout request?",
+    "cancelDescription": "Your tips are released immediately and you can submit a new request with a new invoice.",
+    "keepIt": "Keep it"
+  },
+  "tipsLedger": {
+    "title": "All tips",
+    "subtitle": "Every tip paid by customers and what your team receives from it.",
+    "exporting": "Exporting…",
+    "exportCsv": "Export CSV",
+    "filters": "Filters",
+    "filterByEmployee": "Filter by employee",
+    "fromDate": "From date",
+    "toDate": "To date",
+    "to": "to",
+    "loadFailed": "Could not load tips",
+    "tryAgain": "Try again",
+    "emptyTitle": "No tips yet",
+    "emptyDescription": "Once customers tip through one of your QR codes, transactions will show up here.",
+    "viewQr": "View QR codes",
+    "columns": {
+      "when": "When",
+      "customer": "Customer",
+      "employee": "Employee",
+      "qr": "QR",
+      "tipAmount": "Tip amount",
+      "net": "Net",
+      "status": "Status"
+    },
+    "anonymous": "Anonymous",
+    "store": "Store"
+  },
+  "tipsPage": {
+    "noStoreTitle": "No store selected",
+    "noStoreDescription": "Finish business setup before viewing tips.",
+    "title": "Tips",
+    "description": "Tips, payouts, and staff balances for {store}.",
+    "tabs": {
+      "tips": "Tips",
+      "staffBalances": "Staff balances",
+      "payouts": "Payouts"
+    }
+  },
+  "manualPayoutSkip": {
+    "TIP_NOT_FOUND": "payment not found",
+    "TIP_NOT_COMPLETED": "payment not completed",
+    "FEE_NOT_CONFIRMED": "processor fee not confirmed yet",
+    "ALREADY_CLAIMED": "already paid out or in progress",
+    "PAYOUT_REQUESTED": "locked in a payout request",
+    "NO_PAYOUT_ACCOUNT": "no payout account",
+    "ACCOUNT_NOT_ACTIVE": "payout account not active",
+    "NO_LINKED_USER": "employee has no linked user",
+    "INVOICE_REQUIRED": "store payouts need an invoice-backed request"
+  },
+  "toasts": {
+    "payouts": {
+      "nothingTitle": "Nothing to pay out",
+      "nothingDescription": "No distributions are eligible right now.",
+      "started": "{count, plural, one {# payout started} other {# payouts started}}",
+      "skipped": "{count, plural, one {# recipient skipped - see details below.} other {# recipients skipped - see details below.}}",
+      "runFailed": "Could not run payouts",
+      "startedWithFailed": "{started, plural, one {# payout started} other {# payouts started}}, {failed} failed",
+      "payoutFailed": "Payout failed",
+      "nothingPaid": "Nothing was paid out",
+      "skippedNote": "Skipped: {items}.",
+      "manualFailed": "Could not run the manual payout"
+    },
+    "payoutRequests": {
+      "submittedTitle": "Payout request submitted",
+      "submittedDescription": "We'll check the invoice and let you know once it's reviewed.",
+      "submitFailed": "Could not submit the payout request",
+      "cancelledTitle": "Payout request cancelled",
+      "cancelledDescription": "Your tips are available to request again.",
+      "cancelFailed": "Could not cancel the payout request",
+      "openInvoiceFailed": "Could not open the invoice",
+      "transferFailed": "Bank transfer failed",
+      "approvedTitle": "Payout approved",
+      "approvedDescription": "The bank transfer has started and the store was notified.",
+      "approveFailed": "Could not approve the payout request",
+      "rejectedTitle": "Payout request rejected",
+      "rejectedDescription": "The store was notified and can submit a corrected invoice.",
+      "rejectFailed": "Could not reject the payout request",
+      "recheckedTitle": "Invoice re-checked",
+      "recheckFailedAgain": "The automatic check failed again — review the invoice manually.",
+      "recheckDone": "The automatic check finished.",
+      "recheckFailed": "Could not re-run the check"
+    },
+    "refunds": {
+      "requestedTitle": "Refund requested",
+      "requestedDescription": "A manager can approve it from the Payments hub.",
+      "requestFailed": "Could not request refund",
+      "updated": "Refund updated",
+      "updateFailed": "Could not update refund"
+    },
+    "settlements": {
+      "recordedTitle": "Payment recorded",
+      "recordedDescription": "The employee can see it and confirm they received it.",
+      "recordFailed": "Could not record the payment",
+      "reversedTitle": "Payment reversed",
+      "reversedDescription": "Those shares are owed again.",
+      "reverseFailed": "Could not reverse the payment",
+      "confirmedTitle": "Confirmed",
+      "confirmedDescription": "Thanks — your business can see you received it.",
+      "confirmFailed": "Could not confirm",
+      "exportReady": "Export ready",
+      "exportFailed": "Could not export"
+    },
+    "tips": {
+      "exportedTitle": "Tips exported",
+      "exportedDescription": "Your CSV download has started.",
+      "exportFailed": "Could not export tips",
+      "reconciledTitle": "Payments reconciled",
+      "reconciledCorrected": "{count, plural, one {# stuck payment corrected against Viva.} other {# stuck payments corrected against Viva.}}",
+      "reconciledNone": "No stuck payments found - everything's up to date.",
+      "reconcileFailed": "Could not reconcile payments"
+    }
+  }
+}

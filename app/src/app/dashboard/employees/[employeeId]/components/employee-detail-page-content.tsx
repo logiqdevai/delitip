@@ -3,6 +3,7 @@
 import { type FC, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
   ArrowLeft,
   ChevronDown,
@@ -58,9 +59,8 @@ import {
   useResendEmployeeInvite,
   useUpdateEmployee,
 } from "@/features/employees/hooks/use-employees";
-import { getEmployeeStatusLabel } from "@/config/constants/dropdowns/employees/employee-status-form.options";
-import { getEmployeeAccountStatusLabel } from "@/config/constants/dropdowns/employees/employee-account-status-form.options";
-import { getPayoutStatusLabel } from "@/config/constants/dropdowns/tips/payout-status-form.options";
+import { PayoutStatusFormOptions } from "@/config/constants/dropdowns/tips/payout-status-form.options";
+import { useDropdownLabel } from "@/hooks/use-dropdown-options";
 import { usePayoutPolicy } from "@/features/app-config/hooks/use-app-config";
 import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
 import type { QrCode } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
@@ -82,18 +82,22 @@ const payoutStatusChipClass: Record<PayoutStatus, string> = {
   CANCELLED: "bg-zinc-100 text-zinc-600",
 };
 
-const formatDateTime = (value?: string | null) => {
-  if (!value) return "-";
-  return new Date(value).toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-};
-
 export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
   employeeId,
 }) => {
   const router = useRouter();
+  const t = useTranslations("dashboard.team.employees.detail");
+  const tStatus = useTranslations("dashboard.team.employees.status");
+  const locale = useLocale();
+  const format = useFormatter();
+  const dropdownLabel = useDropdownLabel();
+  const formatDateTime = (value?: string | null) => {
+    if (!value) return "-";
+    return format.dateTime(new Date(value), {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+  };
   const { store, storeId } = useWorkspace();
   const authUser = useAuthStore((state) => state.user);
   const meQuery = useMe();
@@ -125,9 +129,9 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
     return (
       <Empty className="border border-dashed border-zinc-200 bg-white py-16">
         <EmptyHeader>
-          <EmptyTitle>Could not load this employee</EmptyTitle>
+          <EmptyTitle>{t("loadErrorTitle")}</EmptyTitle>
           <EmptyDescription>
-            {getErrorMessage(employeeQuery.error, "The employee may not exist.")}
+            {getErrorMessage(employeeQuery.error, t("notFoundFallback"))}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
@@ -135,7 +139,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
             href={Routes.dashboard.employees}
             className="text-xs font-semibold text-brand-700 hover:underline"
           >
-            Back to Employees
+            {t("backToEmployees")}
           </Link>
         </EmptyContent>
       </Empty>
@@ -165,7 +169,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-ink-charcoal"
       >
         <ArrowLeft className="size-3.5" strokeWidth={2} />
-        Back to Employees
+        {t("backToEmployees")}
       </Link>
 
       <section className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
@@ -184,7 +188,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                   {employee.full_name}
                 </h1>
                 <p className="truncate text-sm font-medium text-zinc-500">
-                  {employee.position?.trim() || "Team member"}
+                  {employee.position?.trim() || t("defaultPosition")}
                 </p>
               </div>
             </div>
@@ -206,11 +210,11 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                       : "inline-flex items-center rounded-full bg-neutral-fill px-2.5 py-1 text-caption font-medium text-zinc-500"
                   }
                 >
-                  {getEmployeeStatusLabel(employee.is_active)}
+                  {employee.is_active ? tStatus("active") : tStatus("inactive")}
                 </span>
                 {!isSignedUp ? (
                   <span className="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-caption font-bold text-amber-700">
-                    {getEmployeeAccountStatusLabel(employee.user?.registered_at)}
+                    {tStatus("accountInvitePending")}
                   </span>
                 ) : null}
               </div>
@@ -224,9 +228,9 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                   buttonVariants({ variant: "outline", size: "default" }),
                   "w-full justify-between gap-2 px-4 font-semibold sm:w-auto sm:justify-center sm:px-3 sm:text-xs sm:font-medium",
                 )}
-                aria-label="Employee actions"
+                aria-label={t("actionsAria")}
               >
-                Actions
+                {t("actions")}
                 <ChevronDown className="size-4 opacity-50 sm:size-3.5" strokeWidth={2} />
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -235,7 +239,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
               >
                 <DropdownMenuItem onClick={() => setFormOpen(true)}>
                   <Pencil />
-                  Edit
+                  {t("edit")}
                 </DropdownMenuItem>
                 {!isSignedUp ? (
                   <DropdownMenuItem
@@ -243,7 +247,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                     disabled={resendInvite.isPending}
                   >
                     <Mail />
-                    Resend invite
+                    {t("resendInvite")}
                   </DropdownMenuItem>
                 ) : null}
                 <DropdownMenuItem
@@ -260,7 +264,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                   }}
                 >
                   {employee.is_active ? <UserRoundX /> : <UserCheck />}
-                  {employee.is_active ? "Deactivate" : "Activate"}
+                  {employee.is_active ? t("deactivate") : t("activate")}
                 </DropdownMenuItem>
                 {canDeleteEmployee ? (
                   <>
@@ -270,7 +274,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                       onClick={() => deleteConfirm.openDialog()}
                     >
                       <Trash2 />
-                      Delete
+                      {t("delete")}
                     </DropdownMenuItem>
                   </>
                 ) : null}
@@ -283,25 +287,25 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
           <span className="text-xs font-semibold text-zinc-500">
-            Tips this month
+            {t("tipsThisMonth")}
           </span>
           <div className="mt-1 text-xl font-extrabold text-ink-charcoal">
             {dashboardQuery.isPending ? (
               <Skeleton className="h-6 w-20" />
             ) : (
-              formatMoney(dashboard?.tips_this_month.total_amount ?? 0, currency)
+              formatMoney(dashboard?.tips_this_month.total_amount ?? 0, currency, locale)
             )}
           </div>
         </div>
         <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
           <span className="text-xs font-semibold text-zinc-500">
-            Average rating
+            {t("averageRating")}
           </span>
           <div className="mt-1 text-xl font-extrabold text-rating-amber">
             {dashboardQuery.isPending ? (
               <Skeleton className="h-6 w-16" />
             ) : dashboard?.average_rating ? (
-              `★ ${dashboard.average_rating.toFixed(2)}`
+              `★ ${format.number(dashboard.average_rating, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
             ) : (
               "-"
             )}
@@ -309,7 +313,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         </div>
         <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
           <span className="text-xs font-semibold text-zinc-500">
-            Reviews
+            {t("reviews")}
           </span>
           <div className="mt-1 text-xl font-extrabold text-ink-charcoal">
             {dashboardQuery.isPending ? (
@@ -331,7 +335,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
       <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-charcoal">
           <QrCodeIcon className="size-4" strokeWidth={2} />
-          QR codes
+          {t("qrCodes")}
         </h2>
         {qrCodesQuery.isPending ? (
           <div className="space-y-3">
@@ -341,7 +345,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         ) : qrCodesQuery.isError ? (
           <Empty className="border border-dashed border-zinc-200 bg-zinc-50 py-8">
             <EmptyHeader>
-              <EmptyTitle>Could not load QR codes</EmptyTitle>
+              <EmptyTitle>{t("qrLoadErrorTitle")}</EmptyTitle>
               <EmptyDescription>{getErrorMessage(qrCodesQuery.error)}</EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -351,16 +355,16 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
               <EmptyMedia variant="icon">
                 <QrCodeIcon />
               </EmptyMedia>
-              <EmptyTitle>No QR codes yet</EmptyTitle>
+              <EmptyTitle>{t("qrEmptyTitle")}</EmptyTitle>
               <EmptyDescription>
-                This employee isn&apos;t assigned to any QR code.
+                {t("qrEmptyDescription")}
               </EmptyDescription>
             </EmptyHeader>
             {storeId && store ? (
               <EmptyContent>
                 <Button type="button" variant="outline" size="default" onClick={openCreateQr}>
                   <Plus data-icon="inline-start" className="size-3.5" />
-                  Create QR code
+                  {t("createQr")}
                 </Button>
               </EmptyContent>
             ) : null}
@@ -386,7 +390,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                 onClick={openCreateQr}
               >
                 <Plus data-icon="inline-start" className="size-3.5" />
-                Create another QR code
+                {t("createAnotherQr")}
               </Button>
             ) : null}
           </div>
@@ -396,14 +400,14 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
       <div className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-5 shadow-xs">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-charcoal">
           <Receipt className="size-4" strokeWidth={2} />
-          Tips
+          {t("tips")}
         </h2>
         {tipsQuery.isPending ? (
           <TableSkeleton columns={3} rows={4} />
         ) : tipsQuery.isError ? (
           <Empty className="border border-dashed border-zinc-200 bg-zinc-50 py-8">
             <EmptyHeader>
-              <EmptyTitle>Could not load tips</EmptyTitle>
+              <EmptyTitle>{t("tipsLoadErrorTitle")}</EmptyTitle>
               <EmptyDescription>{getErrorMessage(tipsQuery.error)}</EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -413,9 +417,9 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
               <EmptyMedia variant="icon">
                 <Receipt />
               </EmptyMedia>
-              <EmptyTitle>No tips yet</EmptyTitle>
+              <EmptyTitle>{t("tipsEmptyTitle")}</EmptyTitle>
               <EmptyDescription>
-                Tips this employee receives will show up here.
+                {t("tipsEmptyDescription")}
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -424,9 +428,9 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="px-4">When</TableHead>
-                  <TableHead className="px-4">Amount</TableHead>
-                  <TableHead className="px-4 text-right">Payout status</TableHead>
+                  <TableHead className="px-4">{t("colWhen")}</TableHead>
+                  <TableHead className="px-4">{t("colAmount")}</TableHead>
+                  <TableHead className="px-4 text-right">{t("colPayoutStatus")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -442,7 +446,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                       {formatDateTime(distribution.tip.created_at)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 font-bold text-brand-700">
-                      {formatMoney(distribution.amount, distribution.tip.currency)}
+                      {formatMoney(distribution.amount, distribution.tip.currency, locale)}
                     </TableCell>
                     <TableCell className="px-4 py-3.5 text-right">
                       <span
@@ -451,7 +455,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                           payoutStatusChipClass[distribution.payout_status],
                         )}
                       >
-                        {getPayoutStatusLabel(distribution.payout_status)}
+                        {dropdownLabel(PayoutStatusFormOptions, distribution.payout_status)}
                       </span>
                     </TableCell>
                   </TableRow>
@@ -474,9 +478,9 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
 
       <ConfirmationDialog
         state={deactivateConfirm}
-        title="Deactivate employee?"
-        description={`${employee.full_name} will be marked inactive and hidden from active staff lists.`}
-        confirmLabel="Deactivate"
+        title={t("deactivateTitle")}
+        description={t("deactivateDescription", { name: employee.full_name })}
+        confirmLabel={t("deactivateConfirm")}
         onConfirm={async () => {
           await updateEmployee.mutateAsync({
             id: employee.id,
@@ -489,9 +493,9 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
       {canDeleteEmployee ? (
         <ConfirmationDialog
           state={deleteConfirm}
-          title="Delete employee?"
-          description={`${employee.full_name} will be permanently removed. This cannot be undone.`}
-          confirmLabel="Delete"
+          title={t("deleteTitle")}
+          description={t("deleteDescription", { name: employee.full_name })}
+          confirmLabel={t("deleteConfirm")}
           onConfirm={async () => {
             await deleteEmployee.mutateAsync(employee.id);
             router.push(Routes.dashboard.employees);

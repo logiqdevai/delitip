@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
   AlertTriangle,
   Banknote,
@@ -28,13 +29,14 @@ import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { getErrorMessage } from "@/lib/api-error";
 
-const compact = (value: number) =>
-  new Intl.NumberFormat(undefined, {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
-
 export const AdminAnalyticsPageContent: FC = () => {
+  const t = useTranslations("dashboard.adminSystem.analytics");
+  const format = useFormatter();
+  const locale = useLocale();
+  const compact = (value: number) =>
+    format.number(value, { notation: "compact", maximumFractionDigits: 1 });
+  const money = (value: number, currency: Currency) =>
+    formatMoney(value, currency, locale);
   const [period, setPeriod] = useState<AdminOverviewPeriod>("30d");
   const overviewQuery = useAdminOverview({ period });
   const overview = overviewQuery.data;
@@ -47,8 +49,8 @@ export const AdminAnalyticsPageContent: FC = () => {
   return (
     <>
       <DashboardPageHeader
-        title="Analytics"
-        description="Platform-wide usage and revenue, across every business on delitip."
+        title={t("title")}
+        description={t("description")}
         actions={
           <AdminAnalyticsPeriodSelect value={period} onChange={setPeriod} />
         }
@@ -71,29 +73,31 @@ export const AdminAnalyticsPageContent: FC = () => {
       ) : overview && totals ? (
         <div className="space-y-6">
           <section className="space-y-2.5">
-            <h2 className="text-caption font-bold tracking-wider text-zinc-400 uppercase">
-              Platform
+            <h2 className="text-base font-bold tracking-wider text-zinc-400 uppercase">
+              {t("sections.platform")}
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <StatTile
-                label="Total users"
+                label={t("tiles.totalUsers")}
                 value={compact(overview.total_users)}
                 icon={<Users />}
                 tone="brand"
-                helpText={`+${compact(overview.new_users_in_period)} in this range`}
+                helpText={t("help.newUsersInRange", {
+                  count: compact(overview.new_users_in_period),
+                })}
               />
               <StatTile
-                label="New users"
+                label={t("tiles.newUsers")}
                 value={compact(overview.new_users_in_period)}
                 icon={<UserPlus />}
               />
               <StatTile
-                label="Total stores"
+                label={t("tiles.totalStores")}
                 value={compact(overview.total_stores)}
                 icon={<Store />}
               />
               <StatTile
-                label="Total organizations"
+                label={t("tiles.totalOrganizations")}
                 value={compact(overview.total_organizations)}
                 icon={<Building2 />}
               />
@@ -101,70 +105,73 @@ export const AdminAnalyticsPageContent: FC = () => {
           </section>
 
           <section className="space-y-2.5">
-            <h2 className="text-caption font-bold tracking-wider text-zinc-400 uppercase">
-              Revenue &middot; {currency}
+            <h2 className="text-base font-bold tracking-wider text-zinc-400 uppercase">
+              {t("sections.revenue", { currency })}
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <StatTile
-                label="Gross tips revenue"
-                value={formatMoney(totals.tips_gross_revenue, currency)}
+                label={t("tiles.grossTipsRevenue")}
+                value={money(totals.tips_gross_revenue, currency)}
                 icon={<Wallet />}
                 tone="brand"
-                helpText={`${compact(totals.completed_tips_count)} completed tips`}
+                helpText={t("help.completedTips", {
+                  count: compact(totals.completed_tips_count),
+                })}
               />
               <StatTile
-                label="Average tip amount"
-                value={formatMoney(totals.average_tip_amount, currency)}
+                label={t("tiles.averageTipAmount")}
+                value={money(totals.average_tip_amount, currency)}
                 icon={<Percent />}
               />
               <StatTile
-                label="Platform net revenue"
-                value={formatMoney(totals.platform_net_revenue, currency)}
+                label={t("tiles.platformNetRevenue")}
+                value={money(totals.platform_net_revenue, currency)}
                 icon={<Landmark />}
               />
               <StatTile
-                label="Processing fees"
-                value={formatMoney(totals.processing_fees_total, currency)}
+                label={t("tiles.processingFees")}
+                value={money(totals.processing_fees_total, currency)}
                 icon={<CreditCard />}
               />
             </div>
           </section>
 
           <section className="space-y-2.5">
-            <h2 className="text-caption font-bold tracking-wider text-zinc-400 uppercase">
-              Distribution &middot; {currency}
+            <h2 className="text-base font-bold tracking-wider text-zinc-400 uppercase">
+              {t("sections.distribution", { currency })}
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <StatTile
-                label="Employee net revenue"
-                value={formatMoney(totals.employee_net_revenue, currency)}
+                label={t("tiles.employeeNetRevenue")}
+                value={money(totals.employee_net_revenue, currency)}
                 icon={<HandCoins />}
               />
               <StatTile
-                label="Store net revenue"
-                value={formatMoney(totals.store_net_revenue, currency)}
+                label={t("tiles.storeNetRevenue")}
+                value={money(totals.store_net_revenue, currency)}
                 icon={<Store />}
               />
               <StatTile
-                label="Payouts completed"
-                value={formatMoney(totals.payouts_completed_total, currency)}
+                label={t("tiles.payoutsCompleted")}
+                value={money(totals.payouts_completed_total, currency)}
                 icon={<Banknote />}
               />
               <StatTile
-                label="Pending payout accounts"
+                label={t("tiles.pendingPayoutAccounts")}
                 value={compact(overview.pending_payout_accounts)}
                 icon={<AlertTriangle />}
                 tone={overview.pending_payout_accounts > 0 ? "attention" : "neutral"}
-                helpText="Awaiting verification"
+                helpText={t("help.awaitingVerification")}
               />
             </div>
           </section>
 
           {otherCurrencies.length > 0 ? (
-            <p className="text-[11px] text-zinc-400">
-              Also active in {otherCurrencies.map((entry) => entry.currency).join(", ")}
-              {" - "}figures above show {currency} only, the platform&apos;s
-              largest currency by tip volume in this range.
+            <p className="text-base text-zinc-400">
+              {t("otherCurrencies", {
+                currencies: otherCurrencies.map((entry) => entry.currency).join(", "),
+                currency,
+              })}
             </p>
           ) : null}
         </div>

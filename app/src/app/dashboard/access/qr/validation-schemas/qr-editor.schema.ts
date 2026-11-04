@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { vmsg } from "@/lib/validation-message";
 import { Languages } from "@/features/stores/interfaces/stores.interfaces";
 import { qrCodeFormSchema } from "@/features/qr-codes/validation-schemas/qr-codes.schema";
 
@@ -9,7 +10,7 @@ const languageValues = Object.values(Languages) as [
 
 const hexColor = z
   .string()
-  .regex(/^#[0-9a-fA-F]{6}$/, "Use a 6-digit hex color like #84cc16");
+  .regex(/^#[0-9a-fA-F]{6}$/, vmsg("hexColor"));
 
 const translations = z.record(z.string(), z.string());
 
@@ -29,7 +30,7 @@ export const qrEditorStoreSchema = z.object({
           const parsed = Number(trimmed);
           return Number.isFinite(parsed) && parsed > 0;
         }),
-      "Each amount must be a positive number",
+      vmsg("positiveAmounts"),
     ),
   allow_custom_tip_amount: z.boolean(),
   default_distribution_rule_id: z.string(),
@@ -46,7 +47,7 @@ export const qrEditorStoreSchema = z.object({
       } catch {
         return false;
       }
-    }, "Enter a valid URL, including https://"),
+    }, vmsg("invalidUrl")),
   public_review_rating_threshold: z.number().int().min(1).max(5),
 });
 

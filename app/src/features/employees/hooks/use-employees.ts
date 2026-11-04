@@ -1,6 +1,7 @@
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   createEmployee,
   deleteEmployee,
@@ -98,6 +99,7 @@ export const useCurrentEmployee = () => {
 
 export const useCreateEmployee = (storeId: string) => {
   const queryClient = useQueryClient();
+  const t = useTranslations("dashboard.team.employees.toast");
 
   return useMutation({
     mutationFn: (payload: CreateEmployeePayload) =>
@@ -106,14 +108,14 @@ export const useCreateEmployee = (storeId: string) => {
       trackEvent(AnalyticsEvents.employeeCreated, { store_id: storeId });
       void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
       toast.add({
-        title: "Employee added",
-        description: "They can now be assigned to QR codes and tips.",
+        title: t("createdTitle"),
+        description: t("createdDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not add employee",
+        title: t("createFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -123,6 +125,7 @@ export const useCreateEmployee = (storeId: string) => {
 
 export const useUpdateEmployee = () => {
   const queryClient = useQueryClient();
+  const t = useTranslations("dashboard.team.employees.toast");
 
   return useMutation({
     mutationFn: ({
@@ -146,21 +149,21 @@ export const useUpdateEmployee = () => {
       const activated = variables.payload.is_active === true;
       toast.add({
         title: deactivated
-          ? "Employee deactivated"
+          ? t("deactivatedTitle")
           : activated
-            ? "Employee activated"
-            : "Employee updated",
+            ? t("activatedTitle")
+            : t("updatedTitle"),
         description: deactivated
-          ? "They will no longer appear as active staff."
+          ? t("deactivatedDescription")
           : activated
-            ? "They are active again for tipping and QR assignment."
-            : "Your changes were saved.",
+            ? t("activatedDescription")
+            : t("updatedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not update employee",
+        title: t("updateFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -170,6 +173,7 @@ export const useUpdateEmployee = () => {
 
 export const useResendEmployeeInvite = () => {
   const queryClient = useQueryClient();
+  const t = useTranslations("dashboard.team.employees.toast");
 
   return useMutation({
     mutationFn: (id: string) => resendEmployeeInvite(id),
@@ -178,14 +182,14 @@ export const useResendEmployeeInvite = () => {
       queryClient.setQueryData(employeesQueryKeys.detail(data.id), data);
       void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
       toast.add({
-        title: "Invite sent",
-        description: "They'll get an email with a link to set up their account.",
+        title: t("inviteSentTitle"),
+        description: t("inviteSentDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not resend invite",
+        title: t("inviteFailed"),
         description: getErrorMessage(error),
         type: "error",
       });
@@ -195,6 +199,7 @@ export const useResendEmployeeInvite = () => {
 
 export const useDeleteEmployee = () => {
   const queryClient = useQueryClient();
+  const t = useTranslations("dashboard.team.employees.toast");
 
   return useMutation({
     mutationFn: (id: string) => deleteEmployee(id),
@@ -202,14 +207,14 @@ export const useDeleteEmployee = () => {
       trackEvent(AnalyticsEvents.employeeDeleted);
       void queryClient.invalidateQueries({ queryKey: employeesQueryKeys.root });
       toast.add({
-        title: "Employee removed",
-        description: "The employee record was deleted.",
+        title: t("deletedTitle"),
+        description: t("deletedDescription"),
         type: "success",
       });
     },
     onError: (error: Error) => {
       toast.add({
-        title: "Could not remove employee",
+        title: t("deleteFailed"),
         description: getErrorMessage(error),
         type: "error",
       });

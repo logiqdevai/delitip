@@ -1,3 +1,4 @@
+import { tr } from "@/lib/i18n-runtime";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -17,7 +18,7 @@ export const submitContactForm = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "We couldn't send your message. Please try again."),
+      getApiErrorMessage(error, tr("errors.services.sendYourMessage")),
     );
   }
 };

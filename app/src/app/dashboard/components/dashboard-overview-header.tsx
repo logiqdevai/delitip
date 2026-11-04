@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
@@ -12,6 +13,7 @@ interface DashboardOverviewHeaderProps {
 export const DashboardOverviewHeader: FC<DashboardOverviewHeaderProps> = ({
   actions,
 }) => {
+  const t = useTranslations("dashboard.shell.overview");
   const { store, isPending } = useWorkspace();
 
   if (isPending) {
@@ -28,11 +30,11 @@ export const DashboardOverviewHeader: FC<DashboardOverviewHeaderProps> = ({
 
   return (
     <DashboardPageHeader
-      title="Overview"
+      title={t("title")}
       description={
         store
-          ? `Tips, reviews, and staff for ${store.name}.`
-          : "Understand and manage great service across your business."
+          ? t("descriptionStore", { store: store.name })
+          : t("descriptionDefault")
       }
       actions={actions}
     />

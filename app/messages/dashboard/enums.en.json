@@ -1,0 +1,308 @@
+{
+  "alertType": {
+    "POSITIVE_COMPLIMENTS": "Positive compliments",
+    "NEGATIVE_SATISFACTION_DROP": "Satisfaction drop",
+    "LOW_RATING_REVIEW": "Low rating review",
+    "PERFORMANCE_CHANGE": "Performance change",
+    "PAYOUT_REQUEST_APPROVED": "Payout approved",
+    "PAYOUT_REQUEST_REJECTED": "Payout request rejected"
+  },
+  "teamSize": {
+    "SMALL": "1 - 5 employees",
+    "MEDIUM": "6 - 20 employees",
+    "LARGE": "21 - 50 employees",
+    "ENTERPRISE": "50+ employees"
+  },
+  "contactTopic": {
+    "SALES": "Sales & Demos",
+    "SUPPORT": "Account Support",
+    "BILLING": "Billing & Payments",
+    "PARTNERSHIPS": "Partnerships"
+  },
+  "distributionPayoutModeDescription": {
+    "DIRECT": "Each employee is paid their share straight to their own bank account. They need a payout account set up before anything can reach them.",
+    "VIA_STORE": "The whole tip lands in your business account. We keep track of what each employee earned so you can hand it over yourself — cash, transfer, payroll — and record it here."
+  },
+  "distributionPayoutMode": {
+    "DIRECT": "Pay each recipient directly",
+    "VIA_STORE": "Send everything to the business"
+  },
+  "distributionPayoutModeShort": {
+    "DIRECT": "Direct payouts",
+    "VIA_STORE": "Paid by the business"
+  },
+  "distributionRecipientType": {
+    "EMPLOYEE": "Employee",
+    "STORE": "Business (house)",
+    "all": "All recipients"
+  },
+  "employeeAccountStatus": {
+    "active": "Active account",
+    "invite_pending": "Invite pending"
+  },
+  "employeeStatus": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "organizationRole": {
+    "OWNER": "Owner",
+    "STORE_MANAGER": "Store manager",
+    "ACCOUNTANT": "Accountant",
+    "all": "All roles"
+  },
+  "payoutAccountStatus": {
+    "PENDING": "Pending",
+    "ACTIVE": "Active",
+    "RESTRICTED": "Restricted",
+    "DISABLED": "Disabled"
+  },
+  "payoutExecutionStatus": {
+    "PROCESSING": "Processing",
+    "COMPLETED": "Completed",
+    "FAILED": "Failed",
+    "CANCELLED": "Cancelled",
+    "all": "All statuses"
+  },
+  "webhookEventStatus": {
+    "PROCESSED": "Processed",
+    "FAILED": "Failed",
+    "PENDING": "Pending",
+    "all": "All statuses"
+  },
+  "webhookEventType": {
+    "768": "Command Bank Transfer Created",
+    "769": "Command Bank Transfer Executed",
+    "1796": "Transaction Payment Created",
+    "1797": "Transaction Reversal Created",
+    "1798": "Transaction Failed",
+    "1799": "Transaction Price Calculated",
+    "1800": "Transaction Payment Method Session Created",
+    "1802": "Transaction POS ECR Session Completed",
+    "1803": "Transaction POS ECR Session Failed",
+    "2054": "Account Transaction Created",
+    "4865": "Order Updated",
+    "5632": "Obligation Created",
+    "5633": "Obligation Captured",
+    "5634": "Obligation Cancelled",
+    "8193": "Account Connected",
+    "8448": "Transfer Created",
+    "all": "All event types",
+    "unknown": "Event {id}"
+  },
+  "distributionRecipientTypeFilter": {
+    "all": "All recipients",
+    "STORE": "Store",
+    "EMPLOYEE": "Employee"
+  },
+  "invoiceCheckIssue": {
+    "NOT_AN_INVOICE": "The uploaded file does not look like an invoice.",
+    "NET_MISSING": "No amount before VAT could be read from the invoice.",
+    "NET_MISMATCH": "The invoice amount before VAT does not equal the requested payout amount.",
+    "NET_ROUNDING": "The invoice amount before VAT differs from the payout amount by one cent — likely rounding in the scan.",
+    "CURRENCY_MISMATCH": "The invoice currency differs from the payout currency.",
+    "ISSUER_VAT_MISMATCH": "The issuer's VAT number does not match the organization's VAT number on file.",
+    "ISSUER_VAT_MISSING": "No issuer VAT number could be read from the invoice.",
+    "ORG_VAT_MISSING": "The organization has no VAT number in Tax Details, so the issuer could not be verified.",
+    "RECIPIENT_VAT_MISMATCH": "The invoice is not addressed to the platform's VAT number.",
+    "INVOICE_NUMBER_MISMATCH": "The invoice number on the document differs from the one the store typed.",
+    "DATE_SUSPICIOUS": "The invoice date is before the covered period ended, or in the future.",
+    "NET_PLUS_VAT_MISMATCH": "Net amount plus VAT does not add up to the stated total."
+  },
+  "invoiceCheckStatus": {
+    "PENDING": "Checking…",
+    "COMPLETED": "Checked",
+    "FAILED": "Check failed",
+    "SKIPPED": "Not checked"
+  },
+  "invoiceCheckVerdict": {
+    "MATCH": "Looks correct",
+    "MISMATCH": "Mismatch found",
+    "UNREADABLE": "Could not read",
+    "all": "Any check result"
+  },
+  "manualPayoutSkip": {
+    "TIP_NOT_FOUND": "payment not found",
+    "TIP_NOT_COMPLETED": "payment not completed",
+    "FEE_NOT_CONFIRMED": "processor fee not confirmed yet",
+    "ALREADY_CLAIMED": "already paid out or in progress",
+    "PAYOUT_REQUESTED": "locked in a payout request",
+    "NO_PAYOUT_ACCOUNT": "no payout account",
+    "ACCOUNT_NOT_ACTIVE": "payout account not active",
+    "NO_LINKED_USER": "employee has no linked user",
+    "INVOICE_REQUIRED": "store payouts need an invoice-backed request"
+  },
+  "payoutRequestStatus": {
+    "PENDING_REVIEW": "Awaiting review",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected",
+    "CANCELLED": "Cancelled",
+    "all": "All statuses"
+  },
+  "payoutStatus": {
+    "PENDING": "Pending",
+    "PROCESSING": "Processing",
+    "PAID": "Paid",
+    "FAILED": "Failed",
+    "CANCELLED": "Cancelled",
+    "all": "All statuses",
+    "allPayouts": "All payout statuses"
+  },
+  "qrCodeSelectionMode": {
+    "CHOOSE_ONE": "Choose one",
+    "CHOOSE_MANY": "Choose many",
+    "TEAM": "Entire team",
+    "all": "All selection modes"
+  },
+  "qrCodeSelectionModeDescription": {
+    "CHOOSE_ONE": "Customer picks exactly one person from the staff assigned to this QR.",
+    "CHOOSE_MANY": "Customer can thank one or more of the assigned staff in a single tip.",
+    "TEAM": "Everyone assigned is included automatically - the customer skips picking."
+  },
+  "qrEditorSection": {
+    "DETAILS": "Details",
+    "RECIPIENTS": "Recipients",
+    "APPEARANCE": "Appearance",
+    "TIPPING": "Tipping",
+    "REVIEWS": "Reviews",
+    "PRINT": "Print card"
+  },
+  "qrEditorSectionDescription": {
+    "DETAILS": "Name, status and the link behind this QR code.",
+    "RECIPIENTS": "Who guests can tip and how the tip is split.",
+    "APPEARANCE": "Logo, colors and messages shown on the tip page.",
+    "TIPPING": "Suggested amounts and custom tips.",
+    "REVIEWS": "When happy guests are sent to a public review site.",
+    "PRINT": "Design and download the printable QR card."
+  },
+  "refundStatus": {
+    "PENDING": "Pending",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected",
+    "COMPLETED": "Completed",
+    "all": "All statuses"
+  },
+  "feedbackQuestionType": {
+    "RATING": "Rating",
+    "TEXT": "Text"
+  },
+  "reviewSentiment": {
+    "POSITIVE": "Positive",
+    "NEUTRAL": "Neutral",
+    "NEGATIVE": "Negative",
+    "all": "All sentiments"
+  },
+  "changelogType": {
+    "FEATURE": "New feature",
+    "IMPROVEMENT": "Improvement",
+    "FIX": "Bug fix",
+    "CHORE": "Maintenance",
+    "all": "All changes"
+  },
+  "sessionMood": {
+    "HAPPY": "Happy",
+    "FOCUSED": "Focused",
+    "RUSHED": "Rushed",
+    "EXPLANATORY": "Explanatory",
+    "EXPLORATORY": "Exploratory",
+    "FRUSTRATED": "Frustrated",
+    "BLUNT": "Blunt",
+    "all": "All sessions"
+  },
+  "storeCopyOption": {
+    "BRANDING": "Branding",
+    "MESSAGES": "Customer messages",
+    "LOCALIZATION": "Localization",
+    "TIPPING": "Tipping",
+    "REVIEWS": "Reviews & feedback",
+    "QR_DESIGNS": "QR designs"
+  },
+  "storeCopyOptionDescription": {
+    "BRANDING": "Logo, cover image and colors",
+    "MESSAGES": "Welcome and thank-you messages",
+    "LOCALIZATION": "Languages, currency and timezone",
+    "TIPPING": "Suggested amounts, custom amounts and VAT",
+    "REVIEWS": "Categories, tags, questions and rating threshold",
+    "QR_DESIGNS": "Customized QR code templates"
+  },
+  "storeCurrency": {
+    "EUR": "EUR - Euro",
+    "USD": "USD - US Dollar",
+    "GBP": "GBP - British Pound",
+    "TRY": "TRY - Turkish Lira",
+    "RUB": "RUB - Russian Ruble",
+    "AED": "AED - UAE Dirham",
+    "CNY": "CNY - Chinese Yuan"
+  },
+  "storeIndustry": {
+    "RESTAURANT": "Restaurant",
+    "CAFE": "Café / Coffee Bar",
+    "BAR": "Bar & Lounge",
+    "HOTEL": "Hotel & Hospitality",
+    "SALON": "Salon",
+    "SPA": "Spa",
+    "RETAIL": "Retail",
+    "BARBERSHOP": "Barbershop",
+    "FITNESS": "Fitness & Personal Training",
+    "FOOD_TRUCK": "Food Truck",
+    "CLEANING": "Cleaning Services",
+    "OTHER": "Other Service Business",
+    "all": "All industries"
+  },
+  "storeLanguage": {
+    "EN": "English",
+    "EL": "Greek",
+    "ES": "Spanish",
+    "FR": "French",
+    "DE": "German",
+    "IT": "Italian",
+    "PT": "Portuguese",
+    "TR": "Turkish",
+    "RU": "Russian",
+    "AR": "Arabic",
+    "ZH": "Chinese"
+  },
+  "storeTimezone": {
+    "UTC": "UTC",
+    "Europe_London": "Europe / London",
+    "Europe_Dublin": "Europe / Dublin",
+    "Europe_Paris": "Europe / Paris",
+    "Europe_Berlin": "Europe / Berlin",
+    "Europe_Amsterdam": "Europe / Amsterdam",
+    "Europe_Rome": "Europe / Rome",
+    "Europe_Madrid": "Europe / Madrid",
+    "Europe_Athens": "Europe / Athens",
+    "Europe_Istanbul": "Europe / Istanbul",
+    "Europe_Moscow": "Europe / Moscow",
+    "America_New_York": "America / New York",
+    "America_Chicago": "America / Chicago",
+    "America_Denver": "America / Denver",
+    "America_Los_Angeles": "America / Los Angeles",
+    "America_Toronto": "America / Toronto",
+    "Asia_Dubai": "Asia / Dubai",
+    "Asia_Singapore": "Asia / Singapore",
+    "Asia_Tokyo": "Asia / Tokyo",
+    "Asia_Shanghai": "Asia / Shanghai",
+    "Australia_Sydney": "Australia / Sydney"
+  },
+  "subscriptionPlan": {
+    "STARTER": "Starter",
+    "PROFESSIONAL": "Professional",
+    "ENTERPRISE": "Enterprise"
+  },
+  "tipStatus": {
+    "CREATED": "Created",
+    "PROCESSING": "Processing",
+    "COMPLETED": "Completed",
+    "FAILED": "Failed",
+    "CANCELLED": "Cancelled",
+    "REFUNDED": "Refunded",
+    "PENDING": "Pending",
+    "all": "All statuses"
+  },
+  "userPlatformRole": {
+    "USER": "User",
+    "SUPPORT": "Support",
+    "ADMIN": "Admin",
+    "SUPER_ADMIN": "Super Admin"
+  }
+}

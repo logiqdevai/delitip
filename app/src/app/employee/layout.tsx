@@ -1,11 +1,14 @@
 import { type FC, type ReactNode } from "react";
 import { type Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { EmployeeAuthShell } from "./components/employee-auth-shell";
 
-export const metadata: Metadata = {
-  title: "Employee Portal - delitip",
-  description:
-    "View tips, customer reviews, and your personal QR code as a delitip employee.",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("employee.metadata");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
 };
 
 interface EmployeeLayoutProps {

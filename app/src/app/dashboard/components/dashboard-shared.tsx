@@ -1,11 +1,12 @@
 import { type FC, type ReactNode } from "react";
 import { Sparkles, Wine, Zap } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 const badgeConfig = {
-  "super-fast": { label: "Super Fast", Icon: Zap },
-  "great-drinks": { label: "Great Drinks", Icon: Wine },
-  "friendly-vibe": { label: "Friendly Vibe", Icon: Sparkles },
+  "super-fast": { labelKey: "superFast", Icon: Zap },
+  "great-drinks": { labelKey: "greatDrinks", Icon: Wine },
+  "friendly-vibe": { labelKey: "friendlyVibe", Icon: Sparkles },
 } as const;
 
 type BadgeKey = keyof typeof badgeConfig;
@@ -19,7 +20,8 @@ export const RecognitionBadge: FC<RecognitionBadgeProps> = ({
   badge,
   className,
 }) => {
-  const { label, Icon } = badgeConfig[badge];
+  const t = useTranslations("dashboard.shell.badges");
+  const { labelKey, Icon } = badgeConfig[badge];
 
   return (
     <span
@@ -29,7 +31,7 @@ export const RecognitionBadge: FC<RecognitionBadgeProps> = ({
       )}
     >
       <Icon className="size-3" strokeWidth={2} />
-      {label}
+      {t(labelKey)}
     </span>
   );
 };
@@ -39,6 +41,8 @@ interface StatusPillProps {
 }
 
 export const StatusPill: FC<StatusPillProps> = ({ onShift }) => {
+  const t = useTranslations("dashboard.shell.badges");
+
   return (
     <span
       className={cn(
@@ -48,7 +52,7 @@ export const StatusPill: FC<StatusPillProps> = ({ onShift }) => {
           : "bg-neutral-fill font-medium text-zinc-500"
       )}
     >
-      {onShift ? "On Shift" : "Off Shift"}
+      {onShift ? t("onShift") : t("offShift")}
     </span>
   );
 };

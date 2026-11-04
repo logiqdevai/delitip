@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC } from "react";
+import { useTranslations } from "next-intl";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { AlertTriangle, ExternalLink } from "lucide-react";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
@@ -34,6 +35,7 @@ interface ConnectedAccountPayoutDialogProps {
 export const ConnectedAccountPayoutDialog: FC<
   ConnectedAccountPayoutDialogProps
 > = ({ open, onOpenChange, title, description, mutation }) => {
+  const t = useTranslations("dashboard.money.payoutAccountDialogs");
   const handleConnect = () => {
     mutation.mutate(
       { payout_method: "CONNECTED_ACCOUNT" },
@@ -77,7 +79,7 @@ export const ConnectedAccountPayoutDialog: FC<
             disabled={mutation.isPending}
             onClick={() => onOpenChange(false)}
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <ActionButtonWithPending
             type="button"
@@ -85,7 +87,7 @@ export const ConnectedAccountPayoutDialog: FC<
             onClick={handleConnect}
           >
             <ExternalLink className="size-3.5" strokeWidth={2} />
-            Continue to Viva
+            {t("continueToViva")}
           </ActionButtonWithPending>
         </DialogFooter>
       </DialogContent>
