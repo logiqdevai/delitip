@@ -17,6 +17,7 @@ import { useDeleteStore, useStores } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 import { useWorkspaceStore } from "@/stores/workspace.store";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const StoresSettingsPanel: FC = () => {
   const {
@@ -60,7 +61,7 @@ export const StoresSettingsPanel: FC = () => {
       {storesQuery.isPending ? (
         <Skeleton className="h-32 w-full rounded-xl" />
       ) : storesQuery.isError ? (
-        <p className="text-xs text-red-600">{storesQuery.error.message}</p>
+        <p className="text-xs text-red-600">{getErrorMessage(storesQuery.error)}</p>
       ) : (
         <div className="divide-y divide-zinc-100">
           {stores.map((store) => {

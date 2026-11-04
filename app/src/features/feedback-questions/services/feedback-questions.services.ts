@@ -5,6 +5,7 @@ import type {
   FeedbackQuestion,
   UpdateFeedbackQuestionPayload,
 } from "@/features/feedback-questions/interfaces/feedback-questions.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const listFeedbackQuestions = async (
   storeId: string,
@@ -14,8 +15,8 @@ export const listFeedbackQuestions = async (
       ApiRoutes.stores.feedbackQuestions(storeId),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load feedback questions. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load feedback questions. Please try again."));
   }
 };
 
@@ -29,8 +30,8 @@ export const createFeedbackQuestion = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to create feedback question. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't create feedback question. Please try again."));
   }
 };
 
@@ -45,8 +46,8 @@ export const updateFeedbackQuestion = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to update feedback question. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't update feedback question. Please try again."));
   }
 };
 
@@ -56,7 +57,7 @@ export const deleteFeedbackQuestion = async (
 ): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.stores.feedbackQuestion(storeId, id));
-  } catch {
-    throw new Error("Failed to delete feedback question. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't delete feedback question. Please try again."));
   }
 };

@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { useStores } from "@/features/stores/hooks/use-stores";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const MembersSettingsPanel: FC = () => {
   const { organizationId, role: currentUserRole } = useWorkspace();
@@ -67,7 +68,7 @@ export const MembersSettingsPanel: FC = () => {
       {membersQuery.isPending ? (
         <Skeleton className="h-32 w-full rounded-xl" />
       ) : membersQuery.isError ? (
-        <p className="text-xs text-red-600">{membersQuery.error.message}</p>
+        <p className="text-xs text-red-600">{getErrorMessage(membersQuery.error)}</p>
       ) : members.length === 0 ? (
         <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 py-6 text-center text-xs text-zinc-500">
           No members yet.

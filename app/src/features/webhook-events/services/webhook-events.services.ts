@@ -5,6 +5,7 @@ import type {
   AdminWebhookEventsQuery,
   WebhookEvent,
 } from "@/features/webhook-events/interfaces/webhook-events.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const listAdminWebhookEvents = async (
   query?: AdminWebhookEventsQuery,
@@ -15,7 +16,7 @@ export const listAdminWebhookEvents = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load webhook events. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load webhook events. Please try again."));
   }
 };

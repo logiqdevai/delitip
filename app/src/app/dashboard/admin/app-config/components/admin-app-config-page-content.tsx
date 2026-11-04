@@ -197,11 +197,11 @@ export const AdminAppConfigPageContent: FC = () => {
           [...financeFields, ...invoiceDetailFields].find(
             (field) => field.name === name,
           )?.label ?? name;
-        return `${label}: ${error?.message ?? "invalid"}`;
+        return `${label}: ${error?.message ?? "please check this value"}`;
       });
       toast.add({
         title: "Nothing was saved",
-        description: messages.join(" · ") || "Some values are invalid.",
+        description: messages.join(" · ") || "Some values need your attention. Please check them and try again.",
         type: "error",
       });
     },

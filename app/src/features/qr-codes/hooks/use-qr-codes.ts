@@ -16,6 +16,7 @@ import type {
   UpdateQrCodePayload,
 } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const qrCodesQueryKeys = {
   root: ["qr-codes"] as const,
@@ -76,7 +77,7 @@ export const useCreateQrCode = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not create QR code",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -109,7 +110,7 @@ export const useUpdateQrCode = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update QR code",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -132,7 +133,7 @@ export const useDeleteQrCode = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not delete QR code",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

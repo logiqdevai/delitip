@@ -4,6 +4,7 @@ import type {
   DocumentType,
   UploadedDocument,
 } from "@/features/documents/interfaces/documents.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const uploadDocument = async (
   file: File,
@@ -19,15 +20,15 @@ export const uploadDocument = async (
       formData,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to upload the file. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't upload the file. Please try again."));
   }
 };
 
 export const deleteDocument = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.documents.byId(id));
-  } catch {
-    throw new Error("Failed to remove the file. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't remove the file. Please try again."));
   }
 };

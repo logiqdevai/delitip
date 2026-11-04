@@ -12,6 +12,7 @@ import type {
   UpdateMemberPayload,
 } from "@/features/organizations/interfaces/organizations.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const organizationMembersQueryKeys = {
   list: (organizationId: string) =>
@@ -42,7 +43,7 @@ export const useAddOrganizationMember = (organizationId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not add member",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -70,7 +71,7 @@ export const useUpdateOrganizationMember = (organizationId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update member",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -93,7 +94,7 @@ export const useRemoveOrganizationMember = (organizationId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not remove member",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

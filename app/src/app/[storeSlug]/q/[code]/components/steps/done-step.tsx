@@ -144,9 +144,7 @@ const RefundRequest: FC<{
         <div className="flex items-start gap-2 rounded-lg border border-red-100 bg-red-50 px-4 py-2.5 text-[11px] text-red-700">
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0" strokeWidth={2} />
           <span>
-            {requestRefund.error instanceof Error
-              ? requestRefund.error.message
-              : t("genericError")}
+            {t("genericError")}
           </span>
         </div>
       ) : null}

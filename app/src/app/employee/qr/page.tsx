@@ -25,6 +25,7 @@ import {
   getAbsoluteTipUrl,
 } from "@/features/qr-codes/utils/qr-tip-url.utils";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 interface QrCodeTileProps {
   qrCode: EmployeeQrCodeSummary;
@@ -159,7 +160,7 @@ const QrPage: FC = () => {
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load your QR codes</EmptyTitle>
-            <EmptyDescription>{qrCodeQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(qrCodeQuery.error)}</EmptyDescription>
           </EmptyHeader>
         </Empty>
       </div>

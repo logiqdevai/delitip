@@ -26,6 +26,7 @@ import {
   payoutsQueryKeys,
 } from "@/features/payouts/hooks/use-payouts";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const payoutRequestsQueryKeys = {
   root: ["payout-requests"] as const,
@@ -91,7 +92,7 @@ export const useCreatePayoutRequest = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not submit the payout request",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -115,7 +116,7 @@ export const useCancelPayoutRequest = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not cancel the payout request",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -133,7 +134,7 @@ export const useOpenStorePayoutRequestInvoice = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not open the invoice",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -199,7 +200,7 @@ export const useApprovePayoutRequest = (id: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not approve the payout request",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -225,7 +226,7 @@ export const useRejectPayoutRequest = (id: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not reject the payout request",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -253,7 +254,7 @@ export const useRecheckPayoutRequest = (id: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not re-run the check",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

@@ -23,6 +23,7 @@ import {
 } from "./components/employee-balance-card";
 import { EmployeePayoutHistoryCard } from "./components/employee-payout-history-card";
 import { EmployeeStoreBalanceCard } from "./components/employee-store-balance-card";
+import { getErrorMessage } from "@/lib/api-error";
 
 const TREND_DAYS = 7;
 const TIPS_QUERY = { limit: 200 };
@@ -58,7 +59,7 @@ const EarningsPage: FC = () => {
         <EmptyHeader>
           <EmptyTitle>Could not load your earnings</EmptyTitle>
           <EmptyDescription>
-            {dashboardQuery.error?.message ?? tipsQuery.error?.message}
+            {getErrorMessage(dashboardQuery.error ?? tipsQuery.error)}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>

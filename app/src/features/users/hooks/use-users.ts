@@ -10,6 +10,7 @@ import {
 } from "@/features/users/services/users.services";
 import type { UsersQuery } from "@/features/users/interfaces/users.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const usersQueryKeys = {
   root: ["users"] as const,
@@ -43,7 +44,7 @@ export const useUpdateMe = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update account",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -97,7 +98,7 @@ export const useDeleteUser = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not delete user",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

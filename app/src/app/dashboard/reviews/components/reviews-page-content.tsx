@@ -29,6 +29,7 @@ import type { ReviewsQuery } from "@/features/reviews/interfaces/reviews.interfa
 import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 const RATING_OPTIONS = [5, 4, 3, 2, 1] as const;
 
@@ -175,7 +176,7 @@ export const ReviewsPageContent: FC = () => {
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load reviews</EmptyTitle>
-            <EmptyDescription>{reviewsQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(reviewsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

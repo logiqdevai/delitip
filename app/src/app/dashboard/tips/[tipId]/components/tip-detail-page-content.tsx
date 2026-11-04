@@ -20,6 +20,7 @@ import { getPayoutStatusLabel } from "@/config/constants/dropdowns/tips/payout-s
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 const formatDateTime = (value?: string | null) => {
   if (!value) return "-";
@@ -55,7 +56,7 @@ export const TipDetailPageContent: FC<{ tipId: string }> = ({ tipId }) => {
         <EmptyHeader>
           <EmptyTitle>Could not load this tip</EmptyTitle>
           <EmptyDescription>
-            {tipQuery.error?.message ?? "The tip may not exist."}
+            {getErrorMessage(tipQuery.error, "The tip may not exist.")}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>

@@ -1,4 +1,3 @@
-import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -13,19 +12,11 @@ import type {
   PayoutRequestsResponse,
   ReviewPayoutRequestPayload,
 } from "@/features/payout-requests/interfaces/payout-requests.interfaces";
+import { getErrorMessage as getApiErrorMessage } from "@/lib/api-error";
 
 // The API explains *why* a request can't be submitted or approved (already
 // open, tips refunded, no payout account…) — surface that instead of a
 // generic message so the person can act on it.
-const getApiErrorMessage = (error: unknown, fallback: string): string => {
-  if (isAxiosError(error)) {
-    const message = error.response?.data?.message;
-    if (typeof message === "string" && message.length > 0) return message;
-    if (Array.isArray(message) && typeof message[0] === "string") return message[0];
-  }
-  return fallback;
-};
-
 export const getPayoutRequestPreview = async (
   storeId: string,
 ): Promise<PayoutRequestPreview> => {
@@ -35,7 +26,7 @@ export const getPayoutRequestPreview = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "Failed to load the payout preview. Please try again."));
+    throw new Error(getApiErrorMessage(error, "We couldn't load the payout preview. Please try again."));
   }
 };
 
@@ -50,7 +41,7 @@ export const createPayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "Failed to submit the payout request. Please try again."));
+    throw new Error(getApiErrorMessage(error, "We couldn't submit the payout request. Please try again."));
   }
 };
 
@@ -64,8 +55,8 @@ export const listStorePayoutRequests = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load payout requests. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load payout requests. Please try again."));
   }
 };
 
@@ -78,8 +69,8 @@ export const getStorePayoutRequestInvoiceUrl = async (
       ApiRoutes.stores.payoutRequestInvoiceUrl(storeId, id),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to open the invoice. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't open the invoice. Please try again."));
   }
 };
 
@@ -93,7 +84,7 @@ export const cancelPayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "Failed to cancel the payout request. Please try again."));
+    throw new Error(getApiErrorMessage(error, "We couldn't cancel the payout request. Please try again."));
   }
 };
 
@@ -106,8 +97,8 @@ export const listAdminPayoutRequests = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load payout requests. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load payout requests. Please try again."));
   }
 };
 
@@ -117,8 +108,8 @@ export const getAdminPendingPayoutRequestCount = async (): Promise<number> => {
       ApiRoutes.admin.payoutRequests.pendingCount,
     );
     return response.data.count;
-  } catch {
-    throw new Error("Failed to load the pending request count.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load the pending request count."));
   }
 };
 
@@ -130,8 +121,8 @@ export const getAdminPayoutRequest = async (
       ApiRoutes.admin.payoutRequests.byId(id),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load this payout request. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load this payout request. Please try again."));
   }
 };
 
@@ -143,8 +134,8 @@ export const getAdminPayoutRequestInvoiceUrl = async (
       ApiRoutes.admin.payoutRequests.invoiceUrl(id),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to open the invoice. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't open the invoice. Please try again."));
   }
 };
 
@@ -159,7 +150,7 @@ export const approvePayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "Failed to approve the payout request. Please try again."));
+    throw new Error(getApiErrorMessage(error, "We couldn't approve the payout request. Please try again."));
   }
 };
 
@@ -174,7 +165,7 @@ export const rejectPayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "Failed to reject the payout request. Please try again."));
+    throw new Error(getApiErrorMessage(error, "We couldn't reject the payout request. Please try again."));
   }
 };
 
@@ -187,6 +178,6 @@ export const recheckPayoutRequest = async (
     );
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "Failed to re-run the invoice check. Please try again."));
+    throw new Error(getApiErrorMessage(error, "We couldn't re-run the invoice check. Please try again."));
   }
 };

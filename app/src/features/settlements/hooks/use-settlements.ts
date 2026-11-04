@@ -22,6 +22,7 @@ import type {
 } from "@/features/settlements/interfaces/settlements.interfaces";
 import { payoutsQueryKeys } from "@/features/payouts/hooks/use-payouts";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const settlementsQueryKeys = {
   root: ["settlements"] as const,
@@ -126,7 +127,7 @@ export const useCreateSettlement = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not record the payment",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -157,7 +158,7 @@ export const useReverseSettlement = (options?: { showErrorToast?: boolean }) => 
       if (!showErrorToast) return;
       toast.add({
         title: "Could not reverse the payment",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -183,7 +184,7 @@ export const useConfirmSettlement = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not confirm",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -201,7 +202,7 @@ export const useExportStoreSettlementsCsv = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not export",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

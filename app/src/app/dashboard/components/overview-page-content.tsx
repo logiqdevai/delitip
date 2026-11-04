@@ -19,6 +19,7 @@ import {
   useDashboardOverview,
   useDashboardTrends,
 } from "@/features/analytics/hooks/use-analytics";
+import { getErrorMessage } from "@/lib/api-error";
 
 const TREND_DAYS = 7;
 
@@ -176,7 +177,7 @@ export const OverviewPageContent: FC = () => {
         </div>
       ) : overviewQuery.isError ? (
         <div className="rounded-2xl border border-dashed border-red-200 bg-red-50 p-4 text-xs text-red-700">
-          Could not load today&apos;s metrics. {overviewQuery.error?.message}
+          Could not load today&apos;s metrics. {getErrorMessage(overviewQuery.error)}
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -242,7 +243,7 @@ export const OverviewPageContent: FC = () => {
           {trendsQuery.isPending ? (
             <Skeleton className="h-44 w-full rounded-xl" />
           ) : trendsQuery.isError ? (
-            <p className="text-xs text-red-600">{trendsQuery.error.message}</p>
+            <p className="text-xs text-red-600">{getErrorMessage(trendsQuery.error)}</p>
           ) : (
             <div className="grid h-44 grid-cols-7 items-end gap-3 border-b border-zinc-100 pt-4 pb-2">
               {trendPoints.map((point) => {

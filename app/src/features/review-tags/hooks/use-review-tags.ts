@@ -12,6 +12,7 @@ import type {
   UpdateReviewTagPayload,
 } from "@/features/review-tags/interfaces/review-tags.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const reviewTagsQueryKeys = {
   list: (storeId: string) => ["review-tags", storeId] as const,
@@ -37,7 +38,7 @@ export const useCreateReviewTag = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not add tag", description: error.message, type: "error" });
+      toast.add({ title: "Could not add tag", description: getErrorMessage(error), type: "error" });
     },
   });
 };
@@ -54,7 +55,7 @@ export const useUpdateReviewTag = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not update tag", description: error.message, type: "error" });
+      toast.add({ title: "Could not update tag", description: getErrorMessage(error), type: "error" });
     },
   });
 };
@@ -70,7 +71,7 @@ export const useDeleteReviewTag = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not delete tag", description: error.message, type: "error" });
+      toast.add({ title: "Could not delete tag", description: getErrorMessage(error), type: "error" });
     },
   });
 };

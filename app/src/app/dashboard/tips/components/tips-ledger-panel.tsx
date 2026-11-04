@@ -47,6 +47,7 @@ import { getTipStatusLabel } from "@/config/constants/dropdowns/tips/tip-status-
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 const statusChipClass: Record<TipStatus, string> = {
   PENDING: "bg-amber-50 text-amber-700",
@@ -191,7 +192,7 @@ export const TipsLedgerPanel: FC<TipsLedgerPanelProps> = ({ storeId }) => {
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load tips</EmptyTitle>
-            <EmptyDescription>{tipsQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(tipsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

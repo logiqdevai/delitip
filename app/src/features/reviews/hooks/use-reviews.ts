@@ -16,6 +16,7 @@ import type {
   UpdateReviewPayload,
 } from "@/features/reviews/interfaces/reviews.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const reviewsQueryKeys = {
   root: ["reviews"] as const,
@@ -81,7 +82,7 @@ export const useUpdateReview = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update review",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -101,7 +102,7 @@ export const useDeleteReview = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not delete review",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

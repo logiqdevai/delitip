@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { submitContactForm } from "@/features/contact/services/contact.services";
 import type { ContactPayload } from "@/features/contact/interfaces/contact.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const useSubmitContact = () => {
   return useMutation({
@@ -9,7 +10,7 @@ export const useSubmitContact = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not send message",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

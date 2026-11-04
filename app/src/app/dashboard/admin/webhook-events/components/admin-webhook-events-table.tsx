@@ -42,6 +42,7 @@ import {
 } from "@/features/webhook-events/interfaces/webhook-events.interfaces";
 import { cn } from "@/lib/utils";
 import { AdminWebhookEventDialog } from "./admin-webhook-event-dialog";
+import { getErrorMessage } from "@/lib/api-error";
 
 const statusChipClass: Record<WebhookEventStatus, string> = {
   PROCESSED: "bg-brand-50 text-brand-700",
@@ -223,7 +224,7 @@ export const AdminWebhookEventsTable: FC = () => {
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load webhook events</EmptyTitle>
-            <EmptyDescription>{eventsQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(eventsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

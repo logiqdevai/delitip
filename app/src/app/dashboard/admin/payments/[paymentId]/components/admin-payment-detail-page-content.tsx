@@ -18,6 +18,7 @@ import { useTip } from "@/features/tips/hooks/use-tips";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 const formatDateTime = (value?: string | null) => {
   if (!value) return "-";
@@ -52,7 +53,7 @@ export const AdminPaymentDetailPageContent: FC<{ paymentId: string }> = ({
         <EmptyHeader>
           <EmptyTitle>Could not load this payment</EmptyTitle>
           <EmptyDescription>
-            {tipQuery.error?.message ?? "The payment may not exist."}
+            {getErrorMessage(tipQuery.error, "The payment may not exist.")}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>

@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Spinner } from "@/components/ui/spinner";
+import { getErrorMessage } from "@/lib/api-error";
 
 export interface ConfirmationDialogState {
   open: boolean;
@@ -66,11 +67,7 @@ export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
       await onConfirm();
       state.closeDialog();
     } catch (cause) {
-      setError(
-        cause instanceof Error && cause.message
-          ? cause.message
-          : "Something went wrong. Please try again.",
-      );
+      setError(getErrorMessage(cause, "Something went wrong. Please try again."));
     }
   };
 

@@ -17,6 +17,7 @@ import { TeamSizes } from "@/config/constants/dropdowns/businesses/team-size-for
 import { useAuthHydrated } from "@/hooks/use-auth-hydrated";
 import { Routes } from "@/routes/routes";
 import { useAuthStore } from "@/stores/auth.store";
+import { getErrorMessage } from "@/lib/api-error";
 
 const DEFAULT_TIMEZONE = "Europe/Athens";
 
@@ -75,7 +76,7 @@ const OnboardingPage: FC = () => {
             Could not load your business
           </h1>
           <p className="text-sm text-zinc-500">
-            {organizationsQuery.error.message}
+            {getErrorMessage(organizationsQuery.error)}
           </p>
         </div>
       ) : (

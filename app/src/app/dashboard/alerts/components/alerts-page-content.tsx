@@ -31,6 +31,7 @@ import type { AlertType } from "@/features/alerts/interfaces/alerts.interfaces";
 import { AlertTypeFormOptions, getAlertTypeLabel } from "@/config/constants/dropdowns/alerts/alert-type-form.options";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const AlertsPageContent: FC = () => {
   const { storeId, isPending: workspacePending, isReady } = useWorkspace();
@@ -151,7 +152,7 @@ export const AlertsPageContent: FC = () => {
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load alerts</EmptyTitle>
-            <EmptyDescription>{alertsQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(alertsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

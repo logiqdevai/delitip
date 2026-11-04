@@ -5,6 +5,7 @@ import type {
   ReviewTag,
   UpdateReviewTagPayload,
 } from "@/features/review-tags/interfaces/review-tags.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const listReviewTags = async (storeId: string): Promise<ReviewTag[]> => {
   try {
@@ -12,8 +13,8 @@ export const listReviewTags = async (storeId: string): Promise<ReviewTag[]> => {
       ApiRoutes.stores.reviewTags(storeId),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load review tags. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load review tags. Please try again."));
   }
 };
 
@@ -27,8 +28,8 @@ export const createReviewTag = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to create review tag. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't create review tag. Please try again."));
   }
 };
 
@@ -43,8 +44,8 @@ export const updateReviewTag = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to update review tag. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't update review tag. Please try again."));
   }
 };
 
@@ -54,7 +55,7 @@ export const deleteReviewTag = async (
 ): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.stores.reviewTag(storeId, id));
-  } catch {
-    throw new Error("Failed to delete review tag. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't delete review tag. Please try again."));
   }
 };

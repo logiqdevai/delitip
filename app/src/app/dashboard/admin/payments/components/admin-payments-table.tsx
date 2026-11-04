@@ -51,6 +51,7 @@ import { AdminPaymentFeesCell } from "@/app/dashboard/admin/payments/components/
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 const ColumnHeaderWithTooltip: FC<{ label: string; explanation: string }> = ({
   label,
@@ -257,7 +258,7 @@ export const AdminPaymentsTable: FC = () => {
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load payments</EmptyTitle>
-            <EmptyDescription>{tipsQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(tipsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

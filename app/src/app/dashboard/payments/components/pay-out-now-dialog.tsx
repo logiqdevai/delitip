@@ -1,6 +1,7 @@
 "use client";
 
 import { type FC, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Building2, CheckCircle2, User, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ActionButtonWithPending } from "@/components/ui/action-button-with-pending";
@@ -25,14 +26,8 @@ import type {
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
-const SKIP_REASON_LABELS: Record<PayoutSkipReason, string> = {
-  NO_PAYOUT_ACCOUNT: "No payout account linked",
-  ACCOUNT_NOT_ACTIVE: "Payout account not active yet",
-  NO_LINKED_USER: "No linked login for this employee",
-  TRANSFER_FAILED: "Bank transfer failed",
-  INVOICE_REQUIRED: "Needs an invoice — use Request payout",
-};
 
 type RecipientOutcome =
   | { kind: "will_skip"; reason?: PayoutSkipReason }
@@ -62,13 +57,14 @@ const resolveOutcome = (
     return { kind: "sent" };
   }
   // Lost a claim race to another concurrent run — rare, but don't claim success.
-  return { kind: "failed", reason: "Could not be claimed for this run" };
+  return { kind: "failed", reason: null };
 };
 
 const RecipientRow: FC<{
   recipient: PayoutPreviewRecipient;
   outcome?: RecipientOutcome;
 }> = ({ recipient, outcome }) => {
+  const t = useTranslations("dashboard.money.payOutNow");
   return (
     <div className="flex items-center justify-between gap-3 px-4 py-2.5">
       <div className="flex min-w-0 items-center gap-2.5">
@@ -85,17 +81,20 @@ const RecipientRow: FC<{
           </p>
           {outcome?.kind === "will_skip" ? (
             <p className="text-caption text-zinc-400">
-              {outcome.reason ? SKIP_REASON_LABELS[outcome.reason] : "Held"}
+              {outcome.reason ? t(`skip.${outcome.reason}`) : t("held")}
             </p>
           ) : outcome?.kind === "failed" ? (
             <p className="text-caption text-red-600">
-              {outcome.reason ?? "Transfer failed"}
+              {t("skip.TRANSFER_FAILED")}
             </p>
           ) : recipient.held_for_staff_amount > 0 ? (
             <p className="text-caption text-zinc-400">
-              includes{" "}
-              {formatMoney(recipient.held_for_staff_amount, recipient.currency)}{" "}
-              you owe staff
+              {t("includesOwedToStaff", {
+                amount: formatMoney(
+                  recipient.held_for_staff_amount,
+                  recipient.currency,
+                ),
+              })}
             </p>
           ) : null}
         </div>
@@ -127,6 +126,7 @@ export const PayOutNowDialog: FC<{
   storeId: string;
   currency: Currency;
 }> = ({ open, onOpenChange, storeId, currency }) => {
+  const t = useTranslations("dashboard.money.payOutNow");
   const [result, setResult] = useState<RunPayoutResponse | null>(null);
   const previewQuery = useStorePayoutsPreview(storeId, open);
   const runPayouts = useRunStorePayouts(storeId);
@@ -176,20 +176,16 @@ export const PayOutNowDialog: FC<{
       >
         <DialogHeader>
           <DialogTitle>
-            {result ? "Payout results" : "Pay out eligible distributions?"}
+            {result ? t("resultsTitle") : t("confirmTitle")}
           </DialogTitle>
           <DialogDescription>
             {result
-              ? [
-                  `${sentCount} sent`,
-                  failedCount > 0 ? `${failedCount} failed` : null,
-                  heldRecipients.length > 0
-                    ? `${heldRecipients.length} held`
-                    : null,
-                ]
-                  .filter(Boolean)
-                  .join(", ") + "."
-              : "This sends money to your Store and any employees with a linked, active payout account. Held distributions and recipients without an active account are skipped."}
+              ? t("resultsSummary", {
+                  sent: sentCount,
+                  failed: failedCount,
+                  held: heldRecipients.length,
+                })
+              : t("confirmDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -200,7 +196,7 @@ export const PayOutNowDialog: FC<{
           </div>
         ) : previewQuery.isError ? (
           <p className="text-caption text-red-600">
-            {previewQuery.error.message}
+            {getErrorMessage(previewQuery.error)}
           </p>
         ) : preview && preview.recipients.length > 0 ? (
           <div className="divide-y divide-zinc-100 overflow-hidden rounded-xl border border-zinc-200/80">
@@ -220,7 +216,7 @@ export const PayOutNowDialog: FC<{
             ))}
             <div className="flex items-center justify-between bg-zinc-50/60 px-4 py-2.5">
               <span className="text-sm font-semibold text-zinc-500">
-                {result ? "Total sent" : "Total"}
+                {result ? t("totalSent") : t("total")}
               </span>
               <span className="font-bold text-ink-charcoal">
                 {formatMoney(
@@ -235,22 +231,25 @@ export const PayOutNowDialog: FC<{
             </div>
             {!result && preview.total_held_for_staff_amount > 0 ? (
               <p className="border-t border-zinc-100 bg-amber-50/60 px-4 py-2.5 text-caption leading-snug text-amber-900">
-                {formatMoney(preview.total_held_for_staff_amount, currency)} of
-                this is staff money you&apos;ll be holding, not yours to keep.
-                Track it under Staff balances.
+                {t("staffMoneyNote", {
+                  amount: formatMoney(
+                    preview.total_held_for_staff_amount,
+                    currency,
+                  ),
+                })}
               </p>
             ) : null}
           </div>
         ) : (
           <p className="text-caption text-zinc-500">
-            Nothing is eligible for payout right now.
+            {t("nothingEligible")}
           </p>
         )}
 
         <DialogFooter>
           {result ? (
             <Button type="button" onClick={() => onOpenChange(false)}>
-              Done
+              {t("done")}
             </Button>
           ) : (
             <>
@@ -260,7 +259,7 @@ export const PayOutNowDialog: FC<{
                 disabled={runPayouts.isPending}
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                {t("cancel")}
               </Button>
               <ActionButtonWithPending
                 type="button"
@@ -269,7 +268,7 @@ export const PayOutNowDialog: FC<{
                 onClick={() => void handleConfirm()}
                 className="bg-electric-lime text-ink-charcoal"
               >
-                Pay out now
+                {t("payOutNow")}
               </ActionButtonWithPending>
             </>
           )}

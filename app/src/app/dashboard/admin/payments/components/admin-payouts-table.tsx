@@ -41,6 +41,7 @@ import { AdminStoreFilter } from "@/app/dashboard/admin/payments/components/admi
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 const statusChipClass: Record<PayoutExecutionStatus, string> = {
   PROCESSING: "bg-sky-50 text-sky-700",
@@ -196,7 +197,7 @@ export const AdminPayoutsTable: FC = () => {
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load payouts</EmptyTitle>
-            <EmptyDescription>{payoutsQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(payoutsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

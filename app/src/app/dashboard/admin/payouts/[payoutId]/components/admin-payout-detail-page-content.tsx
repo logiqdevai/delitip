@@ -19,6 +19,7 @@ import { useAdminPayout } from "@/features/payouts/hooks/use-payouts";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 const formatDateTime = (value?: string | null) => {
   if (!value) return "-";
@@ -53,7 +54,7 @@ export const AdminPayoutDetailPageContent: FC<{ payoutId: string }> = ({
         <EmptyHeader>
           <EmptyTitle>Could not load this payout</EmptyTitle>
           <EmptyDescription>
-            {payoutQuery.error?.message ?? "The payout may not exist."}
+            {getErrorMessage(payoutQuery.error, "The payout may not exist.")}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>

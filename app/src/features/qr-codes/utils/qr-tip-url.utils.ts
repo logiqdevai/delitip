@@ -31,7 +31,7 @@ export async function renderQrDataUrl(
 export async function fetchImageAsObjectUrl(url: string): Promise<string> {
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error("Failed to load image.");
+    throw new Error("We couldn't load the image. Please try again.");
   }
   const blob = await response.blob();
   return URL.createObjectURL(blob);

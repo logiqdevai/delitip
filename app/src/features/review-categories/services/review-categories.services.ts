@@ -5,6 +5,7 @@ import type {
   ReviewCategory,
   UpdateReviewCategoryPayload,
 } from "@/features/review-categories/interfaces/review-categories.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const listReviewCategories = async (
   storeId: string,
@@ -14,8 +15,8 @@ export const listReviewCategories = async (
       ApiRoutes.stores.reviewCategories(storeId),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load review categories. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load review categories. Please try again."));
   }
 };
 
@@ -29,8 +30,8 @@ export const createReviewCategory = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to create review category. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't create review category. Please try again."));
   }
 };
 
@@ -45,8 +46,8 @@ export const updateReviewCategory = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to update review category. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't update review category. Please try again."));
   }
 };
 
@@ -56,7 +57,7 @@ export const deleteReviewCategory = async (
 ): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.stores.reviewCategory(storeId, id));
-  } catch {
-    throw new Error("Failed to delete review category. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't delete review category. Please try again."));
   }
 };

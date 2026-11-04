@@ -10,6 +10,7 @@ import {
 } from "@/features/alerts/services/alerts.services";
 import type { AlertsQuery } from "@/features/alerts/interfaces/alerts.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const alertsQueryKeys = {
   list: (storeId: string, query?: AlertsQuery) =>
@@ -60,7 +61,7 @@ export const useMarkAllAlertsRead = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not mark alerts as read",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -96,7 +97,7 @@ export const useUpdateAlertPreference = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not save alert preference",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

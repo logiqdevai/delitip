@@ -21,6 +21,7 @@ import { useMyAccounts, usersQueryKeys } from "@/features/users/hooks/use-users"
 import { useAuthHydrated } from "@/hooks/use-auth-hydrated";
 import { useAuthStore } from "@/stores/auth.store";
 import { useEmployeeWorkspaceStore } from "@/stores/employee-workspace.store";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const employeesQueryKeys = {
   root: ["employees"] as const,
@@ -113,7 +114,7 @@ export const useCreateEmployee = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not add employee",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -160,7 +161,7 @@ export const useUpdateEmployee = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update employee",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -185,7 +186,7 @@ export const useResendEmployeeInvite = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not resend invite",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -209,7 +210,7 @@ export const useDeleteEmployee = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not remove employee",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

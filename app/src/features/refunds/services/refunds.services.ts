@@ -1,4 +1,3 @@
-import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -9,15 +8,7 @@ import type {
   RefundsQuery,
   UpdateRefundPayload,
 } from "@/features/refunds/interfaces/refunds.interfaces";
-
-const getApiErrorMessage = (error: unknown, fallback: string): string => {
-  if (isAxiosError(error)) {
-    const message = error.response?.data?.message;
-    if (typeof message === "string" && message.length > 0) return message;
-    if (Array.isArray(message) && typeof message[0] === "string") return message[0];
-  }
-  return fallback;
-};
+import { getErrorMessage as getApiErrorMessage } from "@/lib/api-error";
 
 export const listRefunds = async (
   storeId: string,
@@ -29,8 +20,8 @@ export const listRefunds = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load refunds. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load refunds. Please try again."));
   }
 };
 
@@ -38,8 +29,8 @@ export const getRefund = async (id: string): Promise<Refund> => {
   try {
     const response = await axiosInstance.get<Refund>(ApiRoutes.refunds.byId(id));
     return response.data;
-  } catch {
-    throw new Error("Failed to load refund. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load refund. Please try again."));
   }
 };
 
@@ -54,7 +45,7 @@ export const createRefund = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to request refund. Please try again."),
+      getApiErrorMessage(error, "We couldn't request refund. Please try again."),
     );
   }
 };
@@ -71,7 +62,7 @@ export const createPublicRefundRequest = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to request a refund. Please try again."),
+      getApiErrorMessage(error, "We couldn't request a refund. Please try again."),
     );
   }
 };
@@ -88,7 +79,7 @@ export const updateRefund = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to update refund. Please try again."),
+      getApiErrorMessage(error, "We couldn't update refund. Please try again."),
     );
   }
 };

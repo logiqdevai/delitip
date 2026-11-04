@@ -41,6 +41,7 @@ import type {
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 interface StaffBalancesTableProps {
   storeId: string;
@@ -156,7 +157,7 @@ export const StaffBalancesTable: FC<StaffBalancesTableProps> = ({
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load staff balances</EmptyTitle>
-            <EmptyDescription>{balancesQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(balancesQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

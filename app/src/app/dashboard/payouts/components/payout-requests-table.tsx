@@ -36,6 +36,7 @@ import {
 import { getPayoutRequestStatusLabel } from "@/config/constants/dropdowns/payouts/payout-request-status-form.options";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { getErrorMessage, TRANSFER_FAILED_MESSAGE } from "@/lib/api-error";
 
 const statusChipClass: Record<PayoutRequestStatus, string> = {
   PENDING_REVIEW: "bg-amber-50 text-amber-700",
@@ -100,7 +101,7 @@ export const PayoutRequestsTable: FC<{
         <Empty className="border border-dashed border-zinc-200 bg-white py-12">
           <EmptyHeader>
             <EmptyTitle>Could not load payout requests</EmptyTitle>
-            <EmptyDescription>{requestsQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(requestsQuery.error)}</EmptyDescription>
           </EmptyHeader>
         </Empty>
       ) : requests.length === 0 ? (
@@ -131,7 +132,9 @@ export const PayoutRequestsTable: FC<{
             <TableBody>
               {requests.map((request) => {
                 const status = resolveStatus(request);
-                const note = request.admin_note ?? request.failure_reason;
+                const note =
+                  request.admin_note ??
+                  (request.failure_reason ? TRANSFER_FAILED_MESSAGE : null);
                 return (
                   <TableRow key={request.id}>
                     <TableCell className="px-4 py-3.5 text-zinc-500">

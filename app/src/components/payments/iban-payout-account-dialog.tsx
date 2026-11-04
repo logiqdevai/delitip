@@ -20,6 +20,7 @@ import type {
   PayoutAccount,
 } from "@/features/payout-accounts/interfaces/payout-accounts.interfaces";
 import { formatIbanInput, isValidIban } from "@/lib/iban";
+import { getErrorMessage } from "@/lib/api-error";
 
 interface IbanPayoutAccountDialogProps {
   open: boolean;
@@ -119,7 +120,7 @@ export const IbanPayoutAccountDialog: FC<IbanPayoutAccountDialogProps> = ({
           {mutation.isError ? (
             <div className="flex items-start gap-2 rounded-lg border border-red-100 bg-red-50 p-2.5 text-caption text-red-700">
               <AlertTriangle className="mt-0.5 size-3.5 shrink-0" strokeWidth={2} />
-              <span>{mutation.error.message}</span>
+              <span>{getErrorMessage(mutation.error)}</span>
             </div>
           ) : null}
 

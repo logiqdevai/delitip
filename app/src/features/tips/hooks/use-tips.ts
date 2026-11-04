@@ -19,6 +19,7 @@ import {
   type TipsQuery,
 } from "@/features/tips/interfaces/tips.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const tipsQueryKeys = {
   root: ["tips"] as const,
@@ -66,7 +67,7 @@ export const useExportStoreTipsCsv = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not export tips",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -116,7 +117,7 @@ export const useReconcilePayments = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not reconcile payments",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

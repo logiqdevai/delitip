@@ -19,6 +19,7 @@ import {
 } from "@/app/[storeSlug]/q/[code]/lib/locale-store";
 import { usePublicQrCode } from "@/features/qr-codes/hooks/use-qr-codes";
 import { usePublicStore } from "@/features/stores/hooks/use-stores";
+import { getErrorMessage } from "@/lib/api-error";
 
 interface TipEntryPageContentProps {
   storeSlug: string;
@@ -115,7 +116,7 @@ const TipEntryPageInner: FC<TipEntryPageContentProps> = ({
     !!store &&
     (qr.store.slug !== storeSlug || qr.store.id !== store.id);
 
-  const qrErrorMessage = qrQuery.error?.message ?? "";
+  const qrErrorMessage = getErrorMessage(qrQuery.error, "");
   const isInactiveQr = qrErrorMessage === INACTIVE_QR_MESSAGE;
   const isInactiveStore = qrErrorMessage === INACTIVE_STORE_MESSAGE;
 

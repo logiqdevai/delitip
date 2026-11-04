@@ -8,6 +8,7 @@ import type { DashboardPeriod } from "@/features/analytics/interfaces/analytics.
 import { useEmployees } from "@/features/employees/hooks/use-employees";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const EmployeesTab: FC<{
   organizationId: string;
@@ -40,7 +41,7 @@ export const EmployeesTab: FC<{
       {performanceQuery.isPending ? (
         <Skeleton className="h-64 w-full rounded-2xl" />
       ) : performanceQuery.isError ? (
-        <p className="text-xs text-red-600">{performanceQuery.error.message}</p>
+        <p className="text-xs text-red-600">{getErrorMessage(performanceQuery.error)}</p>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
           <table className="w-full text-left text-sm">

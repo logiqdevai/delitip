@@ -22,6 +22,7 @@ import { tipsQueryKeys } from "@/features/tips/hooks/use-tips";
 import { toast } from "@/components/ui/toast";
 import { describePayoutFailure } from "@/features/payouts/utils/payout-failure.utils";
 import { getManualPayoutSkipLabel } from "@/config/constants/dropdowns/payouts/manual-payout-skip.options";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const payoutsQueryKeys = {
   root: ["payouts"] as const,
@@ -131,7 +132,7 @@ export const useRunStorePayouts = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not run payouts",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -187,7 +188,7 @@ export const useRunManualPayouts = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not run the manual payout",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

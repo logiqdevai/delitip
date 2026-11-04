@@ -5,6 +5,7 @@ import type {
   Subscription,
   UpdateSubscriptionPayload,
 } from "@/features/subscriptions/interfaces/subscriptions.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const getSubscription = async (
   organizationId: string,
@@ -18,7 +19,7 @@ export const getSubscription = async (
     if (isAxiosError(error) && error.response?.status === 404) {
       return null;
     }
-    throw new Error("Failed to load subscription. Please try again.");
+    throw new Error(getErrorMessage(error, "We couldn't load subscription. Please try again."));
   }
 };
 
@@ -32,8 +33,8 @@ export const changeSubscriptionPlan = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to change plan. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't change plan. Please try again."));
   }
 };
 
@@ -45,7 +46,7 @@ export const cancelSubscription = async (
       ApiRoutes.organizations.subscriptionCancel(organizationId),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to cancel subscription. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't cancel subscription. Please try again."));
   }
 };

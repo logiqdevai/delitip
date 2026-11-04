@@ -36,6 +36,7 @@ import {
 import type { UserProfile } from "@/features/users/interfaces/users.interfaces";
 import { usePlatformRole } from "@/hooks/use-platform-role";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 const roleChipClass: Record<string, string> = {
   SUPER_ADMIN: "bg-red-50 text-red-700",
@@ -109,7 +110,7 @@ export const AllUsersPageContent: FC = () => {
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load users</EmptyTitle>
-            <EmptyDescription>{usersQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(usersQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

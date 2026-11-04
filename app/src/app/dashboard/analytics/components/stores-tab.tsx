@@ -6,6 +6,7 @@ import { useStoresPerformance } from "@/features/analytics/hooks/use-analytics";
 import type { DashboardPeriod } from "@/features/analytics/interfaces/analytics.interfaces";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const StoresTab: FC<{
   organizationId: string;
@@ -24,7 +25,7 @@ export const StoresTab: FC<{
       {performanceQuery.isPending ? (
         <Skeleton className="h-64 w-full rounded-2xl" />
       ) : performanceQuery.isError ? (
-        <p className="text-xs text-red-600">{performanceQuery.error.message}</p>
+        <p className="text-xs text-red-600">{getErrorMessage(performanceQuery.error)}</p>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xs">
           <table className="w-full text-left text-sm">

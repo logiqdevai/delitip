@@ -7,6 +7,7 @@ import {
 } from "@/features/documents/services/documents.services";
 import type { DocumentType } from "@/features/documents/interfaces/documents.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const useUploadDocument = () => {
   return useMutation({
@@ -18,7 +19,7 @@ export const useUploadDocument = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not upload the file",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -34,7 +35,7 @@ export const useDeleteDocument = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not remove the file",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

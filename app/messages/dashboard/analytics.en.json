@@ -1,0 +1,73 @@
+{
+  "title": "Analytics & Insights",
+  "defaultDescription": "Detailed intelligence on tipping and customer experience.",
+  "overviewDescription": "Detailed intelligence on tipping and customer experience for {storeName}.",
+  "nav": {
+    "overview": { "label": "Overview", "description": "Tip totals, volume, and experience score for the selected period." },
+    "tips": { "label": "Tips", "description": "Break down tip volume by day, week, month, employee, or store." },
+    "employees": { "label": "Employees", "description": "Informational performance stats for your team - not a ranking." },
+    "stores": { "label": "Stores", "description": "Compare tip performance across locations in your business." },
+    "insights": { "label": "Insights", "description": "Rule-based summaries of recent feedback computed from your data." }
+  },
+  "period": {
+    "today": "Today",
+    "7d": "Last 7 days",
+    "30d": "Last 30 days"
+  },
+  "gate": {
+    "noStoreTitle": "No store selected",
+    "noStoreDescription": "Finish business setup before viewing analytics."
+  },
+  "overview": {
+    "tips": "Tips",
+    "transactions": "Transactions",
+    "avgRating": "Avg Rating",
+    "employeesRecognized": "Employees Recognized",
+    "experienceScore": "Customer Experience Score",
+    "rating": "Rating {value}%",
+    "tipActivity": "Tip activity {value}%",
+    "positiveReviews": "Positive reviews {value}%"
+  },
+  "employees": {
+    "note": "Informational stats for your team - not a ranking.",
+    "employee": "Employee",
+    "tips": "Tips",
+    "rating": "Rating",
+    "reviews": "Reviews",
+    "empty": "No active employees for this period."
+  },
+  "stores": {
+    "store": "Store",
+    "tips": "Tips",
+    "rating": "Rating"
+  },
+  "tips": {
+    "filters": "Filters",
+    "fromDate": "From date",
+    "toDate": "To date",
+    "to": "to",
+    "filterByEmployee": "Filter by employee",
+    "allQrCodes": "All QR codes",
+    "groupBy": {
+      "day": "By day",
+      "week": "By week",
+      "month": "By month",
+      "employee": "By employee",
+      "store": "By store"
+    },
+    "total": "Total",
+    "count": "Count",
+    "average": "Average",
+    "name": "Name",
+    "period": "Period",
+    "amount": "Amount",
+    "empty": "No tips match these filters."
+  },
+  "insights": {
+    "note": "Rule-based summaries of the last period's feedback - no AI/LLM call, purely computed from your data.",
+    "generate": "Generate insight",
+    "generating": "Generating…",
+    "emptyTitle": "No summaries yet",
+    "emptyDescription": "Generate your first insight to see a summary of recent customer feedback."
+  }
+}

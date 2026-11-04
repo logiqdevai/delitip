@@ -9,6 +9,7 @@ import {
 import type { DashboardPeriod } from "@/features/analytics/interfaces/analytics.interfaces";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const OverviewTab: FC<{
   organizationId: string;
@@ -43,7 +44,7 @@ export const OverviewTab: FC<{
           ))}
         </div>
       ) : overviewQuery.isError ? (
-        <p className="text-xs text-red-600">{overviewQuery.error.message}</p>
+        <p className="text-xs text-red-600">{getErrorMessage(overviewQuery.error)}</p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs">
@@ -99,7 +100,7 @@ export const OverviewTab: FC<{
             </div>
           </div>
         ) : scoreQuery.isError ? (
-          <p className="mt-2 text-xs text-red-600">{scoreQuery.error.message}</p>
+          <p className="mt-2 text-xs text-red-600">{getErrorMessage(scoreQuery.error)}</p>
         ) : score ? (
           <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center">
             <div className="flex size-20 shrink-0 items-center justify-center rounded-full bg-brand-50 text-2xl font-extrabold text-brand-700">

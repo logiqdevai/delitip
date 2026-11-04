@@ -4,6 +4,7 @@ import type {
   QrTemplateCustomization,
   UpsertQrTemplateCustomizationPayload,
 } from "@/features/qr-templates/interfaces/qr-template-customization.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const getQrTemplateCustomization = async (
   storeId: string,
@@ -14,10 +15,8 @@ export const getQrTemplateCustomization = async (
       ApiRoutes.stores.qrTemplateCustomization(storeId, templateId),
     );
     return response.data;
-  } catch {
-    throw new Error(
-      "Failed to load the saved template design. Please try again.",
-    );
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load the saved template design. Please try again."));
   }
 };
 
@@ -32,8 +31,8 @@ export const saveQrTemplateCustomization = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to save the template design. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't save the template design. Please try again."));
   }
 };
 
@@ -45,7 +44,7 @@ export const resetQrTemplateCustomization = async (
     await axiosInstance.delete(
       ApiRoutes.stores.qrTemplateCustomization(storeId, templateId),
     );
-  } catch {
-    throw new Error("Failed to reset the template design. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't reset the template design. Please try again."));
   }
 };

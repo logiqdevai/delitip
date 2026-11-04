@@ -22,6 +22,7 @@ import { Routes } from "@/routes/routes";
 import { toast } from "@/components/ui/toast";
 import { trackEvent } from "@/lib/analytics/analytics";
 import { AnalyticsEvents } from "@/config/constants/analytics-events";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const authQueryKeys = {
   root: ["auth"] as const,
@@ -82,7 +83,7 @@ export const useLoginBusiness = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not sign in",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -108,7 +109,7 @@ export const useLoginEmployee = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not sign in",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -161,7 +162,7 @@ export const useRegisterBusiness = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not create account",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -180,7 +181,7 @@ export const useForgotPassword = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not send reset email",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -209,7 +210,7 @@ export const useResetPassword = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not reset password",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -242,7 +243,7 @@ export const useAcceptInvite = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not activate account",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -263,7 +264,7 @@ export const useChangePassword = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not change password",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

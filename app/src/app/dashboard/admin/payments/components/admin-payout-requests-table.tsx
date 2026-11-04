@@ -45,6 +45,7 @@ import {
 } from "@/app/dashboard/admin/payments/components/payout-request-chips";
 import { formatMoney } from "@/lib/money";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 const formatDate = (value?: string | null) => {
   if (!value) return "-";
@@ -199,7 +200,7 @@ export const AdminPayoutRequestsTable: FC = () => {
         <Empty className="border border-dashed border-zinc-200 bg-white px-4 py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load payout requests</EmptyTitle>
-            <EmptyDescription>{requestsQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(requestsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

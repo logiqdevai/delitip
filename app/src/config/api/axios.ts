@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getErrorMessage } from "@/lib/api-error";
 import { environments } from "@/config/environments";
 import { Routes } from "@/routes/routes";
 import { getAuthStoreState } from "@/stores/auth.store";
@@ -36,6 +37,11 @@ axiosInstance.interceptors.response.use(
       ) {
         window.location.href = Routes.auth.sign_in;
       }
+    }
+    // Raw axios text ("Request failed with status code 500", "Network Error")
+    // must never reach a user, whichever component ends up showing it.
+    if (error instanceof Error) {
+      error.message = getErrorMessage(error);
     }
     return Promise.reject(error);
   },

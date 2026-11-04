@@ -28,6 +28,7 @@ import type { Employee } from "@/features/employees/interfaces/employees.interfa
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { DetailSkeleton } from "@/components/ui/detail-skeleton";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const EmployeesPageContent: FC = () => {
   const router = useRouter();
@@ -138,7 +139,7 @@ export const EmployeesPageContent: FC = () => {
           <EmptyHeader>
             <EmptyTitle>Could not load employees</EmptyTitle>
             <EmptyDescription>
-              {employeesQuery.error.message}
+              {getErrorMessage(employeesQuery.error)}
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>

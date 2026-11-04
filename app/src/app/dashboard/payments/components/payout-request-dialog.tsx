@@ -41,6 +41,7 @@ import { DocumentTypes } from "@/features/documents/interfaces/documents.interfa
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 type Step = "overview" | "invoice" | "done";
 
@@ -413,7 +414,7 @@ export const PayoutRequestDialog: FC<{
           </div>
         ) : step !== "done" && (previewQuery.isError || !preview) ? (
           <p className="text-caption text-red-600">
-            {previewQuery.error?.message ?? "Could not load the payout preview."}
+            {getErrorMessage(previewQuery.error, "Could not load the payout preview.")}
           </p>
         ) : step === "overview" && preview ? (
           preview.open_request ? (

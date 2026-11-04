@@ -8,6 +8,19 @@ import {
   type Locale,
 } from "./config";
 
+// Each dashboard area owns messages/dashboard/<area>.<locale>.json, exposed
+// as the `dashboard.<area>` namespace.
+const DASHBOARD_AREAS = [
+  "shell",
+  "analytics",
+  "access",
+  "team",
+  "money",
+  "engagement",
+  "settings",
+  "admin",
+] as const;
+
 const detectFromAcceptLanguage = (header: string | null): Locale | undefined => {
   if (!header) return undefined;
   const requested = header

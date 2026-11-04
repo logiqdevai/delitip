@@ -19,8 +19,9 @@ import type {
   TrendPoint,
   TrendsQuery,
 } from "@/features/analytics/interfaces/analytics.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
-const FAILED = "Failed to load analytics. Please try again.";
+const FAILED = "We couldn't load analytics. Please try again.";
 
 export const getDashboardOverview = async (
   organizationId: string,
@@ -32,8 +33,8 @@ export const getDashboardOverview = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error(FAILED);
+  } catch (error) {
+    throw new Error(getErrorMessage(error, FAILED));
   }
 };
 
@@ -47,8 +48,8 @@ export const getDashboardTrends = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error(FAILED);
+  } catch (error) {
+    throw new Error(getErrorMessage(error, FAILED));
   }
 };
 
@@ -62,8 +63,8 @@ export const getEmployeesPerformance = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error(FAILED);
+  } catch (error) {
+    throw new Error(getErrorMessage(error, FAILED));
   }
 };
 
@@ -77,8 +78,8 @@ export const getStoresPerformance = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error(FAILED);
+  } catch (error) {
+    throw new Error(getErrorMessage(error, FAILED));
   }
 };
 
@@ -92,8 +93,8 @@ export const getExperienceScore = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error(FAILED);
+  } catch (error) {
+    throw new Error(getErrorMessage(error, FAILED));
   }
 };
 
@@ -107,8 +108,8 @@ export const getStoreTipsAnalytics = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error(FAILED);
+  } catch (error) {
+    throw new Error(getErrorMessage(error, FAILED));
   }
 };
 
@@ -122,8 +123,8 @@ export const listInsights = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error(FAILED);
+  } catch (error) {
+    throw new Error(getErrorMessage(error, FAILED));
   }
 };
 
@@ -136,8 +137,8 @@ export const getAdminOverview = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error(FAILED);
+  } catch (error) {
+    throw new Error(getErrorMessage(error, FAILED));
   }
 };
 
@@ -150,8 +151,8 @@ export const getAdminTrends = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error(FAILED);
+  } catch (error) {
+    throw new Error(getErrorMessage(error, FAILED));
   }
 };
 
@@ -165,7 +166,7 @@ export const generateInsight = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to generate insight. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't generate insight. Please try again."));
   }
 };

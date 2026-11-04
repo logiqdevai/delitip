@@ -43,6 +43,7 @@ import { getAbsoluteTipUrl } from "@/features/qr-codes/utils/qr-tip-url.utils";
 import { useWorkspace } from "@/features/stores/hooks/use-workspace";
 import { Routes } from "@/routes/routes";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 const selectionModeIcons: Record<QrCodeSelectionMode, typeof User> = {
   [QrCodeSelectionModes.CHOOSE_ONE]: User,
@@ -223,7 +224,7 @@ export const EmployeeQrCodesDialog: FC<EmployeeQrCodesDialogProps> = ({
             <Empty className="min-w-0 border border-dashed border-zinc-200 bg-zinc-50 py-8">
               <EmptyHeader>
                 <EmptyTitle>Could not load QR codes</EmptyTitle>
-                <EmptyDescription>{qrCodesQuery.error.message}</EmptyDescription>
+                <EmptyDescription>{getErrorMessage(qrCodesQuery.error)}</EmptyDescription>
               </EmptyHeader>
             </Empty>
           ) : qrCodes.length === 0 ? (

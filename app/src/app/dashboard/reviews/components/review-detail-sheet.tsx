@@ -20,6 +20,7 @@ import type { Tip } from "@/features/tips/interfaces/tips.interfaces";
 import { formatMoney } from "@/lib/money";
 import { resolvePrimaryText } from "@/lib/translated-text";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 interface ReviewDetailSheetProps {
   reviewId: string | null;
@@ -62,7 +63,7 @@ const LinkedTipSection: FC<{ tipId: string }> = ({ tipId }) => {
   if (tipQuery.isError || !tipQuery.data) {
     return (
       <p className="text-xs text-red-600">
-        {tipQuery.error?.message ?? "Could not load the linked tip."}
+        {getErrorMessage(tipQuery.error, "Could not load the linked tip.")}
       </p>
     );
   }
@@ -215,7 +216,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
             </div>
           ) : reviewQuery.isError || !reviewQuery.data ? (
             <p className="text-sm text-red-600">
-              {reviewQuery.error?.message ?? "Could not load this review."}
+              {getErrorMessage(reviewQuery.error, "Could not load this review.")}
             </p>
           ) : (
             (() => {

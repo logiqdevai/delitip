@@ -11,6 +11,7 @@ import {
   useEmployeeDashboard,
 } from "@/features/employees/hooks/use-employees";
 import { useEmployeeReviews } from "@/features/reviews/hooks/use-reviews";
+import { getErrorMessage } from "@/lib/api-error";
 
 const StatCard: FC<{
   icon: FC<{ className?: string; strokeWidth?: number }>;
@@ -49,7 +50,7 @@ const ReviewsPage: FC = () => {
         <EmptyHeader>
           <EmptyTitle>Could not load your reviews</EmptyTitle>
           <EmptyDescription>
-            {dashboardQuery.error?.message ?? reviewsQuery.error?.message}
+            {getErrorMessage(dashboardQuery.error ?? reviewsQuery.error)}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>

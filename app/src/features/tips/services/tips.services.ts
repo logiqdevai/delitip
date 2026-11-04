@@ -13,19 +13,10 @@ import type {
   TipsExportQuery,
   TipsQuery,
 } from "@/features/tips/interfaces/tips.interfaces";
-
-const getApiErrorMessage = (error: unknown, fallback: string): string => {
-  if (isAxiosError(error)) {
-    const message = error.response?.data?.message;
-    if (typeof message === "string" && message.length > 0) {
-      return message;
-    }
-    if (Array.isArray(message) && typeof message[0] === "string") {
-      return message[0];
-    }
-  }
-  return fallback;
-};
+import {
+  getErrorMessage as getApiErrorMessage,
+  getFriendlyMessage,
+} from "@/lib/api-error";
 
 export const listStoreTips = async (
   storeId: string,
@@ -37,8 +28,8 @@ export const listStoreTips = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load tips. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load tips. Please try again."));
   }
 };
 
@@ -76,20 +67,13 @@ export const exportStoreTipsCsv = async (
   } catch (error) {
     let message = getApiErrorMessage(
       error,
-      "Failed to export tips. Please try again.",
+      "We couldn't export tips. Please try again.",
     );
     if (isAxiosError(error) && error.response?.data instanceof Blob) {
       try {
         const text = await error.response.data.text();
         const parsed = JSON.parse(text) as { message?: string | string[] };
-        if (typeof parsed.message === "string" && parsed.message.length > 0) {
-          message = parsed.message;
-        } else if (
-          Array.isArray(parsed.message) &&
-          typeof parsed.message[0] === "string"
-        ) {
-          message = parsed.message[0];
-        }
+        message = getFriendlyMessage(parsed.message, message);
       } catch {
         // keep fallback message
       }
@@ -107,8 +91,8 @@ export const listAdminTips = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load payments. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load payments. Please try again."));
   }
 };
 
@@ -118,8 +102,8 @@ export const reconcilePayments = async (): Promise<{ corrected: number }> => {
       ApiRoutes.admin.payments.reconcile,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to reconcile payments. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't reconcile payments. Please try again."));
   }
 };
 
@@ -127,8 +111,8 @@ export const getTip = async (id: string): Promise<Tip> => {
   try {
     const response = await axiosInstance.get<Tip>(ApiRoutes.tips.byId(id));
     return response.data;
-  } catch {
-    throw new Error("Failed to load tip. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load tip. Please try again."));
   }
 };
 
@@ -141,8 +125,8 @@ export const listEmployeeTips = async (
       PaginatedResponse<EmployeeTipDistribution>
     >(ApiRoutes.employees.tips(employeeId), { params: query });
     return response.data;
-  } catch {
-    throw new Error("Failed to load employee tips. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load employee tips. Please try again."));
   }
 };
 
@@ -157,7 +141,7 @@ export const createPublicTip = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to submit tip. Please try again."),
+      getApiErrorMessage(error, "We couldn't submit tip. Please try again."),
     );
   }
 };
@@ -183,6 +167,6 @@ export const getPublicTipByOrderCode = async (
     if (isAxiosError(error) && error.response?.status === 404) {
       return null;
     }
-    throw new Error("Failed to resolve this checkout. Please try again.");
+    throw new Error(getApiErrorMessage(error, "We couldn't resolve this checkout. Please try again."));
   }
 };

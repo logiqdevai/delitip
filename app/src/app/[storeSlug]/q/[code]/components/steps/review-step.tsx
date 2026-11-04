@@ -346,9 +346,7 @@ export const ReviewStep: FC<ReviewStepProps> = ({
         <div className="flex items-start gap-2.5 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-700">
           <AlertTriangle className="mt-0.5 size-4 shrink-0" strokeWidth={2} />
           <span>
-            {createTip.error instanceof Error
-              ? createTip.error.message
-              : t("genericError")}
+            {t("genericError")}
           </span>
         </div>
       ) : null}

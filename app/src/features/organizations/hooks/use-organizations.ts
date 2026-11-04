@@ -19,6 +19,7 @@ import type { BusinessSetupFormData } from "@/features/stores/validation-schemas
 import { storesQueryKeys } from "@/features/stores/hooks/use-stores";
 import { usersQueryKeys } from "@/features/users/hooks/use-users";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const organizationsQueryKeys = {
   root: ["organizations"] as const,
@@ -92,7 +93,7 @@ export const useUpdateOrganization = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not save billing details",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -189,7 +190,7 @@ export const useCompleteBusinessSetup = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not save business profile",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

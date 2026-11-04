@@ -28,6 +28,7 @@ import type {
 } from "@/features/analytics/interfaces/analytics.interfaces";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
+import { getErrorMessage } from "@/lib/api-error";
 
 const METRIC_META: Record<AdminTrendsMetric, { label: string; color: string }> = {
   tips_revenue: { label: "Gross tips revenue", color: "#9FBF3E" },
@@ -105,7 +106,7 @@ export const RevenueTrendChart: FC = () => {
           <Skeleton className="h-64 w-full rounded-xl" />
         ) : trendsQuery.isError ? (
           <p className="py-16 text-center text-xs text-red-600">
-            {trendsQuery.error.message}
+            {getErrorMessage(trendsQuery.error)}
           </p>
         ) : data.length === 0 ? (
           <p className="py-16 text-center text-xs text-zinc-400">

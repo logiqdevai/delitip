@@ -1,4 +1,3 @@
-import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -11,25 +10,10 @@ import type {
   UpdateOrganizationPayload,
 } from "@/features/organizations/interfaces/organizations.interfaces";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
+import { getErrorMessage as getApiErrorMessage } from "@/lib/api-error";
 
 export type OrganizationWithStore = Organization & {
   store?: Store | null;
-};
-
-const getApiErrorMessage = (error: unknown, fallback: string): string => {
-  if (isAxiosError(error)) {
-    const message = error.response?.data?.message;
-    if (typeof message === "string" && message.length > 0) {
-      return message;
-    }
-    if (Array.isArray(message) && typeof message[0] === "string") {
-      return message[0];
-    }
-  }
-  if (error instanceof Error && error.message) {
-    return error.message;
-  }
-  return fallback;
 };
 
 export const createOrganization = async (
@@ -45,7 +29,7 @@ export const createOrganization = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "Failed to create your business. Please try again.",
+        "We couldn't create your business. Please try again.",
       ),
     );
   }
@@ -63,7 +47,7 @@ export const listMyOrganizations = async (): Promise<
     throw new Error(
       getApiErrorMessage(
         error,
-        "Failed to load organizations. Please try again.",
+        "We couldn't load organizations. Please try again.",
       ),
     );
   }
@@ -79,7 +63,7 @@ export const getOrganization = async (id: string): Promise<Organization> => {
     throw new Error(
       getApiErrorMessage(
         error,
-        "Failed to load organization. Please try again.",
+        "We couldn't load organization. Please try again.",
       ),
     );
   }
@@ -99,7 +83,7 @@ export const updateOrganization = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "Failed to update organization. Please try again.",
+        "We couldn't update organization. Please try again.",
       ),
     );
   }
@@ -115,7 +99,7 @@ export const listOrganizationMembers = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to load members. Please try again."),
+      getApiErrorMessage(error, "We couldn't load members. Please try again."),
     );
   }
 };
@@ -132,7 +116,7 @@ export const addOrganizationMember = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to add member. Please try again."),
+      getApiErrorMessage(error, "We couldn't add member. Please try again."),
     );
   }
 };
@@ -150,7 +134,7 @@ export const updateOrganizationMember = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to update member. Please try again."),
+      getApiErrorMessage(error, "We couldn't update member. Please try again."),
     );
   }
 };
@@ -165,7 +149,7 @@ export const removeOrganizationMember = async (
     );
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to remove member. Please try again."),
+      getApiErrorMessage(error, "We couldn't remove member. Please try again."),
     );
   }
 };

@@ -11,6 +11,7 @@ import {
   useInsights,
 } from "@/features/analytics/hooks/use-analytics";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const InsightsTab: FC<{ storeId: string }> = ({ storeId }) => {
   const insightsQuery = useInsights(storeId);
@@ -43,7 +44,7 @@ export const InsightsTab: FC<{ storeId: string }> = ({ storeId }) => {
           ))}
         </div>
       ) : insightsQuery.isError ? (
-        <p className="text-xs text-red-600">{insightsQuery.error.message}</p>
+        <p className="text-xs text-red-600">{getErrorMessage(insightsQuery.error)}</p>
       ) : insights.length === 0 ? (
         <Empty className="border border-dashed border-zinc-200 bg-white py-12">
           <EmptyHeader>

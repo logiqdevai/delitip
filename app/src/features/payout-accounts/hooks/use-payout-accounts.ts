@@ -18,6 +18,7 @@ import type {
   PayoutAccount,
 } from "@/features/payout-accounts/interfaces/payout-accounts.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 const describeRefreshResult = (account: PayoutAccount) =>
   account.status === "ACTIVE"
@@ -57,7 +58,7 @@ export const useReconcilePayoutAccounts = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not reconcile IBANs",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -92,7 +93,7 @@ export const useCreateMyPayoutAccount = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not connect payout account",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -112,7 +113,7 @@ export const useRefreshMyPayoutAccountStatus = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not check payout account status",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -147,7 +148,7 @@ export const useCreateStorePayoutAccount = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not connect payout account",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -167,7 +168,7 @@ export const useRefreshStorePayoutAccountStatus = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not check payout account status",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -202,7 +203,7 @@ export const useCreateEmployeePayoutAccount = (employeeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not link payout account",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -222,7 +223,7 @@ export const useRefreshEmployeePayoutAccountStatus = (employeeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not check payout account status",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

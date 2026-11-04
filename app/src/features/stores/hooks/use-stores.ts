@@ -16,6 +16,7 @@ import type {
 } from "@/features/stores/interfaces/stores.interfaces";
 import { toast } from "@/components/ui/toast";
 import { usersQueryKeys } from "@/features/users/hooks/use-users";
+import { getErrorMessage } from "@/lib/api-error";
 
 const organizationsRootKey = ["organizations"] as const;
 
@@ -88,7 +89,7 @@ export const useCreateStore = (organizationId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not create store",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -119,7 +120,7 @@ export const useUpdateStore = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update store",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -149,7 +150,7 @@ export const useDeleteStore = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not delete store",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

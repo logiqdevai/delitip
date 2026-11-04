@@ -1,4 +1,3 @@
-import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -8,6 +7,7 @@ import type {
   Store,
   UpdateStorePayload,
 } from "@/features/stores/interfaces/stores.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const listAdminStores = async (): Promise<AdminStoreOption[]> => {
   try {
@@ -15,8 +15,8 @@ export const listAdminStores = async (): Promise<AdminStoreOption[]> => {
       ApiRoutes.admin.stores,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load stores. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load stores. Please try again."));
   }
 };
 
@@ -28,8 +28,8 @@ export const listStores = async (
       ApiRoutes.organizations.stores(organizationId),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load stores. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load stores. Please try again."));
   }
 };
 
@@ -37,8 +37,8 @@ export const getStore = async (id: string): Promise<Store> => {
   try {
     const response = await axiosInstance.get<Store>(ApiRoutes.stores.byId(id));
     return response.data;
-  } catch {
-    throw new Error("Failed to load store. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load store. Please try again."));
   }
 };
 
@@ -52,8 +52,8 @@ export const createStore = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to create store. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't create store. Please try again."));
   }
 };
 
@@ -67,8 +67,8 @@ export const updateStore = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to update store. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't update store. Please try again."));
   }
 };
 
@@ -77,11 +77,8 @@ export const deleteStore = async (id: string): Promise<void> => {
     await axiosInstance.delete(ApiRoutes.stores.byId(id));
   } catch (error) {
     // Surface the API's reason (last store, or a store with tips/reviews).
-    const message = isAxiosError(error) ? error.response?.data?.message : null;
     throw new Error(
-      typeof message === "string" && message.length > 0
-        ? message
-        : "Failed to delete store. Please try again.",
+      getErrorMessage(error, "We couldn't delete this store. Please try again."),
     );
   }
 };
@@ -96,7 +93,7 @@ export const getPublicStore = async (
       { params: lang ? { lang } : undefined },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load store. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load store. Please try again."));
   }
 };

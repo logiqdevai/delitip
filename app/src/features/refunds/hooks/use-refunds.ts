@@ -15,6 +15,7 @@ import type {
   UpdateRefundPayload,
 } from "@/features/refunds/interfaces/refunds.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const refundsQueryKeys = {
   root: ["refunds"] as const,
@@ -56,7 +57,7 @@ export const useCreateRefund = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not request refund",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -95,7 +96,7 @@ export const useUpdateRefund = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update refund",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

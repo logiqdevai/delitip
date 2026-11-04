@@ -18,6 +18,7 @@ import type {
 import { storesQueryKeys } from "@/features/stores/hooks/use-stores";
 import { usersQueryKeys } from "@/features/users/hooks/use-users";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const distributionQueryKeys = {
   root: ["distribution-rules"] as const,
@@ -76,7 +77,7 @@ export const useCreateDistributionRule = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not create rule",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -117,7 +118,7 @@ export const useUpdateDistributionRule = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update rule",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -148,7 +149,7 @@ export const useDeleteDistributionRule = (options?: {
       if (!showErrorToast) return;
       toast.add({
         title: "Could not delete rule",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -177,7 +178,7 @@ export const useSetDefaultDistributionRule = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not set default rule",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

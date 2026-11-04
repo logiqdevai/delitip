@@ -6,6 +6,7 @@ import type {
   AlertPreference,
   AlertsQuery,
 } from "@/features/alerts/interfaces/alerts.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const listAlerts = async (
   storeId: string,
@@ -17,8 +18,8 @@ export const listAlerts = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load alerts. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load alerts. Please try again."));
   }
 };
 
@@ -28,8 +29,8 @@ export const markAlertRead = async (id: string): Promise<Alert> => {
       ApiRoutes.alerts.markRead(id),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to mark alert as read. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't mark alert as read. Please try again."));
   }
 };
 
@@ -42,8 +43,8 @@ export const markAllAlertsRead = async (
       updated_count: number;
     }>(ApiRoutes.stores.alertsReadAll(storeId));
     return response.data;
-  } catch {
-    throw new Error("Failed to mark alerts as read. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't mark alerts as read. Please try again."));
   }
 };
 
@@ -55,8 +56,8 @@ export const listAlertPreferences = async (
       ApiRoutes.stores.alertPreferences(storeId),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load alert preferences. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load alert preferences. Please try again."));
   }
 };
 
@@ -71,7 +72,7 @@ export const updateAlertPreference = async (
       { is_enabled: isEnabled },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to update alert preference. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't update alert preference. Please try again."));
   }
 };

@@ -13,6 +13,7 @@ import type {
   UpdateSpotPayload,
 } from "@/features/spots/interfaces/spots.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const spotsQueryKeys = {
   root: ["spots"] as const,
@@ -41,7 +42,7 @@ export const useCreateSpot = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not create spot",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -78,7 +79,7 @@ export const useUpdateSpot = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not update spot",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -98,7 +99,7 @@ export const useDeleteSpot = () => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not remove spot",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

@@ -19,6 +19,7 @@ import { useEmployees } from "@/features/employees/hooks/use-employees";
 import { useQrCodes } from "@/features/qr-codes/hooks/use-qr-codes";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
+import { getErrorMessage } from "@/lib/api-error";
 
 const GROUP_BY_OPTIONS: { id: StoreTipsGroupBy; label: string }[] = [
   { id: "day", label: "By day" },
@@ -135,7 +136,7 @@ export const TipsTab: FC<{ storeId: string; currency: Currency }> = ({
       {analyticsQuery.isPending ? (
         <Skeleton className="h-64 w-full rounded-2xl" />
       ) : analyticsQuery.isError ? (
-        <p className="text-xs text-red-600">{analyticsQuery.error.message}</p>
+        <p className="text-xs text-red-600">{getErrorMessage(analyticsQuery.error)}</p>
       ) : data ? (
         <>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

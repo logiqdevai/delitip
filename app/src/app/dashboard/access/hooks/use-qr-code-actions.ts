@@ -6,6 +6,7 @@ import {
   downloadQrCodePng,
   printQrCode,
 } from "@/features/qr-codes/utils/qr-tip-url.utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 interface UseQrCodeActionsOptions {
   tipUrl: string;
@@ -49,8 +50,7 @@ export const useQrCodeActions = ({
     } catch (error) {
       toast.add({
         title: "Could not download QR",
-        description:
-          error instanceof Error ? error.message : "Please try again.",
+        description: getErrorMessage(error, "Please try again."),
         type: "error",
       });
     } finally {
@@ -65,8 +65,7 @@ export const useQrCodeActions = ({
     } catch (error) {
       toast.add({
         title: "Could not print QR",
-        description:
-          error instanceof Error ? error.message : "Please try again.",
+        description: getErrorMessage(error, "Please try again."),
         type: "error",
       });
     } finally {

@@ -1,4 +1,3 @@
-import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -10,6 +9,7 @@ import type {
   EmployeesQuery,
   UpdateEmployeePayload,
 } from "@/features/employees/interfaces/employees.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const listEmployees = async (
   storeId: string,
@@ -21,8 +21,8 @@ export const listEmployees = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load employees. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load employees. Please try again."));
   }
 };
 
@@ -32,8 +32,8 @@ export const getEmployee = async (id: string): Promise<Employee> => {
       ApiRoutes.employees.byId(id),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load employee. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load employee. Please try again."));
   }
 };
 
@@ -47,8 +47,8 @@ export const createEmployee = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to create employee. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't create employee. Please try again."));
   }
 };
 
@@ -62,16 +62,16 @@ export const updateEmployee = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to update employee. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't update employee. Please try again."));
   }
 };
 
 export const deleteEmployee = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.employees.byId(id));
-  } catch {
-    throw new Error("Failed to delete employee. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't delete employee. Please try again."));
   }
 };
 
@@ -82,10 +82,9 @@ export const resendEmployeeInvite = async (id: string): Promise<Employee> => {
     );
     return response.data;
   } catch (error) {
-    const message = isAxiosError(error)
-      ? (error.response?.data?.message as string | undefined)
-      : undefined;
-    throw new Error(message || "Failed to resend the invite. Please try again.");
+    throw new Error(
+      getErrorMessage(error, "We couldn't resend the invite. Please try again."),
+    );
   }
 };
 
@@ -97,8 +96,8 @@ export const getEmployeeDashboard = async (
       ApiRoutes.employees.dashboard(id),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load employee dashboard. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load employee dashboard. Please try again."));
   }
 };
 
@@ -110,7 +109,7 @@ export const getEmployeeQrCode = async (
       ApiRoutes.employees.qrCode(id),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load your QR code. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load your QR code. Please try again."));
   }
 };

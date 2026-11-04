@@ -8,6 +8,7 @@ import {
 } from "@/features/subscriptions/services/subscriptions.services";
 import type { UpdateSubscriptionPayload } from "@/features/subscriptions/interfaces/subscriptions.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const subscriptionsQueryKeys = {
   detail: (organizationId: string) => ["subscription", organizationId] as const,
@@ -34,7 +35,7 @@ export const useChangeSubscriptionPlan = (organizationId: string) => {
       toast.add({ title: "Plan updated", type: "success" });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not change plan", description: error.message, type: "error" });
+      toast.add({ title: "Could not change plan", description: getErrorMessage(error), type: "error" });
     },
   });
 };
@@ -51,7 +52,7 @@ export const useCancelSubscription = (organizationId: string) => {
       toast.add({ title: "Subscription canceled", type: "success" });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not cancel subscription", description: error.message, type: "error" });
+      toast.add({ title: "Could not cancel subscription", description: getErrorMessage(error), type: "error" });
     },
   });
 };

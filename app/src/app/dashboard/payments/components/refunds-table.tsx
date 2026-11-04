@@ -45,6 +45,7 @@ import { getRefundStatusLabel } from "@/config/constants/dropdowns/refunds/refun
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/api-error";
 
 const statusChipClass: Record<RefundStatus, string> = {
   PENDING: "bg-amber-50 text-amber-700",
@@ -153,7 +154,7 @@ export const RefundsTable: FC<{
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load refunds</EmptyTitle>
-            <EmptyDescription>{refundsQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(refundsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

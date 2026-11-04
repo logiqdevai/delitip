@@ -1,4 +1,3 @@
-import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -15,19 +14,7 @@ import type {
   RunPayoutPayload,
   RunPayoutResponse,
 } from "@/features/payouts/interfaces/payouts.interfaces";
-
-const getApiErrorMessage = (error: unknown, fallback: string): string => {
-  if (isAxiosError(error)) {
-    const message = error.response?.data?.message;
-    if (typeof message === "string" && message.length > 0) {
-      return message;
-    }
-    if (Array.isArray(message) && typeof message[0] === "string") {
-      return message[0];
-    }
-  }
-  return fallback;
-};
+import { getErrorMessage as getApiErrorMessage } from "@/lib/api-error";
 
 export const listStorePayouts = async (
   storeId: string,
@@ -39,8 +26,8 @@ export const listStorePayouts = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load payouts. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load payouts. Please try again."));
   }
 };
 
@@ -54,8 +41,8 @@ export const listEmployeePayouts = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load payouts. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load payouts. Please try again."));
   }
 };
 
@@ -69,8 +56,8 @@ export const listStoreDistributions = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load distributions. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load distributions. Please try again."));
   }
 };
 
@@ -83,8 +70,8 @@ export const listAdminPayouts = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load payouts. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load payouts. Please try again."));
   }
 };
 
@@ -94,8 +81,8 @@ export const getAdminPayout = async (id: string): Promise<PayoutDetail> => {
       ApiRoutes.admin.payouts.byId(id),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load payout. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load payout. Please try again."));
   }
 };
 
@@ -109,7 +96,7 @@ export const previewStorePayouts = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to load payout preview. Please try again."),
+      getApiErrorMessage(error, "We couldn't load payout preview. Please try again."),
     );
   }
 };
@@ -126,7 +113,7 @@ export const runStorePayouts = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to run payouts. Please try again."),
+      getApiErrorMessage(error, "We couldn't run payouts. Please try again."),
     );
   }
 };
@@ -142,7 +129,7 @@ export const runManualPayouts = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to run the manual payout. Please try again."),
+      getApiErrorMessage(error, "We couldn't run the manual payout. Please try again."),
     );
   }
 };

@@ -9,6 +9,7 @@ import {
 } from "@/features/qr-templates/services/qr-template-customizations.services";
 import type { UpsertQrTemplateCustomizationPayload } from "@/features/qr-templates/interfaces/qr-template-customization.interfaces";
 import type { QrTemplateId } from "@/features/qr-templates/interfaces/qr-templates.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const qrTemplateCustomizationQueryKeys = {
   detail: (storeId: string, templateId: QrTemplateId) =>
@@ -46,7 +47,7 @@ export const useSaveQrTemplateCustomization = (
     onError: (error: Error) => {
       toast.add({
         title: "Could not save design",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },
@@ -71,7 +72,7 @@ export const useResetQrTemplateCustomization = (
     onError: (error: Error) => {
       toast.add({
         title: "Could not reset design",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

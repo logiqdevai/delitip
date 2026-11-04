@@ -1,0 +1,96 @@
+{
+  "common": {
+    "noStoreTitle": "No store selected",
+    "filters": "Filters",
+    "tryAgain": "Try again",
+    "store": "Store",
+    "none": "-"
+  },
+  "alertTypes": {
+    "POSITIVE_COMPLIMENTS": "Positive compliments",
+    "NEGATIVE_SATISFACTION_DROP": "Satisfaction drop",
+    "LOW_RATING_REVIEW": "Low rating review",
+    "PERFORMANCE_CHANGE": "Performance change",
+    "PAYOUT_REQUEST_APPROVED": "Payout approved",
+    "PAYOUT_REQUEST_REJECTED": "Payout request rejected"
+  },
+  "tipStatuses": {
+    "CREATED": "Created",
+    "PROCESSING": "Processing",
+    "COMPLETED": "Completed",
+    "FAILED": "Failed",
+    "CANCELLED": "Cancelled",
+    "REFUNDED": "Refunded",
+    "PENDING": "Pending"
+  },
+  "payoutStatuses": {
+    "PENDING": "Pending",
+    "PROCESSING": "Processing",
+    "PAID": "Paid",
+    "FAILED": "Failed",
+    "CANCELLED": "Cancelled"
+  },
+  "refundStatuses": {
+    "PENDING": "Pending",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected",
+    "COMPLETED": "Completed"
+  },
+  "reviews": {
+    "title": "Reviews",
+    "description": "Direct customer sentiment, compliments, and ratings tied to employees.",
+    "noStoreDescription": "Finish business setup before viewing reviews.",
+    "anyRating": "Any rating",
+    "ratingPlus": "{rating}+ stars",
+    "filterEmployee": "Filter by employee",
+    "fromDate": "From date",
+    "toDate": "To date",
+    "to": "to",
+    "loadErrorTitle": "Could not load reviews",
+    "emptyTitle": "No reviews yet",
+    "emptyDescription": "Once customers leave feedback after tipping, it will show up here.",
+    "customerNotes": "Customer notes"
+  },
+  "reviewDetail": {
+    "title": "Review",
+    "description": "Full feedback left after a customer tip.",
+    "loadError": "Could not load this review.",
+    "employee": "Employee",
+    "comment": "Comment",
+    "categoryRatings": "Category ratings",
+    "category": "Category",
+    "feedbackQuestions": "Feedback questions",
+    "question": "Question",
+    "linkedTipLoadError": "Could not load the linked tip.",
+    "linkedTip": "Linked tip",
+    "amount": "Amount",
+    "status": "Status",
+    "paidAt": "Paid at",
+    "createdAt": "Created at",
+    "qrCode": "QR code",
+    "distributionRule": "Distribution rule",
+    "storeDefault": "Store default",
+    "paymentProvider": "Payment provider",
+    "paymentReference": "Payment reference",
+    "customer": "Customer",
+    "distribution": "Distribution",
+    "noDistribution": "No distribution recorded for this tip.",
+    "employeeFallback": "Employee",
+    "refunds": "Refunds",
+    "noReason": "No reason given"
+  },
+  "alerts": {
+    "title": "Alerts",
+    "description": "Automatic notices about performance changes and customer feedback.",
+    "noStoreDescription": "Finish business setup before viewing alerts.",
+    "markAllRead": "Mark all read",
+    "markRead": "Mark read",
+    "filterAll": "All",
+    "filterUnread": "Unread",
+    "filterRead": "Read",
+    "allTypes": "All types",
+    "loadErrorTitle": "Could not load alerts",
+    "emptyTitle": "No alerts",
+    "emptyDescription": "You'll see performance and feedback notices here as they happen."
+  }
+}

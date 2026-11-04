@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getErrorMessage } from "@/lib/api-error";
 
 export type ReviewAction = "approve" | "reject";
 
@@ -52,11 +53,7 @@ export const ReviewPayoutRequestDialog: FC<{
       await onConfirm(action, note.trim());
       onClose();
     } catch (cause) {
-      setError(
-        cause instanceof Error && cause.message
-          ? cause.message
-          : "Something went wrong. Please try again.",
-      );
+      setError(getErrorMessage(cause, "Something went wrong. Please try again."));
     }
   };
 

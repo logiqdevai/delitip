@@ -143,7 +143,7 @@ export const PayoutSummaryCard: FC<PayoutSummaryCardProps> = ({
             <strong>{formatMoney(openRequest.amount, currency)}</strong> requested{" "}
             {formatDate(openRequest.created_at)} is awaiting Delitip&apos;s review.
             {openRequest.failure_reason
-              ? ` Last transfer attempt failed: ${openRequest.failure_reason}.`
+              ? " The last bank transfer attempt didn't go through, so it's back with us for review."
               : ""}
           </span>
           <Button

@@ -30,6 +30,7 @@ import { formatRecipientSummary } from "@/features/distribution/utils/distributi
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 interface DistributionRulesPanelProps {
   storeId: string;
@@ -157,7 +158,7 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
             <Empty className="border border-dashed border-zinc-200 bg-white py-12">
               <EmptyHeader>
                 <EmptyTitle>Could not load rules</EmptyTitle>
-                <EmptyDescription>{rulesQuery.error.message}</EmptyDescription>
+                <EmptyDescription>{getErrorMessage(rulesQuery.error)}</EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
                 <Button

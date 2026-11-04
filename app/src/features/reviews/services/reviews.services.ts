@@ -1,4 +1,3 @@
-import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type { PaginatedResponse } from "@/interfaces/pagination.interfaces";
@@ -10,19 +9,7 @@ import type {
   ReviewsQuery,
   UpdateReviewPayload,
 } from "@/features/reviews/interfaces/reviews.interfaces";
-
-const getApiErrorMessage = (error: unknown, fallback: string): string => {
-  if (isAxiosError(error)) {
-    const message = error.response?.data?.message;
-    if (typeof message === "string" && message.length > 0) {
-      return message;
-    }
-    if (Array.isArray(message) && typeof message[0] === "string") {
-      return message[0];
-    }
-  }
-  return fallback;
-};
+import { getErrorMessage as getApiErrorMessage } from "@/lib/api-error";
 
 export const listStoreReviews = async (
   storeId: string,
@@ -34,8 +21,8 @@ export const listStoreReviews = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load reviews. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load reviews. Please try again."));
   }
 };
 
@@ -45,8 +32,8 @@ export const getReview = async (id: string): Promise<Review> => {
       ApiRoutes.reviews.byId(id),
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load review. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load review. Please try again."));
   }
 };
 
@@ -60,16 +47,16 @@ export const updateReview = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to update review. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't update review. Please try again."));
   }
 };
 
 export const deleteReview = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.reviews.byId(id));
-  } catch {
-    throw new Error("Failed to delete review. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't delete review. Please try again."));
   }
 };
 
@@ -83,8 +70,8 @@ export const listEmployeeReviews = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load employee reviews. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load employee reviews. Please try again."));
   }
 };
 
@@ -98,8 +85,8 @@ export const getPublicReviewConfig = async (
       { params: lang ? { lang } : undefined },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load review config. Please try again.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "We couldn't load review config. Please try again."));
   }
 };
 
@@ -114,7 +101,7 @@ export const createPublicReview = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to submit review. Please try again."),
+      getApiErrorMessage(error, "We couldn't submit review. Please try again."),
     );
   }
 };

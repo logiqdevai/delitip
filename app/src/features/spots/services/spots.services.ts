@@ -7,6 +7,7 @@ import type {
   SpotsQuery,
   UpdateSpotPayload,
 } from "@/features/spots/interfaces/spots.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const listSpots = async (
   storeId: string,
@@ -18,8 +19,8 @@ export const listSpots = async (
       { params: query },
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to load spots. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't load spots. Please try again."));
   }
 };
 
@@ -33,8 +34,8 @@ export const createSpot = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to create spot. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't create spot. Please try again."));
   }
 };
 
@@ -48,15 +49,15 @@ export const updateSpot = async (
       payload,
     );
     return response.data;
-  } catch {
-    throw new Error("Failed to update spot. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't update spot. Please try again."));
   }
 };
 
 export const deleteSpot = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(ApiRoutes.spots.byId(id));
-  } catch {
-    throw new Error("Failed to delete spot. Please try again.");
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "We couldn't delete spot. Please try again."));
   }
 };

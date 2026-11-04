@@ -72,6 +72,7 @@ import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
 import { useAuthStore } from "@/stores/auth.store";
+import { getErrorMessage } from "@/lib/api-error";
 
 const payoutStatusChipClass: Record<PayoutStatus, string> = {
   PENDING: "bg-amber-50 text-amber-700",
@@ -126,7 +127,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
         <EmptyHeader>
           <EmptyTitle>Could not load this employee</EmptyTitle>
           <EmptyDescription>
-            {employeeQuery.error?.message ?? "The employee may not exist."}
+            {getErrorMessage(employeeQuery.error, "The employee may not exist.")}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
@@ -341,7 +342,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
           <Empty className="border border-dashed border-zinc-200 bg-zinc-50 py-8">
             <EmptyHeader>
               <EmptyTitle>Could not load QR codes</EmptyTitle>
-              <EmptyDescription>{qrCodesQuery.error.message}</EmptyDescription>
+              <EmptyDescription>{getErrorMessage(qrCodesQuery.error)}</EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : employeeQrCodes.length === 0 ? (
@@ -403,7 +404,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
           <Empty className="border border-dashed border-zinc-200 bg-zinc-50 py-8">
             <EmptyHeader>
               <EmptyTitle>Could not load tips</EmptyTitle>
-              <EmptyDescription>{tipsQuery.error.message}</EmptyDescription>
+              <EmptyDescription>{getErrorMessage(tipsQuery.error)}</EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : employeeTips.length === 0 ? (

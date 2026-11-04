@@ -13,6 +13,7 @@ import type {
   UpdateReviewCategoryPayload,
 } from "@/features/review-categories/interfaces/review-categories.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const reviewCategoriesQueryKeys = {
   list: (storeId: string) => ["review-categories", storeId] as const,
@@ -38,7 +39,7 @@ export const useCreateReviewCategory = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not add category", description: error.message, type: "error" });
+      toast.add({ title: "Could not add category", description: getErrorMessage(error), type: "error" });
     },
   });
 };
@@ -55,7 +56,7 @@ export const useUpdateReviewCategory = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not update category", description: error.message, type: "error" });
+      toast.add({ title: "Could not update category", description: getErrorMessage(error), type: "error" });
     },
   });
 };
@@ -71,7 +72,7 @@ export const useDeleteReviewCategory = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not delete category", description: error.message, type: "error" });
+      toast.add({ title: "Could not delete category", description: getErrorMessage(error), type: "error" });
     },
   });
 };
@@ -109,7 +110,7 @@ export const useReorderReviewCategories = (storeId: string) => {
       }
       toast.add({
         title: "Could not reorder categories",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

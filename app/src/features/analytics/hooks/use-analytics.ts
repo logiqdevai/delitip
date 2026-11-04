@@ -23,6 +23,7 @@ import type {
   TrendsQuery,
 } from "@/features/analytics/interfaces/analytics.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const analyticsQueryKeys = {
   overview: (organizationId: string, query?: DashboardQuery) =>
@@ -151,7 +152,7 @@ export const useGenerateInsight = (storeId: string) => {
     onError: (error: Error) => {
       toast.add({
         title: "Could not generate insight",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

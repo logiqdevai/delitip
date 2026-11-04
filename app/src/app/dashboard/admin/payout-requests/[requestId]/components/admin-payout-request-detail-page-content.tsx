@@ -51,6 +51,7 @@ import {
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 const formatDate = (value?: string | null) => {
   if (!value) return "-";
@@ -196,7 +197,7 @@ const InvoicePreview: FC<{ requestId: string; mimetype: string }> = ({ requestId
   if (urlQuery.isError || !urlQuery.data) {
     return (
       <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-10 text-center text-xs text-zinc-500">
-        {urlQuery.error?.message ?? "Could not load the invoice."}
+        {getErrorMessage(urlQuery.error, "Could not load the invoice.")}
       </p>
     );
   }
@@ -242,7 +243,7 @@ export const AdminPayoutRequestDetailPageContent: FC<{ requestId: string }> = ({
         <EmptyHeader>
           <EmptyTitle>Could not load this payout request</EmptyTitle>
           <EmptyDescription>
-            {requestQuery.error?.message ?? "The request may not exist."}
+            {getErrorMessage(requestQuery.error, "The request may not exist.")}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>

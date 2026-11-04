@@ -26,6 +26,7 @@ import { useAdminOverview } from "@/features/analytics/hooks/use-analytics";
 import type { AdminOverviewPeriod } from "@/features/analytics/interfaces/analytics.interfaces";
 import type { Currency } from "@/features/stores/interfaces/stores.interfaces";
 import { formatMoney } from "@/lib/money";
+import { getErrorMessage } from "@/lib/api-error";
 
 const compact = (value: number) =>
   new Intl.NumberFormat(undefined, {
@@ -66,7 +67,7 @@ export const AdminAnalyticsPageContent: FC = () => {
           ))}
         </div>
       ) : overviewQuery.isError ? (
-        <p className="text-xs text-red-600">{overviewQuery.error.message}</p>
+        <p className="text-xs text-red-600">{getErrorMessage(overviewQuery.error)}</p>
       ) : overview && totals ? (
         <div className="space-y-6">
           <section className="space-y-2.5">

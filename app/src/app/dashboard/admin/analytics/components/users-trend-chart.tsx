@@ -17,6 +17,7 @@ import type {
   TrendsGroupBy,
   TrendsPeriod,
 } from "@/features/analytics/interfaces/analytics.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 const USERS_COLOR = "#9FBF3E";
 const GRADIENT_ID = "admin-users-trend-fill";
@@ -60,7 +61,7 @@ export const UsersTrendChart: FC = () => {
           <Skeleton className="h-64 w-full rounded-xl" />
         ) : trendsQuery.isError ? (
           <p className="py-16 text-center text-xs text-red-600">
-            {trendsQuery.error.message}
+            {getErrorMessage(trendsQuery.error)}
           </p>
         ) : data.length === 0 ? (
           <p className="py-16 text-center text-xs text-zinc-400">

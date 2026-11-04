@@ -12,6 +12,7 @@ import { useTemplateEditor } from "@/app/dashboard/access/components/qr-template
 import { QR_TEMPLATES } from "@/features/qr-templates/config/qr-templates.config";
 import { downloadTemplatePdf } from "@/features/qr-templates/utils/qr-template-export.utils";
 import type { QrTemplateId } from "@/features/qr-templates/interfaces/qr-templates.interfaces";
+import { getErrorMessage } from "@/lib/api-error";
 
 interface TemplateEditorToolbarProps {
   canvasRef: RefObject<HTMLDivElement | null>;
@@ -59,7 +60,7 @@ export const TemplateEditorToolbar: FC<TemplateEditorToolbarProps> = ({
     } catch (err) {
       toast.add({
         title: "Could not download template",
-        description: err instanceof Error ? err.message : "Please try again.",
+        description: getErrorMessage(err, "Please try again."),
         type: "error",
       });
     } finally {

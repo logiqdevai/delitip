@@ -26,6 +26,7 @@ import {
 import type { QrCode as QrCodeModel } from "@/features/qr-codes/interfaces/qr-codes.interfaces";
 import type { Store } from "@/features/stores/interfaces/stores.interfaces";
 import { Routes } from "@/routes/routes";
+import { getErrorMessage } from "@/lib/api-error";
 
 interface QrCodesPanelProps {
   storeId: string;
@@ -79,7 +80,7 @@ export const QrCodesPanel: FC<QrCodesPanelProps> = ({ storeId, store }) => {
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load QR codes</EmptyTitle>
-            <EmptyDescription>{qrCodesQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(qrCodesQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button

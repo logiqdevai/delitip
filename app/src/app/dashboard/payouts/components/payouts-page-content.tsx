@@ -29,6 +29,7 @@ import { PayoutRequestsTable } from "@/app/dashboard/payouts/components/payout-r
 import { getPayoutExecutionStatusLabel } from "@/config/constants/dropdowns/payments/payout-execution-status-form.options";
 import { formatMoney } from "@/lib/money";
 import { cn } from "@/lib/utils";
+import { getErrorMessage, TRANSFER_FAILED_MESSAGE } from "@/lib/api-error";
 
 const statusChipClass: Record<PayoutExecutionStatus, string> = {
   PROCESSING: "bg-sky-50 text-sky-700",
@@ -85,7 +86,7 @@ export const PayoutsPageContent: FC<PayoutsPageContentProps> = ({ storeId }) => 
         <Empty className="border border-dashed border-zinc-200 bg-white py-16">
           <EmptyHeader>
             <EmptyTitle>Could not load payouts</EmptyTitle>
-            <EmptyDescription>{payoutsQuery.error.message}</EmptyDescription>
+            <EmptyDescription>{getErrorMessage(payoutsQuery.error)}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button
@@ -159,7 +160,7 @@ export const PayoutsPageContent: FC<PayoutsPageContentProps> = ({ storeId }) => 
                         "rounded-full px-2 py-0.5 text-caption font-bold",
                         statusChipClass[payout.status],
                       )}
-                      title={payout.failure_reason ?? undefined}
+                      title={payout.failure_reason ? TRANSFER_FAILED_MESSAGE : undefined}
                     >
                       {getPayoutExecutionStatusLabel(payout.status)}
                     </span>

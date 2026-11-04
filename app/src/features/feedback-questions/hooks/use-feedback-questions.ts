@@ -13,6 +13,7 @@ import type {
   UpdateFeedbackQuestionPayload,
 } from "@/features/feedback-questions/interfaces/feedback-questions.interfaces";
 import { toast } from "@/components/ui/toast";
+import { getErrorMessage } from "@/lib/api-error";
 
 export const feedbackQuestionsQueryKeys = {
   list: (storeId: string) => ["feedback-questions", storeId] as const,
@@ -38,7 +39,7 @@ export const useCreateFeedbackQuestion = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not add question", description: error.message, type: "error" });
+      toast.add({ title: "Could not add question", description: getErrorMessage(error), type: "error" });
     },
   });
 };
@@ -55,7 +56,7 @@ export const useUpdateFeedbackQuestion = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not update question", description: error.message, type: "error" });
+      toast.add({ title: "Could not update question", description: getErrorMessage(error), type: "error" });
     },
   });
 };
@@ -71,7 +72,7 @@ export const useDeleteFeedbackQuestion = (storeId: string) => {
       });
     },
     onError: (error: Error) => {
-      toast.add({ title: "Could not delete question", description: error.message, type: "error" });
+      toast.add({ title: "Could not delete question", description: getErrorMessage(error), type: "error" });
     },
   });
 };
@@ -109,7 +110,7 @@ export const useReorderFeedbackQuestions = (storeId: string) => {
       }
       toast.add({
         title: "Could not reorder questions",
-        description: error.message,
+        description: getErrorMessage(error),
         type: "error",
       });
     },

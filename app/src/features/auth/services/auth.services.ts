@@ -1,4 +1,3 @@
-import { isAxiosError } from "axios";
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import type {
@@ -10,22 +9,7 @@ import type {
   ResetPasswordPayload,
   WaitlistPayload,
 } from "@/features/auth/interfaces/auth.interfaces";
-
-const getApiErrorMessage = (error: unknown, fallback: string): string => {
-  if (isAxiosError(error)) {
-    const message = error.response?.data?.message;
-    if (typeof message === "string" && message.length > 0) {
-      return message;
-    }
-    if (Array.isArray(message) && typeof message[0] === "string") {
-      return message[0];
-    }
-  }
-  if (error instanceof Error && error.message) {
-    return error.message;
-  }
-  return fallback;
-};
+import { getErrorMessage as getApiErrorMessage } from "@/lib/api-error";
 
 export const loginWithEmail = async (
   payload: LoginEmailPayload,
@@ -40,7 +24,7 @@ export const loginWithEmail = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "Failed to sign in. Please check your credentials.",
+        "We couldn't sign you in. Please check your email and password.",
       ),
     );
   }
@@ -59,7 +43,7 @@ export const registerWithEmail = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "Failed to create account. Please try again.",
+        "We couldn't create account. Please try again.",
       ),
     );
   }
@@ -76,7 +60,7 @@ export const joinWaitlist = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to join waitlist. Please try again."),
+      getApiErrorMessage(error, "We couldn't join waitlist. Please try again."),
     );
   }
 };
@@ -94,7 +78,7 @@ export const forgotPassword = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "Failed to request password reset. Please try again.",
+        "We couldn't request password reset. Please try again.",
       ),
     );
   }
@@ -111,7 +95,7 @@ export const resetPassword = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      getApiErrorMessage(error, "Failed to reset password. Please try again."),
+      getApiErrorMessage(error, "We couldn't reset password. Please try again."),
     );
   }
 };
@@ -145,7 +129,7 @@ export const changePassword = async (
     throw new Error(
       getApiErrorMessage(
         error,
-        "Failed to change password. Please try again.",
+        "We couldn't change password. Please try again.",
       ),
     );
   }
