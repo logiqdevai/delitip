@@ -45,8 +45,8 @@ export const StoresSettingsPanel: FC = () => {
 
   return (
     <div className="max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <StoreIcon className="size-4 text-zinc-400" strokeWidth={2} />
           <h2 className="text-sm font-bold text-ink-charcoal">{t("title")}</h2>
         </div>
@@ -54,6 +54,7 @@ export const StoresSettingsPanel: FC = () => {
           <Button
             type="button"
             size="sm"
+            className="shrink-0 max-sm:w-full"
             onClick={() => setAddStoreOpen(true)}
           >
             <Plus className="size-4" strokeWidth={2} />
@@ -77,7 +78,7 @@ export const StoresSettingsPanel: FC = () => {
             return (
               <div
                 key={store.id}
-                className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"
+                className="flex flex-col gap-3 py-4 text-sm sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex min-w-0 flex-1 items-center gap-3">
                   <Avatar className="size-10 rounded-lg after:rounded-lg">
@@ -119,12 +120,13 @@ export const StoresSettingsPanel: FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2 sm:gap-1">
                   {store.id !== currentStoreId ? (
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
+                      className="max-sm:flex-1"
                       onClick={() => switchStore(store.id)}
                     >
                       {t("switch")}
@@ -135,7 +137,7 @@ export const StoresSettingsPanel: FC = () => {
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                      className="text-red-600 hover:bg-red-50 hover:text-red-700 max-sm:ml-auto"
                       disabled={isLastStore}
                       title={isLastStore ? t("lastStoreTitle") : undefined}
                       onClick={() => {

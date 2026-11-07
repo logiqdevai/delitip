@@ -15,7 +15,7 @@ export const DashboardAuthShell: FC<DashboardAuthShellProps> = ({
   return (
     <AuthRouteGuard portal="dashboard">
       <SidebarProvider
-        className="h-svh flex-col overflow-hidden bg-zinc-50 text-ink-charcoal antialiased md:flex-row"
+        className="h-svh flex-col overflow-hidden bg-canvas text-ink-charcoal antialiased md:flex-row"
         style={{ "--sidebar-width-icon": "4.5rem" } as CSSProperties}
       >
         <DashboardSidebar />

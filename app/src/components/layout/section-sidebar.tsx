@@ -37,19 +37,19 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
   const ActiveIcon = activeItem?.icon;
 
   return (
-    <div className="w-full shrink-0 self-start lg:w-56">
+    <div className="w-full shrink-0 self-start lg:w-64">
       {activeItem && ActiveIcon ? (
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
                 "group flex w-full items-center gap-3 rounded-2xl border border-zinc-200/80 bg-white px-3 py-2.5 text-base shadow-xs outline-none transition",
-                "font-semibold text-brand-800",
-                "hover:bg-brand-50/60 focus-visible:ring-2 focus-visible:ring-electric-lime/40",
+                "font-semibold text-ink-charcoal",
+                "hover:bg-electric-lime/30 focus-visible:ring-2 focus-visible:ring-electric-lime/40",
               )}
             >
               <ActiveIcon
-                className="size-4 shrink-0 text-electric-lime"
+                className="size-4 shrink-0 text-ink-charcoal"
                 strokeWidth={2}
               />
               <span className="min-w-0 flex-1 truncate text-left">
@@ -75,7 +75,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
                     className={cn(
                       "cursor-pointer gap-3 rounded-xl px-3 py-2.5 text-base",
                       active
-                        ? "bg-brand-50 font-semibold text-brand-800 focus:bg-brand-50 focus:text-brand-800"
+                        ? "bg-electric-lime font-semibold text-ink-charcoal focus:bg-electric-lime focus:text-ink-charcoal"
                         : "font-medium text-zinc-600",
                     )}
                     onClick={() => router.push(item.href)}
@@ -83,7 +83,7 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
                     <Icon
                       className={cn(
                         "size-4",
-                        active ? "text-electric-lime" : "text-zinc-400",
+                        active ? "text-ink-charcoal" : "text-zinc-400",
                       )}
                       strokeWidth={2}
                     />
@@ -95,37 +95,6 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
           </DropdownMenu>
         </div>
       ) : null}
-
-      <div className="hidden rounded-2xl border border-zinc-200/80 bg-white p-2 shadow-xs md:block lg:hidden">
-        <nav className="flex gap-1 overflow-x-auto">
-          {items.map((item) => {
-            const Icon = item.icon;
-            const active = pathname === item.href;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-base transition",
-                  active
-                    ? "bg-brand-50 font-semibold text-brand-800"
-                    : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
-                )}
-              >
-                <Icon
-                  className={cn(
-                    "size-4",
-                    active ? "text-electric-lime" : "text-zinc-400",
-                  )}
-                  strokeWidth={2}
-                />
-                <span className="whitespace-nowrap">{labelOf(item)}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
 
       <nav className="sticky top-6 hidden rounded-2xl border border-zinc-200/80 bg-white p-2 shadow-xs lg:block">
         <ul className="flex flex-col gap-0.5">
@@ -140,18 +109,18 @@ export const SectionSidebar: FC<SectionSidebarProps> = ({ items }) => {
                   className={cn(
                     "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-base transition",
                     active
-                      ? "bg-brand-50 font-semibold text-brand-800"
-                      : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
+                      ? "bg-electric-lime font-semibold text-ink-charcoal"
+                      : "font-medium text-zinc-600 hover:bg-electric-lime/30 hover:text-ink-charcoal",
                   )}
                 >
                   <Icon
                     className={cn(
                       "size-4 shrink-0",
-                      active ? "text-electric-lime" : "text-zinc-400",
+                      active ? "text-ink-charcoal" : "text-zinc-400",
                     )}
                     strokeWidth={2}
                   />
-                  <span>{labelOf(item)}</span>
+                  <span className="whitespace-nowrap">{labelOf(item)}</span>
                 </Link>
               </li>
             );

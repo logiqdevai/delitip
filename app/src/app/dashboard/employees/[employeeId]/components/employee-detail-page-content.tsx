@@ -206,7 +206,7 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
                 <span
                   className={
                     employee.is_active
-                      ? "inline-flex items-center rounded-full bg-brand-50 px-2.5 py-1 text-caption font-bold text-brand-700"
+                      ? "inline-flex items-center rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700"
                       : "inline-flex items-center rounded-full bg-neutral-fill px-2.5 py-1 text-caption font-medium text-zinc-500"
                   }
                 >
@@ -384,9 +384,9 @@ export const EmployeeDetailPageContent: FC<{ employeeId: string }> = ({
             {storeId && store ? (
               <Button
                 type="button"
-                variant="outline"
+                variant="secondary"
                 size="default"
-                className="w-full"
+                className="w-fit max-sm:w-full"
                 onClick={openCreateQr}
               >
                 <Plus data-icon="inline-start" className="size-3.5" />

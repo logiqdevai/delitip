@@ -3,7 +3,7 @@
 import { type FC, useEffect, useState } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { User, Users, UsersRound } from "lucide-react";
+import { Plus, User, Users, UsersRound } from "lucide-react";
 import { InFlowSelect } from "@/app/dashboard/access/components/in-flow-select";
 import { SpotFormDialog } from "@/app/dashboard/access/components/spot-form-dialog";
 import { SectionCard } from "@/app/dashboard/access/qr/components/sections/section-card";
@@ -146,10 +146,11 @@ export const RecipientsSection: FC = () => {
         </p>
         <Button
           type="button"
-          variant="link"
-          className="h-auto px-0 text-xs font-semibold text-brand-700 decoration-brand-700/40 hover:decoration-brand-700"
+          variant="secondary"
+          size="sm"
           onClick={() => setEmployeeFormOpen(true)}
         >
+          <Plus data-icon="inline-start" />
           {t("createEmployee")}
         </Button>
       </div>
@@ -298,10 +299,11 @@ export const RecipientsSection: FC = () => {
         </p>
         <Button
           type="button"
-          variant="link"
-          className="h-auto px-0 text-xs font-semibold text-brand-700 decoration-brand-700/40 hover:decoration-brand-700"
+          variant="secondary"
+          size="sm"
           onClick={() => setSpotFormOpen(true)}
         >
+          <Plus data-icon="inline-start" />
           {t("createSpot")}
         </Button>
       </div>
@@ -331,10 +333,11 @@ export const RecipientsSection: FC = () => {
         </p>
         <Button
           type="button"
-          variant="link"
-          className="h-auto px-0 text-xs font-semibold text-brand-700 decoration-brand-700/40 hover:decoration-brand-700"
+          variant="secondary"
+          size="sm"
           onClick={() => setRuleFormOpen(true)}
         >
+          <Plus data-icon="inline-start" />
           {t("createRule")}
         </Button>
       </div>

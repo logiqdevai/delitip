@@ -129,7 +129,7 @@ export const InFlowSelect: FC<InFlowSelectProps> = ({
                     tabIndex={open ? 0 : -1}
                     onClick={() => selectOption(option.value)}
                     className={cn(
-                      "relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1.5 pr-8 pl-2 text-left text-sm outline-hidden transition-colors",
+                      "relative flex w-full cursor-pointer items-center gap-1.5 rounded-md py-1.5 pr-8 pl-2 text-left text-sm outline-hidden transition-colors",
                       "hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground",
                       isSelected && "bg-accent/70 font-medium text-accent-foreground",
                     )}

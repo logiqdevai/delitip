@@ -12,6 +12,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { TabsMenu } from "@/components/ui/tabs-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
 import { QrCodeCardsSkeleton } from "@/app/dashboard/access/components/qr-code-cards-skeleton";
@@ -85,7 +86,17 @@ const AccessPageInner: FC = () => {
         onValueChange={handleTabChange}
         className="mt-6"
       >
-        <TabsList>
+        <TabsMenu
+          aria-label={t("title")}
+          items={[
+            { value: AccessTabs.qrCodes, label: t("tabQrCodes"), icon: QrCode },
+            { value: AccessTabs.distribution, label: t("tabDistribution"), icon: Scale },
+          ]}
+          value={activeTab}
+          onValueChange={(value) => handleTabChange(value)}
+        />
+
+        <TabsList className="max-md:hidden">
           <TabsTrigger value={AccessTabs.qrCodes}>
             <QrCode />
             {t("tabQrCodes")}

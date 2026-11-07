@@ -4,6 +4,7 @@ import { type FC, Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Banknote, HandCoins, Receipt } from "lucide-react";
+import { TabsMenu } from "@/components/ui/tabs-menu";
 import { TableSkeleton } from "@/components/ui/table-skeleton";
 import {
   Empty,
@@ -26,6 +27,12 @@ const isTipsTab = (value: unknown): value is TipsTab =>
   value === TipsTabs.ledger ||
   value === TipsTabs.staffBalances ||
   value === TipsTabs.payouts;
+
+const TAB_ITEMS = [
+  { value: TipsTabs.ledger, labelKey: "tabs.tips", Icon: Receipt },
+  { value: TipsTabs.staffBalances, labelKey: "tabs.staffBalances", Icon: HandCoins },
+  { value: TipsTabs.payouts, labelKey: "tabs.payouts", Icon: Banknote },
+] as const;
 
 const TipsPageInner: FC = () => {
   const t = useTranslations("dashboard.money.tipsPage");
@@ -84,7 +91,18 @@ const TipsPageInner: FC = () => {
         onValueChange={handleTabChange}
         className="mt-6"
       >
-        <TabsList>
+        <TabsMenu
+          aria-label={t("title")}
+          items={TAB_ITEMS.map(({ value, labelKey, Icon }) => ({
+            value,
+            label: t(labelKey),
+            icon: Icon,
+          }))}
+          value={activeTab}
+          onValueChange={handleTabChange}
+        />
+
+        <TabsList className="max-md:hidden">
           <TabsTrigger value={TipsTabs.ledger}>
             <Receipt />
             {t("tabs.tips")}

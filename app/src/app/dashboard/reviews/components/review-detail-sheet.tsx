@@ -224,7 +224,7 @@ export const ReviewDetailSheet: FC<ReviewDetailSheetProps> = ({
 
   return (
     <Sheet open={!!reviewId} onOpenChange={onOpenChange}>
-      <SheetContent side="right">
+      <SheetContent side="right" className="data-[side=right]:w-full data-[side=right]:sm:max-w-2xl">
         <SheetHeader>
           <SheetTitle>{t("title")}</SheetTitle>
           <SheetDescription>{t("description")}</SheetDescription>

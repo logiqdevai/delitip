@@ -155,12 +155,31 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
               )}
             </button>
           </div>
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold",
+              "mt-2 w-fit @sm:hidden",
+              qr.is_active
+                ? "bg-brand-50 text-brand-700"
+                : "bg-neutral-fill text-zinc-500",
+            )}
+          >
+            <span
+              aria-hidden
+              className={cn(
+                "size-1.5 rounded-full",
+                qr.is_active ? "bg-brand-700" : "bg-zinc-400",
+              )}
+            />
+            {qr.is_active ? t("active") : t("inactive")}
+          </span>
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5">
           <span
             className={cn(
               "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold",
+              "@max-sm:hidden",
               qr.is_active
                 ? "bg-brand-50 text-brand-700"
                 : "bg-neutral-fill text-zinc-500",
@@ -237,7 +256,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
           </span>
         </div>
 
-        <div className="grid w-full min-w-0 flex-1 grid-cols-2 gap-x-4 gap-y-4 @md:grid-cols-1">
+        <div className="grid w-full min-w-0 flex-1 grid-cols-1 gap-x-4 gap-y-4 @sm:grid-cols-2 @md:grid-cols-1">
           <StatRow icon={Users} label={t("appliesTo")}>
             {dropdownLabel(QrCodeSelectionModeFormOptions, qr.selection_mode)}
           </StatRow>
@@ -267,10 +286,10 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
       </div>
 
       <div className="grid grid-cols-[1.5fr_1fr] gap-2">
-        <div className="flex">
+        <div className="flex transition-[translate] duration-200 ease-out hover:-translate-y-0.5 motion-reduce:transition-none">
           <Button
             type="button"
-            className="h-11 flex-1 rounded-l-xl rounded-r-none bg-electric-lime text-sm font-semibold text-ink-charcoal shadow-sm"
+            className="h-11 flex-1 hover:translate-y-0 rounded-l-xl rounded-r-none bg-electric-lime text-sm font-semibold text-ink-charcoal shadow-sm"
             disabled={busy !== null}
             onClick={() => void handleDownload()}
           >
@@ -281,7 +300,7 @@ export const QrCodeCard: FC<QrCodeCardProps> = ({
             <DropdownMenuTrigger
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "h-11 rounded-l-none rounded-r-xl border-l border-ink-charcoal/10 bg-electric-lime px-3 text-ink-charcoal shadow-sm",
+                "h-11 hover:translate-y-0 rounded-l-none rounded-r-xl border-l border-ink-charcoal/10 bg-electric-lime px-3 text-ink-charcoal shadow-sm",
               )}
               aria-label={t("moreDownload")}
             >

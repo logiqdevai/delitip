@@ -102,7 +102,7 @@ export const BusinessProfileSettingsForm: FC = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="@container max-w-2xl space-y-4 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs"
+      className="@container max-w-2xl space-y-6 rounded-2xl border border-zinc-200/80 bg-white px-4 py-6 shadow-xs"
       noValidate
     >
       <div>
@@ -186,7 +186,7 @@ export const BusinessProfileSettingsForm: FC = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 @sm:grid-cols-2 @lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 @sm:grid-cols-2 @lg:grid-cols-3">
         <div className="min-w-0 space-y-1.5">
           <Label htmlFor="store-city">{t("profile.city")}</Label>
           <Input

@@ -9,10 +9,11 @@ import tr from "./tr.json";
 import ru from "./ru.json";
 import zh from "./zh.json";
 import type { TipLocale } from "@/app/[storeSlug]/q/[code]/lib/locale-store";
+import { withSharedUiMessages } from "./shared-ui";
 
 export type TipPageMessages = typeof en;
 
-export const MESSAGES_BY_LOCALE: Record<TipLocale, TipPageMessages> = {
+const BASE_MESSAGES: Record<TipLocale, TipPageMessages> = {
   en,
   el,
   es,
@@ -23,4 +24,14 @@ export const MESSAGES_BY_LOCALE: Record<TipLocale, TipPageMessages> = {
   tr,
   ru,
   zh,
+};
+
+export const MESSAGES_BY_LOCALE = Object.fromEntries(
+  (Object.keys(BASE_MESSAGES) as TipLocale[]).map((locale) => [
+    locale,
+    withSharedUiMessages(locale, BASE_MESSAGES[locale]),
+  ]),
+) as {
+  [L in TipLocale]: TipPageMessages &
+    ReturnType<typeof withSharedUiMessages>;
 };

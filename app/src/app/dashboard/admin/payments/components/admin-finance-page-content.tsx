@@ -1,9 +1,10 @@
 "use client";
 
-import { type FC } from "react";
+import { type FC, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { DashboardPageHeader } from "@/app/dashboard/components/dashboard-shared";
+import { TabsMenu } from "@/components/ui/tabs-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { AdminPaymentsTable } from "@/app/dashboard/admin/payments/components/admin-payments-table";
@@ -19,6 +20,7 @@ export const AdminFinancePageContent: FC = () => {
   const reconcilePayoutAccounts = useReconcilePayoutAccounts();
   const pendingRequestsQuery = useAdminPendingPayoutRequestCount();
   const pendingRequests = pendingRequestsQuery.data ?? 0;
+  const [tab, setTab] = useState(pendingRequests > 0 ? "requests" : "payments");
 
   return (
     <>
@@ -57,8 +59,21 @@ export const AdminFinancePageContent: FC = () => {
         }
       />
 
-      <Tabs defaultValue={pendingRequests > 0 ? "requests" : "payments"}>
-        <TabsList>
+      <Tabs value={tab} onValueChange={(value) => setTab(String(value))}>
+        <TabsMenu
+          aria-label={t("tabs.payments")}
+          items={[
+            { value: "payments", label: t("tabs.payments") },
+            { value: "payouts", label: t("tabs.payouts") },
+            {
+              value: "requests",
+              label: pendingRequests > 0 ? `${t("tabs.requests")} (${pendingRequests})` : t("tabs.requests"),
+            },
+          ]}
+          value={tab}
+          onValueChange={setTab}
+        />
+        <TabsList className="max-md:hidden">
           <TabsTrigger value="payments">{t("tabs.payments")}</TabsTrigger>
           <TabsTrigger value="payouts">{t("tabs.payouts")}</TabsTrigger>
           <TabsTrigger value="requests">

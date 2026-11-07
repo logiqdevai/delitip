@@ -204,14 +204,14 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$src$2f$lib$2f$utils$2
 ;
 ;
 ;
-const buttonVariants = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$class$2d$variance$2d$authority$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cva"])("group/button inline-flex shrink-0 items-center justify-center rounded-lg text-sm font-semibold whitespace-nowrap transition-[color,background-color,box-shadow,scale,transform] duration-200 ease-out outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-45 aria-invalid:ring-3 aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", {
+const buttonVariants = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$node_modules$2f$class$2d$variance$2d$authority$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cva"])("group/button inline-flex shrink-0 items-center justify-center rounded-lg text-sm font-semibold whitespace-nowrap transition-[color,background-color,box-shadow,translate,transform] duration-200 ease-out motion-reduce:transition-none outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-45 aria-invalid:ring-3 aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", {
     variants: {
         variant: {
-            default: "bg-primary text-primary-foreground hover:scale-[1.03]",
-            outline: "hover:scale-[1.03] [&.text-destructive]:bg-destructive/10 [&.text-destructive]:hover:bg-destructive/20 [&.text-destructive]:aria-expanded:bg-destructive/20 bg-accent text-accent-foreground hover:bg-brand-100 aria-expanded:bg-brand-100 dark:hover:bg-brand-800/60 dark:aria-expanded:bg-brand-800/60",
-            secondary: "hover:scale-[1.03] [&.text-destructive]:bg-destructive/10 [&.text-destructive]:hover:bg-destructive/20 [&.text-destructive]:aria-expanded:bg-destructive/20 bg-brand-100 text-brand-900 hover:bg-brand-200 aria-expanded:bg-brand-200 dark:bg-brand-900 dark:text-primary dark:hover:bg-brand-800/70",
-            ghost: "hover:scale-[1.03] [&.text-destructive]:hover:bg-destructive/10 [&.text-destructive]:aria-expanded:bg-destructive/10 text-foreground hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground",
-            destructive: "hover:scale-[1.03] bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/30",
+            default: "bg-primary text-primary-foreground hover:-translate-y-0.5",
+            outline: "hover:-translate-y-0.5 [&.text-destructive]:bg-destructive/10 [&.text-destructive]:hover:bg-destructive/20 [&.text-destructive]:aria-expanded:bg-destructive/20 bg-brand-100 text-brand-900 hover:bg-brand-200 aria-expanded:bg-brand-200 dark:bg-brand-900 dark:text-primary dark:hover:bg-brand-800/70 dark:aria-expanded:bg-brand-800/70",
+            secondary: "hover:-translate-y-0.5 [&.text-destructive]:bg-destructive/10 [&.text-destructive]:hover:bg-destructive/20 [&.text-destructive]:aria-expanded:bg-destructive/20 bg-brand-100 text-brand-900 hover:bg-brand-200 aria-expanded:bg-brand-200 dark:bg-brand-900 dark:text-primary dark:hover:bg-brand-800/70",
+            ghost: "hover:-translate-y-0.5 [&.text-destructive]:hover:bg-destructive/10 [&.text-destructive]:aria-expanded:bg-destructive/10 text-foreground hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground",
+            destructive: "hover:-translate-y-0.5 bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/30",
             link: "rounded-md text-foreground underline decoration-primary decoration-2 underline-offset-4 hover:decoration-foreground"
         },
         size: {

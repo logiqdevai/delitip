@@ -154,17 +154,19 @@ const QrEditorLayout: FC = () => {
         />
       </div>
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-        <QrEditorSidebar active={active} onSelect={handleSelect} />
+      <div className="flex flex-col gap-6 2xl:flex-row 2xl:items-start">
+        <div className="flex min-w-0 flex-1 flex-col gap-6 lg:flex-row lg:items-start">
+          <QrEditorSidebar active={active} onSelect={handleSelect} />
 
-        <div className="min-w-0 flex-1 xl:max-w-xl">
-          <ActiveSection />
+          <div className="min-w-0 flex-1">
+            <ActiveSection />
+          </div>
         </div>
 
         <aside
           aria-label={t("previewAria")}
           className={cn(
-            "w-full shrink-0 lg:sticky lg:top-6 lg:w-[360px]",
+            "mx-auto w-full max-w-[500px] shrink-0 2xl:sticky 2xl:top-6 2xl:mx-0 2xl:w-[500px]",
           )}
         >
           <QrTipPreview />

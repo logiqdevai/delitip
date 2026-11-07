@@ -147,7 +147,7 @@ export const ReviewsPageContent: FC = () => {
           aria-label={t("reviews.filterEmployee")}
         />
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row sm:items-center">
           <DatePicker
             value={dateFrom}
             onChange={setDateFrom}
@@ -155,7 +155,7 @@ export const ReviewsPageContent: FC = () => {
             aria-label={t("reviews.fromDate")}
             className="w-full rounded-xl border-zinc-200 bg-white font-medium text-ink-charcoal shadow-xs sm:w-auto"
           />
-          <span className="text-xs text-zinc-400">{t("reviews.to")}</span>
+          <span className="hidden text-xs text-zinc-400 sm:inline">{t("reviews.to")}</span>
           <DatePicker
             value={dateTo}
             onChange={setDateTo}

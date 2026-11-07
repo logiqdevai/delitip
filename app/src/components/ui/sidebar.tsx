@@ -195,7 +195,7 @@ function Sidebar({
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
             } as React.CSSProperties
           }
-          side="right"
+          side={side}
         >
           <SheetHeader className="sr-only">
             <SheetTitle>{t("sidebarTitle")}</SheetTitle>

@@ -9,6 +9,13 @@ import { TipFlow, type FlowStep } from "@/app/[storeSlug]/q/[code]/components/ti
 import type { TipLocale } from "@/app/[storeSlug]/q/[code]/lib/locale-store";
 import { TIP_PAGE_UI_LANGUAGES } from "@/app/[storeSlug]/q/[code]/lib/supported-ui-languages";
 import { MESSAGES_BY_LOCALE } from "@/app/[storeSlug]/q/[code]/messages";
+import { ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { LanguagePicker } from "@/components/ui/language-picker";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEmployees } from "@/features/employees/hooks/use-employees";
@@ -207,11 +214,49 @@ export const QrTipPreview: FC = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            aria-label={t("stepAria")}
+            className="group flex h-(--control-height-sm) min-w-0 flex-1 items-center gap-2 rounded-full bg-zinc-100 px-4 text-sm font-semibold text-ink-charcoal outline-none transition hover:bg-electric-lime/30 focus-visible:ring-2 focus-visible:ring-electric-lime/40 sm:hidden"
+          >
+            <span className="min-w-0 flex-1 truncate text-left">
+              {t(`steps.${step}`)}
+            </span>
+            <ChevronDown
+              className="size-4 shrink-0 text-zinc-500 transition-transform duration-200 group-data-popup-open:rotate-180"
+              strokeWidth={2}
+            />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="start"
+            sideOffset={6}
+            className="w-(--anchor-width) rounded-2xl border border-zinc-200/80 p-1.5 shadow-lg"
+          >
+            {steps.map((item) => (
+              <DropdownMenuItem
+                key={item.id}
+                className={cn(
+                  "cursor-pointer rounded-xl px-3 py-2.5 text-base",
+                  step === item.id
+                    ? "bg-electric-lime font-semibold text-ink-charcoal focus:bg-electric-lime focus:text-ink-charcoal"
+                    : "font-medium text-zinc-600 focus:bg-electric-lime/30 focus:text-ink-charcoal",
+                )}
+                onClick={() => {
+                  setRequestedStep(item.id);
+                  setRestartCount((count) => count + 1);
+                }}
+              >
+                {t(`steps.${item.id}`)}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <div
           role="tablist"
           aria-label={t("stepAria")}
-          className="inline-flex rounded-full bg-zinc-100 p-0.5"
+          className="hidden min-w-0 flex-1 rounded-full bg-zinc-100 p-1 sm:flex"
         >
           {steps.map((item) => (
             <button
@@ -224,7 +269,7 @@ export const QrTipPreview: FC = () => {
                 setRestartCount((count) => count + 1);
               }}
               className={cn(
-                "rounded-full px-3 py-1 text-[11px] font-semibold transition",
+                "flex-1 rounded-full px-2.5 py-2 text-xs font-semibold whitespace-nowrap transition",
                 step === item.id
                   ? "bg-white text-ink-charcoal shadow-xs"
                   : "text-zinc-500 hover:text-ink-charcoal",
@@ -245,6 +290,7 @@ export const QrTipPreview: FC = () => {
             labelSource="native"
             compact
             size="sm"
+            className="shrink-0"
             aria-label={t("languageAria")}
           />
         ) : null}

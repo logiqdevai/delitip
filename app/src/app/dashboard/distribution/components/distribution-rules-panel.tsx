@@ -144,7 +144,7 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 lg:col-span-2">
+        <div className="@container flex flex-col gap-4 lg:col-span-2">
           <div className="flex h-5 items-center justify-between gap-2">
             <h3 className="text-sm font-bold text-ink-charcoal">
               {t("library")}
@@ -195,7 +195,7 @@ export const DistributionRulesPanel: FC<DistributionRulesPanelProps> = ({
               </EmptyContent>
             </Empty>
           ) : (
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 @2xl:grid-cols-2">
               {rules.map((rule) => (
                 <DistributionRuleCard
                   key={rule.id}

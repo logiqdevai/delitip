@@ -165,7 +165,7 @@ const StoreLogo: FC<{
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-lg bg-ink-charcoal text-xs font-bold text-paper-offwhite",
+        "flex shrink-0 items-center justify-center rounded-lg bg-electric-lime text-xs font-bold text-paper-offwhite",
         className,
       )}
     >
@@ -226,27 +226,28 @@ export const DashboardSidebar: FC = () => {
 
   return (
     <>
-      <div className="sticky top-0 z-40 flex shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-4 py-3 md:hidden">
-        <Link href={Routes.dashboard.root} className="flex items-center gap-2.5">
-          <BrandMark size="sm" className="size-7 rounded-lg text-xs" />
-          <div>
-            <div className="text-sm leading-none font-bold tracking-tight text-ink-charcoal">
-              delitip
-            </div>
-          </div>
-        </Link>
+      <div className="sticky top-0 z-40 flex shrink-0 items-center gap-2 border-b border-white/10 bg-ink-charcoal px-4 py-3 md:hidden">
         <Button
           variant="ghost"
           size="icon-sm"
           onClick={toggleSidebar}
           aria-label={t("openMenu")}
+          className="-ml-2 text-paper-offwhite hover:bg-white/10 hover:text-paper-offwhite"
         >
           <Menu className="size-5" />
         </Button>
+        <Link href={Routes.dashboard.root} className="flex items-center gap-2.5">
+          <BrandMark size="sm" className="size-7 rounded-lg text-xs" />
+          <div>
+            <div className="text-sm leading-none font-bold tracking-tight text-paper-offwhite">
+              delitip
+            </div>
+          </div>
+        </Link>
       </div>
 
-      <Sidebar collapsible="icon" className="border-zinc-200 bg-white">
-        <SidebarHeader className="gap-4 border-b border-zinc-100 p-4">
+      <Sidebar collapsible="icon" className="border-white/10 bg-ink-charcoal text-paper-offwhite">
+        <SidebarHeader className="gap-4 border-b border-white/10 p-4">
           <div className="flex items-center justify-between gap-2 group-data-[collapsible=icon]:flex-col">
             <Link
               href={Routes.dashboard.root}
@@ -254,7 +255,7 @@ export const DashboardSidebar: FC = () => {
             >
               <BrandMark size="sm" className="size-7 shrink-0 rounded-lg text-xs group-data-[collapsible=icon]:size-8" />
               <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-                <div className="truncate text-sm leading-none font-bold tracking-tight text-ink-charcoal">
+                <div className="truncate text-sm leading-none font-bold tracking-tight text-paper-offwhite">
                   delitip
                 </div>
               </div>
@@ -270,7 +271,7 @@ export const DashboardSidebar: FC = () => {
                     ? t("expand")
                     : t("collapse")
               }
-              className="shrink-0"
+              className="shrink-0 text-zinc-300 hover:bg-white/10 hover:text-paper-offwhite"
             >
               {isMobile ? (
                 <X className="size-4" />
@@ -285,10 +286,10 @@ export const DashboardSidebar: FC = () => {
           <div className="space-y-3 group-data-[collapsible=icon]:hidden">
             <AccountSwitcher
               size="default"
-              className="w-full max-w-none sm:max-w-none"
+              className="w-full max-w-none border-white/15 bg-white/5 text-paper-offwhite sm:max-w-none"
             />
 
-            <div className="flex items-center justify-between rounded-xl border border-zinc-200/80 bg-zinc-50 p-2.5">
+            <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-2.5">
               {isPending ? (
                 <div className="flex min-w-0 flex-1 items-center gap-2.5">
                   <Skeleton className="size-7 shrink-0 rounded-lg" />
@@ -299,7 +300,7 @@ export const DashboardSidebar: FC = () => {
                 </div>
               ) : isError || !store ? (
                 <div className="min-w-0 px-0.5">
-                  <div className="truncate text-xs font-bold text-ink-charcoal">
+                  <div className="truncate text-xs font-bold text-paper-offwhite">
                     {t("noStore")}
                   </div>
                   <div className="text-base font-medium text-zinc-400">
@@ -318,7 +319,7 @@ export const DashboardSidebar: FC = () => {
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           aria-label={t("switchStore")}
-                          className="group flex w-full min-w-0 cursor-pointer items-center gap-1 text-left text-xs font-bold text-ink-charcoal outline-none"
+                          className="group flex w-full min-w-0 cursor-pointer items-center gap-1 text-left text-xs font-bold text-paper-offwhite outline-none"
                         >
                           <span className="truncate">{store.name}</span>
                           <ChevronDown
@@ -326,7 +327,7 @@ export const DashboardSidebar: FC = () => {
                             strokeWidth={2}
                           />
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" sideOffset={8} className="w-56">
+                        <DropdownMenuContent align="start" sideOffset={8} className="w-72">
                           <DropdownMenuGroup>
                             <DropdownMenuLabel>{t("stores")}</DropdownMenuLabel>
                             {storeList.map((item) => {
@@ -337,8 +338,8 @@ export const DashboardSidebar: FC = () => {
                                   className={cn(
                                     "cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-base",
                                     selected
-                                      ? "bg-brand-50 font-semibold text-brand-800 focus:bg-brand-50 focus:text-brand-800"
-                                      : "font-medium text-zinc-600",
+                                      ? "bg-electric-lime font-semibold text-ink-charcoal focus:bg-electric-lime focus:text-ink-charcoal"
+                                      : "font-medium text-zinc-600 focus:bg-electric-lime/30 focus:text-ink-charcoal",
                                   )}
                                   onClick={() => {
                                     switchStore(item.id);
@@ -347,7 +348,7 @@ export const DashboardSidebar: FC = () => {
                                 >
                                   <span className="min-w-0 flex-1 truncate">{item.name}</span>
                                   {selected ? (
-                                    <Check className="size-4 text-electric-lime" strokeWidth={2} />
+                                    <Check className="size-4 text-ink-charcoal" strokeWidth={2} />
                                   ) : null}
                                 </DropdownMenuItem>
                               );
@@ -368,7 +369,7 @@ export const DashboardSidebar: FC = () => {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     ) : (
-                      <div className="truncate text-xs font-bold text-ink-charcoal">
+                      <div className="truncate text-xs font-bold text-paper-offwhite">
                         {store.name}
                       </div>
                     )}
@@ -401,7 +402,7 @@ export const DashboardSidebar: FC = () => {
 
         <SidebarContent className="px-2 py-3">
           <SidebarGroup className="p-0">
-            <p className="px-3 pb-2 text-base font-medium tracking-wider text-zinc-400 uppercase group-data-[collapsible=icon]:hidden">
+            <p className="px-3 pb-2 text-base font-medium tracking-wider text-zinc-500 uppercase group-data-[collapsible=icon]:hidden">
               {t("businessPortal")}
             </p>
             <SidebarGroupContent>
@@ -420,8 +421,8 @@ export const DashboardSidebar: FC = () => {
                   const menuButtonClassName = cn(
                     "h-auto gap-3 rounded-xl px-3 py-2 text-base group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5!",
                     active
-                      ? "bg-brand-50 font-semibold text-brand-800"
-                      : "font-medium text-zinc-600 hover:bg-neutral-fill hover:text-ink-charcoal",
+                      ? "bg-white/10 font-semibold text-paper-offwhite"
+                      : "font-medium text-zinc-300 hover:bg-white/5 hover:text-paper-offwhite",
                   );
 
                   if ("subItems" in item && item.subItems) {
@@ -452,9 +453,9 @@ export const DashboardSidebar: FC = () => {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                             align="start"
-                            side="right"
-                            sideOffset={8}
-                            className="w-56"
+                            side={isMobile ? "bottom" : "right"}
+                            sideOffset={isMobile ? 6 : 8}
+                            className={isMobile ? "w-(--anchor-width)" : "w-72"}
                           >
                             {item.subItems.map((subItem) => {
                               const SubIcon = subItem.icon;
@@ -466,8 +467,8 @@ export const DashboardSidebar: FC = () => {
                                   className={cn(
                                     "cursor-pointer gap-2.5 rounded-lg px-2.5 py-2 text-base",
                                     subActive
-                                      ? "bg-brand-50 font-semibold text-brand-800 focus:bg-brand-50 focus:text-brand-800"
-                                      : "font-medium text-zinc-600",
+                                      ? "bg-electric-lime font-semibold text-ink-charcoal focus:bg-electric-lime focus:text-ink-charcoal"
+                                      : "font-medium text-zinc-600 focus:bg-electric-lime/30 focus:text-ink-charcoal",
                                   )}
                                   onClick={() => {
                                     router.push(subItem.href);
@@ -477,7 +478,7 @@ export const DashboardSidebar: FC = () => {
                                   <SubIcon
                                     className={cn(
                                       "size-4",
-                                      subActive ? "text-electric-lime" : "text-zinc-400",
+                                      subActive ? "text-ink-charcoal" : "text-zinc-400",
                                     )}
                                     strokeWidth={2}
                                   />
@@ -508,7 +509,7 @@ export const DashboardSidebar: FC = () => {
                         />
                         <span>{itemLabel}</span>
                         {badge ? (
-                          <span className="ml-auto rounded-full bg-neutral-fill px-1.5 py-0.5 text-caption font-semibold text-zinc-600 group-data-[collapsible=icon]:hidden">
+                          <span className="ml-auto rounded-full bg-electric-lime px-1.5 py-0.5 text-caption font-semibold text-ink-charcoal group-data-[collapsible=icon]:hidden">
                             {badge}
                           </span>
                         ) : null}
@@ -521,7 +522,7 @@ export const DashboardSidebar: FC = () => {
           </SidebarGroup>
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-zinc-100 p-2">
+        <SidebarFooter className="border-t border-white/10 p-2">
           <DashboardUserMenu onNavigate={closeMobileNav} />
         </SidebarFooter>
       </Sidebar>

@@ -61,7 +61,7 @@ const initialsFromProfile = (profile: {
 };
 
 const UserAvatar: FC<{ initials: string }> = ({ initials }) => (
-  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-ink-charcoal text-[10px] font-bold tracking-wide text-paper-offwhite group-data-[collapsible=icon]:size-9">
+  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-electric-lime text-[10px] font-bold tracking-wide text-ink-charcoal group-data-[collapsible=icon]:size-9">
     {initials}
   </div>
 );
@@ -95,7 +95,7 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
 
   if (meQuery.isPending && !authUser?.email) {
     return (
-      <div className="flex items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50 p-3">
+      <div className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 p-3">
         <Skeleton className="size-8 shrink-0 rounded-full" />
         <div className="min-w-0 flex-1 space-y-1.5 group-data-[collapsible=icon]:hidden">
           <Skeleton className="h-3 w-24" />
@@ -111,14 +111,14 @@ export const DashboardUserMenu: FC<DashboardUserMenuProps> = ({
         <DropdownMenu>
           <DropdownMenuTrigger
             className={cn(
-              "flex w-full items-center gap-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50 p-3 text-left outline-none transition hover:bg-neutral-fill focus-visible:ring-2 focus-visible:ring-ring/50 aria-expanded:bg-neutral-fill",
-              "group-data-[collapsible=icon]:size-10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:hover:bg-neutral-fill",
+              "flex w-full items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 p-3 text-left outline-none transition hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-ring/50 aria-expanded:bg-white/10",
+              "group-data-[collapsible=icon]:size-10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:hover:bg-white/10",
             )}
             aria-label={t("accountMenu")}
           >
             <UserAvatar initials={initials} />
             <div className="grid min-w-0 flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
-              <span className="truncate text-xs font-bold text-ink-charcoal">
+              <span className="truncate text-xs font-bold text-paper-offwhite">
                 {displayName}
               </span>
               <span className="truncate text-base font-medium text-zinc-400">

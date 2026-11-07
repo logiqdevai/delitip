@@ -40,18 +40,13 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
         isDefault ? "border-brand-200 ring-1 ring-brand-100" : "border-zinc-200/80",
       )}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h3 className="truncate text-sm font-bold text-ink-charcoal">
-            {rule.name}
-          </h3>
-          <p className="mt-1 text-base leading-relaxed text-zinc-500">
-            {formatRecipientSummary(rule.recipients, tSummary)}
-          </p>
-        </div>
-        <div className="flex shrink-0 flex-col items-end gap-1">
+      <div className="min-w-0">
+        <h3 className="truncate text-sm font-bold text-ink-charcoal">
+          {rule.name}
+        </h3>
+        <div className="mt-1.5 flex flex-wrap items-center gap-1.5 empty:hidden">
           {isDefault ? (
-            <span className="rounded-full bg-brand-50 px-2 py-0.5 text-caption font-bold text-brand-700">
+            <span className="rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-semibold text-brand-700">
               {t("storeDefault")}
             </span>
           ) : null}
@@ -62,13 +57,17 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
             </span>
           ) : null}
         </div>
+        <p className="mt-2 text-base leading-relaxed text-zinc-500">
+          {formatRecipientSummary(rule.recipients, tSummary)}
+        </p>
       </div>
 
-      <div className="flex flex-wrap gap-2 pt-1">
+      <div className="flex flex-wrap items-center gap-2 pt-1">
         <Button
           type="button"
           variant="outline"
           size="sm"
+          className="flex-1 sm:flex-none"
           onClick={() => onEdit(rule)}
         >
           <Pencil data-icon="inline-start" className="size-3.5" />
@@ -79,6 +78,7 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
             type="button"
             variant="secondary"
             size="sm"
+            className="max-sm:order-last max-sm:w-full sm:flex-none"
             disabled={isSettingDefault}
             onClick={() => onSetDefault(rule)}
           >
@@ -88,13 +88,14 @@ export const DistributionRuleCard: FC<DistributionRuleCardProps> = ({
         ) : null}
         <Button
           type="button"
-          variant="destructive"
-          size="sm"
-          className="ml-auto"
+          variant="ghost"
+          size="icon-sm"
+          aria-label={t("delete")}
+          title={t("delete")}
+          className="ml-auto text-destructive hover:bg-destructive/10 hover:text-destructive"
           onClick={() => onDelete(rule)}
         >
-          <Trash2 data-icon="inline-start" className="size-3.5" />
-          {t("delete")}
+          <Trash2 className="size-4" />
         </Button>
       </div>
     </div>

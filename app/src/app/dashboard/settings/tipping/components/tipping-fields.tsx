@@ -2,7 +2,7 @@
 
 import { type FC, type ReactNode, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Plus, Split, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus, Split, Trash2 } from "lucide-react";
 import { DistributionRuleFormDialog } from "@/app/dashboard/distribution/components/distribution-rule-form-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +39,14 @@ export const TipPresetsField: FC<TipPresetsFieldProps> = ({
   error,
 }) => {
   const t = useTranslations("dashboard.settings.tipping");
+  const tUi = useTranslations("dashboard.shell.ui");
+  const nudge = (index: number, direction: 1 | -1) => {
+    const current = Number.parseFloat(amounts[index] ?? "");
+    const next = Math.max(1, (Number.isFinite(current) ? current : 0) + direction);
+    const copy = [...amounts];
+    copy[index] = String(next);
+    onChange(copy);
+  };
   const locale = useLocale();
   const symbol = getCurrencySymbol(currency, locale);
   const canAddPreset = amounts.length < MAX_PRESETS;
@@ -69,7 +77,7 @@ export const TipPresetsField: FC<TipPresetsFieldProps> = ({
             className="mt-4"
             onClick={() => onChange([""])}
           >
-            <Plus data-icon="inline-start" className="size-3.5" />
+            <Plus data-icon="inline-start" />
             {t("addPreset")}
           </Button>
         </div>
@@ -94,8 +102,28 @@ export const TipPresetsField: FC<TipPresetsFieldProps> = ({
                   next[index] = event.target.value;
                   onChange(next);
                 }}
-                className="h-8 border-0 bg-transparent px-0 text-sm font-bold shadow-none focus-visible:ring-0"
+                className="h-8 border-0 bg-transparent px-0 text-sm font-bold shadow-none focus-visible:ring-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               />
+              <div className="flex shrink-0 flex-col">
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  aria-label={tUi("increase")}
+                  onClick={() => nudge(index, 1)}
+                  className="flex h-3.5 w-5 items-center justify-center rounded-t-md text-zinc-400 transition hover:bg-electric-lime/40 hover:text-ink-charcoal"
+                >
+                  <ChevronUp className="size-3" strokeWidth={2.5} />
+                </button>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  aria-label={tUi("decrease")}
+                  onClick={() => nudge(index, -1)}
+                  className="flex h-3.5 w-5 items-center justify-center rounded-b-md text-zinc-400 transition hover:bg-electric-lime/40 hover:text-ink-charcoal"
+                >
+                  <ChevronDown className="size-3" strokeWidth={2.5} />
+                </button>
+              </div>
               <button
                 type="button"
                 onClick={() => onChange(amounts.filter((_, i) => i !== index))}
@@ -230,11 +258,11 @@ export const DefaultDistributionRuleField: FC<
 
       <Button
         type="button"
-        variant="link"
-        className="h-auto px-0 text-xs font-semibold text-brand-700 decoration-brand-700/40 hover:decoration-brand-700"
+        variant="secondary"
+        size="sm"
         onClick={() => setRuleFormOpen(true)}
       >
-        <Plus data-icon="inline-start" className="size-3.5" />
+        <Plus data-icon="inline-start" />
         {t("createRule")}
       </Button>
 

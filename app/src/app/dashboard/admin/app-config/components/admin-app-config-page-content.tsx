@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, useEffect } from "react";
+import { type FC, useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@/lib/i18n-zod-resolver";
@@ -9,6 +9,7 @@ import { ActionButtonWithPending } from "@/components/ui/action-button-with-pend
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { TabsMenu } from "@/components/ui/tabs-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
@@ -86,6 +87,7 @@ const FieldShell: FC<{
 
 export const AdminAppConfigPageContent: FC = () => {
   const t = useTranslations("dashboard.adminSystem.appConfig");
+  const [tab, setTab] = useState("finance");
   const { data, isError, refetch } = useAppConfig();
   const updateConfig = useUpdateAppConfig();
 
@@ -179,8 +181,18 @@ export const AdminAppConfigPageContent: FC = () => {
         </div>
       ) : null}
       <form onSubmit={onSubmit} noValidate className="mt-4 max-w-xl space-y-6">
-        <Tabs defaultValue="finance">
-          <TabsList>
+        <Tabs value={tab} onValueChange={(value) => setTab(String(value))}>
+          <TabsMenu
+            aria-label={t("tabs.finance")}
+            items={[
+              { value: "finance", label: t("tabs.finance") },
+              { value: "invoices", label: t("tabs.invoices") },
+              { value: "accounts", label: t("tabs.accounts") },
+            ]}
+            value={tab}
+            onValueChange={setTab}
+          />
+          <TabsList className="max-md:hidden">
             <TabsTrigger value="finance">{t("tabs.finance")}</TabsTrigger>
             <TabsTrigger value="invoices">{t("tabs.invoices")}</TabsTrigger>
             <TabsTrigger value="accounts">{t("tabs.accounts")}</TabsTrigger>

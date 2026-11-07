@@ -151,8 +151,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          "group/dropzone relative flex flex-col gap-3 rounded-2xl border border-dashed px-4 py-3 transition-all",
-          "@sm:flex-row @sm:items-center @sm:gap-3.5 @sm:p-3.5",
+          "group/dropzone relative flex flex-col gap-3.5 rounded-2xl border border-dashed p-3.5 transition-all",
           hasValue
             ? showSuccess
               ? "border-solid border-brand-200 bg-brand-50/40 shadow-xs"
@@ -164,7 +163,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({
           isDisabled && "opacity-60",
         )}
       >
-        <div className="flex items-center gap-3 @sm:contents">
+        <div className="flex flex-col items-start gap-3 @sm:flex-row @sm:items-center @sm:gap-3.5">
           <button
             type="button"
             disabled={isDisabled}
@@ -218,7 +217,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({
           <div className="min-w-0 flex-1">
             {hasValue ? (
               <>
-                <p className="truncate text-sm font-semibold text-ink-charcoal">
+                <p className="text-sm font-semibold text-ink-charcoal">
                   {copy.filledTitle}
                 </p>
                 {showSuccess ? (
@@ -245,22 +244,15 @@ export const ImagePicker: FC<ImagePickerProps> = ({
           </div>
         </div>
 
-        <div
-          className={cn(
-            "flex w-full flex-col gap-1.5 @sm:w-auto @sm:flex-row @sm:flex-wrap @sm:items-center",
-            !hasValue && "@sm:mt-0",
-          )}
-        >
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             type="button"
             variant="secondary"
             size="sm"
             disabled={isDisabled}
             className={cn(
-              "h-9 w-full rounded-xl bg-white px-3.5 text-xs font-semibold text-ink-charcoal shadow-xs ring-1 ring-zinc-200/80 hover:bg-zinc-50",
-              "@sm:h-8 @sm:w-auto @sm:rounded-full",
-              hasValue &&
-                "bg-zinc-100 ring-0 hover:bg-zinc-200 @sm:bg-zinc-100",
+              "h-9 rounded-full bg-white px-4 text-xs font-semibold text-ink-charcoal shadow-xs ring-1 ring-zinc-200/80 hover:bg-zinc-50",
+              hasValue && "bg-brand-100 ring-0 hover:bg-brand-200",
             )}
             onClick={openFileDialog}
           >
@@ -277,7 +269,7 @@ export const ImagePicker: FC<ImagePickerProps> = ({
               variant="ghost"
               size="sm"
               disabled={isDisabled}
-              className="h-9 w-full rounded-xl px-3 text-xs font-medium text-zinc-600 hover:bg-zinc-100 hover:text-red-700 @sm:h-8 @sm:w-auto @sm:rounded-full"
+              className="h-9 rounded-full px-3.5 bg-zinc-100 text-xs font-medium text-zinc-700 hover:bg-red-50 hover:text-red-700"
               onClick={onClear}
             >
               <X data-icon="inline-start" />
