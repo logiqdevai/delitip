@@ -2600,10 +2600,6 @@
     place-content: center;
   }
 
-  .place-items-center {
-    place-items: center;
-  }
-
   .place-items-start {
     place-items: start;
   }
@@ -3459,10 +3455,6 @@
     background-color: canvas;
   }
 
-  .bg-accent {
-    background-color: var(--accent);
-  }
-
   .bg-accent\/70 {
     background-color: var(--accent);
   }
@@ -3695,10 +3687,6 @@
 
   .bg-neutral-fill {
     background-color: var(--color-neutral-fill);
-  }
-
-  .bg-neutral-line {
-    background-color: var(--color-neutral-line);
   }
 
   .bg-paper-offwhite {
@@ -5007,17 +4995,6 @@
     text-decoration-line: underline;
   }
 
-  .decoration-brand-700\/40 {
-    text-decoration-color: #9fbf3e66;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .decoration-brand-700\/40 {
-      -webkit-text-decoration-color: color-mix(in oklab, var(--color-brand-700) 40%, transparent);
-      text-decoration-color: color-mix(in oklab, var(--color-brand-700) 40%, transparent);
-    }
-  }
-
   .decoration-primary {
     -webkit-text-decoration-color: var(--primary);
     text-decoration-color: var(--primary);
@@ -5451,12 +5428,6 @@
 
   .transition-\[border-color\,box-shadow\] {
     transition-property: border-color, box-shadow;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-  }
-
-  .transition-\[color\,background-color\,box-shadow\,scale\,transform\] {
-    transition-property: color, background-color, box-shadow, scale, transform;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
@@ -7290,11 +7261,6 @@
       text-decoration-line: underline;
     }
 
-    .hover\:decoration-brand-700:hover {
-      -webkit-text-decoration-color: var(--color-brand-700);
-      text-decoration-color: var(--color-brand-700);
-    }
-
     .hover\:decoration-foreground:hover {
       -webkit-text-decoration-color: var(--foreground);
       text-decoration-color: var(--foreground);
@@ -7378,10 +7344,6 @@
     }
   }
 
-  .focus\:bg-ink-charcoal:focus {
-    background-color: var(--color-ink-charcoal);
-  }
-
   .focus\:bg-muted:focus {
     background-color: var(--muted);
   }
@@ -7400,10 +7362,6 @@
 
   .focus\:text-ink-charcoal:focus {
     color: var(--color-ink-charcoal);
-  }
-
-  .focus\:text-paper-offwhite:focus {
-    color: var(--color-paper-offwhite);
   }
 
   .focus\:ring-2:focus {
@@ -9457,10 +9415,6 @@
       margin-left: auto;
     }
 
-    .max-sm\:hidden {
-      display: none;
-    }
-
     .max-sm\:size-11 {
       width: calc(var(--spacing) * 11);
       height: calc(var(--spacing) * 11);
@@ -9833,10 +9787,6 @@
       padding-inline: calc(var(--spacing) * 10);
     }
 
-    .sm\:py-1\.5 {
-      padding-block: calc(var(--spacing) * 1.5);
-    }
-
     .sm\:py-2 {
       padding-block: calc(var(--spacing) * 2);
     }
@@ -9867,10 +9817,6 @@
 
     .sm\:pr-4 {
       padding-right: calc(var(--spacing) * 4);
-    }
-
-    .sm\:pl-2 {
-      padding-left: calc(var(--spacing) * 2);
     }
 
     .sm\:pl-4 {
@@ -10382,14 +10328,6 @@
       width: 360px;
     }
 
-    .lg\:w-\[440px\] {
-      width: 440px;
-    }
-
-    .lg\:w-\[500px\] {
-      width: 500px;
-    }
-
     .lg\:max-w-5xl {
       max-width: var(--container-5xl);
     }
@@ -10400,10 +10338,6 @@
 
     .lg\:max-w-xl {
       max-width: var(--container-xl);
-    }
-
-    .lg\:shrink {
-      flex-shrink: 1;
     }
 
     .lg\:grid-cols-2 {
@@ -10466,10 +10400,6 @@
       justify-content: flex-end;
     }
 
-    .lg\:gap-0\.5 {
-      gap: calc(var(--spacing) * .5);
-    }
-
     .lg\:gap-1\.5 {
       gap: calc(var(--spacing) * 1.5);
     }
@@ -10502,10 +10432,6 @@
 
     .lg\:overflow-hidden {
       overflow: hidden;
-    }
-
-    .lg\:overflow-visible {
-      overflow: visible;
     }
 
     .lg\:overflow-y-auto {
@@ -10759,10 +10685,6 @@
   }
 
   @media (min-width: 80rem) {
-    .xl\:max-w-xl {
-      max-width: var(--container-xl);
-    }
-
     .xl\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
